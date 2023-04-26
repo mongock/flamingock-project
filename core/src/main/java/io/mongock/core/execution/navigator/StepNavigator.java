@@ -30,7 +30,7 @@ public class StepNavigator {
 
     private static final StepNavigator instance = new StepNavigator();
 
-    //For sequential execution
+    //For sequential execution, so we avoid creating too many new instances and save GC cycles
     public static StepNavigationOutput startByReuse(ExecutableTask task,
                                                     AuditWriter<?> auditWriter,
                                                     RuntimeHelper runtimeHelper,
@@ -41,7 +41,8 @@ public class StepNavigator {
                 .start(task, executionContext);
     }
 
-    //For parallel execution
+    //For parallel execution. In this case, we cannot save instances creation. If this is important, it can be improved
+    //by using a pool
     public static StepNavigationOutput startByNew(ExecutableTask task,
                                                   AuditWriter<?> auditWriter,
                                                   RuntimeHelper runtimeHelper,
