@@ -7,7 +7,7 @@ import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.runner.BaseRunnerBuilder;
 import io.mongock.core.runner.Runner;
 import io.mongock.core.runner.RunnerBuilder;
-import io.mongock.internal.driver.ConnectionEngine;
+import io.mongock.internal.driver.ConnectionDriver;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class MongockRunnerBuilder implements RunnerBuilder<MongockRunnerBuilder,
             SingleExecutableProcess,
             MongockConfiguration> baseBuilder;
 
-    private ConnectionEngine connectionDriver;
+    private ConnectionDriver connectionDriver;
 
     public MongockRunnerBuilder() {
         this(new MongockConfiguration());
@@ -30,7 +30,7 @@ public class MongockRunnerBuilder implements RunnerBuilder<MongockRunnerBuilder,
         this.baseBuilder = new BaseRunnerBuilder<>(configuration, () -> this);
     }
 
-    public void setConnectionDriver(ConnectionEngine connectionDriver) {
+    public void setConnectionDriver(ConnectionDriver connectionDriver) {
         this.connectionDriver = connectionDriver;
     }
 
@@ -51,8 +51,7 @@ public class MongockRunnerBuilder implements RunnerBuilder<MongockRunnerBuilder,
     ///////////////////////////////////////////////////////////////////////////////////
 
     public Runner build() {
-        baseBuilder.setFactory(new MongockFactory(connectionDriver));
-        return baseBuilder.build();
+        return baseBuilder.build(new MongockFactory(connectionDriver));
     }
 
     public MongockRunnerBuilder setConfiguration(MongockConfiguration configuration) {

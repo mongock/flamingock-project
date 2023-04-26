@@ -4,7 +4,7 @@ import io.mongock.internal.MongockLockProvider;
 
 public interface ConnectionEngine {
 
-  void initialize(String executionId, MongockDriverConfiguration configuration);
+  void initialize(MongockDriverConfiguration configuration);
 
   MongockAuditor getAuditor();
 

@@ -19,21 +19,19 @@ public class BaseRunnerBuilder<
         HOLDER,
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
-        CONFIG extends AbstractConfiguration>
-        implements RunnerBuilder<HOLDER, CONFIG> {
+        CONFIG extends AbstractConfiguration> {
 
     private CONFIG configuration;
-    private Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory;
+
     private final Supplier<HOLDER> holderInstanceSupplier;
 
     public BaseRunnerBuilder(CONFIG configuration,
                              Supplier<HOLDER> holderInstanceSupplier) {
         this.configuration = configuration;
-        this.factory = factory;
         this.holderInstanceSupplier = holderInstanceSupplier;
     }
 
-    public Runner build() {
+    public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory) {
         final RunnerOrchestrator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> runnerOrchestrator = new RunnerOrchestrator<>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),
@@ -65,9 +63,6 @@ public class BaseRunnerBuilder<
     ///////////////////////////////////////////////////////////////////////////////////
     //  SETTERS
     ///////////////////////////////////////////////////////////////////////////////////
-    public void setFactory(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory) {
-        this.factory = factory;
-    }
 
     public HOLDER setConfiguration(CONFIG configuration) {
         this.configuration = configuration;
