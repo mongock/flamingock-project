@@ -1,6 +1,3 @@
-# Technical notes
-- Remove OperationState: AfterExecutionAuditStep
+# Technical debts
 - rename AuditEntry fields...Think about mapping old fields in Mongock
-- ConnectionDriver(Mongock)
-- Add specific builder for Mongock
 
