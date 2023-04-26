@@ -35,8 +35,8 @@ public class StepNavigator {
                                                     AuditWriter<?> auditWriter,
                                                     RuntimeHelper runtimeHelper,
                                                     ExecutionContext executionContext) {
-        return instance.resetDependencies(task, auditWriter, new DefaultStepSummarizer(), runtimeHelper, executionContext)
-                .start(executionContext);
+        return instance.resetDependencies(auditWriter, new DefaultStepSummarizer(), runtimeHelper, executionContext)
+                .start(task, executionContext);
     }
 
     //For parallel execution
@@ -44,38 +44,32 @@ public class StepNavigator {
                                                   AuditWriter<?> auditWriter,
                                                   RuntimeHelper runtimeHelper,
                                                   ExecutionContext executionContext) {
-        return new StepNavigator(task, auditWriter, new DefaultStepSummarizer(), runtimeHelper)
-                .start(executionContext);
+        return new StepNavigator(auditWriter, new DefaultStepSummarizer(), runtimeHelper)
+                .start(task, executionContext);
     }
 
-
-    private ExecutableTask task;
     private StepSummarizer summarizer;
     private AuditWriter<?> auditWriter;
 
     private RuntimeHelper runtimeHelper;
 
     private StepNavigator() {
-        this(null, null, null, null);
+        this(null, null, null);
     }
 
-    public StepNavigator(ExecutableTask task,
-                         AuditWriter<?> auditWriter,
+    public StepNavigator(AuditWriter<?> auditWriter,
                          StepSummarizer summarizer,
                          RuntimeHelper runtimeHelper) {
-        this.task = task;
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
         this.runtimeHelper = runtimeHelper;
     }
 
-    private StepNavigator resetDependencies(ExecutableTask task,
-                                            AuditWriter<?> auditWriter,
+    private StepNavigator resetDependencies(AuditWriter<?> auditWriter,
                                             StepSummarizer summarizer,
                                             RuntimeHelper runtimeHelper,
                                             ExecutionContext executionContext) {
         clean();
-        this.task = task;
         this.summarizer = summarizer;
         this.auditWriter = auditWriter;
         this.runtimeHelper = runtimeHelper;
@@ -83,15 +77,14 @@ public class StepNavigator {
     }
 
     private void clean() {
-        task = null;
         summarizer = null;
         auditWriter = null;
         runtimeHelper = null;
     }
 
-    private StepNavigationOutput start(ExecutionContext executionContext) {
+    private StepNavigationOutput start(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
-            ExecutionStep executed = executeAndSummary();
+            ExecutionStep executed = executeAndSummary(task);
 
             AfterExecutionAuditStep afterAuditStep = auditExecutionAndSummary(
                     executed, executionContext, LocalDateTime.now());
@@ -110,12 +103,12 @@ public class StepNavigator {
             }
         } else {
             //Task already executed
-            logAndSummaryIgnored();
+            logAndSummaryIgnored(task);
             return new StepNavigationOutput(true, summarizer.getSummary());
         }
     }
 
-    private ExecutionStep executeAndSummary() {
+    private ExecutionStep executeAndSummary(ExecutableTask task) {
         ExecutionStep executed = new ExecutableStep(task).execute(runtimeHelper);
         summarizer.add(executed);
         if (executed instanceof FailedExecutionStep) {
@@ -173,7 +166,7 @@ public class StepNavigator {
             summarizer.add(rolledBack);
             return Optional.of(rolledBack);
         } else {
-            logger.warn("ROLLBACK NOT PROVIDED FOR - {}", task.getDescriptor().getId());
+            logger.warn("ROLLBACK NOT PROVIDED FOR - {}", failed.getTask().getDescriptor().getId());
             return Optional.empty();
         }
     }
@@ -197,7 +190,7 @@ public class StepNavigator {
         summarizer.add(failedStep);
     }
 
-    private void logAndSummaryIgnored() {
+    private void logAndSummaryIgnored(ExecutableTask task) {
         logger.info("IGNORED - {}", task.getDescriptor().getId());
         summarizer.add(CompleteSuccessStep.fromTask(task));
     }
