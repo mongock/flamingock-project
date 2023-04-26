@@ -35,7 +35,9 @@ public class StepNavigator {
                                                     AuditWriter<?> auditWriter,
                                                     RuntimeHelper runtimeHelper,
                                                     ExecutionContext executionContext) {
-        return instance.resetDependencies(auditWriter, new DefaultStepSummarizer(), runtimeHelper, executionContext)
+        return instance
+                .clean()
+                .setDependencies(auditWriter, new DefaultStepSummarizer(), runtimeHelper, executionContext)
                 .start(task, executionContext);
     }
 
@@ -57,7 +59,7 @@ public class StepNavigator {
         this(null, null, null);
     }
 
-    public StepNavigator(AuditWriter<?> auditWriter,
+    private StepNavigator(AuditWriter<?> auditWriter,
                          StepSummarizer summarizer,
                          RuntimeHelper runtimeHelper) {
         this.auditWriter = auditWriter;
@@ -65,21 +67,21 @@ public class StepNavigator {
         this.runtimeHelper = runtimeHelper;
     }
 
-    private StepNavigator resetDependencies(AuditWriter<?> auditWriter,
-                                            StepSummarizer summarizer,
-                                            RuntimeHelper runtimeHelper,
-                                            ExecutionContext executionContext) {
-        clean();
+    private StepNavigator clean() {
+        summarizer = null;
+        auditWriter = null;
+        runtimeHelper = null;
+        return this;
+    }
+
+    private StepNavigator setDependencies(AuditWriter<?> auditWriter,
+                                          StepSummarizer summarizer,
+                                          RuntimeHelper runtimeHelper,
+                                          ExecutionContext executionContext) {
         this.summarizer = summarizer;
         this.auditWriter = auditWriter;
         this.runtimeHelper = runtimeHelper;
         return this;
-    }
-
-    private void clean() {
-        summarizer = null;
-        auditWriter = null;
-        runtimeHelper = null;
     }
 
     private StepNavigationOutput start(ExecutableTask task, ExecutionContext executionContext) {
