@@ -4,19 +4,10 @@ import io.mongock.core.audit.domain.AuditEntry;
 import io.mongock.core.audit.domain.AuditEntryStatus;
 import io.mongock.core.audit.domain.AuditProcessStatus;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import static io.mongock.core.audit.domain.AuditEntryStatus.EXECUTED;
-import static io.mongock.core.audit.domain.AuditEntryStatus.FAILED;
-import static io.mongock.core.audit.domain.AuditEntryStatus.ROLLBACK_FAILED;
-import static io.mongock.core.audit.domain.AuditEntryStatus.ROLLED_BACK;
 
 public class SingleAuditProcessStatus implements AuditProcessStatus {
 
@@ -36,18 +27,14 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
     }
 
     public static class Builder {
-        private static final Set<AuditEntryStatus> RELEVANT_STATES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-                EXECUTED,
-                ROLLED_BACK,
-                FAILED,
-                ROLLBACK_FAILED)));
 
         private final Map<String, AuditEntry> entryMap = new HashMap<>();
 
         public Builder addEntry(AuditEntry newEntry) {
             entryMap.compute(
                     newEntry.getChangeId(),
-                    (changeId, currentEntry) -> currentEntry == null ? newEntry : getMostRelevant(currentEntry, newEntry));
+                    (changeId, currentEntry) -> getMostRelevant(currentEntry, newEntry)
+            );
             return this;
         }
 
@@ -59,9 +46,11 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
         }
 
         private static AuditEntry getMostRelevant(AuditEntry currentEntry, AuditEntry newEntry) {
-            return RELEVANT_STATES.contains(newEntry.getState()) && newEntry.getCreatedAt().isAfter(currentEntry.getCreatedAt())
-                    ? newEntry
-                    : currentEntry;
+            if (currentEntry != null) {
+                return currentEntry.shouldBeReplacedBy(newEntry) ? newEntry : currentEntry;
+            } else {
+                return newEntry;
+            }
         }
 
     }

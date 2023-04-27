@@ -3,8 +3,23 @@ package io.mongock.core.audit.domain;
 import io.mongock.core.util.ThrowableUtil;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import static io.mongock.core.audit.domain.AuditEntryStatus.EXECUTED;
+import static io.mongock.core.audit.domain.AuditEntryStatus.FAILED;
+import static io.mongock.core.audit.domain.AuditEntryStatus.ROLLBACK_FAILED;
+import static io.mongock.core.audit.domain.AuditEntryStatus.ROLLED_BACK;
 
 public class AuditEntry {
+
+    private static final Set<AuditEntryStatus> RELEVANT_STATES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            EXECUTED,
+            ROLLED_BACK,
+            FAILED,
+            ROLLBACK_FAILED)));
 
     private final String executionId;
 
@@ -145,4 +160,7 @@ public class AuditEntry {
         return errorTrace;
     }
 
+    public boolean shouldBeReplacedBy(AuditEntry newEntry) {
+        return RELEVANT_STATES.contains(state) && newEntry.getCreatedAt().isAfter(this.getCreatedAt());
+    }
 }
