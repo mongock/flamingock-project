@@ -37,7 +37,7 @@ public class StepNavigator {
                                                     ExecutionContext executionContext) {
         return instance
                 .clean()
-                .setDependencies(auditWriter, new DefaultStepSummarizer(), runtimeHelper, executionContext)
+                .setDependencies(auditWriter, new DefaultStepSummarizer(), runtimeHelper)
                 .start(task, executionContext);
     }
 
@@ -77,8 +77,7 @@ public class StepNavigator {
 
     private StepNavigator setDependencies(AuditWriter<?> auditWriter,
                                           StepSummarizer summarizer,
-                                          RuntimeHelper runtimeHelper,
-                                          ExecutionContext executionContext) {
+                                          RuntimeHelper runtimeHelper) {
         this.summarizer = summarizer;
         this.auditWriter = auditWriter;
         this.runtimeHelper = runtimeHelper;
