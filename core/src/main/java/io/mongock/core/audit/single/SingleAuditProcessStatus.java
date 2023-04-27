@@ -45,14 +45,9 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
         private final Map<String, AuditEntry> entryMap = new HashMap<>();
 
         public Builder addEntry(AuditEntry newEntry) {
-            if (!entryMap.containsKey(newEntry.getChangeId())) {
-                entryMap.put(newEntry.getChangeId(), newEntry);
-                return this;
-            }
-            AuditEntry currentEntry = entryMap.get(newEntry.getChangeId());
-            if (RELEVANT_STATES.contains(newEntry.getState()) && newEntry.getCreatedAt().isAfter(currentEntry.getCreatedAt())) {
-                entryMap.put(newEntry.getChangeId(), newEntry);
-            }
+            entryMap.compute(
+                    newEntry.getChangeId(),
+                    (changeId, currentEntry) -> currentEntry == null ? newEntry : getMostRelevant(currentEntry, newEntry));
             return this;
         }
 
@@ -61,6 +56,12 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
             Map<String, AuditEntryStatus> statesMap = entryMap.values().stream()
                     .collect(Collectors.toMap(AuditEntry::getChangeId, AuditEntry::getState));
             return new SingleAuditProcessStatus(statesMap);
+        }
+
+        private static AuditEntry getMostRelevant(AuditEntry currentEntry, AuditEntry newEntry) {
+            return RELEVANT_STATES.contains(newEntry.getState()) && newEntry.getCreatedAt().isAfter(currentEntry.getCreatedAt())
+                    ? newEntry
+                    : currentEntry;
         }
 
     }
