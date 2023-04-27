@@ -4,6 +4,16 @@ import io.mongock.core.util.Failed;
 
 public abstract class AuditResult {
 
+    private static Ok okInstance;
+    
+    public static Ok OK() {
+        if(okInstance == null) {
+            okInstance = new Ok();
+        }
+        return okInstance;
+    }
+    
+
     private AuditResult() {
     }
 

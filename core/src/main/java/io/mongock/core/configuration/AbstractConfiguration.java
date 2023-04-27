@@ -12,7 +12,6 @@ import static io.mongock.core.util.Constants.DEFAULT_TRY_FREQUENCY_MILLIS;
 
 public abstract class AbstractConfiguration {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractConfiguration.class);
     public static final String DEFAULT_MIGRATION_AUTHOR = "default_author";
     private final static String LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME = "mongockChangeLog";
     private final static String LEGACY_DEFAULT_LOCK_REPOSITORY_NAME = "mongockLock";

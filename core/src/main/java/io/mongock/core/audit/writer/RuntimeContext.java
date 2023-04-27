@@ -14,7 +14,7 @@ public final class RuntimeContext {
         return new Builder();
     }
 
-    private enum ExecutionResult {SUCCESS, FAILED, IGNORED}
+    private enum ExecutionResult {SUCCESS, FAILED}
 
     private final ExecutionResult executionResult;
     private final long duration;
@@ -59,10 +59,6 @@ public final class RuntimeContext {
 
     public boolean isFailed() {
         return executionResult == ExecutionResult.FAILED;
-    }
-
-    public boolean isIgnored() {
-        return executionResult == ExecutionResult.IGNORED;
     }
 
 

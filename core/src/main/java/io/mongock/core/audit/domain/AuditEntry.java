@@ -1,5 +1,7 @@
 package io.mongock.core.audit.domain;
 
+import io.mongock.core.util.ThrowableUtil;
+
 import java.time.LocalDateTime;
 
 public class AuditEntry {
@@ -9,15 +11,15 @@ public class AuditEntry {
     private final String changeId;
 
     private final String author;
-    private final LocalDateTime timestamp;//todo change name
+
+    private final LocalDateTime createdAt;
 
     private final AuditEntryStatus state;
 
-//  private final ChangeType type;
+    private final String className;
 
-    private final String changeLogClass;//todo change name
+    private final String methodName;
 
-    private final String changeSetMethod;//todo change name
 
     private final Object metadata;
 
@@ -25,73 +27,74 @@ public class AuditEntry {
 
     private final String executionHostname;
 
-    private final Throwable errorTrace;
+    private final String errorTrace;
+
 
     public static AuditEntry instance(String executionId,
                                       String changeId,
                                       String author,
-                                      LocalDateTime timestamp,
+                                      LocalDateTime createdAt,
                                       AuditEntryStatus state,
-                                      String changeLogClass,
-                                      String changeSetMethod,
+                                      String className,
+                                      String methodName,
                                       long executionMillis,
                                       String executionHostname,
                                       Object metadata) {
         return new AuditEntry(executionId,
                 changeId,
                 author,
-                timestamp,
+                createdAt,
                 state,
-                changeLogClass,
-                changeSetMethod,
+                className,
+                methodName,
                 executionMillis,
                 executionHostname,
                 metadata,
                 null);
     }
 
-  public static AuditEntry withError(String executionId,
-                                     String changeId,
-                                     String author,
-                                     LocalDateTime timestamp,
-                                     AuditEntryStatus state,
-                                     String changeLogClass,
-                                     String changeSetMethod,
-                                     long executionMillis,
-                                     String executionHostname,
-                                     Object metadata,
-                                     Throwable errorTrace) {
-    return new AuditEntry(executionId,
-            changeId,
-            author,
-            timestamp,
-            state,
-            changeLogClass,
-            changeSetMethod,
-            executionMillis,
-            executionHostname,
-            metadata,
-            errorTrace);
-  }
+    public static AuditEntry withError(String executionId,
+                                       String changeId,
+                                       String author,
+                                       LocalDateTime createdAt,
+                                       AuditEntryStatus state,
+                                       String className,
+                                       String methodName,
+                                       long executionMillis,
+                                       String executionHostname,
+                                       Object metadata,
+                                       Throwable errorTrace) {
+        return new AuditEntry(executionId,
+                changeId,
+                author,
+                createdAt,
+                state,
+                className,
+                methodName,
+                executionMillis,
+                executionHostname,
+                metadata,
+                ThrowableUtil.serialize(errorTrace));
+    }
 
     protected AuditEntry(String executionId,
-                      String changeId,
-                      String author,
-                      LocalDateTime timestamp,
-                      AuditEntryStatus state,
-                      String changeLogClass,
-                      String changeSetMethod,
-                      long executionMillis,
-                      String executionHostname,
-                      Object metadata,
-                         Throwable errorTrace) {
+                         String changeId,
+                         String author,
+                         LocalDateTime createdAt,
+                         AuditEntryStatus state,
+                         String className,
+                         String methodName,
+                         long executionMillis,
+                         String executionHostname,
+                         Object metadata,
+                         String errorTrace) {
         this.executionId = executionId;
         this.changeId = changeId;
         this.author = author;
-        this.timestamp = timestamp;
+        this.createdAt = createdAt;
         this.state = state;
-        this.changeLogClass = changeLogClass;
-        this.changeSetMethod = changeSetMethod;
+        this.className = className;
+        this.methodName = methodName;
         this.metadata = metadata;
         this.executionMillis = executionMillis;
         this.executionHostname = executionHostname;
@@ -110,20 +113,20 @@ public class AuditEntry {
         return author;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public AuditEntryStatus getState() {
         return state;
     }
 
-    public String getChangeLogClass() {
-        return changeLogClass;
+    public String getClassName() {
+        return className;
     }
 
-    public String getChangeSetMethod() {
-        return changeSetMethod;
+    public String getMethodName() {
+        return methodName;
     }
 
     public Object getMetadata() {
@@ -138,35 +141,8 @@ public class AuditEntry {
         return executionHostname;
     }
 
-    public Throwable getErrorTrace() {
+    public String getErrorTrace() {
         return errorTrace;
     }
 
-
-    public enum Field {
-        KEY_EXECUTION_ID("executionId"),
-        KEY_CHANGE_ID("changeId"),
-        KEY_AUTHOR("author"),
-        KEY_TIMESTAMP("timestamp"),
-        KEY_STATE("state"),
-        KEY_TYPE("type"),
-        KEY_CHANGELOG_CLASS("changeLogClass"),
-        KEY_CHANGESET_METHOD("changeSetMethod"),
-        KEY_METADATA("metadata"),
-        KEY_EXECUTION_MILLIS("executionMillis"),
-        KEY_EXECUTION_HOSTNAME("executionHostname"),
-        KEY_ERROR_TRACE("errorTrace"),
-        KEY_SYSTEM_CHANGE("systemChange");
-
-        private final String value;
-
-        Field(String value) {
-            this.value = value;
-        }
-
-        public String value() {
-            return value;
-        }
-
-    }
 }

@@ -8,9 +8,9 @@ import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.audit.writer.RuntimeContext;
 import io.mongock.core.execution.executor.ExecutionContext;
 import io.mongock.core.task.descriptor.TaskDescriptor;
+import io.mongock.core.util.ThrowableUtil;
 
 public abstract class MongockAuditor extends AuditWriter<MongockAuditEntry> implements AuditReader<SingleAuditProcessStatus> {
-
 
     @Override
     protected final MongockAuditEntry map(AuditItem auditItem) {
@@ -23,23 +23,35 @@ public abstract class MongockAuditor extends AuditWriter<MongockAuditEntry> impl
                 executionContext.getAuthor(),
                 runtimeContext.getExecutedAt(),
                 getAuditStatus(auditItem),
+                getExecutionType(auditItem),
                 taskDescriptor.getClassImplementor(),
                 runtimeContext.getMethodExecutor(),
                 runtimeContext.getDuration(),
                 executionContext.getHostname(),
                 executionContext.getMetadata(),
-                runtimeContext.getError().orElse(null)
+                getSystemChange(auditItem),
+                ThrowableUtil.serialize(runtimeContext.getError().orElse(null))
         );
+    }
+
+    //TODO implement
+    private boolean getSystemChange(AuditItem auditItem) {
+        return false;
+    }
+
+    //TODO implement
+    private MongockAuditEntry.ExecutionType getExecutionType(AuditItem auditItem) {
+        return MongockAuditEntry.ExecutionType.EXECUTION;
     }
 
 
     private AuditEntryStatus getAuditStatus(AuditItem auditable) {
-//        switch (auditable.getOperation()) {
-//            case EXECUTION:
-//                return auditable.getRuntimeContext()
-//
-//        }
-        //TODO implement this
-        return AuditEntryStatus.EXECUTED;
+        switch (auditable.getOperation()) {
+            case EXECUTION:
+                return auditable.getRuntimeContext().isSuccess() ? AuditEntryStatus.EXECUTED : AuditEntryStatus.FAILED;
+            case ROLLBACK:
+            default:
+                return auditable.getRuntimeContext().isSuccess() ? AuditEntryStatus.ROLLED_BACK : AuditEntryStatus.ROLLBACK_FAILED;
+        }
     }
 }
