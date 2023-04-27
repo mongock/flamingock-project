@@ -33,7 +33,7 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
         public Builder addEntry(AuditEntry newEntry) {
             entryMap.compute(
                     newEntry.getChangeId(),
-                    (changeId, currentEntry) -> getMostRelevant(currentEntry, newEntry)
+                    (changeId, currentEntry) -> AuditEntry.getMostRelevant(currentEntry, newEntry)
             );
             return this;
         }
@@ -45,13 +45,6 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
             return new SingleAuditProcessStatus(statesMap);
         }
 
-        private static AuditEntry getMostRelevant(AuditEntry currentEntry, AuditEntry newEntry) {
-            if (currentEntry != null) {
-                return currentEntry.shouldBeReplacedBy(newEntry) ? newEntry : currentEntry;
-            } else {
-                return newEntry;
-            }
-        }
 
     }
 }

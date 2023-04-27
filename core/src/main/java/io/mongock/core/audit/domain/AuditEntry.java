@@ -160,7 +160,17 @@ public class AuditEntry {
         return errorTrace;
     }
 
-    public boolean shouldBeReplacedBy(AuditEntry newEntry) {
+    public static AuditEntry getMostRelevant(AuditEntry currentEntry, AuditEntry newEntry) {
+        if (currentEntry != null) {
+            return currentEntry.shouldBeReplacedBy(newEntry) ? newEntry : currentEntry;
+        } else {
+            return newEntry;
+        }
+    }
+
+    private boolean shouldBeReplacedBy(AuditEntry newEntry) {
         return RELEVANT_STATES.contains(state) && newEntry.getCreatedAt().isAfter(this.getCreatedAt());
     }
+
+
 }
