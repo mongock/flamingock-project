@@ -9,6 +9,8 @@ import com.mongodb.client.result.UpdateResult;
 import io.mongock.core.audit.domain.AuditResult;
 import io.mongock.core.audit.single.SingleAuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
+import io.mongock.core.mongodb.MongoDBMapper;
+import io.mongock.driver.mongodb.sync.v4.internal.mongodb.DocumentckImpl;
 import io.mongock.internal.driver.MongockAuditEntry;
 import io.mongock.internal.driver.MongockAuditor;
 import org.bson.Document;
@@ -17,19 +19,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_AUTHOR;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_CHANGE_ID;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_EXECUTION_ID;
+import static io.mongock.internal.persistence.EntryField.KEY_AUTHOR;
+import static io.mongock.internal.persistence.EntryField.KEY_CHANGE_ID;
+import static io.mongock.internal.persistence.EntryField.KEY_EXECUTION_ID;
 
 public class MongoSync4Auditor extends MongockAuditor {
     private static final Logger logger = LoggerFactory.getLogger(AbstractConfiguration.class);
 
-
     private final MongoCollection<Document> collection;
+    private final MongoDBMapper<DocumentckImpl> mapper = new MongoDBMapper<>(() -> new DocumentckImpl(new Document()));
 
     MongoSync4Auditor(MongoDatabase database, String collectionName) {
         this.collection = database.getCollection(collectionName);
@@ -43,7 +44,8 @@ public class MongoSync4Auditor extends MongockAuditor {
                 Filters.eq(KEY_AUTHOR, auditEntry.getAuthor())
         );
 
-        Document entryDocument = MongoDBMapper.toDocument(auditEntry);
+        Document entryDocument = mapper.toDocument(auditEntry).getDocument();
+
         UpdateResult result = getClientSession()
                 .map(clientSession -> collection.replaceOne(clientSession, filter, entryDocument, new ReplaceOptions().upsert(true)))
                 .orElseGet(() -> collection.replaceOne(filter, entryDocument, new ReplaceOptions().upsert(true)));
@@ -60,7 +62,8 @@ public class MongoSync4Auditor extends MongockAuditor {
         collection.find()
                 .into(new LinkedList<>())
                 .stream()
-                .map(MongoDBMapper::fromDocument)
+                .map(DocumentckImpl::new)
+                .map(mapper::fromDocument)
                 .collect(Collectors.toList())
                 .forEach(builder::addEntry);
         return builder.build();

@@ -1,46 +1,36 @@
-package io.mongock.driver.mongodb.sync.v4.internal;
+package io.mongock.core.mongodb;
 
 import io.mongock.core.audit.domain.AuditEntryStatus;
 import io.mongock.core.util.DateUtil;
 import io.mongock.internal.driver.MongockAuditEntry;
-import org.bson.Document;
 
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_AUTHOR;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_CHANGELOG_CLASS;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_CHANGESET_METHOD;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_CHANGE_ID;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_ERROR_TRACE;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_EXECUTION_HOSTNAME;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_EXECUTION_ID;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_EXECUTION_MILLIS;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_METADATA;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_STATE;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_SYSTEM_CHANGE;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_TIMESTAMP;
-import static io.mongock.driver.mongodb.sync.v4.internal.EntryField.KEY_TYPE;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-public final class MongoDBMapper {
+import static io.mongock.internal.persistence.EntryField.KEY_AUTHOR;
+import static io.mongock.internal.persistence.EntryField.KEY_CHANGE_ID;
+import static io.mongock.internal.persistence.EntryField.KEY_ERROR_TRACE;
+import static io.mongock.internal.persistence.EntryField.KEY_EXECUTION_HOSTNAME;
+import static io.mongock.internal.persistence.EntryField.KEY_EXECUTION_ID;
+import static io.mongock.internal.persistence.EntryField.KEY_EXECUTION_MILLIS;
+import static io.mongock.internal.persistence.EntryField.KEY_METADATA;
+import static io.mongock.internal.persistence.EntryField.KEY_STATE;
+import static io.mongock.internal.persistence.EntryField.KEY_SYSTEM_CHANGE;
+import static io.mongock.internal.persistence.EntryField.KEY_TIMESTAMP;
+import static io.mongock.internal.persistence.EntryField.KEY_TYPE;
+import static io.mongock.internal.persistence.EntryField.KEY_CHANGELOG_CLASS;
+import static io.mongock.internal.persistence.EntryField.KEY_CHANGESET_METHOD;
 
-    private MongoDBMapper() {
+public class MongoDBMapper<DOCUMENTCK extends Documentck> {
+
+    private final Supplier<DOCUMENTCK> documentckSupplier;
+
+    public MongoDBMapper(Supplier<DOCUMENTCK> documentCreator) {
+        this.documentckSupplier = documentCreator;
     }
 
-    /**
-     * ("executionId"),
-     * ("changeId"),
-     * ("author"),
-     * ("timestamp"),
-     * ("state"),
-     * ("type"),
-     * ("changeLogClass"),
-     * ("changeSetMethod"),
-     * ("metadata"),
-     * ("executionMillis"),
-     * ("executionHostname"),
-     * ("errorTrace"),
-     * ("systemChange");
-     */
-    public static Document toDocument(MongockAuditEntry auditEntry) {
-        Document document = new Document();
+    public DOCUMENTCK toDocument(MongockAuditEntry auditEntry) {
+        DOCUMENTCK document = documentckSupplier.get();
         document.append(KEY_EXECUTION_ID, auditEntry.getExecutionId());
         document.append(KEY_CHANGE_ID, auditEntry.getChangeId());
         document.append(KEY_AUTHOR, auditEntry.getAuthor());
@@ -57,7 +47,7 @@ public final class MongoDBMapper {
         return document;
     }
 
-    public static MongockAuditEntry fromDocument(Document entry) {
+    public MongockAuditEntry fromDocument(Documentck entry) {
         return new MongockAuditEntry(
                 entry.getString(KEY_EXECUTION_ID),
                 entry.getString(KEY_CHANGE_ID),
@@ -75,5 +65,4 @@ public final class MongoDBMapper {
                 entry.getString(KEY_ERROR_TRACE));
 
     }
-
 }

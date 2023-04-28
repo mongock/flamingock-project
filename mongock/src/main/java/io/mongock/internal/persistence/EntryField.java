@@ -1,4 +1,4 @@
-package io.mongock.driver.mongodb.sync.v4.internal;
+package io.mongock.internal.persistence;
 
 public final class  EntryField {
     public static final String KEY_EXECUTION_ID = "executionId";
