@@ -32,9 +32,7 @@ public class BaseRunnerBuilder<
     }
 
     public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory) {
-        //TODO think about where initializing this
-
-
+        //TODO Auditor and LockProvider(inside Factory) need to be constructed and initialised.
         final RunnerOrchestrator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> runnerOrchestrator = new RunnerOrchestrator<>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),

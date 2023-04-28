@@ -7,9 +7,6 @@ import io.mongock.core.task.executable.RollableTask;
 
 import java.util.Optional;
 
-/**
- * TODO find an appropriate name for this class
- */
 public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep implements SuccessableStep {
 
 
