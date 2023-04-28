@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class CollectionInitializer<DOCUMENT extends Documentck> {
-    private final static Logger logger = LoggerFactory.getLogger(CollectionInitializer.class);
+public class CollectionHelper<DOCUMENT extends Documentck> {
+    private final static Logger logger = LoggerFactory.getLogger(CollectionHelper.class);
 
 
     private final static int INDEX_ENSURE_MAX_TRIES = 3;
@@ -22,9 +22,9 @@ public class CollectionInitializer<DOCUMENT extends Documentck> {
 
     private Collectionck<DOCUMENT> collection;
 
-    public CollectionInitializer(Collectionck<DOCUMENT> collection,
-                                 Supplier<DOCUMENT> documentCreator,
-                                 String[] uniqueFields) {
+    public CollectionHelper(Collectionck<DOCUMENT> collection,
+                            Supplier<DOCUMENT> documentCreator,
+                            String[] uniqueFields) {
         this.collection = collection;
         this.documentCreator = documentCreator;
         this.uniqueFields = uniqueFields;
@@ -38,14 +38,17 @@ public class CollectionInitializer<DOCUMENT extends Documentck> {
         }
     }
 
+    public void justValidateCollection() {
+        if (!isIndexFine()) {
+            throw new RuntimeException("Index creation not allowed, but not created or wrongly created for collection " + getCollectionName());
+        }
+    }
+
     private void ensureIndex(int tryCounter) {
         if (tryCounter <= 0) {
             throw new RuntimeException("Max tries " + INDEX_ENSURE_MAX_TRIES + " index  creation");
         }
         if (!isIndexFine()) {
-            if (!indexCreation) {
-                throw new RuntimeException("Index creation not allowed, but not created or wrongly created for collection " + getCollectionName());
-            }
             cleanResidualUniqueKeys();
             if (!isRequiredIndexCreated()) {
                 createRequiredUniqueIndex();

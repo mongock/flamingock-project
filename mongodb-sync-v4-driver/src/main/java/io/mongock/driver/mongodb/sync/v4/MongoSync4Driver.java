@@ -15,7 +15,7 @@ public class MongoSync4Driver implements ConnectionDriver {
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine() {
+    public MongoSync4Engine getConnectionEngine() {
         return new MongoSync4Engine(database);
     }
 }

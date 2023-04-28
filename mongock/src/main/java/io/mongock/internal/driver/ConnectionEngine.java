@@ -1,10 +1,11 @@
 package io.mongock.internal.driver;
 
+import io.mongock.internal.MongockConfiguration;
 import io.mongock.internal.MongockLockProvider;
 
-public interface ConnectionEngine {
+public interface ConnectionEngine<CONFIGURATION extends MongockConfiguration> {
 
-  void initialize(MongockDriverConfiguration configuration);
+  void initialize(CONFIGURATION configuration);
 
   MongockAuditor getAuditor();
 

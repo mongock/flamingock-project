@@ -9,8 +9,11 @@ import com.mongodb.client.result.UpdateResult;
 import io.mongock.core.audit.domain.AuditResult;
 import io.mongock.core.audit.single.SingleAuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
+import io.mongock.core.mongodb.CollectionHelper;
 import io.mongock.core.mongodb.MongoDBMapper;
+import io.mongock.driver.mongodb.sync.v4.internal.mongodb.CollectionckImpl;
 import io.mongock.driver.mongodb.sync.v4.internal.mongodb.DocumentckImpl;
+import io.mongock.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.mongock.internal.driver.MongockAuditEntry;
 import io.mongock.internal.driver.MongockAuditor;
 import org.bson.Document;
@@ -27,13 +30,33 @@ import static io.mongock.internal.persistence.EntryField.KEY_CHANGE_ID;
 import static io.mongock.internal.persistence.EntryField.KEY_EXECUTION_ID;
 
 public class MongoSync4Auditor extends MongockAuditor {
+    
     private static final Logger logger = LoggerFactory.getLogger(AbstractConfiguration.class);
 
     private final MongoCollection<Document> collection;
     private final MongoDBMapper<DocumentckImpl> mapper = new MongoDBMapper<>(() -> new DocumentckImpl(new Document()));
 
-    MongoSync4Auditor(MongoDatabase database, String collectionName) {
-        this.collection = database.getCollection(collectionName);
+    MongoSync4Auditor(MongoDatabase database,
+                      String collectionName,
+                      ReadWriteConfiguration readWriteConfiguration) {
+        this.collection = database.getCollection(collectionName)
+                .withReadConcern(readWriteConfiguration.getReadConcern())
+                .withReadPreference(readWriteConfiguration.getReadPreference())
+                .withWriteConcern(readWriteConfiguration.getWriteConcern());
+    }
+
+    void initialize(boolean indexCreation) {
+        CollectionHelper<DocumentckImpl> initializer = new CollectionHelper<>(
+                new CollectionckImpl(collection),
+                () -> new DocumentckImpl(new Document()),
+                new String[]{KEY_EXECUTION_ID, KEY_AUTHOR, KEY_CHANGE_ID}
+        );
+        if(indexCreation) {
+            initializer.initialize();
+        } else {
+            initializer.justValidateCollection();
+        }
+
     }
 
     @Override
