@@ -34,6 +34,8 @@ public abstract class MongockAuditor extends AuditWriter<MongockAuditEntry> impl
         );
     }
 
+    protected abstract void initialize(boolean indexCreation);
+
     //TODO implement
     private boolean getSystemChange(AuditItem auditItem) {
         return false;

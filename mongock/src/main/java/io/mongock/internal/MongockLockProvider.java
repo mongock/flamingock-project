@@ -8,9 +8,11 @@ import io.mongock.core.lock.LockProvider;
 import io.mongock.core.process.LoadedProcess;
 import io.mongock.core.process.single.SingleExecutableProcess;
 
-public class MongockLockProvider implements LockProvider<SingleAuditProcessStatus, SingleExecutableProcess> {
+public abstract class MongockLockProvider implements LockProvider<SingleAuditProcessStatus, SingleExecutableProcess> {
     @Override
     public Lock acquireIfRequired(LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> loadedProcess) throws LockCheckException {
         throw new RuntimeException("NOT IMPLEMENTED");
     }
+
+    protected abstract void initialize(boolean indexCreation);
 }

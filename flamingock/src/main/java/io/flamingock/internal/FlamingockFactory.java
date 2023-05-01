@@ -15,6 +15,7 @@ import io.mongock.core.lock.LockProvider;
 import io.mongock.core.process.DefinitionProcess;
 
 public class FlamingockFactory implements Factory<FlamingockAuditProcessStatus, FlamingockExecutableProcess, FlamingockConfiguration> {
+
     @Override
     public LockProvider<FlamingockAuditProcessStatus, FlamingockExecutableProcess> getLockProvider() {
         return new FlamingockLockProvider();

@@ -11,17 +11,16 @@ import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.single.SingleDefinitionProcess;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.util.RuntimeHelper;
-import io.mongock.internal.driver.ConnectionDriver;
 import io.mongock.internal.driver.ConnectionEngine;
 import io.mongock.internal.driver.MongockAuditor;
 
 public class MongockFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, MongockConfiguration> {
 
     public static final RuntimeHelper RUNTIME_HELPER = new RuntimeHelper(new DependencyManagerImpl());
-    private final ConnectionEngine<?> connectionEngine;
+    private final ConnectionEngine connectionEngine;
 
-    MongockFactory(ConnectionDriver connectionEngine) {
-        this.connectionEngine = connectionEngine.getConnectionEngine();
+    MongockFactory(ConnectionEngine connectionEngine) {
+        this.connectionEngine = connectionEngine;
     }
 
     @Override

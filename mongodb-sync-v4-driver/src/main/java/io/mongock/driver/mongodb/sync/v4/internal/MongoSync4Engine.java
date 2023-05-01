@@ -7,35 +7,29 @@ import io.mongock.internal.MongockLockProvider;
 import io.mongock.internal.driver.ConnectionEngine;
 import io.mongock.internal.driver.MongockAuditor;
 
-public class MongoSync4Engine implements ConnectionEngine<MongoDBSync4Configuration> {
+public class MongoSync4Engine implements ConnectionEngine {
 
     private final MongoDatabase database;
 
     private MongoSync4Auditor auditor;
     private MongoSync4LockProvider lockProvider;
-    private MongoDBSync4Configuration driverConfiguration;
-    private MongockConfiguration mongockConfiguration;
+    private final MongoDBSync4Configuration driverConfiguration;
+    private final MongockConfiguration mongockConfiguration;
 
-    public MongoSync4Engine(MongoDatabase database) {
+    public MongoSync4Engine(MongoDatabase database,
+                            MongockConfiguration mongockConfiguration,
+                            MongoDBSync4Configuration driverConfiguration) {
         this.database = database;
+        this.driverConfiguration = driverConfiguration;
+        this.mongockConfiguration = mongockConfiguration;
     }
 
+    @Override
     public void initialize() {
         auditor = new MongoSync4Auditor(database, mongockConfiguration.getLockRepositoryName(), driverConfiguration.getReadWriteConfiguration());
         auditor.initialize(mongockConfiguration.isIndexCreation());
         lockProvider = new MongoSync4LockProvider(database, mongockConfiguration.getLockRepositoryName());
-    }
-
-    @Override
-    public ConnectionEngine<MongoDBSync4Configuration> setDriverConfiguration(MongoDBSync4Configuration driverConfiguration) {
-        this.driverConfiguration = driverConfiguration;
-        return this;
-    }
-
-    @Override
-    public ConnectionEngine<MongoDBSync4Configuration> setMongockConfiguration(MongockConfiguration mongockConfiguration) {
-        this.mongockConfiguration = mongockConfiguration;
-        return this;
+        lockProvider.initialize(mongockConfiguration.isIndexCreation());
     }
 
     @Override

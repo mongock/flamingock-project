@@ -25,4 +25,9 @@ public class MongoSync4LockProvider extends MongockLockProvider {
         //TODO implement
         return new MongoSync4Lock();
     }
+
+    @Override
+    protected void initialize(boolean indexCreation) {
+
+    }
 }

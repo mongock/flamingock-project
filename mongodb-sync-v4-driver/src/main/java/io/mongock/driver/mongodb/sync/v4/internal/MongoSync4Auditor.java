@@ -45,7 +45,8 @@ public class MongoSync4Auditor extends MongockAuditor {
                 .withWriteConcern(readWriteConfiguration.getWriteConcern());
     }
 
-    void initialize(boolean indexCreation) {
+    @Override
+    protected void initialize(boolean indexCreation) {
         CollectionHelper<DocumentckImpl> initializer = new CollectionHelper<>(
                 new CollectionckImpl(collection),
                 () -> new DocumentckImpl(new Document()),
