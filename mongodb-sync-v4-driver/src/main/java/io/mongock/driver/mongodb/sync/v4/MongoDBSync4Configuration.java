@@ -1,9 +1,9 @@
 package io.mongock.driver.mongodb.sync.v4;
 
 import io.mongock.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
-import io.mongock.internal.MongockConfiguration;
+import io.mongock.internal.driver.DriverConfiguration;
 
-public class MongoDBSync4Configuration extends MongockConfiguration {
+public class MongoDBSync4Configuration implements DriverConfiguration {
 
     private ReadWriteConfiguration readWriteConfiguration;
 
