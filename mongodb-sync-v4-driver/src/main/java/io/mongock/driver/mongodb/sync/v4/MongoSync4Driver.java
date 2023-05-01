@@ -24,6 +24,9 @@ public class MongoSync4Driver implements ConnectionDriver<MongoDBSync4Configurat
 
     @Override
     public ConnectionEngine getConnectionEngine(MongockConfiguration mongockConfiguration) {
-        return new MongoSync4Engine(database, mongockConfiguration, driverConfiguration);
+        return new MongoSync4Engine(
+                database,
+                mongockConfiguration,
+                driverConfiguration != null ? driverConfiguration : MongoDBSync4Configuration.getDefault());
     }
 }

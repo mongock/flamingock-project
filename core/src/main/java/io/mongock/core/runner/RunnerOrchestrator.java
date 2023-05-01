@@ -78,10 +78,10 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
     }
 
     private void startProcess(LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> process) {
-        AUDIT_PROCESS_STATE processState = stateFetcher.getAuditProcessStatus();
-        logger.debug("Pulled remote state:\n{}", processState);
+        AUDIT_PROCESS_STATE processCurrentState = stateFetcher.getAuditProcessStatus();
+        logger.debug("Pulled remote state:\n{}", processCurrentState);
 
-        EXECUTABLE_PROCESS executableProcess = process.applyState(processState);
+        EXECUTABLE_PROCESS executableProcess = process.applyState(processCurrentState);
         logger.debug("Applied state to process:\n{}", executableProcess);
 
         ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext);

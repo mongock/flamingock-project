@@ -47,6 +47,33 @@ public class MongockRunnerBuilder implements RunnerBuilder<MongockRunnerBuilder,
         return this;
     }
 
+    public String getMigrationRepositoryName() {
+        return baseBuilder.getConfiguration().getMigrationRepositoryName();
+    }
+
+    public MongockRunnerBuilder setMigrationRepositoryName(String value) {
+        baseBuilder.getConfiguration().setMigrationRepositoryName(value);
+        return this;
+    }
+
+    public String getLockRepositoryName() {
+        return baseBuilder.getConfiguration().getLockRepositoryName();
+    }
+
+    public MongockRunnerBuilder setLockRepositoryName(String value) {
+        baseBuilder.getConfiguration().setLockRepositoryName(value);
+        return this;
+    }
+
+    public boolean isIndexCreation() {
+        return baseBuilder.getConfiguration().isIndexCreation();
+    }
+
+    public MongockRunnerBuilder setIndexCreation(boolean value) {
+        baseBuilder.getConfiguration().setIndexCreation(value);
+        return this;
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////
     //  BASE
     ///////////////////////////////////////////////////////////////////////////////////
