@@ -1,5 +1,5 @@
 package io.mongock.internal.driver;
 
-//Marker interface for Driver
+//Marker interface for Driver configuration
 public interface DriverConfiguration {
 }
