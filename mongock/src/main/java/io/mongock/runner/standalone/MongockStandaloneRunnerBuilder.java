@@ -77,6 +77,16 @@ public class MongockStandaloneRunnerBuilder
     }
 
     @Override
+    public MongockStandaloneRunnerBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
+        if (migrationScanPackageList != null) {
+            List<String> migrationScanPackage = getMigrationScanPackage();
+            migrationScanPackage.addAll(migrationScanPackageList);
+            setMigrationScanPackage(migrationScanPackage);
+        }
+        return this;
+    }
+
+    @Override
     public String getMigrationRepositoryName() {
         return delegate.getConfiguration().getMigrationRepositoryName();
     }

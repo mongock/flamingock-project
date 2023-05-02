@@ -1,6 +1,7 @@
 package io.mongock.core.configuration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,7 @@ public abstract class AbstractConfiguration {
     /**
      * Map for custom data you want to attach to your migration
      */
-    private Map<String, Object> metadata;
+    private Map<String, Object> metadata = new HashMap<>();
 
     /**
      * Legacy migration object to instruct Mongock how to import legacy migrations from other tools
@@ -81,7 +82,7 @@ public abstract class AbstractConfiguration {
      * To enable/disable transactions. It works together with the driver, so enabling transactions with a non-transactional
      * driver or a transactional driver with transaction mode off, will throw a MongockException
      */
-    private Boolean transactionEnabled;
+    private boolean transactionEnabled = true;
 
     /**
      * From version 5, author is not a mandatory field, but still needed for backward compatibility. This is why Mongock

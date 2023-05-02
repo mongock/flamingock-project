@@ -5,11 +5,14 @@ import io.mongock.core.configuration.AbstractConfiguration;
 import java.util.LinkedList;
 import java.util.List;
 
+import static io.mongock.core.util.Constants.LEGACY_DEFAULT_LOCK_REPOSITORY_NAME;
+import static io.mongock.core.util.Constants.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
+
 public class MongockConfiguration extends AbstractConfiguration {
 private List<String> migrationScanPackage = new LinkedList<>();
-    private String migrationRepositoryName;
-    private String lockRepositoryName;
-    private boolean indexCreation;
+    private String migrationRepositoryName = LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
+    private String lockRepositoryName = LEGACY_DEFAULT_LOCK_REPOSITORY_NAME;
+    private boolean indexCreation = true;
 
     public List<String> getMigrationScanPackage() {
         return migrationScanPackage;

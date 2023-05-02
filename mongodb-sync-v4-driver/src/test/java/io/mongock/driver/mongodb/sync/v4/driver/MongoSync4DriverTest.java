@@ -19,15 +19,17 @@ class MongoSync4DriverTest {
 
     @Test
     void test1() {
-//        MongockStandalone.builder()
-//                .setDriver(MongoSync4Driver.withDefaultLock(getMainMongoClient(), MONGODB_MAIN_DB_NAME))
-//                .addMigrationScanPackage("io.mongock.examples.mongodb.standalone.mondogb.sync.migration")
+        MongockStandalone.builder()
+                .setDriver(MongoSync4Driver.withDefaultLock(getMainMongoClient(), MONGODB_MAIN_DB_NAME))
+                .addMigrationScanPackage("io.mongock.examples.mongodb.standalone.mondogb.sync.migration")
 //                .setMigrationStartedListener(MongockEventListener::onStart)
 //                .setMigrationSuccessListener(MongockEventListener::onSuccess)
 //                .setMigrationFailureListener(MongockEventListener::onFail)
 //                .addDependency("secondaryDb", getSecondaryDb())
-//                .setTrackIgnored(true)
-//                .setTransactionEnabled(true);
+                .setTrackIgnored(true)
+                .setTransactionEnabled(true)
+                .build()
+                .run();
     }
 
 

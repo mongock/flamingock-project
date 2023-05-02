@@ -53,9 +53,9 @@ public class BaseStandaloneRunnerBuilder<
     @Override
     public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory) {
         EventPublisher eventPublisher = new EventPublisher(
-                () -> processStartedListener.accept(new MigrationStartedEvent()),
-                result -> processSuccessListener.accept(new MigrationSuccessEvent(result)),
-                result -> processFailedListener.accept(new MigrationFailureEvent(result)));
+                processStartedListener != null ? () -> processStartedListener.accept(new MigrationStartedEvent()) : null,
+                processSuccessListener != null ? result -> processSuccessListener.accept(new MigrationSuccessEvent(result)) : null,
+                processFailedListener != null ? result -> processFailedListener.accept(new MigrationFailureEvent(result)) : null);
         final RunnerOrchestrator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> runnerOrchestrator = new RunnerOrchestrator<>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),
