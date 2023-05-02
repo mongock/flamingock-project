@@ -8,35 +8,26 @@ import java.util.List;
 import java.util.Map;
 
 import static io.mongock.core.util.Constants.DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;
+import static io.mongock.core.util.Constants.DEFAULT_QUIT_TRYING_AFTER_MILLIS;
 import static io.mongock.core.util.Constants.DEFAULT_TRY_FREQUENCY_MILLIS;
 
 public abstract class AbstractConfiguration {
 
-    public static final String DEFAULT_MIGRATION_AUTHOR = "default_author";
-    private final static String LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME = "mongockChangeLog";
-    private final static String LEGACY_DEFAULT_LOCK_REPOSITORY_NAME = "mongockLock";
-    private static final String DEPRECATED_PROPERTY_TEMPLATE =
-            "\n********************************************************************************" +
-                    "\nPROPERTY [{}] DEPRECATED. IT WILL BE REMOVED IN NEXT VERSIONS" +
-                    "\nPlease use the following properties instead: [{}]" +
-                    "\n********************************************************************************";
-
     /**
      * The period the lock will be reserved once acquired.
      * If it finishes before, it will release it earlier.
-     * If the process takes longer thant this period, it will automatically extended.
+     * If the process takes longer thant this period, it will be automatically extended.
      * Default 1 minute.
      * Minimum 3 seconds.
      */
     private long lockAcquiredForMillis = DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;
 
     /**
-     * The time after what Mongock will quit trying to acquire the lock, in case it's acquired
-     * by another process.
+     * The time after what Mongock will quit trying to acquire the lock in case it's acquired by another process.
      * Default 3 minutes.
      * Minimum 0, which means won't wait whatsoever.
      */
-    private Long lockQuitTryingAfterMillis;
+    private long lockQuitTryingAfterMillis = DEFAULT_QUIT_TRYING_AFTER_MILLIS;
 
     /**
      * In case the lock is held by another process, it indicates the frequency to try to acquire it.
