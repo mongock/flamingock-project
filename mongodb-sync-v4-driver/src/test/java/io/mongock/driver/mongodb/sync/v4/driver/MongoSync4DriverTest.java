@@ -6,6 +6,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import io.mongock.runner.standalone.MongockStandalone;
 import org.junit.jupiter.api.Test;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -18,9 +19,12 @@ class MongoSync4DriverTest {
 
     @Test
     void test1() {
-//        MongockRunnerBuilder.builder()
+//        MongockStandalone.builder()
 //                .setDriver(MongoSync4Driver.withDefaultLock(getMainMongoClient(), MONGODB_MAIN_DB_NAME))
 //                .addMigrationScanPackage("io.mongock.examples.mongodb.standalone.mondogb.sync.migration")
+//                .setMigrationStartedListener(MongockEventListener::onStart)
+//                .setMigrationSuccessListener(MongockEventListener::onSuccess)
+//                .setMigrationFailureListener(MongockEventListener::onFail)
 //                .addDependency("secondaryDb", getSecondaryDb())
 //                .setTrackIgnored(true)
 //                .setTransactionEnabled(true);

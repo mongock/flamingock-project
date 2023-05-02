@@ -35,7 +35,7 @@ public class MongockFactory implements Factory<SingleAuditProcessStatus, SingleE
 
     @Override
     public DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> getDefinitionProcess(MongockConfiguration configuration) {
-        return new SingleDefinitionProcess(configuration.getScanPackage());
+        return new SingleDefinitionProcess(configuration.getMigrationScanPackage());
     }
 
     @Override

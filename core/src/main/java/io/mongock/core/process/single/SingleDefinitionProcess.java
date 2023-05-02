@@ -11,17 +11,17 @@ import java.util.stream.Collectors;
 
 public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> {
 
-    private final String scanPackage;
+    private final List<String> scanPackages;
 
-    public SingleDefinitionProcess(String scanPackage) {
-        this.scanPackage = scanPackage;
+    public SingleDefinitionProcess(List<String> scanPackages) {
+        this.scanPackages = scanPackages;
     }
 
 
     @Override
     public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load() {
         List<ReflectionTaskDescriptor> descriptors = ReflectionUtil
-                .loadClassesFromPackage(scanPackage)
+                .loadClassesFromPackage(scanPackages.get(0))//TODO change this
                 .stream()
                 .map(source -> ReflectionTaskDescriptor.builder().setSource(source))
                 .map(ReflectionTaskDescriptor.Builder::build)

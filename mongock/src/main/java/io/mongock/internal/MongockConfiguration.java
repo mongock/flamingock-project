@@ -2,19 +2,21 @@ package io.mongock.internal;
 
 import io.mongock.core.configuration.AbstractConfiguration;
 
-public class MongockConfiguration extends AbstractConfiguration {
+import java.util.LinkedList;
+import java.util.List;
 
-    private String scanPackage;
+public class MongockConfiguration extends AbstractConfiguration {
+private List<String> migrationScanPackage = new LinkedList<>();
     private String migrationRepositoryName;
     private String lockRepositoryName;
     private boolean indexCreation;
 
-    public String getScanPackage() {
-        return scanPackage;
+    public List<String> getMigrationScanPackage() {
+        return migrationScanPackage;
     }
 
-    public void setScanPackage(String scanPackage) {
-        this.scanPackage = scanPackage;
+    public void setMigrationScanPackage(List<String> migrationScanPackage) {
+        this.migrationScanPackage = migrationScanPackage;
     }
 
     public String getMigrationRepositoryName() {

@@ -24,7 +24,6 @@ public interface RunnerConfigurator<HOLDER, CONFIG extends AbstractConfiguration
 
     HOLDER setEnabled(boolean enabled);
 
-    HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
 
     HOLDER setStartSystemVersion(String startSystemVersion);
 
@@ -59,8 +58,6 @@ public interface RunnerConfigurator<HOLDER, CONFIG extends AbstractConfiguration
     boolean isTrackIgnored();
 
     boolean isEnabled();
-
-    List<String> getMigrationScanPackage();
 
     String getStartSystemVersion();
 

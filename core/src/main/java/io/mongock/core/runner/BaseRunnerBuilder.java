@@ -1,13 +1,10 @@
 package io.mongock.core.runner;
 
-import io.mongock.core.Factory;
 import io.mongock.core.audit.domain.AuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
 import io.mongock.core.configuration.LegacyMigration;
 import io.mongock.core.configuration.TransactionStrategy;
-import io.mongock.core.event.EventPublisher;
 import io.mongock.core.execution.executor.ExecutionContext;
-import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.util.StringUtil;
 
@@ -96,12 +93,6 @@ implements InternalRunnerBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS
         return holderInstanceSupplier.get();
     }
 
-    @Override
-    public HOLDER setMigrationScanPackage(List<String> migrationScanPackage) {
-        configuration.setMigrationScanPackage(migrationScanPackage);
-        return holderInstanceSupplier.get();
-    }
-
     public HOLDER setStartSystemVersion(String startSystemVersion) {
         configuration.setStartSystemVersion(startSystemVersion);
         return holderInstanceSupplier.get();
@@ -187,11 +178,6 @@ implements InternalRunnerBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS
     @Override
     public boolean isEnabled() {
         return configuration.isEnabled();
-    }
-
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return configuration.getMigrationScanPackage();
     }
 
     @Override

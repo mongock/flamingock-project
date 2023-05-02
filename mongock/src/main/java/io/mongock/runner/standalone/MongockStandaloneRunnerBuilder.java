@@ -60,18 +60,19 @@ public class MongockStandaloneRunnerBuilder
     //  MONGOCK CONFIGURATOR
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public void setConnectionDriver(ConnectionDriver<?> connectionDriver) {
+    public MongockStandaloneRunnerBuilder setDriver(ConnectionDriver<?> connectionDriver) {
         this.connectionDriver = connectionDriver;
+        return this;
     }
 
     @Override
-    public String getScanPackage() {
-        return delegate.getConfiguration().getScanPackage();
+    public List<String> getMigrationScanPackage() {
+        return delegate.getConfiguration().getMigrationScanPackage();
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setScanPackage(String scanPackage) {
-        delegate.getConfiguration().setScanPackage(scanPackage);
+    public MongockStandaloneRunnerBuilder setMigrationScanPackage(List<String> scanPackage) {
+        delegate.getConfiguration().setMigrationScanPackage(scanPackage);
         return this;
     }
 
@@ -147,10 +148,6 @@ public class MongockStandaloneRunnerBuilder
         return delegate.setEnabled(enabled);
     }
 
-    @Override
-    public MongockStandaloneRunnerBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return delegate.setMigrationScanPackage(migrationScanPackage);
-    }
 
     @Override
     public MongockStandaloneRunnerBuilder setStartSystemVersion(String startSystemVersion) {
@@ -225,11 +222,6 @@ public class MongockStandaloneRunnerBuilder
     @Override
     public boolean isEnabled() {
         return delegate.isEnabled();
-    }
-
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return delegate.getMigrationScanPackage();
     }
 
     @Override

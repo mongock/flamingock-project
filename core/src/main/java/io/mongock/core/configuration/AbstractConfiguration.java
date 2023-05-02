@@ -1,9 +1,7 @@
 package io.mongock.core.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,10 +51,6 @@ public abstract class AbstractConfiguration {
      */
     private boolean enabled = true;
 
-    /**
-     * Package paths where the changeLogs are located. mandatory
-     */
-    private List<String> migrationScanPackage = new ArrayList<>();
 
     /**
      * System version to start with. Default '0'
@@ -92,7 +86,7 @@ public abstract class AbstractConfiguration {
     /**
      * From version 5, author is not a mandatory field, but still needed for backward compatibility. This is why Mongock
      * has provided this field, so you can set the author once and forget about it.
-     *
+     * <p>
      * Default value: default_author
      */
     private String defaultAuthor = DEFAULT_MIGRATION_AUTHOR;
@@ -100,10 +94,10 @@ public abstract class AbstractConfiguration {
     /**
      * With the introduction of ExecutableChangeUnit in version 5, Mongock provides two strategies to approach the transactions(automatic and manually):
      * - CHANGE_UNIT: Each change unit is wrapped in an independent transaction. This is the default and recommended way for two main reasons:
-     *                1. Change Unit provides a method `beforeExecution` which is executed before the transaction when strategy is CHANGE_UNIT.
-     *                If the strategy is not CHANGE_UNIT, this method is likely to be executed inside the transaction.
-     *                2. It maximizes the `eventual completeness` options, as allows Mongock to divide the work in multiple chunks in case all of them together are
-     *                too big.
+     * 1. Change Unit provides a method `beforeExecution` which is executed before the transaction when strategy is CHANGE_UNIT.
+     * If the strategy is not CHANGE_UNIT, this method is likely to be executed inside the transaction.
+     * 2. It maximizes the `eventual completeness` options, as allows Mongock to divide the work in multiple chunks in case all of them together are
+     * too big.
      * - EXECUTION: The entire migration's execution is wrapped in a transaction.
      */
     private TransactionStrategy transactionStrategy = TransactionStrategy.CHANGE_UNIT;
@@ -133,9 +127,6 @@ public abstract class AbstractConfiguration {
         this.enabled = enabled;
     }
 
-    public void setMigrationScanPackage(List<String> migrationScanPackage) {
-        this.migrationScanPackage = migrationScanPackage;
-    }
 
     public void setStartSystemVersion(String startSystemVersion) {
         this.startSystemVersion = startSystemVersion;
@@ -192,10 +183,6 @@ public abstract class AbstractConfiguration {
 
     public boolean isEnabled() {
         return enabled;
-    }
-
-    public List<String> getMigrationScanPackage() {
-        return migrationScanPackage;
     }
 
     public String getStartSystemVersion() {

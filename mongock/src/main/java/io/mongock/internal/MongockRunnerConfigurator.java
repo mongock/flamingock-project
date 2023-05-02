@@ -3,13 +3,16 @@ package io.mongock.internal;
 import io.mongock.internal.driver.ConnectionDriver;
 import io.mongock.runner.standalone.MongockStandaloneRunnerBuilder;
 
+import java.util.List;
+
 public interface MongockRunnerConfigurator<HOLDER> {
 
-    void setConnectionDriver(ConnectionDriver<?> connectionDriver);
+    HOLDER setDriver(ConnectionDriver<?> connectionDriver);
 
-    String getScanPackage();
+    List<String> getMigrationScanPackage();
 
-    HOLDER setScanPackage(String scanPackage);
+    HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
+
 
     String getMigrationRepositoryName();
 
