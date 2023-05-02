@@ -10,8 +10,7 @@ import io.mongock.core.runner.RunnerConfigurator;
 
 import java.util.function.Consumer;
 
-public interface StandaloneRunnerConfigurator<HOLDER, CONFIG extends AbstractConfiguration>
-extends RunnerConfigurator<HOLDER, CONFIG> {
+public interface StandaloneRunnerConfigurator<HOLDER> {
 
   //TODO javadoc
   HOLDER setMigrationStartedListener(Consumer<MigrationStartedEvent> listener);

@@ -22,7 +22,7 @@ public class BaseStandaloneRunnerBuilder<
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CONFIG extends AbstractConfiguration>
         extends BaseRunnerBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>
-        implements StandaloneRunnerConfigurator<HOLDER, CONFIG> {
+        implements StandaloneRunnerConfigurator<HOLDER> {
 
     private Consumer<MigrationStartedEvent> processStartedListener;
     private Consumer<MigrationSuccessEvent> processSuccessListener;

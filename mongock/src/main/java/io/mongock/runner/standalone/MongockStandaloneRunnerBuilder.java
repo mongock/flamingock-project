@@ -9,6 +9,7 @@ import io.mongock.core.event.MigrationSuccessEvent;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.runner.Runner;
 import io.mongock.core.runner.RunnerBuilder;
+import io.mongock.core.runner.RunnerConfigurator;
 import io.mongock.core.runner.standalone.BaseStandaloneRunnerBuilder;
 import io.mongock.core.runner.standalone.StandaloneRunnerConfigurator;
 import io.mongock.internal.MongockConfiguration;
@@ -25,7 +26,8 @@ public class MongockStandaloneRunnerBuilder
         implements
         RunnerBuilder,
         MongockRunnerConfigurator<MongockStandaloneRunnerBuilder>,
-        StandaloneRunnerConfigurator<MongockStandaloneRunnerBuilder, MongockConfiguration> {
+        StandaloneRunnerConfigurator<MongockStandaloneRunnerBuilder>,
+        RunnerConfigurator<MongockStandaloneRunnerBuilder, MongockConfiguration> {
 
     private final BaseStandaloneRunnerBuilder<
             MongockStandaloneRunnerBuilder,
