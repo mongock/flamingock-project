@@ -3,17 +3,17 @@ package io.mongock.internal;
 import io.mongock.internal.driver.ConnectionDriver;
 import io.mongock.runner.standalone.MongockStandaloneRunnerBuilder;
 
-public interface MongockRunnerConfigurator {
+public interface MongockRunnerConfigurator<HOLDER> {
 
     void setConnectionDriver(ConnectionDriver<?> connectionDriver);
 
     String getScanPackage();
 
-    MongockStandaloneRunnerBuilder setScanPackage(String scanPackage);
+    HOLDER setScanPackage(String scanPackage);
 
     String getMigrationRepositoryName();
 
-    MongockStandaloneRunnerBuilder setMigrationRepositoryName(String value);
+    HOLDER setMigrationRepositoryName(String value);
 
     String getLockRepositoryName();
 
@@ -21,5 +21,5 @@ public interface MongockRunnerConfigurator {
 
     boolean isIndexCreation();
 
-    MongockStandaloneRunnerBuilder setIndexCreation(boolean value);
+    HOLDER setIndexCreation(boolean value);
 }

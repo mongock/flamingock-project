@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 public class MongockStandaloneRunnerBuilder
         implements
         RunnerBuilder,
-        MongockRunnerConfigurator,
+        MongockRunnerConfigurator<MongockStandaloneRunnerBuilder>,
         StandaloneRunnerConfigurator<MongockStandaloneRunnerBuilder, MongockConfiguration> {
 
     private final BaseStandaloneRunnerBuilder<
@@ -35,11 +35,11 @@ public class MongockStandaloneRunnerBuilder
 
     private ConnectionDriver<?> connectionDriver;
 
-    protected MongockStandaloneRunnerBuilder() {
+    MongockStandaloneRunnerBuilder() {
         this(new MongockConfiguration());
     }
 
-    protected MongockStandaloneRunnerBuilder(MongockConfiguration configuration) {
+    MongockStandaloneRunnerBuilder(MongockConfiguration configuration) {
         this.delegate = new BaseStandaloneRunnerBuilder<>(configuration, () -> this);
     }
 
