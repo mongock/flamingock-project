@@ -1,5 +1,8 @@
 package io.mongock.core.util;
 
+import io.mongock.api.annotations.ChangeUnit;
+import org.reflections.Reflections;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -16,7 +19,7 @@ public final class ReflectionUtil {
     }
 
     public static Collection<Class<?>> loadClassesFromPackage(String packagePath) {
-        return Collections.emptyList();
+        return new Reflections(packagePath).getTypesAnnotatedWith(ChangeUnit.class);
     }
 
 

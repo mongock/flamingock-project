@@ -72,7 +72,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return String.format("\tExecutedSummaryLine\t\t\t\t[%s]", getStateFromSuccess());
+            return String.format("\tExecuted\t\t\t[%s]", getStateFromSuccess());
         }
 
         @Override
@@ -99,7 +99,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return String.format("\tSaved execution state\t[%s]", getStateFromSuccess());
+            return String.format("\tAudited execution\t[%s]", getStateFromSuccess());
         }
 
         @Override
@@ -154,7 +154,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return String.format("\tSaved rollback state\t[%s]", getStateFromSuccess());
+            return String.format("\tAudited rollback\t[%s]", getStateFromSuccess());
         }
 
         @Override

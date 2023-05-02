@@ -6,6 +6,7 @@ import io.mongock.core.process.LoadedProcess;
 import io.mongock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.mongock.core.util.ReflectionUtil;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,9 +21,9 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
 
     @Override
     public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load() {
-        List<ReflectionTaskDescriptor> descriptors = ReflectionUtil
-                .loadClassesFromPackage(scanPackages.get(0))//TODO change this
-                .stream()
+        List<ReflectionTaskDescriptor> descriptors = scanPackages.stream()
+                .map(ReflectionUtil::loadClassesFromPackage)
+                .flatMap(Collection::stream)
                 .map(source -> ReflectionTaskDescriptor.builder().setSource(source))
                 .map(ReflectionTaskDescriptor.Builder::build)
                 .collect(Collectors.toList());

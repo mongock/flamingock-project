@@ -26,7 +26,7 @@ public class MongoSync4Engine implements ConnectionEngine {
 
     @Override
     public void initialize() {
-        auditor = new MongoSync4Auditor(database, mongockConfiguration.getLockRepositoryName(), driverConfiguration.getReadWriteConfiguration());
+        auditor = new MongoSync4Auditor(database, mongockConfiguration.getMigrationRepositoryName(), driverConfiguration.getReadWriteConfiguration());
         auditor.initialize(mongockConfiguration.isIndexCreation());
         lockProvider = new MongoSync4LockProvider(database, mongockConfiguration.getLockRepositoryName());
         lockProvider.initialize(mongockConfiguration.isIndexCreation());

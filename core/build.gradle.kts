@@ -16,6 +16,9 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.6")
     implementation("javax.inject:javax.inject:1")
 
+    implementation("org.reflections:reflections:0.10.1")
+
+
 //    TEST
     testImplementation("org.slf4j:slf4j-simple:2.0.6")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")

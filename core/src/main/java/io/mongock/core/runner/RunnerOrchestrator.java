@@ -85,7 +85,7 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
         logger.debug("Applied state to process:\n{}", executableProcess);
 
         ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext);
-        logger.debug("Finished process successfully\n{}", executionOutput.getSummary());
+        logger.info("Finished process successfully\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));
     }
 

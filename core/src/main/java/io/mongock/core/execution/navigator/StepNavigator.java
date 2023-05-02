@@ -137,7 +137,7 @@ public class StepNavigator {
 
         AuditResult auditResult = auditWriter.writeStep(
                 new AuditItem(
-                        AuditItem.Operation.ROLLBACK,
+                        AuditItem.Operation.EXECUTION,
                         executionStep.getTaskDescriptor(),
                         executionContext,
                         runtimeContext)

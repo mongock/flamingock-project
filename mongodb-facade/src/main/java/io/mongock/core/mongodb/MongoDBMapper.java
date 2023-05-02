@@ -36,7 +36,7 @@ public class MongoDBMapper<DOCUMENTCK extends Documentck> {
         document.append(KEY_AUTHOR, auditEntry.getAuthor());
         document.append(KEY_TIMESTAMP, DateUtil.toDate(auditEntry.getTimestamp()));
         document.append(KEY_STATE, auditEntry.getState().name());
-        document.append(KEY_TYPE, auditEntry.getType());
+        document.append(KEY_TYPE, auditEntry.getType().name());
         document.append(KEY_CHANGELOG_CLASS, auditEntry.getChangeLogClass());
         document.append(KEY_CHANGESET_METHOD, auditEntry.getChangeSetMethod());
         document.append(KEY_METADATA, auditEntry.getMetadata());

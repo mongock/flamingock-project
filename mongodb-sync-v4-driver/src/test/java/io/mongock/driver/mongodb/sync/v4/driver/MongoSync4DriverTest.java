@@ -21,7 +21,7 @@ class MongoSync4DriverTest {
     void test1() {
         MongockStandalone.builder()
                 .setDriver(MongoSync4Driver.withDefaultLock(getMainMongoClient(), MONGODB_MAIN_DB_NAME))
-                .addMigrationScanPackage("io.mongock.examples.mongodb.standalone.mondogb.sync.migration")
+                .addMigrationScanPackage("io.mongock.driver.mongodb.sync.v4.driver.changes")
 //                .setMigrationStartedListener(MongockEventListener::onStart)
 //                .setMigrationSuccessListener(MongockEventListener::onSuccess)
 //                .setMigrationFailureListener(MongockEventListener::onFail)
