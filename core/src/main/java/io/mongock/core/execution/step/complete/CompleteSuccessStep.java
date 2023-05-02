@@ -7,13 +7,8 @@ import io.mongock.core.task.executable.ExecutableTask;
 public final class CompleteSuccessStep extends AfterExecutionAuditStep {
 
     public static CompleteSuccessStep fromSuccessExecution(SuccessExecutionStep executedStep) {
-        return fromTask(executedStep.getTask());
+        return new CompleteSuccessStep(executedStep.getTask());
     }
-
-    public static CompleteSuccessStep fromTask(ExecutableTask executedTask) {
-        return new CompleteSuccessStep(executedTask);
-    }
-
 
     private CompleteSuccessStep(ExecutableTask executedTask) {
         super(executedTask, true);

@@ -5,14 +5,14 @@ import io.mongock.core.audit.writer.AuditItem;
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.audit.writer.RuntimeContext;
 import io.mongock.core.execution.executor.ExecutionContext;
-import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.ExecutableStep;
-import io.mongock.core.execution.step.complete.CompleteFailedStep;
-import io.mongock.core.execution.step.complete.CompleteSuccessStep;
-import io.mongock.core.execution.step.execution.ExecutionStep;
-import io.mongock.core.execution.step.execution.FailedExecutionStep;
+import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.mongock.core.execution.step.afteraudit.RollableStep;
+import io.mongock.core.execution.step.complete.CompleteFailedStep;
+import io.mongock.core.execution.step.complete.AlreadyAppliedStep;
+import io.mongock.core.execution.step.execution.ExecutionStep;
+import io.mongock.core.execution.step.execution.FailedExecutionStep;
 import io.mongock.core.execution.step.rolledback.FailedRolledBackStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
 import io.mongock.core.execution.summary.DefaultStepSummarizer;
@@ -61,8 +61,8 @@ public class StepNavigator {
     }
 
     private StepNavigator(AuditWriter<?> auditWriter,
-                         StepSummarizer summarizer,
-                         RuntimeHelper runtimeHelper) {
+                          StepSummarizer summarizer,
+                          RuntimeHelper runtimeHelper) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
         this.runtimeHelper = runtimeHelper;
@@ -105,7 +105,8 @@ public class StepNavigator {
             }
         } else {
             //Task already executed
-            logAndSummaryIgnored(task);
+            logger.info("IGNORED - {}", task.getDescriptor().getId());
+            summarizer.add(new AlreadyAppliedStep(task));
             return new StepNavigationOutput(true, summarizer.getSummary());
         }
     }
@@ -192,10 +193,6 @@ public class StepNavigator {
         summarizer.add(failedStep);
     }
 
-    private void logAndSummaryIgnored(ExecutableTask task) {
-        logger.info("IGNORED - {}", task.getDescriptor().getId());
-        summarizer.add(CompleteSuccessStep.fromTask(task));
-    }
 
     private static void logAuditResult(AuditResult saveResult, String id, String operation) {
         if (saveResult instanceof AuditResult.Error) {

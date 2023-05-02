@@ -53,21 +53,21 @@ class SingleRunnableProcessTest {
         //Task1's summary lines
         assertEquals(steps.get(0), new StepSummaryLine.InitialSummaryLine(task1.getDescriptor()));
         assertEquals(steps.get(1).getId(), task1.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(1)).isSuccess(), true);
+        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(1)).getPrettyResult(), true);
         assertEquals(steps.get(2).getId(), task1.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(2)).isSuccess(), true);
+        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(2)).getPrettyResult(), true);
         //Task2's summary lines
         assertEquals(steps.get(3), new StepSummaryLine.InitialSummaryLine(task2.getDescriptor()));
         assertEquals(steps.get(4).getId(), task2.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(4)).isSuccess(), true);
+        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(4)).getPrettyResult(), true);
         assertEquals(steps.get(5).getId(), task2.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(5)).isSuccess(), true);
+        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(5)).getPrettyResult(), true);
         //Task2's summary lines
         assertEquals(steps.get(6), new StepSummaryLine.InitialSummaryLine(task3.getDescriptor()));
         assertEquals(steps.get(7).getId(), task3.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(7)).isSuccess(), true);
+        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(7)).getPrettyResult(), true);
         assertEquals(steps.get(8).getId(), task3.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(8)).isSuccess(), true);
+        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(8)).getPrettyResult(), true);
 
         //saved states
         ArgumentCaptor<AuditItem> savedStateCaptor = ArgumentCaptor.forClass(AuditItem.class);

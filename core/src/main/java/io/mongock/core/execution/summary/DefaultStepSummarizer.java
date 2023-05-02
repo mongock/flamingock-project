@@ -2,6 +2,7 @@ package io.mongock.core.execution.summary;
 
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.complete.CompleteFailedStep;
+import io.mongock.core.execution.step.complete.AlreadyAppliedStep;
 import io.mongock.core.execution.step.execution.ExecutionStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
 import io.mongock.core.task.descriptor.TaskDescriptor;
@@ -39,6 +40,11 @@ public class DefaultStepSummarizer implements StepSummarizer {
     @Override
     public StepSummarizer add(CompleteFailedStep step) {
         return addStep(step.getTask().getDescriptor(), new StepSummaryLine.FailedSummaryLine(step));
+    }
+
+    @Override
+    public StepSummarizer add(AlreadyAppliedStep step) {
+        return addStep(step.getTask().getDescriptor(), new StepSummaryLine.AlreadyAppliedSummaryLine(step));
     }
 
     @Override

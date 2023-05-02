@@ -1,10 +1,12 @@
 
 # TODO
-- Why state= ROLLED_BACK after successful execution??
 - Implement Dependency injection
+- - Ensure changeUnit order
+
 
 # Technical debts
 - Implement transaction wrapper
 - Implement Lock
+- 
 - Test/debug mongodb dates
 
