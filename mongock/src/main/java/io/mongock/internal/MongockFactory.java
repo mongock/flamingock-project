@@ -19,7 +19,7 @@ public class MongockFactory implements Factory<SingleAuditProcessStatus, SingleE
     public static final RuntimeHelper RUNTIME_HELPER = new RuntimeHelper(new DependencyManagerImpl());
     private final ConnectionEngine connectionEngine;
 
-    MongockFactory(ConnectionEngine connectionEngine) {
+    public MongockFactory(ConnectionEngine connectionEngine) {
         this.connectionEngine = connectionEngine;
     }
 

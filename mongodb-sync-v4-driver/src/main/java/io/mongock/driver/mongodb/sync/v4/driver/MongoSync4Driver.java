@@ -30,6 +30,11 @@ public class MongoSync4Driver implements ConnectionDriver<MongoDBSync4Configurat
         return new MongoSync4Driver(mongoClient, databaseName);
     }
 
+    @Deprecated
+    public static MongoSync4Driver withDefaultLock(MongoClient mongoClient, String databaseName) {
+        return new MongoSync4Driver(mongoClient, databaseName);
+    }
+
 
     public MongoSync4Driver(MongoClient mongoClient, String databaseName) {
         this.database = mongoClient.getDatabase(databaseName);

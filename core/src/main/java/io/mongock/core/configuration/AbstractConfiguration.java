@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.mongock.core.util.Constants.DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;
+import static io.mongock.core.util.Constants.DEFAULT_MIGRATION_AUTHOR;
 import static io.mongock.core.util.Constants.DEFAULT_QUIT_TRYING_AFTER_MILLIS;
 import static io.mongock.core.util.Constants.DEFAULT_TRY_FREQUENCY_MILLIS;
 

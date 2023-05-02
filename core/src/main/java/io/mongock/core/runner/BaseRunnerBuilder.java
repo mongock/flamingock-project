@@ -15,15 +15,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class BaseRunnerBuilder<
+public abstract class BaseRunnerBuilder<
         HOLDER,
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
-        CONFIG extends AbstractConfiguration> {
+        CONFIG extends AbstractConfiguration>
+implements InternalRunnerBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>{
 
     private CONFIG configuration;
 
-    private final Supplier<HOLDER> holderInstanceSupplier;
+    protected final Supplier<HOLDER> holderInstanceSupplier;
 
     public BaseRunnerBuilder(CONFIG configuration,
                              Supplier<HOLDER> holderInstanceSupplier) {
@@ -31,18 +32,7 @@ public class BaseRunnerBuilder<
         this.holderInstanceSupplier = holderInstanceSupplier;
     }
 
-    public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory) {
-        final RunnerOrchestrator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> runnerOrchestrator = new RunnerOrchestrator<>(
-                factory.getLockProvider(),
-                factory.getAuditReader(),
-                factory.getProcessExecutor(),
-                buildExecutionContext(),
-                new EventPublisher(),
-                configuration.isThrowExceptionIfCannotObtainLock());
-        //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(configuration);
-        return () -> runnerOrchestrator.execute(definitionProcess);
-    }
+
 
     protected ExecutionContext buildExecutionContext() {
         return buildExecutionContext(
@@ -64,41 +54,49 @@ public class BaseRunnerBuilder<
     //  SETTERS
     ///////////////////////////////////////////////////////////////////////////////////
 
+    @Override
     public HOLDER setConfiguration(CONFIG configuration) {
         this.configuration = configuration;
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis) {
         configuration.setLockAcquiredForMillis(lockAcquiredForMillis);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
         configuration.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
         configuration.setLockTryFrequencyMillis(lockTryFrequencyMillis);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
         configuration.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setTrackIgnored(boolean trackIgnored) {
         configuration.setTrackIgnored(trackIgnored);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setEnabled(boolean enabled) {
         configuration.setEnabled(enabled);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setMigrationScanPackage(List<String> migrationScanPackage) {
         configuration.setMigrationScanPackage(migrationScanPackage);
         return holderInstanceSupplier.get();
@@ -109,36 +107,43 @@ public class BaseRunnerBuilder<
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setEndSystemVersion(String endSystemVersion) {
         configuration.setEndSystemVersion(endSystemVersion);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setServiceIdentifier(String serviceIdentifier) {
         configuration.setServiceIdentifier(serviceIdentifier);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setMetadata(Map<String, Object> metadata) {
         configuration.setMetadata(metadata);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setLegacyMigration(LegacyMigration legacyMigration) {
         configuration.setLegacyMigration(legacyMigration);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setTransactionEnabled(Boolean transactionEnabled) {
         configuration.setTransactionEnabled(transactionEnabled);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setDefaultMigrationAuthor(String defaultMigrationAuthor) {
         configuration.setDefaultAuthor(defaultMigrationAuthor);
         return holderInstanceSupplier.get();
     }
 
+    @Override
     public HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy) {
         configuration.setTransactionStrategy(transactionStrategy);
         return holderInstanceSupplier.get();
@@ -148,66 +153,83 @@ public class BaseRunnerBuilder<
     ///////////////////////////////////////////////////////////////////////////////////
     //  GETTERS
     ///////////////////////////////////////////////////////////////////////////////////
+
+    @Override
     public CONFIG getConfiguration() {
         return configuration;
     }
 
+    @Override
     public long getLockAcquiredForMillis() {
         return configuration.getLockAcquiredForMillis();
     }
 
+    @Override
     public Long getLockQuitTryingAfterMillis() {
         return configuration.getLockQuitTryingAfterMillis();
     }
 
+    @Override
     public long getLockTryFrequencyMillis() {
         return configuration.getLockTryFrequencyMillis();
     }
 
+    @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
         return configuration.isThrowExceptionIfCannotObtainLock();
     }
 
+    @Override
     public boolean isTrackIgnored() {
         return configuration.isTrackIgnored();
     }
 
+    @Override
     public boolean isEnabled() {
         return configuration.isEnabled();
     }
 
+    @Override
     public List<String> getMigrationScanPackage() {
         return configuration.getMigrationScanPackage();
     }
 
+    @Override
     public String getStartSystemVersion() {
         return configuration.getStartSystemVersion();
     }
 
+    @Override
     public String getEndSystemVersion() {
         return configuration.getEndSystemVersion();
     }
 
+    @Override
     public String getServiceIdentifier() {
         return configuration.getServiceIdentifier();
     }
 
+    @Override
     public Map<String, Object> getMetadata() {
         return configuration.getMetadata();
     }
 
+    @Override
     public LegacyMigration getLegacyMigration() {
         return configuration.getLegacyMigration();
     }
 
+    @Override
     public Boolean getTransactionEnabled() {
         return configuration.getTransactionEnabled();
     }
 
+    @Override
     public String getDefaultMigrationAuthor() {
         return configuration.getDefaultAuthor();
     }
 
+    @Override
     public TransactionStrategy getTransactionStrategy() {
         return configuration.getTransactionStrategy();
     }
