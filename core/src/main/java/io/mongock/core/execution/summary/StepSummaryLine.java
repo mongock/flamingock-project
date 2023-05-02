@@ -43,7 +43,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return ">" + desc.pretty();
+            return ">> " + desc.pretty();
         }
 
         @Override
