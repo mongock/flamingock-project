@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LockGuardProxyFactory {
+public class LockGuardProxyFactory implements GuardProxyFactory {
 
     private static final Set<String> DEFAULT_NON_GUARDED_METHODS = new HashSet<>(
             Collections.singletonList("finalize")

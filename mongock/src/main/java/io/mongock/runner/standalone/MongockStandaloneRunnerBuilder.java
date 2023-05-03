@@ -3,8 +3,6 @@ package io.mongock.runner.standalone;
 import io.mongock.core.audit.single.SingleAuditProcessStatus;
 import io.mongock.core.configuration.LegacyMigration;
 import io.mongock.core.configuration.TransactionStrategy;
-import io.mongock.core.runtime.dependency.Dependencymanager;
-import io.mongock.core.runtime.dependency.DependencymanagerImpl;
 import io.mongock.core.event.MigrationFailureEvent;
 import io.mongock.core.event.MigrationStartedEvent;
 import io.mongock.core.event.MigrationSuccessEvent;
@@ -14,6 +12,9 @@ import io.mongock.core.runner.RunnerBuilder;
 import io.mongock.core.runner.RunnerConfigurator;
 import io.mongock.core.runner.standalone.BaseStandaloneRunnerBuilder;
 import io.mongock.core.runner.standalone.StandaloneRunnerConfigurator;
+import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.dependency.DependencyManager;
+import io.mongock.core.runtime.dependency.DependencyManagerImpl;
 import io.mongock.internal.MongockConfiguration;
 import io.mongock.internal.MongockFactory;
 import io.mongock.internal.MongockRunnerConfigurator;
@@ -55,8 +56,11 @@ public class MongockStandaloneRunnerBuilder
     public Runner build() {
         ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(delegate.getConfiguration());
         connectionEngine.initialize();
-        Dependencymanager dependencyManager = new DependencymanagerImpl();//TODO implement this
-        return delegate.build(new MongockFactory(connectionEngine), dependencyManager);
+        DependencyManager dependencyManager = new DependencyManagerImpl();//TODO implement this
+        return delegate.build(
+                new MongockFactory(connectionEngine),
+                new RuntimeHelper.DefaultLockableBuilder(dependencyManager)
+        );
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

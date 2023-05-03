@@ -17,6 +17,7 @@ import io.mongock.core.execution.step.rolledback.FailedRolledBackStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
 import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.StepSummarizer;
+import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.runtime.DefaultRuntimeHelper;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class StepNavigator {
     //For sequential execution, so we avoid creating too many new instances and save GC cycles
     public static StepNavigationOutput startByReuse(ExecutableTask task,
                                                     AuditWriter<?> auditWriter,
-                                                    DefaultRuntimeHelper runtimeHelper,
+                                                    RuntimeHelper runtimeHelper,
                                                     ExecutionContext executionContext) {
         return instance
                 .clean()
@@ -54,7 +55,7 @@ public class StepNavigator {
     private StepSummarizer summarizer;
     private AuditWriter<?> auditWriter;
 
-    private DefaultRuntimeHelper runtimeHelper;
+    private RuntimeHelper runtimeHelper;
 
     private StepNavigator() {
         this(null, null, null);
@@ -77,7 +78,7 @@ public class StepNavigator {
 
     private StepNavigator setDependencies(AuditWriter<?> auditWriter,
                                           StepSummarizer summarizer,
-                                          DefaultRuntimeHelper runtimeHelper) {
+                                          RuntimeHelper runtimeHelper) {
         this.summarizer = summarizer;
         this.auditWriter = auditWriter;
         this.runtimeHelper = runtimeHelper;

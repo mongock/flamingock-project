@@ -8,12 +8,12 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class DependencymanagerImpl implements Dependencymanager {
+public class DependencyManagerImpl implements DependencyManager {
 
     private final LinkedHashSet<Dependency> connectorDependencies;
     private final LinkedHashSet<Dependency> standardDependencies;
 
-    public DependencymanagerImpl() {
+    public DependencyManagerImpl() {
         standardDependencies = new LinkedHashSet<>();
         connectorDependencies = new LinkedHashSet<>();
     }
@@ -57,25 +57,25 @@ public class DependencymanagerImpl implements Dependencymanager {
      * @param dependencies dependencies from driver
      * @return the current dependency manager
      */
-    public Dependencymanager addDriverDependencies(Collection<? extends Dependency> dependencies) {
+    public DependencyManager addDriverDependencies(Collection<? extends Dependency> dependencies) {
         dependencies.forEach(this::addDriverDependency);
         return this;
     }
 
-    public Dependencymanager addDriverDependency(Dependency dependency) {
+    public DependencyManager addDriverDependency(Dependency dependency) {
         return addDependency(connectorDependencies, dependency);
     }
 
-    public Dependencymanager addStandardDependencies(Collection<? extends Dependency> dependencies) {
+    public DependencyManager addStandardDependencies(Collection<? extends Dependency> dependencies) {
         dependencies.forEach(this::addStandardDependency);
         return this;
     }
 
-    public Dependencymanager addStandardDependency(Dependency dependency) {
+    public DependencyManager addStandardDependency(Dependency dependency) {
         return addDependency(standardDependencies, dependency);
     }
 
-    private <T extends Dependency> Dependencymanager addDependency(Collection<T> dependencyStore, T dependency) {
+    private <T extends Dependency> DependencyManager addDependency(Collection<T> dependencyStore, T dependency) {
         //add returns false if it's already there. In that case, it needs to be removed and then inserted
         if (!dependencyStore.add(dependency)) {
             dependencyStore.remove(dependency);

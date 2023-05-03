@@ -4,7 +4,7 @@ import io.changock.migration.api.annotations.NonLockGuarded;
 import io.mongock.api.annotations.ChangeUnitConstructor;
 import io.mongock.api.exception.CoreException;
 import io.mongock.core.runtime.dependency.Dependency;
-import io.mongock.core.runtime.dependency.Dependencymanager;
+import io.mongock.core.runtime.dependency.DependencyManager;
 import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
 import io.mongock.core.util.Constants;
 import org.slf4j.Logger;
@@ -33,11 +33,11 @@ public final class DefaultRuntimeHelper implements RuntimeHelper {
             ? parameter.getAnnotation(Named.class).value()
             : null;
     private final Set<Class<?>> nonProxyableTypes = Collections.emptySet();
-    private final Dependencymanager dependencyManager;
+    private final DependencyManager dependencyManager;
     private final LockGuardProxyFactory proxyFactory;
 
     public DefaultRuntimeHelper(LockGuardProxyFactory proxyFactory,
-                                Dependencymanager dependencyManager) {
+                                DependencyManager dependencyManager) {
         this.dependencyManager = dependencyManager;
         this.proxyFactory = proxyFactory;
     }

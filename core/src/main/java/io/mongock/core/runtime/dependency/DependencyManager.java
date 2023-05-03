@@ -2,7 +2,7 @@ package io.mongock.core.runtime.dependency;
 
 import java.util.Optional;
 
-public interface Dependencymanager {
+public interface DependencyManager {
 
     Optional<Dependency> getDependency(Class<?> type);
 

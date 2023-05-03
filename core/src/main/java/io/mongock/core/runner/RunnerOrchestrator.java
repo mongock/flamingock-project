@@ -3,7 +3,8 @@ package io.mongock.core.runner;
 import io.mongock.api.exception.CoreException;
 import io.mongock.core.audit.AuditReader;
 import io.mongock.core.audit.domain.AuditProcessStatus;
-import io.mongock.core.runtime.dependency.Dependencymanager;
+import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.dependency.DependencyManager;
 import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
 import io.mongock.core.event.EventPublisher;
 import io.mongock.core.event.result.MigrationIgnoredResult;
@@ -33,21 +34,22 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
     private final boolean throwExceptionIfCannotObtainLock;
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
-    private final Dependencymanager dependencyManager;
+    private final RuntimeHelper.LockableBuilder runtimeBuilder;
+
 
     public RunnerOrchestrator(LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockProvider,
                               AuditReader<AUDIT_PROCESS_STATE> stateFetcher,
                               ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
                               ExecutionContext executionContext,
                               EventPublisher eventPublisher,
-                              Dependencymanager dependencyManager,
+                              RuntimeHelper.LockableBuilder runtimeBuilder,
                               boolean throwExceptionIfCannotObtainLock) {
         this.lockProvider = lockProvider;
         this.stateFetcher = stateFetcher;
         this.processExecutor = processExecutor;
         this.executionContext = executionContext;
         this.eventPublisher = eventPublisher;
-        this.dependencyManager = dependencyManager;
+        this.runtimeBuilder = runtimeBuilder;
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
@@ -90,8 +92,7 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
         EXECUTABLE_PROCESS executableProcess = process.applyState(processCurrentState);
         logger.debug("Applied state to process:\n{}", executableProcess);
 
-        LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
-        DefaultRuntimeHelper runtimeHelper = new DefaultRuntimeHelper(proxyFactory, dependencyManager);//TODO how to inject this
+        RuntimeHelper runtimeHelper = runtimeBuilder.setLock(lock).build();
         ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, runtimeHelper);
         logger.info("Finished process successfully\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));

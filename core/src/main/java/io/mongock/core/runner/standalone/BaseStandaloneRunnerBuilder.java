@@ -3,7 +3,8 @@ package io.mongock.core.runner.standalone;
 import io.mongock.core.Factory;
 import io.mongock.core.audit.domain.AuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
-import io.mongock.core.runtime.dependency.Dependencymanager;
+import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.dependency.DependencyManager;
 import io.mongock.core.event.EventPublisher;
 import io.mongock.core.event.MigrationFailureEvent;
 import io.mongock.core.event.MigrationStartedEvent;
@@ -53,18 +54,20 @@ public class BaseStandaloneRunnerBuilder<
 
     @Override
     public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory,
-                        Dependencymanager dependencyManager) {
+                        RuntimeHelper.LockableBuilder runtimeBuilder) {
         EventPublisher eventPublisher = new EventPublisher(
                 processStartedListener != null ? () -> processStartedListener.accept(new MigrationStartedEvent()) : null,
                 processSuccessListener != null ? result -> processSuccessListener.accept(new MigrationSuccessEvent(result)) : null,
                 processFailedListener != null ? result -> processFailedListener.accept(new MigrationFailureEvent(result)) : null);
+
+
         final RunnerOrchestrator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> runnerOrchestrator = new RunnerOrchestrator<>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),
                 factory.getProcessExecutor(),
                 buildExecutionContext(),
                 eventPublisher,
-                dependencyManager,
+                runtimeBuilder,
                 getConfiguration().isThrowExceptionIfCannotObtainLock());
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
