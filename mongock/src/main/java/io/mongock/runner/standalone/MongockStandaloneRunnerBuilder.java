@@ -59,7 +59,7 @@ public class MongockStandaloneRunnerBuilder
         DependencyManager dependencyManager = new DependencyManagerImpl();//TODO implement this
         return delegate.build(
                 new MongockFactory(connectionEngine),
-                new RuntimeHelper.DefaultLockableBuilder(dependencyManager)
+                new RuntimeHelper.Builder(dependencyManager)
         );
     }
 

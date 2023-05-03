@@ -11,26 +11,16 @@ public interface RuntimeHelper {
 
     Object executeMethod(Object instance, Method method);
 
-
-    interface Builder {
-
-        RuntimeHelper build();
-    }
-
-    interface LockableBuilder extends Builder {
-        LockableBuilder setLock(Lock lock);
-    }
-
-    class DefaultLockableBuilder implements LockableBuilder {
-
+    final class Builder {
+        
         private final DependencyManager dependencyManager;
         private Lock lock;
 
-        public DefaultLockableBuilder(DependencyManager dependencyManager) {
+        public Builder(DependencyManager dependencyManager) {
             this.dependencyManager = dependencyManager;
         }
 
-        public DefaultLockableBuilder setLock(Lock lock) {
+        public Builder setLock(Lock lock) {
             this.lock = lock;
             return this;
         }
