@@ -14,16 +14,14 @@ import static io.mongock.core.util.StreamUtil.processUntil;
 public class SingleProcessExecutor implements ProcessExecutor<SingleExecutableProcess> {
     protected final AuditWriter<?> stateSaver;
 
-    protected final RuntimeHelper runtimeHelper;
-
-    public SingleProcessExecutor(AuditWriter<?> stateSaver,
-                                 RuntimeHelper runtimeHelper) {
+    public SingleProcessExecutor(AuditWriter<?> stateSaver) {
         this.stateSaver = stateSaver;
-        this.runtimeHelper = runtimeHelper;
     }
 
     @Override
-    public Output run(SingleExecutableProcess executableProcess, ExecutionContext executionContext) {
+    public Output run(SingleExecutableProcess executableProcess,
+                      ExecutionContext executionContext,
+                      RuntimeHelper runtimeHelper) {
         ProcessSummary summary = new ProcessSummary();
         Stream<StepNavigationOutput> taskStepStream = executableProcess.getTasks()
                 .stream()

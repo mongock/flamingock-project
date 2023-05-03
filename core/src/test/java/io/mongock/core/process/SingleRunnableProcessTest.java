@@ -44,8 +44,8 @@ class SingleRunnableProcessTest {
 
         //WHEN
         ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-        List<StepSummaryLine> steps = new SingleProcessExecutor(stateSaver, mock(RuntimeHelper.class))
-                .run(process, executionContext)
+        List<StepSummaryLine> steps = new SingleProcessExecutor(stateSaver)
+                .run(process, executionContext, mock(RuntimeHelper.class))
                 .getSummary()
                 .getLines();
 
@@ -113,8 +113,8 @@ class SingleRunnableProcessTest {
 
         //WHEN
         ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-        ProcessExecutor.Output output = new SingleProcessExecutor(stateSaver, mock(RuntimeHelper.class))
-                .run(process, executionContext);
+        ProcessExecutor.Output output = new SingleProcessExecutor(stateSaver)
+                .run(process, executionContext, mock(RuntimeHelper.class));
         String actualSummary = output.getSummary().getPretty();
         System.out.println(actualSummary);
 
