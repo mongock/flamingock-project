@@ -2,7 +2,7 @@ package io.mongock.core.dependency;
 
 import java.util.Optional;
 
-public class DependencyManagerImpl implements DependencyManager{
+public class DependencyManagerImpl implements DependencyManager {
     @Override
     public Optional<Object> getDependency(Class<?> type, boolean lockGuarded) {
         return Optional.empty();

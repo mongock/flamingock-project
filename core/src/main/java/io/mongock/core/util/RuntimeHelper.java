@@ -71,7 +71,8 @@ public final class RuntimeHelper {
             }
             return constructors[0];
 
-        } else {//annotatedConstructors.size() > 1
+        } else {
+            //annotatedConstructors.size() > 1
             throw new CoreException("Found multiple constructors for class[%s] annotated with %s." +
                     " Annotate the one you want Mongock to use to instantiate your changeUnit",
                     type.getName(),
@@ -79,17 +80,6 @@ public final class RuntimeHelper {
         }
 
     }
-
-    private Optional<Constructor<?>> findChangeUnitConstructor(Class<?> type) {
-        Supplier<Stream<Constructor<?>>> changeUnitConstructorsSupplier = () -> Arrays.stream(type.getConstructors())
-                .filter(constructor -> constructor.isAnnotationPresent(ChangeUnitConstructor.class));
-        if (changeUnitConstructorsSupplier.get().count() > 1) {
-            throw new CoreException("Found multiple constructors for changeUnit[%s] without annotation @ChangeUnitConstructor." +
-                    " Annotate the one you want Mongock to use to instantiate your changeUnit", type.getName());
-        }
-        return changeUnitConstructorsSupplier.get().findFirst();
-    }
-
 
     public Object executeMethod(Object instance, Method method)  {
         List<Object> signatureParameters = getSignatureParameters(method);
