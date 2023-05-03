@@ -1,7 +1,6 @@
 package io.mongock.internal.driver;
 
-import io.mongock.internal.MongockConfiguration;
-import io.mongock.internal.MongockLockProvider;
+import io.mongock.internal.MongockLockAcquirer;
 
 public interface ConnectionEngine {
 
@@ -9,5 +8,5 @@ public interface ConnectionEngine {
 
   MongockAuditor getAuditor();
 
-  MongockLockProvider getLockProvider();
+  MongockLockAcquirer getLockProvider();
 }

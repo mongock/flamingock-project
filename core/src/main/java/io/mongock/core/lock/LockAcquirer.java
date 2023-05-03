@@ -4,7 +4,7 @@ import io.mongock.core.audit.domain.AuditProcessStatus;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.process.LoadedProcess;
 
-public interface LockProvider<AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess> {
+public interface LockAcquirer<AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess> {
 
     /**
      * Acquire the lock if available and if there is any outstanding work, based on the stage description passed as
@@ -17,5 +17,4 @@ public interface LockProvider<AUDIT_PROCESS_STATE extends AuditProcessStatus, EX
      * @return acquired lock if it was successfully acquired or false if there is no pending work to do.
      */
     Lock acquireIfRequired(LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> loadedProcess) throws LockCheckException;
-
 }

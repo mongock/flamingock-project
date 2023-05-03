@@ -1,6 +1,6 @@
 package io.flamingock.internal;
 
-import io.flamingock.internal.lock.FlamingockLockProvider;
+import io.flamingock.internal.lock.FlamingockLockAcquirer;
 import io.flamingock.internal.process.FlamingockDefinitionProcess;
 import io.flamingock.internal.process.FlamingockExecutableProcess;
 import io.flamingock.internal.state.FlamingockAuditProcessStatus;
@@ -11,14 +11,14 @@ import io.mongock.core.audit.AuditReader;
 import io.mongock.core.audit.domain.AuditEntry;
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.executor.ProcessExecutor;
-import io.mongock.core.lock.LockProvider;
+import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
 
 public class FlamingockFactory implements Factory<FlamingockAuditProcessStatus, FlamingockExecutableProcess, FlamingockConfiguration> {
 
     @Override
-    public LockProvider<FlamingockAuditProcessStatus, FlamingockExecutableProcess> getLockProvider() {
-        return new FlamingockLockProvider();
+    public LockAcquirer<FlamingockAuditProcessStatus, FlamingockExecutableProcess> getLockProvider() {
+        return new FlamingockLockAcquirer();
     }
 
     @Override

@@ -4,7 +4,7 @@ import io.mongock.core.audit.AuditReader;
 import io.mongock.core.audit.domain.AuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
 import io.mongock.core.execution.executor.ProcessExecutor;
-import io.mongock.core.lock.LockProvider;
+import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 
@@ -13,7 +13,7 @@ public interface Factory<
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CONFIGURATION extends AbstractConfiguration> {
 
-    LockProvider<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> getLockProvider();
+    LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> getLockProvider();
 
     AuditReader<AUDIT_PROCESS_STATE> getAuditReader();
 

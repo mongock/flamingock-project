@@ -10,7 +10,7 @@ import io.mongock.core.execution.executor.ExecutionContext;
 import io.mongock.core.execution.executor.ProcessExecutor;
 import io.mongock.core.lock.Lock;
 import io.mongock.core.lock.LockCheckException;
-import io.mongock.core.lock.LockProvider;
+import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.process.LoadedProcess;
@@ -21,7 +21,7 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
 
     private static final Logger logger = LoggerFactory.getLogger(RunnerOrchestrator.class);
 
-    private final LockProvider<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockProvider;
+    private final LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockProvider;
 
     private final AuditReader<AUDIT_PROCESS_STATE> stateFetcher;
 
@@ -31,7 +31,7 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
 
-    public RunnerOrchestrator(LockProvider<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockProvider,
+    public RunnerOrchestrator(LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockProvider,
                               AuditReader<AUDIT_PROCESS_STATE> stateFetcher,
                               ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
                               ExecutionContext executionContext,
