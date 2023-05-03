@@ -5,7 +5,7 @@ import io.mongock.core.execution.step.rolledback.FailedRolledBackStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
 import io.mongock.core.execution.step.rolledback.SuccessRolledBackStep;
 import io.mongock.core.task.executable.RollableTask;
-import io.mongock.core.util.RuntimeHelper;
+import io.mongock.core.runtime.DefaultRuntimeHelper;
 import io.mongock.core.util.StopWatch;
 
 public final  class RollableStep extends TaskStep {
@@ -17,7 +17,7 @@ public final  class RollableStep extends TaskStep {
         this.rollableTask = rollableTask;
     }
 
-    public RolledBackStep rollback(RuntimeHelper runtimeHelper) {
+    public RolledBackStep rollback(DefaultRuntimeHelper runtimeHelper) {
         StopWatch stopWatch = StopWatch.start();
         try {
             rollableTask.rollback(runtimeHelper);

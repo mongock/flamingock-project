@@ -1,4 +1,4 @@
-package io.mongock.core.dependency.proxy;
+package io.mongock.core.runtime.proxy;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.changock.migration.api.annotations.NonLockGuardedType;

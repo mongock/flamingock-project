@@ -3,7 +3,8 @@ package io.mongock.core.runner;
 import io.mongock.api.exception.CoreException;
 import io.mongock.core.audit.AuditReader;
 import io.mongock.core.audit.domain.AuditProcessStatus;
-import io.mongock.core.dependency.DependencyManager;
+import io.mongock.core.runtime.dependency.Dependencymanager;
+import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
 import io.mongock.core.event.EventPublisher;
 import io.mongock.core.event.result.MigrationIgnoredResult;
 import io.mongock.core.event.result.MigrationSuccessResult;
@@ -15,7 +16,7 @@ import io.mongock.core.lock.LockCheckException;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.process.LoadedProcess;
-import io.mongock.core.util.RuntimeHelper;
+import io.mongock.core.runtime.DefaultRuntimeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,14 +33,14 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
     private final boolean throwExceptionIfCannotObtainLock;
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
-    private final DependencyManager dependencyManager;
+    private final Dependencymanager dependencyManager;
 
     public RunnerOrchestrator(LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockProvider,
                               AuditReader<AUDIT_PROCESS_STATE> stateFetcher,
                               ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
                               ExecutionContext executionContext,
                               EventPublisher eventPublisher,
-                              DependencyManager dependencyManager,
+                              Dependencymanager dependencyManager,
                               boolean throwExceptionIfCannotObtainLock) {
         this.lockProvider = lockProvider;
         this.stateFetcher = stateFetcher;
@@ -58,7 +59,7 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
         try (Lock lock = lockProvider.acquireIfRequired(loadedProcess)) {
             switch (lock.getStatus()) {
                 case ACQUIRED:
-                    startProcess(loadedProcess);
+                    startProcess(lock, loadedProcess);
                     break;
                 case NOT_REQUIRED:
                     skipProcess();
@@ -82,14 +83,15 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
         }
     }
 
-    private void startProcess(LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> process) {
+    private void startProcess(Lock lock, LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> process) {
         AUDIT_PROCESS_STATE processCurrentState = stateFetcher.getAuditProcessStatus();
         logger.debug("Pulled remote state:\n{}", processCurrentState);
 
         EXECUTABLE_PROCESS executableProcess = process.applyState(processCurrentState);
         logger.debug("Applied state to process:\n{}", executableProcess);
 
-        RuntimeHelper runtimeHelper = new RuntimeHelper(dependencyManager);//TODO how to inject this
+        LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
+        DefaultRuntimeHelper runtimeHelper = new DefaultRuntimeHelper(proxyFactory, dependencyManager);//TODO how to inject this
         ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, runtimeHelper);
         logger.info("Finished process successfully\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));

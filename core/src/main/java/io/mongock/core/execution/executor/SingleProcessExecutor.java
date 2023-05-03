@@ -5,7 +5,7 @@ import io.mongock.core.execution.navigator.StepNavigationOutput;
 import io.mongock.core.execution.navigator.StepNavigator;
 import io.mongock.core.execution.summary.ProcessSummary;
 import io.mongock.core.process.single.SingleExecutableProcess;
-import io.mongock.core.util.RuntimeHelper;
+import io.mongock.core.runtime.DefaultRuntimeHelper;
 
 import java.util.stream.Stream;
 
@@ -21,7 +21,7 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
     @Override
     public Output run(SingleExecutableProcess executableProcess,
                       ExecutionContext executionContext,
-                      RuntimeHelper runtimeHelper) {
+                      DefaultRuntimeHelper runtimeHelper) {
         ProcessSummary summary = new ProcessSummary();
         Stream<StepNavigationOutput> taskStepStream = executableProcess.getTasks()
                 .stream()

@@ -3,8 +3,8 @@ package io.mongock.runner.standalone;
 import io.mongock.core.audit.single.SingleAuditProcessStatus;
 import io.mongock.core.configuration.LegacyMigration;
 import io.mongock.core.configuration.TransactionStrategy;
-import io.mongock.core.dependency.DependencyManager;
-import io.mongock.core.dependency.DependencyManagerImpl;
+import io.mongock.core.runtime.dependency.Dependencymanager;
+import io.mongock.core.runtime.dependency.DependencymanagerImpl;
 import io.mongock.core.event.MigrationFailureEvent;
 import io.mongock.core.event.MigrationStartedEvent;
 import io.mongock.core.event.MigrationSuccessEvent;
@@ -55,7 +55,7 @@ public class MongockStandaloneRunnerBuilder
     public Runner build() {
         ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(delegate.getConfiguration());
         connectionEngine.initialize();
-        DependencyManager dependencyManager = new DependencyManagerImpl();//TODO implement this
+        Dependencymanager dependencyManager = new DependencymanagerImpl();//TODO implement this
         return delegate.build(new MongockFactory(connectionEngine), dependencyManager);
     }
 

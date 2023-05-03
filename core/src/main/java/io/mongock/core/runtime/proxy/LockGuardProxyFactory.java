@@ -1,4 +1,4 @@
-package io.mongock.core.dependency.proxy;
+package io.mongock.core.runtime.proxy;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.mongock.core.lock.Lock;
@@ -55,7 +55,6 @@ public class LockGuardProxyFactory {
         return (T) getRawProxy(targetObject, interfaceType);
     }
 
-    @SuppressWarnings("unchecked")
     public Object getRawProxy(Object targetObject, Class<?> interfaceType) {
         return shouldBeLockGuardProxied(targetObject, interfaceType) ? createProxy(targetObject, interfaceType) : targetObject;
     }

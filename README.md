@@ -1,10 +1,9 @@
 
 # TODO
-- Implement Dependency injection
-- - Ensure changeUnit order
-
+- Implement proxy wrapper
 
 # Technical debts
+- Ensure changeUnit order in ChangeUnits
 - Implement transaction wrapper
 - Implement Lock
 - When a non-transactional change fails, the rollback override the failed execution in DB. 

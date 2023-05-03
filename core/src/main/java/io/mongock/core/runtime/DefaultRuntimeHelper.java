@@ -1,9 +1,12 @@
-package io.mongock.core.util;
+package io.mongock.core.runtime;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.mongock.api.annotations.ChangeUnitConstructor;
 import io.mongock.api.exception.CoreException;
-import io.mongock.core.dependency.DependencyManager;
+import io.mongock.core.runtime.dependency.Dependency;
+import io.mongock.core.runtime.dependency.Dependencymanager;
+import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
+import io.mongock.core.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,21 +23,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public final class RuntimeHelper {
+public final class DefaultRuntimeHelper implements RuntimeHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(RuntimeHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultRuntimeHelper.class);
 
-
-    private final Function<Parameter, String> parameterNameProvider = parameter -> parameter.isAnnotationPresent(Named.class) ? parameter.getAnnotation(Named.class).value() : null;
+    private final Function<Parameter, String> parameterNameProvider = parameter -> parameter.isAnnotationPresent(Named.class)
+            ? parameter.getAnnotation(Named.class).value()
+            : null;
     private final Set<Class<?>> nonProxyableTypes = Collections.emptySet();
-    private final DependencyManager dependencyManager;
+    private final Dependencymanager dependencyManager;
+    private final LockGuardProxyFactory proxyFactory;
 
-    public RuntimeHelper(DependencyManager dependencyManager) {
+    public DefaultRuntimeHelper(LockGuardProxyFactory proxyFactory,
+                                Dependencymanager dependencyManager) {
         this.dependencyManager = dependencyManager;
+        this.proxyFactory = proxyFactory;
     }
 
     public Object getInstance(Class<?> type) {
@@ -45,6 +50,15 @@ public final class RuntimeHelper {
             return constructor.newInstance(signatureParameters.toArray());
         } catch (Exception e) {
             throw new CoreException(e);
+        }
+    }
+
+    public Object executeMethod(Object instance, Method method) {
+        List<Object> signatureParameters = getSignatureParameters(method);
+        try {
+            return method.invoke(instance, signatureParameters.toArray());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -81,15 +95,6 @@ public final class RuntimeHelper {
 
     }
 
-    public Object executeMethod(Object instance, Method method)  {
-        List<Object> signatureParameters = getSignatureParameters(method);
-        try {
-            return method.invoke(instance, signatureParameters.toArray());
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private List<Object> getSignatureParameters(Executable executable) {
         Class<?>[] parameterTypes = executable.getParameterTypes();
         Parameter[] parameters = executable.getParameters();
@@ -102,12 +107,16 @@ public final class RuntimeHelper {
 
 
     private Object getParameter(Class<?> parameterType, Parameter parameter) {
-        Object dependency = dependencyManager.getDependencyOrThrow(parameterType, getParameterName(parameter));
-        boolean makeItProxy = !parameterType.isAnnotationPresent(NonLockGuarded.class)
+        Dependency dependency = dependencyManager.getDependencyOrThrow(parameterType, getParameterName(parameter));
+        boolean lockGuarded = !parameterType.isAnnotationPresent(NonLockGuarded.class)
                 && !parameter.isAnnotationPresent(NonLockGuarded.class)
                 && !nonProxyableTypes.contains(parameterType);
         //TODO return proxy if applies
-        return dependency;
+
+        return dependency.isProxeable() && lockGuarded
+                ? Optional.of(proxyFactory.getRawProxy(dependency.getInstance(), dependency.getType()))
+                : Optional.ofNullable(dependency.getInstance());
+
     }
 
     private String getParameterName(Parameter parameter) {
@@ -115,10 +124,9 @@ public final class RuntimeHelper {
     }
 
 
-
     public static void logMethodWithArguments(String methodName, List<Object> changelogInvocationParameters) {
         String arguments = changelogInvocationParameters.stream()
-                .map(RuntimeHelper::getParameterType)
+                .map(DefaultRuntimeHelper::getParameterType)
                 .collect(Collectors.joining(", "));
         logger.info("method[{}] with arguments: [{}]", methodName, arguments);
 
@@ -127,7 +135,7 @@ public final class RuntimeHelper {
     private static String getParameterType(Object obj) {
         String className = obj != null ? obj.getClass().getName() : "{null argument}";
         int mongockProxyPrefixIndex = className.indexOf(Constants.PROXY_MONGOCK_PREFIX);
-        if(mongockProxyPrefixIndex > 0) {
+        if (mongockProxyPrefixIndex > 0) {
             return className.substring(0, mongockProxyPrefixIndex);
         } else {
             return className;

@@ -1,4 +1,4 @@
-package io.mongock.core.dependency.proxy;
+package io.mongock.core.runtime.proxy;
 
 import io.mongock.core.lock.Lock;
 import javassist.util.proxy.MethodHandler;

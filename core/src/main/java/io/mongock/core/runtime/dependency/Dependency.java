@@ -1,11 +1,11 @@
-package io.mongock.core.dependency;
+package io.mongock.core.runtime.dependency;
 
 
 import io.mongock.api.exception.CoreException;
 
 import java.util.Objects;
 
-public class ChangeSetDependency {
+public class Dependency {
 
   public static final String DEFAULT_NAME = "default_name_not_used";
 
@@ -15,23 +15,23 @@ public class ChangeSetDependency {
   protected Object instance;
 
 
-  public ChangeSetDependency(Object instance) {
+  public Dependency(Object instance) {
     this(instance.getClass(), instance);
   }
 
-  public ChangeSetDependency(Class<?> type, Object instance) {
+  public Dependency(Class<?> type, Object instance) {
     this(type, instance, true);
   }
   
-  public ChangeSetDependency(Class<?> type, Object instance, boolean proxeable) {
+  public Dependency(Class<?> type, Object instance, boolean proxeable) {
     this(DEFAULT_NAME, type, instance, proxeable);
   }
   
-  public ChangeSetDependency(String name, Class<?> type, Object instance) {
+  public Dependency(String name, Class<?> type, Object instance) {
     this(name, type, instance, true);
   }
 
-  public ChangeSetDependency(String name, Class<?> type, Object instance, boolean proxeable) {
+  public Dependency(String name, Class<?> type, Object instance, boolean proxeable) {
     this(name, type, proxeable);
     if (instance == null) {
       throw new CoreException("dependency instance cannot be null");
@@ -39,7 +39,7 @@ public class ChangeSetDependency {
     this.instance = instance;
   }
 
-  protected ChangeSetDependency(String name, Class<?> type, boolean proxeable) {
+  protected Dependency(String name, Class<?> type, boolean proxeable) {
     checkParameters(name, type);
     this.name = name;
     this.type = type;
@@ -79,8 +79,8 @@ public class ChangeSetDependency {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof ChangeSetDependency)) return false;
-    ChangeSetDependency that = (ChangeSetDependency) o;
+    if (!(o instanceof Dependency)) return false;
+    Dependency that = (Dependency) o;
     return name.equals(that.name) && type.equals(that.type);
   }
 

@@ -1,4 +1,4 @@
-package io.mongock.core.dependency.exception;
+package io.mongock.core.runtime.dependency.exception;
 
 public class ForbiddenParameterException extends DependencyInjectionException {
 

@@ -18,7 +18,7 @@ import io.mongock.core.execution.step.rolledback.RolledBackStep;
 import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.task.executable.ExecutableTask;
-import io.mongock.core.util.RuntimeHelper;
+import io.mongock.core.runtime.DefaultRuntimeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class StepNavigator {
     //For sequential execution, so we avoid creating too many new instances and save GC cycles
     public static StepNavigationOutput startByReuse(ExecutableTask task,
                                                     AuditWriter<?> auditWriter,
-                                                    RuntimeHelper runtimeHelper,
+                                                    DefaultRuntimeHelper runtimeHelper,
                                                     ExecutionContext executionContext) {
         return instance
                 .clean()
@@ -45,7 +45,7 @@ public class StepNavigator {
     //by using a pool
     public static StepNavigationOutput startByNew(ExecutableTask task,
                                                   AuditWriter<?> auditWriter,
-                                                  RuntimeHelper runtimeHelper,
+                                                  DefaultRuntimeHelper runtimeHelper,
                                                   ExecutionContext executionContext) {
         return new StepNavigator(auditWriter, new DefaultStepSummarizer(), runtimeHelper)
                 .start(task, executionContext);
@@ -54,7 +54,7 @@ public class StepNavigator {
     private StepSummarizer summarizer;
     private AuditWriter<?> auditWriter;
 
-    private RuntimeHelper runtimeHelper;
+    private DefaultRuntimeHelper runtimeHelper;
 
     private StepNavigator() {
         this(null, null, null);
@@ -62,7 +62,7 @@ public class StepNavigator {
 
     private StepNavigator(AuditWriter<?> auditWriter,
                           StepSummarizer summarizer,
-                          RuntimeHelper runtimeHelper) {
+                          DefaultRuntimeHelper runtimeHelper) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
         this.runtimeHelper = runtimeHelper;
@@ -77,7 +77,7 @@ public class StepNavigator {
 
     private StepNavigator setDependencies(AuditWriter<?> auditWriter,
                                           StepSummarizer summarizer,
-                                          RuntimeHelper runtimeHelper) {
+                                          DefaultRuntimeHelper runtimeHelper) {
         this.summarizer = summarizer;
         this.auditWriter = auditWriter;
         this.runtimeHelper = runtimeHelper;

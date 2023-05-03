@@ -3,7 +3,7 @@ package io.mongock.core.runner.standalone;
 import io.mongock.core.Factory;
 import io.mongock.core.audit.domain.AuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
-import io.mongock.core.dependency.DependencyManager;
+import io.mongock.core.runtime.dependency.Dependencymanager;
 import io.mongock.core.event.EventPublisher;
 import io.mongock.core.event.MigrationFailureEvent;
 import io.mongock.core.event.MigrationStartedEvent;
@@ -53,7 +53,7 @@ public class BaseStandaloneRunnerBuilder<
 
     @Override
     public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory,
-                        DependencyManager dependencyManager) {
+                        Dependencymanager dependencyManager) {
         EventPublisher eventPublisher = new EventPublisher(
                 processStartedListener != null ? () -> processStartedListener.accept(new MigrationStartedEvent()) : null,
                 processSuccessListener != null ? result -> processSuccessListener.accept(new MigrationSuccessEvent(result)) : null,

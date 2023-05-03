@@ -1,18 +1,18 @@
-package io.mongock.core.dependency;
+package io.mongock.core.runtime.dependency;
 
 import java.util.function.Function;
 
 
 /**
- * This class it to hold dependencies that have as implementation a dependency from the DependencyManager itself. So they
+ * This class it to hold dependencies that have as implementation a dependency from the Dependencymanager itself. So they
  * need to retrieve the impl from the dependencyManager
  */
-public class ChangeSetDependencyBuildable extends ChangeSetDependency{
+public class DependencyBuildable extends Dependency {
 
   private final Function<Object, Object> decoratorFunction;
   private final Class<?> implType;
 
-  public ChangeSetDependencyBuildable(Class<?> type, Class<?> implType, Function<Object, Object> decoratorFunction, boolean implProxeable) {
+  public DependencyBuildable(Class<?> type, Class<?> implType, Function<Object, Object> decoratorFunction, boolean implProxeable) {
     super(DEFAULT_NAME, type, implProxeable);
     this.decoratorFunction = decoratorFunction;
     this.implType = implType;
