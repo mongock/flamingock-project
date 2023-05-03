@@ -89,7 +89,7 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
         EXECUTABLE_PROCESS executableProcess = process.applyState(processCurrentState);
         logger.debug("Applied state to process:\n{}", executableProcess);
 
-        RuntimeHelper runtimeHelper = new RuntimeHelper(dependencyManager);
+        RuntimeHelper runtimeHelper = new RuntimeHelper(dependencyManager);//TODO how to inject this
         ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, runtimeHelper);
         logger.info("Finished process successfully\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));

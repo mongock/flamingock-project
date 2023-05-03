@@ -102,10 +102,12 @@ public final class RuntimeHelper {
 
 
     private Object getParameter(Class<?> parameterType, Parameter parameter) {
+        Object dependency = dependencyManager.getDependencyOrThrow(parameterType, getParameterName(parameter));
         boolean makeItProxy = !parameterType.isAnnotationPresent(NonLockGuarded.class)
                 && !parameter.isAnnotationPresent(NonLockGuarded.class)
                 && !nonProxyableTypes.contains(parameterType);
-        return dependencyManager.getDependencyOrThrow(parameterType, getParameterName(parameter), makeItProxy);
+        //TODO return proxy if applies
+        return dependency;
     }
 
     private String getParameterName(Parameter parameter) {
