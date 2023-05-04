@@ -10,7 +10,7 @@ import io.mongock.core.execution.summary.StepSummaryLine;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.process.stubs.task.FailedTestExecutableTask;
 import io.mongock.core.process.stubs.task.SuccessTestExecutableTask;
-import io.mongock.core.runtime.DefaultRuntimeHelper;
+import io.mongock.core.runtime.RuntimeHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -45,7 +45,7 @@ class SingleRunnableProcessTest {
         //WHEN
         ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
         List<StepSummaryLine> steps = new SingleProcessExecutor(stateSaver)
-                .run(process, executionContext, mock(DefaultRuntimeHelper.class))
+                .run(process, executionContext, mock(RuntimeHelper.class))
                 .getSummary()
                 .getLines();
 
@@ -114,7 +114,7 @@ class SingleRunnableProcessTest {
         //WHEN
         ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
         ProcessExecutor.Output output = new SingleProcessExecutor(stateSaver)
-                .run(process, executionContext, mock(DefaultRuntimeHelper.class));
+                .run(process, executionContext, mock(RuntimeHelper.class));
         String actualSummary = output.getSummary().getPretty();
         System.out.println(actualSummary);
 

@@ -2,7 +2,6 @@ package io.mongock.core.execution.executor;
 
 import io.mongock.core.execution.summary.StepSummary;
 import io.mongock.core.process.ExecutableProcess;
-import io.mongock.core.runtime.DefaultRuntimeHelper;
 import io.mongock.core.runtime.RuntimeHelper;
 
 public interface ProcessExecutor<EXECUTABLE_PROCESS extends ExecutableProcess> {

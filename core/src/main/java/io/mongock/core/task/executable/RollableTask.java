@@ -1,6 +1,5 @@
 package io.mongock.core.task.executable;
 
-import io.mongock.core.runtime.DefaultRuntimeHelper;
 import io.mongock.core.runtime.RuntimeHelper;
 
 public interface RollableTask extends ExecutableTask {

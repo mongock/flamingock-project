@@ -9,8 +9,8 @@ import io.mongock.core.execution.step.ExecutableStep;
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.mongock.core.execution.step.afteraudit.RollableStep;
-import io.mongock.core.execution.step.complete.CompleteFailedStep;
 import io.mongock.core.execution.step.complete.AlreadyAppliedStep;
+import io.mongock.core.execution.step.complete.CompleteFailedStep;
 import io.mongock.core.execution.step.execution.ExecutionStep;
 import io.mongock.core.execution.step.execution.FailedExecutionStep;
 import io.mongock.core.execution.step.rolledback.FailedRolledBackStep;
@@ -19,7 +19,6 @@ import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.task.executable.ExecutableTask;
-import io.mongock.core.runtime.DefaultRuntimeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +45,7 @@ public class StepNavigator {
     //by using a pool
     public static StepNavigationOutput startByNew(ExecutableTask task,
                                                   AuditWriter<?> auditWriter,
-                                                  DefaultRuntimeHelper runtimeHelper,
+                                                  RuntimeHelper runtimeHelper,
                                                   ExecutionContext executionContext) {
         return new StepNavigator(auditWriter, new DefaultStepSummarizer(), runtimeHelper)
                 .start(task, executionContext);
@@ -63,7 +62,7 @@ public class StepNavigator {
 
     private StepNavigator(AuditWriter<?> auditWriter,
                           StepSummarizer summarizer,
-                          DefaultRuntimeHelper runtimeHelper) {
+                          RuntimeHelper runtimeHelper) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
         this.runtimeHelper = runtimeHelper;

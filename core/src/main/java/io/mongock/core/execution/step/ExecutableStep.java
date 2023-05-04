@@ -5,7 +5,6 @@ import io.mongock.core.execution.step.execution.FailedExecutionStep;
 import io.mongock.core.execution.step.execution.SuccessExecutionStep;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.task.executable.ExecutableTask;
-import io.mongock.core.runtime.DefaultRuntimeHelper;
 import io.mongock.core.util.StopWatch;
 
 public class ExecutableStep extends TaskStep {
