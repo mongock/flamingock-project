@@ -1,14 +1,19 @@
 package io.mongock.core.runner;
 
+import io.mongock.core.Factory;
 import io.mongock.core.audit.domain.AuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
 import io.mongock.core.configuration.LegacyMigration;
 import io.mongock.core.configuration.TransactionStrategy;
+import io.mongock.core.event.EventPublisher;
 import io.mongock.core.execution.executor.ExecutionContext;
+import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
+import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
+import io.mongock.core.runtime.dependency.DefaultDependencyManager;
 import io.mongock.core.util.StringUtil;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -17,19 +22,18 @@ public abstract class BaseBuilder<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CONFIG extends AbstractConfiguration>
-implements InternalRunnerBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>{
+        implements Configurator<HOLDER, CONFIG> {
 
     private CONFIG configuration;
 
     protected final Supplier<HOLDER> holderInstanceSupplier;
+
 
     public BaseBuilder(CONFIG configuration,
                        Supplier<HOLDER> holderInstanceSupplier) {
         this.configuration = configuration;
         this.holderInstanceSupplier = holderInstanceSupplier;
     }
-
-
 
     protected ExecutionContext buildExecutionContext() {
         return buildExecutionContext(
@@ -45,6 +49,26 @@ implements InternalRunnerBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS
                                                      String author,
                                                      Map<String, Object> metadata) {
         return new ExecutionContext(executionId, hostname, author, metadata);
+    }
+
+
+    protected Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory,
+                           EventPublisher eventPublisher,
+                           AbstractDependencyManager dependencyManager) {
+        RuntimeHelper.Builder runtimeBuilder = RuntimeHelper
+                .builder()
+                .setDependencyManager(dependencyManager);
+        final RunnerOrchestrator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> runnerOrchestrator = new RunnerOrchestrator<>(
+                factory.getLockProvider(),
+                factory.getAuditReader(),
+                factory.getProcessExecutor(),
+                buildExecutionContext(),
+                eventPublisher,
+                runtimeBuilder,
+                getConfiguration().isThrowExceptionIfCannotObtainLock());
+        //Instantiated here, so we don't wait until Runner.run() and fail fast
+        final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
+        return () -> runnerOrchestrator.execute(definitionProcess);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

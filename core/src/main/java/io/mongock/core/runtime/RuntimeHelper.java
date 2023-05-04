@@ -1,7 +1,7 @@
 package io.mongock.core.runtime;
 
 import io.mongock.core.lock.Lock;
-import io.mongock.core.runtime.dependency.DependencyManager;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
 
 import java.lang.reflect.Method;
@@ -11,17 +11,22 @@ public interface RuntimeHelper {
 
     Object executeMethod(Object instance, Method method);
 
+    static Builder builder() {
+        return new Builder();
+    }
+
     final class Builder {
         
-        private final DependencyManager dependencyManager;
+        private AbstractDependencyManager dependencyManager;
         private Lock lock;
-
-        public Builder(DependencyManager dependencyManager) {
-            this.dependencyManager = dependencyManager;
-        }
 
         public Builder setLock(Lock lock) {
             this.lock = lock;
+            return this;
+        }
+
+        public Builder setDependencyManager(AbstractDependencyManager dependencyManager) {
+            this.dependencyManager = dependencyManager;
             return this;
         }
 

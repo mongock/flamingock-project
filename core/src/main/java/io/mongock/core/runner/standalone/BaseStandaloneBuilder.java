@@ -3,16 +3,15 @@ package io.mongock.core.runner.standalone;
 import io.mongock.core.Factory;
 import io.mongock.core.audit.domain.AuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
-import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.event.EventPublisher;
 import io.mongock.core.event.MigrationFailureEvent;
 import io.mongock.core.event.MigrationStartedEvent;
 import io.mongock.core.event.MigrationSuccessEvent;
-import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.runner.BaseBuilder;
 import io.mongock.core.runner.Runner;
-import io.mongock.core.runner.RunnerOrchestrator;
+import io.mongock.core.runtime.dependency.DefaultDependencyManager;
+import io.mongock.core.runtime.dependency.Dependency;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -25,19 +24,26 @@ public class BaseStandaloneBuilder<
         extends BaseBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>
         implements StandaloneBuilder<HOLDER> {
 
+    private final DefaultDependencyManager dependencyManager;
     private Consumer<MigrationStartedEvent> processStartedListener;
     private Consumer<MigrationSuccessEvent> processSuccessListener;
     private Consumer<MigrationFailureEvent> processFailedListener;
 
     public BaseStandaloneBuilder(CONFIG configuration, Supplier<HOLDER> holderInstanceSupplier) {
+        this(configuration, holderInstanceSupplier, new DefaultDependencyManager());
+    }
+
+    BaseStandaloneBuilder(CONFIG configuration,
+                          Supplier<HOLDER> holderInstanceSupplier,
+                          DefaultDependencyManager dependencyManager) {
         super(configuration, holderInstanceSupplier);
+        this.dependencyManager = dependencyManager;
     }
 
     @Override
     public HOLDER addDependency(String name, Class<?> type, Object instance) {
-        return null;
-        //    getDependencyManager().addStandardDependency(new ChangeSetDependency(name, type, instance));
-//    return getInstance();
+        dependencyManager.addStandardDependency(new Dependency(name, type, instance));
+        return holderInstanceSupplier.get();
     }
 
     @Override
@@ -58,25 +64,11 @@ public class BaseStandaloneBuilder<
         return holderInstanceSupplier.get();
     }
 
-    @Override
-    public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory,
-                        RuntimeHelper.Builder runtimeBuilder) {
+    public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory) {
         EventPublisher eventPublisher = new EventPublisher(
                 processStartedListener != null ? () -> processStartedListener.accept(new MigrationStartedEvent()) : null,
                 processSuccessListener != null ? result -> processSuccessListener.accept(new MigrationSuccessEvent(result)) : null,
                 processFailedListener != null ? result -> processFailedListener.accept(new MigrationFailureEvent(result)) : null);
-
-
-        final RunnerOrchestrator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> runnerOrchestrator = new RunnerOrchestrator<>(
-                factory.getLockProvider(),
-                factory.getAuditReader(),
-                factory.getProcessExecutor(),
-                buildExecutionContext(),
-                eventPublisher,
-                runtimeBuilder,
-                getConfiguration().isThrowExceptionIfCannotObtainLock());
-        //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
-        return () -> runnerOrchestrator.execute(definitionProcess);
+        return super.build(factory, eventPublisher, dependencyManager);
     }
 }

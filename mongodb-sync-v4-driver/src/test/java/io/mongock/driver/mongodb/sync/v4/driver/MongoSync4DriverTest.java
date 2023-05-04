@@ -25,7 +25,7 @@ class MongoSync4DriverTest {
 //                .setMigrationStartedListener(MongockEventListener::onStart)
 //                .setMigrationSuccessListener(MongockEventListener::onSuccess)
 //                .setMigrationFailureListener(MongockEventListener::onFail)
-//                .addDependency("secondaryDb", getSecondaryDb())
+                .addDependency(new MyDependency())
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
                 .build()
@@ -40,18 +40,6 @@ class MongoSync4DriverTest {
         return buildMongoClientWithCodecs(MONGODB_CONNECTION_STRING);
     }
 
-    /**
-     * Adding MongoDatabase dependency we can access mongodb secondary databases.
-     * Secondary database should be used only for read, because it won't be
-     * managed by Mongock. We can inject it in ChangeSets this way:
-     * @Named("secondaryDb") @NonLockGuarded MongoDatabase secondaryDb In this
-     * example we are connecting to a single mongodb server, but we could connect
-     * to a different server in the same way.
-     */
-    private static MongoDatabase getSecondaryDb() {
-        MongoClient mongoClient = buildMongoClientWithCodecs(MONGODB_CONNECTION_STRING);
-        return mongoClient.getDatabase("secondaryDb");
-    }
 
     /**
      * Helper to create MongoClients customized including Codecs

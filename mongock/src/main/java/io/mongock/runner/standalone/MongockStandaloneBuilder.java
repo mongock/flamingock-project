@@ -13,8 +13,6 @@ import io.mongock.core.runner.Configurator;
 import io.mongock.core.runner.standalone.BaseStandaloneBuilder;
 import io.mongock.core.runner.standalone.StandaloneBuilder;
 import io.mongock.core.runtime.RuntimeHelper;
-import io.mongock.core.runtime.dependency.DependencyManager;
-import io.mongock.core.runtime.dependency.DependencyManagerWithContext;
 import io.mongock.internal.MongockConfiguration;
 import io.mongock.internal.MongockFactory;
 import io.mongock.internal.MongockRunnerConfigurator;
@@ -56,9 +54,7 @@ public class MongockStandaloneBuilder
     public Runner build() {
         ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(delegate.getConfiguration());
         connectionEngine.initialize();
-        return delegate.build(new MongockFactory(connectionEngine),
-                new RuntimeHelper.Builder(dependencyManager)
-        );
+        return delegate.build(new MongockFactory(connectionEngine));
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

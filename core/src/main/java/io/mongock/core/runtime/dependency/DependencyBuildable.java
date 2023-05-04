@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 
 /**
- * This class it to hold dependencies that have as implementation a dependency from the DependencyManager itself. So they
+ * This class it to hold dependencies that have as implementation a dependency from the AbstractDependencyManager itself. So they
  * need to retrieve the impl from the dependencyManager
  */
 public class DependencyBuildable extends Dependency {

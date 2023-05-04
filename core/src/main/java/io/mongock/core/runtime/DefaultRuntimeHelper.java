@@ -1,10 +1,10 @@
 package io.mongock.core.runtime;
-
+import io.mongock.core.runtime.dependency.exception.DependencyInjectionException;
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.mongock.api.annotations.ChangeUnitConstructor;
 import io.mongock.api.exception.CoreException;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.runtime.dependency.Dependency;
-import io.mongock.core.runtime.dependency.DependencyManager;
 import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
 import io.mongock.core.util.Constants;
 import org.slf4j.Logger;
@@ -33,11 +33,11 @@ public final class DefaultRuntimeHelper implements RuntimeHelper {
             ? parameter.getAnnotation(Named.class).value()
             : null;
     private final Set<Class<?>> nonProxyableTypes = Collections.emptySet();
-    private final DependencyManager dependencyManager;
+    private final AbstractDependencyManager dependencyManager;
     private final LockGuardProxyFactory proxyFactory;
 
     public DefaultRuntimeHelper(LockGuardProxyFactory proxyFactory,
-                                DependencyManager dependencyManager) {
+                                AbstractDependencyManager dependencyManager) {
         this.dependencyManager = dependencyManager;
         this.proxyFactory = proxyFactory;
     }
@@ -92,7 +92,6 @@ public final class DefaultRuntimeHelper implements RuntimeHelper {
                     type.getName(),
                     ChangeUnitConstructor.class.getSimpleName());
         }
-
     }
 
     private List<Object> getSignatureParameters(Executable executable) {
@@ -105,17 +104,18 @@ public final class DefaultRuntimeHelper implements RuntimeHelper {
         return signatureParameters;
     }
 
-
     private Object getParameter(Class<?> parameterType, Parameter parameter) {
-        Dependency dependency = dependencyManager.getDependencyOrThrow(parameterType, getParameterName(parameter));
+        String parameterName = getParameterName(parameter);
+        Dependency dependency = dependencyManager.getDependency(parameterType, parameterName)
+                .orElseThrow(() -> new DependencyInjectionException(parameterType, parameterName));
+
         boolean lockGuarded = !parameterType.isAnnotationPresent(NonLockGuarded.class)
                 && !parameter.isAnnotationPresent(NonLockGuarded.class)
                 && !nonProxyableTypes.contains(parameterType);
-        //TODO return proxy if applies
 
         return dependency.isProxeable() && lockGuarded
-                ? Optional.of(proxyFactory.getRawProxy(dependency.getInstance(), dependency.getType()))
-                : Optional.ofNullable(dependency.getInstance());
+                ? proxyFactory.getRawProxy(dependency.getInstance(), dependency.getType())
+                : dependency.getInstance();
 
     }
 
