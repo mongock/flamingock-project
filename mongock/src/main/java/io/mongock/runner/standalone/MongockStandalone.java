@@ -5,8 +5,8 @@ public final class MongockStandalone {
     private MongockStandalone() {
     }
 
-    public static MongockStandaloneRunnerBuilder builder() {
-        return new MongockStandaloneRunnerBuilder();
+    public static MongockStandaloneBuilder builder() {
+        return new MongockStandaloneBuilder();
     }
 
 

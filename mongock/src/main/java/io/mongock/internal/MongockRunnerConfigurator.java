@@ -1,7 +1,7 @@
 package io.mongock.internal;
 
 import io.mongock.internal.driver.ConnectionDriver;
-import io.mongock.runner.standalone.MongockStandaloneRunnerBuilder;
+import io.mongock.runner.standalone.MongockStandaloneBuilder;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ public interface MongockRunnerConfigurator<HOLDER> {
 
     String getLockRepositoryName();
 
-    MongockStandaloneRunnerBuilder setLockRepositoryName(String value);
+    MongockStandaloneBuilder setLockRepositoryName(String value);
 
     boolean isIndexCreation();
 

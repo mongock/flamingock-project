@@ -26,7 +26,7 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
         Stream<StepNavigationOutput> taskStepStream = executableProcess.getTasks()
                 .stream()
                 .map(task -> StepNavigator.startByReuse(task, stateSaver, runtimeHelper, executionContext))
-                .peek(summary::addSummary);//summary
+                .peek(summary::addSummary);
         processUntil(taskStepStream, StepNavigationOutput::isFailed);
         return new Output(summary);
     }

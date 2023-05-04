@@ -8,14 +8,15 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class DependencyManagerImpl implements DependencyManager {
+public class DependencyManagerWithContext implements DependencyManager {
 
-    private final LinkedHashSet<Dependency> connectorDependencies;
-    private final LinkedHashSet<Dependency> standardDependencies;
+    private final LinkedHashSet<Dependency> priorityDependencies;
+    //    private final LinkedHashSet<Dependency> standardDependencies;
+    private final DependencyContext context;
 
-    public DependencyManagerImpl() {
-        standardDependencies = new LinkedHashSet<>();
-        connectorDependencies = new LinkedHashSet<>();
+    public DependencyManagerWithContext(DependencyContext context) {
+        this.context = context;
+        priorityDependencies = new LinkedHashSet<>();
     }
 
     public Optional<Dependency> getDependency(Class<?> type) throws ForbiddenParameterException {
@@ -23,22 +24,38 @@ public class DependencyManagerImpl implements DependencyManager {
     }
 
     public Optional<Dependency> getDependency(Class<?> type, String name) throws ForbiddenParameterException {
-        Optional<Dependency> connectorDependencyOpt = getDependencyFromStore(connectorDependencies, type, name);
+        Optional<Dependency> connectorDependencyOpt = getDependencyFromStore(priorityDependencies, type, name);
         Optional<Dependency> dependencyOpt = !connectorDependencyOpt.isPresent()
-                ? getDependencyFromStore(standardDependencies, type, name)
+                ? getFromContext(type, name)
                 : connectorDependencyOpt;
         if (!dependencyOpt.isPresent()) {
             return Optional.empty();
-        }
-        Dependency dependency = dependencyOpt.get();
-        return DependencyBuildable.class.isAssignableFrom(dependency.getClass())
-                ? getDependency(((DependencyBuildable) dependency).getImplType())
-                : dependencyOpt;
 
+        } else {
+            Dependency dependency = dependencyOpt.get();
+            return DependencyBuildable.class.isAssignableFrom(dependency.getClass())
+                    ? getDependency(((DependencyBuildable) dependency).getImplType())
+                    : dependencyOpt;
+        }
+    }
+
+    private Optional<Dependency> getFromContext(Class<?> type, String name) {
+        Object value = isByName(name)
+                ? context.getBean(name)
+                : context.getBean(type);
+        if (value == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(new Dependency(name, type, value, true));
+        }
+    }
+
+    private static boolean isByName(String name) {
+        return name != null && !name.isEmpty() && !Dependency.DEFAULT_NAME.equals(name);
     }
 
     private Optional<Dependency> getDependencyFromStore(Collection<Dependency> dependencyStore, Class<?> type, String name) {
-        boolean byName = name != null && !name.isEmpty() && !Dependency.DEFAULT_NAME.equals(name);
+        boolean byName = isByName(name);
         Predicate<Dependency> filter = byName
                 ? dependency -> name.equals(dependency.getName())
                 : dependency -> type.isAssignableFrom(dependency.getType());
@@ -57,22 +74,13 @@ public class DependencyManagerImpl implements DependencyManager {
      * @param dependencies dependencies from driver
      * @return the current dependency manager
      */
-    public DependencyManager addDriverDependencies(Collection<? extends Dependency> dependencies) {
-        dependencies.forEach(this::addDriverDependency);
+    public DependencyManager addPriorityDependencies(Collection<? extends Dependency> dependencies) {
+        dependencies.forEach(this::addPriorityDependency);
         return this;
     }
 
-    public DependencyManager addDriverDependency(Dependency dependency) {
-        return addDependency(connectorDependencies, dependency);
-    }
-
-    public DependencyManager addStandardDependencies(Collection<? extends Dependency> dependencies) {
-        dependencies.forEach(this::addStandardDependency);
-        return this;
-    }
-
-    public DependencyManager addStandardDependency(Dependency dependency) {
-        return addDependency(standardDependencies, dependency);
+    public DependencyManager addPriorityDependency(Dependency dependency) {
+        return addDependency(priorityDependencies, dependency);
     }
 
     private <T extends Dependency> DependencyManager addDependency(Collection<T> dependencyStore, T dependency) {

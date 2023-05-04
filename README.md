@@ -1,6 +1,6 @@
 
 # TODO
-- Implement proxy wrapper
+- Inject dependency in builder
 
 # Technical debts
 - Ensure changeUnit order in ChangeUnits

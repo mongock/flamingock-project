@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class BaseRunnerBuilder<
+public abstract class BaseBuilder<
         HOLDER,
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
@@ -23,8 +23,8 @@ implements InternalRunnerBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS
 
     protected final Supplier<HOLDER> holderInstanceSupplier;
 
-    public BaseRunnerBuilder(CONFIG configuration,
-                             Supplier<HOLDER> holderInstanceSupplier) {
+    public BaseBuilder(CONFIG configuration,
+                       Supplier<HOLDER> holderInstanceSupplier) {
         this.configuration = configuration;
         this.holderInstanceSupplier = holderInstanceSupplier;
     }

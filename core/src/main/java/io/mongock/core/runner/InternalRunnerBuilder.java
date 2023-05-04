@@ -11,7 +11,7 @@ public interface InternalRunnerBuilder<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CONFIG extends AbstractConfiguration>
-        extends RunnerConfigurator<HOLDER, CONFIG> {
+        extends Configurator<HOLDER, CONFIG> {
 
     Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory, RuntimeHelper.Builder runtimeBuilder);
 }

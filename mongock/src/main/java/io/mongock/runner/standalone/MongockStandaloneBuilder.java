@@ -9,12 +9,12 @@ import io.mongock.core.event.MigrationSuccessEvent;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.runner.Runner;
 import io.mongock.core.runner.RunnerBuilder;
-import io.mongock.core.runner.RunnerConfigurator;
-import io.mongock.core.runner.standalone.BaseStandaloneRunnerBuilder;
-import io.mongock.core.runner.standalone.StandaloneRunnerConfigurator;
+import io.mongock.core.runner.Configurator;
+import io.mongock.core.runner.standalone.BaseStandaloneBuilder;
+import io.mongock.core.runner.standalone.StandaloneBuilder;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.runtime.dependency.DependencyManager;
-import io.mongock.core.runtime.dependency.DependencyManagerImpl;
+import io.mongock.core.runtime.dependency.DependencyManagerWithContext;
 import io.mongock.internal.MongockConfiguration;
 import io.mongock.internal.MongockFactory;
 import io.mongock.internal.MongockRunnerConfigurator;
@@ -25,27 +25,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class MongockStandaloneRunnerBuilder
+public class MongockStandaloneBuilder
         implements
         RunnerBuilder,
-        MongockRunnerConfigurator<MongockStandaloneRunnerBuilder>,
-        StandaloneRunnerConfigurator<MongockStandaloneRunnerBuilder>,
-        RunnerConfigurator<MongockStandaloneRunnerBuilder, MongockConfiguration> {
+        MongockRunnerConfigurator<MongockStandaloneBuilder>,
+        StandaloneBuilder<MongockStandaloneBuilder>,
+        Configurator<MongockStandaloneBuilder, MongockConfiguration> {
 
-    private final BaseStandaloneRunnerBuilder<
-            MongockStandaloneRunnerBuilder,
-            SingleAuditProcessStatus,
-            SingleExecutableProcess,
-            MongockConfiguration> delegate;
+    private final BaseStandaloneBuilder<
+            MongockStandaloneBuilder,
+                SingleAuditProcessStatus,
+                SingleExecutableProcess,
+                MongockConfiguration> delegate;
 
     private ConnectionDriver<?> connectionDriver;
 
-    MongockStandaloneRunnerBuilder() {
+    MongockStandaloneBuilder() {
         this(new MongockConfiguration());
     }
 
-    MongockStandaloneRunnerBuilder(MongockConfiguration configuration) {
-        this.delegate = new BaseStandaloneRunnerBuilder<>(configuration, () -> this);
+    MongockStandaloneBuilder(MongockConfiguration configuration) {
+        this.delegate = new BaseStandaloneBuilder<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -56,9 +56,7 @@ public class MongockStandaloneRunnerBuilder
     public Runner build() {
         ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(delegate.getConfiguration());
         connectionEngine.initialize();
-        DependencyManager dependencyManager = new DependencyManagerImpl();//TODO implement this
-        return delegate.build(
-                new MongockFactory(connectionEngine),
+        return delegate.build(new MongockFactory(connectionEngine),
                 new RuntimeHelper.Builder(dependencyManager)
         );
     }
@@ -67,7 +65,7 @@ public class MongockStandaloneRunnerBuilder
     //  MONGOCK CONFIGURATOR
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public MongockStandaloneRunnerBuilder setDriver(ConnectionDriver<?> connectionDriver) {
+    public MongockStandaloneBuilder setDriver(ConnectionDriver<?> connectionDriver) {
         this.connectionDriver = connectionDriver;
         return this;
     }
@@ -78,13 +76,13 @@ public class MongockStandaloneRunnerBuilder
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setMigrationScanPackage(List<String> scanPackage) {
+    public MongockStandaloneBuilder setMigrationScanPackage(List<String> scanPackage) {
         delegate.getConfiguration().setMigrationScanPackage(scanPackage);
         return this;
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
+    public MongockStandaloneBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
         if (migrationScanPackageList != null) {
             List<String> migrationScanPackage = getMigrationScanPackage();
             migrationScanPackage.addAll(migrationScanPackageList);
@@ -99,7 +97,7 @@ public class MongockStandaloneRunnerBuilder
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setMigrationRepositoryName(String value) {
+    public MongockStandaloneBuilder setMigrationRepositoryName(String value) {
         delegate.getConfiguration().setMigrationRepositoryName(value);
         return this;
     }
@@ -110,7 +108,7 @@ public class MongockStandaloneRunnerBuilder
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setLockRepositoryName(String value) {
+    public MongockStandaloneBuilder setLockRepositoryName(String value) {
         delegate.getConfiguration().setLockRepositoryName(value);
         return this;
     }
@@ -121,7 +119,7 @@ public class MongockStandaloneRunnerBuilder
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setIndexCreation(boolean value) {
+    public MongockStandaloneBuilder setIndexCreation(boolean value) {
         delegate.getConfiguration().setIndexCreation(value);
         return this;
     }
@@ -131,78 +129,78 @@ public class MongockStandaloneRunnerBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public MongockStandaloneRunnerBuilder setConfiguration(MongockConfiguration configuration) {
+    public MongockStandaloneBuilder setConfiguration(MongockConfiguration configuration) {
         return delegate.setConfiguration(configuration);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
+    public MongockStandaloneBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
         return delegate.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
+    public MongockStandaloneBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
         return delegate.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
+    public MongockStandaloneBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
         return delegate.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
+    public MongockStandaloneBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
         return delegate.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setTrackIgnored(boolean trackIgnored) {
+    public MongockStandaloneBuilder setTrackIgnored(boolean trackIgnored) {
         return delegate.setTrackIgnored(trackIgnored);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setEnabled(boolean enabled) {
+    public MongockStandaloneBuilder setEnabled(boolean enabled) {
         return delegate.setEnabled(enabled);
     }
 
 
     @Override
-    public MongockStandaloneRunnerBuilder setStartSystemVersion(String startSystemVersion) {
+    public MongockStandaloneBuilder setStartSystemVersion(String startSystemVersion) {
         return delegate.setStartSystemVersion(startSystemVersion);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setEndSystemVersion(String endSystemVersion) {
+    public MongockStandaloneBuilder setEndSystemVersion(String endSystemVersion) {
         return delegate.setEndSystemVersion(endSystemVersion);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setServiceIdentifier(String serviceIdentifier) {
+    public MongockStandaloneBuilder setServiceIdentifier(String serviceIdentifier) {
         return delegate.setServiceIdentifier(serviceIdentifier);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setMetadata(Map<String, Object> metadata) {
+    public MongockStandaloneBuilder setMetadata(Map<String, Object> metadata) {
         return delegate.setMetadata(metadata);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setLegacyMigration(LegacyMigration legacyMigration) {
+    public MongockStandaloneBuilder setLegacyMigration(LegacyMigration legacyMigration) {
         return delegate.setLegacyMigration(legacyMigration);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setTransactionEnabled(Boolean transactionEnabled) {
+    public MongockStandaloneBuilder setTransactionEnabled(Boolean transactionEnabled) {
         return delegate.setTransactionEnabled(transactionEnabled);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setDefaultMigrationAuthor(String defaultMigrationAuthor) {
+    public MongockStandaloneBuilder setDefaultMigrationAuthor(String defaultMigrationAuthor) {
         return delegate.setDefaultMigrationAuthor(defaultMigrationAuthor);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
+    public MongockStandaloneBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
         return delegate.setTransactionStrategy(transactionStrategy);
     }
 
@@ -282,17 +280,22 @@ public class MongockStandaloneRunnerBuilder
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setMigrationStartedListener(Consumer<MigrationStartedEvent> listener) {
+    public MongockStandaloneBuilder addDependency(String name, Class<?> type, Object instance) {
+        return delegate.addDependency(name, type, instance);
+    }
+
+    @Override
+    public MongockStandaloneBuilder setMigrationStartedListener(Consumer<MigrationStartedEvent> listener) {
         return delegate.setMigrationStartedListener(listener);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener) {
+    public MongockStandaloneBuilder setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener) {
         return delegate.setMigrationSuccessListener(listener);
     }
 
     @Override
-    public MongockStandaloneRunnerBuilder setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
+    public MongockStandaloneBuilder setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
         return delegate.setMigrationFailureListener(listener);
     }
 }

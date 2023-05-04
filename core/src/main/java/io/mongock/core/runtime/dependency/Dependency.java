@@ -12,6 +12,7 @@ public class Dependency {
   private String name;
   private Class<?> type;
   private boolean proxeable;
+
   protected Object instance;
 
 

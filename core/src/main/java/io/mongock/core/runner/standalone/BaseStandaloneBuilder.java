@@ -10,27 +10,34 @@ import io.mongock.core.event.MigrationStartedEvent;
 import io.mongock.core.event.MigrationSuccessEvent;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
-import io.mongock.core.runner.BaseRunnerBuilder;
+import io.mongock.core.runner.BaseBuilder;
 import io.mongock.core.runner.Runner;
 import io.mongock.core.runner.RunnerOrchestrator;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class BaseStandaloneRunnerBuilder<
+public class BaseStandaloneBuilder<
         HOLDER,
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CONFIG extends AbstractConfiguration>
-        extends BaseRunnerBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>
-        implements StandaloneRunnerConfigurator<HOLDER> {
+        extends BaseBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>
+        implements StandaloneBuilder<HOLDER> {
 
     private Consumer<MigrationStartedEvent> processStartedListener;
     private Consumer<MigrationSuccessEvent> processSuccessListener;
     private Consumer<MigrationFailureEvent> processFailedListener;
 
-    public BaseStandaloneRunnerBuilder(CONFIG configuration, Supplier<HOLDER> holderInstanceSupplier) {
+    public BaseStandaloneBuilder(CONFIG configuration, Supplier<HOLDER> holderInstanceSupplier) {
         super(configuration, holderInstanceSupplier);
+    }
+
+    @Override
+    public HOLDER addDependency(String name, Class<?> type, Object instance) {
+        return null;
+        //    getDependencyManager().addStandardDependency(new ChangeSetDependency(name, type, instance));
+//    return getInstance();
     }
 
     @Override
