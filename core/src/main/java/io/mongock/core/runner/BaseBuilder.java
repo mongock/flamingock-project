@@ -11,7 +11,6 @@ import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.runtime.dependency.AbstractDependencyManager;
-import io.mongock.core.runtime.dependency.DefaultDependencyManager;
 import io.mongock.core.util.StringUtil;
 
 import java.util.Map;

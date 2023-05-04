@@ -3,7 +3,6 @@ package io.mongock.core.runner;
 import io.mongock.api.exception.CoreException;
 import io.mongock.core.audit.AuditReader;
 import io.mongock.core.audit.domain.AuditProcessStatus;
-import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.event.EventPublisher;
 import io.mongock.core.event.result.MigrationIgnoredResult;
 import io.mongock.core.event.result.MigrationSuccessResult;
@@ -15,6 +14,7 @@ import io.mongock.core.lock.LockCheckException;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.process.LoadedProcess;
+import io.mongock.core.runtime.RuntimeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
