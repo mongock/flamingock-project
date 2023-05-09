@@ -8,6 +8,9 @@ public class ChangeUnit2 {
 
     @Execution
     public void execution() {
-        System.out.println("\n\n+*********EXECUTION***********\n\n");
+//        if(true) {
+//            throw new RuntimeException("INTENTIONED");
+//        }
+//        System.out.println("\n\n+*********EXECUTION***********\n\n");
     }
 }

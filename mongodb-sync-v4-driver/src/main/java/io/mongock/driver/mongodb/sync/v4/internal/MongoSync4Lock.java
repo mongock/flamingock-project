@@ -11,6 +11,7 @@ public class MongoSync4Lock implements Lock {
 
     @Override
     public void ensureLock() {
+        logger.info("\n*******************************ENSURING LOCK***********************\n");
         //TODO implement
     }
 
@@ -23,6 +24,7 @@ public class MongoSync4Lock implements Lock {
     @Override
     public void close() throws Exception {
         //TODO implement
+        logger.info("\n*******************************RELASING LOCK***********************\n");
 
     }
 }

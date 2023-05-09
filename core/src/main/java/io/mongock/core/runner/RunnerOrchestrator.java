@@ -7,6 +7,7 @@ import io.mongock.core.event.EventPublisher;
 import io.mongock.core.event.result.MigrationIgnoredResult;
 import io.mongock.core.event.result.MigrationSuccessResult;
 import io.mongock.core.execution.executor.ExecutionContext;
+import io.mongock.core.execution.executor.ProcessExecutionException;
 import io.mongock.core.execution.executor.ProcessExecutor;
 import io.mongock.core.lock.Lock;
 import io.mongock.core.lock.LockAcquirer;
@@ -74,15 +75,19 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
                 logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" + "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" + "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
             }
 
-        } catch (Exception ex) {
-            CoreException coreEx = ex instanceof CoreException ? (CoreException) ex : new CoreException(ex);
+        } catch (ProcessExecutionException processException) {
+            logger.info("Process summary\n{}", processException.getSummary().getPretty());
+            eventPublisher.publishMigrationFailedEvent(processException);
+            throw processException;
+        } catch (Exception exception) {
+            CoreException coreEx = exception instanceof CoreException ? (CoreException) exception : new CoreException(exception);
             logger.error("Error executing the process. ABORTED OPERATION", coreEx);
             eventPublisher.publishMigrationFailedEvent(coreEx);
             throw coreEx;
         }
     }
 
-    private void startProcess(Lock lock, LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> process) {
+    private void startProcess(Lock lock, LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> process) throws ProcessExecutionException {
         AUDIT_PROCESS_STATE processCurrentState = stateFetcher.getAuditProcessStatus();
         logger.debug("Pulled remote state:\n{}", processCurrentState);
 
@@ -91,7 +96,7 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
 
         RuntimeHelper runtimeHelper = runtimeBuilder.setLock(lock).build();
         ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, runtimeHelper);
-        logger.info("Finished process successfully\n{}", executionOutput.getSummary().getPretty());
+        logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));
     }
 

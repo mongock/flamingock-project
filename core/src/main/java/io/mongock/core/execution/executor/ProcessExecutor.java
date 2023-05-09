@@ -5,7 +5,7 @@ import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.runtime.RuntimeHelper;
 
 public interface ProcessExecutor<EXECUTABLE_PROCESS extends ExecutableProcess> {
-    Output run(EXECUTABLE_PROCESS executableProcess, ExecutionContext executionContext, RuntimeHelper runtimeHelper);
+    Output run(EXECUTABLE_PROCESS executableProcess, ExecutionContext executionContext, RuntimeHelper runtimeHelper) throws ProcessExecutionException;
 
     class Output {
 
