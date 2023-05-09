@@ -23,6 +23,8 @@ public interface StepNavigatorBuilder {
 
     StepNavigatorBuilder setRuntimeHelper(RuntimeHelper runtimeHelper);
 
+    StepNavigatorBuilder setTransactionWrapper(TransactionWrapper transactionWrapper);
+
     AbstractStepNavigator build();
 
 
@@ -40,20 +42,26 @@ public interface StepNavigatorBuilder {
 
 
         @Override
-        public DefaultStepNavigatorBuilder setSummarizer(StepSummarizer summarizer) {
+        public StepNavigatorBuilder setSummarizer(StepSummarizer summarizer) {
             this.summarizer = summarizer;
             return this;
         }
 
         @Override
-        public DefaultStepNavigatorBuilder setAuditWriter(AuditWriter<?> auditWriter) {
+        public StepNavigatorBuilder setAuditWriter(AuditWriter<?> auditWriter) {
             this.auditWriter = auditWriter;
             return this;
         }
 
         @Override
-        public DefaultStepNavigatorBuilder setRuntimeHelper(RuntimeHelper runtimeHelper) {
+        public StepNavigatorBuilder setRuntimeHelper(RuntimeHelper runtimeHelper) {
             this.runtimeHelper = runtimeHelper;
+            return this;
+        }
+
+        @Override
+        public StepNavigatorBuilder setTransactionWrapper(TransactionWrapper transactionWrapper) {
+            this.transactionWrapper = transactionWrapper;
             return this;
         }
 

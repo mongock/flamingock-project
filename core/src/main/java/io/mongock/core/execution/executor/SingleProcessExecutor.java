@@ -7,6 +7,7 @@ import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.ProcessSummary;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 import java.util.stream.Stream;
