@@ -4,7 +4,6 @@ import io.mongock.core.audit.domain.AuditEntryStatus;
 import io.mongock.core.util.DateUtil;
 import io.mongock.internal.driver.MongockAuditEntry;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static io.mongock.internal.persistence.EntryField.KEY_AUTHOR;
@@ -21,7 +20,7 @@ import static io.mongock.internal.persistence.EntryField.KEY_TYPE;
 import static io.mongock.internal.persistence.EntryField.KEY_CHANGELOG_CLASS;
 import static io.mongock.internal.persistence.EntryField.KEY_CHANGESET_METHOD;
 
-public class MongoDBMapper<DOCUMENTCK extends Documentck> {
+public class MongoDBMapper<DOCUMENTCK extends DocumentWrapper> {
 
     private final Supplier<DOCUMENTCK> documentckSupplier;
 
@@ -47,7 +46,7 @@ public class MongoDBMapper<DOCUMENTCK extends Documentck> {
         return document;
     }
 
-    public MongockAuditEntry fromDocument(Documentck entry) {
+    public MongockAuditEntry fromDocument(DocumentWrapper entry) {
         return new MongockAuditEntry(
                 entry.getString(KEY_EXECUTION_ID),
                 entry.getString(KEY_CHANGE_ID),

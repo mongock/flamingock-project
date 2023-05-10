@@ -1,6 +1,6 @@
 package io.mongock.core.execution.navigator;
 
-import io.mongock.core.audit.domain.AuditResult;
+import io.mongock.core.util.Result;
 import io.mongock.core.audit.writer.AuditItem;
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.audit.writer.RuntimeContext;
@@ -12,7 +12,6 @@ import io.mongock.core.execution.step.complete.CompleteFailedStep;
 import io.mongock.core.execution.step.execution.ExecutionStep;
 import io.mongock.core.execution.step.rolledback.FailedRolledBackStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
-import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.task.executable.ExecutableTask;
@@ -25,10 +24,6 @@ import java.util.Optional;
 public class StepNavigator extends AbstractStepNavigator {
     private static final Logger logger = LoggerFactory.getLogger(StepNavigator.class);
 
-
-    StepNavigator() {
-        this(null, null, null);
-    }
 
     StepNavigator(AuditWriter<?> auditWriter,
                   StepSummarizer summarizer,
@@ -88,7 +83,7 @@ public class StepNavigator extends AbstractStepNavigator {
                 .setTaskStep(rolledBackStep)
                 .setExecutedAt(executedAt)
                 .build();
-        AuditResult auditResult = auditWriter.writeStep(
+        Result auditResult = auditWriter.writeStep(
                 new AuditItem(
                         AuditItem.Operation.ROLLBACK,
                         rolledBackStep.getTaskDescriptor(),

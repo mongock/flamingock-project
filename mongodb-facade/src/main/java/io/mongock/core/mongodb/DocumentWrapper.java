@@ -6,17 +6,17 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
-public interface Documentck {
+public interface DocumentWrapper {
 
 
-    Documentck append(String key, Object value);
+    DocumentWrapper append(String key, Object value);
     Object get(String key);
     String getString(String key);
     boolean containsKey(String key);
     Boolean getBoolean(String key);
     boolean getBoolean(Object key, boolean defaultValue);
 
-    Documentck getDocument(String key);
+    DocumentWrapper getDocument(String key);
 
     int size();
 

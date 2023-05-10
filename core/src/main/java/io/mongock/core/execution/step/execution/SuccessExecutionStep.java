@@ -1,6 +1,6 @@
 package io.mongock.core.execution.step.execution;
 
-import io.mongock.core.audit.domain.AuditResult;
+import io.mongock.core.util.Result;
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.ExecutableStep;
 import io.mongock.core.execution.step.complete.CompleteSuccessStep;
@@ -17,7 +17,7 @@ public final class SuccessExecutionStep extends ExecutionStep {
     }
 
     @Override
-    public AfterExecutionAuditStep applyAuditResult(AuditResult auditResult) {
+    public AfterExecutionAuditStep applyAuditResult(Result auditResult) {
         return auditResult.isOk()
                 ? CompleteSuccessStep.fromSuccessExecution(this)
                 : FailedExecutionOrAuditStep.instance(task, auditResult);

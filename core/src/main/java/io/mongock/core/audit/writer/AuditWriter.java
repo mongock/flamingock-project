@@ -1,7 +1,7 @@
 package io.mongock.core.audit.writer;
 
 import io.mongock.core.audit.domain.AuditEntry;
-import io.mongock.core.audit.domain.AuditResult;
+import io.mongock.core.util.Result;
 
 /**
  * This class implements the Facade pattern containing the responsibility to log the taskStep, map it to Entry
@@ -13,11 +13,11 @@ import io.mongock.core.audit.domain.AuditResult;
  */
 public abstract class AuditWriter<AUDIT_ENTRY extends AuditEntry> {
 
-    public final AuditResult writeStep(AuditItem auditItem) {
+    public final Result writeStep(AuditItem auditItem) {
         return writeEntry(map(auditItem));
     }
 
-    protected abstract AuditResult writeEntry(AUDIT_ENTRY auditEntry);
+    protected abstract Result writeEntry(AUDIT_ENTRY auditEntry);
 
     protected abstract AUDIT_ENTRY map(AuditItem taskStep);
 

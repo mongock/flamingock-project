@@ -1,6 +1,6 @@
 package io.mongock.core.execution.step.execution;
 
-import io.mongock.core.audit.domain.AuditResult;
+import io.mongock.core.util.Result;
 import io.mongock.core.execution.step.SuccessableStep;
 import io.mongock.core.execution.step.TaskStep;
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
@@ -22,7 +22,7 @@ public abstract class ExecutionStep extends TaskStep implements SuccessableStep 
         return duration;
     }
 
-    public abstract AfterExecutionAuditStep applyAuditResult(AuditResult saveResult);
+    public abstract AfterExecutionAuditStep applyAuditResult(Result saveResult);
 
     @Override
     public final boolean isSuccessStep() {

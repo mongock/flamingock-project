@@ -1,5 +1,6 @@
 package io.mongock.internal.driver;
 
+import io.mongock.core.transaction.TransactionWrapper;
 import io.mongock.internal.MongockLockAcquirer;
 
 public interface ConnectionEngine {
@@ -9,4 +10,6 @@ public interface ConnectionEngine {
   MongockAuditor getAuditor();
 
   MongockLockAcquirer getLockProvider();
+
+  TransactionWrapper getTransactionWrapper();
 }

@@ -1,6 +1,6 @@
 package io.mongock.core.process;
 
-import io.mongock.core.audit.domain.AuditResult;
+import io.mongock.core.util.Result;
 import io.mongock.core.audit.writer.AuditItem;
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.executor.ExecutionContext;
@@ -34,7 +34,7 @@ class SingleRunnableProcessTest {
     void shouldRunAllTasks() {
         //SETUP
         AuditWriter<?> stateSaver = mock(AuditWriter.class);
-        when(stateSaver.writeStep(any(AuditItem.class))).thenReturn(new AuditResult.Ok());
+        when(stateSaver.writeStep(any(AuditItem.class))).thenReturn(new Result.Ok());
 
         //GIVEN
         SuccessTestExecutableTask task1 = new SuccessTestExecutableTask("task1");
@@ -103,7 +103,7 @@ class SingleRunnableProcessTest {
     void shouldShortCutWhenOneIntermediateTaskFails() {
         //SETUP
         AuditWriter<?> stateSaver = mock(AuditWriter.class);
-        when(stateSaver.writeStep(any(AuditItem.class))).thenReturn(new AuditResult.Ok());
+        when(stateSaver.writeStep(any(AuditItem.class))).thenReturn(new Result.Ok());
 
         //GIVEN
         SuccessTestExecutableTask task1 = new SuccessTestExecutableTask("task1");

@@ -1,13 +1,13 @@
 package io.mongock.driver.mongodb.sync.v4.internal.mongodb;
 
-import io.mongock.core.mongodb.Documentck;
+import io.mongock.core.mongodb.DocumentWrapper;
 import org.bson.Document;
 
-public class DocumentckImpl implements Documentck {
+public class MongoSync4DocumentWrapper implements DocumentWrapper {
 
     private final Document document;
 
-    public DocumentckImpl(Document document) {
+    public MongoSync4DocumentWrapper(Document document) {
         this.document = document;
     }
 
@@ -16,7 +16,7 @@ public class DocumentckImpl implements Documentck {
     }
 
     @Override
-    public Documentck append(String key, Object value) {
+    public DocumentWrapper append(String key, Object value) {
         document.append(key, value);
         return this;
     }
@@ -51,8 +51,8 @@ public class DocumentckImpl implements Documentck {
     }
 
     @Override
-    public Documentck getDocument(String key) {
+    public DocumentWrapper getDocument(String key) {
         Document retrievedDocument = (Document) document.get(key);
-        return new DocumentckImpl(retrievedDocument);
+        return new MongoSync4DocumentWrapper(retrievedDocument);
     }
 }

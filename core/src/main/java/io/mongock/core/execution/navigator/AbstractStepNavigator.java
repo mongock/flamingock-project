@@ -1,6 +1,6 @@
 package io.mongock.core.execution.navigator;
 
-import io.mongock.core.audit.domain.AuditResult;
+import io.mongock.core.util.Result;
 import io.mongock.core.audit.writer.AuditItem;
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.audit.writer.RuntimeContext;
@@ -25,10 +25,6 @@ public abstract class AbstractStepNavigator {
     protected AuditWriter<?> auditWriter;
 
     protected RuntimeHelper runtimeHelper;
-
-    protected AbstractStepNavigator() {
-        this(null, null, null);
-    }
 
     protected AbstractStepNavigator(AuditWriter<?> auditWriter,
                                     StepSummarizer summarizer,
@@ -94,7 +90,7 @@ public abstract class AbstractStepNavigator {
                 .setExecutedAt(executedAt)
                 .build();
 
-        AuditResult auditResult = auditWriter.writeStep(
+        Result auditResult = auditWriter.writeStep(
                 new AuditItem(
                         AuditItem.Operation.EXECUTION,
                         executionStep.getTaskDescriptor(),
@@ -108,9 +104,9 @@ public abstract class AbstractStepNavigator {
     }
 
 
-    protected static void logAuditResult(AuditResult saveResult, String id, String operation) {
-        if (saveResult instanceof AuditResult.Error) {
-            logger.info("FAILED AUDIT " + operation + " TASK - {}\n{}", id, (((AuditResult.Error) saveResult).getError()));
+    protected static void logAuditResult(Result saveResult, String id, String operation) {
+        if (saveResult instanceof Result.Error) {
+            logger.info("FAILED AUDIT " + operation + " TASK - {}\n{}", id, (((Result.Error) saveResult).getError()));
         } else {
             logger.info("SUCCESS AUDIT " + operation + " TASK - {}", id);
         }

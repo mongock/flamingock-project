@@ -1,6 +1,6 @@
 package io.mongock.core.execution.step.afteraudit;
 
-import io.mongock.core.audit.domain.AuditResult;
+import io.mongock.core.util.Result;
 import io.mongock.core.execution.step.SuccessableStep;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.task.executable.RollableTask;
@@ -10,9 +10,9 @@ import java.util.Optional;
 public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep implements SuccessableStep {
 
 
-    public static FailedExecutionOrAuditStep instance(ExecutableTask task, AuditResult auditResult) {
-        if (auditResult instanceof AuditResult.Error) {
-            AuditResult.Error errorResult = (AuditResult.Error) auditResult;
+    public static FailedExecutionOrAuditStep instance(ExecutableTask task, Result auditResult) {
+        if (auditResult instanceof Result.Error) {
+            Result.Error errorResult = (Result.Error) auditResult;
             return new FailedAuditUnknownExecutionStep(task, errorResult.getError());
         } else {
             return new SuccessAuditFailedExecutionStep(task);

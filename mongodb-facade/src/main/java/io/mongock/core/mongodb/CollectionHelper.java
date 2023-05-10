@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class CollectionHelper<DOCUMENT extends Documentck> {
+public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
     private final static Logger logger = LoggerFactory.getLogger(CollectionHelper.class);
 
 
@@ -20,9 +20,9 @@ public class CollectionHelper<DOCUMENT extends Documentck> {
     private final Supplier<DOCUMENT> documentCreator;
     private boolean ensuredCollectionIndex = false;
 
-    private Collectionck<DOCUMENT> collection;
+    private CollectionWrapper<DOCUMENT> collection;
 
-    public CollectionHelper(Collectionck<DOCUMENT> collection,
+    public CollectionHelper(CollectionWrapper<DOCUMENT> collection,
                             Supplier<DOCUMENT> documentCreator,
                             String[] uniqueFields) {
         this.collection = collection;
@@ -68,21 +68,21 @@ public class CollectionHelper<DOCUMENT extends Documentck> {
                 .forEach(this::dropIndex);
     }
 
-    private List<Documentck> getResidualKeys() {
+    private List<DocumentWrapper> getResidualKeys() {
         return StreamSupport.stream(listIndexes().spliterator(), false)
                 .filter(this::doesNeedToBeRemoved)
                 .collect(Collectors.toList());
     }
 
-    private Iterable<Documentck> listIndexes() {
+    private Iterable<DocumentWrapper> listIndexes() {
         return collection.listIndexes();
     }
 
-    protected boolean doesNeedToBeRemoved(Documentck index) {
+    protected boolean doesNeedToBeRemoved(DocumentWrapper index) {
         return !isIdIndex(index) && isUniqueIndex(index) && !isRightIndex(index);
     }
 
-    protected boolean isIdIndex(Documentck index) {
+    protected boolean isIdIndex(DocumentWrapper index) {
         return index.getDocument("key").get("_id") != null;
     }
 
@@ -98,14 +98,14 @@ public class CollectionHelper<DOCUMENT extends Documentck> {
         logger.debug("Index in collection [{}] was recreated", getCollectionName());
     }
 
-    protected boolean isRightIndex(Documentck index) {
-        final Documentck key = index.getDocument("key");
+    protected boolean isRightIndex(DocumentWrapper index) {
+        final DocumentWrapper key = index.getDocument("key");
         boolean keyContainsAllFields = Stream.of(uniqueFields).allMatch(uniqueField -> key.get(uniqueField) != null);
         boolean onlyTheseFields = key.size() == uniqueFields.length;
         return keyContainsAllFields && onlyTheseFields && isUniqueIndex(index);
     }
 
-    protected boolean isUniqueIndex(Documentck index) {
+    protected boolean isUniqueIndex(DocumentWrapper index) {
         return index.getBoolean("unique", false);// checks it'unique
     }
 
@@ -119,7 +119,7 @@ public class CollectionHelper<DOCUMENT extends Documentck> {
         return indexDocument;
     }
 
-    protected void dropIndex(Documentck index) {
+    protected void dropIndex(DocumentWrapper index) {
         collection.dropIndex(index.get("name").toString());
     }
 

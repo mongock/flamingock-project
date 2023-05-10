@@ -69,28 +69,20 @@ public interface StepNavigatorBuilder {
         public AbstractStepNavigator build() {
             AbstractStepNavigator instance;
             if (transactionWrapper != null) {
-                instance = new TransactionalStepNavigator();
-                ((TransactionalStepNavigator) instance).setTransactionWrapper(transactionWrapper);
+                instance = new TransactionalStepNavigator(auditWriter, summarizer, runtimeHelper, transactionWrapper);
             } else {
-                instance = new StepNavigator();
+                instance = new StepNavigator(auditWriter, summarizer, runtimeHelper);
             }
-            setBaseDependencies(instance);
             return instance;
-        }
-
-        protected void setBaseDependencies(AbstractStepNavigator instance) {
-            instance.setSummarizer(summarizer);
-            instance.setAuditWriter(auditWriter);
-            instance.setRuntimeHelper(runtimeHelper);
         }
     }
 
 
     final class ReusableStepNavigatorBuilder extends DefaultStepNavigatorBuilder {
 
-        private StepNavigator stepNavigator = new StepNavigator();
+        private StepNavigator stepNavigator = new StepNavigator(null, null, null);
 
-        private TransactionalStepNavigator transactionalStepNavigator = new TransactionalStepNavigator();
+        private TransactionalStepNavigator transactionalStepNavigator = new TransactionalStepNavigator(null, null, null, null);
 
         private ReusableStepNavigatorBuilder() {
         }
@@ -108,6 +100,12 @@ public interface StepNavigatorBuilder {
             }
             setBaseDependencies(instance);
             return instance;
+        }
+
+        private void setBaseDependencies(AbstractStepNavigator instance) {
+            instance.setSummarizer(summarizer);
+            instance.setAuditWriter(auditWriter);
+            instance.setRuntimeHelper(runtimeHelper);
         }
     }
 

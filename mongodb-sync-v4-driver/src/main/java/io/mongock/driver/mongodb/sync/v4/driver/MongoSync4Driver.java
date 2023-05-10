@@ -14,7 +14,10 @@ public class MongoSync4Driver implements ConnectionDriver<MongoDBSync4Configurat
     private static final Logger logger = LoggerFactory.getLogger(MongoSync4Driver.class);
 
 
-    private final MongoDatabase database;
+    private final MongoClient mongoClient;
+
+    private final String databaseName;
+
     private MongoDBSync4Configuration driverConfiguration;
 
 
@@ -37,7 +40,8 @@ public class MongoSync4Driver implements ConnectionDriver<MongoDBSync4Configurat
 
 
     public MongoSync4Driver(MongoClient mongoClient, String databaseName) {
-        this.database = mongoClient.getDatabase(databaseName);
+        this.mongoClient = mongoClient;
+        this.databaseName = databaseName;
     }
 
     @Override
@@ -49,7 +53,8 @@ public class MongoSync4Driver implements ConnectionDriver<MongoDBSync4Configurat
     @Override
     public ConnectionEngine getConnectionEngine(MongockConfiguration mongockConfiguration) {
         return new MongoSync4Engine(
-                database,
+                mongoClient,
+                databaseName,
                 mongockConfiguration,
                 driverConfiguration != null ? driverConfiguration : MongoDBSync4Configuration.getDefault());
     }

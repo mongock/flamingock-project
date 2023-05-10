@@ -1,6 +1,6 @@
 package io.mongock.core.execution.step.complete;
 
-import io.mongock.core.audit.domain.AuditResult;
+import io.mongock.core.util.Result;
 import io.mongock.core.execution.step.SuccessableStep;
 import io.mongock.core.execution.step.TaskStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
@@ -10,9 +10,9 @@ public class CompleteFailedStep extends TaskStep implements SuccessableStep {
 
     private final boolean rollbackAuditSuccess;
 
-    public static CompleteFailedStep fromRollbackAuditResult(RolledBackStep rolledBack, AuditResult auditResult) {
-        return auditResult instanceof AuditResult.Error
-                ? new CompleteFailedAuditFailedStep(rolledBack, ((AuditResult.Error) auditResult).getError())
+    public static CompleteFailedStep fromRollbackAuditResult(RolledBackStep rolledBack, Result auditResult) {
+        return auditResult instanceof Result.Error
+                ? new CompleteFailedAuditFailedStep(rolledBack, ((Result.Error) auditResult).getError())
                 : new CompleteFailedStep(rolledBack.getTask(), true);
     }
 

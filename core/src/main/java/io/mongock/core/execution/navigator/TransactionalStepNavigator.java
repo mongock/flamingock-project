@@ -10,6 +10,7 @@ import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.transaction.TransactionWrapper;
+import io.mongock.core.util.Result;
 
 import java.time.LocalDateTime;
 
@@ -18,14 +19,12 @@ public class TransactionalStepNavigator extends AbstractStepNavigator {
 
     private TransactionWrapper transactionWrapper;
 
-    protected TransactionalStepNavigator() {
-        this(null, null, null);
-    }
-
     protected TransactionalStepNavigator(AuditWriter<?> auditWriter,
-                               StepSummarizer summarizer,
-                               RuntimeHelper runtimeHelper) {
+                                         StepSummarizer summarizer,
+                                         RuntimeHelper runtimeHelper,
+                                         TransactionWrapper transactionWrapper) {
         super(auditWriter, summarizer, runtimeHelper);
+        this.transactionWrapper = transactionWrapper;
     }
 
     protected void clean() {
@@ -38,7 +37,7 @@ public class TransactionalStepNavigator extends AbstractStepNavigator {
     }
 
     protected StepNavigationOutput startNavigation(ExecutableTask task, ExecutionContext executionContext) {
-        boolean result = transactionWrapper.wrapInTransaction(() -> {
+        Result result = transactionWrapper.wrapInTransaction(task.getDescriptor(), () -> {
             ExecutionStep executed = executeAndSummary(task);
             if (executed instanceof FailedExecutionStep) {
                 throw new CoreException(((FailedExecutionStep) executed).getError());
@@ -49,9 +48,8 @@ public class TransactionalStepNavigator extends AbstractStepNavigator {
             if (!resultStep.isSuccessStep()) {
                 throw new CoreException("Error save audit log for task: " + resultStep.getTask().getDescriptor().getId());
             }
-//            return resultStep;
         });
-        return new StepNavigationOutput(result, summarizer.getSummary());
+        return new StepNavigationOutput(result.isOk(), summarizer.getSummary());
     }
 
 

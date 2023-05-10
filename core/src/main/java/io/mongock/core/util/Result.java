@@ -1,8 +1,6 @@
-package io.mongock.core.audit.domain;
+package io.mongock.core.util;
 
-import io.mongock.core.util.Failed;
-
-public abstract class AuditResult {
+public abstract class Result {
 
     private static Ok okInstance;
     
@@ -14,7 +12,7 @@ public abstract class AuditResult {
     }
     
 
-    private AuditResult() {
+    private Result() {
     }
 
     public final boolean isOk() {
@@ -22,14 +20,14 @@ public abstract class AuditResult {
     }
 
 
-    public static class Ok extends AuditResult {
+    public static class Ok extends Result {
         public Ok() {
             super();
         }
 
     }
 
-    public static class Error extends AuditResult implements Failed {
+    public static class Error extends Result implements Failed {
 
         private final Throwable throwable;
 

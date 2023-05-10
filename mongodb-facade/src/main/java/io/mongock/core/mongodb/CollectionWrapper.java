@@ -1,10 +1,10 @@
 package io.mongock.core.mongodb;
 
-public interface Collectionck<DOCUMENT extends Documentck> {
+public interface CollectionWrapper<DOCUMENT extends DocumentWrapper> {
 
     String getCollectionName();
 
-    Iterable<Documentck> listIndexes();
+    Iterable<DocumentWrapper> listIndexes();
 
     String createUniqueIndex(DOCUMENT uniqueIndexDocument);
 
