@@ -4,13 +4,13 @@ import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.execution.SuccessExecutionStep;
 import io.mongock.core.task.executable.ExecutableTask;
 
-public final class CompleteSuccessStep extends AfterExecutionAuditStep {
+public final class SuccessCompleteStep extends AfterExecutionAuditStep {
 
-    public static CompleteSuccessStep fromSuccessExecution(SuccessExecutionStep executedStep) {
-        return new CompleteSuccessStep(executedStep.getTask());
+    public static SuccessCompleteStep fromSuccessExecution(SuccessExecutionStep executedStep) {
+        return new SuccessCompleteStep(executedStep.getTask());
     }
 
-    private CompleteSuccessStep(ExecutableTask executedTask) {
+    private SuccessCompleteStep(ExecutableTask executedTask) {
         super(executedTask, true);
     }
 

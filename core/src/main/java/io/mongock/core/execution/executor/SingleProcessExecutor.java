@@ -38,11 +38,16 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
                         .start(task, executionContext)
                 )
                 .peek(summary::addSummary);
-        Optional<StepNavigationOutput> failedOutput = processUntil(taskStepStream, StepNavigationOutput::isFailed);
 
-        if (failedOutput.isPresent()) {
-            throw new ProcessExecutionException(summary);
+        try {
+            Optional<StepNavigationOutput> failedOutput = processUntil(taskStepStream, StepNavigationOutput::isFailed);
+            if (failedOutput.isPresent()) {
+                throw new ProcessExecutionException(summary);
+            }
+        } catch (Throwable throwable) {
+            throw new ProcessExecutionException(throwable, summary);
         }
+
 
         return new Output(summary);
     }

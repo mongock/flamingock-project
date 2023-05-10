@@ -1,12 +1,13 @@
 package io.mongock.core.execution.step.rolledback;
 
+import io.mongock.core.util.Failed;
 import io.mongock.core.util.Result;
 import io.mongock.core.execution.step.SuccessableStep;
 import io.mongock.core.execution.step.TaskStep;
 import io.mongock.core.execution.step.complete.CompleteFailedStep;
 import io.mongock.core.task.executable.RollableTask;
 
-public abstract class RolledBackStep extends TaskStep implements SuccessableStep {
+public abstract class RolledBackStep extends TaskStep implements SuccessableStep, Failed {
 
 
     private final RollableTask rollableTask;

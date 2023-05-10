@@ -3,7 +3,7 @@ package io.mongock.core.execution.step.execution;
 import io.mongock.core.util.Result;
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.ExecutableStep;
-import io.mongock.core.execution.step.complete.CompleteSuccessStep;
+import io.mongock.core.execution.step.complete.SuccessCompleteStep;
 import io.mongock.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.mongock.core.task.executable.ExecutableTask;
 
@@ -19,7 +19,7 @@ public final class SuccessExecutionStep extends ExecutionStep {
     @Override
     public AfterExecutionAuditStep applyAuditResult(Result auditResult) {
         return auditResult.isOk()
-                ? CompleteSuccessStep.fromSuccessExecution(this)
+                ? SuccessCompleteStep.fromSuccessExecution(this)
                 : FailedExecutionOrAuditStep.instance(task, auditResult);
     }
 }

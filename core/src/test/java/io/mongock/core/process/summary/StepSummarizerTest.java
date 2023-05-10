@@ -1,7 +1,7 @@
 package io.mongock.core.process.summary;
 
 import io.mongock.core.execution.step.ExecutableStep;
-import io.mongock.core.execution.step.complete.CompleteSuccessStep;
+import io.mongock.core.execution.step.complete.SuccessCompleteStep;
 import io.mongock.core.execution.step.execution.SuccessExecutionStep;
 import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.StepSummarizer;
@@ -31,7 +31,7 @@ class StepSummarizerTest {
         //WHEN
         StepSummarizer summarizer = new DefaultStepSummarizer();
         summarizer.add(SuccessExecutionStep.instance(task1InitialStep, -1l));
-        summarizer.add(CompleteSuccessStep.fromSuccessExecution(SuccessExecutionStep.instance(task1InitialStep, -1l)));
+        summarizer.add(SuccessCompleteStep.fromSuccessExecution(SuccessExecutionStep.instance(task1InitialStep, -1l)));
 
         List<StepSummaryLine> steps = summarizer.getSummary().getLines();
         //Task1's summary lines

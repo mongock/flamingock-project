@@ -11,6 +11,11 @@ public class ProcessExecutionException extends RuntimeException {
         this.summary = summary;
     }
 
+    public ProcessExecutionException(Throwable throwable, ProcessSummary summary) {
+        super(throwable);
+        this.summary = summary;
+    }
+
     public ProcessSummary getSummary() {
         return summary;
     }

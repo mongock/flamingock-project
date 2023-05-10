@@ -3,7 +3,7 @@ package io.mongock.core.audit.writer;
 import io.mongock.core.execution.step.TaskStep;
 import io.mongock.core.execution.step.execution.ExecutionStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
-import io.mongock.core.util.Failed;
+import io.mongock.core.util.FailedWithError;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -95,9 +95,9 @@ public final class RuntimeContext {
         }
 
         private void setFailure(TaskStep taskStep) {
-            if (taskStep instanceof Failed) {
+            if (taskStep instanceof FailedWithError) {
                 executionResult = ExecutionResult.FAILED;
-                error = ((Failed) taskStep).getError();
+                error = ((FailedWithError) taskStep).getError();
             } else {
                 executionResult = ExecutionResult.SUCCESS;
                 error = null;

@@ -3,14 +3,14 @@ package io.mongock.core.util;
 public abstract class Result {
 
     private static Ok okInstance;
-    
+
     public static Ok OK() {
-        if(okInstance == null) {
+        if (okInstance == null) {
             okInstance = new Ok();
         }
         return okInstance;
     }
-    
+
 
     private Result() {
     }
@@ -27,7 +27,7 @@ public abstract class Result {
 
     }
 
-    public static class Error extends Result implements Failed {
+    public static class Error extends Result {
 
         private final Throwable throwable;
 
@@ -36,7 +36,7 @@ public abstract class Result {
             this.throwable = throwable;
         }
 
-        @Override
+
         public Throwable getError() {
             return throwable;
         }

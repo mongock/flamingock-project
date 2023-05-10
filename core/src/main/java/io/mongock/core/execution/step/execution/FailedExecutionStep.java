@@ -5,9 +5,9 @@ import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.ExecutableStep;
 import io.mongock.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.mongock.core.task.executable.ExecutableTask;
-import io.mongock.core.util.Failed;
+import io.mongock.core.util.FailedWithError;
 
-public final class FailedExecutionStep extends ExecutionStep implements Failed {
+public final class FailedExecutionStep extends ExecutionStep implements FailedWithError {
     private final Throwable throwable;
 
     public static FailedExecutionStep instance(ExecutableStep initialStep, long executionTimeMillis, Throwable throwable) {

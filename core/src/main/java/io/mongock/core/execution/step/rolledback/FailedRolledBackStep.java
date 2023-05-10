@@ -1,9 +1,9 @@
 package io.mongock.core.execution.step.rolledback;
 
 import io.mongock.core.task.executable.RollableTask;
-import io.mongock.core.util.Failed;
+import io.mongock.core.util.FailedWithError;
 
-public final class FailedRolledBackStep extends RolledBackStep implements Failed {
+public final class FailedRolledBackStep extends RolledBackStep implements FailedWithError {
 
     private final Throwable error;
 

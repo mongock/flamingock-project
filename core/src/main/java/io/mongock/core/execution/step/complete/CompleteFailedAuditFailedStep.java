@@ -1,9 +1,9 @@
 package io.mongock.core.execution.step.complete;
 
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
-import io.mongock.core.util.Failed;
+import io.mongock.core.util.FailedWithError;
 
-public final class CompleteFailedAuditFailedStep extends CompleteFailedStep implements Failed {
+public final class CompleteFailedAuditFailedStep extends CompleteFailedStep implements FailedWithError {
 
     private final Throwable error;
 

@@ -13,9 +13,9 @@ public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep
     public static FailedExecutionOrAuditStep instance(ExecutableTask task, Result auditResult) {
         if (auditResult instanceof Result.Error) {
             Result.Error errorResult = (Result.Error) auditResult;
-            return new FailedAuditUnknownExecutionStep(task, errorResult.getError());
+            return new FailedAuditExecutionStep(task, errorResult.getError());
         } else {
-            return new SuccessAuditFailedExecutionStep(task);
+            return new FailedExecutionSuccessAuditStep(task);
         }
     }
 
