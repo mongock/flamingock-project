@@ -1,9 +1,7 @@
 package io.mongock.core.execution.step.afteraudit;
 
 import io.mongock.core.execution.step.TaskStep;
-import io.mongock.core.execution.step.rolledback.FailedRolledBackStep;
-import io.mongock.core.execution.step.rolledback.RolledBackStep;
-import io.mongock.core.execution.step.rolledback.SuccessRolledBackStep;
+import io.mongock.core.execution.step.rolledback.ManualRolledBackStep;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.task.executable.RollableTask;
 import io.mongock.core.util.StopWatch;
@@ -17,15 +15,15 @@ public final class RollableStep extends TaskStep {
         this.rollableTask = rollableTask;
     }
 
-    public RolledBackStep rollback(RuntimeHelper runtimeHelper) {
+    public ManualRolledBackStep rollback(RuntimeHelper runtimeHelper) {
         StopWatch stopWatch = StopWatch.start();
         try {
             rollableTask.rollback(runtimeHelper);
             stopWatch.stop();
-            return new SuccessRolledBackStep(this.getTask(), stopWatch.getDuration());
+            return ManualRolledBackStep.successfulRollback(this.getTask(), stopWatch.getDuration());
         } catch (Throwable throwable) {
             stopWatch.stop();
-            return new FailedRolledBackStep(this.getTask(), stopWatch.getDuration(), throwable);
+            return  ManualRolledBackStep.failedRollback(this.getTask(), stopWatch.getDuration(), throwable);
         }
     }
 

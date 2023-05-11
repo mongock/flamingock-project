@@ -9,12 +9,13 @@ import io.mongock.core.execution.step.TaskStep;
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.mongock.core.execution.step.afteraudit.RollableStep;
-import io.mongock.core.execution.step.complete.AlreadyAppliedStep;
-import io.mongock.core.execution.step.complete.CompleteFailedStep;
+import io.mongock.core.execution.step.complete.CompletedAlreadyAppliedStep;
+import io.mongock.core.execution.step.complete.failed.CompletedFailedManualRollback;
 import io.mongock.core.execution.step.execution.ExecutionStep;
 import io.mongock.core.execution.step.execution.FailedExecutionStep;
-import io.mongock.core.execution.step.rolledback.FailedRolledBackStep;
-import io.mongock.core.execution.step.rolledback.RolledBackStep;
+import io.mongock.core.execution.step.complete.failed.CompleteAutoRolledBackStep;
+import io.mongock.core.execution.step.rolledback.FailedManualRolledBackStep;
+import io.mongock.core.execution.step.rolledback.ManualRolledBackStep;
 import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.task.executable.ExecutableTask;
@@ -61,20 +62,21 @@ public abstract class AbstractStepNavigator {
 
     public final StepNavigationOutput start(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
-            TaskStep afterAuditStep = startExecution(task, executionContext);
+            TaskStep afterExecution = startExecution(task, executionContext);
 
-            if(afterAuditStep instanceof CompleteFailedStep) {
+            if (afterExecution instanceof CompleteAutoRolledBackStep) {
+                summarizer.add((CompleteAutoRolledBackStep) afterExecution);
                 return new StepNavigationOutput(false, summarizer.getSummary());
 
-            } else if (afterAuditStep instanceof FailedExecutionOrAuditStep) {
+            } else if (afterExecution instanceof FailedExecutionOrAuditStep) {
                 //failed execution
-                rollbackAndSummaryIfProvided((FailedExecutionOrAuditStep) afterAuditStep)
+                rollbackAndSummaryIfProvided((FailedExecutionOrAuditStep) afterExecution)
                         .ifPresent(rolledBackStep -> auditRollbackAndSummary(
                                 rolledBackStep, executionContext, LocalDateTime.now()));
                 return new StepNavigationOutput(false, summarizer.getSummary());
 
             } else {
-                //successful execution
+                //SUCCESSFUL EXECUTION
                 return new StepNavigationOutput(true, summarizer.getSummary());
 
             }
@@ -82,7 +84,7 @@ public abstract class AbstractStepNavigator {
         } else {
             //Task already executed
             logger.info("IGNORED - {}", task.getDescriptor().getId());
-            summarizer.add(new AlreadyAppliedStep(task));
+            summarizer.add(new CompletedAlreadyAppliedStep(task));
             return new StepNavigationOutput(true, summarizer.getSummary());
         }
     }
@@ -125,22 +127,22 @@ public abstract class AbstractStepNavigator {
                         runtimeContext)
         );
         logAuditResult(auditResult, executionStep.getTaskDescriptor().getId(), "EXECUTION");
-        AfterExecutionAuditStep attemptedSaveStateExecutionStep = executionStep.applyAuditResult(auditResult);
-        summarizer.add(attemptedSaveStateExecutionStep);
-        return attemptedSaveStateExecutionStep;
+        AfterExecutionAuditStep afterExecutionAudit = executionStep.applyAuditResult(auditResult);
+        summarizer.add(afterExecutionAudit);
+        return afterExecutionAudit;
     }
 
-    private Optional<RolledBackStep> rollbackAndSummaryIfProvided(FailedExecutionOrAuditStep failed) {
+    private Optional<ManualRolledBackStep> rollbackAndSummaryIfProvided(FailedExecutionOrAuditStep failed) {
         if (failed.getRollableIfPresent().isPresent()) {
-            RollableStep attemptedSaveStateExecutionStep = failed.getRollableIfPresent().get();
-            RolledBackStep rolledBack = attemptedSaveStateExecutionStep.rollback(runtimeHelper);
-            if (rolledBack instanceof FailedRolledBackStep) {
+            RollableStep rollable = failed.getRollableIfPresent().get();
+            ManualRolledBackStep rolledBack = rollable.rollback(runtimeHelper);
+            if (rolledBack instanceof FailedManualRolledBackStep) {
                 logger.info("ROLL BACK FAILED - {} after {} ms",
                         rolledBack.getTask().getDescriptor().getId(),
                         rolledBack.getDuration());
                 String msg = String.format("error rollback task[%s] after %d ms",
                         rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
-                logger.error(msg, ((FailedRolledBackStep) rolledBack).getError());
+                logger.error(msg, ((FailedManualRolledBackStep) rolledBack).getError());
             } else {
                 logger.info("ROLLED BACK - {} after {} ms",
                         rolledBack.getTask().getDescriptor().getId(),
@@ -155,7 +157,7 @@ public abstract class AbstractStepNavigator {
         }
     }
 
-    private void auditRollbackAndSummary(RolledBackStep rolledBackStep,
+    private void auditRollbackAndSummary(ManualRolledBackStep rolledBackStep,
                                          ExecutionContext executionContext,
                                          LocalDateTime executedAt) {
         RuntimeContext runtimeContext = RuntimeContext.builder()
@@ -170,7 +172,7 @@ public abstract class AbstractStepNavigator {
                         runtimeContext)
         );
         logAuditResult(auditResult, rolledBackStep.getTaskDescriptor().getId(), "ROLLBACK");
-        CompleteFailedStep failedStep = rolledBackStep.applyAuditResult(auditResult);
+        CompletedFailedManualRollback failedStep = rolledBackStep.applyAuditResult(auditResult);
         summarizer.add(failedStep);
     }
 

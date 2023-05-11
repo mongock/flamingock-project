@@ -1,9 +1,10 @@
 package io.mongock.core.execution.summary;
 
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
-import io.mongock.core.execution.step.complete.CompleteFailedStep;
-import io.mongock.core.execution.step.complete.AlreadyAppliedStep;
+import io.mongock.core.execution.step.complete.CompletedAlreadyAppliedStep;
+import io.mongock.core.execution.step.complete.failed.CompletedFailedManualRollback;
 import io.mongock.core.execution.step.execution.ExecutionStep;
+import io.mongock.core.execution.step.rolledback.ManualRolledBackStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
 import io.mongock.core.summary.Summarizer;
 
@@ -18,9 +19,9 @@ public interface StepSummarizer extends Summarizer<StepSummaryLine> {
 
     StepSummarizer add(RolledBackStep step);
 
-    StepSummarizer add(CompleteFailedStep step);
+    StepSummarizer add(CompletedFailedManualRollback step);
 
-    StepSummarizer add(AlreadyAppliedStep ignoredStep);
+    StepSummarizer add(CompletedAlreadyAppliedStep ignoredStep);
 
     StepSummary getSummary();
 }

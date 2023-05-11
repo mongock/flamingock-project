@@ -4,10 +4,10 @@ import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.executor.ExecutionContext;
 import io.mongock.core.execution.step.TaskStep;
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
-import io.mongock.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
-import io.mongock.core.execution.step.complete.CompleteFailedStep;
-import io.mongock.core.execution.step.complete.SuccessCompleteStep;
+import io.mongock.core.execution.step.complete.CompletedSuccessStep;
 import io.mongock.core.execution.step.execution.ExecutionStep;
+import io.mongock.core.execution.step.execution.SuccessExecutionStep;
+import io.mongock.core.execution.step.complete.failed.CompleteAutoRolledBackStep;
 import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.runtime.RuntimeHelper;
 import io.mongock.core.task.executable.ExecutableTask;
@@ -41,10 +41,14 @@ public class TransactionalStepNavigator extends AbstractStepNavigator {
     protected TaskStep startExecution(ExecutableTask task, ExecutionContext executionContext) {
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), () -> {
             ExecutionStep executed = executeAndSummary(task);
-            AfterExecutionAuditStep afterExecutionAuditStep = auditExecutionAndSummary(executed, executionContext, LocalDateTime.now());
-            return afterExecutionAuditStep instanceof SuccessCompleteStep
-                    ? afterExecutionAuditStep
-                    : null;//TODO create CompleteFailedStep
+            if (executed instanceof SuccessExecutionStep) {
+                AfterExecutionAuditStep afterExecutionAuditStep = auditExecutionAndSummary(executed, executionContext, LocalDateTime.now());
+                if (afterExecutionAuditStep instanceof CompletedSuccessStep) {
+                    return afterExecutionAuditStep;
+                }
+            }
+            //if it goes through here, it's failed, and it will be rolled back
+            return new CompleteAutoRolledBackStep(task, true);
         });
     }
 

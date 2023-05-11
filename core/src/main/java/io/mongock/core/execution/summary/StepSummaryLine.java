@@ -1,8 +1,8 @@
 package io.mongock.core.execution.summary;
 
 import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
-import io.mongock.core.execution.step.complete.AlreadyAppliedStep;
-import io.mongock.core.execution.step.complete.CompleteFailedStep;
+import io.mongock.core.execution.step.complete.CompletedAlreadyAppliedStep;
+import io.mongock.core.execution.step.complete.failed.CompletedFailedManualRollback;
 import io.mongock.core.execution.step.execution.ExecutionStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
 import io.mongock.core.summary.SummaryLine;
@@ -16,6 +16,7 @@ public abstract class StepSummaryLine implements SummaryLine {
         OK("OK"), FAILED("FAILED"), ALREADY_APPLIED("IGNORED - Already applied");
 
         private String value;
+
         SummaryResult(String value) {
             this.value = value;
         }
@@ -155,9 +156,9 @@ public abstract class StepSummaryLine implements SummaryLine {
 
     }
 
-    public static class FailedSummaryLine extends StepSummaryLine {
+    public static class FailedCompletedManualRollbackSummaryLine extends StepSummaryLine {
 
-        public FailedSummaryLine(CompleteFailedStep step) {
+        public FailedCompletedManualRollbackSummaryLine(CompletedFailedManualRollback step) {
             super(step.getTask().getDescriptor().getId());
             setResultFromSuccess(step.isSuccessStep());
         }
@@ -170,8 +171,8 @@ public abstract class StepSummaryLine implements SummaryLine {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof FailedSummaryLine)) return false;
-            FailedSummaryLine executed = (FailedSummaryLine) o;
+            if (!(o instanceof FailedCompletedManualRollbackSummaryLine)) return false;
+            FailedCompletedManualRollbackSummaryLine executed = (FailedCompletedManualRollbackSummaryLine) o;
             return result == executed.result;
         }
 
@@ -185,7 +186,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
     public static class AlreadyAppliedSummaryLine extends StepSummaryLine {
 
-        public AlreadyAppliedSummaryLine(AlreadyAppliedStep step) {
+        public AlreadyAppliedSummaryLine(CompletedAlreadyAppliedStep step) {
             super(step.getTask().getDescriptor().getId());
             this.result = SummaryResult.ALREADY_APPLIED;
         }
@@ -198,8 +199,8 @@ public abstract class StepSummaryLine implements SummaryLine {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof FailedSummaryLine)) return false;
-            FailedSummaryLine executed = (FailedSummaryLine) o;
+            if (!(o instanceof FailedCompletedManualRollbackSummaryLine)) return false;
+            FailedCompletedManualRollbackSummaryLine executed = (FailedCompletedManualRollbackSummaryLine) o;
             return result == executed.result;
         }
 

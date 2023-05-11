@@ -144,7 +144,7 @@ class SingleRunnableProcessTest {
 //        //rollback saved
 //        TaskStep task2Step2 = savedStates.get(2);
 //        assertEquals(task2Step2.getTask().getDescriptor().getId(), task2.getDescriptor().getId());
-//        assertEquals(task2Step2.getClass(), RolledBackStep.class);
+//        assertEquals(task2Step2.getClass(), ManualRolledBackStep.class);
 //        assertEquals(task2Step2.getExecutionState(), true);
 //
 //        //TASK3

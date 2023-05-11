@@ -2,7 +2,7 @@ package io.mongock.core.audit.writer;
 
 import io.mongock.core.execution.step.TaskStep;
 import io.mongock.core.execution.step.execution.ExecutionStep;
-import io.mongock.core.execution.step.rolledback.RolledBackStep;
+import io.mongock.core.execution.step.rolledback.ManualRolledBackStep;
 import io.mongock.core.util.FailedWithError;
 
 import java.time.LocalDateTime;
@@ -87,7 +87,7 @@ public final class RuntimeContext {
             setFailure(executedStep);
         }
 
-        public Builder setTaskStep(RolledBackStep rolledBackStep) {
+        public Builder setTaskStep(ManualRolledBackStep rolledBackStep) {
             duration = rolledBackStep.getDuration();
             methodExecutor = rolledBackStep.getTask().getExecutionMethodName();
             setFailure(rolledBackStep);
