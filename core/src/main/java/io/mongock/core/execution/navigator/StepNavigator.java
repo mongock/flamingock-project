@@ -11,10 +11,10 @@ import io.mongock.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.mongock.core.execution.step.afteraudit.RollableStep;
 import io.mongock.core.execution.step.complete.CompletedAlreadyAppliedStep;
 import io.mongock.core.execution.step.complete.CompletedSuccessStep;
+import io.mongock.core.execution.step.complete.failed.CompleteAutoRolledBackStep;
 import io.mongock.core.execution.step.complete.failed.CompletedFailedManualRollback;
 import io.mongock.core.execution.step.execution.ExecutionStep;
 import io.mongock.core.execution.step.execution.FailedExecutionStep;
-import io.mongock.core.execution.step.complete.failed.CompleteAutoRolledBackStep;
 import io.mongock.core.execution.step.execution.SuccessExecutionStep;
 import io.mongock.core.execution.step.rolledback.FailedManualRolledBackStep;
 import io.mongock.core.execution.step.rolledback.ManualRolledBackStep;
@@ -40,9 +40,9 @@ public class StepNavigator {
     private TransactionWrapper transactionWrapper;
 
     StepNavigator(AuditWriter<?> auditWriter,
-                            StepSummarizer summarizer,
-                            RuntimeHelper runtimeHelper,
-                            TransactionWrapper transactionWrapper) {
+                  StepSummarizer summarizer,
+                  RuntimeHelper runtimeHelper,
+                  TransactionWrapper transactionWrapper) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
         this.runtimeHelper = runtimeHelper;
@@ -74,8 +74,8 @@ public class StepNavigator {
     public final StepNavigationOutput start(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
             TaskStep afterExecution = transactionWrapper != null
-                    ? executeWrapped(task, executionContext)
-                    : executeUnwrapped(task, executionContext);
+                    ? executeTaskWrapped(task, executionContext)
+                    : executeTaskUnwrapped(task, executionContext);
 
             if (afterExecution instanceof CompleteAutoRolledBackStep) {
                 summarizer.add((CompleteAutoRolledBackStep) afterExecution);
@@ -83,9 +83,9 @@ public class StepNavigator {
 
             } else if (afterExecution instanceof FailedExecutionOrAuditStep) {
                 //failed execution
-                manualRollback((FailedExecutionOrAuditStep) afterExecution)
-                        .ifPresent(rolledBackStep -> auditManualRollback(
-                                rolledBackStep, executionContext, LocalDateTime.now()));
+                manualRollback((FailedExecutionOrAuditStep) afterExecution).ifPresent(
+                        rolledBackStep -> auditManualRollback(rolledBackStep, executionContext, LocalDateTime.now())
+                );
                 return new StepNavigationOutput(false, summarizer.getSummary());
 
             } else {
@@ -102,11 +102,11 @@ public class StepNavigator {
         }
     }
 
-    private TaskStep executeWrapped(ExecutableTask task, ExecutionContext executionContext) {
+    private TaskStep executeTaskWrapped(ExecutableTask task, ExecutionContext executionContext) {
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), () -> {
-            ExecutionStep executed = executeAndSummary(task);
+            ExecutionStep executed = executeTask(task);
             if (executed instanceof SuccessExecutionStep) {
-                AfterExecutionAuditStep afterExecutionAuditStep = auditExecutionAndSummary(executed, executionContext, LocalDateTime.now());
+                AfterExecutionAuditStep afterExecutionAuditStep = auditExecution(executed, executionContext, LocalDateTime.now());
                 if (afterExecutionAuditStep instanceof CompletedSuccessStep) {
                     return afterExecutionAuditStep;
                 }
@@ -116,12 +116,12 @@ public class StepNavigator {
         });
     }
 
-    private TaskStep executeUnwrapped(ExecutableTask task, ExecutionContext executionContext) {
-        ExecutionStep executed = executeAndSummary(task);
-        return auditExecutionAndSummary(executed, executionContext, LocalDateTime.now());
+    private TaskStep executeTaskUnwrapped(ExecutableTask task, ExecutionContext executionContext) {
+        ExecutionStep executed = executeTask(task);
+        return auditExecution(executed, executionContext, LocalDateTime.now());
     }
 
-    private ExecutionStep executeAndSummary(ExecutableTask task) {
+    private ExecutionStep executeTask(ExecutableTask task) {
         ExecutionStep executed = new ExecutableStep(task).execute(runtimeHelper);
         summarizer.add(executed);
         if (executed instanceof FailedExecutionStep) {
@@ -138,9 +138,9 @@ public class StepNavigator {
         return executed;
     }
 
-    private AfterExecutionAuditStep auditExecutionAndSummary(ExecutionStep executionStep,
-                                                                     ExecutionContext executionContext,
-                                                                     LocalDateTime executedAt) {
+    private AfterExecutionAuditStep auditExecution(ExecutionStep executionStep,
+                                                   ExecutionContext executionContext,
+                                                   LocalDateTime executedAt) {
         RuntimeContext runtimeContext = RuntimeContext.builder()
                 .setTaskStep(executionStep)
                 .setExecutedAt(executedAt)

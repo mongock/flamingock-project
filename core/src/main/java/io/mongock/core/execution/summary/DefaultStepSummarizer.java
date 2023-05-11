@@ -18,6 +18,11 @@ public class DefaultStepSummarizer implements StepSummarizer {
     private final List<StepSummaryLine> lines = new LinkedList<>();
 
     @Override
+    public void clear() {
+        lines.clear();
+    }
+
+    @Override
     public StepSummarizer add(StepSummaryLine line) {
         lines.add(line);
         return this;

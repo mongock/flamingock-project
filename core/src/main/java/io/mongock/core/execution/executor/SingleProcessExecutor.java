@@ -34,14 +34,14 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
                       ExecutionContext executionContext,
                       RuntimeHelper runtimeHelper) throws ProcessExecutionException {
         ProcessSummary summary = new ProcessSummary();
-        StepNavigatorBuilder navBuilder = StepNavigatorBuilder.reusableInstance();
+        StepNavigatorBuilder navBuilder = StepNavigatorBuilder.reusableInstance()
+                .setSummarizer(new DefaultStepSummarizer());
 
         Stream<StepNavigationOutput> taskStepStream = executableProcess.getTasks()
                 .stream()
                 .map(task -> navBuilder
                         .setAuditWriter(auditWriter)
                         .setRuntimeHelper(runtimeHelper)
-                        .setSummarizer(new DefaultStepSummarizer())
                         .setTransactionWrapper(transactionWrapper)
                         .build()
                         .start(task, executionContext)

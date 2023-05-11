@@ -85,6 +85,9 @@ public interface StepNavigatorBuilder {
             StepNavigator instance;
             instance = stepNavigator;
             instance.clean();
+            if(summarizer != null) {
+                summarizer.clear();
+            }
             setBaseDependencies(instance);
             return instance;
         }
