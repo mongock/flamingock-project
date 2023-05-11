@@ -1,6 +1,7 @@
 
 # TODO
 - Implement Mongock transaction wrapper
+- Sort changeUnits
 
 # Technical debts
 - Ensure changeUnit order in ChangeUnits

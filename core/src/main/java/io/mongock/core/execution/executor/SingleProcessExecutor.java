@@ -24,7 +24,7 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
     }
 
     public SingleProcessExecutor(AuditWriter<?> auditWriter,
-                                 TransactionWrapper transactionWrapper,) {
+                                 TransactionWrapper transactionWrapper) {
         this.auditWriter = auditWriter;
         this.transactionWrapper = transactionWrapper;
     }
@@ -34,8 +34,7 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
                       ExecutionContext executionContext,
                       RuntimeHelper runtimeHelper) throws ProcessExecutionException {
         ProcessSummary summary = new ProcessSummary();
-        StepNavigatorBuilder navBuilder = StepNavigatorBuilder.reusableInstance()
-                .setSummarizer(new DefaultStepSummarizer());
+        StepNavigatorBuilder navBuilder = StepNavigatorBuilder.reusableInstance();
 
         Stream<StepNavigationOutput> taskStepStream = executableProcess.getTasks()
                 .stream()
@@ -43,6 +42,7 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
                         .setAuditWriter(auditWriter)
                         .setRuntimeHelper(runtimeHelper)
                         .setTransactionWrapper(transactionWrapper)
+                        .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer
                         .build()
                         .start(task, executionContext)
                 )

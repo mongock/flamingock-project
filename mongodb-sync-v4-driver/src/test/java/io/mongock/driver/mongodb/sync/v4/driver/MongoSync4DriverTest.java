@@ -19,13 +19,14 @@ class MongoSync4DriverTest {
 
     @Test
     void test1() {
+        MongoClient mongoClient = getMainMongoClient();
         MongockStandalone.builder()
-                .setDriver(MongoSync4Driver.withDefaultLock(getMainMongoClient(), MONGODB_MAIN_DB_NAME))
+                .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, MONGODB_MAIN_DB_NAME))
                 .addMigrationScanPackage("io.mongock.driver.mongodb.sync.v4.driver.changes")
 //                .setMigrationStartedListener(MongockEventListener::onStart)
 //                .setMigrationSuccessListener(MongockEventListener::onSuccess)
 //                .setMigrationFailureListener(MongockEventListener::onFail)
-                .addDependency(new MyDependency())
+                .addDependency(mongoClient.getDatabase(MONGODB_MAIN_DB_NAME))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
                 .build()

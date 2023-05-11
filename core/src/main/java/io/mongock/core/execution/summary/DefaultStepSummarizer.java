@@ -15,11 +15,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 //NO thread-safe
 public class DefaultStepSummarizer implements StepSummarizer {
 
-    private final List<StepSummaryLine> lines = new LinkedList<>();
+    private List<StepSummaryLine> lines = new LinkedList<>();
 
     @Override
     public void clear() {
-        lines.clear();
+        lines = new LinkedList<>();
     }
 
     @Override
