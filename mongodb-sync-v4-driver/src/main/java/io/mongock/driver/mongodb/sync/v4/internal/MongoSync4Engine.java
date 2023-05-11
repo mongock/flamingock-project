@@ -10,6 +10,8 @@ import io.mongock.internal.MongockLockAcquirer;
 import io.mongock.internal.driver.ConnectionEngine;
 import io.mongock.internal.driver.MongockAuditor;
 
+import java.util.Optional;
+
 public class MongoSync4Engine implements ConnectionEngine {
 
     private final MongoDatabase database;
@@ -57,7 +59,7 @@ public class MongoSync4Engine implements ConnectionEngine {
 
 
     @Override
-    public TransactionWrapper getTransactionWrapper() {
-        return transactionWrapper;
+    public Optional<TransactionWrapper> getTransactionWrapper() {
+        return Optional.of(transactionWrapper);
     }
 }

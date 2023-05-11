@@ -17,8 +17,16 @@ import static io.mongock.core.util.StreamUtil.processUntil;
 public class SingleProcessExecutor implements ProcessExecutor<SingleExecutableProcess> {
     protected final AuditWriter<?> auditWriter;
 
+    protected final TransactionWrapper transactionWrapper;
+
     public SingleProcessExecutor(AuditWriter<?> auditWriter) {
+        this(auditWriter, null);
+    }
+
+    public SingleProcessExecutor(AuditWriter<?> auditWriter,
+                                 TransactionWrapper transactionWrapper,) {
         this.auditWriter = auditWriter;
+        this.transactionWrapper = transactionWrapper;
     }
 
     @Override
@@ -34,6 +42,7 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
                         .setAuditWriter(auditWriter)
                         .setRuntimeHelper(runtimeHelper)
                         .setSummarizer(new DefaultStepSummarizer())
+                        .setTransactionWrapper(transactionWrapper)
                         .build()
                         .start(task, executionContext)
                 )

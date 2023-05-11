@@ -1,7 +1,6 @@
 package io.mongock.driver.mongodb.sync.v4.driver;
 
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoDatabase;
 import io.mongock.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 import io.mongock.driver.mongodb.sync.v4.internal.MongoSync4Engine;
 import io.mongock.internal.MongockConfiguration;

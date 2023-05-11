@@ -69,6 +69,6 @@ public class BaseStandaloneBuilder<
                 processStartedListener != null ? () -> processStartedListener.accept(new MigrationStartedEvent()) : null,
                 processSuccessListener != null ? result -> processSuccessListener.accept(new MigrationSuccessEvent(result)) : null,
                 processFailedListener != null ? result -> processFailedListener.accept(new MigrationFailureEvent(result)) : null);
-        return super.build(factory, eventPublisher, dependencyManager);
+        return build(factory, eventPublisher, dependencyManager);
     }
 }

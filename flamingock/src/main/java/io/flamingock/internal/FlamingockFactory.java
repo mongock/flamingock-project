@@ -15,6 +15,8 @@ import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.transaction.TransactionWrapper;
 
+import java.util.Optional;
+
 public class FlamingockFactory implements Factory<FlamingockAuditProcessStatus, FlamingockExecutableProcess, FlamingockConfiguration> {
 
     @Override
@@ -35,11 +37,6 @@ public class FlamingockFactory implements Factory<FlamingockAuditProcessStatus, 
 
     @Override
     public ProcessExecutor<FlamingockExecutableProcess> getProcessExecutor() {
-        return null;
-    }
-
-    @Override
-    public TransactionWrapper getTransactionalWrapper() {
         return null;
     }
 

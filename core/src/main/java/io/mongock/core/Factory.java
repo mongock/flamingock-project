@@ -9,6 +9,8 @@ import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.transaction.TransactionWrapper;
 
+import java.util.Optional;
+
 public interface Factory<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
@@ -22,5 +24,4 @@ public interface Factory<
 
     ProcessExecutor<EXECUTABLE_PROCESS> getProcessExecutor();
 
-    TransactionWrapper getTransactionalWrapper();
 }

@@ -2,11 +2,9 @@ package io.mongock.driver.mongodb.sync.v4.internal;
 
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
-import io.mongock.core.execution.navigator.StepNavigator;
 import io.mongock.core.mongodb.SessionWrapper;
 import io.mongock.core.task.descriptor.TaskDescriptor;
 import io.mongock.core.transaction.TransactionWrapper;
-import io.mongock.core.execution.step.SuccessableStep;
 import io.mongock.core.util.Failed;
 import io.mongock.driver.mongodb.sync.v4.internal.mongodb.MongoSync4SessionManager;
 import org.slf4j.Logger;
@@ -15,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.function.Supplier;
 
 public class MongoSync4TransactionWrapper implements TransactionWrapper {
-    private static final Logger logger = LoggerFactory.getLogger(StepNavigator.class);
+    private static final Logger logger = LoggerFactory.getLogger(MongoSync4TransactionWrapper.class);
 
     private final MongoSync4SessionManager sessionManager;
 
@@ -26,12 +24,12 @@ public class MongoSync4TransactionWrapper implements TransactionWrapper {
     @Override
     public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, Supplier<T> operation) {
         logger.info("--------------------------------------------------------------------STARTING TRANSACTION WRAPPER");
-        try (SessionWrapper<ClientSession> sessionWrapper = sessionManager.startSession(taskDescriptor.getId())){
+        try (SessionWrapper<ClientSession> sessionWrapper = sessionManager.startSession(taskDescriptor.getId())) {
             logger.info("--------------------------------------------------------------------SESSION ACQUIRED");
             ClientSession clientSession = sessionWrapper.getClientSession();
             clientSession.startTransaction(TransactionOptions.builder().build());
             T result = operation.get();
-            if(result instanceof Failed) {
+            if (result instanceof Failed) {
                 logger.info("--------------------------------------------------------------------EXECUTION FAILED");
                 clientSession.abortTransaction();
             } else {
@@ -42,7 +40,6 @@ public class MongoSync4TransactionWrapper implements TransactionWrapper {
 
         }
     }
-
 
 
 }
