@@ -9,15 +9,6 @@ import io.mongock.core.transaction.TransactionWrapper;
 
 public interface StepNavigatorBuilder {
 
-    static StepNavigatorBuilder reusableInstance() {
-        return new ReusableStepNavigatorBuilder();
-    }
-
-    //For parallel execution.
-    static StepNavigatorBuilder instance() {
-        return new DefaultStepNavigatorBuilder();
-    }
-
 
     StepNavigatorBuilder setSummarizer(StepSummarizer summarizer);
 
@@ -43,7 +34,7 @@ public interface StepNavigatorBuilder {
 
         protected TransactionWrapper transactionWrapper = null;
 
-        DefaultStepNavigatorBuilder() {
+        public DefaultStepNavigatorBuilder() {
         }
 
 
@@ -88,12 +79,12 @@ public interface StepNavigatorBuilder {
     }
 
 
-    final class ReusableStepNavigatorBuilder extends DefaultStepNavigatorBuilder {
+    class ReusableStepNavigatorBuilder extends DefaultStepNavigatorBuilder {
 
         private StepNavigator stepNavigator = new StepNavigator(null, null, null, null);
 
 
-        private ReusableStepNavigatorBuilder() {
+        public ReusableStepNavigatorBuilder() {
         }
 
         @Override
