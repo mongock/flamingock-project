@@ -9,7 +9,7 @@ import io.mongock.core.event.EventPublisher;
 import io.mongock.core.execution.executor.ExecutionContext;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
-import io.mongock.core.runtime.RuntimeOrchestrator;
+import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.util.StringUtil;
 
@@ -54,18 +54,15 @@ public abstract class BaseBuilder<
     protected Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory,
                            EventPublisher eventPublisher,
                            AbstractDependencyManager dependencyManager) {
-        RuntimeOrchestrator.Generator runtimeBuilder = RuntimeOrchestrator
-                .builder()
-                .setDependencyManager(dependencyManager);
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
         return new AbstractRunner<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),
-                factory.getProcessExecutor(),
+                factory.getProcessExecutor(dependencyManager),
                 buildExecutionContext(),
                 eventPublisher,
-                runtimeBuilder,
+                dependencyManager,
                 getConfiguration().isThrowExceptionIfCannotObtainLock()) {
             @Override
             public void run() {

@@ -5,8 +5,10 @@ import io.mongock.core.execution.navigator.StepNavigationOutput;
 import io.mongock.core.execution.navigator.StepNavigatorBuilder;
 import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.ProcessSummary;
+import io.mongock.core.lock.Lock;
 import io.mongock.core.process.single.SingleExecutableProcess;
-import io.mongock.core.runtime.RuntimeOrchestrator;
+import io.mongock.core.runtime.RuntimeManager;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
@@ -18,13 +20,16 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
     protected final AuditWriter<?> auditWriter;
 
     protected final TransactionWrapper transactionWrapper;
+    private final AbstractDependencyManager dependencyManager;
 
-    public SingleProcessExecutor(AuditWriter<?> auditWriter) {
-        this(auditWriter, null);
+    public SingleProcessExecutor(AbstractDependencyManager dependencyManager, AuditWriter<?> auditWriter) {
+        this(dependencyManager, auditWriter, null);
     }
 
-    public SingleProcessExecutor(AuditWriter<?> auditWriter,
+    public SingleProcessExecutor(AbstractDependencyManager dependencyManager,
+                                 AuditWriter<?> auditWriter,
                                  TransactionWrapper transactionWrapper) {
+        this.dependencyManager = dependencyManager;
         this.auditWriter = auditWriter;
         this.transactionWrapper = transactionWrapper;
     }
@@ -32,15 +37,22 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
     @Override
     public Output run(SingleExecutableProcess executableProcess,
                       ExecutionContext executionContext,
-                      RuntimeOrchestrator runtimeHelper) throws ProcessExecutionException {
+                      Lock lock) throws ProcessExecutionException {
+
         ProcessSummary summary = new ProcessSummary();
+
         StepNavigatorBuilder navBuilder = StepNavigatorBuilder.reusableInstance();
+
+        RuntimeManager runtimeManager = RuntimeManager.generator()
+                .setDependencyManager(dependencyManager)
+                .setLock(lock)
+                .generate();
 
         Stream<StepNavigationOutput> taskStepStream = executableProcess.getTasks()
                 .stream()
                 .map(task -> navBuilder
                         .setAuditWriter(auditWriter)
-                        .setRuntimeHelper(runtimeHelper)
+                        .setRuntimeManager(runtimeManager)
                         .setTransactionWrapper(transactionWrapper)
                         .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer
                         .build()
@@ -50,13 +62,13 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
 
         try {
             Optional<StepNavigationOutput> failedOutput = processUntil(taskStepStream, StepNavigationOutput::isFailed);
-            if (failedOutput.isPresent()) {
+            failedOutput.ifPresent(failed -> {
                 throw new ProcessExecutionException(summary);
-            }
+            });
+
         } catch (Throwable throwable) {
             throw new ProcessExecutionException(throwable, summary);
         }
-
 
         return new Output(summary);
     }

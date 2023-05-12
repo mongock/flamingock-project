@@ -13,6 +13,7 @@ import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.executor.ProcessExecutor;
 import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class FlamingockFactory implements Factory<FlamingockAuditProcessStatus, 
     }
 
     @Override
-    public ProcessExecutor<FlamingockExecutableProcess> getProcessExecutor() {
+    public ProcessExecutor<FlamingockExecutableProcess> getProcessExecutor(AbstractDependencyManager dependencyManager) {
         return null;
     }
 

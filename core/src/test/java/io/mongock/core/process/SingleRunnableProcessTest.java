@@ -1,5 +1,7 @@
 package io.mongock.core.process;
 
+import io.mongock.core.lock.Lock;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.util.Result;
 import io.mongock.core.audit.writer.AuditItem;
 import io.mongock.core.audit.writer.AuditWriter;
@@ -10,7 +12,7 @@ import io.mongock.core.execution.summary.StepSummaryLine;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.process.stubs.task.FailedTestExecutableTask;
 import io.mongock.core.process.stubs.task.SuccessTestExecutableTask;
-import io.mongock.core.runtime.RuntimeOrchestrator;
+import io.mongock.core.runtime.RuntimeManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -44,8 +46,8 @@ class SingleRunnableProcessTest {
 
         //WHEN
         ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-        List<StepSummaryLine> steps = new SingleProcessExecutor(stateSaver)
-                .run(process, executionContext, mock(RuntimeOrchestrator.class))
+        List<StepSummaryLine> steps = new SingleProcessExecutor(mock(AbstractDependencyManager.class), stateSaver)
+                .run(process, executionContext, mock(Lock.class))
                 .getSummary()
                 .getLines();
 
@@ -113,8 +115,8 @@ class SingleRunnableProcessTest {
 
         //WHEN
         ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-        ProcessExecutor.Output output = new SingleProcessExecutor(stateSaver)
-                .run(process, executionContext, mock(RuntimeOrchestrator.class));
+        ProcessExecutor.Output output = new SingleProcessExecutor(mock(AbstractDependencyManager.class), stateSaver)
+                .run(process, executionContext, mock(Lock.class));
         String actualSummary = output.getSummary().getPretty();
         System.out.println(actualSummary);
 

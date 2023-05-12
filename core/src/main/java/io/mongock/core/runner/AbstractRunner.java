@@ -15,7 +15,7 @@ import io.mongock.core.lock.LockCheckException;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.process.LoadedProcess;
-import io.mongock.core.runtime.RuntimeOrchestrator;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ implements Runner{
     private final boolean throwExceptionIfCannotObtainLock;
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
-    private final RuntimeOrchestrator.Generator runtimeBuilder;
+    private final AbstractDependencyManager dependencyManager;
 
 
     public AbstractRunner(LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockAcquirer,
@@ -41,14 +41,14 @@ implements Runner{
                           ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
                           ExecutionContext executionContext,
                           EventPublisher eventPublisher,
-                          RuntimeOrchestrator.Generator runtimeBuilder,
+                          AbstractDependencyManager dependencyManager,
                           boolean throwExceptionIfCannotObtainLock) {
         this.lockProvider = lockAcquirer;
         this.stateFetcher = auditReader;
         this.processExecutor = processExecutor;
         this.executionContext = executionContext;
         this.eventPublisher = eventPublisher;
-        this.runtimeBuilder = runtimeBuilder;
+        this.dependencyManager = dependencyManager;
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
@@ -95,8 +95,7 @@ implements Runner{
         EXECUTABLE_PROCESS executableProcess = process.applyState(processCurrentState);
         logger.debug("Applied state to process:\n{}", executableProcess);
 
-        RuntimeOrchestrator runtimeHelper = runtimeBuilder.setLock(lock).generate();
-        ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, runtimeHelper);
+        ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));
     }

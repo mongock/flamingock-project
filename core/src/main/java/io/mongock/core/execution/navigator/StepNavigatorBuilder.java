@@ -2,7 +2,7 @@ package io.mongock.core.execution.navigator;
 
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.summary.StepSummarizer;
-import io.mongock.core.runtime.RuntimeOrchestrator;
+import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.transaction.TransactionWrapper;
 
 public interface StepNavigatorBuilder {
@@ -21,7 +21,7 @@ public interface StepNavigatorBuilder {
 
     StepNavigatorBuilder setAuditWriter(AuditWriter<?> auditWriter);
 
-    StepNavigatorBuilder setRuntimeHelper(RuntimeOrchestrator runtimeHelper);
+    StepNavigatorBuilder setRuntimeManager(RuntimeManager runtimeManager);
 
     StepNavigatorBuilder setTransactionWrapper(TransactionWrapper transactionWrapper);
 
@@ -33,7 +33,7 @@ public interface StepNavigatorBuilder {
         protected StepSummarizer summarizer = null;
         protected AuditWriter<?> auditWriter = null;
 
-        protected RuntimeOrchestrator runtimeHelper = null;
+        protected RuntimeManager runtimeManager = null;
 
         protected TransactionWrapper transactionWrapper = null;
 
@@ -54,8 +54,8 @@ public interface StepNavigatorBuilder {
         }
 
         @Override
-        public StepNavigatorBuilder setRuntimeHelper(RuntimeOrchestrator runtimeHelper) {
-            this.runtimeHelper = runtimeHelper;
+        public StepNavigatorBuilder setRuntimeManager(RuntimeManager runtimeManager) {
+            this.runtimeManager = runtimeManager;
             return this;
         }
 
@@ -67,7 +67,7 @@ public interface StepNavigatorBuilder {
 
         @Override
         public StepNavigator build() {
-            return  new StepNavigator(auditWriter, summarizer, runtimeHelper, transactionWrapper);
+            return  new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
         }
     }
 
@@ -95,7 +95,7 @@ public interface StepNavigatorBuilder {
         private void setBaseDependencies(StepNavigator instance) {
             instance.setSummarizer(summarizer);
             instance.setAuditWriter(auditWriter);
-            instance.setRuntimeHelper(runtimeHelper);
+            instance.setRuntimeHelper(runtimeManager);
             instance.setTransactionWrapper(transactionWrapper);
         }
     }

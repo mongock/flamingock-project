@@ -7,6 +7,7 @@ import io.mongock.core.execution.executor.ProcessExecutor;
 import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
@@ -22,6 +23,6 @@ public interface Factory<
 
     DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> getDefinitionProcess(CONFIGURATION config);
 
-    ProcessExecutor<EXECUTABLE_PROCESS> getProcessExecutor();
+    ProcessExecutor<EXECUTABLE_PROCESS> getProcessExecutor(AbstractDependencyManager dependencyManager);
 
 }

@@ -1,6 +1,6 @@
 package io.mongock.core.task.executable;
 
-import io.mongock.core.runtime.RuntimeOrchestrator;
+import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.task.descriptor.TaskDescriptor;
 
 
@@ -22,7 +22,7 @@ public abstract class AbstractRollableTask<
 
 
     @Override
-    public void execute(RuntimeOrchestrator runtimeHelper) {
+    public void execute(RuntimeManager runtimeHelper) {
         baseTask.execute(runtimeHelper);
     }
 

@@ -4,7 +4,7 @@ import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackExecution;
 import io.mongock.core.audit.domain.AuditEntryStatus;
-import io.mongock.core.runtime.RuntimeOrchestrator;
+import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.task.Task;
 import io.mongock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.mongock.core.task.descriptor.TaskDescriptor;
@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 public interface ExecutableTask extends Task {
 
-    void execute(RuntimeOrchestrator runtimeHelper);
+    void execute(RuntimeManager runtimeHelper);
 
     String getExecutionMethodName();
 

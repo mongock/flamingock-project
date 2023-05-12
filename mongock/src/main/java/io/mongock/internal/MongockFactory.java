@@ -9,6 +9,7 @@ import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.single.SingleDefinitionProcess;
 import io.mongock.core.process.single.SingleExecutableProcess;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.internal.driver.ConnectionEngine;
 
 public class MongockFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, MongockConfiguration> {
@@ -34,11 +35,11 @@ public class MongockFactory implements Factory<SingleAuditProcessStatus, SingleE
     }
 
     @Override
-    public ProcessExecutor<SingleExecutableProcess> getProcessExecutor() {
+    public ProcessExecutor<SingleExecutableProcess> getProcessExecutor(AbstractDependencyManager dependencyManager) {
 
         return connectionEngine.getTransactionWrapper()
-                .map(transactionWrapper -> new SingleProcessExecutor(connectionEngine.getAuditor(), transactionWrapper))
-                .orElseGet(() -> new SingleProcessExecutor(connectionEngine.getAuditor()));
+                .map(transactionWrapper -> new SingleProcessExecutor(dependencyManager, connectionEngine.getAuditor(), transactionWrapper))
+                .orElseGet(() -> new SingleProcessExecutor(dependencyManager, connectionEngine.getAuditor()));
     }
 
 

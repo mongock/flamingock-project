@@ -26,12 +26,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class RuntimeOrchestrator {
+public final class RuntimeManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(RuntimeOrchestrator.class);
+    private static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 
 
-    public static Generator builder() {
+    public static Generator generator() {
         return new Generator();
     }
 
@@ -42,8 +42,8 @@ public final class RuntimeOrchestrator {
     private final AbstractDependencyManager dependencyManager;
     private final LockGuardProxyFactory proxyFactory;
 
-    public RuntimeOrchestrator(LockGuardProxyFactory proxyFactory,
-                               AbstractDependencyManager dependencyManager) {
+    public RuntimeManager(LockGuardProxyFactory proxyFactory,
+                          AbstractDependencyManager dependencyManager) {
         this.dependencyManager = dependencyManager;
         this.proxyFactory = proxyFactory;
     }
@@ -132,7 +132,7 @@ public final class RuntimeOrchestrator {
 
     public static void logMethodWithArguments(String methodName, List<Object> changelogInvocationParameters) {
         String arguments = changelogInvocationParameters.stream()
-                .map(RuntimeOrchestrator::getParameterType)
+                .map(RuntimeManager::getParameterType)
                 .collect(Collectors.joining(", "));
         logger.info("method[{}] with arguments: [{}]", methodName, arguments);
 
@@ -163,9 +163,9 @@ public final class RuntimeOrchestrator {
             return this;
         }
 
-        public RuntimeOrchestrator generate() {
+        public RuntimeManager generate() {
             LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
-            return new RuntimeOrchestrator(proxyFactory, dependencyManager);
+            return new RuntimeManager(proxyFactory, dependencyManager);
         }
     }
 

@@ -1,6 +1,6 @@
 package io.mongock.core.task.executable.change;
 
-import io.mongock.core.runtime.RuntimeOrchestrator;
+import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.mongock.core.task.executable.AbstractRollableTask;
 
@@ -36,7 +36,7 @@ public class RollableReflectionChangeUnit extends AbstractRollableTask<Reflectio
 
 
     @Override
-    public void rollback(RuntimeOrchestrator runtimeHelper) {
+    public void rollback(RuntimeManager runtimeHelper) {
         runtimeHelper.executeMethod(runtimeHelper.getInstance(getDescriptor().getSource()), rollbackMethod);
     }
 
