@@ -12,6 +12,7 @@ import io.mongock.core.runner.BaseBuilder;
 import io.mongock.core.runner.Runner;
 import io.mongock.core.runtime.dependency.DefaultDependencyManager;
 import io.mongock.core.runtime.dependency.Dependency;
+import io.mongock.core.runtime.dependency.DependencyInjectableContext;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -24,7 +25,7 @@ public class BaseStandaloneBuilder<
         extends BaseBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>
         implements StandaloneBuilder<HOLDER> {
 
-    private final DefaultDependencyManager dependencyManager;
+    private final DependencyInjectableContext dependencyManager;
     private Consumer<MigrationStartedEvent> processStartedListener;
     private Consumer<MigrationSuccessEvent> processSuccessListener;
     private Consumer<MigrationFailureEvent> processFailedListener;
@@ -42,7 +43,7 @@ public class BaseStandaloneBuilder<
 
     @Override
     public HOLDER addDependency(String name, Class<?> type, Object instance) {
-        dependencyManager.addStandardDependency(new Dependency(name, type, instance));
+        dependencyManager.addDependency(new Dependency(name, type, instance));
         return holderInstanceSupplier.get();
     }
 

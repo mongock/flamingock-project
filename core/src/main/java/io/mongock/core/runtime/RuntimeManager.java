@@ -52,12 +52,12 @@ public final class RuntimeManager implements DependencyInjector {
     }
 
     @Override
-    public void addPriorityDependencies(Collection<? extends Dependency> dependencies) {
+    public void addDependencies(Collection<? extends Dependency> dependencies) {
 //        dependencyManager.addPriorityDependencies(dependencies);
     }
 
     @Override
-    public void addPriorityDependency(Dependency dependency) {
+    public void addDependency(Dependency dependency) {
 //        dependencyManager.addPriorityDependency(dependency);
     }
 

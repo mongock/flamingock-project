@@ -4,11 +4,11 @@ import java.util.Collection;
 
 public interface DependencyInjector {
 
-    void addPriorityDependencies(Collection<? extends Dependency> dependencies);
+    void addDependencies(Collection<? extends Dependency> dependencies);
 
-    void addPriorityDependency(Dependency dependency);
+    void addDependency(Dependency dependency);
 
-    default void addPriorityDependency(Object object) {
-        addPriorityDependency(new Dependency(object));
+    default void addDependency(Object object) {
+        addDependency(new Dependency(object));
     }
 }

@@ -47,7 +47,7 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
         Stream<StepNavigationOutput> taskStepStream = buildTaskStream(executableProcess)
                 .map(task -> stepNavigatorBuilder
                         .setAuditWriter(auditWriter)
-                        .setDependencyContext(dependencyContext)
+                        .setStaticContext(dependencyContext)
                         .setLock(lock)
                         .setTransactionWrapper(transactionWrapper)
                         .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer

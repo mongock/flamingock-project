@@ -12,12 +12,12 @@ public class DefaultDependencyManager extends AbstractDependencyManager {
         this.standardDependencies = new LinkedHashSet<>();
     }
     public DefaultDependencyManager addStandardDependencies(Collection<? extends Dependency> dependencies) {
-        dependencies.forEach(this::addStandardDependency);
+        dependencies.forEach(this::addDependency);
         return this;
     }
 
-    public void addStandardDependency(Dependency dependency) {
-        addDependency(standardDependencies, dependency);
+    public void addDependency(Dependency dependency) {
+        addDependencyInternal(standardDependencies, dependency);
     }
 
 

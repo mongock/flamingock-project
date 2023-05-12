@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public abstract class AbstractDependencyManager implements DependencyContext,DependencyInjector {
+public abstract class AbstractDependencyManager implements DependencyInjectableContext {
 
     private final LinkedHashSet<Dependency> priorityDependencies;
 
@@ -17,13 +17,13 @@ public abstract class AbstractDependencyManager implements DependencyContext,Dep
     }
 
     @Override
-    public void addPriorityDependencies(Collection<? extends Dependency> dependencies) {
-        dependencies.forEach(this::addPriorityDependency);
+    public void addDependencies(Collection<? extends Dependency> dependencies) {
+        dependencies.forEach(this::addDependency);
     }
 
     @Override
-    public void addPriorityDependency(Dependency dependency) {
-        addDependency(priorityDependencies, dependency);
+    public void addDependency(Dependency dependency) {
+        addDependencyInternal(priorityDependencies, dependency);
     }
 
     @Override
@@ -66,7 +66,7 @@ public abstract class AbstractDependencyManager implements DependencyContext,Dep
         }
     }
 
-    protected <T extends Dependency> void addDependency(Collection<T> dependencyStore, T dependency) {
+    protected <T extends Dependency> void addDependencyInternal(Collection<T> dependencyStore, T dependency) {
         //add returns false if it's already there. In that case, it needs to be removed and then inserted
         if (!dependencyStore.add(dependency)) {
             dependencyStore.remove(dependency);

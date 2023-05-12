@@ -16,7 +16,7 @@ public interface StepNavigatorBuilder {
 
     StepNavigatorBuilder setLock(Lock lock);
 
-    StepNavigatorBuilder setDependencyContext(DependencyContext dependencyContext);
+    StepNavigatorBuilder setStaticContext(DependencyContext staticContext);
 
     StepNavigatorBuilder setTransactionWrapper(TransactionWrapper transactionWrapper);
 
@@ -30,7 +30,7 @@ public interface StepNavigatorBuilder {
 
         protected Lock lock = null;
 
-        protected DependencyContext dependencyContext;
+        protected DependencyContext staticContext;
 
         protected TransactionWrapper transactionWrapper = null;
 
@@ -51,8 +51,8 @@ public interface StepNavigatorBuilder {
         }
 
         @Override
-        public StepNavigatorBuilder setDependencyContext(DependencyContext dependencyContext) {
-            this.dependencyContext = dependencyContext;
+        public StepNavigatorBuilder setStaticContext(DependencyContext staticContext) {
+            this.staticContext = staticContext;
             return this;
         }
 
@@ -71,7 +71,7 @@ public interface StepNavigatorBuilder {
         @Override
         public StepNavigator build() {
             RuntimeManager runtimeManager = RuntimeManager.generator()
-                    .setDependencyContext(dependencyContext)
+                    .setDependencyContext(staticContext)
                     .setLock(lock)
                     .generate();
             return new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
@@ -103,7 +103,7 @@ public interface StepNavigatorBuilder {
             instance.setSummarizer(summarizer);
             instance.setAuditWriter(auditWriter);
             RuntimeManager runtimeManager = RuntimeManager.generator()
-                    .setDependencyContext(dependencyContext)
+                    .setDependencyContext(staticContext)
                     .setLock(lock)
                     .generate();
             instance.setRuntimeManager(runtimeManager);
