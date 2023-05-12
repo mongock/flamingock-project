@@ -6,15 +6,26 @@ public abstract class AbstractTaskDescriptor implements TaskDescriptor{
 
     private final String id;
 
+    private final String order;
+
     private final boolean runAlways;
 
-    public AbstractTaskDescriptor(String id, boolean runAlways) {
-        this.id = id;this.runAlways = runAlways;
+    public AbstractTaskDescriptor(String id,
+                                  String order,
+                                  boolean runAlways) {
+        this.id = id;
+        this.order = order;
+        this.runAlways = runAlways;
     }
 
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getOrder() {
+        return order;
     }
 
     @Override

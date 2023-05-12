@@ -1,8 +1,12 @@
 package io.mongock.core.task.descriptor;
 
-public interface TaskDescriptor {
+import java.util.Comparator;
+
+public interface TaskDescriptor extends Comparable<TaskDescriptor> {
 
     String getId();
+
+    String getOrder();
 
     boolean isRunAlways();
 
@@ -10,10 +14,10 @@ public interface TaskDescriptor {
 
 
     default String pretty() {
-        //todo improve this
-        return String.format("%s ", getId());
+        return String.format("%s) %s ", getOrder(), getId());
     }
 
-
-
+    default int compareTo(TaskDescriptor other) {
+        return this.getOrder().compareTo(other.getOrder());
+    }
 }

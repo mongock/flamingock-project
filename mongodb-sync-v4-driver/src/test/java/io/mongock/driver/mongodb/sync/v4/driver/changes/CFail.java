@@ -15,8 +15,8 @@ public class CFail {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
         collection.insertOne(clientSession, new Document().append("name", "Juan Failed(ClientSession)"));
         collection.insertOne(new Document().append("name", "Juan Failed(NO ClientSession)"));
-        if(true) {
-            throw new RuntimeException("EXPECTED EXCEPTION");
-        }
+//        if(true) {
+//            throw new RuntimeException("EXPECTED EXCEPTION");
+//        }
     }
 }

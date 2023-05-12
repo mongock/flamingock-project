@@ -4,8 +4,10 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
 
     private final Class<?> source;
 
-    public ReflectionTaskDescriptor(String id, Class<?> source, boolean runAlways) {
-        super(id, runAlways);
+    public ReflectionTaskDescriptor(String id,
+                                    String order,
+                                    Class<?> source, boolean runAlways) {
+        super(id, order, runAlways);
         this.source = source;
     }
 
@@ -25,7 +27,6 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
 
 
     public static final class Builder {
-
 
         private Class<?> source;
 
@@ -55,6 +56,7 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
 
             return new ReflectionTaskDescriptor(
                     changeUnitAnnotation.id(),
+                    changeUnitAnnotation.order(),
                     source,
                     changeUnitAnnotation.runAlways());
         }

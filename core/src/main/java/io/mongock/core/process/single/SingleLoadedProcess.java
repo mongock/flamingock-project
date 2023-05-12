@@ -8,6 +8,7 @@ import io.mongock.core.task.executable.ExecutableTask;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> {
 
@@ -21,14 +22,18 @@ public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStat
     public SingleExecutableProcess applyState(SingleAuditProcessStatus state) {
         //reused builder to avoid performing GC unnecessarily. This is always sequential
         final ExecutableTask.Builder builder = ExecutableTask.builder();
-        List<ExecutableTask> tasks = new LinkedList<>();
-        for(TaskDescriptor descriptor: taskDescriptors) {
-            builder.clean();
-            builder.setTaskDescriptor(descriptor);
-            builder.setInitialState(state.getEntryStatus(descriptor.getId()).orElse(null));
-            tasks.add(builder.build());
-        }
-        return new SingleExecutableProcess(tasks);
+        List<ExecutableTask> tasks2 = taskDescriptors
+                .stream()
+                .sorted()
+                .map(descriptor ->
+                        builder.clean()
+                                .setTaskDescriptor(descriptor)
+                                .setInitialState(state.getEntryStatus(descriptor.getId()).orElse(null))
+                                .build()
+                ).sorted()
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        return new SingleExecutableProcess(tasks2);
     }
 
 }
