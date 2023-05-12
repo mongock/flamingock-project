@@ -29,6 +29,7 @@ public class MongoSync4TransactionWrapper implements TransactionWrapper {
             logger.info("--------------------------------------------------------------------SESSION ACQUIRED");
             ClientSession clientSession = sessionWrapper.getClientSession();
             clientSession.startTransaction(TransactionOptions.builder().build());
+            dependencyInjector.addPriorityDependency(clientSession);
             T result = operation.get();
             if (result instanceof Failed) {
                 logger.info("--------------------------------------------------------------------EXECUTION FAILED");

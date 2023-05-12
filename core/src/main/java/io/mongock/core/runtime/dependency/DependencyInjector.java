@@ -7,4 +7,8 @@ public interface DependencyInjector {
     void addPriorityDependencies(Collection<? extends Dependency> dependencies);
 
     void addPriorityDependency(Dependency dependency);
+
+    default void addPriorityDependency(Object object) {
+        addPriorityDependency(new Dependency(object));
+    }
 }
