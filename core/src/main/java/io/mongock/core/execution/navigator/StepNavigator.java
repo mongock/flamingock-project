@@ -35,24 +35,24 @@ public class StepNavigator {
     private StepSummarizer summarizer;
     private AuditWriter<?> auditWriter;
 
-    private RuntimeManager runtimeHelper;
+    private RuntimeManager runtimeManager;
 
     private TransactionWrapper transactionWrapper;
 
     StepNavigator(AuditWriter<?> auditWriter,
                   StepSummarizer summarizer,
-                  RuntimeManager runtimeHelper,
+                  RuntimeManager runtimeManager,
                   TransactionWrapper transactionWrapper) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
-        this.runtimeHelper = runtimeHelper;
+        this.runtimeManager = runtimeManager;
         this.transactionWrapper = transactionWrapper;
     }
 
     void clean() {
         summarizer = null;
         auditWriter = null;
-        runtimeHelper = null;
+        runtimeManager = null;
     }
 
     void setSummarizer(StepSummarizer summarizer) {
@@ -63,8 +63,8 @@ public class StepNavigator {
         this.auditWriter = auditWriter;
     }
 
-    void setRuntimeHelper(RuntimeManager runtimeHelper) {
-        this.runtimeHelper = runtimeHelper;
+    void setRuntimeManager(RuntimeManager runtimeManager) {
+        this.runtimeManager = runtimeManager;
     }
 
     void setTransactionWrapper(TransactionWrapper transactionWrapper) {
@@ -122,7 +122,7 @@ public class StepNavigator {
     }
 
     private ExecutionStep executeTask(ExecutableTask task) {
-        ExecutionStep executed = new ExecutableStep(task).execute(runtimeHelper);
+        ExecutionStep executed = new ExecutableStep(task).execute(runtimeManager);
         summarizer.add(executed);
         if (executed instanceof FailedExecutionStep) {
             FailedExecutionStep failed = (FailedExecutionStep) executed;
@@ -162,7 +162,7 @@ public class StepNavigator {
     private Optional<ManualRolledBackStep> manualRollback(FailedExecutionOrAuditStep failed) {
         if (failed.getRollableIfPresent().isPresent()) {
             RollableStep rollable = failed.getRollableIfPresent().get();
-            ManualRolledBackStep rolledBack = rollable.rollback(runtimeHelper);
+            ManualRolledBackStep rolledBack = rollable.rollback(runtimeManager);
             if (rolledBack instanceof FailedManualRolledBackStep) {
                 logger.info("ROLL BACK FAILED - {} after {} ms",
                         rolledBack.getTask().getDescriptor().getId(),

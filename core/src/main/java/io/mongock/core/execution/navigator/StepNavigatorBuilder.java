@@ -2,7 +2,9 @@ package io.mongock.core.execution.navigator;
 
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.summary.StepSummarizer;
+import io.mongock.core.lock.Lock;
 import io.mongock.core.runtime.RuntimeManager;
+import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.transaction.TransactionWrapper;
 
 public interface StepNavigatorBuilder {
@@ -21,7 +23,9 @@ public interface StepNavigatorBuilder {
 
     StepNavigatorBuilder setAuditWriter(AuditWriter<?> auditWriter);
 
-    StepNavigatorBuilder setRuntimeManager(RuntimeManager runtimeManager);
+    StepNavigatorBuilder setLock(Lock lock);
+
+    StepNavigatorBuilder setDependencyManager(AbstractDependencyManager dependencyManager);
 
     StepNavigatorBuilder setTransactionWrapper(TransactionWrapper transactionWrapper);
 
@@ -33,7 +37,9 @@ public interface StepNavigatorBuilder {
         protected StepSummarizer summarizer = null;
         protected AuditWriter<?> auditWriter = null;
 
-        protected RuntimeManager runtimeManager = null;
+        protected Lock lock = null;
+
+        protected AbstractDependencyManager dependencyManager;
 
         protected TransactionWrapper transactionWrapper = null;
 
@@ -54,8 +60,14 @@ public interface StepNavigatorBuilder {
         }
 
         @Override
-        public StepNavigatorBuilder setRuntimeManager(RuntimeManager runtimeManager) {
-            this.runtimeManager = runtimeManager;
+        public StepNavigatorBuilder setDependencyManager(AbstractDependencyManager dependencyManager) {
+            this.dependencyManager = dependencyManager;
+            return this;
+        }
+
+        @Override
+        public StepNavigatorBuilder setLock(Lock lock) {
+            this.lock = lock;
             return this;
         }
 
@@ -67,7 +79,11 @@ public interface StepNavigatorBuilder {
 
         @Override
         public StepNavigator build() {
-            return  new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
+            RuntimeManager runtimeManager = RuntimeManager.generator()
+                    .setDependencyManager(dependencyManager)
+                    .setLock(lock)
+                    .generate();
+            return new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
         }
     }
 
@@ -85,7 +101,7 @@ public interface StepNavigatorBuilder {
             StepNavigator instance;
             instance = stepNavigator;
             instance.clean();
-            if(summarizer != null) {
+            if (summarizer != null) {
                 summarizer.clear();
             }
             setBaseDependencies(instance);
@@ -95,7 +111,11 @@ public interface StepNavigatorBuilder {
         private void setBaseDependencies(StepNavigator instance) {
             instance.setSummarizer(summarizer);
             instance.setAuditWriter(auditWriter);
-            instance.setRuntimeHelper(runtimeManager);
+            RuntimeManager runtimeManager = RuntimeManager.generator()
+                    .setDependencyManager(dependencyManager)
+                    .setLock(lock)
+                    .generate();
+            instance.setRuntimeManager(runtimeManager);
             instance.setTransactionWrapper(transactionWrapper);
         }
     }

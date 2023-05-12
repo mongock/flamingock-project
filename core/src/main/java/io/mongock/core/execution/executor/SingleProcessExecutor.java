@@ -43,16 +43,12 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
 
         StepNavigatorBuilder navBuilder = StepNavigatorBuilder.reusableInstance();
 
-        RuntimeManager runtimeManager = RuntimeManager.generator()
-                .setDependencyManager(dependencyManager)
-                .setLock(lock)
-                .generate();
-
         Stream<StepNavigationOutput> taskStepStream = executableProcess.getTasks()
                 .stream()
                 .map(task -> navBuilder
                         .setAuditWriter(auditWriter)
-                        .setRuntimeManager(runtimeManager)
+                        .setDependencyManager(dependencyManager)
+                        .setLock(lock)
                         .setTransactionWrapper(transactionWrapper)
                         .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer
                         .build()
