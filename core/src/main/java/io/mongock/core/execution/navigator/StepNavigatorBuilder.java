@@ -72,6 +72,9 @@ public interface StepNavigatorBuilder {
             return this;
         }
 
+        protected StepNavigator buildInstance(RuntimeManager runtimeManager) {
+            return new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
+        }
 
     }
 

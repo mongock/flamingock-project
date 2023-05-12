@@ -1,5 +1,7 @@
-package io.mongock.core.execution.navigator;
+package io.flamingock.internal.executor;
 
+import io.mongock.core.execution.navigator.StepNavigator;
+import io.mongock.core.execution.navigator.StepNavigatorBuilder;
 import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.runtime.dependency.DefaultDependencyInjectableContext;
 import io.mongock.core.runtime.dependency.DependencyInjectableContext;
@@ -21,6 +23,6 @@ public class ParallelStepNavigatorBuilder extends StepNavigatorBuilder.AbstractS
                 .setDependencyContext(injectableContext)
                 .setLock(lock)
                 .build();
-        return new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
+        return buildInstance(runtimeManager);
     }
 }
