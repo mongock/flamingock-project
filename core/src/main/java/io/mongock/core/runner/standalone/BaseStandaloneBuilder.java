@@ -10,7 +10,7 @@ import io.mongock.core.event.MigrationSuccessEvent;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.runner.BaseBuilder;
 import io.mongock.core.runner.Runner;
-import io.mongock.core.runtime.dependency.DefaultDependencyManager;
+import io.mongock.core.runtime.dependency.DefaultDependencyInjectableContext;
 import io.mongock.core.runtime.dependency.Dependency;
 import io.mongock.core.runtime.dependency.DependencyInjectableContext;
 
@@ -31,12 +31,12 @@ public class BaseStandaloneBuilder<
     private Consumer<MigrationFailureEvent> processFailedListener;
 
     public BaseStandaloneBuilder(CONFIG configuration, Supplier<HOLDER> holderInstanceSupplier) {
-        this(configuration, holderInstanceSupplier, new DefaultDependencyManager());
+        this(configuration, holderInstanceSupplier, new DefaultDependencyInjectableContext());
     }
 
     BaseStandaloneBuilder(CONFIG configuration,
                           Supplier<HOLDER> holderInstanceSupplier,
-                          DefaultDependencyManager dependencyManager) {
+                          DefaultDependencyInjectableContext dependencyManager) {
         super(configuration, holderInstanceSupplier);
         this.dependencyManager = dependencyManager;
     }

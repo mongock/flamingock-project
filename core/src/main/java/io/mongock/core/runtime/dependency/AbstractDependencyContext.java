@@ -17,7 +17,7 @@ public abstract class AbstractDependencyContext implements DependencyContext {
 
     @Override
     public Optional<Dependency> getDependency(Class<?> type, String name) throws ForbiddenParameterException {
-        Optional<Dependency> dependencyOptional = getStandardDependency(type, name);
+        Optional<Dependency> dependencyOptional = getDependencyInternal(type, name);
         if (!dependencyOptional.isPresent()) {
             return Optional.empty();
 
@@ -28,32 +28,6 @@ public abstract class AbstractDependencyContext implements DependencyContext {
                 : dependencyOptional;
     }
 
-    private static boolean isByName(String name) {
-        return name != null && !name.isEmpty() && !Dependency.DEFAULT_NAME.equals(name);
-    }
-
-    protected final Optional<Dependency> getDependencyFromStore(Collection<Dependency> dependencyStore, Class<?> type, String name) {
-        boolean byName = isByName(name);
-        Predicate<Dependency> filter = byName
-                ? dependency -> name.equals(dependency.getName())
-                : dependency -> type.isAssignableFrom(dependency.getType());
-
-        Stream<Dependency> stream = dependencyStore.stream().filter(filter);
-        if (byName) {
-            return stream.findFirst();
-        } else {
-            return stream.reduce((dependency1, dependency2) -> !dependency1.isDefaultNamed() && dependency2.isDefaultNamed() ? dependency2 : dependency1);
-        }
-    }
-
-    protected <T extends Dependency> void addDependency(Collection<T> dependencyStore, T dependency) {
-        //add returns false if it's already there. In that case, it needs to be removed and then inserted
-        if (!dependencyStore.add(dependency)) {
-            dependencyStore.remove(dependency);
-            dependencyStore.add(dependency);
-        }
-    }
-
-    abstract protected Optional<Dependency> getStandardDependency(Class<?> type, String name);
+    protected abstract Optional<Dependency> getDependencyInternal(Class<?> type, String name);
 
 }

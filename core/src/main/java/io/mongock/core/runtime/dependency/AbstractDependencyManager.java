@@ -16,10 +16,6 @@ public abstract class AbstractDependencyManager implements DependencyInjectableC
         priorityDependencies = new LinkedHashSet<>();
     }
 
-    @Override
-    public void addDependencies(Collection<? extends Dependency> dependencies) {
-        dependencies.forEach(this::addDependency);
-    }
 
     @Override
     public void addDependency(Dependency dependency) {
