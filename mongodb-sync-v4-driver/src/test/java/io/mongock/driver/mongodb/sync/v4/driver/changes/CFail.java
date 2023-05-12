@@ -13,7 +13,8 @@ public class CFail {
     @Execution
     public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(clientSession, new Document().append("name", "Juan from Failed changeUnit"));
+        collection.insertOne(clientSession, new Document().append("name", "Juan Failed(ClientSession)"));
+        collection.insertOne(new Document().append("name", "Juan Failed(NO ClientSession)"));
         if(true) {
             throw new RuntimeException("EXPECTED EXCEPTION");
         }
