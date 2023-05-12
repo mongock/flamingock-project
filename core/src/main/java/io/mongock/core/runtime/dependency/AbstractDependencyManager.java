@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public abstract class AbstractDependencyManager {
+public abstract class AbstractDependencyManager implements DependencyContext,DependencyInjector {
 
     private final LinkedHashSet<Dependency> priorityDependencies;
 
@@ -16,19 +16,22 @@ public abstract class AbstractDependencyManager {
         priorityDependencies = new LinkedHashSet<>();
     }
 
+    @Override
     public void addPriorityDependencies(Collection<? extends Dependency> dependencies) {
         dependencies.forEach(this::addPriorityDependency);
     }
 
+    @Override
     public void addPriorityDependency(Dependency dependency) {
         addDependency(priorityDependencies, dependency);
     }
 
-
+    @Override
     public Optional<Dependency> getDependency(Class<?> type) throws ForbiddenParameterException {
         return getDependency(type, null);
     }
 
+    @Override
     public Optional<Dependency> getDependency(Class<?> type, String name) throws ForbiddenParameterException {
         Optional<Dependency> priorityDependencyOptional = getDependencyFromStore(priorityDependencies, type, name);
         Optional<Dependency> dependencyOptional = priorityDependencyOptional.isPresent()

@@ -6,8 +6,10 @@
   - Inject DependencyContext/DependencyInjector(current DependencyManager) and proxy and generate RuntimeHelper?.
 - Implement Mongock transaction wrapper
 - Sort changeUnits
+- Lock
 
 # Technical debts
+- Remove RuntimeManager.getDependencyManager() and pass the DependencyManager to navigator
 - Provide support for dependency injection per task
 - Ensure changeUnit order in ChangeUnits
 - Implement Lock

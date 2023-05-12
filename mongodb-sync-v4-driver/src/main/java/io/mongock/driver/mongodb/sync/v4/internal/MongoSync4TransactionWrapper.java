@@ -3,6 +3,7 @@ package io.mongock.driver.mongodb.sync.v4.internal;
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
 import io.mongock.core.mongodb.SessionWrapper;
+import io.mongock.core.runtime.dependency.DependencyInjector;
 import io.mongock.core.task.descriptor.TaskDescriptor;
 import io.mongock.core.transaction.TransactionWrapper;
 import io.mongock.core.util.Failed;
@@ -22,7 +23,7 @@ public class MongoSync4TransactionWrapper implements TransactionWrapper {
     }
 
     @Override
-    public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, Supplier<T> operation) {
+    public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, DependencyInjector dependencyInjector, Supplier<T> operation) {
         logger.info("--------------------------------------------------------------------STARTING TRANSACTION WRAPPER");
         try (SessionWrapper<ClientSession> sessionWrapper = sessionManager.startSession(taskDescriptor.getId())) {
             logger.info("--------------------------------------------------------------------SESSION ACQUIRED");

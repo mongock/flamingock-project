@@ -6,6 +6,7 @@ import io.mongock.api.exception.CoreException;
 import io.mongock.core.lock.Lock;
 import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.runtime.dependency.Dependency;
+import io.mongock.core.runtime.dependency.DependencyInjector;
 import io.mongock.core.runtime.dependency.exception.DependencyInjectionException;
 import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
 import io.mongock.core.util.Constants;
@@ -20,13 +21,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class RuntimeManager {
+public final class RuntimeManager implements DependencyInjector {
 
     private static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 
@@ -46,6 +48,16 @@ public final class RuntimeManager {
                           AbstractDependencyManager dependencyManager) {
         this.dependencyManager = dependencyManager;
         this.proxyFactory = proxyFactory;
+    }
+
+    @Override
+    public void addPriorityDependencies(Collection<? extends Dependency> dependencies) {
+        dependencyManager.addPriorityDependencies(dependencies);
+    }
+
+    @Override
+    public void addPriorityDependency(Dependency dependency) {
+        dependencyManager.addPriorityDependency(dependency);
     }
 
     public Object getInstance(Class<?> type) {

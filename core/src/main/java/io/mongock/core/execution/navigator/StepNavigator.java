@@ -20,6 +20,7 @@ import io.mongock.core.execution.step.rolledback.FailedManualRolledBackStep;
 import io.mongock.core.execution.step.rolledback.ManualRolledBackStep;
 import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.runtime.RuntimeManager;
+import io.mongock.core.runtime.dependency.DependencyInjector;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.transaction.TransactionWrapper;
 import io.mongock.core.util.Result;
@@ -74,7 +75,7 @@ public class StepNavigator {
     public final StepNavigationOutput start(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
             TaskStep afterExecution = transactionWrapper != null
-                    ? executeTaskWrapped(task, executionContext)
+                    ? executeTaskWrapped(task, executionContext, runtimeManager)
                     : executeTaskUnwrapped(task, executionContext);
 
             if (afterExecution instanceof CompleteAutoRolledBackStep) {
@@ -102,8 +103,8 @@ public class StepNavigator {
         }
     }
 
-    private TaskStep executeTaskWrapped(ExecutableTask task, ExecutionContext executionContext) {
-        return transactionWrapper.wrapInTransaction(task.getDescriptor(), () -> {
+    private TaskStep executeTaskWrapped(ExecutableTask task, ExecutionContext executionContext, DependencyInjector dependencyInjector) {
+        return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjector, () -> {
             ExecutionStep executed = executeTask(task);
             if (executed instanceof SuccessExecutionStep) {
                 AfterExecutionAuditStep afterExecutionAuditStep = auditExecution(executed, executionContext, LocalDateTime.now());

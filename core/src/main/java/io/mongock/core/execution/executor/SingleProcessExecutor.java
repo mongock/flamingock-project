@@ -22,7 +22,8 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
     protected final TransactionWrapper transactionWrapper;
     private final AbstractDependencyManager dependencyManager;
 
-    public SingleProcessExecutor(AbstractDependencyManager dependencyManager, AuditWriter<?> auditWriter) {
+    public SingleProcessExecutor(AbstractDependencyManager dependencyManager,
+                                 AuditWriter<?> auditWriter) {
         this(dependencyManager, auditWriter, null);
     }
 
