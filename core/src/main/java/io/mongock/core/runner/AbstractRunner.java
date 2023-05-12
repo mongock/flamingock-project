@@ -15,7 +15,7 @@ import io.mongock.core.lock.LockCheckException;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.process.LoadedProcess;
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ implements Runner{
     private final boolean throwExceptionIfCannotObtainLock;
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
-    private final RuntimeHelper.Generator runtimeBuilder;
+    private final RuntimeOrchestrator.Generator runtimeBuilder;
 
 
     public AbstractRunner(LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockAcquirer,
@@ -41,7 +41,7 @@ implements Runner{
                           ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
                           ExecutionContext executionContext,
                           EventPublisher eventPublisher,
-                          RuntimeHelper.Generator runtimeBuilder,
+                          RuntimeOrchestrator.Generator runtimeBuilder,
                           boolean throwExceptionIfCannotObtainLock) {
         this.lockProvider = lockAcquirer;
         this.stateFetcher = auditReader;
@@ -95,7 +95,7 @@ implements Runner{
         EXECUTABLE_PROCESS executableProcess = process.applyState(processCurrentState);
         logger.debug("Applied state to process:\n{}", executableProcess);
 
-        RuntimeHelper runtimeHelper = runtimeBuilder.setLock(lock).generate();
+        RuntimeOrchestrator runtimeHelper = runtimeBuilder.setLock(lock).generate();
         ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, runtimeHelper);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));

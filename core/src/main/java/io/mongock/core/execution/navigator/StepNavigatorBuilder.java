@@ -2,7 +2,7 @@ package io.mongock.core.execution.navigator;
 
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.summary.StepSummarizer;
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 import io.mongock.core.transaction.TransactionWrapper;
 
 public interface StepNavigatorBuilder {
@@ -21,7 +21,7 @@ public interface StepNavigatorBuilder {
 
     StepNavigatorBuilder setAuditWriter(AuditWriter<?> auditWriter);
 
-    StepNavigatorBuilder setRuntimeHelper(RuntimeHelper runtimeHelper);
+    StepNavigatorBuilder setRuntimeHelper(RuntimeOrchestrator runtimeHelper);
 
     StepNavigatorBuilder setTransactionWrapper(TransactionWrapper transactionWrapper);
 
@@ -33,7 +33,7 @@ public interface StepNavigatorBuilder {
         protected StepSummarizer summarizer = null;
         protected AuditWriter<?> auditWriter = null;
 
-        protected RuntimeHelper runtimeHelper = null;
+        protected RuntimeOrchestrator runtimeHelper = null;
 
         protected TransactionWrapper transactionWrapper = null;
 
@@ -54,7 +54,7 @@ public interface StepNavigatorBuilder {
         }
 
         @Override
-        public StepNavigatorBuilder setRuntimeHelper(RuntimeHelper runtimeHelper) {
+        public StepNavigatorBuilder setRuntimeHelper(RuntimeOrchestrator runtimeHelper) {
             this.runtimeHelper = runtimeHelper;
             return this;
         }

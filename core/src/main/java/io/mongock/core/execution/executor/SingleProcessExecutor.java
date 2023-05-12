@@ -6,7 +6,7 @@ import io.mongock.core.execution.navigator.StepNavigatorBuilder;
 import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.ProcessSummary;
 import io.mongock.core.process.single.SingleExecutableProcess;
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 import io.mongock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class SingleProcessExecutor implements ProcessExecutor<SingleExecutablePr
     @Override
     public Output run(SingleExecutableProcess executableProcess,
                       ExecutionContext executionContext,
-                      RuntimeHelper runtimeHelper) throws ProcessExecutionException {
+                      RuntimeOrchestrator runtimeHelper) throws ProcessExecutionException {
         ProcessSummary summary = new ProcessSummary();
         StepNavigatorBuilder navBuilder = StepNavigatorBuilder.reusableInstance();
 

@@ -1,9 +1,9 @@
 package io.mongock.core.task.executable;
 
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 
 public interface RollableTask extends ExecutableTask {
-    void rollback(RuntimeHelper runtimeHelper);
+    void rollback(RuntimeOrchestrator runtimeHelper);
 
     String getRollbackMethodName();
 }

@@ -19,7 +19,7 @@ import io.mongock.core.execution.step.execution.SuccessExecutionStep;
 import io.mongock.core.execution.step.rolledback.FailedManualRolledBackStep;
 import io.mongock.core.execution.step.rolledback.ManualRolledBackStep;
 import io.mongock.core.execution.summary.StepSummarizer;
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.transaction.TransactionWrapper;
 import io.mongock.core.util.Result;
@@ -35,13 +35,13 @@ public class StepNavigator {
     private StepSummarizer summarizer;
     private AuditWriter<?> auditWriter;
 
-    private RuntimeHelper runtimeHelper;
+    private RuntimeOrchestrator runtimeHelper;
 
     private TransactionWrapper transactionWrapper;
 
     StepNavigator(AuditWriter<?> auditWriter,
                   StepSummarizer summarizer,
-                  RuntimeHelper runtimeHelper,
+                  RuntimeOrchestrator runtimeHelper,
                   TransactionWrapper transactionWrapper) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
@@ -63,7 +63,7 @@ public class StepNavigator {
         this.auditWriter = auditWriter;
     }
 
-    void setRuntimeHelper(RuntimeHelper runtimeHelper) {
+    void setRuntimeHelper(RuntimeOrchestrator runtimeHelper) {
         this.runtimeHelper = runtimeHelper;
     }
 

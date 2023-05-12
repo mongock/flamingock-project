@@ -1,7 +1,7 @@
 package io.mongock.core.process.stubs.task;
 
 import io.mongock.core.audit.domain.AuditEntryStatus;
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 import io.mongock.core.task.executable.AbstractExecutableTask;
 
 public abstract class TestExecutableTask extends AbstractExecutableTask<TestTaskDescriptor> {
@@ -27,7 +27,7 @@ public abstract class TestExecutableTask extends AbstractExecutableTask<TestTask
     }
 
     @Override
-    public void execute(RuntimeHelper runtimeHelper) {
+    public void execute(RuntimeOrchestrator runtimeHelper) {
         executed = true;
     }
 

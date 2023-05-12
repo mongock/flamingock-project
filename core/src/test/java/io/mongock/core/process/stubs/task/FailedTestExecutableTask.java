@@ -1,6 +1,6 @@
 package io.mongock.core.process.stubs.task;
 
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 
 public class FailedTestExecutableTask extends TestExecutableTask {
     public FailedTestExecutableTask(String id) {
@@ -8,7 +8,7 @@ public class FailedTestExecutableTask extends TestExecutableTask {
     }
 
     @Override
-    public void execute(RuntimeHelper runtimeHelper) {
+    public void execute(RuntimeOrchestrator runtimeHelper) {
         super.execute(runtimeHelper);
         throw new RuntimeException("Deliberate execution at task[" + getDescriptor() + "]");
     }

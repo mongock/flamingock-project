@@ -3,7 +3,7 @@ package io.mongock.core.execution.step;
 import io.mongock.core.execution.step.execution.ExecutionStep;
 import io.mongock.core.execution.step.execution.FailedExecutionStep;
 import io.mongock.core.execution.step.execution.SuccessExecutionStep;
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.util.StopWatch;
 
@@ -13,7 +13,7 @@ public class ExecutableStep extends TaskStep {
         super(task);
     }
 
-    public ExecutionStep execute(RuntimeHelper runtimeHelper) {
+    public ExecutionStep execute(RuntimeOrchestrator runtimeHelper) {
         StopWatch stopWatch = StopWatch.start();
         try {
             task.execute(runtimeHelper);

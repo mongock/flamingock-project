@@ -1,6 +1,6 @@
 package io.mongock.core.task.executable.change;
 
-import io.mongock.core.runtime.RuntimeHelper;
+import io.mongock.core.runtime.RuntimeOrchestrator;
 import io.mongock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.mongock.core.task.executable.AbstractExecutableTask;
 
@@ -41,7 +41,7 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Refle
     }
 
     @Override
-    public void execute(RuntimeHelper runtimeHelper) {
+    public void execute(RuntimeOrchestrator runtimeHelper) {
         runtimeHelper.executeMethod(runtimeHelper.getInstance(descriptor.getSource()), executionMethod);
     }
 

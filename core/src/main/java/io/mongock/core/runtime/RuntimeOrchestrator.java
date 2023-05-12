@@ -26,9 +26,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class RuntimeHelper {
+public final class RuntimeOrchestrator {
 
-    private static final Logger logger = LoggerFactory.getLogger(RuntimeHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(RuntimeOrchestrator.class);
 
 
     public static Generator builder() {
@@ -42,8 +42,8 @@ public final class RuntimeHelper {
     private final AbstractDependencyManager dependencyManager;
     private final LockGuardProxyFactory proxyFactory;
 
-    public RuntimeHelper(LockGuardProxyFactory proxyFactory,
-                         AbstractDependencyManager dependencyManager) {
+    public RuntimeOrchestrator(LockGuardProxyFactory proxyFactory,
+                               AbstractDependencyManager dependencyManager) {
         this.dependencyManager = dependencyManager;
         this.proxyFactory = proxyFactory;
     }
@@ -132,7 +132,7 @@ public final class RuntimeHelper {
 
     public static void logMethodWithArguments(String methodName, List<Object> changelogInvocationParameters) {
         String arguments = changelogInvocationParameters.stream()
-                .map(RuntimeHelper::getParameterType)
+                .map(RuntimeOrchestrator::getParameterType)
                 .collect(Collectors.joining(", "));
         logger.info("method[{}] with arguments: [{}]", methodName, arguments);
 
@@ -163,9 +163,9 @@ public final class RuntimeHelper {
             return this;
         }
 
-        public RuntimeHelper generate() {
+        public RuntimeOrchestrator generate() {
             LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
-            return new RuntimeHelper(proxyFactory, dependencyManager);
+            return new RuntimeOrchestrator(proxyFactory, dependencyManager);
         }
     }
 
