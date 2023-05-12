@@ -54,20 +54,24 @@ public abstract class BaseBuilder<
     protected Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory,
                            EventPublisher eventPublisher,
                            AbstractDependencyManager dependencyManager) {
-        RuntimeHelper.Builder runtimeBuilder = RuntimeHelper
+        RuntimeHelper.Generator runtimeBuilder = RuntimeHelper
                 .builder()
                 .setDependencyManager(dependencyManager);
-        final RunnerOrchestrator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> runnerOrchestrator = new RunnerOrchestrator<>(
+        //Instantiated here, so we don't wait until Runner.run() and fail fast
+        final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
+        return new AbstractRunner<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),
                 factory.getProcessExecutor(),
                 buildExecutionContext(),
                 eventPublisher,
                 runtimeBuilder,
-                getConfiguration().isThrowExceptionIfCannotObtainLock());
-        //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
-        return () -> runnerOrchestrator.execute(definitionProcess);
+                getConfiguration().isThrowExceptionIfCannotObtainLock()) {
+            @Override
+            public void run() {
+                this.execute(definitionProcess);
+            }
+        };
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

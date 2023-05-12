@@ -31,8 +31,8 @@ public final class RuntimeHelper {
     private static final Logger logger = LoggerFactory.getLogger(RuntimeHelper.class);
 
 
-    public static Builder builder() {
-        return new Builder();
+    public static Generator builder() {
+        return new Generator();
     }
 
     private static final Function<Parameter, String> parameterNameProvider = parameter -> parameter.isAnnotationPresent(Named.class)
@@ -148,22 +148,22 @@ public final class RuntimeHelper {
         }
     }
 
-    public static final class Builder {
+    public static final class Generator {
 
         private AbstractDependencyManager dependencyManager;
         private Lock lock;
 
-        public Builder setLock(Lock lock) {
+        public Generator setLock(Lock lock) {
             this.lock = lock;
             return this;
         }
 
-        public Builder setDependencyManager(AbstractDependencyManager dependencyManager) {
+        public Generator setDependencyManager(AbstractDependencyManager dependencyManager) {
             this.dependencyManager = dependencyManager;
             return this;
         }
 
-        public RuntimeHelper build() {
+        public RuntimeHelper generate() {
             LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
             return new RuntimeHelper(proxyFactory, dependencyManager);
         }

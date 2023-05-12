@@ -19,9 +19,10 @@ import io.mongock.core.runtime.RuntimeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess> {
+public abstract class AbstractRunner<AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess>
+implements Runner{
 
-    private static final Logger logger = LoggerFactory.getLogger(RunnerOrchestrator.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractRunner.class);
 
     private final LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockProvider;
 
@@ -32,18 +33,18 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
     private final boolean throwExceptionIfCannotObtainLock;
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
-    private final RuntimeHelper.Builder runtimeBuilder;
+    private final RuntimeHelper.Generator runtimeBuilder;
 
 
-    public RunnerOrchestrator(LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockProvider,
-                              AuditReader<AUDIT_PROCESS_STATE> stateFetcher,
-                              ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
-                              ExecutionContext executionContext,
-                              EventPublisher eventPublisher,
-                              RuntimeHelper.Builder runtimeBuilder,
-                              boolean throwExceptionIfCannotObtainLock) {
-        this.lockProvider = lockProvider;
-        this.stateFetcher = stateFetcher;
+    public AbstractRunner(LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockAcquirer,
+                          AuditReader<AUDIT_PROCESS_STATE> auditReader,
+                          ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
+                          ExecutionContext executionContext,
+                          EventPublisher eventPublisher,
+                          RuntimeHelper.Generator runtimeBuilder,
+                          boolean throwExceptionIfCannotObtainLock) {
+        this.lockProvider = lockAcquirer;
+        this.stateFetcher = auditReader;
         this.processExecutor = processExecutor;
         this.executionContext = executionContext;
         this.eventPublisher = eventPublisher;
@@ -94,7 +95,7 @@ public class RunnerOrchestrator<AUDIT_PROCESS_STATE extends AuditProcessStatus, 
         EXECUTABLE_PROCESS executableProcess = process.applyState(processCurrentState);
         logger.debug("Applied state to process:\n{}", executableProcess);
 
-        RuntimeHelper runtimeHelper = runtimeBuilder.setLock(lock).build();
+        RuntimeHelper runtimeHelper = runtimeBuilder.setLock(lock).generate();
         ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, runtimeHelper);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));
