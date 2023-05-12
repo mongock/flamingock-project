@@ -7,7 +7,7 @@ import io.mongock.core.execution.summary.DefaultStepSummarizer;
 import io.mongock.core.execution.summary.ProcessSummary;
 import io.mongock.core.lock.Lock;
 import io.mongock.core.process.single.SingleExecutableProcess;
-import io.mongock.core.runtime.dependency.AbstractDependencyManager;
+import io.mongock.core.runtime.dependency.DependencyContext;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.transaction.TransactionWrapper;
 
@@ -20,17 +20,17 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
     protected final AuditWriter<?> auditWriter;
 
     protected final TransactionWrapper transactionWrapper;
-    private final AbstractDependencyManager dependencyManager;
+    private final DependencyContext dependencyContext;
 
-    public AbstractSingleProcessExecutor(AbstractDependencyManager dependencyManager,
+    public AbstractSingleProcessExecutor(DependencyContext dependencyContext,
                                          AuditWriter<?> auditWriter) {
-        this(dependencyManager, auditWriter, null);
+        this(dependencyContext, auditWriter, null);
     }
 
-    public AbstractSingleProcessExecutor(AbstractDependencyManager dependencyManager,
+    public AbstractSingleProcessExecutor(DependencyContext dependencyContext,
                                          AuditWriter<?> auditWriter,
                                          TransactionWrapper transactionWrapper) {
-        this.dependencyManager = dependencyManager;
+        this.dependencyContext = dependencyContext;
         this.auditWriter = auditWriter;
         this.transactionWrapper = transactionWrapper;
     }
@@ -47,7 +47,7 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
         Stream<StepNavigationOutput> taskStepStream = buildTaskStream(executableProcess)
                 .map(task -> stepNavigatorBuilder
                         .setAuditWriter(auditWriter)
-                        .setDependencyManager(dependencyManager)
+                        .setDependencyContext(dependencyContext)
                         .setLock(lock)
                         .setTransactionWrapper(transactionWrapper)
                         .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer

@@ -11,6 +11,7 @@ import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.runtime.dependency.AbstractDependencyManager;
+import io.mongock.core.runtime.dependency.DependencyContext;
 import io.mongock.core.util.StringUtil;
 
 import java.util.Map;
@@ -53,16 +54,15 @@ public abstract class BaseBuilder<
 
     protected Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory,
                            EventPublisher eventPublisher,
-                           AbstractDependencyManager dependencyManager) {
+                           DependencyContext dependencyContext) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
         return new AbstractRunner<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),
-                factory.getProcessExecutor(dependencyManager),
+                factory.getProcessExecutor(dependencyContext),
                 buildExecutionContext(),
                 eventPublisher,
-                dependencyManager,
                 getConfiguration().isThrowExceptionIfCannotObtainLock()) {
             @Override
             public void run() {

@@ -6,6 +6,7 @@ import io.mongock.api.exception.CoreException;
 import io.mongock.core.lock.Lock;
 import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.runtime.dependency.Dependency;
+import io.mongock.core.runtime.dependency.DependencyContext;
 import io.mongock.core.runtime.dependency.DependencyInjector;
 import io.mongock.core.runtime.dependency.exception.DependencyInjectionException;
 import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
@@ -41,23 +42,23 @@ public final class RuntimeManager implements DependencyInjector {
             ? parameter.getAnnotation(Named.class).value()
             : null;
     private final Set<Class<?>> nonProxyableTypes = Collections.emptySet();
-    private final AbstractDependencyManager dependencyManager;
+    private final DependencyContext dependencyManager;
     private final LockGuardProxyFactory proxyFactory;
 
     public RuntimeManager(LockGuardProxyFactory proxyFactory,
-                          AbstractDependencyManager dependencyManager) {
-        this.dependencyManager = dependencyManager;
+                          DependencyContext DependencyContext) {
+        this.dependencyManager = DependencyContext;
         this.proxyFactory = proxyFactory;
     }
 
     @Override
     public void addPriorityDependencies(Collection<? extends Dependency> dependencies) {
-        dependencyManager.addPriorityDependencies(dependencies);
+//        dependencyManager.addPriorityDependencies(dependencies);
     }
 
     @Override
     public void addPriorityDependency(Dependency dependency) {
-        dependencyManager.addPriorityDependency(dependency);
+//        dependencyManager.addPriorityDependency(dependency);
     }
 
     public Object getInstance(Class<?> type) {
@@ -162,7 +163,7 @@ public final class RuntimeManager implements DependencyInjector {
 
     public static final class Generator {
 
-        private AbstractDependencyManager dependencyManager;
+        private DependencyContext dependencyContext;
         private Lock lock;
 
         public Generator setLock(Lock lock) {
@@ -170,14 +171,14 @@ public final class RuntimeManager implements DependencyInjector {
             return this;
         }
 
-        public Generator setDependencyManager(AbstractDependencyManager dependencyManager) {
-            this.dependencyManager = dependencyManager;
+        public Generator setDependencyContext(DependencyContext dependencyContext) {
+            this.dependencyContext = dependencyContext;
             return this;
         }
 
         public RuntimeManager generate() {
             LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
-            return new RuntimeManager(proxyFactory, dependencyManager);
+            return new RuntimeManager(proxyFactory, dependencyContext);
         }
     }
 

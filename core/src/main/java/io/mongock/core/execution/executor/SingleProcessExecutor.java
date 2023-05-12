@@ -9,6 +9,7 @@ import io.mongock.core.lock.Lock;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.runtime.dependency.AbstractDependencyManager;
+import io.mongock.core.runtime.dependency.DependencyContext;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.transaction.TransactionWrapper;
 
@@ -19,12 +20,12 @@ import static io.mongock.core.util.StreamUtil.processUntil;
 
 public class SingleProcessExecutor extends AbstractSingleProcessExecutor {
 
-    public SingleProcessExecutor(AbstractDependencyManager dependencyManager,
+    public SingleProcessExecutor(DependencyContext dependencyManager,
                                  AuditWriter<?> auditWriter) {
         this(dependencyManager, auditWriter, null);
     }
 
-    public SingleProcessExecutor(AbstractDependencyManager dependencyManager,
+    public SingleProcessExecutor(DependencyContext dependencyManager,
                                  AuditWriter<?> auditWriter,
                                  TransactionWrapper transactionWrapper) {
         super(dependencyManager, auditWriter, transactionWrapper);

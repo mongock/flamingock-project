@@ -16,6 +16,7 @@ import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.process.LoadedProcess;
 import io.mongock.core.runtime.dependency.AbstractDependencyManager;
+import io.mongock.core.runtime.dependency.DependencyContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,6 @@ implements Runner{
     private final boolean throwExceptionIfCannotObtainLock;
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
-    private final AbstractDependencyManager dependencyManager;
 
 
     public AbstractRunner(LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> lockAcquirer,
@@ -41,14 +41,12 @@ implements Runner{
                           ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
                           ExecutionContext executionContext,
                           EventPublisher eventPublisher,
-                          AbstractDependencyManager dependencyManager,
                           boolean throwExceptionIfCannotObtainLock) {
         this.lockProvider = lockAcquirer;
         this.stateFetcher = auditReader;
         this.processExecutor = processExecutor;
         this.executionContext = executionContext;
         this.eventPublisher = eventPublisher;
-        this.dependencyManager = dependencyManager;
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 

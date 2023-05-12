@@ -4,7 +4,7 @@ import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.lock.Lock;
 import io.mongock.core.runtime.RuntimeManager;
-import io.mongock.core.runtime.dependency.AbstractDependencyManager;
+import io.mongock.core.runtime.dependency.DependencyContext;
 import io.mongock.core.transaction.TransactionWrapper;
 
 public interface StepNavigatorBuilder {
@@ -16,7 +16,7 @@ public interface StepNavigatorBuilder {
 
     StepNavigatorBuilder setLock(Lock lock);
 
-    StepNavigatorBuilder setDependencyManager(AbstractDependencyManager dependencyManager);
+    StepNavigatorBuilder setDependencyContext(DependencyContext dependencyContext);
 
     StepNavigatorBuilder setTransactionWrapper(TransactionWrapper transactionWrapper);
 
@@ -30,7 +30,7 @@ public interface StepNavigatorBuilder {
 
         protected Lock lock = null;
 
-        protected AbstractDependencyManager dependencyManager;
+        protected DependencyContext dependencyContext;
 
         protected TransactionWrapper transactionWrapper = null;
 
@@ -51,8 +51,8 @@ public interface StepNavigatorBuilder {
         }
 
         @Override
-        public StepNavigatorBuilder setDependencyManager(AbstractDependencyManager dependencyManager) {
-            this.dependencyManager = dependencyManager;
+        public StepNavigatorBuilder setDependencyContext(DependencyContext dependencyContext) {
+            this.dependencyContext = dependencyContext;
             return this;
         }
 
@@ -71,7 +71,7 @@ public interface StepNavigatorBuilder {
         @Override
         public StepNavigator build() {
             RuntimeManager runtimeManager = RuntimeManager.generator()
-                    .setDependencyManager(dependencyManager)
+                    .setDependencyContext(dependencyContext)
                     .setLock(lock)
                     .generate();
             return new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
@@ -103,7 +103,7 @@ public interface StepNavigatorBuilder {
             instance.setSummarizer(summarizer);
             instance.setAuditWriter(auditWriter);
             RuntimeManager runtimeManager = RuntimeManager.generator()
-                    .setDependencyManager(dependencyManager)
+                    .setDependencyContext(dependencyContext)
                     .setLock(lock)
                     .generate();
             instance.setRuntimeManager(runtimeManager);
