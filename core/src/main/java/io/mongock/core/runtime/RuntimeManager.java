@@ -4,9 +4,10 @@ import io.changock.migration.api.annotations.NonLockGuarded;
 import io.mongock.api.annotations.ChangeUnitConstructor;
 import io.mongock.api.exception.CoreException;
 import io.mongock.core.lock.Lock;
-import io.mongock.core.runtime.dependency.AbstractDependencyManager;
+import io.mongock.core.runtime.dependency.DefaultDependencyInjectableContext;
 import io.mongock.core.runtime.dependency.Dependency;
 import io.mongock.core.runtime.dependency.DependencyContext;
+import io.mongock.core.runtime.dependency.DependencyInjectableContext;
 import io.mongock.core.runtime.dependency.DependencyInjector;
 import io.mongock.core.runtime.dependency.exception.DependencyInjectionException;
 import io.mongock.core.runtime.proxy.LockGuardProxyFactory;
@@ -34,31 +35,31 @@ public final class RuntimeManager implements DependencyInjector {
     private static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 
 
-    public static Generator generator() {
-        return new Generator();
+    public static Builder builder() {
+        return new Builder();
     }
 
     private static final Function<Parameter, String> parameterNameProvider = parameter -> parameter.isAnnotationPresent(Named.class)
             ? parameter.getAnnotation(Named.class).value()
             : null;
     private final Set<Class<?>> nonProxyableTypes = Collections.emptySet();
-    private final DependencyContext dependencyManager;
+    private final DependencyInjectableContext dependencyContext;
     private final LockGuardProxyFactory proxyFactory;
 
     public RuntimeManager(LockGuardProxyFactory proxyFactory,
-                          DependencyContext DependencyContext) {
-        this.dependencyManager = DependencyContext;
+                          DependencyInjectableContext dependencyContext) {
+        this.dependencyContext = dependencyContext;
         this.proxyFactory = proxyFactory;
     }
 
     @Override
     public void addDependencies(Collection<? extends Dependency> dependencies) {
-//        dependencyManager.addPriorityDependencies(dependencies);
+        dependencyContext.addDependencies(dependencies);
     }
 
     @Override
     public void addDependency(Dependency dependency) {
-//        dependencyManager.addPriorityDependency(dependency);
+        dependencyContext.addDependency(dependency);
     }
 
     public Object getInstance(Class<?> type) {
@@ -125,7 +126,7 @@ public final class RuntimeManager implements DependencyInjector {
 
     private Object getParameter(Class<?> parameterType, Parameter parameter) {
         String parameterName = getParameterName(parameter);
-        Dependency dependency = dependencyManager.getDependency(parameterType, parameterName)
+        Dependency dependency = dependencyContext.getDependency(parameterType, parameterName)
                 .orElseThrow(() -> new DependencyInjectionException(parameterType, parameterName));
 
         boolean lockGuarded = !parameterType.isAnnotationPresent(NonLockGuarded.class)
@@ -161,26 +162,26 @@ public final class RuntimeManager implements DependencyInjector {
         }
     }
 
-    public static final class Generator {
+    public static final class Builder {
 
         private DependencyContext dependencyContext;
         private Lock lock;
 
-        public Generator setLock(Lock lock) {
+        public Builder setLock(Lock lock) {
             this.lock = lock;
             return this;
         }
 
-        public Generator setDependencyContext(DependencyContext dependencyContext) {
+        public Builder setDependencyContext(DependencyContext dependencyContext) {
             this.dependencyContext = dependencyContext;
             return this;
         }
 
         public RuntimeManager generate() {
             LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
-            return new RuntimeManager(proxyFactory, dependencyContext);
+
+            DependencyInjectableContext injectableContext = new DefaultDependencyInjectableContext(dependencyContext);
+            return new RuntimeManager(proxyFactory, injectableContext);
         }
     }
-
-
 }

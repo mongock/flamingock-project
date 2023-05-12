@@ -1,22 +1,20 @@
 package io.mongock.driver.mongodb.sync.v4.internal;
 
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
-import io.mongock.core.mongodb.SessionWrapper;
-import io.mongock.core.util.Result;
 import io.mongock.core.audit.single.SingleAuditProcessStatus;
 import io.mongock.core.configuration.AbstractConfiguration;
 import io.mongock.core.mongodb.CollectionHelper;
 import io.mongock.core.mongodb.MongoDBMapper;
-import io.mongock.driver.mongodb.sync.v4.internal.mongodb.MongoSync4SessionWrapper;
+import io.mongock.core.mongodb.SessionWrapper;
+import io.mongock.core.util.Result;
 import io.mongock.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
 import io.mongock.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
-import io.mongock.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.mongock.driver.mongodb.sync.v4.internal.mongodb.MongoSync4SessionManager;
+import io.mongock.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.mongock.internal.driver.MongockAuditEntry;
 import io.mongock.internal.driver.MongockAuditor;
 import org.bson.Document;

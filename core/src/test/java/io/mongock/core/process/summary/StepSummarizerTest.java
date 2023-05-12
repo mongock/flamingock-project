@@ -30,8 +30,8 @@ class StepSummarizerTest {
 
         //WHEN
         StepSummarizer summarizer = new DefaultStepSummarizer();
-        summarizer.add(SuccessExecutionStep.instance(task1InitialStep, -1l));
-        summarizer.add(CompletedSuccessStep.fromSuccessExecution(SuccessExecutionStep.instance(task1InitialStep, -1l)));
+        summarizer.add(SuccessExecutionStep.instance(task1InitialStep, -1L));
+        summarizer.add(CompletedSuccessStep.fromSuccessExecution(SuccessExecutionStep.instance(task1InitialStep, -1L)));
 
         List<StepSummaryLine> steps = summarizer.getSummary().getLines();
         //Task1's summary lines

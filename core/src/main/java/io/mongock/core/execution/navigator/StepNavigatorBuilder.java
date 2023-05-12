@@ -70,7 +70,9 @@ public interface StepNavigatorBuilder {
 
         @Override
         public StepNavigator build() {
-            RuntimeManager runtimeManager = RuntimeManager.generator()
+
+
+            RuntimeManager runtimeManager = RuntimeManager.builder()
                     .setDependencyContext(staticContext)
                     .setLock(lock)
                     .generate();
@@ -81,7 +83,7 @@ public interface StepNavigatorBuilder {
 
     class ReusableStepNavigatorBuilder extends DefaultStepNavigatorBuilder {
 
-        private StepNavigator stepNavigator = new StepNavigator(null, null, null, null);
+        private final StepNavigator stepNavigator = new StepNavigator(null, null, null, null);
 
 
         public ReusableStepNavigatorBuilder() {
@@ -102,7 +104,7 @@ public interface StepNavigatorBuilder {
         private void setBaseDependencies(StepNavigator instance) {
             instance.setSummarizer(summarizer);
             instance.setAuditWriter(auditWriter);
-            RuntimeManager runtimeManager = RuntimeManager.generator()
+            RuntimeManager runtimeManager = RuntimeManager.builder()
                     .setDependencyContext(staticContext)
                     .setLock(lock)
                     .generate();

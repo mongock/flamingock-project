@@ -1,9 +1,6 @@
 package io.mongock.core.configuration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import static io.mongock.core.util.Constants.DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;

@@ -4,7 +4,6 @@ import io.mongock.core.audit.domain.AuditEntry;
 import io.mongock.core.audit.domain.AuditEntryStatus;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class MongockAuditEntry extends AuditEntry {
 

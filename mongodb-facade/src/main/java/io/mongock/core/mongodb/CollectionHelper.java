@@ -20,7 +20,7 @@ public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
     private final Supplier<DOCUMENT> documentCreator;
     private boolean ensuredCollectionIndex = false;
 
-    private CollectionWrapper<DOCUMENT> collection;
+    private final CollectionWrapper<DOCUMENT> collection;
 
     public CollectionHelper(CollectionWrapper<DOCUMENT> collection,
                             Supplier<DOCUMENT> documentCreator,

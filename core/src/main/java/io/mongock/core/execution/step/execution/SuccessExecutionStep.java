@@ -1,11 +1,11 @@
 package io.mongock.core.execution.step.execution;
 
-import io.mongock.core.util.Result;
-import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.ExecutableStep;
-import io.mongock.core.execution.step.complete.CompletedSuccessStep;
+import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
+import io.mongock.core.execution.step.complete.CompletedSuccessStep;
 import io.mongock.core.task.executable.ExecutableTask;
+import io.mongock.core.util.Result;
 
 public final class SuccessExecutionStep extends ExecutionStep {
     public static SuccessExecutionStep instance(ExecutableStep initialStep, long executionTimeMillis) {

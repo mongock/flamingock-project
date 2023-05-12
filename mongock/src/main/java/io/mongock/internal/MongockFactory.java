@@ -9,7 +9,6 @@ import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.single.SingleDefinitionProcess;
 import io.mongock.core.process.single.SingleExecutableProcess;
-import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.runtime.dependency.DependencyContext;
 import io.mongock.internal.driver.ConnectionEngine;
 

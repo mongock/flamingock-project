@@ -1,7 +1,10 @@
 package io.mongock.core.runtime.dependency;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -10,8 +13,17 @@ public class DefaultDependencyInjectableContext extends AbstractDependencyInject
     private final LinkedHashSet<Dependency> dependencyStorage;
 
     public DefaultDependencyInjectableContext() {
-        dependencyStorage = new LinkedHashSet<>();
+        this(new ArrayList<>());
     }
+
+    public DefaultDependencyInjectableContext(DependencyContext dependencyContext) {
+        this(dependencyContext.getAllDependencies());
+    }
+
+    public DefaultDependencyInjectableContext(List<Dependency> dependencyList) {
+        dependencyStorage = new LinkedHashSet<>(dependencyList);
+    }
+
 
     @Override
     protected Optional<Dependency> getDependencyInternal(Class<?> type, String name) {
@@ -33,4 +45,8 @@ public class DefaultDependencyInjectableContext extends AbstractDependencyInject
         addDependencyToStore(dependencyStorage, dependency);
     }
 
+    @Override
+    public List<Dependency> getAllDependencies() {
+        return new CopyOnWriteArrayList<>(dependencyStorage);
+    }
 }

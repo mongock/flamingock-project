@@ -9,9 +9,9 @@ public class Dependency {
 
   public static final String DEFAULT_NAME = "default_name_not_used";
 
-  private String name;
-  private Class<?> type;
-  private boolean proxeable;
+  private final String name;
+  private final Class<?> type;
+  private final boolean proxeable;
 
   protected Object instance;
 

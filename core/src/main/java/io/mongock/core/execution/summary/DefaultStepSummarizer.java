@@ -4,7 +4,6 @@ import io.mongock.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.mongock.core.execution.step.complete.CompletedAlreadyAppliedStep;
 import io.mongock.core.execution.step.complete.failed.CompletedFailedManualRollback;
 import io.mongock.core.execution.step.execution.ExecutionStep;
-import io.mongock.core.execution.step.rolledback.ManualRolledBackStep;
 import io.mongock.core.execution.step.rolledback.RolledBackStep;
 import io.mongock.core.task.descriptor.TaskDescriptor;
 

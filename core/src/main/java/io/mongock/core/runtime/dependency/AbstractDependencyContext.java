@@ -2,11 +2,7 @@ package io.mongock.core.runtime.dependency;
 
 import io.mongock.core.runtime.dependency.exception.ForbiddenParameterException;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public abstract class AbstractDependencyContext implements DependencyContext {
 

@@ -15,8 +15,6 @@ import io.mongock.core.lock.LockCheckException;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
 import io.mongock.core.process.LoadedProcess;
-import io.mongock.core.runtime.dependency.AbstractDependencyManager;
-import io.mongock.core.runtime.dependency.DependencyContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

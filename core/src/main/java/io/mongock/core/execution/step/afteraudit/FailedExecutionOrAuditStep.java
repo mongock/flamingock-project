@@ -1,9 +1,9 @@
 package io.mongock.core.execution.step.afteraudit;
 
-import io.mongock.core.util.Result;
 import io.mongock.core.execution.step.SuccessableStep;
 import io.mongock.core.task.executable.ExecutableTask;
 import io.mongock.core.task.executable.RollableTask;
+import io.mongock.core.util.Result;
 
 import java.util.Optional;
 

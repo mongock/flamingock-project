@@ -15,7 +15,7 @@ public abstract class StepSummaryLine implements SummaryLine {
     private enum SummaryResult {
         OK("OK"), FAILED("FAILED"), ALREADY_APPLIED("IGNORED - Already applied");
 
-        private String value;
+        private final String value;
 
         SummaryResult(String value) {
             this.value = value;

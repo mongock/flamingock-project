@@ -1,18 +1,17 @@
 package io.mongock.core.process;
 
-import io.mongock.core.lock.Lock;
-import io.mongock.core.runtime.dependency.AbstractDependencyManager;
-import io.mongock.core.util.Result;
 import io.mongock.core.audit.writer.AuditItem;
 import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.executor.ExecutionContext;
 import io.mongock.core.execution.executor.ProcessExecutor;
 import io.mongock.core.execution.executor.SingleProcessExecutor;
 import io.mongock.core.execution.summary.StepSummaryLine;
+import io.mongock.core.lock.Lock;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.process.stubs.task.FailedTestExecutableTask;
 import io.mongock.core.process.stubs.task.SuccessTestExecutableTask;
-import io.mongock.core.runtime.RuntimeManager;
+import io.mongock.core.runtime.dependency.DependencyContext;
+import io.mongock.core.util.Result;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -46,7 +45,7 @@ class SingleRunnableProcessTest {
 
         //WHEN
         ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-        List<StepSummaryLine> steps = new SingleProcessExecutor(mock(AbstractDependencyManager.class), stateSaver)
+        List<StepSummaryLine> steps = new SingleProcessExecutor(mock(DependencyContext.class), stateSaver)
                 .run(process, executionContext, mock(Lock.class))
                 .getSummary()
                 .getLines();
@@ -55,21 +54,21 @@ class SingleRunnableProcessTest {
         //Task1's summary lines
         assertEquals(steps.get(0), new StepSummaryLine.InitialSummaryLine(task1.getDescriptor()));
         assertEquals(steps.get(1).getId(), task1.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(1)).getPrettyResult(), true);
+        assertEquals(steps.get(1).getPrettyResult(), true);
         assertEquals(steps.get(2).getId(), task1.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(2)).getPrettyResult(), true);
+        assertEquals(steps.get(2).getPrettyResult(), true);
         //Task2's summary lines
         assertEquals(steps.get(3), new StepSummaryLine.InitialSummaryLine(task2.getDescriptor()));
         assertEquals(steps.get(4).getId(), task2.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(4)).getPrettyResult(), true);
+        assertEquals(steps.get(4).getPrettyResult(), true);
         assertEquals(steps.get(5).getId(), task2.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(5)).getPrettyResult(), true);
+        assertEquals(steps.get(5).getPrettyResult(), true);
         //Task2's summary lines
         assertEquals(steps.get(6), new StepSummaryLine.InitialSummaryLine(task3.getDescriptor()));
         assertEquals(steps.get(7).getId(), task3.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.ExecutedSummaryLine) steps.get(7)).getPrettyResult(), true);
+        assertEquals(steps.get(7).getPrettyResult(), true);
         assertEquals(steps.get(8).getId(), task3.getDescriptor().getId());
-        assertEquals(((StepSummaryLine.AfterExecutionAuditSummaryLine) steps.get(8)).getPrettyResult(), true);
+        assertEquals(steps.get(8).getPrettyResult(), true);
 
         //saved states
         ArgumentCaptor<AuditItem> savedStateCaptor = ArgumentCaptor.forClass(AuditItem.class);
@@ -115,7 +114,7 @@ class SingleRunnableProcessTest {
 
         //WHEN
         ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-        ProcessExecutor.Output output = new SingleProcessExecutor(mock(AbstractDependencyManager.class), stateSaver)
+        ProcessExecutor.Output output = new SingleProcessExecutor(mock(DependencyContext.class), stateSaver)
                 .run(process, executionContext, mock(Lock.class));
         String actualSummary = output.getSummary().getPretty();
         System.out.println(actualSummary);

@@ -7,11 +7,7 @@ import io.mongock.core.execution.executor.ProcessExecutor;
 import io.mongock.core.lock.LockAcquirer;
 import io.mongock.core.process.DefinitionProcess;
 import io.mongock.core.process.ExecutableProcess;
-import io.mongock.core.runtime.dependency.AbstractDependencyManager;
 import io.mongock.core.runtime.dependency.DependencyContext;
-import io.mongock.core.transaction.TransactionWrapper;
-
-import java.util.Optional;
 
 public interface Factory<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,

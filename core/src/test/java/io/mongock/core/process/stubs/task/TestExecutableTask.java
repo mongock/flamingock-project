@@ -7,7 +7,7 @@ import io.mongock.core.task.executable.AbstractExecutableTask;
 public abstract class TestExecutableTask extends AbstractExecutableTask<TestTaskDescriptor> {
 
     private boolean executed = false;
-    private boolean rollbackExecuted = false;
+    private final boolean rollbackExecuted = false;
 
     TestExecutableTask(String id, AuditEntryStatus initialState) {
         super(null, AuditEntryStatus.isRequiredExecution(initialState));

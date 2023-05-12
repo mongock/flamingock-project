@@ -7,6 +7,8 @@ import io.mongock.internal.driver.MongockAuditEntry;
 import java.util.function.Supplier;
 
 import static io.mongock.internal.persistence.EntryField.KEY_AUTHOR;
+import static io.mongock.internal.persistence.EntryField.KEY_CHANGELOG_CLASS;
+import static io.mongock.internal.persistence.EntryField.KEY_CHANGESET_METHOD;
 import static io.mongock.internal.persistence.EntryField.KEY_CHANGE_ID;
 import static io.mongock.internal.persistence.EntryField.KEY_ERROR_TRACE;
 import static io.mongock.internal.persistence.EntryField.KEY_EXECUTION_HOSTNAME;
@@ -17,8 +19,6 @@ import static io.mongock.internal.persistence.EntryField.KEY_STATE;
 import static io.mongock.internal.persistence.EntryField.KEY_SYSTEM_CHANGE;
 import static io.mongock.internal.persistence.EntryField.KEY_TIMESTAMP;
 import static io.mongock.internal.persistence.EntryField.KEY_TYPE;
-import static io.mongock.internal.persistence.EntryField.KEY_CHANGELOG_CLASS;
-import static io.mongock.internal.persistence.EntryField.KEY_CHANGESET_METHOD;
 
 public class MongoDBMapper<DOCUMENTCK extends DocumentWrapper> {
 
