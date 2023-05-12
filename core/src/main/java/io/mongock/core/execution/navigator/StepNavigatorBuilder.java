@@ -4,7 +4,10 @@ import io.mongock.core.audit.writer.AuditWriter;
 import io.mongock.core.execution.summary.StepSummarizer;
 import io.mongock.core.lock.Lock;
 import io.mongock.core.runtime.RuntimeManager;
+import io.mongock.core.runtime.dependency.DefaultDependencyInjectableContext;
 import io.mongock.core.runtime.dependency.DependencyContext;
+import io.mongock.core.runtime.dependency.DependencyInjectableContext;
+import io.mongock.core.runtime.dependency.PriorityDependencyContext;
 import io.mongock.core.transaction.TransactionWrapper;
 
 public interface StepNavigatorBuilder {
@@ -23,7 +26,7 @@ public interface StepNavigatorBuilder {
     StepNavigator build();
 
 
-    class DefaultStepNavigatorBuilder implements StepNavigatorBuilder {
+    class ParallelStepNavigatorBuilder implements StepNavigatorBuilder {
 
         protected StepSummarizer summarizer = null;
         protected AuditWriter<?> auditWriter = null;
@@ -34,7 +37,7 @@ public interface StepNavigatorBuilder {
 
         protected TransactionWrapper transactionWrapper = null;
 
-        public DefaultStepNavigatorBuilder() {
+        public ParallelStepNavigatorBuilder() {
         }
 
 
@@ -70,18 +73,19 @@ public interface StepNavigatorBuilder {
 
         @Override
         public StepNavigator build() {
-
-
+            DependencyInjectableContext injectableContext = new PriorityDependencyContext(
+                    new DefaultDependencyInjectableContext(),
+                    staticContext);
             RuntimeManager runtimeManager = RuntimeManager.builder()
-                    .setDependencyContext(staticContext)
+                    .setDependencyContext(injectableContext)
                     .setLock(lock)
-                    .generate();
+                    .build();
             return new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
         }
     }
 
 
-    class ReusableStepNavigatorBuilder extends DefaultStepNavigatorBuilder {
+    class ReusableStepNavigatorBuilder extends ParallelStepNavigatorBuilder {
 
         private final StepNavigator stepNavigator = new StepNavigator(null, null, null, null);
 
@@ -104,10 +108,12 @@ public interface StepNavigatorBuilder {
         private void setBaseDependencies(StepNavigator instance) {
             instance.setSummarizer(summarizer);
             instance.setAuditWriter(auditWriter);
+
+            DependencyInjectableContext injectableContext = new DefaultDependencyInjectableContext(staticContext);
             RuntimeManager runtimeManager = RuntimeManager.builder()
-                    .setDependencyContext(staticContext)
+                    .setDependencyContext(injectableContext)
                     .setLock(lock)
-                    .generate();
+                    .build();
             instance.setRuntimeManager(runtimeManager);
             instance.setTransactionWrapper(transactionWrapper);
         }

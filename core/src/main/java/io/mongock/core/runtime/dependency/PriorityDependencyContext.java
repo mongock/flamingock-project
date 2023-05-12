@@ -12,9 +12,9 @@ public class PriorityDependencyContext implements DependencyInjectableContext {
 
     private final DependencyInjectableContext priorityInjectableContext;
 
-    public PriorityDependencyContext(DependencyContext baseContext, DependencyInjectableContext priorityInjectableContext) {
-        this.baseContext = baseContext;
+    public PriorityDependencyContext(DependencyInjectableContext priorityInjectableContext, DependencyContext baseContext) {
         this.priorityInjectableContext = priorityInjectableContext;
+        this.baseContext = baseContext;
     }
 
     @Override

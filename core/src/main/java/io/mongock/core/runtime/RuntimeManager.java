@@ -164,7 +164,7 @@ public final class RuntimeManager implements DependencyInjector {
 
     public static final class Builder {
 
-        private DependencyContext dependencyContext;
+        private DependencyInjectableContext dependencyContext;
         private Lock lock;
 
         public Builder setLock(Lock lock) {
@@ -172,16 +172,14 @@ public final class RuntimeManager implements DependencyInjector {
             return this;
         }
 
-        public Builder setDependencyContext(DependencyContext dependencyContext) {
+        public Builder setDependencyContext(DependencyInjectableContext dependencyContext) {
             this.dependencyContext = dependencyContext;
             return this;
         }
 
-        public RuntimeManager generate() {
+        public RuntimeManager build() {
             LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
-
-            DependencyInjectableContext injectableContext = new DefaultDependencyInjectableContext(dependencyContext);
-            return new RuntimeManager(proxyFactory, injectableContext);
+            return new RuntimeManager(proxyFactory, dependencyContext);
         }
     }
 }
