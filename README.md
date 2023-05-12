@@ -1,7 +1,5 @@
 
 # TODO
-- Inject ConnectionEngine's dependencies to runtimeHelper
-  - Divide dependencies inside the DependencyManager between standard and "priority"/"isolated"/"specific"
 - Sort changeUnits
 - Lock
 
