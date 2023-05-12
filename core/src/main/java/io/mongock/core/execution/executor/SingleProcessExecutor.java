@@ -1,6 +1,7 @@
 package io.mongock.core.execution.executor;
 
 import io.mongock.core.audit.writer.AuditWriter;
+import io.mongock.core.execution.navigator.ReusableStepNavigatorBuilder;
 import io.mongock.core.execution.navigator.StepNavigatorBuilder;
 import io.mongock.core.process.single.SingleExecutableProcess;
 import io.mongock.core.runtime.dependency.DependencyContext;
@@ -29,7 +30,7 @@ public class SingleProcessExecutor extends AbstractSingleProcessExecutor {
 
     @Override
     protected StepNavigatorBuilder getStepNavigatorBuilder() {
-        return new StepNavigatorBuilder.ReusableStepNavigatorBuilder();
+        return new ReusableStepNavigatorBuilder();
     }
 
 }

@@ -26,7 +26,8 @@ public interface StepNavigatorBuilder {
     StepNavigator build();
 
 
-    class ParallelStepNavigatorBuilder implements StepNavigatorBuilder {
+    abstract class AbstractStepNavigator implements StepNavigatorBuilder {
+
 
         protected StepSummarizer summarizer = null;
         protected AuditWriter<?> auditWriter = null;
@@ -37,7 +38,7 @@ public interface StepNavigatorBuilder {
 
         protected TransactionWrapper transactionWrapper = null;
 
-        public ParallelStepNavigatorBuilder() {
+        public AbstractStepNavigator() {
         }
 
 
@@ -71,52 +72,7 @@ public interface StepNavigatorBuilder {
             return this;
         }
 
-        @Override
-        public StepNavigator build() {
-            DependencyInjectableContext injectableContext = new PriorityDependencyContext(
-                    new DefaultDependencyInjectableContext(),
-                    staticContext);
-            RuntimeManager runtimeManager = RuntimeManager.builder()
-                    .setDependencyContext(injectableContext)
-                    .setLock(lock)
-                    .build();
-            return new StepNavigator(auditWriter, summarizer, runtimeManager, transactionWrapper);
-        }
-    }
 
-
-    class ReusableStepNavigatorBuilder extends ParallelStepNavigatorBuilder {
-
-        private final StepNavigator stepNavigator = new StepNavigator(null, null, null, null);
-
-
-        public ReusableStepNavigatorBuilder() {
-        }
-
-        @Override
-        public StepNavigator build() {
-            StepNavigator instance;
-            instance = stepNavigator;
-            instance.clean();
-            if (summarizer != null) {
-                summarizer.clear();
-            }
-            setBaseDependencies(instance);
-            return instance;
-        }
-
-        private void setBaseDependencies(StepNavigator instance) {
-            instance.setSummarizer(summarizer);
-            instance.setAuditWriter(auditWriter);
-
-            DependencyInjectableContext injectableContext = new DefaultDependencyInjectableContext(staticContext);
-            RuntimeManager runtimeManager = RuntimeManager.builder()
-                    .setDependencyContext(injectableContext)
-                    .setLock(lock)
-                    .build();
-            instance.setRuntimeManager(runtimeManager);
-            instance.setTransactionWrapper(transactionWrapper);
-        }
     }
 
 }
