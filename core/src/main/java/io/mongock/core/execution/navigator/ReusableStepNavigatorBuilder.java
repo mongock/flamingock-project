@@ -4,28 +4,26 @@ import io.mongock.core.runtime.RuntimeManager;
 import io.mongock.core.runtime.dependency.DefaultDependencyInjectableContext;
 import io.mongock.core.runtime.dependency.DependencyInjectableContext;
 
-public     class ReusableStepNavigatorBuilder extends StepNavigatorBuilder.AbstractStepNavigator {
+public class ReusableStepNavigatorBuilder extends StepNavigatorBuilder.AbstractStepNavigator {
 
-    private final StepNavigator stepNavigator = new StepNavigator(null, null, null, null);
+    private final StepNavigator instance = new StepNavigator(null, null, null, null);
 
 
     public ReusableStepNavigatorBuilder() {
     }
-    
+
 
     @Override
     public StepNavigator build() {
-        StepNavigator instance;
-        instance = stepNavigator;
         instance.clean();
         if (summarizer != null) {
             summarizer.clear();
         }
-        setBaseDependencies(instance);
+        setBaseDependencies();
         return instance;
     }
 
-    private void setBaseDependencies(StepNavigator instance) {
+    private void setBaseDependencies() {
         instance.setSummarizer(summarizer);
         instance.setAuditWriter(auditWriter);
 
