@@ -1,0 +1,36 @@
+package io.flamingock.internal.executor;
+
+import io.flamingock.oss.core.audit.writer.AuditWriter;
+import io.flamingock.oss.core.execution.executor.AbstractSingleProcessExecutor;
+import io.flamingock.oss.core.execution.navigator.StepNavigatorBuilder;
+import io.flamingock.oss.core.process.single.SingleExecutableProcess;
+import io.flamingock.oss.core.runtime.dependency.DependencyContext;
+import io.flamingock.oss.core.task.executable.ExecutableTask;
+import io.flamingock.oss.core.transaction.TransactionWrapper;
+
+import java.util.stream.Stream;
+
+public class ParallelProcessExecutor extends AbstractSingleProcessExecutor {
+
+    public ParallelProcessExecutor(DependencyContext dependencyManager,
+                                   AuditWriter<?> auditWriter) {
+        this(dependencyManager, auditWriter, null);
+    }
+
+    public ParallelProcessExecutor(DependencyContext dependencyManager,
+                                   AuditWriter<?> auditWriter,
+                                   TransactionWrapper transactionWrapper) {
+        super(dependencyManager, auditWriter, transactionWrapper);
+    }
+
+    @Override
+    protected Stream<? extends ExecutableTask> buildTaskStream(SingleExecutableProcess executableProcess) {
+        return executableProcess.getTasks().parallelStream();
+    }
+
+    @Override
+    protected StepNavigatorBuilder getStepNavigatorBuilder() {
+        return new ParallelStepNavigatorBuilder();
+    }
+
+}

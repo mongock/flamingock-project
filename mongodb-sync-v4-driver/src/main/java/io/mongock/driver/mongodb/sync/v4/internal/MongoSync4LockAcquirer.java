@@ -2,10 +2,10 @@ package io.mongock.driver.mongodb.sync.v4.internal;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import io.mongock.core.audit.single.SingleAuditProcessStatus;
-import io.mongock.core.lock.LockCheckException;
-import io.mongock.core.process.LoadedProcess;
-import io.mongock.core.process.single.SingleExecutableProcess;
+import io.flamingock.oss.core.audit.single.SingleAuditProcessStatus;
+import io.flamingock.oss.core.lock.LockCheckException;
+import io.flamingock.oss.core.process.LoadedProcess;
+import io.flamingock.oss.core.process.single.SingleExecutableProcess;
 import io.mongock.internal.MongockLockAcquirer;
 import org.bson.Document;
 import org.slf4j.Logger;

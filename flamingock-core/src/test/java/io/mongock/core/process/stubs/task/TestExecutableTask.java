@@ -1,0 +1,40 @@
+package io.mongock.core.process.stubs.task;
+
+import io.flamingock.oss.core.audit.domain.AuditEntryStatus;
+import io.flamingock.oss.core.runtime.RuntimeManager;
+import io.flamingock.oss.core.task.executable.AbstractExecutableTask;
+
+public abstract class TestExecutableTask extends AbstractExecutableTask<TestTaskDescriptor> {
+
+    private boolean executed = false;
+    private final boolean rollbackExecuted = false;
+
+    TestExecutableTask(String id, AuditEntryStatus initialState) {
+        super(null, AuditEntryStatus.isRequiredExecution(initialState));
+//        new TestTaskDescriptor(
+//                id,
+//                rollbackResult != null && rollbackResult != RollbackResult.NOT_PROVIDED,
+//                false),
+//                initialState)
+    }
+
+    public boolean isExecuted() {
+        return executed;
+    }
+
+    public boolean isRollbackExecuted() {
+        return rollbackExecuted;
+    }
+
+    @Override
+    public void execute(RuntimeManager runtimeHelper) {
+        executed = true;
+    }
+
+
+    @Override
+    public String getExecutionMethodName() {
+        return "testExecutionMethod";
+    }
+
+}

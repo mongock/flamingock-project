@@ -1,7 +1,7 @@
 package io.mongock.driver.mongodb.sync.v4.internal;
 
-import io.mongock.core.lock.Lock;
-import io.mongock.core.lock.LockStatus;
+import io.flamingock.oss.core.lock.Lock;
+import io.flamingock.oss.core.lock.LockStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

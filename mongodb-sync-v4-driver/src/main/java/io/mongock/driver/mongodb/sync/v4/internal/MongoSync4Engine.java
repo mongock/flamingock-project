@@ -2,7 +2,7 @@ package io.mongock.driver.mongodb.sync.v4.internal;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import io.mongock.core.transaction.TransactionWrapper;
+import io.flamingock.oss.core.transaction.TransactionWrapper;
 import io.mongock.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 import io.mongock.driver.mongodb.sync.v4.internal.mongodb.MongoSync4SessionManager;
 import io.mongock.internal.MongockConfiguration;

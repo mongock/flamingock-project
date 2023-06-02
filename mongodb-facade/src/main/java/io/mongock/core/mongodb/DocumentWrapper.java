@@ -1,6 +1,6 @@
 package io.mongock.core.mongodb;
 
-import io.mongock.core.util.DateUtil;
+import io.flamingock.oss.core.util.DateUtil;
 
 import java.time.LocalDateTime;
 import java.util.Date;
