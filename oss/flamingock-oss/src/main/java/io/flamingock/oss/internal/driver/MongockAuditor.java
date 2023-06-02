@@ -1,16 +1,20 @@
 package io.flamingock.oss.internal.driver;
 
-import io.flamingock.oss.core.audit.AuditReader;
-import io.flamingock.oss.core.audit.domain.AuditEntryStatus;
-import io.flamingock.oss.core.audit.single.SingleAuditProcessStatus;
-import io.flamingock.oss.core.audit.writer.AuditItem;
-import io.flamingock.oss.core.audit.writer.AuditWriter;
-import io.flamingock.oss.core.audit.writer.RuntimeContext;
-import io.flamingock.oss.core.execution.executor.ExecutionContext;
-import io.flamingock.oss.core.task.descriptor.TaskDescriptor;
-import io.flamingock.oss.core.util.ThrowableUtil;
+import io.flamingock.core.core.audit.AuditReader;
+import io.flamingock.core.core.audit.AuditWriter;
+import io.flamingock.core.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
+import io.flamingock.core.core.audit.writer.AbstractAuditWriter;
+import io.flamingock.core.core.audit.writer.AuditItem;
+import io.flamingock.core.core.audit.writer.RuntimeContext;
+import io.flamingock.core.core.execution.executor.ExecutionContext;
+import io.flamingock.core.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.util.ThrowableUtil;
+import io.flamingock.oss.internal.persistence.MongockAuditEntry;
 
-public abstract class MongockAuditor extends AuditWriter<MongockAuditEntry> implements AuditReader<SingleAuditProcessStatus> {
+public abstract class MongockAuditor
+        extends AbstractAuditWriter<MongockAuditEntry>
+        implements AuditWriter, AuditReader<SingleAuditProcessStatus> {
 
     @Override
     protected final MongockAuditEntry map(AuditItem auditItem) {

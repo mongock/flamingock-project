@@ -1,22 +1,22 @@
 package io.flamingock.oss.runner.standalone;
 
-import io.flamingock.oss.core.audit.single.SingleAuditProcessStatus;
-import io.flamingock.oss.core.configuration.LegacyMigration;
-import io.flamingock.oss.core.configuration.TransactionStrategy;
-import io.flamingock.oss.core.event.MigrationFailureEvent;
-import io.flamingock.oss.core.event.MigrationStartedEvent;
-import io.flamingock.oss.core.event.MigrationSuccessEvent;
-import io.flamingock.oss.core.process.single.SingleExecutableProcess;
-import io.flamingock.oss.core.runner.Configurator;
-import io.flamingock.oss.core.runner.Runner;
-import io.flamingock.oss.core.runner.RunnerBuilder;
-import io.flamingock.oss.core.runner.standalone.BaseStandaloneBuilder;
-import io.flamingock.oss.core.runner.standalone.StandaloneBuilder;
+import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
+import io.flamingock.core.core.configuration.LegacyMigration;
+import io.flamingock.core.core.configuration.TransactionStrategy;
+import io.flamingock.core.core.event.MigrationFailureEvent;
+import io.flamingock.core.core.event.MigrationStartedEvent;
+import io.flamingock.core.core.event.MigrationSuccessEvent;
+import io.flamingock.core.core.process.single.SingleExecutableProcess;
+import io.flamingock.core.core.runner.Configurator;
+import io.flamingock.core.core.runner.Runner;
+import io.flamingock.core.core.runner.RunnerBuilder;
+import io.flamingock.core.core.runner.standalone.BaseStandaloneBuilder;
+import io.flamingock.core.core.runner.standalone.StandaloneBuilder;
 import io.flamingock.oss.internal.MongockConfiguration;
 import io.flamingock.oss.internal.MongockFactory;
+import io.flamingock.oss.internal.MongockRunnerConfigurator;
 import io.flamingock.oss.internal.driver.ConnectionDriver;
 import io.flamingock.oss.internal.driver.ConnectionEngine;
-import io.flamingock.oss.internal.MongockRunnerConfigurator;
 
 import java.util.List;
 import java.util.Map;

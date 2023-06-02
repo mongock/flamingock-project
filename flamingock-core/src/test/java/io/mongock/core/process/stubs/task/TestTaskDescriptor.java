@@ -1,6 +1,6 @@
 package io.mongock.core.process.stubs.task;
 
-import io.flamingock.oss.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
 public class TestTaskDescriptor implements TaskDescriptor {
     private final String id;

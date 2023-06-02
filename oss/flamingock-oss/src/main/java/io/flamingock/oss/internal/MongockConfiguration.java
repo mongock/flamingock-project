@@ -1,18 +1,19 @@
 package io.flamingock.oss.internal;
 
-import io.flamingock.oss.core.configuration.AbstractConfiguration;
+import io.flamingock.core.core.configuration.CoreConfiguration;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static io.flamingock.oss.core.util.Constants.LEGACY_DEFAULT_LOCK_REPOSITORY_NAME;
-import static io.flamingock.oss.core.util.Constants.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
+import static io.flamingock.core.core.util.Constants.LEGACY_DEFAULT_LOCK_REPOSITORY_NAME;
+import static io.flamingock.core.core.util.Constants.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
 
-public class MongockConfiguration extends AbstractConfiguration {
-private List<String> migrationScanPackage = new LinkedList<>();
+public class MongockConfiguration extends CoreConfiguration {
+    private List<String> migrationScanPackage = new LinkedList<>();
     private String migrationRepositoryName = LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
     private String lockRepositoryName = LEGACY_DEFAULT_LOCK_REPOSITORY_NAME;
     private boolean indexCreation = true;
+
 
     public List<String> getMigrationScanPackage() {
         return migrationScanPackage;

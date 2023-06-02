@@ -1,6 +1,6 @@
 package io.mongock.core.process.stubs;
 
-import io.flamingock.oss.core.process.single.SingleExecutableProcess;
+import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.mongock.core.process.stubs.task.TestExecutableTask;
 
 import java.util.Arrays;
