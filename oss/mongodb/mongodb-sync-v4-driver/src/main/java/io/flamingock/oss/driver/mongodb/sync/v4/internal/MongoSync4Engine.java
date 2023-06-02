@@ -2,13 +2,13 @@ package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.oss.core.transaction.TransactionWrapper;
+import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4SessionManager;
 import io.flamingock.oss.internal.MongockConfiguration;
-import io.flamingock.oss.internal.MongockLockAcquirer;
 import io.flamingock.oss.internal.driver.ConnectionEngine;
 import io.flamingock.oss.internal.driver.MongockAuditor;
+import io.flamingock.oss.internal.driver.MongockLockAcquirer;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ public class MongoSync4Engine implements ConnectionEngine {
     private final MongoClient mongoClient;
 
     private MongoSync4Auditor auditor;
-    private MongoSync4LockAcquirer lockProvider;
+    private MongockLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final MongoDBSync4Configuration driverConfiguration;
     private final MongockConfiguration mongockConfiguration;
@@ -43,8 +43,9 @@ public class MongoSync4Engine implements ConnectionEngine {
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
         auditor.initialize(mongockConfiguration.isIndexCreation());
-        lockProvider = new MongoSync4LockAcquirer(database, mongockConfiguration.getLockRepositoryName());
-        lockProvider.initialize(mongockConfiguration.isIndexCreation());
+        MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, mongockConfiguration.getLockRepositoryName());
+        lockRepository.initialize(mongockConfiguration.isIndexCreation());
+        lockProvider = new MongockLockAcquirer(lockRepository, auditor, mongockConfiguration);
     }
 
     @Override

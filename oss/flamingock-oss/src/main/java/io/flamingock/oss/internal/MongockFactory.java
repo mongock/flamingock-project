@@ -1,15 +1,15 @@
 package io.flamingock.oss.internal;
 
-import io.flamingock.oss.core.Factory;
-import io.flamingock.oss.core.audit.AuditReader;
-import io.flamingock.oss.core.audit.single.SingleAuditProcessStatus;
-import io.flamingock.oss.core.execution.executor.ProcessExecutor;
-import io.flamingock.oss.core.execution.executor.SingleProcessExecutor;
-import io.flamingock.oss.core.lock.LockAcquirer;
-import io.flamingock.oss.core.process.DefinitionProcess;
-import io.flamingock.oss.core.process.single.SingleDefinitionProcess;
-import io.flamingock.oss.core.process.single.SingleExecutableProcess;
-import io.flamingock.oss.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.core.Factory;
+import io.flamingock.core.core.audit.AuditReader;
+import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
+import io.flamingock.core.core.execution.executor.ProcessExecutor;
+import io.flamingock.core.core.execution.executor.SingleProcessExecutor;
+import io.flamingock.core.core.lock.LockAcquirer;
+import io.flamingock.core.core.process.DefinitionProcess;
+import io.flamingock.core.core.process.single.SingleDefinitionProcess;
+import io.flamingock.core.core.process.single.SingleExecutableProcess;
+import io.flamingock.core.core.runtime.dependency.DependencyContext;
 import io.flamingock.oss.internal.driver.ConnectionEngine;
 
 public class MongockFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, MongockConfiguration> {

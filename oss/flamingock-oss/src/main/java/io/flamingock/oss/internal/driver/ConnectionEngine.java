@@ -1,7 +1,6 @@
 package io.flamingock.oss.internal.driver;
 
-import io.flamingock.oss.core.transaction.TransactionWrapper;
-import io.flamingock.oss.internal.MongockLockAcquirer;
+import io.flamingock.core.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 

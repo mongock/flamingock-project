@@ -1,6 +1,6 @@
 package io.mongock.core.process.stubs.task;
 
-import io.flamingock.oss.core.runtime.RuntimeManager;
+import io.flamingock.core.core.runtime.RuntimeManager;
 
 public class FailedTestExecutableTask extends TestExecutableTask {
     public FailedTestExecutableTask(String id) {

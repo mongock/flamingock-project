@@ -31,22 +31,14 @@ public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
     }
 
 
-    public void initialize(boolean indexCreation) {
-        if(indexCreation) {
-            ensureIndex();
-        } else {
-            justValidateCollection();
-        }
-    }
-
-    private synchronized void ensureIndex() {
+    public synchronized void initialize() {
         if (!this.ensuredCollectionIndex) {
             ensureIndex(INDEX_ENSURE_MAX_TRIES);
             this.ensuredCollectionIndex = true;
         }
     }
 
-    private void justValidateCollection() {
+    public void justValidateCollection() {
         if (!isIndexFine()) {
             throw new RuntimeException("Index creation not allowed, but not created or wrongly created for collection " + getCollectionName());
         }

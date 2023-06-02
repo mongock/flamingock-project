@@ -1,7 +1,7 @@
 package io.mongock.core.process.stubs;
 
-import io.flamingock.oss.core.audit.domain.AuditEntryStatus;
-import io.flamingock.oss.core.audit.domain.AuditProcessStatus;
+import io.flamingock.core.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.core.audit.domain.AuditProcessStatus;
 
 import java.util.Optional;
 

@@ -5,18 +5,18 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
-import io.flamingock.oss.core.audit.single.SingleAuditProcessStatus;
-import io.flamingock.oss.core.configuration.AbstractConfiguration;
+import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
+import io.flamingock.core.core.configuration.CoreConfiguration;
+import io.flamingock.core.core.util.Result;
+import io.flamingock.oss.driver.common.mongodb.CollectionHelper;
+import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
+import io.flamingock.oss.driver.common.mongodb.SessionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4SessionManager;
-import io.flamingock.oss.driver.common.mongodb.CollectionHelper;
-import io.flamingock.oss.driver.common.mongodb.MongoDBMapper;
-import io.flamingock.oss.driver.common.mongodb.SessionWrapper;
-import io.flamingock.oss.core.util.Result;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.oss.internal.driver.MongockAuditEntry;
 import io.flamingock.oss.internal.driver.MongockAuditor;
+import io.flamingock.oss.internal.persistence.MongockAuditEntry;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
@@ -25,16 +25,14 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
-import static io.flamingock.oss.internal.persistence.EntryField.KEY_AUTHOR;
-import static io.flamingock.oss.internal.persistence.EntryField.KEY_CHANGE_ID;
-import static io.flamingock.oss.internal.persistence.EntryField.KEY_EXECUTION_ID;
+import static io.flamingock.oss.internal.persistence.AuditEntryField.*;
 
 public class MongoSync4Auditor extends MongockAuditor {
     
-    private static final Logger logger = LoggerFactory.getLogger(AbstractConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(CoreConfiguration.class);
 
     private final MongoCollection<Document> collection;
-    private final MongoDBMapper<MongoSync4DocumentWrapper> mapper = new MongoDBMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
+    private final MongoDBAuditMapper<MongoSync4DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
     private final MongoSync4SessionManager sessionManager;
 
     MongoSync4Auditor(MongoDatabase database,
@@ -50,11 +48,17 @@ public class MongoSync4Auditor extends MongockAuditor {
 
     @Override
     protected void initialize(boolean indexCreation) {
-        new CollectionHelper<>(
+        CollectionHelper<MongoSync4DocumentWrapper> initializer = new CollectionHelper<>(
                 new MongoSync4CollectionWrapper(collection),
                 () -> new MongoSync4DocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_AUTHOR, KEY_CHANGE_ID}
-        ).initialize(indexCreation);
+        );
+        if(indexCreation) {
+            initializer.initialize();
+        } else {
+            initializer.justValidateCollection();
+        }
+
     }
 
     @Override

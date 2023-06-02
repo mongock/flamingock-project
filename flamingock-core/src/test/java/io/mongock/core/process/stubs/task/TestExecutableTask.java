@@ -1,8 +1,8 @@
 package io.mongock.core.process.stubs.task;
 
-import io.flamingock.oss.core.audit.domain.AuditEntryStatus;
-import io.flamingock.oss.core.runtime.RuntimeManager;
-import io.flamingock.oss.core.task.executable.AbstractExecutableTask;
+import io.flamingock.core.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.core.runtime.RuntimeManager;
+import io.flamingock.core.core.task.executable.AbstractExecutableTask;
 
 public abstract class TestExecutableTask extends AbstractExecutableTask<TestTaskDescriptor> {
 

@@ -1,5 +1,6 @@
 package io.flamingock.oss.internal.driver;
 
+import io.flamingock.oss.internal.DriverConfiguration;
 import io.flamingock.oss.internal.MongockConfiguration;
 
 public interface ConnectionDriver<DRIVER_CONFIGURATION extends DriverConfiguration> {

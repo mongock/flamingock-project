@@ -1,8 +1,8 @@
 package io.mongock.driver.mongodb.sync.v4.driver.changes;
 
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.oss.api.annotations.ChangeUnit;
-import io.flamingock.oss.api.annotations.Execution;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
 
 @ChangeUnit( id="create-collection" , order = "1", transactional = false)
 public class ACreateCollection {
