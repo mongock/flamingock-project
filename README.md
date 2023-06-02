@@ -4,6 +4,7 @@
 - Lock
 
 # Technical debts
+- create legacy module
 - Remove RuntimeManager.getDependencyManager() and pass the DependencyManager to navigator
 - Provide support for dependency injection per task
 - Ensure changeUnit order in ChangeUnits

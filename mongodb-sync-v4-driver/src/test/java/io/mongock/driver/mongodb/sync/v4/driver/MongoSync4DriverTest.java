@@ -1,14 +1,6 @@
 package io.mongock.driver.mongodb.sync.v4.driver;
 
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import io.mongock.runner.standalone.MongockStandalone;
-import org.junit.jupiter.api.Test;
-
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
