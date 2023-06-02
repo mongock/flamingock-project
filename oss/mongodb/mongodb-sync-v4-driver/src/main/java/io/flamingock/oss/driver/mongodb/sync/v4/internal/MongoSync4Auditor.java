@@ -50,16 +50,12 @@ public class MongoSync4Auditor extends MongockAuditor {
 
     @Override
     protected void initialize(boolean indexCreation) {
-        CollectionHelper<MongoSync4DocumentWrapper> initializer = new CollectionHelper<>(
+        new CollectionHelper<>(
                 new MongoSync4CollectionWrapper(collection),
                 () -> new MongoSync4DocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_AUTHOR, KEY_CHANGE_ID}
-        );
-        if(indexCreation) {
-            initializer.initialize();
-        } else {
-            initializer.justValidateCollection();
-        }
+        ).initialize(indexCreation);
+
 
     }
 
