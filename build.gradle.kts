@@ -1,14 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-
     `kotlin-dsl`
     id("java")
-//    kotlin("jvm") version "1.6.20"
 }
-
-
-
 subprojects {
     apply {
         plugin("org.jetbrains.kotlin.jvm")
@@ -28,13 +23,24 @@ subprojects {
 
     dependencies {
         implementation(kotlin("stdlib-jdk8"))
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+
+        testImplementation("org.slf4j:slf4j-simple:2.0.6")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+        implementation("org.mockito:mockito-core:4.11.0")
     }
 
-//    tasks.withType<KotlinCompile> {
-//        kotlinOptions.jvmTarget = "1.8"
-//    }
+    tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
+        testLogging {
+            events(
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+                    org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
+            )
+        }
+    }
 
 
     tasks.getByName<Test>("test") {
