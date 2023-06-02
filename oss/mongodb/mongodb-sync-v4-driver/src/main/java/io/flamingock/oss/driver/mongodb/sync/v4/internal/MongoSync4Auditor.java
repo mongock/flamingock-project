@@ -55,8 +55,6 @@ public class MongoSync4Auditor extends MongockAuditor {
                 () -> new MongoSync4DocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_AUTHOR, KEY_CHANGE_ID}
         ).initialize(indexCreation);
-
-
     }
 
     @Override
