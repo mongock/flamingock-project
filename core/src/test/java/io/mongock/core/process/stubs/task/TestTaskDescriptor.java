@@ -19,6 +19,11 @@ public class TestTaskDescriptor implements TaskDescriptor {
     }
 
     @Override
+    public String getOrder() {
+        return null;
+    }
+
+    @Override
     public boolean isRunAlways() {
         return runAlways;
     }
