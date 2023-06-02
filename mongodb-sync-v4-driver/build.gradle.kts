@@ -1,8 +1,8 @@
 
 dependencies {
 //    INTERNAL
-    implementation(project(":core"))
-    implementation(project(":mongock"))
+    implementation(project(":flamingock-core"))
+    implementation(project(":flamingock-oss"))
     implementation(project(":mongodb-facade"))
 
 //    GENERAL
