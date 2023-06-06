@@ -13,6 +13,6 @@ public class DInsertAnotherDocument {
     @Execution
     public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(clientSession, new Document().append("name", "Jorge from another document"));
+        collection.insertOne(clientSession, new Document().append("name", "Jorge"));
     }
 }

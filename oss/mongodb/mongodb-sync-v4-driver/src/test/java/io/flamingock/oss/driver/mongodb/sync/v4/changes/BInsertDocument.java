@@ -13,6 +13,6 @@ public class BInsertDocument {
     @Execution
     public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(clientSession, new Document().append("name", "Federico from insert-document changeUnit"));
+        collection.insertOne(clientSession, new Document().append("name", "Federico"));
     }
 }
