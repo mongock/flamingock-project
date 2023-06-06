@@ -1,4 +1,4 @@
-package io.mongock.driver.mongodb.sync.v4.driver.changes;
+package io.flamingock.oss.driver.mongodb.sync.v4.changes;
 
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
