@@ -9,7 +9,6 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
-import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.common.mongodb.MongoDBLockMapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
@@ -18,17 +17,16 @@ import io.flamingock.oss.internal.persistence.LockPersistenceException;
 import io.flamingock.oss.internal.persistence.LockRepository;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
 import static io.flamingock.core.core.lock.LockStatus.LOCK_HELD;
-import static io.flamingock.oss.internal.persistence.LockEntryField.*;
+import static io.flamingock.oss.internal.persistence.LockEntryField.EXPIRES_AT_FIELD;
+import static io.flamingock.oss.internal.persistence.LockEntryField.KEY_FIELD;
+import static io.flamingock.oss.internal.persistence.LockEntryField.OWNER_FIELD;
+import static io.flamingock.oss.internal.persistence.LockEntryField.STATUS_FIELD;
 
 public class MongoSync4LockRepository implements LockRepository {
-
-    private static final Logger logger = LoggerFactory.getLogger(MongoSync4LockRepository.class);
 
     private final MongoDBLockMapper<MongoSync4DocumentWrapper> mapper = new MongoDBLockMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
 
