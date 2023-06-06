@@ -1,5 +1,7 @@
 package io.flamingock.oss.internal.persistence;
 
+import io.flamingock.core.core.lock.LockStatus;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -12,13 +14,13 @@ public class LockEntry {
 
     private final String key;
 
-    private final String status;
+    private final LockStatus status;
 
     private final String owner;
 
     private final LocalDateTime expiresAt;
 
-    public LockEntry(String key, String status, String owner, LocalDateTime expiresAt) {
+    public LockEntry(String key, LockStatus status, String owner, LocalDateTime expiresAt) {
         this.key = key;
         this.status = status;
         this.owner = owner;
@@ -36,7 +38,7 @@ public class LockEntry {
     /**
      * @return lock's status
      */
-    public String getStatus() {
+    public LockStatus getStatus() {
         return status;
     }
 
