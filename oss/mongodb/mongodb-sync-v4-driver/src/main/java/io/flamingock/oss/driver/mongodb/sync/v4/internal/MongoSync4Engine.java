@@ -1,10 +1,11 @@
 package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.core.transaction.TransactionWrapper;
+import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
-import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4SessionManager;
 import io.flamingock.oss.internal.MongockConfiguration;
 import io.flamingock.oss.internal.driver.ConnectionEngine;
 import io.flamingock.oss.internal.driver.MongockAuditor;
@@ -36,7 +37,7 @@ public class MongoSync4Engine implements ConnectionEngine {
 
     @Override
     public void initialize() {
-        MongoSync4SessionManager sessionManager = new MongoSync4SessionManager(mongoClient);
+        SessionManager<ClientSession> sessionManager = new SessionManager<>(mongoClient::startSession);
         transactionWrapper = new MongoSync4TransactionWrapper(sessionManager);
         auditor = new MongoSync4Auditor(database,
                 mongockConfiguration.getMigrationRepositoryName(),

@@ -51,8 +51,7 @@ public class MongoSync4DocumentWrapper implements DocumentWrapper {
     }
 
     @Override
-    public DocumentWrapper getDocument(String key) {
-        Document retrievedDocument = (Document) document.get(key);
-        return new MongoSync4DocumentWrapper(retrievedDocument);
+    public DocumentWrapper getWithWrapper(String key) {
+        return new MongoSync4DocumentWrapper((Document) get(key));
     }
 }

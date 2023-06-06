@@ -10,23 +10,25 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
-    private final static Logger logger = LoggerFactory.getLogger(CollectionHelper.class);
+public class CollectionInitializator<DOCUMENT_WRAPPER extends DocumentWrapper> {
+
+
+    private final static Logger logger = LoggerFactory.getLogger(CollectionInitializator.class);
 
 
     private final static int INDEX_ENSURE_MAX_TRIES = 3;
 
     private final String[] uniqueFields;
-    private final Supplier<DOCUMENT> documentCreator;
+    private final Supplier<DOCUMENT_WRAPPER> documentWrapperSupplier;
     private boolean ensuredCollectionIndex = false;
 
-    private final CollectionWrapper<DOCUMENT> collection;
+    private final CollectionWrapper<DOCUMENT_WRAPPER> collectionWrapper;
 
-    public CollectionHelper(CollectionWrapper<DOCUMENT> collection,
-                            Supplier<DOCUMENT> documentCreator,
-                            String[] uniqueFields) {
-        this.collection = collection;
-        this.documentCreator = documentCreator;
+    public CollectionInitializator(CollectionWrapper<DOCUMENT_WRAPPER> collectionWrapper,
+                                   Supplier<DOCUMENT_WRAPPER> documentWrapperSupplier,
+                                   String[] uniqueFields) {
+        this.collectionWrapper = collectionWrapper;
+        this.documentWrapperSupplier = documentWrapperSupplier;
         this.uniqueFields = uniqueFields;
     }
 
@@ -39,7 +41,7 @@ public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
     }
 
     public void justValidateCollection() {
-        if (!isIndexFine()) {
+        if (isIndexWrong()) {
             throw new RuntimeException("Index creation not allowed, but not created or wrongly created for collection " + getCollectionName());
         }
     }
@@ -48,17 +50,17 @@ public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
         if (tryCounter <= 0) {
             throw new RuntimeException("Max tries " + INDEX_ENSURE_MAX_TRIES + " index  creation");
         }
-        if (!isIndexFine()) {
+        if (isIndexWrong()) {
             cleanResidualUniqueKeys();
-            if (!isRequiredIndexCreated()) {
+            if (indexCreatedNotRequired()) {
                 createRequiredUniqueIndex();
             }
             ensureIndex(tryCounter - 1);
         }
     }
 
-    protected boolean isIndexFine() {
-        return getResidualKeys().isEmpty() && isRequiredIndexCreated();
+    protected boolean isIndexWrong() {
+        return !getResidualKeys().isEmpty() || indexCreatedNotRequired();
     }
 
     protected void cleanResidualUniqueKeys() {
@@ -75,7 +77,7 @@ public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
     }
 
     private Iterable<DocumentWrapper> listIndexes() {
-        return collection.listIndexes();
+        return collectionWrapper.listIndexes();
     }
 
     protected boolean doesNeedToBeRemoved(DocumentWrapper index) {
@@ -83,23 +85,23 @@ public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
     }
 
     protected boolean isIdIndex(DocumentWrapper index) {
-        return index.getDocument("key").get("_id") != null;
+        return index.getWithWrapper("key").get("_id") != null;
     }
 
-    protected boolean isRequiredIndexCreated() {
+    protected boolean indexCreatedNotRequired() {
         return StreamSupport.stream(
-                        collection.listIndexes().spliterator(),
+                        collectionWrapper.listIndexes().spliterator(),
                         false)
-                .anyMatch(this::isRightIndex);
+                .noneMatch(this::isRightIndex);
     }
 
     protected void createRequiredUniqueIndex() {
-        collection.createUniqueIndex(getIndexDocument(uniqueFields));
+        collectionWrapper.createUniqueIndex(getIndexDocument(uniqueFields));
         logger.debug("Index in collection [{}] was recreated", getCollectionName());
     }
 
     protected boolean isRightIndex(DocumentWrapper index) {
-        final DocumentWrapper key = index.getDocument("key");
+        final DocumentWrapper key = index.getWithWrapper("key");
         boolean keyContainsAllFields = Stream.of(uniqueFields).allMatch(uniqueField -> key.get(uniqueField) != null);
         boolean onlyTheseFields = key.size() == uniqueFields.length;
         return keyContainsAllFields && onlyTheseFields && isUniqueIndex(index);
@@ -110,17 +112,17 @@ public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
     }
 
     private String getCollectionName() {
-        return collection.getCollectionName();
+        return collectionWrapper.getCollectionName();
     }
 
-    protected DOCUMENT getIndexDocument(String[] uniqueFields) {
-        final DOCUMENT indexDocument = documentCreator.get();
+    protected DOCUMENT_WRAPPER getIndexDocument(String[] uniqueFields) {
+        final DOCUMENT_WRAPPER indexDocument = documentWrapperSupplier.get();
         Stream.of(uniqueFields).forEach(field -> indexDocument.append(field, 1));
         return indexDocument;
     }
 
     protected void dropIndex(DocumentWrapper index) {
-        collection.dropIndex(index.get("name").toString());
+        collectionWrapper.dropIndex(index.get("name").toString());
     }
 
 
@@ -128,6 +130,6 @@ public class CollectionHelper<DOCUMENT extends DocumentWrapper> {
      * Only for testing
      */
     public void deleteAll() {
-        collection.deleteMany(documentCreator.get());
+        collectionWrapper.deleteMany(documentWrapperSupplier.get());
     }
 }

@@ -2,7 +2,7 @@ package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.oss.driver.common.mongodb.CollectionHelper;
+import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
 import io.flamingock.oss.internal.persistence.LockEntry;
@@ -24,7 +24,7 @@ public class MongoSync4LockRepository implements LockRepository {
     }
 
     protected void initialize(boolean indexCreation) {
-        CollectionHelper<MongoSync4DocumentWrapper> initializer = new CollectionHelper<>(
+        CollectionInitializator<MongoSync4DocumentWrapper> initializer = new CollectionInitializator<>(
                 new MongoSync4CollectionWrapper(collection),
                 () -> new MongoSync4DocumentWrapper(new Document()),
                 new String[]{LockEntryField.KEY_FIELD}

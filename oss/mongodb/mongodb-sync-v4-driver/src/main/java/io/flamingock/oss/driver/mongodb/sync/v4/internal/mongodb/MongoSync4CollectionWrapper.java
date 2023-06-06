@@ -37,8 +37,8 @@ public class MongoSync4CollectionWrapper implements CollectionWrapper<MongoSync4
     }
 
     @Override
-    public void deleteMany(MongoSync4DocumentWrapper documentck) {
-        collection.deleteMany(documentck.getDocument());
+    public void deleteMany(MongoSync4DocumentWrapper documentWrapper) {
+        collection.deleteMany(documentWrapper.getDocument());
     }
 
 

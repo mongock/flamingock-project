@@ -16,7 +16,7 @@ public interface DocumentWrapper {
     Boolean getBoolean(String key);
     boolean getBoolean(Object key, boolean defaultValue);
 
-    DocumentWrapper getDocument(String key);
+    DocumentWrapper getWithWrapper(String key);
 
     int size();
 
