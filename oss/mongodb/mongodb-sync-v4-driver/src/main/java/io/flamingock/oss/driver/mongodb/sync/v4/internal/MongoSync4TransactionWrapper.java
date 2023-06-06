@@ -25,9 +25,8 @@ public class MongoSync4TransactionWrapper implements TransactionWrapper {
     @Override
     public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, DependencyInjector dependencyInjector, Supplier<T> operation) {
         logger.info("--------------------------------------------------------------------STARTING TRANSACTION WRAPPER");
-        try (SessionWrapper<ClientSession> sessionWrapper = sessionManager.startSession(taskDescriptor.getId())) {
+        try (ClientSession clientSession = sessionManager.startSession(taskDescriptor.getId())) {
             logger.info("--------------------------------------------------------------------SESSION ACQUIRED");
-            ClientSession clientSession = sessionWrapper.getClientSession();
             clientSession.startTransaction(TransactionOptions.builder().build());
             dependencyInjector.addDependency(clientSession);
             T result = operation.get();

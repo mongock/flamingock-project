@@ -13,7 +13,7 @@ public interface SessionManager<CLIENT_SESSION> {
      * @param sessionId ClientSession identifier. Will be the taskId most of the time(if not always)
      * @return ClientSession
      */
-    SessionWrapper<CLIENT_SESSION>  startSession(String sessionId);
+    CLIENT_SESSION  startSession(String sessionId);
 
-    Optional<SessionWrapper<CLIENT_SESSION> > getSession(String sessionId);
+    Optional<CLIENT_SESSION> getSession(String sessionId);
 }
