@@ -15,5 +15,7 @@ public interface SessionManager<CLIENT_SESSION> {
      */
     CLIENT_SESSION  startSession(String sessionId);
 
+    void  closeSession(String sessionId);
+
     Optional<CLIENT_SESSION> getSession(String sessionId);
 }

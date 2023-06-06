@@ -1,5 +1,6 @@
 package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -10,10 +11,9 @@ import io.flamingock.core.core.configuration.CoreConfiguration;
 import io.flamingock.core.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionHelper;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
-import io.flamingock.oss.driver.common.mongodb.SessionWrapper;
+import io.flamingock.oss.driver.common.mongodb.MongoSync4SessionManagerGeneric;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
-import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4SessionManager;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.oss.internal.driver.MongockAuditor;
 import io.flamingock.oss.internal.persistence.MongockAuditEntry;
@@ -33,12 +33,12 @@ public class MongoSync4Auditor extends MongockAuditor {
 
     private final MongoCollection<Document> collection;
     private final MongoDBAuditMapper<MongoSync4DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
-    private final MongoSync4SessionManager sessionManager;
+    private final MongoSync4SessionManagerGeneric<ClientSession> sessionManager;
 
     MongoSync4Auditor(MongoDatabase database,
                       String collectionName,
                       ReadWriteConfiguration readWriteConfiguration,
-                      MongoSync4SessionManager sessionManager) {
+                      MongoSync4SessionManagerGeneric<ClientSession> sessionManager) {
         this.collection = database.getCollection(collectionName)
                 .withReadConcern(readWriteConfiguration.getReadConcern())
                 .withReadPreference(readWriteConfiguration.getReadPreference())
@@ -72,7 +72,6 @@ public class MongoSync4Auditor extends MongockAuditor {
         Document entryDocument = mapper.toDocument(auditEntry).getDocument();
 
         UpdateResult result = sessionManager.getSession(auditEntry.getChangeId())
-                .map(SessionWrapper::getClientSession)
                 .map(clientSession -> collection.replaceOne(clientSession, filter, entryDocument, new ReplaceOptions().upsert(true)))
                 .orElseGet(() -> collection.replaceOne(filter, entryDocument, new ReplaceOptions().upsert(true)));
         logger.debug("SaveOrUpdate[{}] with result" +
