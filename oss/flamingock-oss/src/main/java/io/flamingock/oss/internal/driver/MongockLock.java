@@ -169,7 +169,7 @@ public class MongockLock implements Lock {
         LocalDateTime expiresAt1 = timeService.currentDatePlusMillis(leaseMillis);
         final LockEntry newEntry = new LockEntry(
                 DEFAULT_KEY,
-                LockStatus.ACQUIRED.name(),
+                LockStatus.LOCK_HELD,
                 owner,
                 expiresAt1);
 
