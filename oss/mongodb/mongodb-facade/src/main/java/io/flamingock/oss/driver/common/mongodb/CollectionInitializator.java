@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class CollectionHelper<DOCUMENT_WRAPPER extends DocumentWrapper> {
-    private final static Logger logger = LoggerFactory.getLogger(CollectionHelper.class);
+public class CollectionInitializator<DOCUMENT_WRAPPER extends DocumentWrapper> {
+
+
+    private final static Logger logger = LoggerFactory.getLogger(CollectionInitializator.class);
 
 
     private final static int INDEX_ENSURE_MAX_TRIES = 3;
@@ -22,9 +24,9 @@ public class CollectionHelper<DOCUMENT_WRAPPER extends DocumentWrapper> {
 
     private final CollectionWrapper<DOCUMENT_WRAPPER> collectionWrapper;
 
-    public CollectionHelper(CollectionWrapper<DOCUMENT_WRAPPER> collectionWrapper,
-                            Supplier<DOCUMENT_WRAPPER> documentWrapperSupplier,
-                            String[] uniqueFields) {
+    public CollectionInitializator(CollectionWrapper<DOCUMENT_WRAPPER> collectionWrapper,
+                                   Supplier<DOCUMENT_WRAPPER> documentWrapperSupplier,
+                                   String[] uniqueFields) {
         this.collectionWrapper = collectionWrapper;
         this.documentWrapperSupplier = documentWrapperSupplier;
         this.uniqueFields = uniqueFields;

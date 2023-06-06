@@ -9,9 +9,9 @@ import com.mongodb.client.result.UpdateResult;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.configuration.CoreConfiguration;
 import io.flamingock.core.core.util.Result;
-import io.flamingock.oss.driver.common.mongodb.CollectionHelper;
+import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
-import io.flamingock.oss.driver.common.mongodb.MongoSync4SessionManagerGeneric;
+import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
@@ -33,12 +33,12 @@ public class MongoSync4Auditor extends MongockAuditor {
 
     private final MongoCollection<Document> collection;
     private final MongoDBAuditMapper<MongoSync4DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
-    private final MongoSync4SessionManagerGeneric<ClientSession> sessionManager;
+    private final SessionManager<ClientSession> sessionManager;
 
     MongoSync4Auditor(MongoDatabase database,
                       String collectionName,
                       ReadWriteConfiguration readWriteConfiguration,
-                      MongoSync4SessionManagerGeneric<ClientSession> sessionManager) {
+                      SessionManager<ClientSession> sessionManager) {
         this.collection = database.getCollection(collectionName)
                 .withReadConcern(readWriteConfiguration.getReadConcern())
                 .withReadPreference(readWriteConfiguration.getReadPreference())
@@ -48,7 +48,7 @@ public class MongoSync4Auditor extends MongockAuditor {
 
     @Override
     protected void initialize(boolean indexCreation) {
-        CollectionHelper<MongoSync4DocumentWrapper> initializer = new CollectionHelper<>(
+        CollectionInitializator<MongoSync4DocumentWrapper> initializer = new CollectionInitializator<>(
                 new MongoSync4CollectionWrapper(collection),
                 () -> new MongoSync4DocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_AUTHOR, KEY_CHANGE_ID}
