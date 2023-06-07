@@ -1,35 +1,19 @@
 package io.flamingock.oss.driver.mongodb.sync.v4;
 
-
-//import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-//import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.core.util.TimeUtil;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import io.flamingock.oss.runner.standalone.MongockStandalone;
 import org.bson.Document;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.utility.DockerImageName;
 
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static io.flamingock.oss.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
-import static io.flamingock.oss.internal.persistence.AuditEntryField.KEY_TIMESTAMP;
+import static io.flamingock.oss.driver.mongodb.sync.v4.MongoDBTestHelper.getAuditLogSorted;
+import static io.flamingock.oss.driver.mongodb.sync.v4.MongoDBTestHelper.mongoClient;
+import static io.flamingock.oss.driver.mongodb.sync.v4.MongoDBTestHelper.mongoDatabase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,26 +24,9 @@ class MongoSync4DriverTest {
     public static final String CLIENTS_COLLECTION = "clientCollection";
 
 
-    private static MongoDBContainer mongoDBContainer;
-    private static MongoClient mongoClient;
-    private static MongoDatabase mongoDatabase;
-
-    @BeforeAll
-    static void setupAll() {
-        mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
-        mongoDBContainer.start();
-        mongoClient = getMainMongoClient(mongoDBContainer.getConnectionString());
-        mongoDatabase = mongoClient.getDatabase(DB_NAME);
-    }
-
     @BeforeEach
     public void setupEach() {
         mongoDatabase.getCollection(AUDIT_LOG_COLLECTION).deleteMany(new Document());
-    }
-
-    @AfterAll
-    public static void tearDownAll() {
-        mongoDBContainer.stop();
     }
 
 
@@ -78,7 +45,7 @@ class MongoSync4DriverTest {
 
         //Then
         //Checking auditLog
-        List<String> auditLog = getAuditLogSorted(mongoDatabase);
+        List<String> auditLog = getAuditLogSorted(AUDIT_LOG_COLLECTION);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0));
         assertEquals("insert-document", auditLog.get(1));
@@ -97,22 +64,4 @@ class MongoSync4DriverTest {
         mongoDatabase.getCollection(CLIENTS_COLLECTION).drop();
 
     }
-
-    private static List<String> getAuditLogSorted(MongoDatabase mongoDatabase) {
-        return mongoDatabase.getCollection(AUDIT_LOG_COLLECTION)
-                .find()
-                .into(new LinkedList<>())
-                .stream()
-                .sorted(Comparator.comparing(d -> TimeUtil.toLocalDateTime(d.get(KEY_TIMESTAMP))))
-                .map(document -> document.getString(KEY_CHANGE_ID))
-                .collect(Collectors.toList());
-    }
-
-    private static MongoClient getMainMongoClient(String connectionString) {
-        MongoClientSettings.Builder builder = MongoClientSettings.builder();
-        builder.applyConnectionString(new ConnectionString(connectionString));
-        MongoClientSettings build = builder.build();
-        return MongoClients.create(build);
-    }
-
 }
