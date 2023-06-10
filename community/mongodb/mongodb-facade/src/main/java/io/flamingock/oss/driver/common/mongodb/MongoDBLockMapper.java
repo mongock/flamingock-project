@@ -6,6 +6,11 @@ import io.flamingock.community.internal.persistence.LockEntry;
 
 import java.util.function.Supplier;
 
+import static io.flamingock.community.internal.persistence.LockEntryField.EXPIRES_AT_FIELD;
+import static io.flamingock.community.internal.persistence.LockEntryField.KEY_FIELD;
+import static io.flamingock.community.internal.persistence.LockEntryField.OWNER_FIELD;
+import static io.flamingock.community.internal.persistence.LockEntryField.STATUS_FIELD;
+
 public class MongoDBLockMapper<DOCUMENT_WRAPPER extends DocumentWrapper> {
 
     private final Supplier<DOCUMENT_WRAPPER> documentckSupplier;
