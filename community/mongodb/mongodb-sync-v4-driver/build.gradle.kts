@@ -10,6 +10,7 @@ dependencies {
     implementation("org.mongodb:mongo-java-driver:3.12.8")
 
 //    TEST
+    testImplementation(project(":standalone-runner-community"))
     testImplementation("org.slf4j:slf4j-simple:2.0.6")
     testImplementation("org.testcontainers:mongodb:1.18.3")
 

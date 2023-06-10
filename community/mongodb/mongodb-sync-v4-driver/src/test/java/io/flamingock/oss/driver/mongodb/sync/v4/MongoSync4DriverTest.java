@@ -1,7 +1,7 @@
 package io.flamingock.oss.driver.mongodb.sync.v4;
 
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
-import io.flamingock.community.runner.standalone.MongockStandalone;
+import io.flamingock.commuinty.runner.standalone.MongockStandalone;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

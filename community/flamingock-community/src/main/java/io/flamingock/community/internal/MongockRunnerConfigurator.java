@@ -1,7 +1,6 @@
 package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.community.runner.standalone.MongockStandaloneBuilder;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,7 @@ public interface MongockRunnerConfigurator<HOLDER> {
 
     String getLockRepositoryName();
 
-    MongockStandaloneBuilder setLockRepositoryName(String value);
+    HOLDER setLockRepositoryName(String value);
 
     boolean isIndexCreation();
 

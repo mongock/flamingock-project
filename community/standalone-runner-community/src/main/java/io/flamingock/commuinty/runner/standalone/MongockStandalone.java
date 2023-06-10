@@ -1,4 +1,4 @@
-package io.flamingock.community.runner.standalone;
+package io.flamingock.commuinty.runner.standalone;
 
 public final class MongockStandalone {
 

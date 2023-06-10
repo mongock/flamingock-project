@@ -1,4 +1,4 @@
-package io.flamingock.community.runner.standalone;
+package io.flamingock.commuinty.runner.standalone;
 
 import io.flamingock.community.internal.MongockConfiguration;
 import io.flamingock.community.internal.MongockFactory;
