@@ -1,6 +1,6 @@
 
 dependencies {
-    implementation(project(":flamingock-community"))
+    implementation(project(":base-community"))
     implementation(project(":flamingock-core"))
 
 //    GENERAL

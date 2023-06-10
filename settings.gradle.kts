@@ -22,9 +22,9 @@ project(":flamingock-cloud").projectDir = file("cloud/flamingock-cloud")
 //////////////////////////////////////
 // COMMUNITY
 //////////////////////////////////////
-include("flamingock-community")
-project(":flamingock-community").projectDir = file("community/flamingock-community")
-project(":flamingock-community").name = "flamingock-community"
+include("base-community")
+project(":base-community").projectDir = file("community/base-community")
+project(":base-community").name = "base-community"
 
 include("mongodb-sync-v4-driver")
 project(":mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
