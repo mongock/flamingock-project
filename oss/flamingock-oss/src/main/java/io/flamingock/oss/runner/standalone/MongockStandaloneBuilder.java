@@ -31,9 +31,9 @@ public class MongockStandaloneBuilder
 
     private final BaseStandaloneBuilder<
             MongockStandaloneBuilder,
-                SingleAuditProcessStatus,
-                SingleExecutableProcess,
-                MongockConfiguration> delegate;
+            SingleAuditProcessStatus,
+            SingleExecutableProcess,
+            MongockConfiguration> delegate;
 
     private ConnectionDriver<?> connectionDriver;
 

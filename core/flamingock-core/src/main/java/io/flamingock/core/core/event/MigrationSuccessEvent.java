@@ -4,7 +4,7 @@ package io.flamingock.core.core.event;
 import io.flamingock.core.core.event.result.MigrationResult;
 import io.flamingock.core.core.event.result.MigrationSuccessResult;
 
-public class MigrationSuccessEvent implements MongockResultEvent {
+public class MigrationSuccessEvent implements ResultEvent {
 
   private final MigrationSuccessResult migrationResult;
 
