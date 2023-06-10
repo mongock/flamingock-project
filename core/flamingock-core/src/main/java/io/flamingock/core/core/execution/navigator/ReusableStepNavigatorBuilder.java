@@ -1,8 +1,9 @@
 package io.flamingock.core.core.execution.navigator;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.runtime.dependency.DefaultDependencyInjectableContext;
+import io.flamingock.core.core.runtime.dependency.SimpleDependencyInjectableContext;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.core.runtime.dependency.PriorityDependencyInjectableContext;
 
 public class ReusableStepNavigatorBuilder extends StepNavigatorBuilder.AbstractStepNavigator {
 
@@ -27,7 +28,7 @@ public class ReusableStepNavigatorBuilder extends StepNavigatorBuilder.AbstractS
         instance.setSummarizer(summarizer);
         instance.setAuditWriter(auditWriter);
 
-        DependencyInjectableContext injectableContext = new DefaultDependencyInjectableContext(staticContext);
+        DependencyInjectableContext injectableContext = new PriorityDependencyInjectableContext(staticContext);
         RuntimeManager runtimeManager = RuntimeManager.builder()
                 .setDependencyContext(injectableContext)
                 .setLock(lock)

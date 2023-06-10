@@ -2,16 +2,19 @@ package io.flamingock.core.core.runtime.dependency;
 
 import io.flamingock.core.core.runtime.dependency.exception.ForbiddenParameterException;
 
-import java.util.List;
 import java.util.Optional;
 
-public class PriorityDependencyContext implements DependencyInjectableContext {
+public class PriorityDependencyInjectableContext implements DependencyInjectableContext {
 
     private final DependencyContext baseContext;
 
     private final DependencyInjectableContext priorityInjectableContext;
 
-    public PriorityDependencyContext(DependencyInjectableContext priorityInjectableContext, DependencyContext baseContext) {
+    public PriorityDependencyInjectableContext(DependencyContext baseContext) {
+        this(new SimpleDependencyInjectableContext(), baseContext);
+    }
+
+    public PriorityDependencyInjectableContext(DependencyInjectableContext priorityInjectableContext, DependencyContext baseContext) {
         this.priorityInjectableContext = priorityInjectableContext;
         this.baseContext = baseContext;
     }
@@ -24,16 +27,9 @@ public class PriorityDependencyContext implements DependencyInjectableContext {
     }
 
     @Override
-    public Optional<Dependency> getDependency(Class<?> type, String name) throws ForbiddenParameterException {
-        Optional<Dependency> priorityDependency = priorityInjectableContext.getDependency(type, name);
-        return priorityDependency.isPresent() ? priorityDependency : baseContext.getDependency(type, name);
-    }
-
-    @Override
-    public List<Dependency> getAllDependencies() {
-        List<Dependency> allDependencies = baseContext.getAllDependencies();
-        allDependencies.addAll(priorityInjectableContext.getAllDependencies());
-        return allDependencies;
+    public Optional<Dependency> getDependency(String name) throws ForbiddenParameterException {
+        Optional<Dependency> priorityDependency = priorityInjectableContext.getDependency(name);
+        return priorityDependency.isPresent() ? priorityDependency : baseContext.getDependency(name);
     }
 
     @Override

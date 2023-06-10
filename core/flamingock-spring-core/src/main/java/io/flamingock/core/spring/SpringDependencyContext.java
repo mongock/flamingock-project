@@ -6,7 +6,6 @@ import io.flamingock.core.core.runtime.dependency.exception.ForbiddenParameterEx
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
-import java.util.List;
 import java.util.Optional;
 
 public class SpringDependencyContext implements DependencyContext {
@@ -28,12 +27,12 @@ public class SpringDependencyContext implements DependencyContext {
     }
 
     @Override
-    public Optional<Dependency> getDependency(Class<?> type, String name) throws ForbiddenParameterException {
-        return Optional.empty();
+    public Optional<Dependency> getDependency(String name) throws ForbiddenParameterException {
+        try {
+            return Optional.of(new Dependency(springContext.getBean(name)));
+        } catch (BeansException ex) {
+            return Optional.empty();
+        }
     }
 
-    @Override
-    public List<Dependency> getAllDependencies() {
-        return null;
-    }
 }

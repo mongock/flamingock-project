@@ -10,7 +10,7 @@ import io.flamingock.core.core.event.MigrationSuccessEvent;
 import io.flamingock.core.core.process.ExecutableProcess;
 import io.flamingock.core.core.runner.BaseBuilder;
 import io.flamingock.core.core.runner.Runner;
-import io.flamingock.core.core.runtime.dependency.DefaultDependencyInjectableContext;
+import io.flamingock.core.core.runtime.dependency.SimpleDependencyInjectableContext;
 import io.flamingock.core.core.runtime.dependency.Dependency;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
 
@@ -31,12 +31,12 @@ public class BaseStandaloneBuilder<
     private Consumer<MigrationFailureEvent> processFailedListener;
 
     public BaseStandaloneBuilder(CONFIG configuration, Supplier<HOLDER> holderInstanceSupplier) {
-        this(configuration, holderInstanceSupplier, new DefaultDependencyInjectableContext());
+        this(configuration, holderInstanceSupplier, new SimpleDependencyInjectableContext());
     }
 
     BaseStandaloneBuilder(CONFIG configuration,
                           Supplier<HOLDER> holderInstanceSupplier,
-                          DefaultDependencyInjectableContext dependencyManager) {
+                          SimpleDependencyInjectableContext dependencyManager) {
         super(configuration, holderInstanceSupplier);
         this.dependencyManager = dependencyManager;
     }

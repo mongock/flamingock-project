@@ -9,7 +9,5 @@ public interface DependencyContext {
 
     Optional<Dependency> getDependency(Class<?> type) throws ForbiddenParameterException;
 
-    Optional<Dependency> getDependency(Class<?> type, String name) throws ForbiddenParameterException;
-
-    List<Dependency> getAllDependencies();
+    Optional<Dependency> getDependency(String name) throws ForbiddenParameterException;
 }

@@ -1,4 +1,4 @@
 package io.flamingock.core.core.runtime.dependency;
 
-public interface DependencyInjectableContext extends DependencyContext, DependencyInjector{
+public interface DependencyInjectableContext extends DependencyContext, DependencyInjectable {
 }

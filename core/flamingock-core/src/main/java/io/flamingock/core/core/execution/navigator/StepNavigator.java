@@ -20,7 +20,7 @@ import io.flamingock.core.core.execution.step.rolledback.FailedManualRolledBackS
 import io.flamingock.core.core.execution.step.rolledback.ManualRolledBackStep;
 import io.flamingock.core.core.execution.summary.StepSummarizer;
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.runtime.dependency.DependencyInjector;
+import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.core.core.util.Result;
@@ -103,8 +103,8 @@ public class StepNavigator {
         }
     }
 
-    private TaskStep executeTaskWrapped(ExecutableTask task, ExecutionContext executionContext, DependencyInjector dependencyInjector) {
-        return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjector, () -> {
+    private TaskStep executeTaskWrapped(ExecutableTask task, ExecutionContext executionContext, DependencyInjectable dependencyInjectable) {
+        return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
             ExecutionStep executed = executeTask(task);
             if (executed instanceof SuccessExecutionStep) {
                 AfterExecutionAuditStep afterExecutionAuditStep = auditExecution(executed, executionContext, LocalDateTime.now());

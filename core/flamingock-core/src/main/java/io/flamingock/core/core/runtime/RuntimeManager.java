@@ -6,10 +6,11 @@ import io.flamingock.core.api.exception.CoreException;
 import io.flamingock.core.core.lock.Lock;
 import io.flamingock.core.core.runtime.dependency.Dependency;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
-import io.flamingock.core.core.runtime.dependency.DependencyInjector;
+import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.core.runtime.dependency.exception.DependencyInjectionException;
 import io.flamingock.core.core.runtime.proxy.LockGuardProxyFactory;
 import io.flamingock.core.core.util.Constants;
+import io.flamingock.core.core.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class RuntimeManager implements DependencyInjector {
+public final class RuntimeManager implements DependencyInjectable {
 
     private static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 
@@ -113,14 +114,17 @@ public final class RuntimeManager implements DependencyInjector {
         return signatureParameters;
     }
 
-    private Object getParameter(Class<?> parameterType, Parameter parameter) {
-        String parameterName = getParameterName(parameter);
-        Dependency dependency = dependencyContext.getDependency(parameterType, parameterName)
-                .orElseThrow(() -> new DependencyInjectionException(parameterType, parameterName));
+    private Object getParameter(Class<?> type, Parameter parameter) {
+        String name = getParameterName(parameter);
 
-        boolean lockGuarded = !parameterType.isAnnotationPresent(NonLockGuarded.class)
+        Dependency dependency = (StringUtil.isEmpty(name)
+                ? dependencyContext.getDependency(type)
+                : dependencyContext.getDependency(name)
+        ).orElseThrow(() -> new DependencyInjectionException(type, name));
+
+        boolean lockGuarded = !type.isAnnotationPresent(NonLockGuarded.class)
                 && !parameter.isAnnotationPresent(NonLockGuarded.class)
-                && !nonProxyableTypes.contains(parameterType);
+                && !nonProxyableTypes.contains(type);
 
         return dependency.isProxeable() && lockGuarded
                 ? proxyFactory.getRawProxy(dependency.getInstance(), dependency.getType())

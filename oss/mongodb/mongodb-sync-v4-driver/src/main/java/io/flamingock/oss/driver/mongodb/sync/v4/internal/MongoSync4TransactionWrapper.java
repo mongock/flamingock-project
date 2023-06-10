@@ -2,7 +2,7 @@ package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
-import io.flamingock.core.core.runtime.dependency.DependencyInjector;
+import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.core.core.util.Failed;
@@ -22,11 +22,11 @@ public class MongoSync4TransactionWrapper implements TransactionWrapper {
     }
 
     @Override
-    public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, DependencyInjector dependencyInjector, Supplier<T> operation) {
+    public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, DependencyInjectable dependencyInjectable, Supplier<T> operation) {
         String sessionId = taskDescriptor.getId();
         try (ClientSession clientSession = sessionManager.startSession(sessionId)) {
             clientSession.startTransaction(TransactionOptions.builder().build());
-            dependencyInjector.addDependency(clientSession);
+            dependencyInjectable.addDependency(clientSession);
             T result = operation.get();
             if (result instanceof Failed) {
                 clientSession.abortTransaction();

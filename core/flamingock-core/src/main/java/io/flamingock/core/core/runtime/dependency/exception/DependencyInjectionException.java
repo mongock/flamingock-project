@@ -8,11 +8,11 @@ public class DependencyInjectionException extends CoreException {
   private final Class<?> wrongParameter;
   private final String name;
 
-  public DependencyInjectionException(Class wrongParameter) {
+  public DependencyInjectionException(Class<?> wrongParameter) {
     this(wrongParameter, null);
   }
 
-  public DependencyInjectionException(Class wrongParameter, String name) {
+  public DependencyInjectionException(Class<?> wrongParameter, String name) {
     super();
     this.wrongParameter = wrongParameter;
     this.name = name;

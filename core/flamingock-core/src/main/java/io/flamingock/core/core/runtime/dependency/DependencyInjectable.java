@@ -2,7 +2,7 @@ package io.flamingock.core.core.runtime.dependency;
 
 import java.util.Collection;
 
-public interface DependencyInjector {
+public interface DependencyInjectable {
 
     default void addDependencies(Collection<? extends Dependency> dependencies) {
         dependencies.forEach(this::addDependency);
