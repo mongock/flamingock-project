@@ -1,12 +1,40 @@
 rootProject.name = "flamingock-project"
-include("flamingock-core")
-include("flamingock-cloud")
 
-include("flamingock-oss")
-project(":flamingock-oss").projectDir = file("oss/flamingock-oss")
+
+
+//////////////////////////////////////
+// CORE
+//////////////////////////////////////
+include("flamingock-core")
+project(":flamingock-core").projectDir = file("core/flamingock-core")
+project(":flamingock-core").name = "flamingock-core"
+
+include("flamingock-spring-core")
+project(":flamingock-spring-core").projectDir = file("core/flamingock-spring-core")
+project(":flamingock-spring-core").name = "flamingock-spring-core"
+
+//////////////////////////////////////
+// CORE
+//////////////////////////////////////
+include("flamingock-cloud")
+project(":flamingock-cloud").projectDir = file("cloud/flamingock-cloud")
+
+//////////////////////////////////////
+// COMMUNITY
+//////////////////////////////////////
+include("base-community")
+project(":base-community").projectDir = file("community/base-community")
+project(":base-community").name = "base-community"
 
 include("mongodb-sync-v4-driver")
-project(":mongodb-sync-v4-driver").projectDir = file("oss/mongodb/mongodb-sync-v4-driver")
+project(":mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
+
+include("standalone-runner-community")
+project(":standalone-runner-community").name = "standalone-runner-community"
+project(":standalone-runner-community").projectDir = file("community/standalone-runner-community")
+
+
 
 include("mongodb-facade")
-project(":mongodb-facade").projectDir = file("oss/mongodb/mongodb-facade")
+project(":mongodb-facade").name = "mongodb-facade"
+project(":mongodb-facade").projectDir = file("community/mongodb/mongodb-facade")
