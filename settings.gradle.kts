@@ -14,12 +14,6 @@ project(":flamingock-spring-core").projectDir = file("core/flamingock-spring-cor
 project(":flamingock-spring-core").name = "flamingock-spring-core"
 
 //////////////////////////////////////
-// CORE
-//////////////////////////////////////
-include("flamingock-cloud")
-project(":flamingock-cloud").projectDir = file("cloud/flamingock-cloud")
-
-//////////////////////////////////////
 // COMMUNITY
 //////////////////////////////////////
 include("base-community")

@@ -2,20 +2,38 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
+    `maven-publish`
     id("java")
 }
+group = "io.flamingock"
+version = "0.0.1-SNAPSHOT"
+
 subprojects {
+
     apply {
         plugin("org.jetbrains.kotlin.jvm")
+
+        plugin("maven-publish")
     }
 
-
-    group = "io.flamingock"
-    version = "0.0.1-SNAPSHOT"
 
     repositories {
         mavenCentral()
+//        mavenLocal()
     }
+
+
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = "io.flamingock"
+                artifactId = project.name
+                version = "0.0.2-SNAPSHOT"
+                from(components["java"])
+            }
+        }
+    }
+
 
     val implementation by configurations
     val testImplementation by configurations
