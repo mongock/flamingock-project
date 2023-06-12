@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.distsDirectory
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -19,20 +20,21 @@ subprojects {
 
     repositories {
         mavenCentral()
-//        mavenLocal()
+        mavenLocal()
     }
-
-
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                groupId = "io.flamingock"
+                groupId = getGroupId(project)
                 artifactId = project.name
                 version = "0.0.2-SNAPSHOT"
                 from(components["java"])
             }
         }
     }
+
+
+
 
 
     val implementation by configurations
@@ -70,3 +72,11 @@ subprojects {
         targetCompatibility = "1.8"
     }
 }
+
+
+fun getGroupId(project: Project) : String{
+    val relativeProjectDir = project.projectDir.canonicalPath
+        .substring(rootProject.projectDir.canonicalPath.length + 1)
+    return if(relativeProjectDir.startsWith("community")) "io.flamingock.community" else "io.flamingock"
+}
+
