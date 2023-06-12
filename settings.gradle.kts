@@ -12,13 +12,6 @@ project(":flamingock-core").name = "flamingock-core"
 include("flamingock-spring-core")
 project(":flamingock-spring-core").projectDir = file("core/flamingock-spring-core")
 project(":flamingock-spring-core").name = "flamingock-spring-core"
-
-//////////////////////////////////////
-// CORE
-//////////////////////////////////////
-include("flamingock-cloud")
-project(":flamingock-cloud").projectDir = file("cloud/flamingock-cloud")
-
 //////////////////////////////////////
 // COMMUNITY
 //////////////////////////////////////
@@ -29,9 +22,9 @@ project(":base-community").name = "base-community"
 include("mongodb-sync-v4-driver")
 project(":mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
 
-include("standalone-runner-community")
-project(":standalone-runner-community").name = "standalone-runner-community"
-project(":standalone-runner-community").projectDir = file("community/standalone-runner-community")
+include("standalone-runner")
+project(":standalone-runner").name = "standalone-runner"
+project(":standalone-runner").projectDir = file("community/standalone-runner")
 
 
 
