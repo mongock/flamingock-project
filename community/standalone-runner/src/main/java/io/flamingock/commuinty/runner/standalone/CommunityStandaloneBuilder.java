@@ -1,8 +1,8 @@
 package io.flamingock.commuinty.runner.standalone;
 
-import io.flamingock.community.internal.MongockConfiguration;
-import io.flamingock.community.internal.MongockFactory;
-import io.flamingock.community.internal.MongockRunnerConfigurator;
+import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.community.internal.CommunityFactory;
+import io.flamingock.community.internal.CommunityRunnerConfigurator;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
@@ -25,24 +25,24 @@ import java.util.function.Consumer;
 public class CommunityStandaloneBuilder
         implements
         RunnerBuilder,
-        MongockRunnerConfigurator<CommunityStandaloneBuilder>,
+        CommunityRunnerConfigurator<CommunityStandaloneBuilder>,
         CoreStandaloneBuilder<CommunityStandaloneBuilder>,
-        Configurator<CommunityStandaloneBuilder, MongockConfiguration> {
+        Configurator<CommunityStandaloneBuilder, CommunityConfiguration> {
 
     private final CoreStandaloneBuilderImpl<
             CommunityStandaloneBuilder,
                         SingleAuditProcessStatus,
                         SingleExecutableProcess,
-                        MongockConfiguration> delegate;
+            CommunityConfiguration> standaloneBuilderDelegate;
 
     private ConnectionDriver<?> connectionDriver;
 
     CommunityStandaloneBuilder() {
-        this(new MongockConfiguration());
+        this(new CommunityConfiguration());
     }
 
-    CommunityStandaloneBuilder(MongockConfiguration configuration) {
-        this.delegate = new CoreStandaloneBuilderImpl<>(configuration, () -> this);
+    CommunityStandaloneBuilder(CommunityConfiguration configuration) {
+        this.standaloneBuilderDelegate = new CoreStandaloneBuilderImpl<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -51,9 +51,9 @@ public class CommunityStandaloneBuilder
 
     @Override
     public Runner build() {
-        ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(delegate.getConfiguration());
+        ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(standaloneBuilderDelegate.getConfiguration());
         connectionEngine.initialize();
-        return delegate.build(new MongockFactory(connectionEngine));
+        return standaloneBuilderDelegate.build(new CommunityFactory(connectionEngine));
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -67,12 +67,12 @@ public class CommunityStandaloneBuilder
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return delegate.getConfiguration().getMigrationScanPackage();
+        return standaloneBuilderDelegate.getConfiguration().getMigrationScanPackage();
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationScanPackage(List<String> scanPackage) {
-        delegate.getConfiguration().setMigrationScanPackage(scanPackage);
+        standaloneBuilderDelegate.getConfiguration().setMigrationScanPackage(scanPackage);
         return this;
     }
 
@@ -88,34 +88,34 @@ public class CommunityStandaloneBuilder
 
     @Override
     public String getMigrationRepositoryName() {
-        return delegate.getConfiguration().getMigrationRepositoryName();
+        return standaloneBuilderDelegate.getConfiguration().getMigrationRepositoryName();
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationRepositoryName(String value) {
-        delegate.getConfiguration().setMigrationRepositoryName(value);
+        standaloneBuilderDelegate.getConfiguration().setMigrationRepositoryName(value);
         return this;
     }
 
     @Override
     public String getLockRepositoryName() {
-        return delegate.getConfiguration().getLockRepositoryName();
+        return standaloneBuilderDelegate.getConfiguration().getLockRepositoryName();
     }
 
     @Override
     public CommunityStandaloneBuilder setLockRepositoryName(String value) {
-        delegate.getConfiguration().setLockRepositoryName(value);
+        standaloneBuilderDelegate.getConfiguration().setLockRepositoryName(value);
         return this;
     }
 
     @Override
     public boolean isIndexCreation() {
-        return delegate.getConfiguration().isIndexCreation();
+        return standaloneBuilderDelegate.getConfiguration().isIndexCreation();
     }
 
     @Override
     public CommunityStandaloneBuilder setIndexCreation(boolean value) {
-        delegate.getConfiguration().setIndexCreation(value);
+        standaloneBuilderDelegate.getConfiguration().setIndexCreation(value);
         return this;
     }
 
@@ -124,173 +124,173 @@ public class CommunityStandaloneBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public CommunityStandaloneBuilder setConfiguration(MongockConfiguration configuration) {
-        return delegate.setConfiguration(configuration);
+    public CommunityStandaloneBuilder setConfiguration(CommunityConfiguration configuration) {
+        return standaloneBuilderDelegate.setConfiguration(configuration);
     }
 
     @Override
     public CommunityStandaloneBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
-        return delegate.setLockAcquiredForMillis(lockAcquiredForMillis);
+        return standaloneBuilderDelegate.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
     @Override
     public CommunityStandaloneBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
-        return delegate.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+        return standaloneBuilderDelegate.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
     @Override
     public CommunityStandaloneBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
-        return delegate.setLockTryFrequencyMillis(lockTryFrequencyMillis);
+        return standaloneBuilderDelegate.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
     @Override
     public CommunityStandaloneBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
-        return delegate.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+        return standaloneBuilderDelegate.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
     @Override
     public CommunityStandaloneBuilder setTrackIgnored(boolean trackIgnored) {
-        return delegate.setTrackIgnored(trackIgnored);
+        return standaloneBuilderDelegate.setTrackIgnored(trackIgnored);
     }
 
     @Override
     public CommunityStandaloneBuilder setEnabled(boolean enabled) {
-        return delegate.setEnabled(enabled);
+        return standaloneBuilderDelegate.setEnabled(enabled);
     }
 
 
     @Override
     public CommunityStandaloneBuilder setStartSystemVersion(String startSystemVersion) {
-        return delegate.setStartSystemVersion(startSystemVersion);
+        return standaloneBuilderDelegate.setStartSystemVersion(startSystemVersion);
     }
 
     @Override
     public CommunityStandaloneBuilder setEndSystemVersion(String endSystemVersion) {
-        return delegate.setEndSystemVersion(endSystemVersion);
+        return standaloneBuilderDelegate.setEndSystemVersion(endSystemVersion);
     }
 
     @Override
     public CommunityStandaloneBuilder setServiceIdentifier(String serviceIdentifier) {
-        return delegate.setServiceIdentifier(serviceIdentifier);
+        return standaloneBuilderDelegate.setServiceIdentifier(serviceIdentifier);
     }
 
     @Override
     public CommunityStandaloneBuilder setMetadata(Map<String, Object> metadata) {
-        return delegate.setMetadata(metadata);
+        return standaloneBuilderDelegate.setMetadata(metadata);
     }
 
     @Override
     public CommunityStandaloneBuilder setLegacyMigration(LegacyMigration legacyMigration) {
-        return delegate.setLegacyMigration(legacyMigration);
+        return standaloneBuilderDelegate.setLegacyMigration(legacyMigration);
     }
 
     @Override
     public CommunityStandaloneBuilder setTransactionEnabled(Boolean transactionEnabled) {
-        return delegate.setTransactionEnabled(transactionEnabled);
+        return standaloneBuilderDelegate.setTransactionEnabled(transactionEnabled);
     }
 
     @Override
     public CommunityStandaloneBuilder setDefaultMigrationAuthor(String defaultMigrationAuthor) {
-        return delegate.setDefaultMigrationAuthor(defaultMigrationAuthor);
+        return standaloneBuilderDelegate.setDefaultMigrationAuthor(defaultMigrationAuthor);
     }
 
     @Override
     public CommunityStandaloneBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
-        return delegate.setTransactionStrategy(transactionStrategy);
+        return standaloneBuilderDelegate.setTransactionStrategy(transactionStrategy);
     }
 
     @Override
-    public MongockConfiguration getConfiguration() {
-        return delegate.getConfiguration();
+    public CommunityConfiguration getConfiguration() {
+        return standaloneBuilderDelegate.getConfiguration();
     }
 
     @Override
     public long getLockAcquiredForMillis() {
-        return delegate.getLockAcquiredForMillis();
+        return standaloneBuilderDelegate.getLockAcquiredForMillis();
     }
 
     @Override
     public Long getLockQuitTryingAfterMillis() {
-        return delegate.getLockQuitTryingAfterMillis();
+        return standaloneBuilderDelegate.getLockQuitTryingAfterMillis();
     }
 
     @Override
     public long getLockTryFrequencyMillis() {
-        return delegate.getLockTryFrequencyMillis();
+        return standaloneBuilderDelegate.getLockTryFrequencyMillis();
     }
 
     @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
-        return delegate.isThrowExceptionIfCannotObtainLock();
+        return standaloneBuilderDelegate.isThrowExceptionIfCannotObtainLock();
     }
 
     @Override
     public boolean isTrackIgnored() {
-        return delegate.isTrackIgnored();
+        return standaloneBuilderDelegate.isTrackIgnored();
     }
 
     @Override
     public boolean isEnabled() {
-        return delegate.isEnabled();
+        return standaloneBuilderDelegate.isEnabled();
     }
 
     @Override
     public String getStartSystemVersion() {
-        return delegate.getStartSystemVersion();
+        return standaloneBuilderDelegate.getStartSystemVersion();
     }
 
     @Override
     public String getEndSystemVersion() {
-        return delegate.getEndSystemVersion();
+        return standaloneBuilderDelegate.getEndSystemVersion();
     }
 
     @Override
     public String getServiceIdentifier() {
-        return delegate.getServiceIdentifier();
+        return standaloneBuilderDelegate.getServiceIdentifier();
     }
 
     @Override
     public Map<String, Object> getMetadata() {
-        return delegate.getMetadata();
+        return standaloneBuilderDelegate.getMetadata();
     }
 
     @Override
     public LegacyMigration getLegacyMigration() {
-        return delegate.getLegacyMigration();
+        return standaloneBuilderDelegate.getLegacyMigration();
     }
 
     @Override
     public Boolean getTransactionEnabled() {
-        return delegate.getTransactionEnabled();
+        return standaloneBuilderDelegate.getTransactionEnabled();
     }
 
     @Override
     public String getDefaultMigrationAuthor() {
-        return delegate.getDefaultMigrationAuthor();
+        return standaloneBuilderDelegate.getDefaultMigrationAuthor();
     }
 
     @Override
     public TransactionStrategy getTransactionStrategy() {
-        return delegate.getTransactionStrategy();
+        return standaloneBuilderDelegate.getTransactionStrategy();
     }
 
     @Override
     public CommunityStandaloneBuilder addDependency(String name, Class<?> type, Object instance) {
-        return delegate.addDependency(name, type, instance);
+        return standaloneBuilderDelegate.addDependency(name, type, instance);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationStartedListener(Consumer<MigrationStartedEvent> listener) {
-        return delegate.setMigrationStartedListener(listener);
+        return standaloneBuilderDelegate.setMigrationStartedListener(listener);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener) {
-        return delegate.setMigrationSuccessListener(listener);
+        return standaloneBuilderDelegate.setMigrationSuccessListener(listener);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
-        return delegate.setMigrationFailureListener(listener);
+        return standaloneBuilderDelegate.setMigrationFailureListener(listener);
     }
 }

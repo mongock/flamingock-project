@@ -12,10 +12,10 @@ import io.flamingock.core.core.process.single.SingleDefinitionProcess;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 
-public class MongockFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, MongockConfiguration> {
+public class CommunityFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, CommunityConfiguration> {
     private final ConnectionEngine connectionEngine;
 
-    public MongockFactory(ConnectionEngine connectionEngine) {
+    public CommunityFactory(ConnectionEngine connectionEngine) {
         this.connectionEngine = connectionEngine;
     }
 
@@ -30,7 +30,7 @@ public class MongockFactory implements Factory<SingleAuditProcessStatus, SingleE
     }
 
     @Override
-    public DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> getDefinitionProcess(MongockConfiguration configuration) {
+    public DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> getDefinitionProcess(CommunityConfiguration configuration) {
         return new SingleDefinitionProcess(configuration.getMigrationScanPackage());
     }
 

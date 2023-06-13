@@ -1,8 +1,8 @@
 package io.flamingock.commuinty.runner.standalone;
 
-import io.flamingock.community.internal.MongockConfiguration;
-import io.flamingock.community.internal.MongockFactory;
-import io.flamingock.community.internal.MongockRunnerConfigurator;
+import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.community.internal.CommunityFactory;
+import io.flamingock.community.internal.CommunityRunnerConfigurator;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
@@ -23,23 +23,23 @@ import java.util.Map;
 public class CommunitySpringbootBuilder2
         implements
         RunnerBuilder,
-        MongockRunnerConfigurator<CommunitySpringbootBuilder2>,
+        CommunityRunnerConfigurator<CommunitySpringbootBuilder2>,
         CoreSpringbootBuilder<CommunitySpringbootBuilder2>,
-        Configurator<CommunitySpringbootBuilder2, MongockConfiguration> {
+        Configurator<CommunitySpringbootBuilder2, CommunityConfiguration> {
 
     private final CoreSpringbootBuilderImpl<
             CommunitySpringbootBuilder2,
                     SingleAuditProcessStatus,
                     SingleExecutableProcess,
-                    MongockConfiguration> delegate;
+            CommunityConfiguration> delegate;
 
     private ConnectionDriver<?> connectionDriver;
 
     CommunitySpringbootBuilder2() {
-        this(new MongockConfiguration());
+        this(new CommunityConfiguration());
     }
 
-    CommunitySpringbootBuilder2(MongockConfiguration configuration) {
+    CommunitySpringbootBuilder2(CommunityConfiguration configuration) {
         this.delegate = new CoreSpringbootBuilderImpl<>(configuration, () -> this);
     }
 
@@ -51,7 +51,7 @@ public class CommunitySpringbootBuilder2
     public Runner build() {
         ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(delegate.getConfiguration());
         connectionEngine.initialize();
-        return delegate.build(new MongockFactory(connectionEngine));
+        return delegate.build(new CommunityFactory(connectionEngine));
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ public class CommunitySpringbootBuilder2
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public CommunitySpringbootBuilder2 setConfiguration(MongockConfiguration configuration) {
+    public CommunitySpringbootBuilder2 setConfiguration(CommunityConfiguration configuration) {
         return delegate.setConfiguration(configuration);
     }
 
@@ -198,7 +198,7 @@ public class CommunitySpringbootBuilder2
     }
 
     @Override
-    public MongockConfiguration getConfiguration() {
+    public CommunityConfiguration getConfiguration() {
         return delegate.getConfiguration();
     }
 

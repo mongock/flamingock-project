@@ -5,7 +5,7 @@ import io.flamingock.community.internal.driver.ConnectionDriver;
 import java.util.Collections;
 import java.util.List;
 
-public interface MongockRunnerConfigurator<HOLDER> {
+public interface CommunityRunnerConfigurator<HOLDER> {
 
     HOLDER setDriver(ConnectionDriver<?> connectionDriver);
 

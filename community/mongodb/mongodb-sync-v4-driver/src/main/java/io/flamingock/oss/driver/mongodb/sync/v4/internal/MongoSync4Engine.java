@@ -6,7 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
-import io.flamingock.community.internal.MongockConfiguration;
+import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.community.internal.driver.MongockAuditor;
 import io.flamingock.community.internal.driver.MongockLockAcquirer;
@@ -22,17 +22,17 @@ public class MongoSync4Engine implements ConnectionEngine {
     private MongockLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final MongoDBSync4Configuration driverConfiguration;
-    private final MongockConfiguration mongockConfiguration;
+    private final CommunityConfiguration communityConfiguration;
 
 
     public MongoSync4Engine(MongoClient mongoClient,
                             String databaseName,
-                            MongockConfiguration mongockConfiguration,
+                            CommunityConfiguration communityConfiguration,
                             MongoDBSync4Configuration driverConfiguration) {
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);
         this.driverConfiguration = driverConfiguration;
-        this.mongockConfiguration = mongockConfiguration;
+        this.communityConfiguration = communityConfiguration;
     }
 
     @Override
@@ -40,13 +40,13 @@ public class MongoSync4Engine implements ConnectionEngine {
         SessionManager<ClientSession> sessionManager = new SessionManager<>(mongoClient::startSession);
         transactionWrapper = new MongoSync4TransactionWrapper(sessionManager);
         auditor = new MongoSync4Auditor(database,
-                mongockConfiguration.getMigrationRepositoryName(),
+                communityConfiguration.getMigrationRepositoryName(),
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
-        auditor.initialize(mongockConfiguration.isIndexCreation());
-        MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, mongockConfiguration.getLockRepositoryName());
-        lockRepository.initialize(mongockConfiguration.isIndexCreation());
-        lockProvider = new MongockLockAcquirer(lockRepository, auditor, mongockConfiguration);
+        auditor.initialize(communityConfiguration.isIndexCreation());
+        MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, communityConfiguration.getLockRepositoryName());
+        lockRepository.initialize(communityConfiguration.isIndexCreation());
+        lockProvider = new MongockLockAcquirer(lockRepository, auditor, communityConfiguration);
     }
 
     @Override
