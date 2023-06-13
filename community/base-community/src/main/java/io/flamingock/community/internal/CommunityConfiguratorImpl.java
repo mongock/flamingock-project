@@ -1,22 +1,21 @@
 package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.core.core.configuration.CoreConfiguration;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class CommunityRunnerConfiguratorImpl<HOLDER, CONFIG extends CommunityConfiguration>
-        implements CommunityRunnerConfigurator<HOLDER, CONFIG> {
+public class CommunityConfiguratorImpl<HOLDER, CONFIG extends CommunityConfiguration>
+        implements CommunityConfigurator<HOLDER, CONFIG> {
 
     private final Supplier<HOLDER> holderInstanceSupplier;
     private CONFIG communityConfiguration;
 
     private ConnectionDriver<?> connectionDriver;
 
-    public CommunityRunnerConfiguratorImpl(CONFIG communityConfiguration,
-                                           Supplier<HOLDER> holderInstanceSupplier) {
+    public CommunityConfiguratorImpl(CONFIG communityConfiguration,
+                                     Supplier<HOLDER> holderInstanceSupplier) {
         this.communityConfiguration = communityConfiguration;
         this.holderInstanceSupplier = holderInstanceSupplier;
     }

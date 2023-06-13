@@ -1,72 +1,24 @@
 package io.flamingock.core.core.runner;
 
-import io.flamingock.core.core.Factory;
-import io.flamingock.core.core.audit.domain.AuditProcessStatus;
 import io.flamingock.core.core.configuration.CoreConfiguration;
 import io.flamingock.core.core.configuration.LegacyMigration;
 import io.flamingock.core.core.configuration.TransactionStrategy;
-import io.flamingock.core.core.event.EventPublisher;
-import io.flamingock.core.core.execution.executor.ExecutionContext;
-import io.flamingock.core.core.process.DefinitionProcess;
-import io.flamingock.core.core.process.ExecutableProcess;
-import io.flamingock.core.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.core.util.StringUtil;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class AbstractBuilder<
-        HOLDER,
-        AUDIT_PROCESS_STATE extends AuditProcessStatus,
-        EXECUTABLE_PROCESS extends ExecutableProcess,
-        CORE_CONFIG extends CoreConfiguration>
-        implements Configurator<HOLDER, CORE_CONFIG> {
+public abstract class AbstractCoreConfigurator<HOLDER, CORE_CONFIG extends CoreConfiguration>
+        implements CoreConfigurator<HOLDER, CORE_CONFIG> {
 
     private CORE_CONFIG coreConfiguration;
 
     protected final Supplier<HOLDER> holderInstanceSupplier;
 
 
-    public AbstractBuilder(CORE_CONFIG coreConfiguration,
-                           Supplier<HOLDER> holderInstanceSupplier) {
+    public AbstractCoreConfigurator(CORE_CONFIG coreConfiguration,
+                                    Supplier<HOLDER> holderInstanceSupplier) {
         this.coreConfiguration = coreConfiguration;
         this.holderInstanceSupplier = holderInstanceSupplier;
-    }
-
-    protected ExecutionContext buildExecutionContext() {
-        return buildExecutionContext(
-                StringUtil.executionId(),
-                StringUtil.hostname(),
-                coreConfiguration.getDefaultAuthor(),
-                coreConfiguration.getMetadata()
-        );
-    }
-
-    protected ExecutionContext buildExecutionContext(String executionId,
-                                                     String hostname,
-                                                     String author,
-                                                     Map<String, Object> metadata) {
-        return new ExecutionContext(executionId, hostname, author, metadata);
-    }
-
-
-    protected Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG> factory,
-                           EventPublisher eventPublisher,
-                           DependencyContext dependencyContext) {
-        //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
-        return new AbstractRunner<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS>(
-                factory.getLockProvider(),
-                factory.getAuditReader(),
-                factory.getProcessExecutor(dependencyContext),
-                buildExecutionContext(),
-                eventPublisher,
-                getConfiguration().isThrowExceptionIfCannotObtainLock()) {
-            @Override
-            public void run() {
-                this.execute(definitionProcess);
-            }
-        };
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -241,7 +193,6 @@ public abstract class AbstractBuilder<
     public TransactionStrategy getTransactionStrategy() {
         return coreConfiguration.getTransactionStrategy();
     }
-
 
 
 }

@@ -6,7 +6,7 @@ import io.flamingock.core.core.configuration.TransactionStrategy;
 
 import java.util.Map;
 
-public interface Configurator<HOLDER, CONFIG extends CoreConfiguration> {
+public interface CoreConfigurator<HOLDER, CONFIG extends CoreConfiguration> {
 
     HOLDER setConfiguration(CONFIG configuration);
 
