@@ -1,11 +1,14 @@
 package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
+import io.flamingock.core.core.configuration.CoreConfiguration;
 
 import java.util.Collections;
 import java.util.List;
 
-public interface CommunityRunnerConfigurator<HOLDER> {
+public interface CommunityRunnerConfigurator<HOLDER, CONFIG extends CoreConfiguration> {
+
+    HOLDER setConfiguration(CONFIG config);
 
     HOLDER setDriver(ConnectionDriver<?> connectionDriver);
 
