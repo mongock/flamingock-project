@@ -26,6 +26,10 @@ include("standalone-runner")
 project(":standalone-runner").name = "standalone-runner"
 project(":standalone-runner").projectDir = file("community/standalone-runner")
 
+include("springboot-runner")
+project(":springboot-runner").name = "springboot-runner"
+project(":springboot-runner").projectDir = file("community/springboot-runner")
+
 
 
 include("mongodb-facade")
