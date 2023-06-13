@@ -5,7 +5,7 @@ import io.flamingock.core.core.audit.domain.AuditProcessStatus;
 import io.flamingock.core.core.configuration.CoreConfiguration;
 import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.process.ExecutableProcess;
-import io.flamingock.core.core.runner.BaseBuilder;
+import io.flamingock.core.core.runner.AbstractBuilder;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.spring.SpringDependencyContext;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
@@ -16,18 +16,18 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.function.Supplier;
 
-public class BaseSpringBuilder<
+public class CoreSpringbootBuilderImpl<
         HOLDER,
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CONFIG extends CoreConfiguration>
-        extends BaseBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>
-        implements SpringBuilder<HOLDER> {
+        extends AbstractBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>
+        implements CoreSpringbootBuilder<HOLDER> {
 
     private ApplicationEventPublisher applicationEventPublisher;
     private ApplicationContext springContext;
 
-    public BaseSpringBuilder(CONFIG configuration, Supplier<HOLDER> holderInstanceSupplier) {
+    public CoreSpringbootBuilderImpl(CONFIG configuration, Supplier<HOLDER> holderInstanceSupplier) {
         super(configuration, holderInstanceSupplier);
     }
 

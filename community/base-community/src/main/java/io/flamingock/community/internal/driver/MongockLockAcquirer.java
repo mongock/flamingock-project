@@ -8,14 +8,14 @@ import io.flamingock.core.core.lock.Lock;
 import io.flamingock.core.core.lock.LockOptions;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.util.TimeService;
-import io.flamingock.community.internal.MongockConfiguration;
+import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.persistence.LockRepository;
 
 public class MongockLockAcquirer extends AbstractLockAcquirer<SingleAuditProcessStatus, SingleExecutableProcess> {
 
     private final LockRepository lockRepository;
 
-    private final MongockConfiguration configuration;
+    private final CommunityConfiguration configuration;
 
 
     /**
@@ -25,7 +25,7 @@ public class MongockLockAcquirer extends AbstractLockAcquirer<SingleAuditProcess
      */
     public MongockLockAcquirer(LockRepository lockRepository,
                                AuditReader<SingleAuditProcessStatus> auditReader,
-                               MongockConfiguration configuration) {
+                               CommunityConfiguration configuration) {
         super(auditReader);
         this.lockRepository = lockRepository;
         this.configuration = configuration;

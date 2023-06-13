@@ -1,13 +1,18 @@
 package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
+import io.flamingock.core.core.configuration.CoreConfiguration;
 
 import java.util.Collections;
 import java.util.List;
 
-public interface MongockRunnerConfigurator<HOLDER> {
+public interface CommunityRunnerConfigurator<HOLDER, CONFIG extends CoreConfiguration> {
+
+    HOLDER setConfiguration(CONFIG config);
 
     HOLDER setDriver(ConnectionDriver<?> connectionDriver);
+
+    ConnectionDriver<?> getDriver();
 
     List<String> getMigrationScanPackage();
 
@@ -16,9 +21,7 @@ public interface MongockRunnerConfigurator<HOLDER> {
     HOLDER addMigrationScanPackages(List<String> migrationScanPackageList);
 
 
-    default HOLDER addMigrationScanPackage(String migrationScanPackage) {
-        return this.addMigrationScanPackages(Collections.singletonList(migrationScanPackage));
-    }
+    HOLDER addMigrationScanPackage(String migrationScanPackage);
 
     String getMigrationRepositoryName();
 

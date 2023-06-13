@@ -1,7 +1,7 @@
 package io.flamingock.oss.driver.mongodb.sync.v4;
 
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
-import io.flamingock.commuinty.runner.standalone.MongockStandalone;
+import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ class MongoSync4DriverTest {
     @DisplayName("When standalone runs the driver should persist the audit logs and the user's collection updated")
     void happyPath() {
         //Given-When
-        MongockStandalone.builder()
+        CommunityStandalone.builder()
                 .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, DB_NAME))
                 .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.sync.v4.changes")
                 .addDependency(mongoClient.getDatabase(DB_NAME))
