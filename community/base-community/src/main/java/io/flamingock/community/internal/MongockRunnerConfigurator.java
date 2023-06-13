@@ -13,7 +13,13 @@ public interface MongockRunnerConfigurator<HOLDER> {
 
     HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
 
-    HOLDER addMigrationScanPackages(List<String> migrationScanPackageList);
+    default HOLDER addMigrationScanPackages(List<String> migrationScanPackageList) {
+        List<String> packagesCurrentlyStored = getMigrationScanPackage();
+        if (migrationScanPackageList != null) {
+            packagesCurrentlyStored.addAll(migrationScanPackageList);
+        }
+        return setMigrationScanPackage(packagesCurrentlyStored);
+    }
 
 
     default HOLDER addMigrationScanPackage(String migrationScanPackage) {

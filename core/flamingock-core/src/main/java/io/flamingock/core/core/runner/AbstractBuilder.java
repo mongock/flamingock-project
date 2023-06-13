@@ -15,7 +15,7 @@ import io.flamingock.core.core.util.StringUtil;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class BaseBuilder<
+public abstract class AbstractBuilder<
         HOLDER,
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
@@ -27,8 +27,8 @@ public abstract class BaseBuilder<
     protected final Supplier<HOLDER> holderInstanceSupplier;
 
 
-    public BaseBuilder(CONFIG configuration,
-                       Supplier<HOLDER> holderInstanceSupplier) {
+    public AbstractBuilder(CONFIG configuration,
+                           Supplier<HOLDER> holderInstanceSupplier) {
         this.configuration = configuration;
         this.holderInstanceSupplier = holderInstanceSupplier;
     }
@@ -241,4 +241,7 @@ public abstract class BaseBuilder<
     public TransactionStrategy getTransactionStrategy() {
         return configuration.getTransactionStrategy();
     }
+
+
+
 }

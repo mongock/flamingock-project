@@ -8,41 +8,39 @@ import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.configuration.LegacyMigration;
 import io.flamingock.core.core.configuration.TransactionStrategy;
-import io.flamingock.core.core.event.MigrationFailureEvent;
-import io.flamingock.core.core.event.MigrationStartedEvent;
-import io.flamingock.core.core.event.MigrationSuccessEvent;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runner.Configurator;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerBuilder;
-import io.flamingock.core.core.runner.standalone.BaseStandaloneBuilder;
-import io.flamingock.core.core.runner.standalone.StandaloneBuilder;
+import io.flamingock.core.spring.builder.CoreSpringbootBuilderImpl;
+import io.flamingock.core.spring.builder.CoreSpringbootBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
-public class MongockStandaloneBuilder
+public class CommunitySpringbootBuilder
         implements
         RunnerBuilder,
-        MongockRunnerConfigurator<MongockStandaloneBuilder>,
-        StandaloneBuilder<MongockStandaloneBuilder>,
-        Configurator<MongockStandaloneBuilder, MongockConfiguration> {
+        MongockRunnerConfigurator<CommunitySpringbootBuilder>,
+        CoreSpringbootBuilder<CommunitySpringbootBuilder>,
+        Configurator<CommunitySpringbootBuilder, MongockConfiguration> {
 
-    private final BaseStandaloneBuilder<
-            MongockStandaloneBuilder,
-            SingleAuditProcessStatus,
-            SingleExecutableProcess,
-            MongockConfiguration> delegate;
+    private final CoreSpringbootBuilderImpl<
+            CommunitySpringbootBuilder,
+                    SingleAuditProcessStatus,
+                    SingleExecutableProcess,
+                    MongockConfiguration> delegate;
 
     private ConnectionDriver<?> connectionDriver;
 
-    MongockStandaloneBuilder() {
+    CommunitySpringbootBuilder() {
         this(new MongockConfiguration());
     }
 
-    MongockStandaloneBuilder(MongockConfiguration configuration) {
-        this.delegate = new BaseStandaloneBuilder<>(configuration, () -> this);
+    CommunitySpringbootBuilder(MongockConfiguration configuration) {
+        this.delegate = new CoreSpringbootBuilderImpl<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -56,146 +54,129 @@ public class MongockStandaloneBuilder
         return delegate.build(new MongockFactory(connectionEngine));
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    //  MONGOCK CONFIGURATOR
-    ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public MongockStandaloneBuilder setDriver(ConnectionDriver<?> connectionDriver) {
+    public CommunitySpringbootBuilder setDriver(ConnectionDriver<?> connectionDriver) {
         this.connectionDriver = connectionDriver;
         return this;
     }
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return delegate.getConfiguration().getMigrationScanPackage();
+        return null;
     }
 
     @Override
-    public MongockStandaloneBuilder setMigrationScanPackage(List<String> scanPackage) {
-        delegate.getConfiguration().setMigrationScanPackage(scanPackage);
-        return this;
-    }
-
-    @Override
-    public MongockStandaloneBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        if (migrationScanPackageList != null) {
-            List<String> migrationScanPackage = getMigrationScanPackage();
-            migrationScanPackage.addAll(migrationScanPackageList);
-            setMigrationScanPackage(migrationScanPackage);
-        }
-        return this;
+    public CommunitySpringbootBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
+        return null;
     }
 
     @Override
     public String getMigrationRepositoryName() {
-        return delegate.getConfiguration().getMigrationRepositoryName();
+        return null;
     }
 
     @Override
-    public MongockStandaloneBuilder setMigrationRepositoryName(String value) {
-        delegate.getConfiguration().setMigrationRepositoryName(value);
-        return this;
+    public CommunitySpringbootBuilder setMigrationRepositoryName(String value) {
+        return null;
     }
 
     @Override
     public String getLockRepositoryName() {
-        return delegate.getConfiguration().getLockRepositoryName();
+        return null;
     }
 
     @Override
-    public MongockStandaloneBuilder setLockRepositoryName(String value) {
-        delegate.getConfiguration().setLockRepositoryName(value);
-        return this;
+    public CommunitySpringbootBuilder setLockRepositoryName(String value) {
+        return null;
     }
 
     @Override
     public boolean isIndexCreation() {
-        return delegate.getConfiguration().isIndexCreation();
+        return false;
     }
 
     @Override
-    public MongockStandaloneBuilder setIndexCreation(boolean value) {
-        delegate.getConfiguration().setIndexCreation(value);
-        return this;
+    public CommunitySpringbootBuilder setIndexCreation(boolean value) {
+        return null;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
-    //  CORE CONFIGURATOR
+    //  MONGOCK CONFIGURATOR
     ///////////////////////////////////////////////////////////////////////////////////
 
+
     @Override
-    public MongockStandaloneBuilder setConfiguration(MongockConfiguration configuration) {
+    public CommunitySpringbootBuilder setConfiguration(MongockConfiguration configuration) {
         return delegate.setConfiguration(configuration);
     }
 
     @Override
-    public MongockStandaloneBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
+    public CommunitySpringbootBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
         return delegate.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
     @Override
-    public MongockStandaloneBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
+    public CommunitySpringbootBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
         return delegate.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
     @Override
-    public MongockStandaloneBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
+    public CommunitySpringbootBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
         return delegate.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
     @Override
-    public MongockStandaloneBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
+    public CommunitySpringbootBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
         return delegate.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
     @Override
-    public MongockStandaloneBuilder setTrackIgnored(boolean trackIgnored) {
+    public CommunitySpringbootBuilder setTrackIgnored(boolean trackIgnored) {
         return delegate.setTrackIgnored(trackIgnored);
     }
 
     @Override
-    public MongockStandaloneBuilder setEnabled(boolean enabled) {
+    public CommunitySpringbootBuilder setEnabled(boolean enabled) {
         return delegate.setEnabled(enabled);
     }
 
-
     @Override
-    public MongockStandaloneBuilder setStartSystemVersion(String startSystemVersion) {
+    public CommunitySpringbootBuilder setStartSystemVersion(String startSystemVersion) {
         return delegate.setStartSystemVersion(startSystemVersion);
     }
 
     @Override
-    public MongockStandaloneBuilder setEndSystemVersion(String endSystemVersion) {
+    public CommunitySpringbootBuilder setEndSystemVersion(String endSystemVersion) {
         return delegate.setEndSystemVersion(endSystemVersion);
     }
 
     @Override
-    public MongockStandaloneBuilder setServiceIdentifier(String serviceIdentifier) {
+    public CommunitySpringbootBuilder setServiceIdentifier(String serviceIdentifier) {
         return delegate.setServiceIdentifier(serviceIdentifier);
     }
 
     @Override
-    public MongockStandaloneBuilder setMetadata(Map<String, Object> metadata) {
+    public CommunitySpringbootBuilder setMetadata(Map<String, Object> metadata) {
         return delegate.setMetadata(metadata);
     }
 
     @Override
-    public MongockStandaloneBuilder setLegacyMigration(LegacyMigration legacyMigration) {
+    public CommunitySpringbootBuilder setLegacyMigration(LegacyMigration legacyMigration) {
         return delegate.setLegacyMigration(legacyMigration);
     }
 
     @Override
-    public MongockStandaloneBuilder setTransactionEnabled(Boolean transactionEnabled) {
+    public CommunitySpringbootBuilder setTransactionEnabled(Boolean transactionEnabled) {
         return delegate.setTransactionEnabled(transactionEnabled);
     }
 
     @Override
-    public MongockStandaloneBuilder setDefaultMigrationAuthor(String defaultMigrationAuthor) {
+    public CommunitySpringbootBuilder setDefaultMigrationAuthor(String defaultMigrationAuthor) {
         return delegate.setDefaultMigrationAuthor(defaultMigrationAuthor);
     }
 
     @Override
-    public MongockStandaloneBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
+    public CommunitySpringbootBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
         return delegate.setTransactionStrategy(transactionStrategy);
     }
 
@@ -275,22 +256,12 @@ public class MongockStandaloneBuilder
     }
 
     @Override
-    public MongockStandaloneBuilder addDependency(String name, Class<?> type, Object instance) {
-        return delegate.addDependency(name, type, instance);
+    public CommunitySpringbootBuilder setSpringContext(ApplicationContext springContext) {
+        return delegate.setSpringContext(springContext);
     }
 
     @Override
-    public MongockStandaloneBuilder setMigrationStartedListener(Consumer<MigrationStartedEvent> listener) {
-        return delegate.setMigrationStartedListener(listener);
-    }
-
-    @Override
-    public MongockStandaloneBuilder setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener) {
-        return delegate.setMigrationSuccessListener(listener);
-    }
-
-    @Override
-    public MongockStandaloneBuilder setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
-        return delegate.setMigrationFailureListener(listener);
+    public CommunitySpringbootBuilder setEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        return delegate.setEventPublisher(applicationEventPublisher);
     }
 }

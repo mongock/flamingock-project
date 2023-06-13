@@ -12,35 +12,35 @@ import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runner.Configurator;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerBuilder;
-import io.flamingock.core.spring.builder.BaseSpringBuilder;
-import io.flamingock.core.spring.builder.SpringBuilder;
+import io.flamingock.core.spring.builder.CoreSpringbootBuilderImpl;
+import io.flamingock.core.spring.builder.CoreSpringbootBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Map;
 
-public class FlamingockSpringbootBuilder
+public class CommunitySpringbootBuilder2
         implements
         RunnerBuilder,
-        MongockRunnerConfigurator<FlamingockSpringbootBuilder>,
-        SpringBuilder<FlamingockSpringbootBuilder>,
-        Configurator<FlamingockSpringbootBuilder, MongockConfiguration> {
+        MongockRunnerConfigurator<CommunitySpringbootBuilder2>,
+        CoreSpringbootBuilder<CommunitySpringbootBuilder2>,
+        Configurator<CommunitySpringbootBuilder2, MongockConfiguration> {
 
-    private final BaseSpringBuilder<
-                FlamingockSpringbootBuilder,
-                SingleAuditProcessStatus,
-                SingleExecutableProcess,
-                MongockConfiguration> delegate;
+    private final CoreSpringbootBuilderImpl<
+            CommunitySpringbootBuilder2,
+                    SingleAuditProcessStatus,
+                    SingleExecutableProcess,
+                    MongockConfiguration> delegate;
 
     private ConnectionDriver<?> connectionDriver;
 
-    FlamingockSpringbootBuilder() {
+    CommunitySpringbootBuilder2() {
         this(new MongockConfiguration());
     }
 
-    FlamingockSpringbootBuilder(MongockConfiguration configuration) {
-        this.delegate = new BaseSpringBuilder<>(configuration, () -> this);
+    CommunitySpringbootBuilder2(MongockConfiguration configuration) {
+        this.delegate = new CoreSpringbootBuilderImpl<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ public class FlamingockSpringbootBuilder
     //  MONGOCK CONFIGURATOR
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public FlamingockSpringbootBuilder setDriver(ConnectionDriver<?> connectionDriver) {
+    public CommunitySpringbootBuilder2 setDriver(ConnectionDriver<?> connectionDriver) {
         this.connectionDriver = connectionDriver;
         return this;
     }
@@ -69,13 +69,13 @@ public class FlamingockSpringbootBuilder
     }
 
     @Override
-    public FlamingockSpringbootBuilder setMigrationScanPackage(List<String> scanPackage) {
+    public CommunitySpringbootBuilder2 setMigrationScanPackage(List<String> scanPackage) {
         delegate.getConfiguration().setMigrationScanPackage(scanPackage);
         return this;
     }
 
     @Override
-    public FlamingockSpringbootBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
+    public CommunitySpringbootBuilder2 addMigrationScanPackages(List<String> migrationScanPackageList) {
         if (migrationScanPackageList != null) {
             List<String> migrationScanPackage = getMigrationScanPackage();
             migrationScanPackage.addAll(migrationScanPackageList);
@@ -90,7 +90,7 @@ public class FlamingockSpringbootBuilder
     }
 
     @Override
-    public FlamingockSpringbootBuilder setMigrationRepositoryName(String value) {
+    public CommunitySpringbootBuilder2 setMigrationRepositoryName(String value) {
         delegate.getConfiguration().setMigrationRepositoryName(value);
         return this;
     }
@@ -101,7 +101,7 @@ public class FlamingockSpringbootBuilder
     }
 
     @Override
-    public FlamingockSpringbootBuilder setLockRepositoryName(String value) {
+    public CommunitySpringbootBuilder2 setLockRepositoryName(String value) {
         delegate.getConfiguration().setLockRepositoryName(value);
         return this;
     }
@@ -112,7 +112,7 @@ public class FlamingockSpringbootBuilder
     }
 
     @Override
-    public FlamingockSpringbootBuilder setIndexCreation(boolean value) {
+    public CommunitySpringbootBuilder2 setIndexCreation(boolean value) {
         delegate.getConfiguration().setIndexCreation(value);
         return this;
     }
@@ -122,78 +122,78 @@ public class FlamingockSpringbootBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public FlamingockSpringbootBuilder setConfiguration(MongockConfiguration configuration) {
+    public CommunitySpringbootBuilder2 setConfiguration(MongockConfiguration configuration) {
         return delegate.setConfiguration(configuration);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
+    public CommunitySpringbootBuilder2 setLockAcquiredForMillis(long lockAcquiredForMillis) {
         return delegate.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
+    public CommunitySpringbootBuilder2 setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
         return delegate.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
+    public CommunitySpringbootBuilder2 setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
         return delegate.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
+    public CommunitySpringbootBuilder2 setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
         return delegate.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setTrackIgnored(boolean trackIgnored) {
+    public CommunitySpringbootBuilder2 setTrackIgnored(boolean trackIgnored) {
         return delegate.setTrackIgnored(trackIgnored);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setEnabled(boolean enabled) {
+    public CommunitySpringbootBuilder2 setEnabled(boolean enabled) {
         return delegate.setEnabled(enabled);
     }
 
 
     @Override
-    public FlamingockSpringbootBuilder setStartSystemVersion(String startSystemVersion) {
+    public CommunitySpringbootBuilder2 setStartSystemVersion(String startSystemVersion) {
         return delegate.setStartSystemVersion(startSystemVersion);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setEndSystemVersion(String endSystemVersion) {
+    public CommunitySpringbootBuilder2 setEndSystemVersion(String endSystemVersion) {
         return delegate.setEndSystemVersion(endSystemVersion);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setServiceIdentifier(String serviceIdentifier) {
+    public CommunitySpringbootBuilder2 setServiceIdentifier(String serviceIdentifier) {
         return delegate.setServiceIdentifier(serviceIdentifier);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setMetadata(Map<String, Object> metadata) {
+    public CommunitySpringbootBuilder2 setMetadata(Map<String, Object> metadata) {
         return delegate.setMetadata(metadata);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setLegacyMigration(LegacyMigration legacyMigration) {
+    public CommunitySpringbootBuilder2 setLegacyMigration(LegacyMigration legacyMigration) {
         return delegate.setLegacyMigration(legacyMigration);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setTransactionEnabled(Boolean transactionEnabled) {
+    public CommunitySpringbootBuilder2 setTransactionEnabled(Boolean transactionEnabled) {
         return delegate.setTransactionEnabled(transactionEnabled);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setDefaultMigrationAuthor(String defaultMigrationAuthor) {
+    public CommunitySpringbootBuilder2 setDefaultMigrationAuthor(String defaultMigrationAuthor) {
         return delegate.setDefaultMigrationAuthor(defaultMigrationAuthor);
     }
 
     @Override
-    public FlamingockSpringbootBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
+    public CommunitySpringbootBuilder2 setTransactionStrategy(TransactionStrategy transactionStrategy) {
         return delegate.setTransactionStrategy(transactionStrategy);
     }
 
@@ -274,12 +274,12 @@ public class FlamingockSpringbootBuilder
 
 
     @Override
-    public FlamingockSpringbootBuilder setSpringContext(ApplicationContext springContext) {
+    public CommunitySpringbootBuilder2 setSpringContext(ApplicationContext springContext) {
         return null;
     }
 
     @Override
-    public FlamingockSpringbootBuilder setEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+    public CommunitySpringbootBuilder2 setEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         return null;
     }
 }
