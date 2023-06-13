@@ -8,17 +8,26 @@ import io.flamingock.core.core.execution.executor.ExecutionContext;
 import io.flamingock.core.core.process.DefinitionProcess;
 import io.flamingock.core.core.process.ExecutableProcess;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.core.util.StringUtil;
 
 public class RunnerCreator<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CORE_CONFIG extends CoreConfiguration> {
 
+    private ExecutionContext buildExecutionContext(CORE_CONFIG configuration) {
+        return new ExecutionContext(
+                StringUtil.executionId(),
+                StringUtil.hostname(),
+                configuration.getDefaultAuthor(),
+                configuration.getMetadata()
+        );
+    }
+
     public Runner create(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG> factory,
                          CORE_CONFIG configuration,
                          EventPublisher eventPublisher,
                          DependencyContext dependencyContext,
-                         ExecutionContext executionContext,
                          boolean isThrowExceptionIfCannotObtainLock) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(configuration);
@@ -26,7 +35,7 @@ public class RunnerCreator<
                 factory.getLockProvider(),
                 factory.getAuditReader(),
                 factory.getProcessExecutor(dependencyContext),
-                executionContext,
+                buildExecutionContext(configuration),
                 eventPublisher,
                 isThrowExceptionIfCannotObtainLock) {
             @Override

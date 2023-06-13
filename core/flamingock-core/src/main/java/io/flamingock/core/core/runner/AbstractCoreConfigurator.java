@@ -7,9 +7,7 @@ import io.flamingock.core.core.configuration.TransactionStrategy;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class AbstractCoreConfigurator<
-        HOLDER,
-        CORE_CONFIG extends CoreConfiguration>
+public abstract class AbstractCoreConfigurator<HOLDER, CORE_CONFIG extends CoreConfiguration>
         implements CoreConfigurator<HOLDER, CORE_CONFIG> {
 
     private CORE_CONFIG coreConfiguration;
@@ -195,7 +193,6 @@ public abstract class AbstractCoreConfigurator<
     public TransactionStrategy getTransactionStrategy() {
         return coreConfiguration.getTransactionStrategy();
     }
-
 
 
 }

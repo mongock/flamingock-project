@@ -6,11 +6,13 @@ import io.flamingock.core.core.event.MigrationFailureEvent;
 import io.flamingock.core.core.event.MigrationStartedEvent;
 import io.flamingock.core.core.event.MigrationSuccessEvent;
 import io.flamingock.core.core.runtime.dependency.Dependency;
+import io.flamingock.core.core.runtime.dependency.DependencyContext;
 
 import java.util.function.Consumer;
 
-public interface CoreStandaloneConfigurator<HOLDER> {
+public interface StandaloneConfigurator<HOLDER> {
 
+  DependencyContext getDependencyContext();
 
   /**
    * Manually adds a dependency to be used in the  changeUnits, which can be retrieved by its own type
@@ -66,4 +68,12 @@ public interface CoreStandaloneConfigurator<HOLDER> {
 
   //TODO javadoc
   HOLDER setMigrationFailureListener(Consumer<MigrationFailureEvent> listener);
+
+  Consumer<MigrationStartedEvent> getMigrationStartedListener();
+
+  //TODO javadoc
+  Consumer<MigrationSuccessEvent> getMigrationSuccessListener();
+
+  //TODO javadoc
+  Consumer<MigrationFailureEvent> getMigrationFailureListener();
 }
