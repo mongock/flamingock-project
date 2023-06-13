@@ -33,42 +33,6 @@ public abstract class AbstractBuilder<
         this.holderInstanceSupplier = holderInstanceSupplier;
     }
 
-    protected ExecutionContext buildExecutionContext() {
-        return buildExecutionContext(
-                StringUtil.executionId(),
-                StringUtil.hostname(),
-                coreConfiguration.getDefaultAuthor(),
-                coreConfiguration.getMetadata()
-        );
-    }
-
-    protected ExecutionContext buildExecutionContext(String executionId,
-                                                     String hostname,
-                                                     String author,
-                                                     Map<String, Object> metadata) {
-        return new ExecutionContext(executionId, hostname, author, metadata);
-    }
-
-
-    protected Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG> factory,
-                           EventPublisher eventPublisher,
-                           DependencyContext dependencyContext) {
-        //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(getConfiguration());
-        return new AbstractRunner<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS>(
-                factory.getLockProvider(),
-                factory.getAuditReader(),
-                factory.getProcessExecutor(dependencyContext),
-                buildExecutionContext(),
-                eventPublisher,
-                getConfiguration().isThrowExceptionIfCannotObtainLock()) {
-            @Override
-            public void run() {
-                this.execute(definitionProcess);
-            }
-        };
-    }
-
     ///////////////////////////////////////////////////////////////////////////////////
     //  SETTERS
     ///////////////////////////////////////////////////////////////////////////////////

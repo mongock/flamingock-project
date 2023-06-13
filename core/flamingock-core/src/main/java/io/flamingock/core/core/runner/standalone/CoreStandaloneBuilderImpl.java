@@ -7,12 +7,15 @@ import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.event.MigrationFailureEvent;
 import io.flamingock.core.core.event.MigrationStartedEvent;
 import io.flamingock.core.core.event.MigrationSuccessEvent;
+import io.flamingock.core.core.execution.executor.ExecutionContext;
 import io.flamingock.core.core.process.ExecutableProcess;
 import io.flamingock.core.core.runner.AbstractBuilder;
 import io.flamingock.core.core.runner.Runner;
+import io.flamingock.core.core.runner.RunnerCreator;
 import io.flamingock.core.core.runtime.dependency.SimpleDependencyInjectableContext;
 import io.flamingock.core.core.runtime.dependency.Dependency;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.core.util.StringUtil;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -65,11 +68,29 @@ public class CoreStandaloneBuilderImpl<
         return holderInstanceSupplier.get();
     }
 
+
+    private ExecutionContext buildExecutionContext() {
+        return new ExecutionContext(
+                StringUtil.executionId(),
+                StringUtil.hostname(),
+                getConfiguration().getDefaultAuthor(),
+                getConfiguration().getMetadata()
+        );
+    }
+
     public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG> factory) {
         EventPublisher eventPublisher = new EventPublisher(
                 processStartedListener != null ? () -> processStartedListener.accept(new MigrationStartedEvent()) : null,
                 processSuccessListener != null ? result -> processSuccessListener.accept(new MigrationSuccessEvent(result)) : null,
                 processFailedListener != null ? result -> processFailedListener.accept(new MigrationFailureEvent(result)) : null);
-        return build(factory, eventPublisher, dependencyManager);
+        RunnerCreator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG> runnerCreator = new RunnerCreator<>();
+        return runnerCreator.create(
+                factory,
+                getConfiguration(),
+                eventPublisher,
+                dependencyManager,
+                buildExecutionContext(),
+                getConfiguration().isThrowExceptionIfCannotObtainLock()
+        );
     }
 }
