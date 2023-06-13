@@ -4,12 +4,9 @@ import io.flamingock.core.core.Factory;
 import io.flamingock.core.core.audit.domain.AuditProcessStatus;
 import io.flamingock.core.core.configuration.CoreConfiguration;
 import io.flamingock.core.core.event.EventPublisher;
-import io.flamingock.core.core.event.MigrationFailureEvent;
-import io.flamingock.core.core.event.MigrationStartedEvent;
-import io.flamingock.core.core.event.MigrationSuccessEvent;
 import io.flamingock.core.core.execution.executor.ExecutionContext;
 import io.flamingock.core.core.process.ExecutableProcess;
-import io.flamingock.core.core.runner.AbstractBuilder;
+import io.flamingock.core.core.runner.AbstractCoreConfigurator;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerCreator;
 import io.flamingock.core.core.util.StringUtil;
@@ -27,7 +24,7 @@ public class CoreSpringbootBuilderImpl<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CORE_CONFIG extends CoreConfiguration>
-        extends AbstractBuilder<HOLDER, CORE_CONFIG>
+        extends AbstractCoreConfigurator<HOLDER, CORE_CONFIG>
         implements CoreSpringbootBuilder<HOLDER> {
 
     private ApplicationEventPublisher applicationEventPublisher;

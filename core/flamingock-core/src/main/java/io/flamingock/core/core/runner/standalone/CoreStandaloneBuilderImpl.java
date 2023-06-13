@@ -9,7 +9,7 @@ import io.flamingock.core.core.event.MigrationStartedEvent;
 import io.flamingock.core.core.event.MigrationSuccessEvent;
 import io.flamingock.core.core.execution.executor.ExecutionContext;
 import io.flamingock.core.core.process.ExecutableProcess;
-import io.flamingock.core.core.runner.AbstractBuilder;
+import io.flamingock.core.core.runner.AbstractCoreConfigurator;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerCreator;
 import io.flamingock.core.core.runtime.dependency.SimpleDependencyInjectableContext;
@@ -25,8 +25,8 @@ public class CoreStandaloneBuilderImpl<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CORE_CONFIG extends CoreConfiguration>
-        extends AbstractBuilder<HOLDER, CORE_CONFIG>
-        implements CoreStandaloneBuilder<HOLDER> {
+        extends AbstractCoreConfigurator<HOLDER, CORE_CONFIG>
+        implements CoreStandaloneConfigurator<HOLDER> {
 
     private final DependencyInjectableContext dependencyManager;
     private Consumer<MigrationStartedEvent> processStartedListener;
@@ -83,14 +83,14 @@ public class CoreStandaloneBuilderImpl<
                 processStartedListener != null ? () -> processStartedListener.accept(new MigrationStartedEvent()) : null,
                 processSuccessListener != null ? result -> processSuccessListener.accept(new MigrationSuccessEvent(result)) : null,
                 processFailedListener != null ? result -> processFailedListener.accept(new MigrationFailureEvent(result)) : null);
-        RunnerCreator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG> runnerCreator = new RunnerCreator<>();
-        return runnerCreator.create(
-                factory,
-                getConfiguration(),
-                eventPublisher,
-                dependencyManager,
-                buildExecutionContext(),
-                getConfiguration().isThrowExceptionIfCannotObtainLock()
-        );
+        return new RunnerCreator<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG>()
+                .create(
+                        factory,
+                        getConfiguration(),
+                        eventPublisher,
+                        dependencyManager,
+                        buildExecutionContext(),
+                        getConfiguration().isThrowExceptionIfCannotObtainLock()
+                );
     }
 }

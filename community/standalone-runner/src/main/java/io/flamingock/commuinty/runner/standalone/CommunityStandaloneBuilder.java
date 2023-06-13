@@ -2,11 +2,10 @@ package io.flamingock.commuinty.runner.standalone;
 
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityFactory;
-import io.flamingock.community.internal.CommunityRunnerConfigurator;
-import io.flamingock.community.internal.CommunityRunnerConfiguratorImpl;
+import io.flamingock.community.internal.CommunityConfigurator;
+import io.flamingock.community.internal.CommunityConfiguratorImpl;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.core.core.Factory;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.configuration.LegacyMigration;
 import io.flamingock.core.core.configuration.TransactionStrategy;
@@ -14,11 +13,11 @@ import io.flamingock.core.core.event.MigrationFailureEvent;
 import io.flamingock.core.core.event.MigrationStartedEvent;
 import io.flamingock.core.core.event.MigrationSuccessEvent;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
-import io.flamingock.core.core.runner.Configurator;
+import io.flamingock.core.core.runner.CoreConfigurator;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerBuilder;
 import io.flamingock.core.core.runner.standalone.CoreStandaloneBuilderImpl;
-import io.flamingock.core.core.runner.standalone.CoreStandaloneBuilder;
+import io.flamingock.core.core.runner.standalone.CoreStandaloneConfigurator;
 
 import java.util.List;
 import java.util.Map;
@@ -26,10 +25,10 @@ import java.util.function.Consumer;
 
 public class CommunityStandaloneBuilder
         implements
-        RunnerBuilder,
-        CommunityRunnerConfigurator<CommunityStandaloneBuilder, CommunityConfiguration>,
-        CoreStandaloneBuilder<CommunityStandaloneBuilder>,
-        Configurator<CommunityStandaloneBuilder, CommunityConfiguration> {
+        CoreConfigurator<CommunityStandaloneBuilder, CommunityConfiguration>,
+        CommunityConfigurator<CommunityStandaloneBuilder, CommunityConfiguration>,
+        CoreStandaloneConfigurator<CommunityStandaloneBuilder>,
+        RunnerBuilder {
 
     private final CoreStandaloneBuilderImpl<
             CommunityStandaloneBuilder,
@@ -37,7 +36,7 @@ public class CommunityStandaloneBuilder
             SingleExecutableProcess,
             CommunityConfiguration> coreStandaloneBuilderDelegate;
 
-    private final CommunityRunnerConfigurator<CommunityStandaloneBuilder, CommunityConfiguration> communityRunnerConfigurator;
+    private final CommunityConfigurator<CommunityStandaloneBuilder, CommunityConfiguration> communityRunnerConfigurator;
 
     CommunityStandaloneBuilder() {
         this(new CommunityConfiguration());
@@ -45,7 +44,7 @@ public class CommunityStandaloneBuilder
 
     CommunityStandaloneBuilder(CommunityConfiguration configuration) {
         this.coreStandaloneBuilderDelegate = new CoreStandaloneBuilderImpl<>(configuration, () -> this);
-        this.communityRunnerConfigurator = new CommunityRunnerConfiguratorImpl<>(configuration, () -> this);
+        this.communityRunnerConfigurator = new CommunityConfiguratorImpl<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

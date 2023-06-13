@@ -7,18 +7,18 @@ import io.flamingock.core.core.configuration.TransactionStrategy;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class AbstractBuilder<
+public abstract class AbstractCoreConfigurator<
         HOLDER,
         CORE_CONFIG extends CoreConfiguration>
-        implements Configurator<HOLDER, CORE_CONFIG> {
+        implements CoreConfigurator<HOLDER, CORE_CONFIG> {
 
     private CORE_CONFIG coreConfiguration;
 
     protected final Supplier<HOLDER> holderInstanceSupplier;
 
 
-    public AbstractBuilder(CORE_CONFIG coreConfiguration,
-                           Supplier<HOLDER> holderInstanceSupplier) {
+    public AbstractCoreConfigurator(CORE_CONFIG coreConfiguration,
+                                    Supplier<HOLDER> holderInstanceSupplier) {
         this.coreConfiguration = coreConfiguration;
         this.holderInstanceSupplier = holderInstanceSupplier;
     }

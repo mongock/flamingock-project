@@ -2,15 +2,15 @@ package io.flamingock.commuinty.runner.standalone;
 
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityFactory;
-import io.flamingock.community.internal.CommunityRunnerConfigurator;
-import io.flamingock.community.internal.CommunityRunnerConfiguratorImpl;
+import io.flamingock.community.internal.CommunityConfigurator;
+import io.flamingock.community.internal.CommunityConfiguratorImpl;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.configuration.LegacyMigration;
 import io.flamingock.core.core.configuration.TransactionStrategy;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
-import io.flamingock.core.core.runner.Configurator;
+import io.flamingock.core.core.runner.CoreConfigurator;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerBuilder;
 import io.flamingock.core.spring.builder.CoreSpringbootBuilderImpl;
@@ -24,9 +24,9 @@ import java.util.Map;
 public class CommunitySpringbootBuilder
         implements
         RunnerBuilder,
-        CommunityRunnerConfigurator<CommunitySpringbootBuilder, CommunityConfiguration>,
+        CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration>,
         CoreSpringbootBuilder<CommunitySpringbootBuilder>,
-        Configurator<CommunitySpringbootBuilder, CommunityConfiguration> {
+        CoreConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> {
 
     private final CoreSpringbootBuilderImpl<
             CommunitySpringbootBuilder,
@@ -34,7 +34,7 @@ public class CommunitySpringbootBuilder
             SingleExecutableProcess,
             CommunityConfiguration> coreSpringbootBuilderDelegate;
 
-    private final CommunityRunnerConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityRunnerConfigurator;
+    private final CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityRunnerConfigurator;
 
 
     CommunitySpringbootBuilder() {
@@ -43,7 +43,7 @@ public class CommunitySpringbootBuilder
 
     CommunitySpringbootBuilder(CommunityConfiguration configuration) {
         this.coreSpringbootBuilderDelegate = new CoreSpringbootBuilderImpl<>(configuration, () -> this);
-        this.communityRunnerConfigurator = new CommunityRunnerConfiguratorImpl<>(configuration, () -> this);
+        this.communityRunnerConfigurator = new CommunityConfiguratorImpl<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

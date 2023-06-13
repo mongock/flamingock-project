@@ -9,7 +9,7 @@ import io.flamingock.core.core.runtime.dependency.Dependency;
 
 import java.util.function.Consumer;
 
-public interface CoreStandaloneBuilder<HOLDER> {
+public interface CoreStandaloneConfigurator<HOLDER> {
 
 
   /**
