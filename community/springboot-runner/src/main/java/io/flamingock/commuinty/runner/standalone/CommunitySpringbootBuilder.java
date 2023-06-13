@@ -6,11 +6,9 @@ import io.flamingock.community.internal.CommunityConfigurator;
 import io.flamingock.community.internal.CommunityConfiguratorImpl;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.configuration.LegacyMigration;
 import io.flamingock.core.core.configuration.TransactionStrategy;
 import io.flamingock.core.core.event.EventPublisher;
-import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runner.CoreConfigurator;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerBuilder;
@@ -64,15 +62,13 @@ public class CommunitySpringbootBuilder
                 .getDriver()
                 .getConnectionEngine(springbootConfigurator.getConfiguration());
         connectionEngine.initialize();
-
-        return new RunnerCreator<SingleAuditProcessStatus, SingleExecutableProcess, CommunityConfiguration>()
-                .create(
-                        new CommunityFactory(connectionEngine),
-                        getConfiguration(),
-                        eventPublisher,
-                        new SpringDependencyContext(getSpringContext()),
-                        getConfiguration().isThrowExceptionIfCannotObtainLock()
-                );
+        return RunnerCreator.create(
+                new CommunityFactory(connectionEngine),
+                getConfiguration(),
+                eventPublisher,
+                new SpringDependencyContext(getSpringContext()),
+                getConfiguration().isThrowExceptionIfCannotObtainLock()
+        );
 
     }
 

@@ -60,14 +60,13 @@ public class CommunityStandaloneBuilder
                 .getDriver()
                 .getConnectionEngine(standaloneConfigurator.getConfiguration());
         connectionEngine.initialize();
-        return new RunnerCreator<SingleAuditProcessStatus, SingleExecutableProcess, CommunityConfiguration>()
-                .create(
-                        new CommunityFactory(connectionEngine),
-                        getConfiguration(),
-                        eventPublisher,
-                        getDependencyContext(),
-                        getConfiguration().isThrowExceptionIfCannotObtainLock()
-                );
+        return RunnerCreator.create(
+                new CommunityFactory(connectionEngine),
+                getConfiguration(),
+                eventPublisher,
+                getDependencyContext(),
+                getConfiguration().isThrowExceptionIfCannotObtainLock()
+        );
     }
 
 
