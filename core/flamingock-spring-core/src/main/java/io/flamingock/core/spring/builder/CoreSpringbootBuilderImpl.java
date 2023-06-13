@@ -27,7 +27,7 @@ public class CoreSpringbootBuilderImpl<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
         CORE_CONFIG extends CoreConfiguration>
-        extends AbstractBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG>
+        extends AbstractBuilder<HOLDER, CORE_CONFIG>
         implements CoreSpringbootBuilder<HOLDER> {
 
     private ApplicationEventPublisher applicationEventPublisher;

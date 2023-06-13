@@ -1,24 +1,14 @@
 package io.flamingock.core.core.runner;
 
-import io.flamingock.core.core.Factory;
-import io.flamingock.core.core.audit.domain.AuditProcessStatus;
 import io.flamingock.core.core.configuration.CoreConfiguration;
 import io.flamingock.core.core.configuration.LegacyMigration;
 import io.flamingock.core.core.configuration.TransactionStrategy;
-import io.flamingock.core.core.event.EventPublisher;
-import io.flamingock.core.core.execution.executor.ExecutionContext;
-import io.flamingock.core.core.process.DefinitionProcess;
-import io.flamingock.core.core.process.ExecutableProcess;
-import io.flamingock.core.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.core.util.StringUtil;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
 public abstract class AbstractBuilder<
         HOLDER,
-        AUDIT_PROCESS_STATE extends AuditProcessStatus,
-        EXECUTABLE_PROCESS extends ExecutableProcess,
         CORE_CONFIG extends CoreConfiguration>
         implements Configurator<HOLDER, CORE_CONFIG> {
 
