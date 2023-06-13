@@ -21,8 +21,8 @@ public class CoreStandaloneBuilderImpl<
         HOLDER,
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
-        CONFIG extends CoreConfiguration>
-        extends AbstractBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG>
+        CORE_CONFIG extends CoreConfiguration>
+        extends AbstractBuilder<HOLDER, AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG>
         implements CoreStandaloneBuilder<HOLDER> {
 
     private final DependencyInjectableContext dependencyManager;
@@ -30,14 +30,14 @@ public class CoreStandaloneBuilderImpl<
     private Consumer<MigrationSuccessEvent> processSuccessListener;
     private Consumer<MigrationFailureEvent> processFailedListener;
 
-    public CoreStandaloneBuilderImpl(CONFIG configuration, Supplier<HOLDER> holderInstanceSupplier) {
-        this(configuration, holderInstanceSupplier, new SimpleDependencyInjectableContext());
+    public CoreStandaloneBuilderImpl(CORE_CONFIG coreConfiguration, Supplier<HOLDER> holderInstanceSupplier) {
+        this(coreConfiguration, holderInstanceSupplier, new SimpleDependencyInjectableContext());
     }
 
-    CoreStandaloneBuilderImpl(CONFIG configuration,
+    CoreStandaloneBuilderImpl(CORE_CONFIG coreConfiguration,
                               Supplier<HOLDER> holderInstanceSupplier,
                               SimpleDependencyInjectableContext dependencyManager) {
-        super(configuration, holderInstanceSupplier);
+        super(coreConfiguration, holderInstanceSupplier);
         this.dependencyManager = dependencyManager;
     }
 
@@ -65,7 +65,7 @@ public class CoreStandaloneBuilderImpl<
         return holderInstanceSupplier.get();
     }
 
-    public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CONFIG> factory) {
+    public Runner build(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, CORE_CONFIG> factory) {
         EventPublisher eventPublisher = new EventPublisher(
                 processStartedListener != null ? () -> processStartedListener.accept(new MigrationStartedEvent()) : null,
                 processSuccessListener != null ? result -> processSuccessListener.accept(new MigrationSuccessEvent(result)) : null,

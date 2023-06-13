@@ -3,6 +3,7 @@ package io.flamingock.commuinty.runner.standalone;
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.CommunityRunnerConfigurator;
+import io.flamingock.community.internal.CommunityRunnerConfiguratorImpl;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
@@ -29,11 +30,12 @@ public class CommunitySpringbootBuilder
 
     private final CoreSpringbootBuilderImpl<
             CommunitySpringbootBuilder,
-                    SingleAuditProcessStatus,
-                    SingleExecutableProcess,
+            SingleAuditProcessStatus,
+            SingleExecutableProcess,
             CommunityConfiguration> coreSpringbootBuilderDelegate;
 
-    private ConnectionDriver<?> connectionDriver;
+    private final CommunityRunnerConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityRunnerConfigurator;
+
 
     CommunitySpringbootBuilder() {
         this(new CommunityConfiguration());
@@ -41,6 +43,7 @@ public class CommunitySpringbootBuilder
 
     CommunitySpringbootBuilder(CommunityConfiguration configuration) {
         this.coreSpringbootBuilderDelegate = new CoreSpringbootBuilderImpl<>(configuration, () -> this);
+        this.communityRunnerConfigurator = new CommunityRunnerConfiguratorImpl<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -49,65 +52,22 @@ public class CommunitySpringbootBuilder
 
     @Override
     public Runner build() {
-        ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(coreSpringbootBuilderDelegate.getConfiguration());
+        ConnectionEngine connectionEngine = communityRunnerConfigurator
+                .getDriver()
+                .getConnectionEngine(coreSpringbootBuilderDelegate.getConfiguration());
         connectionEngine.initialize();
         return coreSpringbootBuilderDelegate.build(new CommunityFactory(connectionEngine));
     }
 
-    @Override
-    public CommunitySpringbootBuilder setDriver(ConnectionDriver<?> connectionDriver) {
-        this.connectionDriver = connectionDriver;
-        return this;
-    }
-
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return null;
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return null;
-    }
-
-    @Override
-    public String getMigrationRepositoryName() {
-        return null;
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setMigrationRepositoryName(String value) {
-        return null;
-    }
-
-    @Override
-    public String getLockRepositoryName() {
-        return null;
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setLockRepositoryName(String value) {
-        return null;
-    }
-
-    @Override
-    public boolean isIndexCreation() {
-        return false;
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setIndexCreation(boolean value) {
-        return null;
-    }
-
     ///////////////////////////////////////////////////////////////////////////////////
-    //  MONGOCK CONFIGURATOR
+    //  CoreSpringbootBuilder
     ///////////////////////////////////////////////////////////////////////////////////
-
 
     @Override
     public CommunitySpringbootBuilder setConfiguration(CommunityConfiguration configuration) {
-        return coreSpringbootBuilderDelegate.setConfiguration(configuration);
+        communityRunnerConfigurator.setConfiguration(configuration);
+        coreSpringbootBuilderDelegate.setConfiguration(configuration);
+        return this;
     }
 
     @Override
@@ -263,5 +223,70 @@ public class CommunitySpringbootBuilder
     @Override
     public CommunitySpringbootBuilder setEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         return coreSpringbootBuilderDelegate.setEventPublisher(applicationEventPublisher);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //  communityRunnerConfigurator
+    ///////////////////////////////////////////////////////////////////////////////////
+
+
+    @Override
+    public CommunitySpringbootBuilder setDriver(ConnectionDriver<?> connectionDriver) {
+        return communityRunnerConfigurator.setDriver(connectionDriver);
+    }
+
+    @Override
+    public ConnectionDriver<?> getDriver() {
+        return communityRunnerConfigurator.getDriver();
+    }
+
+    @Override
+    public List<String> getMigrationScanPackage() {
+        return communityRunnerConfigurator.getMigrationScanPackage();
+    }
+
+    @Override
+    public CommunitySpringbootBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
+        return communityRunnerConfigurator.setMigrationScanPackage(migrationScanPackage);
+    }
+
+    @Override
+    public CommunitySpringbootBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
+        return communityRunnerConfigurator.addMigrationScanPackages(migrationScanPackageList);
+    }
+
+    @Override
+    public CommunitySpringbootBuilder addMigrationScanPackage(String migrationScanPackage) {
+        return communityRunnerConfigurator.addMigrationScanPackage(migrationScanPackage);
+    }
+
+    @Override
+    public String getMigrationRepositoryName() {
+        return communityRunnerConfigurator.getMigrationRepositoryName();
+    }
+
+    @Override
+    public CommunitySpringbootBuilder setMigrationRepositoryName(String value) {
+        return communityRunnerConfigurator.setMigrationRepositoryName(value);
+    }
+
+    @Override
+    public String getLockRepositoryName() {
+        return communityRunnerConfigurator.getLockRepositoryName();
+    }
+
+    @Override
+    public CommunitySpringbootBuilder setLockRepositoryName(String value) {
+        return communityRunnerConfigurator.setLockRepositoryName(value);
+    }
+
+    @Override
+    public boolean isIndexCreation() {
+        return communityRunnerConfigurator.isIndexCreation();
+    }
+
+    @Override
+    public CommunitySpringbootBuilder setIndexCreation(boolean value) {
+        return communityRunnerConfigurator.setIndexCreation(value);
     }
 }

@@ -12,22 +12,16 @@ public interface CommunityRunnerConfigurator<HOLDER, CONFIG extends CoreConfigur
 
     HOLDER setDriver(ConnectionDriver<?> connectionDriver);
 
+    ConnectionDriver<?> getDriver();
+
     List<String> getMigrationScanPackage();
 
     HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
 
-    default HOLDER addMigrationScanPackages(List<String> migrationScanPackageList) {
-        List<String> packagesCurrentlyStored = getMigrationScanPackage();
-        if (migrationScanPackageList != null) {
-            packagesCurrentlyStored.addAll(migrationScanPackageList);
-        }
-        return setMigrationScanPackage(packagesCurrentlyStored);
-    }
+    HOLDER addMigrationScanPackages(List<String> migrationScanPackageList);
 
 
-    default HOLDER addMigrationScanPackage(String migrationScanPackage) {
-        return this.addMigrationScanPackages(Collections.singletonList(migrationScanPackage));
-    }
+    HOLDER addMigrationScanPackage(String migrationScanPackage);
 
     String getMigrationRepositoryName();
 

@@ -3,8 +3,10 @@ package io.flamingock.commuinty.runner.standalone;
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.CommunityRunnerConfigurator;
+import io.flamingock.community.internal.CommunityRunnerConfiguratorImpl;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.core.Factory;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.configuration.LegacyMigration;
 import io.flamingock.core.core.configuration.TransactionStrategy;
@@ -31,11 +33,11 @@ public class CommunityStandaloneBuilder
 
     private final CoreStandaloneBuilderImpl<
             CommunityStandaloneBuilder,
-                        SingleAuditProcessStatus,
-                        SingleExecutableProcess,
+            SingleAuditProcessStatus,
+            SingleExecutableProcess,
             CommunityConfiguration> coreStandaloneBuilderDelegate;
 
-    private ConnectionDriver<?> connectionDriver;
+    private final CommunityRunnerConfigurator<CommunityStandaloneBuilder, CommunityConfiguration> communityRunnerConfigurator;
 
     CommunityStandaloneBuilder() {
         this(new CommunityConfiguration());
@@ -43,6 +45,7 @@ public class CommunityStandaloneBuilder
 
     CommunityStandaloneBuilder(CommunityConfiguration configuration) {
         this.coreStandaloneBuilderDelegate = new CoreStandaloneBuilderImpl<>(configuration, () -> this);
+        this.communityRunnerConfigurator = new CommunityRunnerConfiguratorImpl<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -51,76 +54,16 @@ public class CommunityStandaloneBuilder
 
     @Override
     public Runner build() {
-        ConnectionEngine connectionEngine = connectionDriver.getConnectionEngine(coreStandaloneBuilderDelegate.getConfiguration());
+        ConnectionEngine connectionEngine = communityRunnerConfigurator
+                .getDriver()
+                .getConnectionEngine(coreStandaloneBuilderDelegate.getConfiguration());
         connectionEngine.initialize();
         return coreStandaloneBuilderDelegate.build(new CommunityFactory(connectionEngine));
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    //  MONGOCK CONFIGURATOR
-    ///////////////////////////////////////////////////////////////////////////////////
-    @Override
-    public CommunityStandaloneBuilder setDriver(ConnectionDriver<?> connectionDriver) {
-        this.connectionDriver = connectionDriver;
-        return this;
-    }
-
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return coreStandaloneBuilderDelegate.getConfiguration().getMigrationScanPackage();
-    }
-
-    @Override
-    public CommunityStandaloneBuilder setMigrationScanPackage(List<String> scanPackage) {
-        coreStandaloneBuilderDelegate.getConfiguration().setMigrationScanPackage(scanPackage);
-        return this;
-    }
-
-    @Override
-    public CommunityStandaloneBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        if (migrationScanPackageList != null) {
-            List<String> migrationScanPackage = getMigrationScanPackage();
-            migrationScanPackage.addAll(migrationScanPackageList);
-            setMigrationScanPackage(migrationScanPackage);
-        }
-        return this;
-    }
-
-    @Override
-    public String getMigrationRepositoryName() {
-        return coreStandaloneBuilderDelegate.getConfiguration().getMigrationRepositoryName();
-    }
-
-    @Override
-    public CommunityStandaloneBuilder setMigrationRepositoryName(String value) {
-        coreStandaloneBuilderDelegate.getConfiguration().setMigrationRepositoryName(value);
-        return this;
-    }
-
-    @Override
-    public String getLockRepositoryName() {
-        return coreStandaloneBuilderDelegate.getConfiguration().getLockRepositoryName();
-    }
-
-    @Override
-    public CommunityStandaloneBuilder setLockRepositoryName(String value) {
-        coreStandaloneBuilderDelegate.getConfiguration().setLockRepositoryName(value);
-        return this;
-    }
-
-    @Override
-    public boolean isIndexCreation() {
-        return coreStandaloneBuilderDelegate.getConfiguration().isIndexCreation();
-    }
-
-    @Override
-    public CommunityStandaloneBuilder setIndexCreation(boolean value) {
-        coreStandaloneBuilderDelegate.getConfiguration().setIndexCreation(value);
-        return this;
-    }
 
     ///////////////////////////////////////////////////////////////////////////////////
-    //  CORE CONFIGURATOR
+    //  CoreStandaloneBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
@@ -157,7 +100,6 @@ public class CommunityStandaloneBuilder
     public CommunityStandaloneBuilder setEnabled(boolean enabled) {
         return coreStandaloneBuilderDelegate.setEnabled(enabled);
     }
-
 
     @Override
     public CommunityStandaloneBuilder setStartSystemVersion(String startSystemVersion) {
@@ -275,6 +217,21 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
+    public CommunityStandaloneBuilder addDependency(Object instance) {
+        return coreStandaloneBuilderDelegate.addDependency(instance);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder addDependency(String name, Object instance) {
+        return coreStandaloneBuilderDelegate.addDependency(name, instance);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder addDependency(Class<?> type, Object instance) {
+        return coreStandaloneBuilderDelegate.addDependency(type, instance);
+    }
+
+    @Override
     public CommunityStandaloneBuilder addDependency(String name, Class<?> type, Object instance) {
         return coreStandaloneBuilderDelegate.addDependency(name, type, instance);
     }
@@ -292,5 +249,71 @@ public class CommunityStandaloneBuilder
     @Override
     public CommunityStandaloneBuilder setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
         return coreStandaloneBuilderDelegate.setMigrationFailureListener(listener);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //  communityRunnerConfigurator
+    ///////////////////////////////////////////////////////////////////////////////////
+
+
+    @Override
+    public CommunityStandaloneBuilder setDriver(ConnectionDriver<?> connectionDriver) {
+        return communityRunnerConfigurator.setDriver(connectionDriver);
+    }
+
+    @Override
+    public ConnectionDriver<?> getDriver() {
+        return communityRunnerConfigurator.getDriver();
+    }
+
+    @Override
+    public List<String> getMigrationScanPackage() {
+        return communityRunnerConfigurator.getMigrationScanPackage();
+    }
+
+    @Override
+    public CommunityStandaloneBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
+        return communityRunnerConfigurator.setMigrationScanPackage(migrationScanPackage);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
+        return communityRunnerConfigurator.addMigrationScanPackages(migrationScanPackageList);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder addMigrationScanPackage(String migrationScanPackage) {
+        return communityRunnerConfigurator.addMigrationScanPackage(migrationScanPackage);
+    }
+
+    @Override
+    public String getMigrationRepositoryName() {
+        return communityRunnerConfigurator.getMigrationRepositoryName();
+    }
+
+    @Override
+    public CommunityStandaloneBuilder setMigrationRepositoryName(String value) {
+        return communityRunnerConfigurator.setMigrationRepositoryName(value);
+    }
+
+    @Override
+    public String getLockRepositoryName() {
+        return communityRunnerConfigurator.getLockRepositoryName();
+    }
+
+    @Override
+    public CommunityStandaloneBuilder setLockRepositoryName(String value) {
+        return communityRunnerConfigurator.setLockRepositoryName(value);
+    }
+
+    @Override
+    public boolean isIndexCreation() {
+        return communityRunnerConfigurator.isIndexCreation();
+    }
+
+    @Override
+    public CommunityStandaloneBuilder setIndexCreation(boolean value) {
+        return communityRunnerConfigurator.setIndexCreation(value);
     }
 }
