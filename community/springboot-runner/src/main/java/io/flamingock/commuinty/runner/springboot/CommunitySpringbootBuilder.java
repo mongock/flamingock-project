@@ -3,7 +3,7 @@ package io.flamingock.commuinty.runner.springboot;
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.CommunityConfigurator;
-import io.flamingock.community.internal.CommunityConfiguratorImpl;
+import io.flamingock.community.internal.DefaultCommunityConfigurator;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.core.configuration.LegacyMigration;
@@ -44,7 +44,7 @@ public class CommunitySpringbootBuilder
 
     CommunitySpringbootBuilder(CommunityConfiguration coreConfiguration, SpringbootConfiguration springbootConfiguration) {
         this.springbootConfigurator = new DefaultSpringbootConfigurator<>(coreConfiguration, springbootConfiguration, () -> this);
-        this.communityConfigurator = new CommunityConfiguratorImpl<>(coreConfiguration, () -> this);
+        this.communityConfigurator = new DefaultCommunityConfigurator<>(coreConfiguration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

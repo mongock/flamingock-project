@@ -3,17 +3,15 @@ package io.flamingock.commuinty.runner.standalone;
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.CommunityConfigurator;
-import io.flamingock.community.internal.CommunityConfiguratorImpl;
+import io.flamingock.community.internal.DefaultCommunityConfigurator;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.configuration.LegacyMigration;
 import io.flamingock.core.core.configuration.TransactionStrategy;
 import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.event.MigrationFailureEvent;
 import io.flamingock.core.core.event.MigrationStartedEvent;
 import io.flamingock.core.core.event.MigrationSuccessEvent;
-import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runner.CoreConfigurator;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerBuilder;
@@ -43,7 +41,7 @@ public class CommunityStandaloneBuilder
 
     CommunityStandaloneBuilder(CommunityConfiguration configuration) {
         this.standaloneConfigurator = new DefaultStandaloneConfigurator<>(configuration, () -> this);
-        this.communityConfigurator = new CommunityConfiguratorImpl<>(configuration, () -> this);
+        this.communityConfigurator = new DefaultCommunityConfigurator<>(configuration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

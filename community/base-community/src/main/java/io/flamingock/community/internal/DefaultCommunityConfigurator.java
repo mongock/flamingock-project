@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class CommunityConfiguratorImpl<HOLDER, CONFIG extends CommunityConfiguration>
+public class DefaultCommunityConfigurator<HOLDER, CONFIG extends CommunityConfiguration>
         implements CommunityConfigurator<HOLDER, CONFIG> {
 
     private final Supplier<HOLDER> holderInstanceSupplier;
@@ -14,8 +14,8 @@ public class CommunityConfiguratorImpl<HOLDER, CONFIG extends CommunityConfigura
 
     private ConnectionDriver<?> connectionDriver;
 
-    public CommunityConfiguratorImpl(CONFIG communityConfiguration,
-                                     Supplier<HOLDER> holderInstanceSupplier) {
+    public DefaultCommunityConfigurator(CONFIG communityConfiguration,
+                                        Supplier<HOLDER> holderInstanceSupplier) {
         this.communityConfiguration = communityConfiguration;
         this.holderInstanceSupplier = holderInstanceSupplier;
     }
