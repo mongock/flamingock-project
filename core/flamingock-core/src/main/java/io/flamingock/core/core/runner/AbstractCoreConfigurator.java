@@ -31,6 +31,8 @@ public abstract class AbstractCoreConfigurator<HOLDER, CORE_CONFIG extends CoreC
         return holderInstanceSupplier.get();
     }
 
+
+
     @Override
     public HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis) {
         coreConfiguration.setLockAcquiredForMillis(lockAcquiredForMillis);

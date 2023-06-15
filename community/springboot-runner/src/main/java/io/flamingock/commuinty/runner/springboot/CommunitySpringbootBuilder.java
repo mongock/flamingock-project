@@ -11,11 +11,12 @@ import io.flamingock.core.core.configuration.TransactionStrategy;
 import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.runner.CoreConfigurator;
 import io.flamingock.core.core.runner.Runner;
-import io.flamingock.core.core.runner.RunnerBuilder;
 import io.flamingock.core.core.runner.RunnerCreator;
 import io.flamingock.core.spring.SpringDependencyContext;
-import io.flamingock.core.spring.builder.DefaultSpringbootConfigurator;
-import io.flamingock.core.spring.builder.SpringbootConfigurator;
+import io.flamingock.core.spring.configurator.DefaultSpringbootConfigurator;
+import io.flamingock.core.spring.configurator.SpringRunnerType;
+import io.flamingock.core.spring.configurator.SpringbootConfiguration;
+import io.flamingock.core.spring.configurator.SpringbootConfigurator;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
 import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
@@ -38,12 +39,12 @@ public class CommunitySpringbootBuilder
 
 
     CommunitySpringbootBuilder() {
-        this(new CommunityConfiguration());
+        this(new CommunityConfiguration(), new SpringbootConfiguration());
     }
 
-    CommunitySpringbootBuilder(CommunityConfiguration configuration) {
-        this.springbootConfigurator = new DefaultSpringbootConfigurator<>(configuration, () -> this);
-        this.communityConfigurator = new CommunityConfiguratorImpl<>(configuration, () -> this);
+    CommunitySpringbootBuilder(CommunityConfiguration coreConfiguration, SpringbootConfiguration springbootConfiguration) {
+        this.springbootConfigurator = new DefaultSpringbootConfigurator<>(coreConfiguration, springbootConfiguration, () -> this);
+        this.communityConfigurator = new CommunityConfiguratorImpl<>(coreConfiguration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -75,6 +76,17 @@ public class CommunitySpringbootBuilder
     ///////////////////////////////////////////////////////////////////////////////////
     //  CoreSpringbootBuilder
     ///////////////////////////////////////////////////////////////////////////////////
+
+
+    @Override
+    public CommunitySpringbootBuilder setRunnerType(SpringRunnerType runnerType) {
+        return springbootConfigurator.setRunnerType(runnerType);
+    }
+
+    @Override
+    public SpringRunnerType getRunnerType() {
+        return springbootConfigurator.getRunnerType();
+    }
 
     @Override
     public CommunitySpringbootBuilder setConfiguration(CommunityConfiguration configuration) {
