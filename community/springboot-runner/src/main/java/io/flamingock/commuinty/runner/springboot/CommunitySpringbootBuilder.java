@@ -1,8 +1,8 @@
 package io.flamingock.commuinty.runner.springboot;
 
 import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.CommunityConfigurator;
+import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.DefaultCommunityConfigurator;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
@@ -33,18 +33,21 @@ public class CommunitySpringbootBuilder
         SpringbootConfigurator<CommunitySpringbootBuilder>,
         CoreConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> {
 
-    private final DefaultSpringbootConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> springbootConfigurator;
+    private final SpringbootConfigurator<CommunitySpringbootBuilder> springbootConfigurator;
 
-    private final DefaultCommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityConfigurator;
+    private final CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityConfigurator;
 
 
     CommunitySpringbootBuilder() {
-        this(new CommunityConfiguration(), new SpringbootConfiguration());
+        CommunityConfiguration communityConfiguration = new CommunityConfiguration();
+        this.springbootConfigurator = new DefaultSpringbootConfigurator<>(communityConfiguration, new SpringbootConfiguration(), () -> this);
+        this.communityConfigurator = new DefaultCommunityConfigurator<>(communityConfiguration, () -> this);
     }
 
-    CommunitySpringbootBuilder(CommunityConfiguration communityConfiguration, SpringbootConfiguration springbootConfiguration) {
-        this.springbootConfigurator = new DefaultSpringbootConfigurator<>(communityConfiguration, springbootConfiguration, () -> this);
-        this.communityConfigurator = new DefaultCommunityConfigurator<>(communityConfiguration, () -> this);
+    CommunitySpringbootBuilder(CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityConfigurator,
+                               SpringbootConfigurator<CommunitySpringbootBuilder> springbootConfigurator) {
+        this.communityConfigurator = communityConfigurator;
+        this.springbootConfigurator = springbootConfigurator;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
