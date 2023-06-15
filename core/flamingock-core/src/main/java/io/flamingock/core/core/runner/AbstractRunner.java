@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess>
-implements Runner{
+        implements Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractRunner.class);
 
@@ -55,10 +55,9 @@ implements Runner{
         LoadedProcess<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> loadedProcess = processDefinition.load();
 
         try (LockAcquisition lockAcquisition = lockProvider.acquireIfRequired(loadedProcess)) {
-            if(lockAcquisition instanceof LockAcquisition.Acquired) {
-                startProcess(((LockAcquisition.Acquired)lockAcquisition).getLock(), loadedProcess);
-            }
-            else {
+            if (lockAcquisition instanceof LockAcquisition.Acquired) {
+                startProcess(((LockAcquisition.Acquired) lockAcquisition).getLock(), loadedProcess);
+            } else {
                 skipProcess();
             }
         } catch (LockException exception) {

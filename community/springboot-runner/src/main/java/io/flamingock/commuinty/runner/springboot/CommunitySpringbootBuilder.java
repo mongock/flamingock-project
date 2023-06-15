@@ -1,4 +1,4 @@
-package io.flamingock.commuinty.runner.standalone;
+package io.flamingock.commuinty.runner.springboot;
 
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityFactory;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class CommunitySpringbootBuilder
         implements
-        RunnerBuilder,
+        SpringRunnerBuilder,
         CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration>,
         SpringbootConfigurator<CommunitySpringbootBuilder>,
         CoreConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> {
