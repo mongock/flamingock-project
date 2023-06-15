@@ -7,18 +7,14 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.function.Supplier;
 
-public class DefaultSpringbootConfigurator<
-        HOLDER,
-        CORE_CONFIG extends CoreConfiguration>
-        implements SpringbootConfigurator<HOLDER> {
+public class DefaultSpringbootConfigurator<HOLDER> implements SpringbootConfigurator<HOLDER> {
 
     private final Supplier<HOLDER> holderInstanceSupplier;
     private SpringbootConfiguration springbootConfiguration;
     private ApplicationEventPublisher applicationEventPublisher;
     private ApplicationContext springContext;
 
-    public DefaultSpringbootConfigurator(CORE_CONFIG coreConfiguration,
-                                         SpringbootConfiguration springbootConfiguration,
+    public DefaultSpringbootConfigurator(SpringbootConfiguration springbootConfiguration,
                                          Supplier<HOLDER> holderInstanceSupplier) {
 //        super(coreConfiguration, holderInstanceSupplier);
         this.holderInstanceSupplier = holderInstanceSupplier;
@@ -29,8 +25,6 @@ public class DefaultSpringbootConfigurator<
         this.springbootConfiguration = springbootConfiguration;
         return holderInstanceSupplier.get();
     }
-
-
 
     @Override
     public HOLDER setSpringContext(ApplicationContext springContext) {

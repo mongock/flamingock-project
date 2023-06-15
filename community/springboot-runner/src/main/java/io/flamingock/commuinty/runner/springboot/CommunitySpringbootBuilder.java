@@ -39,9 +39,8 @@ public class CommunitySpringbootBuilder
 
 
     CommunitySpringbootBuilder() {
-        CommunityConfiguration communityConfiguration = new CommunityConfiguration();
-        this.springbootConfigurator = new DefaultSpringbootConfigurator<>(communityConfiguration, new SpringbootConfiguration(), () -> this);
-        this.communityConfigurator = new DefaultCommunityConfigurator<>(communityConfiguration, () -> this);
+        this.springbootConfigurator = new DefaultSpringbootConfigurator<>( new SpringbootConfiguration(), () -> this);
+        this.communityConfigurator = new DefaultCommunityConfigurator<>(new CommunityConfiguration(), () -> this);
     }
 
     CommunitySpringbootBuilder(CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityConfigurator,
