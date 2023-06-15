@@ -1,4 +1,4 @@
-package io.flamingock.commuinty.runner.standalone;
+package io.flamingock.commuinty.runner.springboot;
 
 public final class CommunitySpringboot {
 
