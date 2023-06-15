@@ -35,16 +35,16 @@ public class CommunitySpringbootBuilder
 
     private final DefaultSpringbootConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> springbootConfigurator;
 
-    private final CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityConfigurator;
+    private final DefaultCommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityConfigurator;
 
 
     CommunitySpringbootBuilder() {
         this(new CommunityConfiguration(), new SpringbootConfiguration());
     }
 
-    CommunitySpringbootBuilder(CommunityConfiguration coreConfiguration, SpringbootConfiguration springbootConfiguration) {
-        this.springbootConfigurator = new DefaultSpringbootConfigurator<>(coreConfiguration, springbootConfiguration, () -> this);
-        this.communityConfigurator = new DefaultCommunityConfigurator<>(coreConfiguration, () -> this);
+    CommunitySpringbootBuilder(CommunityConfiguration communityConfiguration, SpringbootConfiguration springbootConfiguration) {
+        this.springbootConfigurator = new DefaultSpringbootConfigurator<>(communityConfiguration, springbootConfiguration, () -> this);
+        this.communityConfigurator = new DefaultCommunityConfigurator<>(communityConfiguration, () -> this);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ public class CommunitySpringbootBuilder
 
         ConnectionEngine connectionEngine = communityConfigurator
                 .getDriver()
-                .getConnectionEngine(springbootConfigurator.getConfiguration());
+                .getConnectionEngine(communityConfigurator.getConfiguration());
         connectionEngine.initialize();
         return RunnerCreator.create(
                 new CommunityFactory(connectionEngine),
@@ -74,7 +74,7 @@ public class CommunitySpringbootBuilder
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
-    //  CoreSpringbootBuilder
+    //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
 
 
@@ -89,179 +89,152 @@ public class CommunitySpringbootBuilder
     }
 
     @Override
-    public CommunitySpringbootBuilder setConfiguration(CommunityConfiguration configuration) {
-        communityConfigurator.setConfiguration(configuration);
-        springbootConfigurator.setConfiguration(configuration);
-        return this;
-    }
-
-    @Override
     public CommunitySpringbootBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
-        return springbootConfigurator.setLockAcquiredForMillis(lockAcquiredForMillis);
+        return communityConfigurator.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
     @Override
     public CommunitySpringbootBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
-        return springbootConfigurator.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+        return communityConfigurator.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
     @Override
     public CommunitySpringbootBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
-        return springbootConfigurator.setLockTryFrequencyMillis(lockTryFrequencyMillis);
+        return communityConfigurator.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
     @Override
     public CommunitySpringbootBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
-        return springbootConfigurator.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+        return communityConfigurator.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
     @Override
     public CommunitySpringbootBuilder setTrackIgnored(boolean trackIgnored) {
-        return springbootConfigurator.setTrackIgnored(trackIgnored);
+        return communityConfigurator.setTrackIgnored(trackIgnored);
     }
 
     @Override
     public CommunitySpringbootBuilder setEnabled(boolean enabled) {
-        return springbootConfigurator.setEnabled(enabled);
+        return communityConfigurator.setEnabled(enabled);
     }
 
     @Override
     public CommunitySpringbootBuilder setStartSystemVersion(String startSystemVersion) {
-        return springbootConfigurator.setStartSystemVersion(startSystemVersion);
+        return communityConfigurator.setStartSystemVersion(startSystemVersion);
     }
 
     @Override
     public CommunitySpringbootBuilder setEndSystemVersion(String endSystemVersion) {
-        return springbootConfigurator.setEndSystemVersion(endSystemVersion);
+        return communityConfigurator.setEndSystemVersion(endSystemVersion);
     }
 
     @Override
     public CommunitySpringbootBuilder setServiceIdentifier(String serviceIdentifier) {
-        return springbootConfigurator.setServiceIdentifier(serviceIdentifier);
+        return communityConfigurator.setServiceIdentifier(serviceIdentifier);
     }
 
     @Override
     public CommunitySpringbootBuilder setMetadata(Map<String, Object> metadata) {
-        return springbootConfigurator.setMetadata(metadata);
+        return communityConfigurator.setMetadata(metadata);
     }
 
     @Override
     public CommunitySpringbootBuilder setLegacyMigration(LegacyMigration legacyMigration) {
-        return springbootConfigurator.setLegacyMigration(legacyMigration);
+        return communityConfigurator.setLegacyMigration(legacyMigration);
     }
 
     @Override
     public CommunitySpringbootBuilder setTransactionEnabled(Boolean transactionEnabled) {
-        return springbootConfigurator.setTransactionEnabled(transactionEnabled);
+        return communityConfigurator.setTransactionEnabled(transactionEnabled);
     }
 
     @Override
     public CommunitySpringbootBuilder setDefaultMigrationAuthor(String defaultMigrationAuthor) {
-        return springbootConfigurator.setDefaultMigrationAuthor(defaultMigrationAuthor);
+        return communityConfigurator.setDefaultMigrationAuthor(defaultMigrationAuthor);
     }
 
     @Override
     public CommunitySpringbootBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
-        return springbootConfigurator.setTransactionStrategy(transactionStrategy);
+        return communityConfigurator.setTransactionStrategy(transactionStrategy);
     }
 
     @Override
     public CommunityConfiguration getConfiguration() {
-        return springbootConfigurator.getConfiguration();
+        return communityConfigurator.getConfiguration();
     }
 
     @Override
     public long getLockAcquiredForMillis() {
-        return springbootConfigurator.getLockAcquiredForMillis();
+        return communityConfigurator.getLockAcquiredForMillis();
     }
 
     @Override
     public Long getLockQuitTryingAfterMillis() {
-        return springbootConfigurator.getLockQuitTryingAfterMillis();
+        return communityConfigurator.getLockQuitTryingAfterMillis();
     }
 
     @Override
     public long getLockTryFrequencyMillis() {
-        return springbootConfigurator.getLockTryFrequencyMillis();
+        return communityConfigurator.getLockTryFrequencyMillis();
     }
 
     @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
-        return springbootConfigurator.isThrowExceptionIfCannotObtainLock();
+        return communityConfigurator.isThrowExceptionIfCannotObtainLock();
     }
 
     @Override
     public boolean isTrackIgnored() {
-        return springbootConfigurator.isTrackIgnored();
+        return communityConfigurator.isTrackIgnored();
     }
 
     @Override
     public boolean isEnabled() {
-        return springbootConfigurator.isEnabled();
+        return communityConfigurator.isEnabled();
     }
 
     @Override
     public String getStartSystemVersion() {
-        return springbootConfigurator.getStartSystemVersion();
+        return communityConfigurator.getStartSystemVersion();
     }
 
     @Override
     public String getEndSystemVersion() {
-        return springbootConfigurator.getEndSystemVersion();
+        return communityConfigurator.getEndSystemVersion();
     }
 
     @Override
     public String getServiceIdentifier() {
-        return springbootConfigurator.getServiceIdentifier();
+        return communityConfigurator.getServiceIdentifier();
     }
 
     @Override
     public Map<String, Object> getMetadata() {
-        return springbootConfigurator.getMetadata();
+        return communityConfigurator.getMetadata();
     }
 
     @Override
     public LegacyMigration getLegacyMigration() {
-        return springbootConfigurator.getLegacyMigration();
+        return communityConfigurator.getLegacyMigration();
     }
 
     @Override
     public Boolean getTransactionEnabled() {
-        return springbootConfigurator.getTransactionEnabled();
+        return communityConfigurator.getTransactionEnabled();
     }
 
     @Override
     public String getDefaultMigrationAuthor() {
-        return springbootConfigurator.getDefaultMigrationAuthor();
+        return communityConfigurator.getDefaultMigrationAuthor();
     }
 
     @Override
     public TransactionStrategy getTransactionStrategy() {
-        return springbootConfigurator.getTransactionStrategy();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setSpringContext(ApplicationContext springContext) {
-        return springbootConfigurator.setSpringContext(springContext);
-    }
-
-    @Override
-    public ApplicationContext getSpringContext() {
-        return springbootConfigurator.getSpringContext();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-        return springbootConfigurator.setEventPublisher(applicationEventPublisher);
-    }
-
-    @Override
-    public ApplicationEventPublisher getEventPublisher() {
-        return springbootConfigurator.getEventPublisher();
+        return communityConfigurator.getTransactionStrategy();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
-    //  communityRunnerConfigurator
+    //  COMMUNITY
     ///////////////////////////////////////////////////////////////////////////////////
 
 
@@ -324,4 +297,29 @@ public class CommunitySpringbootBuilder
     public CommunitySpringbootBuilder setIndexCreation(boolean value) {
         return communityConfigurator.setIndexCreation(value);
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //  SPRINGBOOT
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public CommunitySpringbootBuilder setSpringContext(ApplicationContext springContext) {
+        return springbootConfigurator.setSpringContext(springContext);
+    }
+
+    @Override
+    public ApplicationContext getSpringContext() {
+        return springbootConfigurator.getSpringContext();
+    }
+
+    @Override
+    public CommunitySpringbootBuilder setEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        return springbootConfigurator.setEventPublisher(applicationEventPublisher);
+    }
+
+    @Override
+    public ApplicationEventPublisher getEventPublisher() {
+        return springbootConfigurator.getEventPublisher();
+    }
+
 }

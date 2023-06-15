@@ -8,7 +8,6 @@ import java.util.Map;
 
 public interface CoreConfigurator<HOLDER, CONFIG extends CoreConfiguration> {
 
-    HOLDER setConfiguration(CONFIG configuration);
 
     HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis);
 

@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 public abstract class AbstractCoreConfigurator<HOLDER, CORE_CONFIG extends CoreConfiguration>
         implements CoreConfigurator<HOLDER, CORE_CONFIG> {
 
-    private CORE_CONFIG coreConfiguration;
+    private final CORE_CONFIG coreConfiguration;
 
     protected final Supplier<HOLDER> holderInstanceSupplier;
 
@@ -24,14 +24,6 @@ public abstract class AbstractCoreConfigurator<HOLDER, CORE_CONFIG extends CoreC
     ///////////////////////////////////////////////////////////////////////////////////
     //  SETTERS
     ///////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public HOLDER setConfiguration(CORE_CONFIG configuration) {
-        this.coreConfiguration = configuration;
-        return holderInstanceSupplier.get();
-    }
-
-
 
     @Override
     public HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis) {

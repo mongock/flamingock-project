@@ -1,29 +1,28 @@
 package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
+import io.flamingock.core.core.runner.AbstractCoreConfigurator;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class DefaultCommunityConfigurator<HOLDER, CONFIG extends CommunityConfiguration>
+        extends AbstractCoreConfigurator<HOLDER, CONFIG>
         implements CommunityConfigurator<HOLDER, CONFIG> {
 
     private final Supplier<HOLDER> holderInstanceSupplier;
-    private CONFIG communityConfiguration;
+
+    //TODO create a abstract method in AbstractCoreConfigurator
+    private final CONFIG communityConfiguration;
 
     private ConnectionDriver<?> connectionDriver;
 
     public DefaultCommunityConfigurator(CONFIG communityConfiguration,
                                         Supplier<HOLDER> holderInstanceSupplier) {
+        super(communityConfiguration, holderInstanceSupplier);
         this.communityConfiguration = communityConfiguration;
         this.holderInstanceSupplier = holderInstanceSupplier;
-    }
-
-    @Override
-    public HOLDER setConfiguration(CONFIG communityConfig) {
-        this.communityConfiguration = communityConfig;
-        return holderInstanceSupplier.get();
     }
 
     @Override

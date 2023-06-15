@@ -73,11 +73,6 @@ public class CommunityStandaloneBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public CommunityStandaloneBuilder setConfiguration(CommunityConfiguration configuration) {
-        return standaloneConfigurator.setConfiguration(configuration);
-    }
-
-    @Override
     public CommunityStandaloneBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
         return standaloneConfigurator.setLockAcquiredForMillis(lockAcquiredForMillis);
     }

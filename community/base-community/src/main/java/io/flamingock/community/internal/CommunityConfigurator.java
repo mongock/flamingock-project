@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface CommunityConfigurator<HOLDER, CONFIG extends CommunityConfiguration> {
 
-    HOLDER setConfiguration(CONFIG config);
-
     HOLDER setDriver(ConnectionDriver<?> connectionDriver);
 
     ConnectionDriver<?> getDriver();
