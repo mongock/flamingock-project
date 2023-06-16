@@ -15,23 +15,18 @@ public class CoreProperties {
      * If true, will track ignored changeSets in history. Default false
      */
     private boolean trackIgnored = false;
-
     /**
      * If false, will disable Mongock. Default true
      */
     private boolean enabled = true;
-
-
     /**
      * System version to start with. Default '0'
      */
     private String startSystemVersion = "0";
-
     /**
      * System version to end with. Default Integer.MAX_VALUE
      */
     private String endSystemVersion = String.valueOf(Integer.MAX_VALUE);
-
     /**
      * Service identifier.
      */
@@ -41,18 +36,15 @@ public class CoreProperties {
      * Map for custom data you want to attach to your migration
      */
     private Map<String, Object> metadata = new HashMap<>();
-
     /**
      * Legacy migration object to instruct Mongock how to import legacy migrations from other tools
      */
     private LegacyMigration legacyMigration = null;
-
     /**
      * To enable/disable transactions. It works together with the driver, so enabling transactions with a non-transactional
      * driver or a transactional driver with transaction mode off, will throw a MongockException
      */
     private boolean transactionEnabled = true;
-
     /**
      * From version 5, author is not a mandatory field, but still needed for backward compatibility. This is why Mongock
      * has provided this field, so you can set the author once and forget about it.
@@ -60,7 +52,6 @@ public class CoreProperties {
      * Default value: default_author
      */
     private String defaultAuthor = DEFAULT_MIGRATION_AUTHOR;
-
     /**
      * With the introduction of ExecutableChangeUnit in version 5, Mongock provides two strategies to approach the transactions(automatic and manually):
      * - CHANGE_UNIT: Each change unit is wrapped in an independent transaction. This is the default and recommended way for two main reasons:

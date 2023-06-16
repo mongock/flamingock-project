@@ -24,59 +24,61 @@ public class StandaloneDelegator<HOLDER> implements StandaloneConfigurator<HOLDE
         this.holderSupplier = holderSupplier;
     }
 
-    
+    @Override
     public DependencyContext getDependencyContext() {
         return dependencyManager;
     }
 
-    
+    @Override
     public HOLDER addDependency(String name, Class<?> type, Object instance) {
         dependencyManager.addDependency(new Dependency(name, type, instance));
         return holderSupplier.get();
     }
 
-
+    @Override
     public HOLDER addDependency(Object instance) {
         return addDependency(Dependency.DEFAULT_NAME, instance.getClass(), instance);
     }
 
+    @Override
     public HOLDER addDependency(String name, Object instance) {
         return addDependency(name, instance.getClass(), instance);
     }
 
+    @Override
     public HOLDER addDependency(Class<?> type, Object instance) {
         return addDependency(Dependency.DEFAULT_NAME, type, instance);
     }
 
-    
+    @Override
     public HOLDER setMigrationStartedListener(Consumer<MigrationStartedEvent> listener) {
         this.processStartedListener = listener;
         return holderSupplier.get();
     }
 
-    
+    @Override
     public HOLDER setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener) {
         this.processSuccessListener = listener;
         return holderSupplier.get();
     }
 
-    
+    @Override
     public HOLDER setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
         this.processFailedListener = listener;
         return holderSupplier.get();
     }
 
-    
+    @Override
     public Consumer<MigrationStartedEvent> getMigrationStartedListener() {
         return processStartedListener;
     }
 
-    
+    @Override
     public Consumer<MigrationSuccessEvent> getMigrationSuccessListener() {
         return processSuccessListener;
     }
 
-    
+    @Override
     public Consumer<MigrationFailureEvent> getMigrationFailureListener() {
         return processFailedListener;
     }

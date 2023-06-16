@@ -39,7 +39,6 @@ public interface StandaloneConfigurator<HOLDER> {
    * @return builder for fluent interface
    */
   HOLDER addDependency(Class<?> type, Object instance);
-
   /**
    * Manually adds a dependency to be used in the  changeUnits, which can be retrieved by a type or name
    *
@@ -49,10 +48,6 @@ public interface StandaloneConfigurator<HOLDER> {
    * @return builder for fluent interface
    */
   HOLDER addDependency(String name, Class<?> type, Object instance);
-
-  ///////////////////////////////////////////////////////////////////////////////////
-  //  SETTERS
-  ///////////////////////////////////////////////////////////////////////////////////
 
   //TODO javadoc
   HOLDER setMigrationStartedListener(Consumer<MigrationStartedEvent> listener);

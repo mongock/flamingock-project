@@ -51,11 +51,9 @@ public class CommunitySpringbootBuilder
         this.communityDelegator = new CommunityDelegator<>(communityProperties, () -> this);
         this.springbootDelegator = new SpringbootDelegator<>(springbootProperties, () -> this);
     }
-
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
     ///////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public Runner build() {
         EventPublisher eventPublisher = new EventPublisher(
@@ -76,14 +74,10 @@ public class CommunitySpringbootBuilder
                 new SpringDependencyContext(getSpringContext()),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
-
     }
-
     ///////////////////////////////////////////////////////////////////////////////////
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
-
-
     @Override
     public CoreProperties getCoreProperties() {
         return coreDelegator.getCoreProperties();
@@ -301,8 +295,6 @@ public class CommunitySpringbootBuilder
     ///////////////////////////////////////////////////////////////////////////////////
     //  SPRINGBOOT
     ///////////////////////////////////////////////////////////////////////////////////
-
-
     @Override
     public CommunitySpringbootBuilder setSpringContext(ApplicationContext springContext) {
         return springbootDelegator.setSpringContext(springContext);

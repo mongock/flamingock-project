@@ -18,6 +18,4 @@ public final class CommunityStandalone {
                 new CommunityProperties(),
                 new SimpleDependencyInjectableContext());
     }
-
-
 }

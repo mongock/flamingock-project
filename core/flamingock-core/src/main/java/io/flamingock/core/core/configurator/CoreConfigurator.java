@@ -6,9 +6,6 @@ public interface CoreConfigurator<HOLDER> {
 
     CoreProperties getCoreProperties();
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    //  GETTERS / SETTERS
-    ///////////////////////////////////////////////////////////////////////////////////
     HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis);
 
     HOLDER setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis);
@@ -20,7 +17,6 @@ public interface CoreConfigurator<HOLDER> {
     HOLDER setTrackIgnored(boolean trackIgnored);
 
     HOLDER setEnabled(boolean enabled);
-
 
     HOLDER setStartSystemVersion(String startSystemVersion);
 
@@ -50,9 +46,11 @@ public interface CoreConfigurator<HOLDER> {
     boolean isEnabled();
 
     String getStartSystemVersion();
+
     String getEndSystemVersion();
 
     String getServiceIdentifier();
+
     Map<String, Object> getMetadata();
 
     LegacyMigration getLegacyMigration();

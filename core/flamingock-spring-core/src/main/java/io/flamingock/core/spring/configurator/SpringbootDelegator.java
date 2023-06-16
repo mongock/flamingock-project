@@ -18,7 +18,6 @@ public class SpringbootDelegator<HOLDER> implements SpringbootConfigurator<HOLDE
         this.holderSupplier = holderSupplier;
     }
 
-
     @Override
     public HOLDER setSpringContext(ApplicationContext springContext) {
         this.springContext = springContext;
