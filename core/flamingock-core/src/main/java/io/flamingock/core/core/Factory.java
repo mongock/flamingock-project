@@ -2,7 +2,7 @@ package io.flamingock.core.core;
 
 import io.flamingock.core.core.audit.AuditReader;
 import io.flamingock.core.core.audit.domain.AuditProcessStatus;
-import io.flamingock.core.core.configuration.CoreConfiguration;
+import io.flamingock.core.core.configurator.CoreProperties;
 import io.flamingock.core.core.execution.executor.ProcessExecutor;
 import io.flamingock.core.core.lock.LockAcquirer;
 import io.flamingock.core.core.process.DefinitionProcess;
@@ -12,7 +12,7 @@ import io.flamingock.core.core.runtime.dependency.DependencyContext;
 public interface Factory<
         AUDIT_PROCESS_STATE extends AuditProcessStatus,
         EXECUTABLE_PROCESS extends ExecutableProcess,
-        CONFIGURATION extends CoreConfiguration> {
+        CONFIGURATION> {
 
     LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> getLockProvider();
 

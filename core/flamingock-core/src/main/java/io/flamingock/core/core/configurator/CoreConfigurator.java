@@ -1,14 +1,14 @@
-package io.flamingock.core.core.runner;
-
-import io.flamingock.core.core.configuration.CoreConfiguration;
-import io.flamingock.core.core.configuration.LegacyMigration;
-import io.flamingock.core.core.configuration.TransactionStrategy;
+package io.flamingock.core.core.configurator;
 
 import java.util.Map;
 
-public interface CoreConfigurator<HOLDER, CONFIG extends CoreConfiguration> {
+public interface CoreConfigurator<HOLDER> {
 
+    CoreProperties getCoreProperties();
 
+    ///////////////////////////////////////////////////////////////////////////////////
+    //  GETTERS / SETTERS
+    ///////////////////////////////////////////////////////////////////////////////////
     HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis);
 
     HOLDER setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis);
@@ -34,22 +34,15 @@ public interface CoreConfigurator<HOLDER, CONFIG extends CoreConfiguration> {
 
     HOLDER setTransactionEnabled(Boolean transactionEnabled);
 
-    HOLDER setDefaultMigrationAuthor(String defaultMigrationAuthor);
+    HOLDER setDefaultAuthor(String defaultMigrationAuthor);
 
     HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy);
-
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    //  GETTERS
-    ///////////////////////////////////////////////////////////////////////////////////
-    CONFIG getConfiguration();
 
     long getLockAcquiredForMillis();
 
     Long getLockQuitTryingAfterMillis();
 
     long getLockTryFrequencyMillis();
-
     boolean isThrowExceptionIfCannotObtainLock();
 
     boolean isTrackIgnored();
@@ -57,18 +50,16 @@ public interface CoreConfigurator<HOLDER, CONFIG extends CoreConfiguration> {
     boolean isEnabled();
 
     String getStartSystemVersion();
-
     String getEndSystemVersion();
 
     String getServiceIdentifier();
-
     Map<String, Object> getMetadata();
 
     LegacyMigration getLegacyMigration();
 
     Boolean getTransactionEnabled();
 
-    String getDefaultMigrationAuthor();
+    String getDefaultAuthor();
 
     TransactionStrategy getTransactionStrategy();
 }

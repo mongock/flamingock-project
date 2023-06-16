@@ -1,4 +1,4 @@
-package io.flamingock.core.core.configuration;
+package io.flamingock.core.core.configurator;
 
 import java.util.Objects;
 

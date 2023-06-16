@@ -1,6 +1,6 @@
 package io.flamingock.core.spring.configurator;
 
-public class SpringbootConfiguration {
+public class SpringbootProperties {
     private SpringRunnerType runnerType = SpringRunnerType.ApplicationRunner;
 
     public SpringRunnerType getRunnerType() {

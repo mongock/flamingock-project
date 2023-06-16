@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationEventPublisher;
 public interface SpringbootConfigurator<HOLDER> {
   HOLDER setSpringContext(ApplicationContext springContext);
 
-
   ApplicationContext getSpringContext();
 
   HOLDER setEventPublisher(ApplicationEventPublisher applicationEventPublisher);

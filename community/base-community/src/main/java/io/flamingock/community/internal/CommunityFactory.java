@@ -12,7 +12,7 @@ import io.flamingock.core.core.process.single.SingleDefinitionProcess;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 
-public class CommunityFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, CommunityConfiguration> {
+public class CommunityFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, CommunityProperties> {
     private final ConnectionEngine connectionEngine;
 
     public CommunityFactory(ConnectionEngine connectionEngine) {
@@ -30,7 +30,7 @@ public class CommunityFactory implements Factory<SingleAuditProcessStatus, Singl
     }
 
     @Override
-    public DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> getDefinitionProcess(CommunityConfiguration configuration) {
+    public DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> getDefinitionProcess(CommunityProperties configuration) {
         return new SingleDefinitionProcess(configuration.getMigrationScanPackage());
     }
 
