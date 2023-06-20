@@ -13,5 +13,11 @@ public final class CommunitySpringboot {
         return new CommunitySpringbootBuilder(new CoreProperties(), new CommunityProperties(), new SpringbootProperties());
     }
 
+    static CommunitySpringbootBuilder builder(CoreProperties coreProperties,
+                                              CommunityProperties communityProperties,
+                                              SpringbootProperties springbootProperties) {
+        return new CommunitySpringbootBuilder(coreProperties, communityProperties, springbootProperties);
+    }
+
 
 }
