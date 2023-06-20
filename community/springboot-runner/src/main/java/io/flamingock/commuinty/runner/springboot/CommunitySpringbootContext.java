@@ -11,17 +11,17 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
+@ConditionalOnExpression("${mongock.enabled:true}")
+public class CommunitySpringbootContext {
 
-public abstract class MongockContextBase<CONFIG> {
 
     @Bean
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${mongock.runner-type:ApplicationRunner}'.toLowerCase().equals('applicationrunner')")
     public ApplicationRunner applicationRunner(ConnectionDriver<?> connectionDriver,
-                                               CONFIG springConfiguration,
+                                               CommunitySpringbootConfigurationProperties springConfiguration,
                                                ApplicationContext springContext,
                                                ApplicationEventPublisher applicationEventPublisher) {
-
         return getBuilder(connectionDriver, springConfiguration, springContext, applicationEventPublisher)
                 .buildApplicationRunner();
     }
@@ -30,16 +30,25 @@ public abstract class MongockContextBase<CONFIG> {
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${mongock.runner-type:null}'.toLowerCase().equals('initializingbean')")
     public InitializingBean initializingBeanRunner(ConnectionDriver<?> connectionDriver,
-                                                   CONFIG springConfiguration,
+                                                   CommunitySpringbootConfigurationProperties springConfiguration,
                                                    ApplicationContext springContext,
                                                    ApplicationEventPublisher applicationEventPublisher) {
         return getBuilder(connectionDriver, springConfiguration, springContext, applicationEventPublisher)
                 .buildInitializingBeanRunner();
     }
 
-    @SuppressWarnings("all")
-    public abstract SpringRunnerBuilder getBuilder(ConnectionDriver<?> connectionDriver,
-                                                   CONFIG springConfiguration,
-                                                   ApplicationContext springContext,
-                                                   ApplicationEventPublisher applicationEventPublisher);
+
+    private SpringRunnerBuilder getBuilder(ConnectionDriver<?> connectionDriver,
+                                           CommunitySpringbootConfigurationProperties properties,
+                                           ApplicationContext springContext,
+                                           ApplicationEventPublisher applicationEventPublisher) {
+        return CommunitySpringboot.builder(
+                        properties.getCoreProperties(),
+                        properties.getCommunityProperties(),
+                        properties.getSpringbootProperties()
+                ).setDriver(connectionDriver)
+                .setSpringContext(springContext)
+                .setEventPublisher(applicationEventPublisher);
+    }
+
 }
