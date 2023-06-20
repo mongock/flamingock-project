@@ -1,34 +1,32 @@
-package io.flamingock.core.core.configuration;
+package io.flamingock.core.core.configurator;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.flamingock.core.core.util.Constants.DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;
 import static io.flamingock.core.core.util.Constants.DEFAULT_MIGRATION_AUTHOR;
+import static io.flamingock.core.core.util.Constants.DEFAULT_QUIT_TRYING_AFTER_MILLIS;
+import static io.flamingock.core.core.util.Constants.DEFAULT_TRY_FREQUENCY_MILLIS;
 
-public abstract class CoreConfiguration {
+public class CoreProperties {
 
-    private final LockConfiguration lockConfiguration  = new LockConfiguration();;
+    private final LockProperties lockConfiguration  = new LockProperties();
     /**
      * If true, will track ignored changeSets in history. Default false
      */
     private boolean trackIgnored = false;
-
     /**
      * If false, will disable Mongock. Default true
      */
     private boolean enabled = true;
-
-
     /**
      * System version to start with. Default '0'
      */
     private String startSystemVersion = "0";
-
     /**
      * System version to end with. Default Integer.MAX_VALUE
      */
     private String endSystemVersion = String.valueOf(Integer.MAX_VALUE);
-
     /**
      * Service identifier.
      */
@@ -38,18 +36,15 @@ public abstract class CoreConfiguration {
      * Map for custom data you want to attach to your migration
      */
     private Map<String, Object> metadata = new HashMap<>();
-
     /**
      * Legacy migration object to instruct Mongock how to import legacy migrations from other tools
      */
     private LegacyMigration legacyMigration = null;
-
     /**
      * To enable/disable transactions. It works together with the driver, so enabling transactions with a non-transactional
      * driver or a transactional driver with transaction mode off, will throw a MongockException
      */
     private boolean transactionEnabled = true;
-
     /**
      * From version 5, author is not a mandatory field, but still needed for backward compatibility. This is why Mongock
      * has provided this field, so you can set the author once and forget about it.
@@ -57,7 +52,6 @@ public abstract class CoreConfiguration {
      * Default value: default_author
      */
     private String defaultAuthor = DEFAULT_MIGRATION_AUTHOR;
-
     /**
      * With the introduction of ExecutableChangeUnit in version 5, Mongock provides two strategies to approach the transactions(automatic and manually):
      * - CHANGE_UNIT: Each change unit is wrapped in an independent transaction. This is the default and recommended way for two main reasons:
@@ -180,5 +174,72 @@ public abstract class CoreConfiguration {
 
     public TransactionStrategy getTransactionStrategy() {
         return transactionStrategy;
+    }
+
+    public static class LockProperties {
+
+        /**
+         * The period the lock will be reserved once acquired.
+         * If it finishes before, it will release it earlier.
+         * If the process takes longer thant this period, it will be automatically extended.
+         * Default 1 minute.
+         * Minimum 3 seconds.
+         */
+        private long lockAcquiredForMillis = DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;
+
+        /**
+         * The time after what Mongock will quit trying to acquire the lock in case it's acquired by another process.
+         * Default 3 minutes.
+         * Minimum 0, which means won't wait whatsoever.
+         */
+        private long lockQuitTryingAfterMillis = DEFAULT_QUIT_TRYING_AFTER_MILLIS;
+
+        /**
+         * In case the lock is held by another process, it indicates the frequency to try to acquire it.
+         * Regardless of this value, the longest Mongock will wait if until the current lock's expiration.
+         * Default 1 second.
+         * Minimum 500 millis.
+         */
+        private long lockTryFrequencyMillis = DEFAULT_TRY_FREQUENCY_MILLIS;
+
+        /**
+         * Mongock will throw MongockException if lock can not be obtained. Default true
+         */
+        private boolean throwExceptionIfCannotObtainLock = true;
+
+
+
+        public void setLockAcquiredForMillis(long lockAcquiredForMillis) {
+            this.lockAcquiredForMillis = lockAcquiredForMillis;
+        }
+
+        public void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
+            this.lockQuitTryingAfterMillis = lockQuitTryingAfterMillis;
+        }
+
+        public void setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
+            this.lockTryFrequencyMillis = lockTryFrequencyMillis;
+        }
+
+        public void setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
+            this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
+        }
+
+
+        public long getLockAcquiredForMillis() {
+            return lockAcquiredForMillis;
+        }
+
+        public Long getLockQuitTryingAfterMillis() {
+            return lockQuitTryingAfterMillis;
+        }
+
+        public long getLockTryFrequencyMillis() {
+            return lockTryFrequencyMillis;
+        }
+
+        public boolean isThrowExceptionIfCannotObtainLock() {
+            return throwExceptionIfCannotObtainLock;
+        }
     }
 }

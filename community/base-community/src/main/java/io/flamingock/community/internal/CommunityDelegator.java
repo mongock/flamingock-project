@@ -6,30 +6,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class CommunityConfiguratorImpl<HOLDER, CONFIG extends CommunityConfiguration>
-        implements CommunityConfigurator<HOLDER, CONFIG> {
+public class CommunityDelegator<HOLDER> implements CommunityConfigurator<HOLDER> {
 
-    private final Supplier<HOLDER> holderInstanceSupplier;
-    private CONFIG communityConfiguration;
-
+    private final CommunityProperties communityProperties;
+    private final Supplier<HOLDER> holderSupplier;
     private ConnectionDriver<?> connectionDriver;
 
-    public CommunityConfiguratorImpl(CONFIG communityConfiguration,
-                                     Supplier<HOLDER> holderInstanceSupplier) {
-        this.communityConfiguration = communityConfiguration;
-        this.holderInstanceSupplier = holderInstanceSupplier;
-    }
+    public CommunityDelegator(CommunityProperties communityProperties, Supplier<HOLDER> holderSupplier) {
+        this.communityProperties = communityProperties;
+        this.holderSupplier = holderSupplier;
 
-    @Override
-    public HOLDER setConfiguration(CONFIG communityConfig) {
-        this.communityConfiguration = communityConfig;
-        return holderInstanceSupplier.get();
     }
 
     @Override
     public HOLDER setDriver(ConnectionDriver<?> connectionDriver) {
         this.connectionDriver = connectionDriver;
-        return holderInstanceSupplier.get();
+        return holderSupplier.get();
     }
 
     @Override
@@ -39,7 +31,7 @@ public class CommunityConfiguratorImpl<HOLDER, CONFIG extends CommunityConfigura
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityConfiguration.getMigrationScanPackage();
+        return communityProperties.getMigrationScanPackage();
     }
 
     @Override
@@ -58,39 +50,44 @@ public class CommunityConfiguratorImpl<HOLDER, CONFIG extends CommunityConfigura
 
     @Override
     public HOLDER setMigrationScanPackage(List<String> migrationScanPackage) {
-        communityConfiguration.setMigrationScanPackage(migrationScanPackage);
-        return holderInstanceSupplier.get();
+        communityProperties.setMigrationScanPackage(migrationScanPackage);
+        return holderSupplier.get();
     }
 
     @Override
     public String getMigrationRepositoryName() {
-        return communityConfiguration.getMigrationRepositoryName();
+        return communityProperties.getMigrationRepositoryName();
     }
 
     @Override
     public HOLDER setMigrationRepositoryName(String value) {
-        communityConfiguration.setMigrationRepositoryName(value);
-        return holderInstanceSupplier.get();
+        communityProperties.setMigrationRepositoryName(value);
+        return holderSupplier.get();
     }
 
     @Override
     public String getLockRepositoryName() {
-        return communityConfiguration.getLockRepositoryName();
+        return communityProperties.getLockRepositoryName();
     }
 
     @Override
     public HOLDER setLockRepositoryName(String value) {
-        return holderInstanceSupplier.get();
+        return holderSupplier.get();
     }
 
     @Override
     public boolean isIndexCreation() {
-        return communityConfiguration.isIndexCreation();
+        return communityProperties.isIndexCreation();
     }
 
     @Override
     public HOLDER setIndexCreation(boolean value) {
-        communityConfiguration.setIndexCreation(value);
-        return holderInstanceSupplier.get();
+        communityProperties.setIndexCreation(value);
+        return holderSupplier.get();
+    }
+
+    @Override
+    public CommunityProperties getCommunityProperties() {
+        return communityProperties;
     }
 }

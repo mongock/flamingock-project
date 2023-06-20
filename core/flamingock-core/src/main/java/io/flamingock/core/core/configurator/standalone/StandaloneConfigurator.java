@@ -1,4 +1,4 @@
-package io.flamingock.core.core.runner.standalone;
+package io.flamingock.core.core.configurator.standalone;
 
 
 
@@ -20,9 +20,7 @@ public interface StandaloneConfigurator<HOLDER> {
    * @param instance dependency
    * @return builder for fluent interface
    */
-  default HOLDER addDependency(Object instance) {
-    return addDependency(Dependency.DEFAULT_NAME, instance.getClass(), instance);
-  }
+  HOLDER addDependency(Object instance);
 
   /**
    * Manually adds a dependency to be used in the  changeUnits, which can be retrieved by a name
@@ -31,9 +29,7 @@ public interface StandaloneConfigurator<HOLDER> {
    * @param instance dependency
    * @return builder for fluent interface
    */
-  default HOLDER addDependency(String name, Object instance) {
-    return addDependency(name, instance.getClass(), instance);
-  }
+  HOLDER addDependency(String name, Object instance);
 
   /**
    * Manually adds a dependency to be used in the  changeUnits, which can be retrieved by a type
@@ -42,10 +38,7 @@ public interface StandaloneConfigurator<HOLDER> {
    * @param instance dependency
    * @return builder for fluent interface
    */
-  default HOLDER addDependency(Class<?> type, Object instance) {
-    return addDependency(Dependency.DEFAULT_NAME, type, instance);
-  }
-
+  HOLDER addDependency(Class<?> type, Object instance);
   /**
    * Manually adds a dependency to be used in the  changeUnits, which can be retrieved by a type or name
    *
@@ -55,10 +48,6 @@ public interface StandaloneConfigurator<HOLDER> {
    * @return builder for fluent interface
    */
   HOLDER addDependency(String name, Class<?> type, Object instance);
-
-  ///////////////////////////////////////////////////////////////////////////////////
-  //  SETTERS
-  ///////////////////////////////////////////////////////////////////////////////////
 
   //TODO javadoc
   HOLDER setMigrationStartedListener(Consumer<MigrationStartedEvent> listener);

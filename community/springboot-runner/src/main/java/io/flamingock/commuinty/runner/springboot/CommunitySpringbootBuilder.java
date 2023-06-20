@@ -1,21 +1,25 @@
 package io.flamingock.commuinty.runner.springboot;
 
-import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.CommunityConfigurator;
-import io.flamingock.community.internal.CommunityConfiguratorImpl;
+import io.flamingock.community.internal.CommunityDelegator;
+import io.flamingock.community.internal.CommunityFactory;
+import io.flamingock.community.internal.CommunityProperties;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.core.core.configuration.LegacyMigration;
-import io.flamingock.core.core.configuration.TransactionStrategy;
+import io.flamingock.core.core.configurator.CoreConfigurator;
+import io.flamingock.core.core.configurator.CoreDelegator;
+import io.flamingock.core.core.configurator.CoreProperties;
+import io.flamingock.core.core.configurator.LegacyMigration;
+import io.flamingock.core.core.configurator.TransactionStrategy;
 import io.flamingock.core.core.event.EventPublisher;
-import io.flamingock.core.core.runner.CoreConfigurator;
 import io.flamingock.core.core.runner.Runner;
-import io.flamingock.core.core.runner.RunnerBuilder;
 import io.flamingock.core.core.runner.RunnerCreator;
+import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.spring.SpringDependencyContext;
-import io.flamingock.core.spring.builder.DefaultSpringbootConfigurator;
-import io.flamingock.core.spring.builder.SpringbootConfigurator;
+import io.flamingock.core.spring.configurator.SpringRunnerType;
+import io.flamingock.core.spring.configurator.SpringbootConfigurator;
+import io.flamingock.core.spring.configurator.SpringbootDelegator;
+import io.flamingock.core.spring.configurator.SpringbootProperties;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
 import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
@@ -27,29 +31,29 @@ import java.util.Map;
 
 public class CommunitySpringbootBuilder
         implements
-        SpringRunnerBuilder,
-        CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration>,
+        CoreConfigurator<CommunitySpringbootBuilder>,
+        CommunityConfigurator<CommunitySpringbootBuilder>,
         SpringbootConfigurator<CommunitySpringbootBuilder>,
-        CoreConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> {
-
-    private final DefaultSpringbootConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> springbootConfigurator;
-
-    private final CommunityConfigurator<CommunitySpringbootBuilder, CommunityConfiguration> communityConfigurator;
+        SpringRunnerBuilder {
 
 
-    CommunitySpringbootBuilder() {
-        this(new CommunityConfiguration());
+    private final CoreDelegator<CommunitySpringbootBuilder> coreDelegator;
+
+    private final CommunityDelegator<CommunitySpringbootBuilder> communityDelegator;
+
+    private final SpringbootDelegator<CommunitySpringbootBuilder> springbootDelegator;
+
+
+    CommunitySpringbootBuilder(CoreProperties coreProperties,
+                               CommunityProperties communityProperties,
+                               SpringbootProperties springbootProperties) {
+        this.coreDelegator = new CoreDelegator<>(coreProperties, () -> this);
+        this.communityDelegator = new CommunityDelegator<>(communityProperties, () -> this);
+        this.springbootDelegator = new SpringbootDelegator<>(springbootProperties, () -> this);
     }
-
-    CommunitySpringbootBuilder(CommunityConfiguration configuration) {
-        this.springbootConfigurator = new DefaultSpringbootConfigurator<>(configuration, () -> this);
-        this.communityConfigurator = new CommunityConfiguratorImpl<>(configuration, () -> this);
-    }
-
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
     ///////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public Runner build() {
         EventPublisher eventPublisher = new EventPublisher(
@@ -58,258 +62,266 @@ public class CommunitySpringbootBuilder
                 result -> getEventPublisher().publishEvent(new SpringMigrationFailureEvent(this, result))
         );
 
-        ConnectionEngine connectionEngine = communityConfigurator
+        ConnectionEngine connectionEngine = communityDelegator
                 .getDriver()
-                .getConnectionEngine(springbootConfigurator.getConfiguration());
+                .getConnectionEngine(coreDelegator.getCoreProperties(), communityDelegator.getCommunityProperties());
         connectionEngine.initialize();
         return RunnerCreator.create(
                 new CommunityFactory(connectionEngine),
-                getConfiguration(),
+                coreDelegator.getCoreProperties(),
+                communityDelegator.getCommunityProperties(),
                 eventPublisher,
                 new SpringDependencyContext(getSpringContext()),
-                getConfiguration().isThrowExceptionIfCannotObtainLock()
+                getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
-
     }
-
     ///////////////////////////////////////////////////////////////////////////////////
-    //  CoreSpringbootBuilder
+    //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
-
     @Override
-    public CommunitySpringbootBuilder setConfiguration(CommunityConfiguration configuration) {
-        communityConfigurator.setConfiguration(configuration);
-        springbootConfigurator.setConfiguration(configuration);
-        return this;
+    public CoreProperties getCoreProperties() {
+        return coreDelegator.getCoreProperties();
     }
 
     @Override
     public CommunitySpringbootBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
-        return springbootConfigurator.setLockAcquiredForMillis(lockAcquiredForMillis);
+        return coreDelegator.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
     @Override
     public CommunitySpringbootBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
-        return springbootConfigurator.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+        return coreDelegator.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
     @Override
     public CommunitySpringbootBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
-        return springbootConfigurator.setLockTryFrequencyMillis(lockTryFrequencyMillis);
+        return coreDelegator.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
     @Override
     public CommunitySpringbootBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
-        return springbootConfigurator.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+        return coreDelegator.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
     @Override
     public CommunitySpringbootBuilder setTrackIgnored(boolean trackIgnored) {
-        return springbootConfigurator.setTrackIgnored(trackIgnored);
+        return coreDelegator.setTrackIgnored(trackIgnored);
     }
 
     @Override
     public CommunitySpringbootBuilder setEnabled(boolean enabled) {
-        return springbootConfigurator.setEnabled(enabled);
+        return coreDelegator.setEnabled(enabled);
     }
 
     @Override
     public CommunitySpringbootBuilder setStartSystemVersion(String startSystemVersion) {
-        return springbootConfigurator.setStartSystemVersion(startSystemVersion);
+        return coreDelegator.setStartSystemVersion(startSystemVersion);
     }
 
     @Override
     public CommunitySpringbootBuilder setEndSystemVersion(String endSystemVersion) {
-        return springbootConfigurator.setEndSystemVersion(endSystemVersion);
+        return coreDelegator.setEndSystemVersion(endSystemVersion);
     }
 
     @Override
     public CommunitySpringbootBuilder setServiceIdentifier(String serviceIdentifier) {
-        return springbootConfigurator.setServiceIdentifier(serviceIdentifier);
+        return coreDelegator.setServiceIdentifier(serviceIdentifier);
     }
 
     @Override
     public CommunitySpringbootBuilder setMetadata(Map<String, Object> metadata) {
-        return springbootConfigurator.setMetadata(metadata);
+        return coreDelegator.setMetadata(metadata);
     }
 
     @Override
     public CommunitySpringbootBuilder setLegacyMigration(LegacyMigration legacyMigration) {
-        return springbootConfigurator.setLegacyMigration(legacyMigration);
+        return coreDelegator.setLegacyMigration(legacyMigration);
     }
 
     @Override
     public CommunitySpringbootBuilder setTransactionEnabled(Boolean transactionEnabled) {
-        return springbootConfigurator.setTransactionEnabled(transactionEnabled);
+        return coreDelegator.setTransactionEnabled(transactionEnabled);
     }
 
     @Override
-    public CommunitySpringbootBuilder setDefaultMigrationAuthor(String defaultMigrationAuthor) {
-        return springbootConfigurator.setDefaultMigrationAuthor(defaultMigrationAuthor);
+    public CommunitySpringbootBuilder setDefaultAuthor(String publicMigrationAuthor) {
+        return coreDelegator.setDefaultAuthor(publicMigrationAuthor);
     }
 
     @Override
     public CommunitySpringbootBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
-        return springbootConfigurator.setTransactionStrategy(transactionStrategy);
-    }
-
-    @Override
-    public CommunityConfiguration getConfiguration() {
-        return springbootConfigurator.getConfiguration();
+        return coreDelegator.setTransactionStrategy(transactionStrategy);
     }
 
     @Override
     public long getLockAcquiredForMillis() {
-        return springbootConfigurator.getLockAcquiredForMillis();
+        return coreDelegator.getLockAcquiredForMillis();
     }
 
     @Override
     public Long getLockQuitTryingAfterMillis() {
-        return springbootConfigurator.getLockQuitTryingAfterMillis();
+        return coreDelegator.getLockQuitTryingAfterMillis();
     }
 
     @Override
     public long getLockTryFrequencyMillis() {
-        return springbootConfigurator.getLockTryFrequencyMillis();
+        return coreDelegator.getLockTryFrequencyMillis();
     }
 
     @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
-        return springbootConfigurator.isThrowExceptionIfCannotObtainLock();
+        return coreDelegator.isThrowExceptionIfCannotObtainLock();
     }
 
     @Override
     public boolean isTrackIgnored() {
-        return springbootConfigurator.isTrackIgnored();
+        return coreDelegator.isTrackIgnored();
     }
 
     @Override
     public boolean isEnabled() {
-        return springbootConfigurator.isEnabled();
+        return coreDelegator.isEnabled();
     }
 
     @Override
     public String getStartSystemVersion() {
-        return springbootConfigurator.getStartSystemVersion();
+        return coreDelegator.getStartSystemVersion();
     }
 
     @Override
     public String getEndSystemVersion() {
-        return springbootConfigurator.getEndSystemVersion();
+        return coreDelegator.getEndSystemVersion();
     }
 
     @Override
     public String getServiceIdentifier() {
-        return springbootConfigurator.getServiceIdentifier();
+        return coreDelegator.getServiceIdentifier();
     }
 
     @Override
     public Map<String, Object> getMetadata() {
-        return springbootConfigurator.getMetadata();
+        return coreDelegator.getMetadata();
     }
 
     @Override
     public LegacyMigration getLegacyMigration() {
-        return springbootConfigurator.getLegacyMigration();
+        return coreDelegator.getLegacyMigration();
     }
 
     @Override
     public Boolean getTransactionEnabled() {
-        return springbootConfigurator.getTransactionEnabled();
+        return coreDelegator.getTransactionEnabled();
     }
 
     @Override
-    public String getDefaultMigrationAuthor() {
-        return springbootConfigurator.getDefaultMigrationAuthor();
+    public String getDefaultAuthor() {
+        return coreDelegator.getDefaultAuthor();
     }
 
     @Override
     public TransactionStrategy getTransactionStrategy() {
-        return springbootConfigurator.getTransactionStrategy();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setSpringContext(ApplicationContext springContext) {
-        return springbootConfigurator.setSpringContext(springContext);
-    }
-
-    @Override
-    public ApplicationContext getSpringContext() {
-        return springbootConfigurator.getSpringContext();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-        return springbootConfigurator.setEventPublisher(applicationEventPublisher);
-    }
-
-    @Override
-    public ApplicationEventPublisher getEventPublisher() {
-        return springbootConfigurator.getEventPublisher();
+        return coreDelegator.getTransactionStrategy();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
-    //  communityRunnerConfigurator
+    //  COMMUNITY
     ///////////////////////////////////////////////////////////////////////////////////
-
 
     @Override
     public CommunitySpringbootBuilder setDriver(ConnectionDriver<?> connectionDriver) {
-        return communityConfigurator.setDriver(connectionDriver);
+        return communityDelegator.setDriver(connectionDriver);
     }
 
     @Override
     public ConnectionDriver<?> getDriver() {
-        return communityConfigurator.getDriver();
+        return communityDelegator.getDriver();
     }
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityConfigurator.getMigrationScanPackage();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return communityConfigurator.setMigrationScanPackage(migrationScanPackage);
+        return communityDelegator.getMigrationScanPackage();
     }
 
     @Override
     public CommunitySpringbootBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        return communityConfigurator.addMigrationScanPackages(migrationScanPackageList);
+        return communityDelegator.addMigrationScanPackages(migrationScanPackageList);
     }
 
     @Override
     public CommunitySpringbootBuilder addMigrationScanPackage(String migrationScanPackage) {
-        return communityConfigurator.addMigrationScanPackage(migrationScanPackage);
+        return communityDelegator.addMigrationScanPackage(migrationScanPackage);
+    }
+
+    @Override
+    public CommunitySpringbootBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
+        return communityDelegator.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override
     public String getMigrationRepositoryName() {
-        return communityConfigurator.getMigrationRepositoryName();
+        return communityDelegator.getMigrationRepositoryName();
     }
 
     @Override
     public CommunitySpringbootBuilder setMigrationRepositoryName(String value) {
-        return communityConfigurator.setMigrationRepositoryName(value);
+        return communityDelegator.setMigrationRepositoryName(value);
     }
 
     @Override
     public String getLockRepositoryName() {
-        return communityConfigurator.getLockRepositoryName();
+        return communityDelegator.getLockRepositoryName();
     }
 
     @Override
     public CommunitySpringbootBuilder setLockRepositoryName(String value) {
-        return communityConfigurator.setLockRepositoryName(value);
+        return communityDelegator.setLockRepositoryName(value);
     }
 
     @Override
     public boolean isIndexCreation() {
-        return communityConfigurator.isIndexCreation();
+        return communityDelegator.isIndexCreation();
     }
 
     @Override
     public CommunitySpringbootBuilder setIndexCreation(boolean value) {
-        return communityConfigurator.setIndexCreation(value);
+        return communityDelegator.setIndexCreation(value);
+    }
+
+    @Override
+    public CommunityProperties getCommunityProperties() {
+        return communityDelegator.getCommunityProperties();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //  SPRINGBOOT
+    ///////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public CommunitySpringbootBuilder setSpringContext(ApplicationContext springContext) {
+        return springbootDelegator.setSpringContext(springContext);
+    }
+
+    @Override
+    public ApplicationContext getSpringContext() {
+        return springbootDelegator.getSpringContext();
+    }
+
+    @Override
+    public CommunitySpringbootBuilder setEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        return springbootDelegator.setEventPublisher(applicationEventPublisher);
+    }
+
+    @Override
+    public ApplicationEventPublisher getEventPublisher() {
+        return springbootDelegator.getEventPublisher();
+    }
+
+    @Override
+    public CommunitySpringbootBuilder setRunnerType(SpringRunnerType runnerType) {
+        return springbootDelegator.setRunnerType(runnerType);
+    }
+
+    @Override
+    public SpringRunnerType getRunnerType() {
+        return springbootDelegator.getRunnerType();
     }
 }

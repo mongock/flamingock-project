@@ -1,10 +1,8 @@
-package io.flamingock.core.core.runner.standalone;
+package io.flamingock.core.core.configurator.standalone;
 
-import io.flamingock.core.core.configuration.CoreConfiguration;
 import io.flamingock.core.core.event.MigrationFailureEvent;
 import io.flamingock.core.core.event.MigrationStartedEvent;
 import io.flamingock.core.core.event.MigrationSuccessEvent;
-import io.flamingock.core.core.runner.AbstractCoreConfigurator;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.core.runtime.dependency.SimpleDependencyInjectableContext;
 import io.flamingock.core.core.runtime.dependency.Dependency;
@@ -13,26 +11,17 @@ import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class DefaultStandaloneConfigurator<
-        HOLDER,
-        CORE_CONFIG extends CoreConfiguration>
-        extends AbstractCoreConfigurator<HOLDER, CORE_CONFIG>
-        implements StandaloneConfigurator<HOLDER> {
+public class StandaloneDelegator<HOLDER> implements StandaloneConfigurator<HOLDER> {
 
     private final DependencyInjectableContext dependencyManager;
+    private final Supplier<HOLDER> holderSupplier;
     private Consumer<MigrationStartedEvent> processStartedListener;
     private Consumer<MigrationSuccessEvent> processSuccessListener;
     private Consumer<MigrationFailureEvent> processFailedListener;
 
-    public DefaultStandaloneConfigurator(CORE_CONFIG coreConfiguration, Supplier<HOLDER> holderInstanceSupplier) {
-        this(coreConfiguration, holderInstanceSupplier, new SimpleDependencyInjectableContext());
-    }
-
-    DefaultStandaloneConfigurator(CORE_CONFIG coreConfiguration,
-                                  Supplier<HOLDER> holderInstanceSupplier,
-                                  SimpleDependencyInjectableContext dependencyManager) {
-        super(coreConfiguration, holderInstanceSupplier);
+    public StandaloneDelegator(DependencyInjectableContext dependencyManager, Supplier<HOLDER> holderSupplier) {
         this.dependencyManager = dependencyManager;
+        this.holderSupplier = holderSupplier;
     }
 
     @Override
@@ -43,25 +32,40 @@ public class DefaultStandaloneConfigurator<
     @Override
     public HOLDER addDependency(String name, Class<?> type, Object instance) {
         dependencyManager.addDependency(new Dependency(name, type, instance));
-        return holderInstanceSupplier.get();
+        return holderSupplier.get();
+    }
+
+    @Override
+    public HOLDER addDependency(Object instance) {
+        return addDependency(Dependency.DEFAULT_NAME, instance.getClass(), instance);
+    }
+
+    @Override
+    public HOLDER addDependency(String name, Object instance) {
+        return addDependency(name, instance.getClass(), instance);
+    }
+
+    @Override
+    public HOLDER addDependency(Class<?> type, Object instance) {
+        return addDependency(Dependency.DEFAULT_NAME, type, instance);
     }
 
     @Override
     public HOLDER setMigrationStartedListener(Consumer<MigrationStartedEvent> listener) {
         this.processStartedListener = listener;
-        return holderInstanceSupplier.get();
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener) {
         this.processSuccessListener = listener;
-        return holderInstanceSupplier.get();
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
         this.processFailedListener = listener;
-        return holderInstanceSupplier.get();
+        return holderSupplier.get();
     }
 
     @Override

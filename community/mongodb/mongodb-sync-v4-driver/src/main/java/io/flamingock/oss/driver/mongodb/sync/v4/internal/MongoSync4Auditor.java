@@ -7,7 +7,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
-import io.flamingock.core.core.configuration.CoreConfiguration;
+import io.flamingock.core.core.configurator.CoreProperties;
 import io.flamingock.core.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
@@ -31,7 +31,7 @@ import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_E
 
 public class MongoSync4Auditor extends MongockAuditor {
     
-    private static final Logger logger = LoggerFactory.getLogger(CoreConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(CoreProperties.class);
 
     private final MongoCollection<Document> collection;
     private final MongoDBAuditMapper<MongoSync4DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
