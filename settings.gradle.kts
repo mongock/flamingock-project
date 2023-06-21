@@ -30,8 +30,14 @@ include("springboot-runner")
 project(":springboot-runner").name = "springboot-runner"
 project(":springboot-runner").projectDir = file("community/springboot-runner")
 
-
-
 include("mongodb-facade")
 project(":mongodb-facade").name = "mongodb-facade"
 project(":mongodb-facade").projectDir = file("community/mongodb/mongodb-facade")
+
+//////////////////////////////////////
+// EXAMPLES
+//////////////////////////////////////
+
+include("standalone-mongodb-sync")
+project(":standalone-mongodb-sync").name = "standalone-mongodb-sync"
+project(":standalone-mongodb-sync").projectDir = file("examples/community/standalone-mongodb-sync")
