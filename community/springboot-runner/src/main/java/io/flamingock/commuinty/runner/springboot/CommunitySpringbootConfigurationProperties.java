@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
 import java.util.Map;
 
-@ConfigurationProperties("mongock")
+@ConfigurationProperties("flamingock")
 public class CommunitySpringbootConfigurationProperties {
 
     private final CoreProperties coreProperties = new CoreProperties();

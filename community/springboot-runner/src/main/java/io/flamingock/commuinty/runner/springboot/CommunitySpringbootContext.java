@@ -11,13 +11,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
-@ConditionalOnExpression("${mongock.enabled:true}")
+@ConditionalOnExpression("${flamingock.enabled:true}")
 public class CommunitySpringbootContext {
 
 
     @Bean
     @Profile(Constants.NON_CLI_PROFILE)
-    @ConditionalOnExpression("'${mongock.runner-type:ApplicationRunner}'.toLowerCase().equals('applicationrunner')")
+    @ConditionalOnExpression("'${flamingock.runner-type:ApplicationRunner}'.toLowerCase().equals('applicationrunner')")
     public ApplicationRunner applicationRunner(ConnectionDriver<?> connectionDriver,
                                                CommunitySpringbootConfigurationProperties springConfiguration,
                                                ApplicationContext springContext,
@@ -28,7 +28,7 @@ public class CommunitySpringbootContext {
 
     @Bean
     @Profile(Constants.NON_CLI_PROFILE)
-    @ConditionalOnExpression("'${mongock.runner-type:null}'.toLowerCase().equals('initializingbean')")
+    @ConditionalOnExpression("'${flamingock.runner-type:null}'.toLowerCase().equals('initializingbean')")
     public InitializingBean initializingBeanRunner(ConnectionDriver<?> connectionDriver,
                                                    CommunitySpringbootConfigurationProperties springConfiguration,
                                                    ApplicationContext springContext,
