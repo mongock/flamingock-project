@@ -1,4 +1,4 @@
-package io.flamingock.commuinty.runner.springboot;
+package io.flamingock.core.spring;
 
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerBuilder;

@@ -12,8 +12,7 @@ public class SpringbootDelegator<HOLDER> implements SpringbootConfigurator<HOLDE
     private ApplicationEventPublisher applicationEventPublisher;
     private ApplicationContext springContext;
 
-    public SpringbootDelegator(SpringbootProperties springbootConfiguration,
-                               Supplier<HOLDER> holderSupplier) {
+    public SpringbootDelegator(SpringbootProperties springbootConfiguration, Supplier<HOLDER> holderSupplier) {
         this.springbootProperties = springbootConfiguration;
         this.holderSupplier = holderSupplier;
     }
