@@ -13,6 +13,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -37,11 +38,13 @@ public class Main {
     }
 
     @Bean
+    @ConditionalOnBean(MongoDatabase.class)
     public MongoDatabase mongoDatabase(MongoClient mongoClient) {
         return mongoClient.getDatabase(DATABASE_NAME);
     }
 
     @Bean
+    @ConditionalOnBean(MongoClient.class)
     public MongoClient mongoClient() {
         return buildMongoClientWithCodecs(DATABASE_CONNECTION_STRING);
     }

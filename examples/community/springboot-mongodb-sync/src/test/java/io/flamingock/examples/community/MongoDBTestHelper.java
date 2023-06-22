@@ -1,21 +1,12 @@
-package io.flamingock.examples.community.mongodb.sync;
+package io.flamingock.examples.community;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.core.util.TimeUtil;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
-
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_TIMESTAMP;
 
 public class MongoDBTestHelper {
 

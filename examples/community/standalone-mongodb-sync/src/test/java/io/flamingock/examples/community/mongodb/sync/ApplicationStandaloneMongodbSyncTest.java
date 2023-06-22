@@ -5,7 +5,6 @@ import io.flamingock.examples.community.mongodb.sync.changes.BInsertDocument;
 import io.flamingock.examples.community.mongodb.sync.changes.CInsertAnotherDocument;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.flamingock.examples.community.mongodb.sync.MongoDBTestHelper.mongoClient;
@@ -26,7 +25,6 @@ public class ApplicationStandaloneMongodbSyncTest {
 
 
     @Test
-    @DisplayName("When standalone runs the driver should persist the audit logs and the user's collection updated")
     void happyPath() {
         //Given-When
         new ApplicationStandaloneMongodbSync().run(mongoClient, DB_NAME);
