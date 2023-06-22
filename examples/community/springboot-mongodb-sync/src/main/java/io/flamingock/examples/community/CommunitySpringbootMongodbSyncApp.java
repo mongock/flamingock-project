@@ -22,13 +22,13 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @EnableFlamingock
 @SpringBootApplication
-public class Main {
+public class CommunitySpringbootMongodbSyncApp {
 
     public final static String DATABASE_CONNECTION_STRING = "mongodb://localhost:27017/";
     public final static String DATABASE_NAME = "test";
 
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(CommunitySpringbootMongodbSyncApp.class, args);
     }
 
 

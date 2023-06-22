@@ -11,7 +11,7 @@ import static io.flamingock.examples.community.mongodb.sync.MongoDBTestHelper.mo
 import static io.flamingock.examples.community.mongodb.sync.MongoDBTestHelper.mongoDatabase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ApplicationStandaloneMongodbSyncTest {
+public class CommunityStandaloneMongodbSyncAppTest {
 
     public static final String DB_NAME = "test";
     public static final String AUDIT_LOG_COLLECTION = "mongockChangeLog";
@@ -27,7 +27,7 @@ public class ApplicationStandaloneMongodbSyncTest {
     @Test
     void happyPath() {
         //Given-When
-        new ApplicationStandaloneMongodbSync().run(mongoClient, DB_NAME);
+        new CommunityStandaloneMongodbSyncApp().run(mongoClient, DB_NAME);
         assertEquals(ACreateCollection.class.getName(), ChangesTracker.changes.get(0));
         assertEquals(BInsertDocument.class.getName(), ChangesTracker.changes.get(1));
         assertEquals(CInsertAnotherDocument.class.getName(), ChangesTracker.changes.get(2));

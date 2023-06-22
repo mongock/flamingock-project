@@ -22,10 +22,10 @@ import static io.flamingock.examples.community.MongoDBTestHelper.mongoDatabase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@Import(Main.class)
+@Import(CommunitySpringbootMongodbSyncApp.class)
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-class MainTest {
+class CommunitySpringbootMongodbSyncAppTest {
 
     @Configuration
     static class TestConfiguration {
