@@ -38,6 +38,10 @@ project(":mongodb-facade").projectDir = file("community/mongodb/mongodb-facade")
 // EXAMPLES
 //////////////////////////////////////
 
-include("standalone-mongodb-sync")
-project(":standalone-mongodb-sync").name = "standalone-mongodb-sync"
-project(":standalone-mongodb-sync").projectDir = file("examples/community/standalone-mongodb-sync")
+include("examples:community:standalone-mongodb-sync")
+project(":examples:community:standalone-mongodb-sync").name = "standalone-mongodb-sync"
+project(":examples:community:standalone-mongodb-sync").projectDir = file("examples/community/standalone-mongodb-sync")
+
+include("examples:community:springboot-mongodb-sync")
+project(":examples:community:springboot-mongodb-sync").name = "springboot-mongodb-sync"
+project(":examples:community:springboot-mongodb-sync").projectDir = file("examples/community/springboot-mongodb-sync")
