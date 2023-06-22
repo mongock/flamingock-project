@@ -13,9 +13,9 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class ApplicationStandaloneMongodbSync {
+public class CommunityStandaloneMongodbSyncApp {
     public static void main(String[] args) {
-        new ApplicationStandaloneMongodbSync()
+        new CommunityStandaloneMongodbSyncApp()
                 .run(getMongoClient("mongodb://localhost:27017/"), "test");
     }
 

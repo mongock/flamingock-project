@@ -1,5 +1,5 @@
 
 dependencies {
-    api(project(":base-community"))
+    api(project(":community:base-community"))
 
 }

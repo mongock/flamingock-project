@@ -1,7 +1,7 @@
 dependencies {
 //    INTERNAL
-    api(project(":flamingock-spring-core"))
-    api(project(":base-community"))
+    api(project(":core:flamingock-spring-core"))
+    api(project(":community:base-community"))
 
     compileOnly("org.springframework.boot:spring-boot:2.7.12")
     compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.7.12")
