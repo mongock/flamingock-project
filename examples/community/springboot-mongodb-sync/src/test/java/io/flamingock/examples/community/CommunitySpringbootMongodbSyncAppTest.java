@@ -9,6 +9,7 @@ import io.flamingock.examples.community.changes.ACreateCollection;
 import io.flamingock.examples.community.changes.BInsertDocument;
 import io.flamingock.examples.community.changes.CInsertAnotherDocument;
 import org.bson.Document;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,23 +22,25 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@Import(CommunitySpringbootMongodbSyncApp.class)
+@Testcontainers
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
+@Import(CommunitySpringbootMongodbSyncApp.class)
 class CommunitySpringbootMongodbSyncAppTest {
 
 
     public static final String DB_NAME = "test";
+
+    @Container
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
 
-    static {
-        mongoDBContainer.start();
-    }
 
 
     @Configuration
@@ -59,15 +62,13 @@ class CommunitySpringbootMongodbSyncAppTest {
 
     }
 
-    public static final String AUDIT_LOG_COLLECTION = "mongockChangeLog";
-    public static final String CLIENTS_COLLECTION = "clientCollection";
 
     @Autowired
     private MongoDatabase mongoDatabase;
 
     @BeforeEach
     public void setupEach() {
-        mongoDatabase.getCollection(AUDIT_LOG_COLLECTION).deleteMany(new Document());
+        mongoDatabase.getCollection("mongockChangeLog").deleteMany(new Document());
     }
 
 
@@ -78,17 +79,7 @@ class CommunitySpringbootMongodbSyncAppTest {
         assertEquals(CInsertAnotherDocument.class.getName(), ChangesTracker.changes.get(2));
 
         //tear-down
-        mongoDatabase.getCollection(CLIENTS_COLLECTION).drop();
-    }
-
-    @Test
-    void happyPath2() {
-        assertEquals(ACreateCollection.class.getName(), ChangesTracker.changes.get(0));
-        assertEquals(BInsertDocument.class.getName(), ChangesTracker.changes.get(1));
-        assertEquals(CInsertAnotherDocument.class.getName(), ChangesTracker.changes.get(2));
-
-        //tear-down
-        mongoDatabase.getCollection(CLIENTS_COLLECTION).drop();
+        mongoDatabase.getCollection("clientCollection").drop();
     }
 
 }
