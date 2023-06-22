@@ -45,7 +45,6 @@ class CommunitySpringbootMongodbSyncAppTest {
         mongoDatabase.getCollection("mongockChangeLog").deleteMany(new Document());
     }
 
-
     @Test
     void happyPath() {
         assertEquals(ACreateCollection.class.getName(), ChangesTracker.changes.get(0));
@@ -73,5 +72,4 @@ class CommunitySpringbootMongodbSyncAppTest {
             return mongoClient.getDatabase("test");
         }
     }
-
 }
