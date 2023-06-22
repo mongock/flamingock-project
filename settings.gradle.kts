@@ -5,13 +5,14 @@ rootProject.name = "flamingock-project"
 //////////////////////////////////////
 // CORE
 //////////////////////////////////////
-include("flamingock-core")
-project(":flamingock-core").projectDir = file("core/flamingock-core")
-project(":flamingock-core").name = "flamingock-core"
+include("core:flamingock-core")
+project(":core:flamingock-core").projectDir = file("core/flamingock-core")
+project(":core:flamingock-core").name = "flamingock-core"
 
-include("flamingock-spring-core")
-project(":flamingock-spring-core").projectDir = file("core/flamingock-spring-core")
-project(":flamingock-spring-core").name = "flamingock-spring-core"
+include("core:flamingock-spring-core")
+project(":core:flamingock-spring-core").projectDir = file("core/flamingock-spring-core")
+project(":core:flamingock-spring-core").name = "flamingock-spring-core"
+
 //////////////////////////////////////
 // COMMUNITY
 //////////////////////////////////////
