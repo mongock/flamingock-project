@@ -9,7 +9,6 @@ import io.flamingock.examples.community.changes.ACreateCollection;
 import io.flamingock.examples.community.changes.BInsertDocument;
 import io.flamingock.examples.community.changes.CInsertAnotherDocument;
 import org.bson.Document;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,33 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Import(CommunitySpringbootMongodbSyncApp.class)
 class CommunitySpringbootMongodbSyncAppTest {
 
-
-    public static final String DB_NAME = "test";
-
     @Container
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
-
-
-
-    @Configuration
-    static class TestConfiguration {
-        @Bean
-        @Primary
-        public MongoClient mongoClient() {
-            return MongoClients.create(MongoClientSettings
-                    .builder()
-                    .applyConnectionString(new ConnectionString(mongoDBContainer.getConnectionString()))
-                    .build());
-        }
-
-        @Bean
-        @Primary
-        public MongoDatabase mongoDatabase(MongoClient mongoClient) {
-            return mongoClient.getDatabase(DB_NAME);
-        }
-
-    }
-
 
     @Autowired
     private MongoDatabase mongoDatabase;
@@ -80,6 +54,24 @@ class CommunitySpringbootMongodbSyncAppTest {
 
         //tear-down
         mongoDatabase.getCollection("clientCollection").drop();
+    }
+
+    @Configuration
+    static class TestConfiguration {
+        @Bean
+        @Primary
+        public MongoClient mongoClient() {
+            return MongoClients.create(MongoClientSettings
+                    .builder()
+                    .applyConnectionString(new ConnectionString(mongoDBContainer.getConnectionString()))
+                    .build());
+        }
+
+        @Bean
+        @Primary
+        public MongoDatabase mongoDatabase(MongoClient mongoClient) {
+            return mongoClient.getDatabase("test");
+        }
     }
 
 }
