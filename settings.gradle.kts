@@ -15,24 +15,24 @@ project(":flamingock-spring-core").name = "flamingock-spring-core"
 //////////////////////////////////////
 // COMMUNITY
 //////////////////////////////////////
-include("base-community")
-project(":base-community").projectDir = file("community/base-community")
-project(":base-community").name = "base-community"
+include("community:base-community")
+project(":community:base-community").projectDir = file("community/base-community")
+project(":community:base-community").name = "base-community"
 
-include("mongodb-sync-v4-driver")
-project(":mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
+include("community:standalone-runner")
+project(":community:standalone-runner").name = "standalone-runner"
+project(":community:standalone-runner").projectDir = file("community/standalone-runner")
 
-include("standalone-runner")
-project(":standalone-runner").name = "standalone-runner"
-project(":standalone-runner").projectDir = file("community/standalone-runner")
+include("community:springboot-runner")
+project(":community:springboot-runner").name = "springboot-runner"
+project(":community:springboot-runner").projectDir = file("community/springboot-runner")
 
-include("springboot-runner")
-project(":springboot-runner").name = "springboot-runner"
-project(":springboot-runner").projectDir = file("community/springboot-runner")
+include("community:mongodb:mongodb-facade")
+project(":community:mongodb:mongodb-facade").name = "mongodb-facade"
+project(":community:mongodb:mongodb-facade").projectDir = file("community/mongodb/mongodb-facade")
 
-include("mongodb-facade")
-project(":mongodb-facade").name = "mongodb-facade"
-project(":mongodb-facade").projectDir = file("community/mongodb/mongodb-facade")
+include("community:mongodb:mongodb-sync-v4-driver")
+project(":community:mongodb:mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
 
 //////////////////////////////////////
 // EXAMPLES
