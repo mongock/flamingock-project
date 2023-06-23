@@ -14,7 +14,5 @@ public class ACreateCollection {
     public void execution(MongoDatabase mongoDatabase) {
         ChangesTracker.changes.add(getClass().getName());
         mongoDatabase.createCollection("clientCollection");
-        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        System.out.println("clientCollection with documents: " + collection.countDocuments());
     }
 }

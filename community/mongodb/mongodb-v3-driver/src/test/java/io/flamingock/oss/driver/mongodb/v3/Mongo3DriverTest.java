@@ -1,4 +1,4 @@
-package io.flamingock.oss.driver.mongodb.sync.v4;
+package io.flamingock.oss.driver.mongodb.v3;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -9,7 +9,7 @@ import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.core.execution.executor.ProcessExecutionException;
-import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.flamingock.oss.driver.mongodb.v3.driver.Mongo3Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
-class MongoSync4DriverTest {
+class Mongo3DriverTest {
 
     private static final String DB_NAME = "test";
 
@@ -72,8 +72,8 @@ class MongoSync4DriverTest {
     void happyPathWithTransaction() {
         //Given-When
         CommunityStandalone.builder()
-                .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction")
+                .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
+                .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction")
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
@@ -109,8 +109,8 @@ class MongoSync4DriverTest {
     void happyPathWithoutTransaction() {
         //Given-When
         CommunityStandalone.builder()
-                .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction")
+                .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
+                .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithoutTransaction")
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(false)
@@ -147,8 +147,8 @@ class MongoSync4DriverTest {
         //Given-When
         assertThrows(ProcessExecutionException.class, () -> {
             CommunityStandalone.builder()
-                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithTransaction")
+                    .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
+                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithTransaction")
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(true)
@@ -183,8 +183,8 @@ class MongoSync4DriverTest {
         //Given-When
         assertThrows(ProcessExecutionException.class, () -> {
             CommunityStandalone.builder()
-                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback")
+                    .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
+                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithRollback")
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)
@@ -221,8 +221,8 @@ class MongoSync4DriverTest {
         //Given-When
         assertThrows(ProcessExecutionException.class, () -> {
             CommunityStandalone.builder()
-                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithoutRollback")
+                    .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
+                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithoutRollback")
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)

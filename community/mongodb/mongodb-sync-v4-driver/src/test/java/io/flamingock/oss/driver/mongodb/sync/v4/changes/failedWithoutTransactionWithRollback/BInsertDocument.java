@@ -1,6 +1,5 @@
-package io.flamingock.oss.driver.mongodb.sync.v4.changes;
+package io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback;
 
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.ChangeUnit;
@@ -11,8 +10,8 @@ import org.bson.Document;
 public class BInsertDocument {
 
     @Execution
-    public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
+    public void execution(MongoDatabase mongoDatabase) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(clientSession, new Document().append("name", "Federico"));
+        collection.insertOne(new Document().append("name", "Federico"));
     }
 }
