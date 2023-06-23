@@ -2,7 +2,6 @@ package io.flamingock.core.core;
 
 import io.flamingock.core.core.audit.AuditReader;
 import io.flamingock.core.core.audit.domain.AuditProcessStatus;
-import io.flamingock.core.core.configurator.CoreProperties;
 import io.flamingock.core.core.execution.executor.ProcessExecutor;
 import io.flamingock.core.core.lock.LockAcquirer;
 import io.flamingock.core.core.process.DefinitionProcess;

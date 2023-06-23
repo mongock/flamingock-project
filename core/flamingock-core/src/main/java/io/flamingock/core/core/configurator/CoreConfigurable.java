@@ -2,7 +2,7 @@ package io.flamingock.core.core.configurator;
 
 import java.util.Map;
 
-public interface ICoreProperties {
+public interface CoreConfigurable {
     void setLockAcquiredForMillis(long lockAcquiredForMillis);
 
     void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis);

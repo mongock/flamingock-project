@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface CoreConfigurator<HOLDER> {
 
-    CoreProperties getCoreProperties();
+    CoreConfiguration getCoreProperties();
 
     HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis);
 

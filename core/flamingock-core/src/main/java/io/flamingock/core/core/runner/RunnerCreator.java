@@ -2,7 +2,7 @@ package io.flamingock.core.core.runner;
 
 import io.flamingock.core.core.Factory;
 import io.flamingock.core.core.audit.domain.AuditProcessStatus;
-import io.flamingock.core.core.configurator.CoreProperties;
+import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.execution.executor.ExecutionContext;
 import io.flamingock.core.core.process.DefinitionProcess;
@@ -15,7 +15,7 @@ public final class RunnerCreator {
     private RunnerCreator() {
     }
 
-    private static <CORE_CONFIG extends CoreProperties> ExecutionContext buildExecutionContext(CORE_CONFIG configuration) {
+    private static <CORE_CONFIG extends CoreConfiguration> ExecutionContext buildExecutionContext(CORE_CONFIG configuration) {
         return new ExecutionContext(
                 StringUtil.executionId(),
                 StringUtil.hostname(),
@@ -26,7 +26,7 @@ public final class RunnerCreator {
 
     public static <AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess, EXTRA_PROPS>
     Runner create(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, EXTRA_PROPS> factory,
-                  CoreProperties coreProperties,
+                  CoreConfiguration coreConfiguration,
                   EXTRA_PROPS extraProperties,
                   EventPublisher eventPublisher,
                   DependencyContext dependencyContext,
@@ -37,7 +37,7 @@ public final class RunnerCreator {
                 factory.getLockProvider(),
                 factory.getAuditReader(),
                 factory.getProcessExecutor(dependencyContext),
-                buildExecutionContext(coreProperties),
+                buildExecutionContext(coreConfiguration),
                 eventPublisher,
                 isThrowExceptionIfCannotObtainLock) {
             @Override

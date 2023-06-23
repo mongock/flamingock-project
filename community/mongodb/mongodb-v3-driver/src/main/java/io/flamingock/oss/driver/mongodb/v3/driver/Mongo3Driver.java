@@ -1,10 +1,10 @@
 package io.flamingock.oss.driver.mongodb.v3.driver;
 
 import com.mongodb.client.MongoClient;
-import io.flamingock.core.core.configurator.CoreProperties;
+import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.Mongo3Engine;
-import io.flamingock.community.internal.CommunityProperties;
+import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import org.slf4j.Logger;
@@ -51,12 +51,12 @@ public class Mongo3Driver implements ConnectionDriver<MongoDB3Configuration> {
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine(CoreProperties coreProperties, CommunityProperties communityProperties) {
+    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, CommunityConfiguration communityConfiguration) {
         return new Mongo3Engine(
                 mongoClient,
                 databaseName,
-                coreProperties,
-                communityProperties,
+                coreConfiguration,
+                communityConfiguration,
                 driverConfiguration != null ? driverConfiguration : MongoDB3Configuration.getDefault());
     }
 

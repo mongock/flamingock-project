@@ -1,8 +1,8 @@
 package io.flamingock.commuinty.runner.springboot;
 
-import io.flamingock.community.internal.CommunityProperties;
-import io.flamingock.core.core.configurator.CoreProperties;
-import io.flamingock.core.spring.configurator.SpringbootProperties;
+import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.core.configurator.CoreConfiguration;
+import io.flamingock.core.spring.configurator.SpringbootConfiguration;
 
 public final class CommunitySpringboot {
 
@@ -10,12 +10,12 @@ public final class CommunitySpringboot {
     }
 
     public static CommunitySpringbootBuilder builder() {
-        return builder(new CoreProperties(), new CommunityProperties(), new SpringbootProperties());
+        return builder(new CoreConfiguration(), new CommunityConfiguration(), new SpringbootConfiguration());
     }
 
-    static CommunitySpringbootBuilder builder(CoreProperties coreProperties,
-                                              CommunityProperties communityProperties,
-                                              SpringbootProperties springbootProperties) {
-        return new CommunitySpringbootBuilder(coreProperties, communityProperties, springbootProperties);
+    static CommunitySpringbootBuilder builder(CoreConfiguration coreConfiguration,
+                                              CommunityConfiguration communityConfiguration,
+                                              SpringbootConfiguration springbootConfiguration) {
+        return new CommunitySpringbootBuilder(coreConfiguration, communityConfiguration, springbootConfiguration);
     }
 }

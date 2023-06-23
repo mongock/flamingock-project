@@ -8,7 +8,7 @@ import static io.flamingock.core.core.util.Constants.DEFAULT_MIGRATION_AUTHOR;
 import static io.flamingock.core.core.util.Constants.DEFAULT_QUIT_TRYING_AFTER_MILLIS;
 import static io.flamingock.core.core.util.Constants.DEFAULT_TRY_FREQUENCY_MILLIS;
 
-public class CoreProperties implements ICoreProperties {
+public class CoreConfiguration implements CoreConfigurable {
 
     private final LockProperties lockConfiguration  = new LockProperties();
     /**

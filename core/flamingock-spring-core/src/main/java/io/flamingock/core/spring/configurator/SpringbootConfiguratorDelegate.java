@@ -5,15 +5,15 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.function.Supplier;
 
-public class SpringbootDelegator<HOLDER> implements SpringbootConfigurator<HOLDER> {
+public class SpringbootConfiguratorDelegate<HOLDER> implements SpringbootConfigurator<HOLDER> {
 
     private final Supplier<HOLDER> holderSupplier;
-    private final SpringbootProperties springbootProperties;
+    private final SpringbootConfiguration springbootConfiguration;
     private ApplicationEventPublisher applicationEventPublisher;
     private ApplicationContext springContext;
 
-    public SpringbootDelegator(SpringbootProperties springbootConfiguration, Supplier<HOLDER> holderSupplier) {
-        this.springbootProperties = springbootConfiguration;
+    public SpringbootConfiguratorDelegate(SpringbootConfiguration springbootConfiguration, Supplier<HOLDER> holderSupplier) {
+        this.springbootConfiguration = springbootConfiguration;
         this.holderSupplier = holderSupplier;
     }
 
@@ -41,13 +41,13 @@ public class SpringbootDelegator<HOLDER> implements SpringbootConfigurator<HOLDE
 
     @Override
     public HOLDER setRunnerType(SpringRunnerType runnerType) {
-        springbootProperties.setRunnerType(runnerType);
+        springbootConfiguration.setRunnerType(runnerType);
         return holderSupplier.get();
     }
 
     @Override
     public SpringRunnerType getRunnerType() {
-        return springbootProperties.getRunnerType();
+        return springbootConfiguration.getRunnerType();
     }
 
 }

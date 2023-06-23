@@ -4,14 +4,13 @@ import io.flamingock.core.core.event.MigrationFailureEvent;
 import io.flamingock.core.core.event.MigrationStartedEvent;
 import io.flamingock.core.core.event.MigrationSuccessEvent;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.core.runtime.dependency.SimpleDependencyInjectableContext;
 import io.flamingock.core.core.runtime.dependency.Dependency;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class StandaloneDelegator<HOLDER> implements StandaloneConfigurator<HOLDER> {
+public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigurator<HOLDER> {
 
     private final DependencyInjectableContext dependencyManager;
     private final Supplier<HOLDER> holderSupplier;
@@ -19,7 +18,7 @@ public class StandaloneDelegator<HOLDER> implements StandaloneConfigurator<HOLDE
     private Consumer<MigrationSuccessEvent> processSuccessListener;
     private Consumer<MigrationFailureEvent> processFailedListener;
 
-    public StandaloneDelegator(DependencyInjectableContext dependencyManager, Supplier<HOLDER> holderSupplier) {
+    public StandaloneConfiguratorDelegate(DependencyInjectableContext dependencyManager, Supplier<HOLDER> holderSupplier) {
         this.dependencyManager = dependencyManager;
         this.holderSupplier = holderSupplier;
     }
