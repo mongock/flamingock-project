@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 public class CommunitySpringbootContext {
 
 
-    @Bean
+    @Bean("flamingock-runner")
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:ApplicationRunner}'.toLowerCase().equals('applicationrunner')")
     public ApplicationRunner applicationRunner(ConnectionDriver<?> connectionDriver,
@@ -26,7 +26,7 @@ public class CommunitySpringbootContext {
                 .buildApplicationRunner();
     }
 
-    @Bean
+    @Bean("flamingock-runner")
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:null}'.toLowerCase().equals('initializingbean')")
     public InitializingBean initializingBeanRunner(ConnectionDriver<?> connectionDriver,
