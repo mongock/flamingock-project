@@ -31,7 +31,6 @@ hs_err_pid*
 build/
 volume
 classes
-resources
 libs
 Dockerfile
 

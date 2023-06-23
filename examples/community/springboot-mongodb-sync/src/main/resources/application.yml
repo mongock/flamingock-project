@@ -1,0 +1,10 @@
+flamingock:
+  migration-scan-package:
+    - io.flamingock.examples.community.changes
+  transactionEnabled: true
+
+
+
+
+
+
