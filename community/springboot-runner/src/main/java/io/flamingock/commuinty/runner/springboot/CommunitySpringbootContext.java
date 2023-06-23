@@ -19,7 +19,7 @@ public class CommunitySpringbootContext {
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:ApplicationRunner}'.toLowerCase().equals('applicationrunner')")
     public ApplicationRunner applicationRunner(ConnectionDriver<?> connectionDriver,
-                                               CommunitySpringbootConfigurationProperties springConfiguration,
+                                               CommunitySpringbootConfiguration springConfiguration,
                                                ApplicationContext springContext,
                                                ApplicationEventPublisher applicationEventPublisher) {
         return getBuilder(connectionDriver, springConfiguration, springContext, applicationEventPublisher)
@@ -30,7 +30,7 @@ public class CommunitySpringbootContext {
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:null}'.toLowerCase().equals('initializingbean')")
     public InitializingBean initializingBeanRunner(ConnectionDriver<?> connectionDriver,
-                                                   CommunitySpringbootConfigurationProperties springConfiguration,
+                                                   CommunitySpringbootConfiguration springConfiguration,
                                                    ApplicationContext springContext,
                                                    ApplicationEventPublisher applicationEventPublisher) {
         return getBuilder(connectionDriver, springConfiguration, springContext, applicationEventPublisher)
@@ -39,7 +39,7 @@ public class CommunitySpringbootContext {
 
 
     private SpringRunnerBuilder getBuilder(ConnectionDriver<?> connectionDriver,
-                                           CommunitySpringbootConfigurationProperties properties,
+                                           CommunitySpringbootConfiguration properties,
                                            ApplicationContext springContext,
                                            ApplicationEventPublisher applicationEventPublisher) {
         return CommunitySpringboot.builder(

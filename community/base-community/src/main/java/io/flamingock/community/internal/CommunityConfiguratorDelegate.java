@@ -6,14 +6,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class CommunityDelegator<HOLDER> implements CommunityConfigurator<HOLDER> {
+public class CommunityConfiguratorDelegate<HOLDER> implements CommunityConfigurator<HOLDER> {
 
-    private final CommunityProperties communityProperties;
+    private final CommunityConfiguration communityConfiguration;
     private final Supplier<HOLDER> holderSupplier;
     private ConnectionDriver<?> connectionDriver;
 
-    public CommunityDelegator(CommunityProperties communityProperties, Supplier<HOLDER> holderSupplier) {
-        this.communityProperties = communityProperties;
+    public CommunityConfiguratorDelegate(CommunityConfiguration communityConfiguration, Supplier<HOLDER> holderSupplier) {
+        this.communityConfiguration = communityConfiguration;
         this.holderSupplier = holderSupplier;
 
     }
@@ -31,7 +31,7 @@ public class CommunityDelegator<HOLDER> implements CommunityConfigurator<HOLDER>
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityProperties.getMigrationScanPackage();
+        return communityConfiguration.getMigrationScanPackage();
     }
 
     @Override
@@ -50,24 +50,24 @@ public class CommunityDelegator<HOLDER> implements CommunityConfigurator<HOLDER>
 
     @Override
     public HOLDER setMigrationScanPackage(List<String> migrationScanPackage) {
-        communityProperties.setMigrationScanPackage(migrationScanPackage);
+        communityConfiguration.setMigrationScanPackage(migrationScanPackage);
         return holderSupplier.get();
     }
 
     @Override
     public String getMigrationRepositoryName() {
-        return communityProperties.getMigrationRepositoryName();
+        return communityConfiguration.getMigrationRepositoryName();
     }
 
     @Override
     public HOLDER setMigrationRepositoryName(String value) {
-        communityProperties.setMigrationRepositoryName(value);
+        communityConfiguration.setMigrationRepositoryName(value);
         return holderSupplier.get();
     }
 
     @Override
     public String getLockRepositoryName() {
-        return communityProperties.getLockRepositoryName();
+        return communityConfiguration.getLockRepositoryName();
     }
 
     @Override
@@ -77,17 +77,17 @@ public class CommunityDelegator<HOLDER> implements CommunityConfigurator<HOLDER>
 
     @Override
     public boolean isIndexCreation() {
-        return communityProperties.isIndexCreation();
+        return communityConfiguration.isIndexCreation();
     }
 
     @Override
     public HOLDER setIndexCreation(boolean value) {
-        communityProperties.setIndexCreation(value);
+        communityConfiguration.setIndexCreation(value);
         return holderSupplier.get();
     }
 
     @Override
-    public CommunityProperties getCommunityProperties() {
-        return communityProperties;
+    public CommunityConfiguration getCommunityProperties() {
+        return communityConfiguration;
     }
 }

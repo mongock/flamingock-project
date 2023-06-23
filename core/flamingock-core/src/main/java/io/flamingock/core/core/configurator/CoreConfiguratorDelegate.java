@@ -3,17 +3,17 @@ package io.flamingock.core.core.configurator;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class CoreDelegator<HOLDER> implements CoreConfigurator<HOLDER>{
+public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER>{
     private final Supplier<HOLDER> holderSupplier;
-    private final CoreProperties properties;
+    private final CoreConfiguration properties;
 
-    public CoreDelegator(CoreProperties properties, Supplier<HOLDER> holderSupplier) {
+    public CoreConfiguratorDelegate(CoreConfiguration properties, Supplier<HOLDER> holderSupplier) {
         this.properties = properties;
         this.holderSupplier = holderSupplier;
     }
 
     @Override
-    public CoreProperties getCoreProperties() {
+    public CoreConfiguration getCoreProperties() {
         return properties;
     }
 

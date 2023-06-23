@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @EnableConfigurationProperties
-@Import({CommunitySpringbootContext.class, CommunitySpringbootConfigurationProperties.class})
+@Import({CommunitySpringbootContext.class, CommunitySpringbootConfiguration.class})
 public @interface EnableFlamingock {
 }

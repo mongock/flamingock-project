@@ -1,18 +1,18 @@
 package io.flamingock.commuinty.runner.standalone;
 
 import io.flamingock.community.internal.CommunityConfigurator;
-import io.flamingock.community.internal.CommunityDelegator;
+import io.flamingock.community.internal.CommunityConfiguratorDelegate;
 import io.flamingock.community.internal.CommunityFactory;
-import io.flamingock.community.internal.CommunityProperties;
+import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.core.configurator.CoreConfigurator;
-import io.flamingock.core.core.configurator.CoreDelegator;
-import io.flamingock.core.core.configurator.CoreProperties;
+import io.flamingock.core.core.configurator.CoreConfiguratorDelegate;
+import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.configurator.LegacyMigration;
 import io.flamingock.core.core.configurator.TransactionStrategy;
 import io.flamingock.core.core.configurator.standalone.StandaloneConfigurator;
-import io.flamingock.core.core.configurator.standalone.StandaloneDelegator;
+import io.flamingock.core.core.configurator.standalone.StandaloneConfiguratorDelegate;
 import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.event.MigrationFailureEvent;
 import io.flamingock.core.core.event.MigrationStartedEvent;
@@ -34,19 +34,19 @@ public class CommunityStandaloneBuilder
         StandaloneConfigurator<CommunityStandaloneBuilder>,
         RunnerBuilder {
 
-    private final CoreDelegator<CommunityStandaloneBuilder> coreDelegator;
+    private final CoreConfiguratorDelegate<CommunityStandaloneBuilder> coreConfiguratorDelegate;
 
-    private final CommunityDelegator<CommunityStandaloneBuilder> communityDelegator;
+    private final CommunityConfiguratorDelegate<CommunityStandaloneBuilder> communityConfiguratorDelegate;
 
-    private final StandaloneDelegator<CommunityStandaloneBuilder> standaloneDelegator;
+    private final StandaloneConfiguratorDelegate<CommunityStandaloneBuilder> standaloneConfiguratorDelegate;
 
 
-    CommunityStandaloneBuilder(CoreProperties coreProperties,
-                               CommunityProperties communityProperties,
+    CommunityStandaloneBuilder(CoreConfiguration coreConfiguration,
+                               CommunityConfiguration communityConfiguration,
                                DependencyInjectableContext dependencyInjectableContext) {
-        this.coreDelegator = new CoreDelegator<>(coreProperties, () -> this);
-        this.communityDelegator = new CommunityDelegator<>(communityProperties, () -> this);
-        this.standaloneDelegator = new StandaloneDelegator<>(dependencyInjectableContext, () -> this);
+        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
+        this.communityConfiguratorDelegate = new CommunityConfiguratorDelegate<>(communityConfiguration, () -> this);
+        this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
     }
 
 
@@ -60,14 +60,14 @@ public class CommunityStandaloneBuilder
                 getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new MigrationStartedEvent()) : null,
                 getMigrationSuccessListener() != null ? result -> getMigrationSuccessListener().accept(new MigrationSuccessEvent(result)) : null,
                 getMigrationFailureListener() != null ? result -> getMigrationFailureListener().accept(new MigrationFailureEvent(result)) : null);
-        ConnectionEngine connectionEngine = communityDelegator
+        ConnectionEngine connectionEngine = communityConfiguratorDelegate
                 .getDriver()
-                .getConnectionEngine(coreDelegator.getCoreProperties(), communityDelegator.getCommunityProperties());
+                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
         connectionEngine.initialize();
         return RunnerCreator.create(
                 new CommunityFactory(connectionEngine),
-                coreDelegator.getCoreProperties(),
-                communityDelegator.getCommunityProperties(),
+                coreConfiguratorDelegate.getCoreProperties(),
+                communityConfiguratorDelegate.getCommunityProperties(),
                 eventPublisher,
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
@@ -78,148 +78,148 @@ public class CommunityStandaloneBuilder
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public CoreProperties getCoreProperties() {
-        return coreDelegator.getCoreProperties();
+    public CoreConfiguration getCoreProperties() {
+        return coreConfiguratorDelegate.getCoreProperties();
     }
 
     @Override
     public CommunityStandaloneBuilder setLockAcquiredForMillis(long lockAcquiredForMillis) {
-        return coreDelegator.setLockAcquiredForMillis(lockAcquiredForMillis);
+        return coreConfiguratorDelegate.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
     @Override
     public CommunityStandaloneBuilder setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
-        return coreDelegator.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+        return coreConfiguratorDelegate.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
     @Override
     public CommunityStandaloneBuilder setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
-        return coreDelegator.setLockTryFrequencyMillis(lockTryFrequencyMillis);
+        return coreConfiguratorDelegate.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
     @Override
     public CommunityStandaloneBuilder setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
-        return coreDelegator.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+        return coreConfiguratorDelegate.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
     @Override
     public CommunityStandaloneBuilder setTrackIgnored(boolean trackIgnored) {
-        return coreDelegator.setTrackIgnored(trackIgnored);
+        return coreConfiguratorDelegate.setTrackIgnored(trackIgnored);
     }
 
     @Override
     public CommunityStandaloneBuilder setEnabled(boolean enabled) {
-        return coreDelegator.setEnabled(enabled);
+        return coreConfiguratorDelegate.setEnabled(enabled);
     }
 
     @Override
     public CommunityStandaloneBuilder setStartSystemVersion(String startSystemVersion) {
-        return coreDelegator.setStartSystemVersion(startSystemVersion);
+        return coreConfiguratorDelegate.setStartSystemVersion(startSystemVersion);
     }
 
     @Override
     public CommunityStandaloneBuilder setEndSystemVersion(String endSystemVersion) {
-        return coreDelegator.setEndSystemVersion(endSystemVersion);
+        return coreConfiguratorDelegate.setEndSystemVersion(endSystemVersion);
     }
 
     @Override
     public CommunityStandaloneBuilder setServiceIdentifier(String serviceIdentifier) {
-        return coreDelegator.setServiceIdentifier(serviceIdentifier);
+        return coreConfiguratorDelegate.setServiceIdentifier(serviceIdentifier);
     }
 
     @Override
     public CommunityStandaloneBuilder setMetadata(Map<String, Object> metadata) {
-        return coreDelegator.setMetadata(metadata);
+        return coreConfiguratorDelegate.setMetadata(metadata);
     }
 
     @Override
     public CommunityStandaloneBuilder setLegacyMigration(LegacyMigration legacyMigration) {
-        return coreDelegator.setLegacyMigration(legacyMigration);
+        return coreConfiguratorDelegate.setLegacyMigration(legacyMigration);
     }
 
     @Override
     public CommunityStandaloneBuilder setTransactionEnabled(Boolean transactionEnabled) {
-        return coreDelegator.setTransactionEnabled(transactionEnabled);
+        return coreConfiguratorDelegate.setTransactionEnabled(transactionEnabled);
     }
 
     @Override
     public CommunityStandaloneBuilder setDefaultAuthor(String publicMigrationAuthor) {
-        return coreDelegator.setDefaultAuthor(publicMigrationAuthor);
+        return coreConfiguratorDelegate.setDefaultAuthor(publicMigrationAuthor);
     }
 
     @Override
     public CommunityStandaloneBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
-        return coreDelegator.setTransactionStrategy(transactionStrategy);
+        return coreConfiguratorDelegate.setTransactionStrategy(transactionStrategy);
     }
 
     @Override
     public long getLockAcquiredForMillis() {
-        return coreDelegator.getLockAcquiredForMillis();
+        return coreConfiguratorDelegate.getLockAcquiredForMillis();
     }
 
     @Override
     public Long getLockQuitTryingAfterMillis() {
-        return coreDelegator.getLockQuitTryingAfterMillis();
+        return coreConfiguratorDelegate.getLockQuitTryingAfterMillis();
     }
 
     @Override
     public long getLockTryFrequencyMillis() {
-        return coreDelegator.getLockTryFrequencyMillis();
+        return coreConfiguratorDelegate.getLockTryFrequencyMillis();
     }
 
     @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
-        return coreDelegator.isThrowExceptionIfCannotObtainLock();
+        return coreConfiguratorDelegate.isThrowExceptionIfCannotObtainLock();
     }
 
     @Override
     public boolean isTrackIgnored() {
-        return coreDelegator.isTrackIgnored();
+        return coreConfiguratorDelegate.isTrackIgnored();
     }
 
     @Override
     public boolean isEnabled() {
-        return coreDelegator.isEnabled();
+        return coreConfiguratorDelegate.isEnabled();
     }
 
     @Override
     public String getStartSystemVersion() {
-        return coreDelegator.getStartSystemVersion();
+        return coreConfiguratorDelegate.getStartSystemVersion();
     }
 
     @Override
     public String getEndSystemVersion() {
-        return coreDelegator.getEndSystemVersion();
+        return coreConfiguratorDelegate.getEndSystemVersion();
     }
 
     @Override
     public String getServiceIdentifier() {
-        return coreDelegator.getServiceIdentifier();
+        return coreConfiguratorDelegate.getServiceIdentifier();
     }
 
     @Override
     public Map<String, Object> getMetadata() {
-        return coreDelegator.getMetadata();
+        return coreConfiguratorDelegate.getMetadata();
     }
 
     @Override
     public LegacyMigration getLegacyMigration() {
-        return coreDelegator.getLegacyMigration();
+        return coreConfiguratorDelegate.getLegacyMigration();
     }
 
     @Override
     public Boolean getTransactionEnabled() {
-        return coreDelegator.getTransactionEnabled();
+        return coreConfiguratorDelegate.getTransactionEnabled();
     }
 
     @Override
     public String getDefaultAuthor() {
-        return coreDelegator.getDefaultAuthor();
+        return coreConfiguratorDelegate.getDefaultAuthor();
     }
 
     @Override
     public TransactionStrategy getTransactionStrategy() {
-        return coreDelegator.getTransactionStrategy();
+        return coreConfiguratorDelegate.getTransactionStrategy();
     }
 
 
@@ -229,67 +229,67 @@ public class CommunityStandaloneBuilder
 
     @Override
     public CommunityStandaloneBuilder setDriver(ConnectionDriver<?> connectionDriver) {
-        return communityDelegator.setDriver(connectionDriver);
+        return communityConfiguratorDelegate.setDriver(connectionDriver);
     }
 
     @Override
     public ConnectionDriver<?> getDriver() {
-        return communityDelegator.getDriver();
+        return communityConfiguratorDelegate.getDriver();
     }
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityDelegator.getMigrationScanPackage();
+        return communityConfiguratorDelegate.getMigrationScanPackage();
     }
 
     @Override
     public CommunityStandaloneBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        return communityDelegator.addMigrationScanPackages(migrationScanPackageList);
+        return communityConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
     }
 
     @Override
     public CommunityStandaloneBuilder addMigrationScanPackage(String migrationScanPackage) {
-        return communityDelegator.addMigrationScanPackage(migrationScanPackage);
+        return communityConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return communityDelegator.setMigrationScanPackage(migrationScanPackage);
+        return communityConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override
     public String getMigrationRepositoryName() {
-        return communityDelegator.getMigrationRepositoryName();
+        return communityConfiguratorDelegate.getMigrationRepositoryName();
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationRepositoryName(String value) {
-        return communityDelegator.setMigrationRepositoryName(value);
+        return communityConfiguratorDelegate.setMigrationRepositoryName(value);
     }
 
     @Override
     public String getLockRepositoryName() {
-        return communityDelegator.getLockRepositoryName();
+        return communityConfiguratorDelegate.getLockRepositoryName();
     }
 
     @Override
     public CommunityStandaloneBuilder setLockRepositoryName(String value) {
-        return communityDelegator.setLockRepositoryName(value);
+        return communityConfiguratorDelegate.setLockRepositoryName(value);
     }
 
     @Override
     public boolean isIndexCreation() {
-        return communityDelegator.isIndexCreation();
+        return communityConfiguratorDelegate.isIndexCreation();
     }
 
     @Override
     public CommunityStandaloneBuilder setIndexCreation(boolean value) {
-        return communityDelegator.setIndexCreation(value);
+        return communityConfiguratorDelegate.setIndexCreation(value);
     }
 
     @Override
-    public CommunityProperties getCommunityProperties() {
-        return communityDelegator.getCommunityProperties();
+    public CommunityConfiguration getCommunityProperties() {
+        return communityConfiguratorDelegate.getCommunityProperties();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -298,56 +298,56 @@ public class CommunityStandaloneBuilder
 
     @Override
     public CommunityStandaloneBuilder addDependency(Object instance) {
-        return standaloneDelegator.addDependency(instance);
+        return standaloneConfiguratorDelegate.addDependency(instance);
     }
 
     @Override
     public CommunityStandaloneBuilder addDependency(String name, Object instance) {
-        return standaloneDelegator.addDependency(name, instance);
+        return standaloneConfiguratorDelegate.addDependency(name, instance);
     }
 
     @Override
     public CommunityStandaloneBuilder addDependency(Class<?> type, Object instance) {
-        return standaloneDelegator.addDependency(type, instance);
+        return standaloneConfiguratorDelegate.addDependency(type, instance);
     }
 
     @Override
     public DependencyContext getDependencyContext() {
-        return standaloneDelegator.getDependencyContext();
+        return standaloneConfiguratorDelegate.getDependencyContext();
     }
 
     @Override
     public CommunityStandaloneBuilder addDependency(String name, Class<?> type, Object instance) {
-        return standaloneDelegator.addDependency(name, type, instance);
+        return standaloneConfiguratorDelegate.addDependency(name, type, instance);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationStartedListener(Consumer<MigrationStartedEvent> listener) {
-        return standaloneDelegator.setMigrationStartedListener(listener);
+        return standaloneConfiguratorDelegate.setMigrationStartedListener(listener);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener) {
-        return standaloneDelegator.setMigrationSuccessListener(listener);
+        return standaloneConfiguratorDelegate.setMigrationSuccessListener(listener);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
-        return standaloneDelegator.setMigrationFailureListener(listener);
+        return standaloneConfiguratorDelegate.setMigrationFailureListener(listener);
     }
 
     @Override
     public Consumer<MigrationStartedEvent> getMigrationStartedListener() {
-        return standaloneDelegator.getMigrationStartedListener();
+        return standaloneConfiguratorDelegate.getMigrationStartedListener();
     }
 
     @Override
     public Consumer<MigrationSuccessEvent> getMigrationSuccessListener() {
-        return standaloneDelegator.getMigrationSuccessListener();
+        return standaloneConfiguratorDelegate.getMigrationSuccessListener();
     }
 
     @Override
     public Consumer<MigrationFailureEvent> getMigrationFailureListener() {
-        return standaloneDelegator.getMigrationFailureListener();
+        return standaloneConfiguratorDelegate.getMigrationFailureListener();
     }
 }

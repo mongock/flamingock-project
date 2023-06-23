@@ -1,10 +1,10 @@
 package io.flamingock.oss.driver.mongodb.sync.v4.driver;
 
 import com.mongodb.client.MongoClient;
-import io.flamingock.core.core.configurator.CoreProperties;
+import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4Engine;
-import io.flamingock.community.internal.CommunityProperties;
+import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import org.slf4j.Logger;
@@ -51,12 +51,12 @@ public class MongoSync4Driver implements ConnectionDriver<MongoDBSync4Configurat
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine(CoreProperties coreProperties, CommunityProperties communityProperties) {
+    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, CommunityConfiguration communityConfiguration) {
         return new MongoSync4Engine(
                 mongoClient,
                 databaseName,
-                coreProperties,
-                communityProperties,
+                coreConfiguration,
+                communityConfiguration,
                 driverConfiguration != null ? driverConfiguration : MongoDBSync4Configuration.getDefault());
     }
 

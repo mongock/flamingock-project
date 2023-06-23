@@ -1,9 +1,7 @@
 package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.core.core.configurator.CoreConfigurator;
 
-import java.util.Collections;
 import java.util.List;
 
 public interface CommunityConfigurator<HOLDER> {
@@ -31,5 +29,5 @@ public interface CommunityConfigurator<HOLDER> {
 
     HOLDER setIndexCreation(boolean value);
 
-    CommunityProperties getCommunityProperties();
+    CommunityConfiguration getCommunityProperties();
 }
