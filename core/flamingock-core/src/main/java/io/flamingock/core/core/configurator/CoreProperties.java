@@ -8,7 +8,7 @@ import static io.flamingock.core.core.util.Constants.DEFAULT_MIGRATION_AUTHOR;
 import static io.flamingock.core.core.util.Constants.DEFAULT_QUIT_TRYING_AFTER_MILLIS;
 import static io.flamingock.core.core.util.Constants.DEFAULT_TRY_FREQUENCY_MILLIS;
 
-public class CoreProperties {
+public class CoreProperties implements ICoreProperties {
 
     private final LockProperties lockConfiguration  = new LockProperties();
     /**
@@ -63,115 +63,143 @@ public class CoreProperties {
      */
     private TransactionStrategy transactionStrategy = TransactionStrategy.CHANGE_UNIT;
 
+    @Override
     public void setLockAcquiredForMillis(long lockAcquiredForMillis) {
         lockConfiguration.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
+    @Override
     public void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
         lockConfiguration.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
+    @Override
     public void setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
         lockConfiguration.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
+    @Override
     public void setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
         lockConfiguration.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
+    @Override
     public void setTrackIgnored(boolean trackIgnored) {
         this.trackIgnored = trackIgnored;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
 
+    @Override
     public void setStartSystemVersion(String startSystemVersion) {
         this.startSystemVersion = startSystemVersion;
     }
 
+    @Override
     public void setEndSystemVersion(String endSystemVersion) {
         this.endSystemVersion = endSystemVersion;
     }
 
+    @Override
     public void setServiceIdentifier(String serviceIdentifier) {
         this.serviceIdentifier = serviceIdentifier;
     }
 
+    @Override
     public void setMetadata(Map<String, Object> metadata) {
         this.metadata = metadata;
     }
 
+    @Override
     public void setLegacyMigration(LegacyMigration legacyMigration) {
         this.legacyMigration = legacyMigration;
     }
 
+    @Override
     public void setTransactionEnabled(Boolean transactionEnabled) {
         this.transactionEnabled = transactionEnabled;
     }
 
+    @Override
     public void setDefaultAuthor(String defaultAuthor) {
         this.defaultAuthor = defaultAuthor;
     }
 
+    @Override
     public void setTransactionStrategy(TransactionStrategy transactionStrategy) {
         this.transactionStrategy = transactionStrategy;
     }
 
+    @Override
     public long getLockAcquiredForMillis() {
         return lockConfiguration.getLockAcquiredForMillis();
     }
 
+    @Override
     public Long getLockQuitTryingAfterMillis() {
         return lockConfiguration.getLockQuitTryingAfterMillis();
     }
 
+    @Override
     public long getLockTryFrequencyMillis() {
         return lockConfiguration.getLockTryFrequencyMillis();
     }
 
+    @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
         return lockConfiguration.isThrowExceptionIfCannotObtainLock();
     }
 
+    @Override
     public boolean isTrackIgnored() {
         return trackIgnored;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    @Override
     public String getStartSystemVersion() {
         return startSystemVersion;
     }
 
+    @Override
     public String getEndSystemVersion() {
         return endSystemVersion;
     }
 
+    @Override
     public String getServiceIdentifier() {
         return serviceIdentifier;
     }
 
+    @Override
     public Map<String, Object> getMetadata() {
         return metadata;
     }
 
+    @Override
     public LegacyMigration getLegacyMigration() {
         return legacyMigration;
     }
 
+    @Override
     public Boolean getTransactionEnabled() {
         return transactionEnabled;
     }
 
+    @Override
     public String getDefaultAuthor() {
         return defaultAuthor;
     }
 
+    @Override
     public TransactionStrategy getTransactionStrategy() {
         return transactionStrategy;
     }
