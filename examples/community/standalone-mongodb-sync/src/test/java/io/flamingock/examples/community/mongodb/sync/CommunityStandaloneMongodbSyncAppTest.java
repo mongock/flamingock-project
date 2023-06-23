@@ -56,6 +56,7 @@ public class CommunityStandaloneMongodbSyncAppTest {
 
     @Test
     void happyPath() {
+        assertEquals(3, ChangesTracker.changes.size());
         //Given-When
         new CommunityStandaloneMongodbSyncApp().run(mongoClient, DB_NAME);
         assertEquals(ACreateCollection.class.getName(), ChangesTracker.changes.get(0));

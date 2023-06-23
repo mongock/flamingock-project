@@ -47,6 +47,7 @@ class CommunitySpringbootMongodbSyncAppTest {
 
     @Test
     void happyPath() {
+        assertEquals(3, ChangesTracker.changes.size());
         assertEquals(ACreateCollection.class.getName(), ChangesTracker.changes.get(0));
         assertEquals(BInsertDocument.class.getName(), ChangesTracker.changes.get(1));
         assertEquals(CInsertAnotherDocument.class.getName(), ChangesTracker.changes.get(2));

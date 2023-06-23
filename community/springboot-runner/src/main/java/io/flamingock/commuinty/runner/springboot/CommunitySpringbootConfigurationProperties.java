@@ -183,4 +183,7 @@ public class CommunitySpringbootConfigurationProperties {
     public void setRunnerType(SpringRunnerType runnerType) {
         springbootProperties.setRunnerType(runnerType);
     }
+
+
+
 }
