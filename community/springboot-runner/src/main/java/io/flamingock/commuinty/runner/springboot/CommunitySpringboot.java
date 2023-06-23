@@ -10,7 +10,7 @@ public final class CommunitySpringboot {
     }
 
     public static CommunitySpringbootBuilder builder() {
-        return new CommunitySpringbootBuilder(new CoreProperties(), new CommunityProperties(), new SpringbootProperties());
+        return builder(new CoreProperties(), new CommunityProperties(), new SpringbootProperties());
     }
 
     static CommunitySpringbootBuilder builder(CoreProperties coreProperties,
@@ -18,6 +18,4 @@ public final class CommunitySpringboot {
                                               SpringbootProperties springbootProperties) {
         return new CommunitySpringbootBuilder(coreProperties, communityProperties, springbootProperties);
     }
-
-
 }
