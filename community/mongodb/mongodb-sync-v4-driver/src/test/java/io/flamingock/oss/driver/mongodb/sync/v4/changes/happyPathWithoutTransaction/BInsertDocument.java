@@ -1,4 +1,4 @@
-package io.flamingock.oss.driver.mongodb.sync.v4.changes;
+package io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -6,13 +6,12 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
-@ChangeUnit( id="create-collection" , order = "1", transactional = false)
-public class ACreateCollection {
+@ChangeUnit( id="insert-document" , order = "2")
+public class BInsertDocument {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {
-        mongoDatabase.createCollection("clientCollection");
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        System.out.println("clientCollection with documents: " + collection.countDocuments());
+        collection.insertOne(new Document().append("name", "Federico"));
     }
 }

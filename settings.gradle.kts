@@ -35,6 +35,9 @@ project(":community:mongodb:mongodb-facade").projectDir = file("community/mongod
 include("community:mongodb:mongodb-sync-v4-driver")
 project(":community:mongodb:mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
 
+include("community:mongodb:mongodb-v3-driver")
+project(":community:mongodb:mongodb-v3-driver").projectDir = file("community/mongodb/mongodb-v3-driver")
+
 //////////////////////////////////////
 // EXAMPLES
 //////////////////////////////////////

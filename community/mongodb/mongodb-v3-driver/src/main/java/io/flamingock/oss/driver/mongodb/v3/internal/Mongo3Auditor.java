@@ -1,4 +1,4 @@
-package io.flamingock.oss.driver.mongodb.sync.v4.internal;
+package io.flamingock.oss.driver.mongodb.v3.internal;
 
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
@@ -11,9 +11,9 @@ import io.flamingock.core.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
-import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
-import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
-import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
+import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.Mongo3CollectionWrapper;
+import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.Mongo3DocumentWrapper;
+import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.community.internal.driver.MongockAuditor;
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
 import org.bson.Document;
@@ -28,15 +28,16 @@ import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_A
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_EXECUTION_ID;
 
-public class MongoSync4Auditor extends MongockAuditor {
+public class Mongo3Auditor extends MongockAuditor {
     
-    private static final Logger logger = LoggerFactory.getLogger(MongoSync4Auditor.class);
+    private static final Logger logger = LoggerFactory.getLogger(Mongo3Auditor.class);
+
 
     private final MongoCollection<Document> collection;
-    private final MongoDBAuditMapper<MongoSync4DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
+    private final MongoDBAuditMapper<Mongo3DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new Mongo3DocumentWrapper(new Document()));
     private final SessionManager<ClientSession> sessionManager;
 
-    MongoSync4Auditor(MongoDatabase database,
+    Mongo3Auditor(MongoDatabase database,
                       String collectionName,
                       ReadWriteConfiguration readWriteConfiguration,
                       SessionManager<ClientSession> sessionManager) {
@@ -49,9 +50,9 @@ public class MongoSync4Auditor extends MongockAuditor {
 
     @Override
     protected void initialize(boolean indexCreation) {
-        CollectionInitializator<MongoSync4DocumentWrapper> initializer = new CollectionInitializator<>(
-                new MongoSync4CollectionWrapper(collection),
-                () -> new MongoSync4DocumentWrapper(new Document()),
+        CollectionInitializator<Mongo3DocumentWrapper> initializer = new CollectionInitializator<>(
+                new Mongo3CollectionWrapper(collection),
+                () -> new Mongo3DocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_AUTHOR, KEY_CHANGE_ID}
         );
         if(indexCreation) {
@@ -88,7 +89,7 @@ public class MongoSync4Auditor extends MongockAuditor {
         collection.find()
                 .into(new LinkedList<>())
                 .stream()
-                .map(MongoSync4DocumentWrapper::new)
+                .map(Mongo3DocumentWrapper::new)
                 .map(mapper::fromDocument)
                 .collect(Collectors.toList())
                 .forEach(builder::addEntry);

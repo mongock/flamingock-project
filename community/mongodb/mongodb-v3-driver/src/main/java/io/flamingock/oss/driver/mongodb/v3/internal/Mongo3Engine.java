@@ -1,4 +1,4 @@
-package io.flamingock.oss.driver.mongodb.sync.v4.internal;
+package io.flamingock.oss.driver.mongodb.v3.internal;
 
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
@@ -7,31 +7,31 @@ import io.flamingock.community.internal.CommunityProperties;
 import io.flamingock.core.core.configurator.CoreProperties;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
-import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
+import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.community.internal.driver.MongockAuditor;
 import io.flamingock.community.internal.driver.MongockLockAcquirer;
 
 import java.util.Optional;
 
-public class MongoSync4Engine implements ConnectionEngine {
+public class Mongo3Engine implements ConnectionEngine {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;
     private final CommunityProperties communityProperties;
 
-    private MongoSync4Auditor auditor;
+    private Mongo3Auditor auditor;
     private MongockLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
-    private final MongoDBSync4Configuration driverConfiguration;
+    private final MongoDB3Configuration driverConfiguration;
     private final CoreProperties coreProperties;
 
 
-    public MongoSync4Engine(MongoClient mongoClient,
+    public Mongo3Engine(MongoClient mongoClient,
                             String databaseName,
                             CoreProperties coreProperties,
                             CommunityProperties communityProperties,
-                            MongoDBSync4Configuration driverConfiguration) {
+                            MongoDB3Configuration driverConfiguration) {
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);
         this.driverConfiguration = driverConfiguration;
@@ -42,13 +42,13 @@ public class MongoSync4Engine implements ConnectionEngine {
     @Override
     public void initialize() {
         SessionManager<ClientSession> sessionManager = new SessionManager<>(mongoClient::startSession);
-        transactionWrapper = coreProperties.getTransactionEnabled() ? new MongoSync4TransactionWrapper(sessionManager) : null;
-        auditor = new MongoSync4Auditor(database,
+        transactionWrapper = coreProperties.getTransactionEnabled() ? new Mongo3TransactionWrapper(sessionManager) : null;
+        auditor = new Mongo3Auditor(database,
                 communityProperties.getMigrationRepositoryName(),
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
         auditor.initialize(communityProperties.isIndexCreation());
-        MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, communityProperties.getLockRepositoryName());
+        Mongo3LockRepository lockRepository = new Mongo3LockRepository(database, communityProperties.getLockRepositoryName());
         lockRepository.initialize(communityProperties.isIndexCreation());
         lockProvider = new MongockLockAcquirer(lockRepository, auditor, coreProperties);
     }

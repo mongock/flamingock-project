@@ -1,4 +1,4 @@
-package io.flamingock.oss.driver.mongodb.sync.v4.changes;
+package io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithTransaction;
 
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
@@ -7,12 +7,12 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
-@ChangeUnit( id="insert-another-document" , order = "4")
-public class DInsertAnotherDocument {
+@ChangeUnit( id="insert-document" , order = "2")
+public class BInsertDocument {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(clientSession, new Document().append("name", "Jorge"));
+        collection.insertOne(clientSession, new Document().append("name", "Federico"));
     }
 }
