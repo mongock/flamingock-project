@@ -34,7 +34,7 @@ public class CommunitySpringbootMongodbSyncApp {
 
     @Bean
     public ConnectionDriver<?> connectionDriver(MongoClient mongoClient) {
-         return MongoSync4Driver.withDefaultLock(mongoClient, DATABASE_NAME);
+         return new MongoSync4Driver(mongoClient, DATABASE_NAME);
     }
 
     @Bean

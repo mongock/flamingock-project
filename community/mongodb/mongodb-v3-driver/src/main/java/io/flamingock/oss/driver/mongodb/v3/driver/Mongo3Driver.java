@@ -23,10 +23,10 @@ public class Mongo3Driver implements ConnectionDriver<MongoDB3Configuration> {
 
     @Deprecated
     public static Mongo3Driver withLockStrategy(MongoClient mongoClient,
-                                                    String databaseName,
-                                                    @Deprecated long lockAcquiredForMillis,
-                                                    @Deprecated long lockQuitTryingAfterMillis,
-                                                    @Deprecated long lockTryFrequencyMillis) {
+                                                String databaseName,
+                                                @Deprecated long lockAcquiredForMillis,
+                                                @Deprecated long lockQuitTryingAfterMillis,
+                                                @Deprecated long lockTryFrequencyMillis) {
         logWarningFieldIgnored("lockAcquiredForMillis", lockAcquiredForMillis);
         logWarningFieldIgnored("lockQuitTryingAfterMillis", lockQuitTryingAfterMillis);
         logWarningFieldIgnored("lockTryFrequencyMillis", lockTryFrequencyMillis);

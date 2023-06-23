@@ -22,7 +22,10 @@ public class CommunityStandaloneMongodbSyncApp {
 
     public  void run(MongoClient mongoClient, String databaseName) {
         CommunityStandalone.builder()
-                .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
+                .setDriver(new MongoSync4Driver(mongoClient, databaseName))
+                .setLockAcquiredForMillis(60 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
+                .setLockQuitTryingAfterMillis(3 * 60 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
+                .setLockTryFrequencyMillis(1000L)//this is just to show how is set. Default value is still 1000L
                 .addMigrationScanPackage("io.flamingock.examples.community.mongodb.sync.changes")
                 .addDependency(mongoClient.getDatabase(databaseName))
                 .setTrackIgnored(true)
