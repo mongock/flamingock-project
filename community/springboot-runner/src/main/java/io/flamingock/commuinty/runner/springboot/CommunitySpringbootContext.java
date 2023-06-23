@@ -26,6 +26,7 @@ public class CommunitySpringbootContext {
                 .buildApplicationRunner();
     }
 
+
     @Bean("flamingock-runner")
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:null}'.toLowerCase().equals('initializingbean')")
