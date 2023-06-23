@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@Import(CommunitySpringbootMongodbSyncApp.class)
+@Import({CommunitySpringbootMongodbSyncAppTest.TestConfiguration.class, CommunitySpringbootMongodbSyncApp.class})
 class CommunitySpringbootMongodbSyncAppTest {
 
     @Container
@@ -65,12 +65,6 @@ class CommunitySpringbootMongodbSyncAppTest {
                     .builder()
                     .applyConnectionString(new ConnectionString(mongoDBContainer.getConnectionString()))
                     .build());
-        }
-
-        @Bean
-        @Primary
-        public MongoDatabase mongoDatabase(MongoClient mongoClient) {
-            return mongoClient.getDatabase("test");
         }
     }
 }
