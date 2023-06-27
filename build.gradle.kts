@@ -51,6 +51,10 @@ subprojects {
         testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
 
         testImplementation("org.mockito:mockito-core:4.11.0")
+        testImplementation("org.mockito:mockito-junit-jupiter:4.11.0")
+        testImplementation("org.mockito:mockito-inline:4.11.0")
+
+
     }
 
     tasks.withType<Test>().configureEach {

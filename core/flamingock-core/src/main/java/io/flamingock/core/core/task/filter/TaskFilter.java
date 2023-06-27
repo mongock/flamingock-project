@@ -1,5 +1,5 @@
 package io.flamingock.core.core.task.filter;
 
-public interface TaskFilter<T> {
-    boolean filter(T filteredElement);
+public interface TaskFilter {
+    boolean filter(Class<?> filteredElement);
 }

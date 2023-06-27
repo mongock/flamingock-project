@@ -21,10 +21,11 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
 
 
     @Override
-    public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load(Collection<TaskFilter<?>> filters) {
+    public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load(Collection<TaskFilter> filters) {
         List<ReflectionTaskDescriptor> descriptors = scanPackages.stream()
                 .map(ReflectionUtil::loadClassesFromPackage)
                 .flatMap(Collection::stream)
+                .filter(source -> filters.stream().allMatch(filter-> filter.filter(source)))
                 .map(source -> ReflectionTaskDescriptor.builder().setSource(source))
                 .map(ReflectionTaskDescriptor.Builder::build)
                 .collect(Collectors.toList());

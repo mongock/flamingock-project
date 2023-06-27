@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SpringProfileFilter implements TaskFilter<AnnotatedElement> {
+public class SpringProfileFilter implements TaskFilter {
 
     private final List<String> activeProfiles;
 
@@ -18,7 +18,7 @@ public class SpringProfileFilter implements TaskFilter<AnnotatedElement> {
 
 
     @Override
-    public boolean filter(AnnotatedElement taskClass) {
+    public boolean filter(Class<?> taskClass) {
         if (!taskClass.isAnnotationPresent(Profile.class)) {
             return true; // no-profiled changeset always matches
         }

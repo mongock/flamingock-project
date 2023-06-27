@@ -31,7 +31,7 @@ public final class RunnerCreator {
     Runner create(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, EXTRA_PROPS> factory,
                   CoreConfiguration coreConfiguration,
                   EXTRA_PROPS extraProperties,
-                  Collection<TaskFilter<?>> filters,
+                  Collection<TaskFilter> filters,
                   EventPublisher eventPublisher,
                   DependencyContext dependencyContext,
                   boolean isThrowExceptionIfCannotObtainLock) {

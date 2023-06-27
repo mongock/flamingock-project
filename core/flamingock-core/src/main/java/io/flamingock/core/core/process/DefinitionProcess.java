@@ -11,6 +11,6 @@ import java.util.Collection;
  */
 public interface DefinitionProcess<AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess> {
 
-    LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> load(Collection<TaskFilter<?>> filters);
+    LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> load(Collection<TaskFilter> filters);
 
 }

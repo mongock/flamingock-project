@@ -36,13 +36,13 @@ public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessSt
     private final boolean throwExceptionIfCannotObtainLock;
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
-    private final Collection<TaskFilter<?>> filters;
+    private final Collection<TaskFilter> filters;
 
 
     public AbstractRunner(LockAcquirer<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> lockAcquirer,
                           AuditReader<AUDIT_PROCESS_STATUS> auditReader,
                           ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
-                          Collection<TaskFilter<?>> filters,
+                          Collection<TaskFilter> filters,
                           ExecutionContext executionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock) {
