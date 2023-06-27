@@ -25,4 +25,8 @@ public final class ChangesTracker {
     public static String get(int i) {
         return changes.get(i);
     }
+
+    public static boolean contains(String changeName) {
+        return changes.contains(changeName);
+    }
 }

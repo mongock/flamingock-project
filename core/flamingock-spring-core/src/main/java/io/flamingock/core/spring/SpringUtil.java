@@ -9,6 +9,6 @@ public final class SpringUtil {
 
     public static String[] getActiveProfiles(ApplicationContext springContext) {
         String[] activeProfiles = springContext.getEnvironment().getActiveProfiles();
-        return activeProfiles.length == 0 ? activeProfiles : new String[]{"default"};
+        return activeProfiles.length > 0 ? activeProfiles : new String[]{"default"};
     }
 }

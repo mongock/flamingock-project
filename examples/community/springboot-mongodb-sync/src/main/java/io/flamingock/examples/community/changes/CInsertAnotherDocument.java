@@ -8,7 +8,7 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.examples.community.ChangesTracker;
 import org.bson.Document;
 
-@ChangeUnit( id="insert-another-document" , order = "4")
+@ChangeUnit( id="insert-another-document" , order = "3")
 public class CInsertAnotherDocument {
 
     @Execution
