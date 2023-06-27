@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class StartFlamingockListener implements ApplicationListener<SpringMigrationStartedEvent> {
-    private final Logger logger = LoggerFactory.getLogger(StartFlamingockListener.class);
+public class StartedEventListener implements ApplicationListener<SpringMigrationStartedEvent> {
+    private final Logger logger = LoggerFactory.getLogger(StartedEventListener.class);
     public boolean executed = false;
 
     @Override

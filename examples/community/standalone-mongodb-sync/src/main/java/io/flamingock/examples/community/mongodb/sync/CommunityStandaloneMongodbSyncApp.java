@@ -5,6 +5,9 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
+import io.flamingock.examples.community.mongodb.sync.events.FailureEventListener;
+import io.flamingock.examples.community.mongodb.sync.events.StartedEventListener;
+import io.flamingock.examples.community.mongodb.sync.events.SuccessEventListener;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -30,6 +33,9 @@ public class CommunityStandaloneMongodbSyncApp {
                 .addDependency(mongoClient.getDatabase(databaseName))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
+                .setMigrationStartedListener(new StartedEventListener())
+                .setMigrationSuccessListener(new SuccessEventListener())
+                .setMigrationFailureListener(new FailureEventListener())
                 .build()
                 .run();
     }

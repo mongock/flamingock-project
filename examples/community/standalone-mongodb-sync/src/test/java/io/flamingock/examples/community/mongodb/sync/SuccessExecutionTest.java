@@ -4,14 +4,14 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
 import io.flamingock.examples.community.mongodb.sync.changes.ACreateCollection;
 import io.flamingock.examples.community.mongodb.sync.changes.BInsertDocument;
 import io.flamingock.examples.community.mongodb.sync.changes.CInsertAnotherDocument;
-import org.bson.Document;
-import org.junit.jupiter.api.AfterEach;
+import io.flamingock.examples.community.mongodb.sync.events.FailureEventListener;
+import io.flamingock.examples.community.mongodb.sync.events.StartedEventListener;
+import io.flamingock.examples.community.mongodb.sync.events.SuccessEventListener;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -19,16 +19,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
-public class CommunityStandaloneMongodbSyncAppTest {
-
-    public static final String DB_NAME = "test";
-    public static final String AUDIT_LOG_COLLECTION = "mongockChangeLog";
-    public static final String CLIENTS_COLLECTION = "clientCollection";
-    public static MongoClient mongoClient;
-
-    public static MongoDatabase mongoDatabase;
+public class SuccessExecutionTest {
 
     @Container
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
@@ -36,32 +31,29 @@ public class CommunityStandaloneMongodbSyncAppTest {
 
     @BeforeAll
     static void beforeAll() {
-        mongoClient = MongoClients.create(MongoClientSettings
+        MongoClient mongoClient = MongoClients.create(MongoClientSettings
                 .builder()
                 .applyConnectionString(new ConnectionString(mongoDBContainer.getConnectionString()))
                 .build());
-        mongoDatabase = mongoClient.getDatabase(DB_NAME);
-    }
-
-    @BeforeEach
-    void setupEach() {
-        mongoDatabase.getCollection(AUDIT_LOG_COLLECTION).deleteMany(new Document());
-    }
-
-    @AfterEach
-    void tearDownEach() {
-        mongoDatabase.getCollection(CLIENTS_COLLECTION).drop();
+        new CommunityStandaloneMongodbSyncApp().run(mongoClient, "test");
     }
 
 
     @Test
-    void happyPath() {
-        //Given-When
-        new CommunityStandaloneMongodbSyncApp().run(mongoClient, DB_NAME);
+    @DisplayName("SHOULD execute all the changes WHEN executed IF happy path")
+    void allChangeExecuted() {
         assertEquals(3, ChangesTracker.changes.size());
         assertEquals(ACreateCollection.class.getName(), ChangesTracker.changes.get(0));
         assertEquals(BInsertDocument.class.getName(), ChangesTracker.changes.get(1));
         assertEquals(CInsertAnotherDocument.class.getName(), ChangesTracker.changes.get(2));
+    }
+
+    @Test
+    @DisplayName("SHOULD trigger start and success event WHEN executed IF happy path")
+    void events() {
+        assertTrue(StartedEventListener.executed);
+        assertTrue(SuccessEventListener.executed);
+        assertFalse(FailureEventListener.executed);
     }
 
 }

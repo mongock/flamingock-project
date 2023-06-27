@@ -4,10 +4,9 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.commuinty.runner.springboot.EnableFlamingock;
 import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
-import io.flamingock.examples.community.events.FailedFlamingockListener;
-import io.flamingock.examples.community.events.StartFlamingockListener;
-import io.flamingock.examples.community.events.SuccessFlamingockListener;
+import io.flamingock.examples.community.events.FailureEventListener;
+import io.flamingock.examples.community.events.StartedEventListener;
+import io.flamingock.examples.community.events.SuccessEventListener;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,18 +33,18 @@ public class CommunitySpringbootMongodbSyncApp {
     }
 
     @Bean
-    public StartFlamingockListener startFlamingockListener() {
-        return new StartFlamingockListener();
+    public StartedEventListener startFlamingockListener() {
+        return new StartedEventListener();
     }
 
     @Bean
-    public SuccessFlamingockListener successFlamingockListener() {
-        return new SuccessFlamingockListener();
+    public SuccessEventListener successFlamingockListener() {
+        return new SuccessEventListener();
     }
 
     @Bean
-    public FailedFlamingockListener sailedFlamingockListener() {
-        return new FailedFlamingockListener();
+    public FailureEventListener sailedFlamingockListener() {
+        return new FailureEventListener();
     }
 
 }

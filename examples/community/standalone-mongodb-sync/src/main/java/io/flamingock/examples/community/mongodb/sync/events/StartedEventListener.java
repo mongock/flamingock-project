@@ -1,0 +1,15 @@
+package io.flamingock.examples.community.mongodb.sync.events;
+
+import io.flamingock.core.core.event.MigrationStartedEvent;
+
+import java.util.function.Consumer;
+
+public class StartedEventListener implements Consumer<MigrationStartedEvent> {
+
+    public static boolean executed = false;
+
+    @Override
+    public void accept(MigrationStartedEvent migrationStartedEvent) {
+        executed = true;
+    }
+}
