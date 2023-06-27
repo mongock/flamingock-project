@@ -6,7 +6,7 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.examples.community.ChangesTracker;
 import org.springframework.context.annotation.Profile;
 
-@Profile("example-profile")
+@Profile("accepted-profile-1")
 @ChangeUnit(id = "create-collection", order = "1", transactional = false)
 public class ACreateCollection {
 

@@ -5,7 +5,10 @@ flamingock:
 
 spring:
   profiles:
-    active: example-profile
+    active:
+      - accepted-profile-1
+      - accepted-profile-2
+      - not-used-profile
 
 
 

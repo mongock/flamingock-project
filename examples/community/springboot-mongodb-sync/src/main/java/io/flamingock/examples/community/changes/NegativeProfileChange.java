@@ -5,9 +5,9 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.examples.community.ChangesTracker;
 import org.springframework.context.annotation.Profile;
 
-@Profile("not-accepted-profile")
+@Profile("!accepted-profile-1")
 @ChangeUnit( id="profile-not-included-change" , order = "4")
-public class ProfileNotIncludedChange {
+public class NegativeProfileChange {
 
     @Execution
     public void execution() {
