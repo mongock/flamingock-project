@@ -8,7 +8,10 @@ import io.flamingock.core.core.execution.executor.ExecutionContext;
 import io.flamingock.core.core.process.DefinitionProcess;
 import io.flamingock.core.core.process.ExecutableProcess;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.core.task.filter.TaskFilter;
 import io.flamingock.core.core.util.StringUtil;
+
+import java.util.Collection;
 
 public final class RunnerCreator {
 
@@ -28,6 +31,7 @@ public final class RunnerCreator {
     Runner create(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, EXTRA_PROPS> factory,
                   CoreConfiguration coreConfiguration,
                   EXTRA_PROPS extraProperties,
+                  Collection<TaskFilter<?>> filters,
                   EventPublisher eventPublisher,
                   DependencyContext dependencyContext,
                   boolean isThrowExceptionIfCannotObtainLock) {
@@ -37,6 +41,7 @@ public final class RunnerCreator {
                 factory.getLockProvider(),
                 factory.getAuditReader(),
                 factory.getProcessExecutor(dependencyContext),
+                filters,
                 buildExecutionContext(coreConfiguration),
                 eventPublisher,
                 isThrowExceptionIfCannotObtainLock) {

@@ -4,14 +4,16 @@ import io.flamingock.core.core.task.filter.TaskFilter;
 import org.springframework.context.annotation.Profile;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SpringProfileFilter implements TaskFilter<AnnotatedElement> {
 
     private final List<String> activeProfiles;
 
-    public SpringProfileFilter(List<String> activeProfiles) {
-        this.activeProfiles = activeProfiles;
+    public SpringProfileFilter(String... activeProfiles) {
+        this.activeProfiles = activeProfiles.length > 0 ? Arrays.asList(activeProfiles) : Collections.emptyList();
     }
 
 

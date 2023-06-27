@@ -15,7 +15,9 @@ import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerCreator;
 import io.flamingock.core.spring.SpringDependencyContext;
+import io.flamingock.core.spring.SpringProfileFilter;
 import io.flamingock.core.spring.SpringRunnerBuilder;
+import io.flamingock.core.spring.SpringUtil;
 import io.flamingock.core.spring.configurator.SpringRunnerType;
 import io.flamingock.core.spring.configurator.SpringbootConfigurator;
 import io.flamingock.core.spring.configurator.SpringbootConfiguratorDelegate;
@@ -25,7 +27,10 @@ import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.env.Environment;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -70,11 +75,13 @@ public class CommunitySpringbootBuilder
                 new CommunityFactory(connectionEngine),
                 coreConfiguratorDelegate.getCoreProperties(),
                 communityConfiguratorDelegate.getCommunityProperties(),
+                Collections.singletonList(new SpringProfileFilter(SpringUtil.getActiveProfiles(getSpringContext()))),
                 eventPublisher,
                 new SpringDependencyContext(getSpringContext()),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
     }
+
     ///////////////////////////////////////////////////////////////////////////////////
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////

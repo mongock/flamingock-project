@@ -8,12 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.context.annotation.Profile;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -29,13 +25,13 @@ class SpringProfileFilterTest {
         when(taskClass.isAnnotationPresent(Profile.class)).thenReturn(false);
 
         // When-Then
-        assertTrue(new SpringProfileFilter(Collections.emptyList()).filter(taskClass));
+        assertTrue(new SpringProfileFilter().filter(taskClass));
     }
 
     @ParameterizedTest
     @MethodSource("provideTestArguments")
     void isBlank_ShouldReturnTrueForNullOrBlankStrings(
-            List<String> activeProfiles,
+            String[] activeProfiles,
             String[] profileStrings,
             boolean expected) {
         // Given
@@ -53,16 +49,16 @@ class SpringProfileFilterTest {
     private static Stream<Arguments> provideTestArguments() {
         return Stream.of(
                 //true
-                Arguments.of(Collections.emptyList(), new String[]{}, true),
-                Arguments.of(singletonList("P1"), new String[]{"P1"}, true),
-                Arguments.of(asList("P1", "P2"), new String[]{"P1"}, true),
-                Arguments.of(singletonList("P1"), new String[]{"P1", "P2"}, true),
-                Arguments.of(singletonList("P2"), new String[]{"!P1"}, true),
+                Arguments.of(new String[]{}, new String[]{}, true),
+                Arguments.of(new String[]{"P1"}, new String[]{"P1"}, true),
+                Arguments.of(new String[]{"P1","P2"}, new String[]{"P1"}, true),
+                Arguments.of(new String[]{"P1"}, new String[]{"P1", "P2"}, true),
+                Arguments.of(new String[]{"P2"}, new String[]{"!P1"}, true),
                 //false
-                Arguments.of(Collections.emptyList(), new String[]{"P1"}, false),
-                Arguments.of(singletonList("P2"), new String[]{"P1"}, false),
-                Arguments.of(singletonList("P1"), new String[]{"!P1"}, false),
-                Arguments.of(asList("P1", "P2"), new String[]{"!P1"}, false)
+                Arguments.of(new String[]{}, new String[]{"P1"}, false),
+                Arguments.of(new String[]{"P2"}, new String[]{"P1"}, false),
+                Arguments.of(new String[]{"P1"}, new String[]{"!P1"}, false),
+                Arguments.of(new String[]{"P1","P2"}, new String[]{"!P1"}, false)
         );
     }
 }

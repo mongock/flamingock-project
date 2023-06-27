@@ -23,6 +23,7 @@ import io.flamingock.core.core.runner.RunnerCreator;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -68,6 +69,7 @@ public class CommunityStandaloneBuilder
                 new CommunityFactory(connectionEngine),
                 coreConfiguratorDelegate.getCoreProperties(),
                 communityConfiguratorDelegate.getCommunityProperties(),
+                Collections.emptyList(),
                 eventPublisher,
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
