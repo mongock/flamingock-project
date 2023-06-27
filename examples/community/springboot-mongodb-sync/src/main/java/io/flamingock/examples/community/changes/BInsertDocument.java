@@ -12,7 +12,7 @@ import org.bson.Document;
 public class BInsertDocument {
     @Execution
     public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
-        ChangesTracker.changes.add(getClass().getName());
+        ChangesTracker.add(getClass().getName());
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
         collection.insertOne(clientSession, new Document().append("name", "Federico"));
     }

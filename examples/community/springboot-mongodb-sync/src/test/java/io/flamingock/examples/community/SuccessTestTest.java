@@ -8,8 +8,12 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.examples.community.changes.ACreateCollection;
 import io.flamingock.examples.community.changes.BInsertDocument;
 import io.flamingock.examples.community.changes.CInsertAnotherDocument;
+import io.flamingock.examples.community.events.FailedFlamingockListener;
+import io.flamingock.examples.community.events.StartFlamingockListener;
+import io.flamingock.examples.community.events.SuccessFlamingockListener;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +30,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@Import({CommunitySpringbootMongodbSyncAppTest.TestConfiguration.class, CommunitySpringbootMongodbSyncApp.class})
-class CommunitySpringbootMongodbSyncAppTest {
+@Import({SuccessTestTest.TestConfiguration.class, CommunitySpringbootMongodbSyncApp.class})
+class SuccessTestTest {
 
     @Container
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
@@ -40,20 +46,38 @@ class CommunitySpringbootMongodbSyncAppTest {
     @Autowired
     private MongoDatabase mongoDatabase;
 
+    @Autowired
+    private StartFlamingockListener startFlamingockListener;
+
+    @Autowired
+    private SuccessFlamingockListener successFlamingockListener;
+
+    @Autowired
+    private FailedFlamingockListener failedFlamingockListener;
+
+
+
     @BeforeEach
     public void setupEach() {
         mongoDatabase.getCollection("mongockChangeLog").deleteMany(new Document());
+        mongoDatabase.getCollection("clientCollection").drop();
     }
 
     @Test
+    @DisplayName("SHOULD execute all the changes WHEN executed IF happy path")
     void happyPath() {
-        assertEquals(3, ChangesTracker.changes.size());
-        assertEquals(ACreateCollection.class.getName(), ChangesTracker.changes.get(0));
-        assertEquals(BInsertDocument.class.getName(), ChangesTracker.changes.get(1));
-        assertEquals(CInsertAnotherDocument.class.getName(), ChangesTracker.changes.get(2));
+        assertEquals(3, ChangesTracker.size());
+        assertEquals(ACreateCollection.class.getName(), ChangesTracker.get(0));
+        assertEquals(BInsertDocument.class.getName(), ChangesTracker.get(1));
+        assertEquals(CInsertAnotherDocument.class.getName(), ChangesTracker.get(2));
+    }
 
-        //tear-down
-        mongoDatabase.getCollection("clientCollection").drop();
+    @Test
+    @DisplayName("SHOULD trigger start and success event WHEN executed IF happy path")
+    void events() {
+        assertTrue(startFlamingockListener.executed);
+        assertTrue(successFlamingockListener.executed);
+        assertFalse(failedFlamingockListener.executed);
     }
 
     @Configuration

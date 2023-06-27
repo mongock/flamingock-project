@@ -12,7 +12,7 @@ public class ACreateCollection {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {
-        ChangesTracker.changes.add(getClass().getName());
+        ChangesTracker.add(getClass().getName());
         mongoDatabase.createCollection("clientCollection");
     }
 }

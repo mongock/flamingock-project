@@ -4,6 +4,10 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.commuinty.runner.springboot.EnableFlamingock;
 import io.flamingock.community.internal.driver.ConnectionDriver;
+import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
+import io.flamingock.examples.community.events.FailedFlamingockListener;
+import io.flamingock.examples.community.events.StartFlamingockListener;
+import io.flamingock.examples.community.events.SuccessFlamingockListener;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,6 +31,21 @@ public class CommunitySpringbootMongodbSyncApp {
     @Bean
     public MongoDatabase mongoDatabase(MongoClient mongoClient) {
         return mongoClient.getDatabase(DATABASE_NAME);
+    }
+
+    @Bean
+    public StartFlamingockListener startFlamingockListener() {
+        return new StartFlamingockListener();
+    }
+
+    @Bean
+    public SuccessFlamingockListener successFlamingockListener() {
+        return new SuccessFlamingockListener();
+    }
+
+    @Bean
+    public FailedFlamingockListener sailedFlamingockListener() {
+        return new FailedFlamingockListener();
     }
 
 }
