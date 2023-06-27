@@ -10,10 +10,6 @@ public final class ChangesTracker {
     private ChangesTracker() {
     }
 
-    public static void clear() {
-        changes.clear();
-    }
-
     public static void add(String change) {
         changes.add(change);
     }
