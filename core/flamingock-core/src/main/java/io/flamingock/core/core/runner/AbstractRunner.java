@@ -16,8 +16,11 @@ import io.flamingock.core.core.lock.LockException;
 import io.flamingock.core.core.process.DefinitionProcess;
 import io.flamingock.core.core.process.ExecutableProcess;
 import io.flamingock.core.core.process.LoadedProcess;
+import io.flamingock.core.core.task.filter.TaskFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess>
         implements Runner {

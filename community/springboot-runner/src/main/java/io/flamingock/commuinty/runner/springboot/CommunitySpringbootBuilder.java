@@ -15,7 +15,9 @@ import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.runner.Runner;
 import io.flamingock.core.core.runner.RunnerCreator;
 import io.flamingock.core.spring.SpringDependencyContext;
+import io.flamingock.core.spring.SpringProfileFilter;
 import io.flamingock.core.spring.SpringRunnerBuilder;
+import io.flamingock.core.spring.SpringUtil;
 import io.flamingock.core.spring.configurator.SpringRunnerType;
 import io.flamingock.core.spring.configurator.SpringbootConfigurator;
 import io.flamingock.core.spring.configurator.SpringbootConfiguratorDelegate;
@@ -23,9 +25,14 @@ import io.flamingock.core.spring.configurator.SpringbootConfiguration;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
 import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.env.Environment;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +43,7 @@ public class CommunitySpringbootBuilder
         SpringbootConfigurator<CommunitySpringbootBuilder>,
         SpringRunnerBuilder {
 
+    private static final Logger logger = LoggerFactory.getLogger(CommunitySpringbootBuilder.class);
 
     private final CoreConfiguratorDelegate<CommunitySpringbootBuilder> coreConfiguratorDelegate;
 
@@ -51,6 +59,7 @@ public class CommunitySpringbootBuilder
         this.communityConfiguratorDelegate = new CommunityConfiguratorDelegate<>(communityConfiguration, () -> this);
         this.springbootConfiguratorDelegate = new SpringbootConfiguratorDelegate<>(springbootConfiguration, () -> this);
     }
+
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
     ///////////////////////////////////////////////////////////////////////////////////
@@ -66,8 +75,10 @@ public class CommunitySpringbootBuilder
                 .getDriver()
                 .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
         connectionEngine.initialize();
+        String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
+        logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
         return RunnerCreator.create(
-                new CommunityFactory(connectionEngine),
+                new CommunityFactory(connectionEngine, new SpringProfileFilter(activeProfiles)),
                 coreConfiguratorDelegate.getCoreProperties(),
                 communityConfiguratorDelegate.getCommunityProperties(),
                 eventPublisher,
@@ -75,6 +86,7 @@ public class CommunitySpringbootBuilder
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
     }
+
     ///////////////////////////////////////////////////////////////////////////////////
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////

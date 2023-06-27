@@ -4,16 +4,13 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
 import io.flamingock.examples.community.changes.ACreateCollection;
 import io.flamingock.examples.community.changes.BInsertDocument;
 import io.flamingock.examples.community.changes.CInsertAnotherDocument;
+import io.flamingock.examples.community.changes.ProfileNotIncludedChange;
 import io.flamingock.examples.community.events.FailureEventListener;
 import io.flamingock.examples.community.events.StartedEventListener;
 import io.flamingock.examples.community.events.SuccessEventListener;
-import org.bson.Document;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -55,13 +53,22 @@ class SuccessExecutionTest {
 
 
     @Test
-    @DisplayName("SHOULD execute all the changes WHEN executed IF happy path")
-    void allChangeExecuted() {
+    @DisplayName("SHOULD execute all the expected changes WHEN executed IF happy path")
+    void allExpectedChangeExecuted() {
         assertEquals(3, ChangesTracker.size());
         assertEquals(ACreateCollection.class.getName(), ChangesTracker.get(0));
         assertEquals(BInsertDocument.class.getName(), ChangesTracker.get(1));
         assertEquals(CInsertAnotherDocument.class.getName(), ChangesTracker.get(2));
     }
+
+
+    @Test
+    @DisplayName("SHOULD execute all the expected changes WHEN executed IF happy path")
+    void profiledChangeNotExecuted() {
+        assertFalse(ChangesTracker.contains(ProfileNotIncludedChange.class.getName()));
+    }
+
+
 
     @Test
     @DisplayName("SHOULD trigger start and success event WHEN executed IF happy path")

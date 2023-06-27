@@ -7,7 +7,9 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.examples.community.ChangesTracker;
 import org.bson.Document;
+import org.springframework.context.annotation.Profile;
 
+@Profile("accepted-profile-2")
 @ChangeUnit( id="insert-document" , order = "2")
 public class BInsertDocument {
     @Execution

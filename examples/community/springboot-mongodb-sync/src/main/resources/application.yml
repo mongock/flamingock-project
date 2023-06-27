@@ -3,6 +3,13 @@ flamingock:
     - io.flamingock.examples.community.changes
   transactionEnabled: true
 
+spring:
+  profiles:
+    active:
+      - accepted-profile-1
+      - accepted-profile-2
+      - not-used-profile
+
 
 
 
