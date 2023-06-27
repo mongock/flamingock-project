@@ -25,6 +25,8 @@ import io.flamingock.core.spring.configurator.SpringbootConfiguration;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
 import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
@@ -41,6 +43,7 @@ public class CommunitySpringbootBuilder
         SpringbootConfigurator<CommunitySpringbootBuilder>,
         SpringRunnerBuilder {
 
+    private static final Logger logger = LoggerFactory.getLogger(CommunitySpringbootBuilder.class);
 
     private final CoreConfiguratorDelegate<CommunitySpringbootBuilder> coreConfiguratorDelegate;
 
@@ -56,6 +59,7 @@ public class CommunitySpringbootBuilder
         this.communityConfiguratorDelegate = new CommunityConfiguratorDelegate<>(communityConfiguration, () -> this);
         this.springbootConfiguratorDelegate = new SpringbootConfiguratorDelegate<>(springbootConfiguration, () -> this);
     }
+
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
     ///////////////////////////////////////////////////////////////////////////////////
@@ -71,11 +75,12 @@ public class CommunitySpringbootBuilder
                 .getDriver()
                 .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
         connectionEngine.initialize();
+        String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
+        logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
         return RunnerCreator.create(
-                new CommunityFactory(connectionEngine),
+                new CommunityFactory(connectionEngine, new SpringProfileFilter(activeProfiles)),
                 coreConfiguratorDelegate.getCoreProperties(),
                 communityConfiguratorDelegate.getCommunityProperties(),
-                Collections.singletonList(new SpringProfileFilter(SpringUtil.getActiveProfiles(getSpringContext()))),
                 eventPublisher,
                 new SpringDependencyContext(getSpringContext()),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()

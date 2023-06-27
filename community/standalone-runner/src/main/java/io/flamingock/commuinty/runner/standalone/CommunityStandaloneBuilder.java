@@ -69,7 +69,6 @@ public class CommunityStandaloneBuilder
                 new CommunityFactory(connectionEngine),
                 coreConfiguratorDelegate.getCoreProperties(),
                 communityConfiguratorDelegate.getCommunityProperties(),
-                Collections.emptyList(),
                 eventPublisher,
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()

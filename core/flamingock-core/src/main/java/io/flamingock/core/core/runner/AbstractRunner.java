@@ -36,20 +36,17 @@ public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessSt
     private final boolean throwExceptionIfCannotObtainLock;
     private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
     private final ExecutionContext executionContext;
-    private final Collection<TaskFilter> filters;
 
 
     public AbstractRunner(LockAcquirer<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> lockAcquirer,
                           AuditReader<AUDIT_PROCESS_STATUS> auditReader,
                           ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
-                          Collection<TaskFilter> filters,
                           ExecutionContext executionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock) {
         this.lockProvider = lockAcquirer;
         this.auditReader = auditReader;
         this.processExecutor = processExecutor;
-        this.filters = filters;
         this.executionContext = executionContext;
         this.eventPublisher = eventPublisher;
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
@@ -58,7 +55,7 @@ public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessSt
     public void execute(DefinitionProcess<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> processDefinition) throws CoreException {
         eventPublisher.publishMigrationStarted();
 
-        LoadedProcess<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> loadedProcess = processDefinition.load(filters);
+        LoadedProcess<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> loadedProcess = processDefinition.load();
 
         try (LockAcquisition lockAcquisition = lockProvider.acquireIfRequired(loadedProcess)) {
             if (lockAcquisition instanceof LockAcquisition.Acquired) {
