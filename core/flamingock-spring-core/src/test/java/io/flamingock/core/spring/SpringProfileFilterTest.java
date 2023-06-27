@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class SpringProfileTaskFilterTest {
+class SpringProfileFilterTest {
 
     @Test
     @DisplayName("SHOULD return true WHEN activeProfiles=[] IF appliedProfiles=[]")
@@ -29,7 +29,7 @@ class SpringProfileTaskFilterTest {
         when(taskClass.isAnnotationPresent(Profile.class)).thenReturn(false);
 
         // When-Then
-        assertTrue(new SpringProfileTaskFilter(Collections.emptyList()).filter(taskClass));
+        assertTrue(new SpringProfileFilter(Collections.emptyList()).filter(taskClass));
     }
 
     @ParameterizedTest
@@ -46,7 +46,7 @@ class SpringProfileTaskFilterTest {
         when(taskClass.getAnnotation(Profile.class)).thenReturn(taskProfile);
 
         // When-Then
-        assertEquals(expected, new SpringProfileTaskFilter(activeProfiles).filter(taskClass));
+        assertEquals(expected, new SpringProfileFilter(activeProfiles).filter(taskClass));
     }
 
 

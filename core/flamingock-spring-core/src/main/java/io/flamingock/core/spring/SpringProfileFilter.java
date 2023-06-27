@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Profile;
 import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
-public class SpringProfileTaskFilter implements TaskFilter<AnnotatedElement> {
+public class SpringProfileFilter implements TaskFilter<AnnotatedElement> {
 
     private final List<String> activeProfiles;
 
-    public SpringProfileTaskFilter(List<String> activeProfiles) {
+    public SpringProfileFilter(List<String> activeProfiles) {
         this.activeProfiles = activeProfiles;
     }
 
