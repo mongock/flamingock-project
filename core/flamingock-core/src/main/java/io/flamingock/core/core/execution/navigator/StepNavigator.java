@@ -76,6 +76,10 @@ public class StepNavigator {
 
     public final StepNavigationOutput executeTask(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
+
+
+
+            // Main execution
             TaskStep executedStep = transactionWrapper != null
                     ? executeTaskWrapped(task, executionContext, runtimeManager)
                     : executeTaskUnwrapped(task, executionContext);
@@ -111,7 +115,9 @@ public class StepNavigator {
         }
     }
 
-    private TaskStep executeTaskWrapped(ExecutableTask task, ExecutionContext executionContext, DependencyInjectable dependencyInjectable) {
+    private TaskStep executeTaskWrapped(ExecutableTask task,
+                                        ExecutionContext executionContext,
+                                        DependencyInjectable dependencyInjectable) {
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
             ExecutionStep executed = executeTask(task);
             if (executed instanceof SuccessExecutionStep) {
