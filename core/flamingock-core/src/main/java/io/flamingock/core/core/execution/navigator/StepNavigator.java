@@ -72,7 +72,7 @@ public class StepNavigator {
         this.transactionWrapper = transactionWrapper;
     }
 
-    public final StepNavigationOutput start(ExecutableTask task, ExecutionContext executionContext) {
+    public final StepNavigationOutput executeTask(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
             TaskStep afterExecution = transactionWrapper != null
                     ? executeTaskWrapped(task, executionContext, runtimeManager)

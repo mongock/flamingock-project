@@ -51,7 +51,7 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
                         .setTransactionWrapper(transactionWrapper)
                         .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer
                         .build()
-                        .start(task, executionContext)
+                        .executeTask(task, executionContext)
                 )
                 .peek(summary::addSummary);
 
