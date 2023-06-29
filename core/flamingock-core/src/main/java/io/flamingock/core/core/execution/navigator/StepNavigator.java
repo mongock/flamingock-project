@@ -1,5 +1,6 @@
 package io.flamingock.core.core.execution.navigator;
 
+import io.flamingock.core.api.exception.CoreException;
 import io.flamingock.core.core.audit.AuditWriter;
 import io.flamingock.core.core.audit.writer.AuditItem;
 import io.flamingock.core.core.audit.writer.RuntimeContext;
@@ -23,6 +24,7 @@ import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.transaction.TransactionWrapper;
+import io.flamingock.core.core.util.Failed;
 import io.flamingock.core.core.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,32 +76,38 @@ public class StepNavigator {
 
     public final StepNavigationOutput executeTask(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
-            TaskStep afterExecution = transactionWrapper != null
+            TaskStep executedStep = transactionWrapper != null
                     ? executeTaskWrapped(task, executionContext, runtimeManager)
                     : executeTaskUnwrapped(task, executionContext);
 
-            if (afterExecution instanceof CompleteAutoRolledBackStep) {
-                summarizer.add((CompleteAutoRolledBackStep) afterExecution);
-                return new StepNavigationOutput(false, summarizer.getSummary());
-
-            } else if (afterExecution instanceof FailedExecutionOrAuditStep) {
-                //failed execution
-                manualRollback((FailedExecutionOrAuditStep) afterExecution).ifPresent(
-                        rolledBackStep -> auditManualRollback(rolledBackStep, executionContext, LocalDateTime.now())
-                );
-                return new StepNavigationOutput(false, summarizer.getSummary());
-
-            } else {
-                //SUCCESSFUL EXECUTION
-                return new StepNavigationOutput(true, summarizer.getSummary());
-
-            }
+            return executedStep instanceof Failed
+                    ? rollback((Failed) executedStep, executionContext)
+                    : new StepNavigationOutput(true, summarizer.getSummary());
 
         } else {
             //Task already executed
             logger.info("IGNORED - {}", task.getDescriptor().getId());
             summarizer.add(new CompletedAlreadyAppliedStep(task));
             return new StepNavigationOutput(true, summarizer.getSummary());
+        }
+    }
+
+    private StepNavigationOutput rollback(Failed failedTaskStep, ExecutionContext executionContext) {
+        if (failedTaskStep instanceof CompleteAutoRolledBackStep) {
+            summarizer.add((CompleteAutoRolledBackStep) failedTaskStep);
+            return new StepNavigationOutput(false, summarizer.getSummary());
+
+        } else if (failedTaskStep instanceof FailedExecutionOrAuditStep) {
+            //failed execution
+            manualRollback((FailedExecutionOrAuditStep) failedTaskStep).ifPresent(
+                    rolledBackStep -> auditManualRollback(rolledBackStep, executionContext, LocalDateTime.now())
+            );
+            return new StepNavigationOutput(false, summarizer.getSummary());
+
+        } else {
+            throw new CoreException(
+                    "Failed task[%s] doesn't implement CompleteAutoRolledBackStep nor FailedExecutionOrAuditStep",
+                    failedTaskStep.toString());
         }
     }
 
