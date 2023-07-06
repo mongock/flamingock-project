@@ -24,7 +24,7 @@ import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.transaction.TransactionWrapper;
-import io.flamingock.core.core.util.Failed;
+import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.core.core.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,8 +84,8 @@ public class StepNavigator {
                     ? executeTaskWrapped(task, executionContext, runtimeManager)
                     : executeTaskUnwrapped(task, executionContext);
 
-            return executedStep instanceof Failed
-                    ? rollback((Failed) executedStep, executionContext)
+            return executedStep instanceof FailedStep
+                    ? rollback((FailedStep) executedStep, executionContext)
                     : new StepNavigationOutput(true, summarizer.getSummary());
 
         } else {
@@ -96,7 +96,7 @@ public class StepNavigator {
         }
     }
 
-    private StepNavigationOutput rollback(Failed failedTaskStep, ExecutionContext executionContext) {
+    private StepNavigationOutput rollback(FailedStep failedTaskStep, ExecutionContext executionContext) {
         if (failedTaskStep instanceof CompleteAutoRolledBackStep) {
             summarizer.add((CompleteAutoRolledBackStep) failedTaskStep);
             return new StepNavigationOutput(false, summarizer.getSummary());
@@ -110,7 +110,7 @@ public class StepNavigator {
 
         } else {
             throw new CoreException(
-                    "Failed task[%s] doesn't implement CompleteAutoRolledBackStep nor FailedExecutionOrAuditStep",
+                    "FailedStep task[%s] doesn't implement CompleteAutoRolledBackStep nor FailedExecutionOrAuditStep",
                     failedTaskStep.toString());
         }
     }

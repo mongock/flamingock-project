@@ -1,12 +1,12 @@
 package io.flamingock.core.core.execution.step.afteraudit;
 
-import io.flamingock.core.core.execution.step.TaskStep;
+import io.flamingock.core.core.execution.step.AbstractTaskStep;
 import io.flamingock.core.core.execution.step.rolledback.ManualRolledBackStep;
 import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.util.StopWatch;
 
-public final class RollableStep extends TaskStep {
+public final class RollableStep extends AbstractTaskStep {
     private final RollableTask rollableTask;
 
 

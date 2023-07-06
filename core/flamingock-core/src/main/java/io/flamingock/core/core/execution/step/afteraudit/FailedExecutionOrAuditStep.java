@@ -3,12 +3,12 @@ package io.flamingock.core.core.execution.step.afteraudit;
 import io.flamingock.core.core.execution.step.SuccessableStep;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
-import io.flamingock.core.core.util.Failed;
+import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.core.core.util.Result;
 
 import java.util.Optional;
 
-public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep implements SuccessableStep, Failed {
+public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep implements SuccessableStep, FailedStep {
 
 
     public static FailedExecutionOrAuditStep instance(ExecutableTask task, Result auditResult) {
