@@ -9,10 +9,4 @@ import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 public interface Task extends Comparable<Task> {
     OrderedTaskDescriptor getDescriptor();
 
-    @Override
-    default int compareTo(Task other) {
-        return this.getDescriptor().compareTo(other.getDescriptor());
-
-    }
-
 }

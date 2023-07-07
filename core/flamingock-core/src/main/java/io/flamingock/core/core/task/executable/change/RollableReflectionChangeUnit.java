@@ -1,8 +1,11 @@
 package io.flamingock.core.core.task.executable.change;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
+import io.flamingock.core.core.task.Task;
 import io.flamingock.core.core.task.descriptor.impl.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.AbstractRollableTask;
+import io.flamingock.core.core.task.executable.RollableTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 
@@ -34,6 +37,10 @@ public class RollableReflectionChangeUnit extends AbstractRollableTask<Reflectio
         return baseTask.getOrder();
     }
 
+    @Override
+    public void addRollbackDependent(RollableTask rollbackDependent) {
+        baseTask.addRollbackDependent(rollbackDependent);
+    }
 
     @Override
     public void rollback(RuntimeManager runtimeHelper) {
@@ -48,5 +55,10 @@ public class RollableReflectionChangeUnit extends AbstractRollableTask<Reflectio
     @Override
     public String getRollbackMethodName() {
         return rollbackMethod.getName();
+    }
+
+    @Override
+    public int compareTo(@NotNull Task o) {
+        return 0;
     }
 }
