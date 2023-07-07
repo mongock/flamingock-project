@@ -23,7 +23,7 @@ import io.flamingock.core.core.execution.step.rolledback.ManualRolledBackStep;
 import io.flamingock.core.core.execution.summary.StepSummarizer;
 import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
-import io.flamingock.core.core.task.executable.ExecutableTask;
+import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.core.core.util.Result;
@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 public class StepNavigator {
@@ -76,7 +75,7 @@ public class StepNavigator {
         this.transactionWrapper = transactionWrapper;
     }
 
-    public final StepNavigationOutput executeTask(ExecutableTask task, ExecutionContext executionContext) {
+    public final StepNavigationOutput executeTask(OrderedExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
 
 
@@ -127,7 +126,7 @@ public class StepNavigator {
         }
     }
 
-    private TaskStep executeTaskWrapped(ExecutableTask task,
+    private TaskStep executeTaskWrapped(OrderedExecutableTask task,
                                         ExecutionContext executionContext,
                                         DependencyInjectable dependencyInjectable) {
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
@@ -143,12 +142,12 @@ public class StepNavigator {
         });
     }
 
-    private TaskStep executeTaskUnwrapped(ExecutableTask task, ExecutionContext executionContext) {
+    private TaskStep executeTaskUnwrapped(OrderedExecutableTask task, ExecutionContext executionContext) {
         ExecutionStep executed = executeTask(task);
         return auditExecution(executed, executionContext, LocalDateTime.now());
     }
 
-    private ExecutionStep executeTask(ExecutableTask task) {
+    private ExecutionStep executeTask(OrderedExecutableTask task) {
         ExecutionStep executed = new ExecutableStep(task).execute(runtimeManager);
         summarizer.add(executed);
         if (executed instanceof FailedExecutionStep) {

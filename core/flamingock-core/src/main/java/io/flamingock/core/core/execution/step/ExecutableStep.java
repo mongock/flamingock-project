@@ -4,12 +4,12 @@ import io.flamingock.core.core.execution.step.execution.ExecutionStep;
 import io.flamingock.core.core.execution.step.execution.FailedExecutionStep;
 import io.flamingock.core.core.execution.step.execution.SuccessExecutionStep;
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.task.executable.ExecutableTask;
+import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.util.StopWatch;
 
 public class ExecutableStep extends AbstractTaskStep {
 
-    public ExecutableStep(ExecutableTask task) {
+    public ExecutableStep(OrderedExecutableTask task) {
         super(task);
     }
 

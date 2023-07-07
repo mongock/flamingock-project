@@ -45,7 +45,7 @@ public class ReflectionTaskDescriptor extends AbstractOrderedTaskDescriptor {
             if (isChangeUnit(source)) {
                 return getDescriptorFromChangeUnit(source);
             } else {
-                throw new IllegalArgumentException(String.format("ExecutableTask type not recognised in class[%s]", source.getName()));
+                throw new IllegalArgumentException(String.format("OrderedExecutableTask type not recognised in class[%s]", source.getName()));
             }
         }
 

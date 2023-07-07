@@ -9,7 +9,7 @@ public class SuccessTestExecutableTask extends TestExecutableTask {
     }
 
     @Override
-    public int compareTo(@NotNull Task o) {
-        return 0;
+    public String getOrder() {
+        return null;
     }
 }

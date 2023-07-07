@@ -4,8 +4,7 @@ package io.flamingock.core.core.process.single;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.process.LoadedProcess;
 import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
-import io.flamingock.core.core.task.executable.ExecutableTask;
-import io.flamingock.core.core.task.executable.ExecutableTaskBuilder;
+import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,16 +20,11 @@ public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStat
 
     @Override
     public SingleExecutableProcess applyState(SingleAuditProcessStatus state) {
-        //reused builder to avoid performing GC unnecessarily. This is always sequential
-        final ExecutableTaskBuilder builder = ExecutableTask.builder();
-        List<ExecutableTask> tasks2 = taskDescriptors
+        List<OrderedExecutableTask> tasks2 = taskDescriptors
                 .stream()
                 .sorted()
                 .map(descriptor ->
-                        builder.clean()
-                                .setTaskDescriptor(descriptor)
-                                .setInitialState(state.getEntryStatus(descriptor.getId()).orElse(null))
-                                .build()
+                        OrderedExecutableTask.build(descriptor, state.getEntryStatus(descriptor.getId()).orElse(null))
                 )
                 .flatMap(List::stream)
                 .sorted()

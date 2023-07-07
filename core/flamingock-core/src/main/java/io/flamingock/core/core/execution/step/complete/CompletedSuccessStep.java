@@ -2,7 +2,7 @@ package io.flamingock.core.core.execution.step.complete;
 
 import io.flamingock.core.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.flamingock.core.core.execution.step.execution.SuccessExecutionStep;
-import io.flamingock.core.core.task.executable.ExecutableTask;
+import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 
 public final class CompletedSuccessStep extends AfterExecutionAuditStep {
 
@@ -10,7 +10,7 @@ public final class CompletedSuccessStep extends AfterExecutionAuditStep {
         return new CompletedSuccessStep(executedStep.getTask());
     }
 
-    private CompletedSuccessStep(ExecutableTask executedTask) {
+    private CompletedSuccessStep(OrderedExecutableTask executedTask) {
         super(executedTask, true);
     }
 

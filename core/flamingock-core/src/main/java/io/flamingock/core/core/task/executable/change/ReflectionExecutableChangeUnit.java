@@ -58,9 +58,4 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Refle
         return executionMethod.getName();
     }
 
-
-    @Override
-    public int compareTo(@NotNull Task o) {
-        return 0;
-    }
 }

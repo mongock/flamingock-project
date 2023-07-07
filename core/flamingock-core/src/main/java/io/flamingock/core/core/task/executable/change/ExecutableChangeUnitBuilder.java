@@ -1,63 +1,27 @@
-package io.flamingock.core.core.task.executable;
+package io.flamingock.core.core.task.executable.change;
 
-import io.flamingock.core.api.annotations.BeforeExecution;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.core.task.descriptor.impl.ReflectionTaskDescriptor;
-import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
-import io.flamingock.core.core.task.executable.change.ExecutableChangeUnit;
-import io.flamingock.core.core.task.executable.change.ReflectionExecutableChangeUnit;
-import io.flamingock.core.core.task.executable.change.RollableReflectionChangeUnit;
+import io.flamingock.core.core.task.executable.OrderedExecutableTask;
+import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.util.ReflectionUtil;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class ExecutableTaskBuilder {
 
-    private OrderedTaskDescriptor taskDescriptor;
-    private AuditEntryStatus initialState;
+public class ExecutableChangeUnitBuilder {
 
-    ExecutableTaskBuilder() {
+    private  ExecutableChangeUnitBuilder() {
     }
 
-    public ExecutableTaskBuilder clean() {
-        taskDescriptor = null;
-        initialState = null;
-        return this;
-    }
 
-    public ExecutableTaskBuilder setTaskDescriptor(OrderedTaskDescriptor taskDescriptor) {
-        this.taskDescriptor = taskDescriptor;
-        return this;
-    }
-
-    public ExecutableTaskBuilder setInitialState(AuditEntryStatus initialState) {
-        this.initialState = initialState;
-        return this;
-    }
-
-    public List<ExecutableTask> build() {
-        if (taskDescriptor instanceof ReflectionTaskDescriptor) {
-            return getTaskFromReflection((ReflectionTaskDescriptor) taskDescriptor, initialState);
-        } else {
-            throw new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", taskDescriptor.getClass().getName()));
-        }
-    }
-
-    private static List<ExecutableTask> getTaskFromReflection(ReflectionTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
-        if (!taskDescriptor.getSource().isAnnotationPresent(ChangeUnit.class)) {
-            throw new IllegalArgumentException(String.format(
-                    "ExecutableChangeUnit source class[%s] must be annotated with %s",
-                    taskDescriptor.getSource().getName(),
-                    ChangeUnit.class.getName()));
-        }
-
+    public static List<OrderedExecutableTask> build(ReflectionTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), Execution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
                         "ExecutableChangeUnit[%s] without %s method",
@@ -81,14 +45,16 @@ public class ExecutableTaskBuilder {
         before the main task and also added to the main task as rollback dependent, so they  are rolled back in case
         the main task fails.
          */
-        List<ExecutableTask> tasks = new LinkedList<>();
+        List<OrderedExecutableTask> tasks = new LinkedList<>();
         getRollbackDependentOptional(taskDescriptor).ifPresent(rollbackDependent -> {
             tasks.add(rollbackDependent);
             mainTask.addRollbackDependent(rollbackDependent);
         });
         tasks.add(mainTask);
         return tasks;
+
     }
+
 
     private static Optional<RollableTask> getRollbackDependentOptional(ReflectionTaskDescriptor taskDescriptor) {
 //        Optional<Method> beforeExecutionMethodOptional = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), BeforeExecution.class);

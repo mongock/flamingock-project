@@ -8,7 +8,7 @@ import io.flamingock.core.core.execution.summary.ProcessSummary;
 import io.flamingock.core.core.lock.Lock;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.core.task.executable.ExecutableTask;
+import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.core.core.util.StreamUtil;
 
@@ -68,7 +68,7 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
         return new Output(summary);
     }
 
-    abstract protected Stream<? extends ExecutableTask> getTaskStream(SingleExecutableProcess executableProcess);
+    abstract protected Stream<? extends OrderedExecutableTask> getTaskStream(SingleExecutableProcess executableProcess);
 
     abstract protected StepNavigatorBuilder getStepNavigatorBuilder();
 

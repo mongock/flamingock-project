@@ -1,6 +1,6 @@
 package io.flamingock.core.core.task.descriptor;
 
-public interface OrderedTaskDescriptor extends TaskDescriptor<OrderedTaskDescriptor> {
+public interface OrderedTaskDescriptor extends TaskDescriptor, Comparable<OrderedTaskDescriptor> {
 
     String getOrder();
 

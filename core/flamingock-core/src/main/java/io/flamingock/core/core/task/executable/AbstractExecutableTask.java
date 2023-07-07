@@ -4,7 +4,7 @@ import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 
 import java.util.Objects;
 
-public abstract class AbstractExecutableTask<DESCRIPTOR extends OrderedTaskDescriptor> implements ExecutableTask {
+public abstract class AbstractExecutableTask<DESCRIPTOR extends OrderedTaskDescriptor> implements OrderedExecutableTask {
 
     protected final DESCRIPTOR descriptor;
 

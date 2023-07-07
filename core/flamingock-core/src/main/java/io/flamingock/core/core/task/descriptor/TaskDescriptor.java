@@ -1,6 +1,6 @@
 package io.flamingock.core.core.task.descriptor;
 
-public interface TaskDescriptor<T extends TaskDescriptor<T>> extends Comparable<T> {
+public interface TaskDescriptor {
 
     String getId();
 

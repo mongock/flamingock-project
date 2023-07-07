@@ -57,8 +57,4 @@ public class RollableReflectionChangeUnit extends AbstractRollableTask<Reflectio
         return rollbackMethod.getName();
     }
 
-    @Override
-    public int compareTo(@NotNull Task o) {
-        return 0;
-    }
 }

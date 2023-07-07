@@ -5,7 +5,7 @@ import io.flamingock.core.core.execution.navigator.ReusableStepNavigatorBuilder;
 import io.flamingock.core.core.execution.navigator.StepNavigatorBuilder;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.core.task.executable.ExecutableTask;
+import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 
 import java.util.stream.Stream;
@@ -24,7 +24,7 @@ public class SeqSingleProcessExecutor extends AbstractSingleProcessExecutor {
     }
 
     @Override
-    protected Stream<? extends ExecutableTask> getTaskStream(SingleExecutableProcess executableProcess) {
+    protected Stream<? extends OrderedExecutableTask> getTaskStream(SingleExecutableProcess executableProcess) {
         return executableProcess.getTasks().stream();
     }
 
