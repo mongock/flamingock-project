@@ -43,7 +43,7 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
 
         StepNavigatorBuilder stepNavigatorBuilder = getStepNavigatorBuilder();
 
-        Stream<StepNavigationOutput> taskStepStream = buildTaskStream(executableProcess)
+        Stream<StepNavigationOutput> taskStepStream = getTaskStream(executableProcess)
                 .map(task -> stepNavigatorBuilder
                         .setAuditWriter(auditWriter)
                         .setStaticContext(dependencyContext)
@@ -68,7 +68,7 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
         return new Output(summary);
     }
 
-    abstract protected Stream<? extends ExecutableTask> buildTaskStream(SingleExecutableProcess executableProcess);
+    abstract protected Stream<? extends ExecutableTask> getTaskStream(SingleExecutableProcess executableProcess);
 
     abstract protected StepNavigatorBuilder getStepNavigatorBuilder();
 

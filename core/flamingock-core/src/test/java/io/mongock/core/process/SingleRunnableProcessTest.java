@@ -24,7 +24,7 @@ class SingleRunnableProcessTest {
 //
 //        //WHEN
 //        ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-//        List<StepSummaryLine> steps = new SingleProcessExecutor(mock(DependencyContext.class), stateSaver)
+//        List<StepSummaryLine> steps = new SeqSingleProcessExecutor(mock(DependencyContext.class), stateSaver)
 //                .run(process, executionContext, mock(Lock.class))
 //                .getSummary()
 //                .getLines();
@@ -93,7 +93,7 @@ class SingleRunnableProcessTest {
 //
 //        //WHEN
 //        ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-//        ProcessExecutor.Output output = new SingleProcessExecutor(mock(DependencyContext.class), stateSaver)
+//        ProcessExecutor.Output output = new SeqSingleProcessExecutor(mock(DependencyContext.class), stateSaver)
 //                .run(process, executionContext, mock(Lock.class));
 //        String actualSummary = output.getSummary().getPretty();
 //        System.out.println(actualSummary);

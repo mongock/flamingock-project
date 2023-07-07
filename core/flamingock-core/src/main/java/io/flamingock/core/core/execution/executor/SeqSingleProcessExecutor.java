@@ -10,21 +10,21 @@ import io.flamingock.core.core.transaction.TransactionWrapper;
 
 import java.util.stream.Stream;
 
-public class SingleProcessExecutor extends AbstractSingleProcessExecutor {
+public class SeqSingleProcessExecutor extends AbstractSingleProcessExecutor {
 
-    public SingleProcessExecutor(DependencyContext dependencyManager,
-                                 AuditWriter auditWriter) {
+    public SeqSingleProcessExecutor(DependencyContext dependencyManager,
+                                    AuditWriter auditWriter) {
         this(dependencyManager, auditWriter, null);
     }
 
-    public SingleProcessExecutor(DependencyContext dependencyManager,
-                                 AuditWriter auditWriter,
-                                 TransactionWrapper transactionWrapper) {
+    public SeqSingleProcessExecutor(DependencyContext dependencyManager,
+                                    AuditWriter auditWriter,
+                                    TransactionWrapper transactionWrapper) {
         super(dependencyManager, auditWriter, transactionWrapper);
     }
 
     @Override
-    protected Stream<? extends ExecutableTask> buildTaskStream(SingleExecutableProcess executableProcess) {
+    protected Stream<? extends ExecutableTask> getTaskStream(SingleExecutableProcess executableProcess) {
         return executableProcess.getTasks().stream();
     }
 

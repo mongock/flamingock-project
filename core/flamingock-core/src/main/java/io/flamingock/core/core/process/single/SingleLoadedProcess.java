@@ -5,6 +5,7 @@ import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.process.LoadedProcess;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
+import io.flamingock.core.core.task.executable.ExecutableTaskBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStat
     @Override
     public SingleExecutableProcess applyState(SingleAuditProcessStatus state) {
         //reused builder to avoid performing GC unnecessarily. This is always sequential
-        final ExecutableTask.Builder builder = ExecutableTask.builder();
+        final ExecutableTaskBuilder builder = ExecutableTask.builder();
         List<ExecutableTask> tasks2 = taskDescriptors
                 .stream()
                 .sorted()
@@ -30,7 +31,9 @@ public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStat
                                 .setTaskDescriptor(descriptor)
                                 .setInitialState(state.getEntryStatus(descriptor.getId()).orElse(null))
                                 .build()
-                ).sorted()
+                )
+                .flatMap(List::stream)
+                .sorted()
                 .collect(Collectors.toCollection(LinkedList::new));
 
         return new SingleExecutableProcess(tasks2);
