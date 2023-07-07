@@ -6,7 +6,7 @@ import io.flamingock.core.core.execution.step.complete.failed.CompletedFailedMan
 import io.flamingock.core.core.execution.step.execution.ExecutionStep;
 import io.flamingock.core.core.execution.step.rolledback.RolledBackStep;
 import io.flamingock.core.core.summary.SummaryLine;
-import io.flamingock.core.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 
 import java.util.Objects;
 
@@ -45,9 +45,9 @@ public abstract class StepSummaryLine implements SummaryLine {
 
     public static class InitialSummaryLine extends StepSummaryLine {
 
-        private final TaskDescriptor desc;
+        private final OrderedTaskDescriptor desc;
 
-        public InitialSummaryLine(TaskDescriptor taskDescriptor) {
+        public InitialSummaryLine(OrderedTaskDescriptor taskDescriptor) {
             super(taskDescriptor.getId());
             this.desc = taskDescriptor;
         }

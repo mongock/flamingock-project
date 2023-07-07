@@ -4,20 +4,19 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.core.task.descriptor.ReflectionTaskDescriptor;
-import io.flamingock.core.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.task.descriptor.impl.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 import io.flamingock.core.core.task.executable.change.ReflectionExecutableChangeUnit;
 import io.flamingock.core.core.task.executable.change.RollableReflectionChangeUnit;
 import io.flamingock.core.core.util.ReflectionUtil;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class ExecutableTaskBuilder {
 
-    private TaskDescriptor taskDescriptor;
+    private OrderedTaskDescriptor taskDescriptor;
     private AuditEntryStatus initialState;
 
     ExecutableTaskBuilder() {
@@ -29,7 +28,7 @@ public class ExecutableTaskBuilder {
         return this;
     }
 
-    public ExecutableTaskBuilder setTaskDescriptor(TaskDescriptor taskDescriptor) {
+    public ExecutableTaskBuilder setTaskDescriptor(OrderedTaskDescriptor taskDescriptor) {
         this.taskDescriptor = taskDescriptor;
         return this;
     }

@@ -1,8 +1,8 @@
 package io.mongock.core.process.stubs.task;
 
-import io.flamingock.core.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 
-public class TestTaskDescriptor implements TaskDescriptor {
+public class TestTaskDescriptor implements OrderedTaskDescriptor {
     private final String id;
     private final boolean rollable;
     private final boolean runAlways;

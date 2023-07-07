@@ -1,8 +1,8 @@
-package io.flamingock.core.core.task.descriptor;
+package io.flamingock.core.core.task.descriptor.impl;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
 
-public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
+public class ReflectionTaskDescriptor extends AbstractOrderedTaskDescriptor {
 
     private final Class<?> source;
 

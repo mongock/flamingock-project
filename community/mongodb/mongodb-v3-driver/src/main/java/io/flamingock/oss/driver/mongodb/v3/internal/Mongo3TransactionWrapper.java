@@ -3,7 +3,7 @@ package io.flamingock.oss.driver.mongodb.v3.internal;
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
-import io.flamingock.core.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
@@ -22,7 +22,7 @@ public class Mongo3TransactionWrapper implements TransactionWrapper {
     }
 
     @Override
-    public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, DependencyInjectable dependencyInjectable, Supplier<T> operation) {
+    public <T> T wrapInTransaction(OrderedTaskDescriptor taskDescriptor, DependencyInjectable dependencyInjectable, Supplier<T> operation) {
         String sessionId = taskDescriptor.getId();
         try (ClientSession clientSession = sessionManager.startSession(sessionId)) {
             clientSession.startTransaction(TransactionOptions.builder().build());

@@ -3,7 +3,7 @@ package io.flamingock.core.core.process.single;
 
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.process.LoadedProcess;
-import io.flamingock.core.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.ExecutableTaskBuilder;
 
@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> {
 
-    private final List<? extends TaskDescriptor> taskDescriptors;
+    private final List<? extends OrderedTaskDescriptor> taskDescriptors;
 
-    public SingleLoadedProcess(List<? extends TaskDescriptor> taskDescriptors) {
+    public SingleLoadedProcess(List<? extends OrderedTaskDescriptor> taskDescriptors) {
         this.taskDescriptors = taskDescriptors;
     }
 

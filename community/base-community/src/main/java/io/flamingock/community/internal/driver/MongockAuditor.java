@@ -9,7 +9,7 @@ import io.flamingock.core.core.audit.writer.AbstractAuditWriter;
 import io.flamingock.core.core.audit.writer.AuditItem;
 import io.flamingock.core.core.audit.writer.RuntimeContext;
 import io.flamingock.core.core.execution.executor.ExecutionContext;
-import io.flamingock.core.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 import io.flamingock.core.core.util.ThrowableUtil;
 
 public abstract class MongockAuditor
@@ -18,7 +18,7 @@ public abstract class MongockAuditor
 
     @Override
     protected final MongockAuditEntry map(AuditItem auditItem) {
-        TaskDescriptor taskDescriptor = auditItem.getTaskDescriptor();
+        OrderedTaskDescriptor taskDescriptor = auditItem.getTaskDescriptor();
         ExecutionContext executionContext = auditItem.getExecutionContext();
         RuntimeContext runtimeContext = auditItem.getRuntimeContext();
         return new MongockAuditEntry(

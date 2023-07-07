@@ -1,7 +1,7 @@
 package io.flamingock.core.core.task.executable.change;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.task.descriptor.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.impl.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.AbstractExecutableTask;
 
 import java.lang.reflect.Method;
