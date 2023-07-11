@@ -8,4 +8,6 @@ public interface TaskDescriptor {
 
     String getClassImplementor();
 
+    String pretty();
+
 }

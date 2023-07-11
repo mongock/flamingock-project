@@ -9,11 +9,11 @@ import io.flamingock.core.core.task.executable.change.ExecutableChangeUnitBuilde
 import java.util.List;
 
 
-final class OrderedExecutableTaskBuilder {
+public final class ExecutableTaskBuilder {
 
     private enum TaskType {CHANGE_UNIT}
 
-    private OrderedExecutableTaskBuilder() {}
+    private ExecutableTaskBuilder() {}
 
     public static List<OrderedExecutableTask> build(OrderedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         switch (getType(taskDescriptor)) {

@@ -6,6 +6,7 @@ import io.flamingock.core.core.execution.step.complete.failed.CompletedFailedMan
 import io.flamingock.core.core.execution.step.execution.ExecutionStep;
 import io.flamingock.core.core.execution.step.rolledback.RolledBackStep;
 import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class DefaultStepSummarizer implements StepSummarizer {
         return () -> new CopyOnWriteArrayList<>(lines);
     }
 
-    private StepSummarizer addStep(OrderedTaskDescriptor taskDescriptor, StepSummaryLine step) {
+    private StepSummarizer addStep(TaskDescriptor taskDescriptor, StepSummaryLine step) {
         if (lines.isEmpty()) {
             add(new StepSummaryLine.InitialSummaryLine(taskDescriptor));
         }

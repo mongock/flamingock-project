@@ -62,7 +62,7 @@ public class ExecutableChangeUnitBuilder {
 //            return Optional.empty();
 //        }
 //        Method beforeExecutionMethod = beforeExecutionMethodOptional.get();
-return null;
+return Optional.empty();
 //        return ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), BeforeExecution.class).map(beforeExecutionMethod -> {
 //            ExecutableChangeUnit mainTask = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackExecution.class)
 //                    .map(rollbackMethod ->

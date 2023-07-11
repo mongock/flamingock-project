@@ -5,7 +5,7 @@ import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 
 import java.util.List;
 
-public interface OrderedExecutableTask extends ExecutableTask<OrderedTaskDescriptor>, Comparable<OrderedExecutableTask> {
+public interface OrderedExecutableTask extends ExecutableTask, Comparable<OrderedExecutableTask> {
     String getOrder();
 
     @Override
@@ -14,6 +14,6 @@ public interface OrderedExecutableTask extends ExecutableTask<OrderedTaskDescrip
     }
 
     static List<OrderedExecutableTask> build(OrderedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
-        return OrderedExecutableTaskBuilder.build(taskDescriptor, initialState);
+        return ExecutableTaskBuilder.build(taskDescriptor, initialState);
     }
 }

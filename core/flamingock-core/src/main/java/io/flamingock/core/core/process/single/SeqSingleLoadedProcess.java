@@ -5,6 +5,7 @@ import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.process.LoadedProcess;
 import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 import io.flamingock.core.core.task.executable.OrderedExecutableTask;
+import io.flamingock.core.core.task.executable.ExecutableTaskBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class SeqSingleLoadedProcess implements LoadedProcess<SingleAuditProcessS
         List<OrderedExecutableTask> tasks2 = taskDescriptors
                 .stream()
                 .map(descriptor ->
-                        OrderedExecutableTask.build(descriptor, state.getEntryStatus(descriptor.getId()).orElse(null))
+                        ExecutableTaskBuilder.build(descriptor, state.getEntryStatus(descriptor.getId()).orElse(null))
                 )
                 .flatMap(List::stream)
                 .collect(Collectors.toCollection(LinkedList::new));

@@ -2,6 +2,7 @@ package io.flamingock.core.core.audit.writer;
 
 import io.flamingock.core.core.execution.executor.ExecutionContext;
 import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
 public class AuditItem {
 
@@ -9,12 +10,12 @@ public class AuditItem {
     public enum Operation {EXECUTION, ROLLBACK}
 
     private final Operation operation;
-    private final OrderedTaskDescriptor taskDescriptor;
+    private final TaskDescriptor taskDescriptor;
     private final ExecutionContext executionContext;
     private final RuntimeContext runtimeContext;
 
     public AuditItem(Operation operation,
-                     OrderedTaskDescriptor taskDescriptor,
+                     TaskDescriptor taskDescriptor,
                      ExecutionContext executionContext,
                      RuntimeContext runtimeContext) {
         this.operation = operation;
@@ -27,7 +28,7 @@ public class AuditItem {
         return operation;
     }
 
-    public OrderedTaskDescriptor getTaskDescriptor() {
+    public TaskDescriptor getTaskDescriptor() {
         return taskDescriptor;
     }
 

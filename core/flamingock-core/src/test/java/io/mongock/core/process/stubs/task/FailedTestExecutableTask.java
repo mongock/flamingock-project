@@ -12,4 +12,9 @@ public class FailedTestExecutableTask extends TestExecutableTask {
         super.execute(runtimeHelper);
         throw new RuntimeException("Deliberate execution at task[" + getDescriptor() + "]");
     }
+
+    @Override
+    public String getOrder() {
+        return null;
+    }
 }

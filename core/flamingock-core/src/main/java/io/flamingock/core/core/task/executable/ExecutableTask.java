@@ -4,7 +4,7 @@ import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.task.Task;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
-public interface ExecutableTask<DESCRIPTOR extends TaskDescriptor> extends Task<DESCRIPTOR> {
+public interface ExecutableTask extends Task {
 
     void execute(RuntimeManager runtimeHelper);
 
