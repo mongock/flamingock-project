@@ -3,6 +3,7 @@ package io.flamingock.core.core.execution.step.execution;
 import io.flamingock.core.core.execution.step.ExecutableStep;
 import io.flamingock.core.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.flamingock.core.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
+import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.execution.step.FailedStepWithError;
 import io.flamingock.core.core.util.Result;
@@ -14,7 +15,7 @@ public final class FailedExecutionStep extends ExecutionStep implements FailedSt
         return new FailedExecutionStep(initialStep.getTask(), executionTimeMillis, throwable);
     }
 
-    private FailedExecutionStep(OrderedExecutableTask task, long executionTimeMillis, Throwable throwable) {
+    private FailedExecutionStep(ExecutableTask task, long executionTimeMillis, Throwable throwable) {
         super(task, false, executionTimeMillis);
         this.throwable = throwable;
     }

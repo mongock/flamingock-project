@@ -5,6 +5,7 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.core.task.descriptor.impl.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.util.ReflectionUtil;
@@ -21,7 +22,7 @@ public class ExecutableChangeUnitBuilder {
     }
 
 
-    public static List<OrderedExecutableTask> build(ReflectionTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
+    public static List<? extends ExecutableTask> build(ReflectionTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), Execution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
                         "ExecutableChangeUnit[%s] without %s method",

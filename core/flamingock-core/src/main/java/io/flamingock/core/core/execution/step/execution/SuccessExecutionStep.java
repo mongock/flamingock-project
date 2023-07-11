@@ -4,6 +4,7 @@ import io.flamingock.core.core.execution.step.ExecutableStep;
 import io.flamingock.core.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.flamingock.core.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.flamingock.core.core.execution.step.complete.CompletedSuccessStep;
+import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.util.Result;
 
@@ -12,7 +13,7 @@ public final class SuccessExecutionStep extends ExecutionStep {
         return new SuccessExecutionStep(initialStep.getTask(), executionTimeMillis);
     }
 
-    private SuccessExecutionStep(OrderedExecutableTask task, long executionTimeMillis) {
+    private SuccessExecutionStep(ExecutableTask task, long executionTimeMillis) {
         super(task, true, executionTimeMillis);
     }
 

@@ -1,5 +1,6 @@
 package io.flamingock.core.core.execution.step.afteraudit;
 
+import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.execution.step.FailedStepWithError;
 
@@ -7,7 +8,7 @@ public final class FailedAuditExecutionStep extends FailedExecutionOrAuditStep i
 
     private final Throwable error;
 
-    FailedAuditExecutionStep(OrderedExecutableTask task, Throwable error) {
+    FailedAuditExecutionStep(ExecutableTask task, Throwable error) {
         super(task, false);
         this.error = error;
     }

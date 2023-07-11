@@ -3,6 +3,7 @@ package io.flamingock.core.core.task.executable;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.task.descriptor.impl.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.change.ExecutableChangeUnitBuilder;
 
@@ -15,7 +16,7 @@ public final class ExecutableTaskBuilder {
 
     private ExecutableTaskBuilder() {}
 
-    public static List<OrderedExecutableTask> build(OrderedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
+    public static List<? extends ExecutableTask> build(TaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         switch (getType(taskDescriptor)) {
             case CHANGE_UNIT: return ExecutableChangeUnitBuilder.build((ReflectionTaskDescriptor)taskDescriptor, initialState);
             default:
@@ -23,7 +24,7 @@ public final class ExecutableTaskBuilder {
         }
     }
 
-    private static TaskType getType(OrderedTaskDescriptor orderedTaskDescriptor) {
+    private static TaskType getType(TaskDescriptor orderedTaskDescriptor) {
         if (orderedTaskDescriptor instanceof ReflectionTaskDescriptor &&
                 ((ReflectionTaskDescriptor)orderedTaskDescriptor).getSource().isAnnotationPresent(ChangeUnit.class)) {
             return TaskType.CHANGE_UNIT;

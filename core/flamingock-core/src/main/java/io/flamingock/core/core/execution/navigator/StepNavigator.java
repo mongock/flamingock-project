@@ -23,6 +23,7 @@ import io.flamingock.core.core.execution.step.rolledback.ManualRolledBackStep;
 import io.flamingock.core.core.execution.summary.StepSummarizer;
 import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
+import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.core.core.execution.step.FailedStep;
@@ -75,7 +76,7 @@ public class StepNavigator {
         this.transactionWrapper = transactionWrapper;
     }
 
-    public final StepNavigationOutput executeTask(OrderedExecutableTask task, ExecutionContext executionContext) {
+    public final StepNavigationOutput executeTask(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
 
 
@@ -126,7 +127,7 @@ public class StepNavigator {
         }
     }
 
-    private TaskStep executeTaskWrapped(OrderedExecutableTask task,
+    private TaskStep executeTaskWrapped(ExecutableTask task,
                                         ExecutionContext executionContext,
                                         DependencyInjectable dependencyInjectable) {
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
@@ -142,12 +143,12 @@ public class StepNavigator {
         });
     }
 
-    private TaskStep executeTaskUnwrapped(OrderedExecutableTask task, ExecutionContext executionContext) {
+    private TaskStep executeTaskUnwrapped(ExecutableTask task, ExecutionContext executionContext) {
         ExecutionStep executed = executeTask(task);
         return auditExecution(executed, executionContext, LocalDateTime.now());
     }
 
-    private ExecutionStep executeTask(OrderedExecutableTask task) {
+    private ExecutionStep executeTask(ExecutableTask task) {
         ExecutionStep executed = new ExecutableStep(task).execute(runtimeManager);
         summarizer.add(executed);
         if (executed instanceof FailedExecutionStep) {

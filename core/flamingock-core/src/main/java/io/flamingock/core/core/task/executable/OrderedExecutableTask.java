@@ -13,7 +13,4 @@ public interface OrderedExecutableTask extends ExecutableTask, Comparable<Ordere
         return this.getOrder().compareTo(other.getOrder());
     }
 
-    static List<OrderedExecutableTask> build(OrderedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
-        return ExecutableTaskBuilder.build(taskDescriptor, initialState);
-    }
 }
