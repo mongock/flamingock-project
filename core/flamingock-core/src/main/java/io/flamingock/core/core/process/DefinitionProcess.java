@@ -11,6 +11,15 @@ import java.util.Collection;
  */
 public interface DefinitionProcess<AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess> {
 
+    /**
+     * It loads the definition from the source(scanPackage, yaml definition, etc.) and returns the LoadedProcess
+     * with contain the task Definition.
+     * <br />
+     * This method can decide up to some level, which type of process is loaded. For example in the case of 'SingleDefinitionProcess',
+     * depending on the tasks inside the package or some field in the yaml, it returns a SeqSingleLoadedProcess or ParallelSingleLoadedProcess.
+     * <br />
+     * @return the LoadedProcess with contain the task Definition
+     */
     LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> load();
 
 }

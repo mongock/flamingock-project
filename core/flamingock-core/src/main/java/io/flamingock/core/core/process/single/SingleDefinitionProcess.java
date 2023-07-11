@@ -22,6 +22,13 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
         this.filters = Arrays.asList(filters);
     }
 
+    /**
+     * Depending on the tasks inside the package or some field in the yaml, it returns a SeqSingleLoadedProcess
+     * or ParallelSingleLoadedProcess.
+     * <br />
+     * @return a SeqSingleLoadedProcess or a ParallelSingleLoadedProcess, depending on the task in the scanPackage,
+     * or some field in the yaml.
+     */
     @Override
     public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load() {
         List<ReflectionTaskDescriptor> descriptors = scanPackages.stream()
@@ -30,7 +37,9 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
                 .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
                 .map(source -> ReflectionTaskDescriptor.builder().setSource(source))
                 .map(ReflectionTaskDescriptor.Builder::build)
+                .sorted()
                 .collect(Collectors.toList());
-        return new SingleLoadedProcess(descriptors);
+
+        return new SeqSingleLoadedProcess(descriptors);
     }
 }

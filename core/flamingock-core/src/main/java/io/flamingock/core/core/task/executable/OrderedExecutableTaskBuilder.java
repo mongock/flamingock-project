@@ -15,7 +15,7 @@ final class OrderedExecutableTaskBuilder {
 
     private OrderedExecutableTaskBuilder() {}
 
-    static List<OrderedExecutableTask> build(OrderedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
+    public static List<OrderedExecutableTask> build(OrderedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         switch (getType(taskDescriptor)) {
             case CHANGE_UNIT: return ExecutableChangeUnitBuilder.build((ReflectionTaskDescriptor)taskDescriptor, initialState);
             default:
