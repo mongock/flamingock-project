@@ -11,11 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SeqSingleLoadedProcess implements LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> {
+public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> {
 
     private final List<? extends TaskDescriptor> taskDescriptors;
 
-    public SeqSingleLoadedProcess(List<? extends TaskDescriptor> taskDescriptors) {
+    public SingleLoadedProcess(List<? extends TaskDescriptor> taskDescriptors) {
         this.taskDescriptors = taskDescriptors;
     }
 

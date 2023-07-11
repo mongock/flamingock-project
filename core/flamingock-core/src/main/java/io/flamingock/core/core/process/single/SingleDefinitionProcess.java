@@ -23,10 +23,10 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
     }
 
     /**
-     * Depending on the tasks inside the package or some field in the yaml, it returns a SeqSingleLoadedProcess
+     * Depending on the tasks inside the package or some field in the yaml, it returns a SingleLoadedProcess
      * or ParallelSingleLoadedProcess.
      * <br />
-     * @return a SeqSingleLoadedProcess or a ParallelSingleLoadedProcess, depending on the task in the scanPackage,
+     * @return a SingleLoadedProcess or a ParallelSingleLoadedProcess, depending on the task in the scanPackage,
      * or some field in the yaml.
      */
     @Override
@@ -40,6 +40,6 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
                 .sorted()
                 .collect(Collectors.toList());
 
-        return new SeqSingleLoadedProcess(descriptors);
+        return new SingleLoadedProcess(descriptors);
     }
 }

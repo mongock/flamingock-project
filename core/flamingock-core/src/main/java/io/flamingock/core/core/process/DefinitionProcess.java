@@ -13,7 +13,7 @@ public interface DefinitionProcess<AUDIT_PROCESS_STATE extends AuditProcessStatu
      * with contain the task Definition.
      * <br />
      * This method can decide up to some level, which type of process is loaded. For example in the case of 'SingleDefinitionProcess',
-     * depending on the tasks inside the package or some field in the yaml, it returns a SeqSingleLoadedProcess or ParallelSingleLoadedProcess.
+     * depending on the tasks inside the package or some field in the yaml, it returns a SingleLoadedProcess or ParallelSingleLoadedProcess.
      * <br />
      * @return the LoadedProcess with contain the task Definition
      */
