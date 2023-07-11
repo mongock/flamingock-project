@@ -1,7 +1,6 @@
 package io.flamingock.core.core.execution.navigator;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.runtime.dependency.SimpleDependencyInjectableContext;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.core.runtime.dependency.PriorityDependencyInjectableContext;
 

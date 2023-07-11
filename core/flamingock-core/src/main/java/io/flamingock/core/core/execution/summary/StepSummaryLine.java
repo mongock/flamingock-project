@@ -6,7 +6,6 @@ import io.flamingock.core.core.execution.step.complete.failed.CompletedFailedMan
 import io.flamingock.core.core.execution.step.execution.ExecutionStep;
 import io.flamingock.core.core.execution.step.rolledback.RolledBackStep;
 import io.flamingock.core.core.summary.SummaryLine;
-import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
 import java.util.Objects;

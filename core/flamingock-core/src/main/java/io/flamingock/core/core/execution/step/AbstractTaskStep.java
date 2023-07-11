@@ -1,7 +1,6 @@
 package io.flamingock.core.core.execution.step;
 
 import io.flamingock.core.core.task.executable.ExecutableTask;
-import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 
 public abstract class AbstractTaskStep implements TaskStep {
 

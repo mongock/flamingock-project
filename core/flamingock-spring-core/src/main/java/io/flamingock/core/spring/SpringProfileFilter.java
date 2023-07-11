@@ -3,7 +3,6 @@ package io.flamingock.core.spring;
 import io.flamingock.core.core.task.filter.TaskFilter;
 import org.springframework.context.annotation.Profile;
 
-import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

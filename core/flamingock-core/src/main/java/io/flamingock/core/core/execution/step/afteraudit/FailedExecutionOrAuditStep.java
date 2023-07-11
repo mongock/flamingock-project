@@ -1,11 +1,10 @@
 package io.flamingock.core.core.execution.step.afteraudit;
 
+import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.core.core.execution.step.RollbackDependent;
 import io.flamingock.core.core.execution.step.SuccessableStep;
 import io.flamingock.core.core.task.executable.ExecutableTask;
-import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
-import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.core.core.util.Result;
 
 import java.util.Collections;

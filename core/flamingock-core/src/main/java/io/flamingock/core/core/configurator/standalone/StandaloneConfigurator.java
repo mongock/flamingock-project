@@ -1,11 +1,9 @@
 package io.flamingock.core.core.configurator.standalone;
 
 
-
 import io.flamingock.core.core.event.MigrationFailureEvent;
 import io.flamingock.core.core.event.MigrationStartedEvent;
 import io.flamingock.core.core.event.MigrationSuccessEvent;
-import io.flamingock.core.core.runtime.dependency.Dependency;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 
 import java.util.function.Consumer;

@@ -1,10 +1,9 @@
 package io.flamingock.core.core.execution.step.execution;
 
-import io.flamingock.core.core.execution.step.SuccessableStep;
 import io.flamingock.core.core.execution.step.AbstractTaskStep;
+import io.flamingock.core.core.execution.step.SuccessableStep;
 import io.flamingock.core.core.execution.step.afteraudit.AfterExecutionAuditStep;
 import io.flamingock.core.core.task.executable.ExecutableTask;
-import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.util.Result;
 
 public abstract class ExecutionStep extends AbstractTaskStep implements SuccessableStep {

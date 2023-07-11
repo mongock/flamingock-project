@@ -5,7 +5,6 @@ import io.flamingock.core.core.execution.step.afteraudit.AfterExecutionAuditStep
 import io.flamingock.core.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.flamingock.core.core.execution.step.complete.CompletedSuccessStep;
 import io.flamingock.core.core.task.executable.ExecutableTask;
-import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.util.Result;
 
 public final class SuccessExecutionStep extends ExecutionStep {

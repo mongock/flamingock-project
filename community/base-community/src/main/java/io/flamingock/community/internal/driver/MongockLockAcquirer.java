@@ -1,6 +1,7 @@
 package io.flamingock.community.internal.driver;
 
 
+import io.flamingock.community.internal.persistence.LockRepository;
 import io.flamingock.core.core.audit.AuditReader;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.configurator.CoreConfiguration;
@@ -9,7 +10,6 @@ import io.flamingock.core.core.lock.Lock;
 import io.flamingock.core.core.lock.LockOptions;
 import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.util.TimeService;
-import io.flamingock.community.internal.persistence.LockRepository;
 
 public class MongockLockAcquirer extends AbstractLockAcquirer<SingleAuditProcessStatus, SingleExecutableProcess> {
 

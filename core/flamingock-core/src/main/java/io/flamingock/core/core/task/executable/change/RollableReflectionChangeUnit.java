@@ -1,11 +1,9 @@
 package io.flamingock.core.core.task.executable.change;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.task.Task;
 import io.flamingock.core.core.task.descriptor.impl.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.AbstractRollableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 

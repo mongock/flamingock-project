@@ -1,7 +1,7 @@
 package io.flamingock.oss.driver.mongodb.v3;
 
-import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.community.internal.DriverConfigurable;
+import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
 
 public class MongoDB3Configuration implements DriverConfigurable {
 

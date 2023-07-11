@@ -1,9 +1,9 @@
 package io.flamingock.core.core.audit.writer;
 
+import io.flamingock.core.core.execution.step.FailedStepWithError;
 import io.flamingock.core.core.execution.step.TaskStep;
 import io.flamingock.core.core.execution.step.execution.ExecutionStep;
 import io.flamingock.core.core.execution.step.rolledback.ManualRolledBackStep;
-import io.flamingock.core.core.execution.step.FailedStepWithError;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

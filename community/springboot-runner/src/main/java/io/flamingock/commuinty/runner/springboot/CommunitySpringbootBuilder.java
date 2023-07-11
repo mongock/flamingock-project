@@ -1,14 +1,14 @@
 package io.flamingock.commuinty.runner.springboot;
 
+import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityConfigurator;
 import io.flamingock.community.internal.CommunityConfiguratorDelegate;
 import io.flamingock.community.internal.CommunityFactory;
-import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.configurator.CoreConfigurator;
 import io.flamingock.core.core.configurator.CoreConfiguratorDelegate;
-import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.configurator.LegacyMigration;
 import io.flamingock.core.core.configurator.TransactionStrategy;
 import io.flamingock.core.core.event.EventPublisher;
@@ -19,9 +19,9 @@ import io.flamingock.core.spring.SpringProfileFilter;
 import io.flamingock.core.spring.SpringRunnerBuilder;
 import io.flamingock.core.spring.SpringUtil;
 import io.flamingock.core.spring.configurator.SpringRunnerType;
+import io.flamingock.core.spring.configurator.SpringbootConfiguration;
 import io.flamingock.core.spring.configurator.SpringbootConfigurator;
 import io.flamingock.core.spring.configurator.SpringbootConfiguratorDelegate;
-import io.flamingock.core.spring.configurator.SpringbootConfiguration;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
 import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
@@ -29,10 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 

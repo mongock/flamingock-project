@@ -2,7 +2,6 @@ package io.flamingock.core.core.process.single;
 
 import io.flamingock.core.core.process.ExecutableProcess;
 import io.flamingock.core.core.task.executable.ExecutableTask;
-import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 
 import java.util.List;
 import java.util.Objects;

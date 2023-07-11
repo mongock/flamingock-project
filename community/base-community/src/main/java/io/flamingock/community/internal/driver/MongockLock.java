@@ -1,13 +1,13 @@
 package io.flamingock.community.internal.driver;
 
+import io.flamingock.community.internal.persistence.LockEntry;
 import io.flamingock.community.internal.persistence.LockPersistenceException;
+import io.flamingock.community.internal.persistence.LockRepository;
 import io.flamingock.core.core.lock.Lock;
 import io.flamingock.core.core.lock.LockException;
 import io.flamingock.core.core.lock.LockStatus;
 import io.flamingock.core.core.util.TimeService;
 import io.flamingock.core.core.util.TimeUtil;
-import io.flamingock.community.internal.persistence.LockEntry;
-import io.flamingock.community.internal.persistence.LockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

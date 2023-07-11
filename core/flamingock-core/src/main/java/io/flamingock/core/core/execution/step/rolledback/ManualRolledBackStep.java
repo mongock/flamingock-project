@@ -1,9 +1,9 @@
 package io.flamingock.core.core.execution.step.rolledback;
 
+import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.core.core.execution.step.SuccessableStep;
 import io.flamingock.core.core.execution.step.complete.failed.CompletedFailedManualRollback;
 import io.flamingock.core.core.task.executable.RollableTask;
-import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.core.core.util.Result;
 
 public class ManualRolledBackStep extends RolledBackStep implements SuccessableStep, FailedStep {

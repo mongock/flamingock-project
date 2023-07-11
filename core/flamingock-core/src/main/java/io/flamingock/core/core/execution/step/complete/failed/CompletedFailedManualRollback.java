@@ -1,11 +1,10 @@
 package io.flamingock.core.core.execution.step.complete.failed;
 
-import io.flamingock.core.core.execution.step.SuccessableStep;
 import io.flamingock.core.core.execution.step.AbstractTaskStep;
+import io.flamingock.core.core.execution.step.FailedStep;
+import io.flamingock.core.core.execution.step.SuccessableStep;
 import io.flamingock.core.core.execution.step.rolledback.ManualRolledBackStep;
 import io.flamingock.core.core.task.executable.ExecutableTask;
-import io.flamingock.core.core.task.executable.OrderedExecutableTask;
-import io.flamingock.core.core.execution.step.FailedStep;
 import io.flamingock.core.core.util.Result;
 
 public class CompletedFailedManualRollback extends AbstractTaskStep implements SuccessableStep, FailedStep {

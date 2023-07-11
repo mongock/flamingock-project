@@ -1,9 +1,6 @@
 package io.flamingock.core.core.process;
 
 import io.flamingock.core.core.audit.domain.AuditProcessStatus;
-import io.flamingock.core.core.task.filter.TaskFilter;
-
-import java.util.Collection;
 
 /**
  * This class represents the process defined by the user in the builder, yaml, etc.
