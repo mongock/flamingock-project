@@ -1,10 +1,8 @@
-package io.flamingock.core.core.task.descriptor.impl;
-
-import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+package io.flamingock.core.core.task.descriptor;
 
 import java.util.Objects;
 
-public abstract class AbstractTaskDescriptor implements OrderedTaskDescriptor {
+public abstract class AbstractTaskDescriptor implements TaskDescriptor {
 
     private final String id;
 

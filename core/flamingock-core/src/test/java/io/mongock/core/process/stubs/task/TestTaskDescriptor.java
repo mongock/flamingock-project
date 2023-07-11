@@ -1,8 +1,8 @@
 package io.mongock.core.process.stubs.task;
 
-import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
-public class TestTaskDescriptor implements OrderedTaskDescriptor {
+public class TestTaskDescriptor implements TaskDescriptor {
     private final String id;
     private final boolean rollable;
     private final boolean runAlways;
@@ -18,10 +18,6 @@ public class TestTaskDescriptor implements OrderedTaskDescriptor {
         return id;
     }
 
-    @Override
-    public String getOrder() {
-        return null;
-    }
 
     @Override
     public boolean isRunAlways() {
@@ -31,6 +27,11 @@ public class TestTaskDescriptor implements OrderedTaskDescriptor {
     @Override
     public String getClassImplementor() {
         return "testClassImplementor";
+    }
+
+    @Override
+    public String pretty() {
+        return toString();
     }
 
 }

@@ -3,7 +3,7 @@ package io.flamingock.core.core.process.single;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.process.DefinitionProcess;
 import io.flamingock.core.core.process.LoadedProcess;
-import io.flamingock.core.core.task.descriptor.impl.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.filter.TaskFilter;
 import io.flamingock.core.core.util.ReflectionUtil;
 

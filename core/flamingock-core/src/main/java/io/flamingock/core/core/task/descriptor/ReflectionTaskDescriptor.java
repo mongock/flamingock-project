@@ -1,4 +1,4 @@
-package io.flamingock.core.core.task.descriptor.impl;
+package io.flamingock.core.core.task.descriptor;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
 
