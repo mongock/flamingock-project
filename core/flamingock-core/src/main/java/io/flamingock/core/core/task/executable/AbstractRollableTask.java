@@ -2,6 +2,7 @@ package io.flamingock.core.core.task.executable;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
 
 /**
@@ -11,7 +12,7 @@ import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
  * @param <EXECUTABLE_TASK> ExutableTask delegate
  */
 public abstract class AbstractRollableTask<
-        DESCRIPTOR extends OrderedTaskDescriptor,
+        DESCRIPTOR extends TaskDescriptor,
         EXECUTABLE_TASK extends AbstractExecutableTask<DESCRIPTOR>> implements RollableTask {
 
     protected final EXECUTABLE_TASK baseTask;

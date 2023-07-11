@@ -2,14 +2,14 @@ package io.flamingock.core.core.task.descriptor;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
 
-public class ReflectionTaskDescriptor extends AbstractOrderedTaskDescriptor {
+public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
 
     private final Class<?> source;
 
     public ReflectionTaskDescriptor(String id,
-                                    String order,
-                                    Class<?> source, boolean runAlways) {
-        super(id, order, runAlways);
+                                    Class<?> source,
+                                    boolean runAlways) {
+        super(id, runAlways);
         this.source = source;
     }
 
@@ -21,6 +21,11 @@ public class ReflectionTaskDescriptor extends AbstractOrderedTaskDescriptor {
     @Override
     public String getClassImplementor() {
         return source.getName();
+    }
+
+    @Override
+    public String pretty() {
+        return toString();
     }
 
     public static Builder builder() {
@@ -56,7 +61,7 @@ public class ReflectionTaskDescriptor extends AbstractOrderedTaskDescriptor {
         private static ReflectionTaskDescriptor getDescriptorFromChangeUnit(Class<?> source) {
             ChangeUnit changeUnitAnnotation = source.getAnnotation(ChangeUnit.class);
 
-            return new ReflectionTaskDescriptor(
+            return new OrderedReflectionTaskDescriptor(
                     changeUnitAnnotation.id(),
                     changeUnitAnnotation.order(),
                     source,
