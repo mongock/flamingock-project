@@ -1,14 +1,14 @@
 package io.flamingock.commuinty.runner.standalone;
 
+import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityConfigurator;
 import io.flamingock.community.internal.CommunityConfiguratorDelegate;
 import io.flamingock.community.internal.CommunityFactory;
-import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.configurator.CoreConfigurator;
 import io.flamingock.core.core.configurator.CoreConfiguratorDelegate;
-import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.configurator.LegacyMigration;
 import io.flamingock.core.core.configurator.TransactionStrategy;
 import io.flamingock.core.core.configurator.standalone.StandaloneConfigurator;
@@ -23,7 +23,6 @@ import io.flamingock.core.core.runner.RunnerCreator;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.core.runtime.dependency.DependencyInjectableContext;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;

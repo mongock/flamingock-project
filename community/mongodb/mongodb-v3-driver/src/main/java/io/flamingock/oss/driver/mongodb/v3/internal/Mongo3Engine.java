@@ -4,13 +4,13 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.community.internal.driver.MongockAuditor;
+import io.flamingock.community.internal.driver.MongockLockAcquirer;
 import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
-import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.MongockLockAcquirer;
 
 import java.util.Optional;
 

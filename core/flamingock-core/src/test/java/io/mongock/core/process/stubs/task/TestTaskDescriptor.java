@@ -18,10 +18,6 @@ public class TestTaskDescriptor implements TaskDescriptor {
         return id;
     }
 
-    @Override
-    public String getOrder() {
-        return null;
-    }
 
     @Override
     public boolean isRunAlways() {
@@ -31,6 +27,11 @@ public class TestTaskDescriptor implements TaskDescriptor {
     @Override
     public String getClassImplementor() {
         return "testClassImplementor";
+    }
+
+    @Override
+    public String pretty() {
+        return toString();
     }
 
 }

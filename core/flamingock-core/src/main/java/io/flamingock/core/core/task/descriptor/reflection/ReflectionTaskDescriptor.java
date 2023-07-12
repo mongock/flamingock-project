@@ -1,15 +1,15 @@
-package io.flamingock.core.core.task.descriptor;
+package io.flamingock.core.core.task.descriptor.reflection;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.core.task.descriptor.AbstractTaskDescriptor;
 
 public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
 
+    private static final Builder BUILDER = new Builder();
     private final Class<?> source;
 
-    public ReflectionTaskDescriptor(String id,
-                                    String order,
-                                    Class<?> source, boolean runAlways) {
-        super(id, order, runAlways);
+    public ReflectionTaskDescriptor(String id, Class<?> source, boolean runAlways) {
+        super(id, runAlways);
         this.source = source;
     }
 
@@ -18,13 +18,20 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
     }
 
 
+
     @Override
     public String getClassImplementor() {
         return source.getName();
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String pretty() {
+        return toString();
+    }
+
+
+    public static Builder recycledBuilder() {
+        return BUILDER;
     }
 
 
@@ -45,7 +52,7 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
             if (isChangeUnit(source)) {
                 return getDescriptorFromChangeUnit(source);
             } else {
-                throw new IllegalArgumentException(String.format("ExecutableTask type not recognised in class[%s]", source.getName()));
+                throw new IllegalArgumentException(String.format("Task type not recognised in class[%s]", source.getName()));
             }
         }
 
@@ -56,7 +63,7 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
         private static ReflectionTaskDescriptor getDescriptorFromChangeUnit(Class<?> source) {
             ChangeUnit changeUnitAnnotation = source.getAnnotation(ChangeUnit.class);
 
-            return new ReflectionTaskDescriptor(
+            return new SortedReflectionTaskDescriptor(
                     changeUnitAnnotation.id(),
                     changeUnitAnnotation.order(),
                     source,

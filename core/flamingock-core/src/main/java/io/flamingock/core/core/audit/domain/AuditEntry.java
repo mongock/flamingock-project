@@ -8,7 +8,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static io.flamingock.core.core.audit.domain.AuditEntryStatus.*;
+import static io.flamingock.core.core.audit.domain.AuditEntryStatus.EXECUTED;
+import static io.flamingock.core.core.audit.domain.AuditEntryStatus.FAILED;
+import static io.flamingock.core.core.audit.domain.AuditEntryStatus.ROLLBACK_FAILED;
+import static io.flamingock.core.core.audit.domain.AuditEntryStatus.ROLLED_BACK;
 
 public class AuditEntry {
 

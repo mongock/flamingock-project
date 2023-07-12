@@ -1,9 +1,9 @@
 package io.flamingock.core.core.audit.writer;
 
+import io.flamingock.core.core.execution.step.FailedStepWithError;
 import io.flamingock.core.core.execution.step.TaskStep;
 import io.flamingock.core.core.execution.step.execution.ExecutionStep;
 import io.flamingock.core.core.execution.step.rolledback.ManualRolledBackStep;
-import io.flamingock.core.core.util.FailedWithError;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -95,9 +95,9 @@ public final class RuntimeContext {
         }
 
         private void setFailure(TaskStep taskStep) {
-            if (taskStep instanceof FailedWithError) {
+            if (taskStep instanceof FailedStepWithError) {
                 executionResult = ExecutionResult.FAILED;
-                error = ((FailedWithError) taskStep).getError();
+                error = ((FailedStepWithError) taskStep).getError();
             } else {
                 executionResult = ExecutionResult.SUCCESS;
                 error = null;

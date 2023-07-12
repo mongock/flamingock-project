@@ -1,18 +1,16 @@
 package io.flamingock.oss.driver.mongodb.sync.v4;
 
 import com.mongodb.client.MongoDatabase;
-
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
 import io.flamingock.core.core.util.TimeUtil;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
+import org.bson.Document;
 
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.bson.Document;
 
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_TIMESTAMP;
