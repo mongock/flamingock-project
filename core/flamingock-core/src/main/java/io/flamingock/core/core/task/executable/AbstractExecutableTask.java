@@ -1,11 +1,10 @@
 package io.flamingock.core.core.task.executable;
 
-import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
 import java.util.Objects;
 
-public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> implements OrderedExecutableTask {
+public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> implements ExecutableTask {
 
     protected final DESCRIPTOR descriptor;
 

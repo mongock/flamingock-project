@@ -5,7 +5,6 @@ public class SuccessTestExecutableTask extends TestExecutableTask {
         super(id, null);
     }
 
-    @Override
     public String getOrder() {
         return null;
     }

@@ -6,7 +6,6 @@ import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
-import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.util.ReflectionUtil;
 
@@ -46,7 +45,7 @@ public class ExecutableChangeUnitBuilder {
         before the main task and also added to the main task as rollback dependent, so they  are rolled back in case
         the main task fails.
          */
-        List<OrderedExecutableTask> tasks = new LinkedList<>();
+        List<ExecutableTask> tasks = new LinkedList<>();
         getRollbackDependentOptional(taskDescriptor).ifPresent(rollbackDependent -> {
             tasks.add(rollbackDependent);
             mainTask.addRollbackDependent(rollbackDependent);
