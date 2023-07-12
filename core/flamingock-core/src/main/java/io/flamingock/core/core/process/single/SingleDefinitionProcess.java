@@ -23,6 +23,7 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
     private final List<String> scanPackages;
     private Collection<TaskFilter> filters = new ArrayList<>();
 
+    //We can pass here other sources, like yamls, etc.
     public SingleDefinitionProcess(List<String> scanPackages) {
         this.scanPackages = scanPackages;
     }
