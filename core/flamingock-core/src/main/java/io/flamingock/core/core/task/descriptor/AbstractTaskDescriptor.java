@@ -8,8 +8,7 @@ public abstract class AbstractTaskDescriptor implements TaskDescriptor {
 
     private final boolean runAlways;
 
-    public AbstractTaskDescriptor(String id,
-                                  boolean runAlways) {
+    public AbstractTaskDescriptor(String id, boolean runAlways) {
         this.id = id;
         this.runAlways = runAlways;
     }

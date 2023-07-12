@@ -1,9 +1,10 @@
-package io.flamingock.core.core.task.executable.change;
+package io.flamingock.core.core.task.executable.change.reflection;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.reflection.OrderedReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.AbstractRollableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
+import io.flamingock.core.core.task.executable.change.ExecutableChangeUnit;
 
 import java.lang.reflect.Method;
 
@@ -20,7 +21,7 @@ import java.lang.reflect.Method;
  * However, the methods are extracted in advance, so we can spot wrong configuration before starting the process and
  * fail fast.
  */
-public class RollableReflectionChangeUnit extends AbstractRollableTask<ReflectionTaskDescriptor, ReflectionExecutableChangeUnit> implements ExecutableChangeUnit {
+public class RollableReflectionChangeUnit extends AbstractRollableTask<OrderedReflectionTaskDescriptor, ReflectionExecutableChangeUnit> implements ExecutableChangeUnit {
     private final Method rollbackMethod;
 
 
@@ -31,9 +32,6 @@ public class RollableReflectionChangeUnit extends AbstractRollableTask<Reflectio
     }
 
 
-    public String getOrder() {
-        return baseTask.getOrder();
-    }
 
     @Override
     public void addRollbackDependent(RollableTask rollbackDependent) {

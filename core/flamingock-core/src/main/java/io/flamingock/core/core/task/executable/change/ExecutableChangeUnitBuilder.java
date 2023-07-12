@@ -4,9 +4,13 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.reflection.OrderedReflectionTaskDescriptor;
 import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
+import io.flamingock.core.core.task.executable.change.reflection.ReflectionExecutableChangeUnit;
+import io.flamingock.core.core.task.executable.change.reflection.RollableReflectionChangeUnit;
 import io.flamingock.core.core.util.ReflectionUtil;
 
 import java.lang.reflect.Method;
@@ -21,7 +25,19 @@ public class ExecutableChangeUnitBuilder {
     }
 
 
-    public static List<? extends ExecutableTask> build(ReflectionTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
+    public static List<? extends ExecutableTask> build(OrderedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
+        if(taskDescriptor instanceof ReflectionTaskDescriptor) {
+            ReflectionTaskDescriptor reflectionTaskDescriptor = (ReflectionTaskDescriptor) taskDescriptor;
+
+            return buildExecutablesFromReflectionChangeUnit((OrderedReflectionTaskDescriptor)taskDescriptor, initialState);
+        }
+
+        throw new IllegalArgumentException("Unrecognized task: " + taskDescriptor.pretty());
+
+
+    }
+
+    private static List<? extends ExecutableTask> buildExecutablesFromReflectionChangeUnit(OrderedReflectionTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), Execution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
                         "ExecutableChangeUnit[%s] without %s method",
@@ -31,7 +47,6 @@ public class ExecutableChangeUnitBuilder {
         ChangeUnit changeUnitAnnotation = taskDescriptor.getSource().getAnnotation(ChangeUnit.class);
         ReflectionExecutableChangeUnit reflectionChangeUnit = new ReflectionExecutableChangeUnit(
                 taskDescriptor,
-                changeUnitAnnotation.order(),
                 AuditEntryStatus.isRequiredExecution(initialState),
                 executionMethod);
 
@@ -52,7 +67,6 @@ public class ExecutableChangeUnitBuilder {
         });
         tasks.add(mainTask);
         return tasks;
-
     }
 
 
