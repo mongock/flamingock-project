@@ -5,6 +5,7 @@ import io.flamingock.core.core.task.descriptor.AbstractTaskDescriptor;
 
 public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
 
+    private static final Builder BUILDER = new Builder();
     private final Class<?> source;
 
     public ReflectionTaskDescriptor(String id, Class<?> source, boolean runAlways) {
@@ -27,8 +28,9 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
         return toString();
     }
 
-    public static Builder builder() {
-        return new Builder();
+
+    public static Builder recycledBuilder() {
+        return BUILDER;
     }
 
 

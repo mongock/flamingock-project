@@ -8,10 +8,8 @@ import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.filter.TaskFilter;
 import io.flamingock.core.core.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +63,7 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
                 .map(ReflectionUtil::loadClassesFromPackage)
                 .flatMap(Collection::stream)
                 .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
-                .map(source -> ReflectionTaskDescriptor.builder().setSource(source))
+                .map(source -> ReflectionTaskDescriptor.recycledBuilder().setSource(source))
                 .map(ReflectionTaskDescriptor.Builder::build)
                 .collect(Collectors.toList());
     }
