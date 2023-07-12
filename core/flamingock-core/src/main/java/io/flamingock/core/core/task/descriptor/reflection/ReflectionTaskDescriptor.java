@@ -1,14 +1,13 @@
-package io.flamingock.core.core.task.descriptor;
+package io.flamingock.core.core.task.descriptor.reflection;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.core.task.descriptor.AbstractTaskDescriptor;
 
 public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
 
     private final Class<?> source;
 
-    public ReflectionTaskDescriptor(String id,
-                                    Class<?> source,
-                                    boolean runAlways) {
+    public ReflectionTaskDescriptor(String id, Class<?> source, boolean runAlways) {
         super(id, runAlways);
         this.source = source;
     }

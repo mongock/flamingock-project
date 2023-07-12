@@ -13,6 +13,8 @@ import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.core.task.filter.TaskFilter;
 
+import java.util.Arrays;
+
 public class CommunityFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, CommunityConfiguration> {
     private final ConnectionEngine connectionEngine;
     private final TaskFilter[] filters;
@@ -34,7 +36,7 @@ public class CommunityFactory implements Factory<SingleAuditProcessStatus, Singl
 
     @Override
     public DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> getDefinitionProcess(CommunityConfiguration configuration) {
-        return new SingleDefinitionProcess(configuration.getMigrationScanPackage(), filters);
+        return new SingleDefinitionProcess(configuration.getMigrationScanPackage()).setFilters(Arrays.asList(filters));
     }
 
     @Override

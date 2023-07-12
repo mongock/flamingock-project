@@ -4,7 +4,7 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.core.task.descriptor.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.OrderedExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;

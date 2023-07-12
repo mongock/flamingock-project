@@ -7,7 +7,7 @@ import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
 @ChangeUnit( id="insert-document" , order = "2")
-public class BInsertDocument {
+public class ABInsertDocument {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {

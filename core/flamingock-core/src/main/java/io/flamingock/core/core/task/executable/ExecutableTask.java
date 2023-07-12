@@ -4,7 +4,7 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.task.Task;
-import io.flamingock.core.core.task.descriptor.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.task.executable.change.ExecutableChangeUnitBuilder;
 

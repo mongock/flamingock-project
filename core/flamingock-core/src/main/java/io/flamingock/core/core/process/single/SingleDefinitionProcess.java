@@ -3,23 +3,33 @@ package io.flamingock.core.core.process.single;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.process.DefinitionProcess;
 import io.flamingock.core.core.process.LoadedProcess;
-import io.flamingock.core.core.task.descriptor.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.filter.TaskFilter;
 import io.flamingock.core.core.util.ReflectionUtil;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> {
 
     private final List<String> scanPackages;
-    private final Collection<TaskFilter> filters;
+    private Collection<TaskFilter> filters = new ArrayList<>();
 
-    public SingleDefinitionProcess(List<String> scanPackages, TaskFilter... filters) {
+    public SingleDefinitionProcess(List<String> scanPackages) {
         this.scanPackages = scanPackages;
-        this.filters = Arrays.asList(filters);
+    }
+
+    public SingleDefinitionProcess setFilters(Collection<TaskFilter> filters) {
+        this.filters = filters != null ? filters : Collections.emptyList();
+        return this;
     }
 
     /**
@@ -31,15 +41,31 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
      */
     @Override
     public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load() {
-        List<ReflectionTaskDescriptor> descriptors = scanPackages.stream()
+        List<TaskDescriptor> descriptors = getDescriptorsFromScanPackage();
+
+        Optional<TaskDescriptor> orderedDescriptorOptional = descriptors
+                .stream()
+                .filter(descriptor -> descriptor instanceof OrderedTaskDescriptor)
+                .findFirst();
+
+        if(descriptors.stream().allMatch(descriptor -> descriptor instanceof OrderedTaskDescriptor)) {//all ordered
+            return new SingleLoadedProcess(descriptors.stream().sorted().collect(Collectors.toList()));
+
+        } else if(orderedDescriptorOptional.isPresent()) {
+            throw new IllegalArgumentException("Either all task are ordered or none. Ordered task found: " + orderedDescriptorOptional.get().getId());
+
+        } else {
+            return new SingleLoadedProcess(descriptors);
+        }
+    }
+
+    private List<TaskDescriptor> getDescriptorsFromScanPackage() {
+        return scanPackages.stream()
                 .map(ReflectionUtil::loadClassesFromPackage)
                 .flatMap(Collection::stream)
                 .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
                 .map(source -> ReflectionTaskDescriptor.builder().setSource(source))
                 .map(ReflectionTaskDescriptor.Builder::build)
-                .sorted()
                 .collect(Collectors.toList());
-
-        return new SingleLoadedProcess(descriptors);
     }
 }

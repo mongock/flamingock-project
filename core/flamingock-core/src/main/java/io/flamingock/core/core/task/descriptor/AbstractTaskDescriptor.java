@@ -6,7 +6,6 @@ public abstract class AbstractTaskDescriptor implements TaskDescriptor {
 
     private final String id;
 
-
     private final boolean runAlways;
 
     public AbstractTaskDescriptor(String id,
