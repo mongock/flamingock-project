@@ -51,7 +51,7 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
             return new SingleLoadedProcess(descriptors.stream().sorted().collect(Collectors.toList()));
 
         } else if(orderedDescriptorOptional.isPresent()) {
-            throw new IllegalArgumentException("Either all task are ordered or none. Ordered task found: " + orderedDescriptorOptional.get().getId());
+            throw new IllegalArgumentException("Either all tasks are ordered or none is. Ordered task found: " + orderedDescriptorOptional.get().getId());
 
         } else {
             return new SingleLoadedProcess(descriptors);
