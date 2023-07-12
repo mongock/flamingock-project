@@ -11,11 +11,6 @@ public abstract class TestExecutableTask extends AbstractExecutableTask<TestTask
 
     TestExecutableTask(String id, AuditEntryStatus initialState) {
         super(null, AuditEntryStatus.isRequiredExecution(initialState));
-//        new TestTaskDescriptor(
-//                id,
-//                rollbackResult != null && rollbackResult != RollbackResult.NOT_PROVIDED,
-//                false),
-//                initialState)
     }
 
     public boolean isExecuted() {

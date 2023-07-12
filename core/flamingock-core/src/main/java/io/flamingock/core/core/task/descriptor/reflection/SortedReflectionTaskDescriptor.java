@@ -6,8 +6,8 @@ public class SortedReflectionTaskDescriptor extends ReflectionTaskDescriptor imp
 
     private final String order;
 
-    public SortedReflectionTaskDescriptor(String id, String order, Class<?> source, boolean runAlways) {
-        super(id, source,runAlways);
+    public SortedReflectionTaskDescriptor(String id, String order, Class<?> source, boolean runAlways, boolean transactional) {
+        super(id, source, runAlways, transactional);
         this.order = order;
     }
 

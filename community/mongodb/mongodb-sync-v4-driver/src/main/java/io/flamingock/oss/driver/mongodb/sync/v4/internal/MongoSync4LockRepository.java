@@ -33,11 +33,11 @@ public class MongoSync4LockRepository implements LockRepository {
 
     private final MongoCollection<Document> collection;
 
-    MongoSync4LockRepository(MongoDatabase mongoDatabase, String lockCollectionName) {
+    public MongoSync4LockRepository(MongoDatabase mongoDatabase, String lockCollectionName) {
         this.collection = mongoDatabase.getCollection(lockCollectionName);
     }
 
-    protected void initialize(boolean indexCreation) {
+    public void initialize(boolean indexCreation) {
         CollectionInitializator<MongoSync4DocumentWrapper> initializer = new CollectionInitializator<>(
                 new MongoSync4CollectionWrapper(collection),
                 () -> new MongoSync4DocumentWrapper(new Document()),
