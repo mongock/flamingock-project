@@ -4,8 +4,8 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
-import io.flamingock.core.core.task.descriptor.reflection.OrderedReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.SortedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
 import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
@@ -25,11 +25,11 @@ public class ExecutableChangeUnitBuilder {
     }
 
 
-    public static List<? extends ExecutableTask> build(OrderedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
+    public static List<? extends ExecutableTask> build(SortedTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         if(taskDescriptor instanceof ReflectionTaskDescriptor) {
             ReflectionTaskDescriptor reflectionTaskDescriptor = (ReflectionTaskDescriptor) taskDescriptor;
 
-            return buildExecutablesFromReflectionChangeUnit((OrderedReflectionTaskDescriptor)taskDescriptor, initialState);
+            return buildExecutablesFromReflectionChangeUnit((SortedReflectionTaskDescriptor)taskDescriptor, initialState);
         }
 
         throw new IllegalArgumentException("Unrecognized task: " + taskDescriptor.pretty());
@@ -37,7 +37,7 @@ public class ExecutableChangeUnitBuilder {
 
     }
 
-    private static List<? extends ExecutableTask> buildExecutablesFromReflectionChangeUnit(OrderedReflectionTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
+    private static List<? extends ExecutableTask> buildExecutablesFromReflectionChangeUnit(SortedReflectionTaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), Execution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
                         "ExecutableChangeUnit[%s] without %s method",

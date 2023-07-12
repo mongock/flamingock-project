@@ -1,6 +1,6 @@
 package io.flamingock.core.core.task.descriptor;
 
-public interface OrderedTaskDescriptor extends TaskDescriptor, Comparable<OrderedTaskDescriptor> {
+public interface SortedTaskDescriptor extends TaskDescriptor, Comparable<SortedTaskDescriptor> {
 
     String getOrder();
 
@@ -8,7 +8,7 @@ public interface OrderedTaskDescriptor extends TaskDescriptor, Comparable<Ordere
         return String.format("%s) %s ", getOrder(), getId());
     }
 
-    default int compareTo(OrderedTaskDescriptor other) {
+    default int compareTo(SortedTaskDescriptor other) {
         return this.getOrder().compareTo(other.getOrder());
     }
 }

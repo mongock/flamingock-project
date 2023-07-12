@@ -3,7 +3,7 @@ package io.flamingock.core.core.process.single;
 import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
 import io.flamingock.core.core.process.DefinitionProcess;
 import io.flamingock.core.core.process.LoadedProcess;
-import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.SortedTaskDescriptor;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.core.task.filter.TaskFilter;
@@ -40,20 +40,24 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
      */
     @Override
     public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load() {
+        //descriptors will potentially contain all the descriptors extracted form scanPackage, yaml, etc.
         List<TaskDescriptor> descriptors = getDescriptorsFromScanPackage();
 
         Optional<TaskDescriptor> orderedDescriptorOptional = descriptors
                 .stream()
-                .filter(descriptor -> descriptor instanceof OrderedTaskDescriptor)
+                .filter(descriptor -> descriptor instanceof SortedTaskDescriptor)
                 .findFirst();
 
-        if(descriptors.stream().allMatch(descriptor -> descriptor instanceof OrderedTaskDescriptor)) {//all ordered
+        if(descriptors.stream().allMatch(descriptor -> descriptor instanceof SortedTaskDescriptor)) {
+            //if all descriptors are sorted, we return a sorted collection
             return new SingleLoadedProcess(descriptors.stream().sorted().collect(Collectors.toList()));
 
         } else if(orderedDescriptorOptional.isPresent()) {
+            //if at least one of them are sorted, but not all. An exception is thrown
             throw new IllegalArgumentException("Either all tasks are ordered or none is. Ordered task found: " + orderedDescriptorOptional.get().getId());
 
         } else {
+            //if none of the tasks are sorted, a unsorted collection is returned
             return new SingleLoadedProcess(descriptors);
         }
     }

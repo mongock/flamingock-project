@@ -1,8 +1,7 @@
 package io.flamingock.core.core.task.executable.change.reflection;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.task.descriptor.reflection.OrderedReflectionTaskDescriptor;
-import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
+import io.flamingock.core.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.AbstractExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.task.executable.change.ExecutableChangeUnit;
@@ -22,12 +21,12 @@ import java.lang.reflect.Method;
  * However, the methods are extracted in advance, so we can spot wrong configuration before starting the process and
  * fail fast.
  */
-public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<OrderedReflectionTaskDescriptor> implements ExecutableChangeUnit {
+public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<SortedReflectionTaskDescriptor> implements ExecutableChangeUnit {
 
     private final Method executionMethod;
 
 
-    public ReflectionExecutableChangeUnit(OrderedReflectionTaskDescriptor descriptor,
+    public ReflectionExecutableChangeUnit(SortedReflectionTaskDescriptor descriptor,
                                           boolean requiredExecution,
                                           Method executionMethod) {
         super(descriptor, requiredExecution);

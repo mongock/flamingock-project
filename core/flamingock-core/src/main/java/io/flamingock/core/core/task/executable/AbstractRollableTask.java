@@ -1,7 +1,6 @@
 package io.flamingock.core.core.task.executable;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.task.descriptor.OrderedTaskDescriptor;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
 
