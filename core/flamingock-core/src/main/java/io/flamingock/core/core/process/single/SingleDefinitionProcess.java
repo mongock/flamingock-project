@@ -36,8 +36,8 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
      * Depending on the tasks inside the package or some field in the yaml, it returns a SingleLoadedProcess
      * or ParallelSingleLoadedProcess.
      * <br />
-     * @return a SingleLoadedProcess or a ParallelSingleLoadedProcess, depending on the task in the scanPackage,
-     * or some field in the yaml.
+     * @return a sorted SingleLoadedProcess, non-sorted SingleLoadedProcess or a ParallelSingleLoadedProcess(non sorted),
+     * depending on the task in the scanPackage,or some field in the yaml.
      */
     @Override
     public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load() {
