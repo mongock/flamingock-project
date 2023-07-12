@@ -6,15 +6,16 @@ import io.flamingock.core.core.process.LoadedProcess;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> {
 
-    private final List<? extends TaskDescriptor> taskDescriptors;
+    private final Collection<? extends TaskDescriptor> taskDescriptors;
 
-    public SingleLoadedProcess(List<? extends TaskDescriptor> taskDescriptors) {
+    public SingleLoadedProcess(Collection<? extends TaskDescriptor> taskDescriptors) {
         this.taskDescriptors = taskDescriptors;
     }
 
