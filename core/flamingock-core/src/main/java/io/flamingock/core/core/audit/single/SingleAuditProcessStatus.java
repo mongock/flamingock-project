@@ -26,6 +26,12 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
         return Optional.ofNullable(statesMap.get(taskId));
     }
 
+    @Override
+    public Map<String, AuditEntryStatus> getStatesMap() {
+        return statesMap;
+    }
+
+
     public static class Builder {
 
         private final Map<String, AuditEntry> entryMap = new HashMap<>();

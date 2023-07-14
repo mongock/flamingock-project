@@ -1,14 +1,14 @@
 package io.flamingock.core.core.task.executable;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.task.Task;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
-import io.flamingock.core.core.task.executable.change.ExecutableChangeUnitBuilder;
+import io.flamingock.core.core.task.executable.change.ExecutableChangeUnit;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface ExecutableTask extends Task {
 
@@ -18,25 +18,34 @@ public interface ExecutableTask extends Task {
 
     boolean isInitialExecutionRequired();
 
-    static List<? extends ExecutableTask> build(TaskDescriptor descriptor, AuditEntryStatus auditEntryStatus) {
-        return Builder.build(descriptor, auditEntryStatus);
-    }
 
-    final class Builder {
+    final class Factory implements ExecutableTaskFactory {
 
-        private Builder() {}
+        private final ExecutableChangeUnit.Factory changeUnitFactory;
 
-        public static List<? extends ExecutableTask> build(TaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
-            if (isReflectionChangeUnit(taskDescriptor)) {
-                return ExecutableChangeUnitBuilder.build((SortedReflectionTaskDescriptor)taskDescriptor, initialState);
+        public Factory(Map<String, AuditEntryStatus> initialStatesMap) {
+            changeUnitFactory = new ExecutableChangeUnit.Factory(initialStatesMap);
+        }
+
+        @Override
+        public boolean matchesDescriptor(TaskDescriptor descriptor) {
+            return true;
+        }
+
+        @Override
+        public List<? extends ExecutableTask> getTasks(TaskDescriptor taskDescriptor) {
+            return findFactory(taskDescriptor)
+                    .map(factory -> factory.getTasks(taskDescriptor))
+                    .orElseThrow(() -> new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", taskDescriptor.getClass().getName())));
+        }
+
+        private Optional<ExecutableTaskFactory> findFactory(TaskDescriptor taskDescriptor) {
+            if (changeUnitFactory.matchesDescriptor(taskDescriptor)) {
+                return Optional.of(changeUnitFactory);
             }
-            throw new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", taskDescriptor.getClass().getName()));
+            return Optional.empty();
         }
 
-        private static boolean isReflectionChangeUnit(TaskDescriptor taskDescriptor) {
-            return taskDescriptor instanceof SortedReflectionTaskDescriptor &&
-                    ((SortedReflectionTaskDescriptor) taskDescriptor).getSource().isAnnotationPresent(ChangeUnit.class);
-        }
 
     }
 
