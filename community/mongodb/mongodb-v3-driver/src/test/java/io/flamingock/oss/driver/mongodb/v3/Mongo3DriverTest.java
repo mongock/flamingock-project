@@ -246,8 +246,9 @@ class Mongo3DriverTest {
                 .find()
                 .map(document -> document.getString("name"))
                 .into(new HashSet<>());
-        assertEquals(1, clients.size());
+        assertEquals(2, clients.size());
         assertTrue(clients.contains("Federico"));
+        assertTrue(clients.contains("Jorge"));
 
         //tear-down
         mongoDatabase.getCollection(CLIENTS_COLLECTION).drop();

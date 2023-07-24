@@ -33,11 +33,11 @@ public class Mongo3LockRepository implements LockRepository {
 
     private final MongoCollection<Document> collection;
 
-    Mongo3LockRepository(MongoDatabase mongoDatabase, String lockCollectionName) {
+    protected Mongo3LockRepository(MongoDatabase mongoDatabase, String lockCollectionName) {
         this.collection = mongoDatabase.getCollection(lockCollectionName);
     }
 
-    protected void initialize(boolean indexCreation) {
+    public void initialize(boolean indexCreation) {
         CollectionInitializator<Mongo3DocumentWrapper> initializer = new CollectionInitializator<>(
                 new Mongo3CollectionWrapper(collection),
                 () -> new Mongo3DocumentWrapper(new Document()),
