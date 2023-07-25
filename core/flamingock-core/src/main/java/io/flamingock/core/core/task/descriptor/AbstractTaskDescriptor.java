@@ -7,10 +7,13 @@ public abstract class AbstractTaskDescriptor implements TaskDescriptor {
     private final String id;
 
     private final boolean runAlways;
+    
+    private final boolean transactional;
 
-    public AbstractTaskDescriptor(String id, boolean runAlways) {
+    public AbstractTaskDescriptor(String id, boolean runAlways, boolean transactional) {
         this.id = id;
         this.runAlways = runAlways;
+        this.transactional = transactional;
     }
 
     @Override
@@ -22,6 +25,11 @@ public abstract class AbstractTaskDescriptor implements TaskDescriptor {
     @Override
     public boolean isRunAlways() {
         return runAlways;
+    }
+
+    @Override
+    public boolean isTransactional() {
+        return transactional;
     }
 
     @Override

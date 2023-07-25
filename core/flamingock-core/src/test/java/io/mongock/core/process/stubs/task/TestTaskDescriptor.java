@@ -4,13 +4,13 @@ import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 
 public class TestTaskDescriptor implements TaskDescriptor {
     private final String id;
-    private final boolean rollable;
     private final boolean runAlways;
+    private final boolean transactional;
 
-    public TestTaskDescriptor(String id, boolean rollable, boolean runAlways) {
+    public TestTaskDescriptor(String id, boolean runAlways, boolean transactional) {
         this.id = id;
-        this.rollable = rollable;
         this.runAlways = runAlways;
+        this.transactional = transactional;
     }
 
     @Override
@@ -22,6 +22,11 @@ public class TestTaskDescriptor implements TaskDescriptor {
     @Override
     public boolean isRunAlways() {
         return runAlways;
+    }
+
+    @Override
+    public boolean isTransactional() {
+        return transactional;
     }
 
     @Override

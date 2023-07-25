@@ -17,8 +17,8 @@ project(":core:flamingock-spring-core").name = "flamingock-spring-core"
 // COMMUNITY
 //////////////////////////////////////
 include("community:base-community")
-project(":community:base-community").projectDir = file("community/base-community")
 project(":community:base-community").name = "base-community"
+project(":community:base-community").projectDir = file("community/base-community")
 
 include("community:standalone-runner")
 project(":community:standalone-runner").name = "standalone-runner"
@@ -33,10 +33,20 @@ project(":community:mongodb:mongodb-facade").name = "mongodb-facade"
 project(":community:mongodb:mongodb-facade").projectDir = file("community/mongodb/mongodb-facade")
 
 include("community:mongodb:mongodb-sync-v4-driver")
+project(":community:mongodb:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
 project(":community:mongodb:mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
 
 include("community:mongodb:mongodb-v3-driver")
+project(":community:mongodb:mongodb-v3-driver").name = "mongodb-v3-driver"
 project(":community:mongodb:mongodb-v3-driver").projectDir = file("community/mongodb/mongodb-v3-driver")
+
+include("community:mongodb:mongodb-springdata-v3-driver")
+project(":community:mongodb:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
+project(":community:mongodb:mongodb-springdata-v3-driver").projectDir = file("community/mongodb/mongodb-springdata-v3-driver")
+
+include("community:mongodb:mongodb-springdata-v2-driver")
+project(":community:mongodb:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
+project(":community:mongodb:mongodb-springdata-v2-driver").projectDir = file("community/mongodb/mongodb-springdata-v2-driver")
 
 //////////////////////////////////////
 // EXAMPLES
@@ -49,3 +59,7 @@ project(":examples:community:standalone-mongodb-sync").projectDir = file("exampl
 include("examples:community:springboot-mongodb-sync")
 project(":examples:community:springboot-mongodb-sync").name = "springboot-mongodb-sync"
 project(":examples:community:springboot-mongodb-sync").projectDir = file("examples/community/springboot-mongodb-sync")
+
+include("examples:community:springboot-mongodb-springdata")
+project(":examples:community:springboot-mongodb-springdata").name = "springboot-mongodb-springdata"
+project(":examples:community:springboot-mongodb-springdata").projectDir = file("examples/community/springboot-mongodb-springdata")

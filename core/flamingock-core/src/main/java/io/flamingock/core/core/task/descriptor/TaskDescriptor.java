@@ -6,6 +6,8 @@ public interface TaskDescriptor {
 
     boolean isRunAlways();
 
+    boolean isTransactional();
+
     String getClassImplementor();
 
     String pretty();

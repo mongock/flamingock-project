@@ -8,8 +8,8 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
     private static final Builder BUILDER = new Builder();
     private final Class<?> source;
 
-    public ReflectionTaskDescriptor(String id, Class<?> source, boolean runAlways) {
-        super(id, runAlways);
+    public ReflectionTaskDescriptor(String id, Class<?> source, boolean runAlways, boolean transactional) {
+        super(id, runAlways, transactional);
         this.source = source;
     }
 
@@ -67,7 +67,8 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
                     changeUnitAnnotation.id(),
                     changeUnitAnnotation.order(),
                     source,
-                    changeUnitAnnotation.runAlways());
+                    changeUnitAnnotation.runAlways(),
+                    changeUnitAnnotation.transactional());
         }
     }
 }
