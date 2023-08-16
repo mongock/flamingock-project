@@ -28,7 +28,7 @@ public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep
         super(task, successExecutionAudit);
     }
 
-    public final Optional<RollableStep> getRollableIfPresent() {
+    public final Optional<RollableStep> getRollable() {
         return task instanceof RollableTask
                 ? Optional.of(new RollableStep((RollableTask) task))
                 : Optional.empty();

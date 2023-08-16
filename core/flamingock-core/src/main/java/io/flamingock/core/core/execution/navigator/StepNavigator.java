@@ -81,7 +81,7 @@ public class StepNavigator {
 
 
             // Main execution
-            TaskStep executedStep = transactionWrapper != null
+            TaskStep executedStep = transactionWrapper != null && task.getDescriptor().isTransactional()
                     ? executeTaskWrapped(task, executionContext, runtimeManager)
                     : executeTaskUnwrapped(task, executionContext);
 
@@ -106,8 +106,8 @@ public class StepNavigator {
             } else {
                 //failed execution
                 FailedExecutionOrAuditStep failedExecutionOrAudit = (FailedExecutionOrAuditStep) failedTaskStep;
-                if (failedExecutionOrAudit.getRollableIfPresent().isPresent()) {
-                    ManualRolledBackStep rolledBack = manualRollback(failedExecutionOrAudit.getRollableIfPresent().get());
+                if (failedExecutionOrAudit.getRollable().isPresent()) {
+                    ManualRolledBackStep rolledBack = manualRollback(failedExecutionOrAudit.getRollable().get());
                     auditManualRollback(rolledBack, executionContext, LocalDateTime.now());
                 } else {
                     logger.warn("ROLLBACK NOT PROVIDED FOR - {}", failedExecutionOrAudit.getTask().getDescriptor().getId());
@@ -205,8 +205,8 @@ public class StepNavigator {
     }
 
     private Optional<ManualRolledBackStep> manualRollback(FailedExecutionOrAuditStep failed) {
-        if (failed.getRollableIfPresent().isPresent()) {
-            ManualRolledBackStep rolledBack = manualRollback(failed.getRollableIfPresent().get());
+        if (failed.getRollable().isPresent()) {
+            ManualRolledBackStep rolledBack = manualRollback(failed.getRollable().get());
             return Optional.of(rolledBack);
         } else {
             logger.warn("ROLLBACK NOT PROVIDED FOR - {}", failed.getTask().getDescriptor().getId());
