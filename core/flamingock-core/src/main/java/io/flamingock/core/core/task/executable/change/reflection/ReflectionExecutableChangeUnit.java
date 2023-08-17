@@ -36,7 +36,7 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
 
 
     @Override
-    public void addRollbackDependent(RollableTask rollbackDependent) {
+    public void addDependentTask(RollableTask rollbackDependent) {
 
     }
 

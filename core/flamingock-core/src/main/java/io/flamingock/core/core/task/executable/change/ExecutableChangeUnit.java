@@ -28,7 +28,7 @@ import java.util.Optional;
  */
 public interface ExecutableChangeUnit extends ExecutableTask {
 
-    void addRollbackDependent(RollableTask rollbackDependent);
+    void addDependentTask(RollableTask rollbackDependent);
 
 
     class Factory implements ExecutableTaskFactory {
@@ -87,7 +87,7 @@ public interface ExecutableChangeUnit extends ExecutableTask {
                     .ifPresent(beforeExecutionTask -> {
                         tasks.add(beforeExecutionTask);
                         if (beforeExecutionTask instanceof RollableTask) {
-                            decoratedBaseTaskWithRollback.addRollbackDependent((RollableTask) beforeExecutionTask);
+                            decoratedBaseTaskWithRollback.addDependentTask((RollableTask) beforeExecutionTask);
                         }
                     });
             tasks.add(decoratedBaseTaskWithRollback);
@@ -101,7 +101,8 @@ public interface ExecutableChangeUnit extends ExecutableTask {
                     BeforeExecutionIdGenerator.getId(baseTask.getDescriptor().getId()),
                     baseTask.getDescriptor().getOrder(),
                     baseTask.getDescriptor().getSource(),
-                    baseTask.getDescriptor().isRunAlways()
+                    baseTask.getDescriptor().isRunAlways(),
+                    baseTask.getDescriptor().isTransactional()
             );
 
             Optional<Method> beforeExecutionMethodOptional = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), BeforeExecution.class);

@@ -31,11 +31,9 @@ public class RollableReflectionChangeUnit extends AbstractRollableTask<SortedRef
 
     }
 
-
-
     @Override
-    public void addRollbackDependent(RollableTask rollbackDependent) {
-        baseTask.addRollbackDependent(rollbackDependent);
+    public void  addDependentTask(RollableTask rollbackDependent) {
+        baseTask.addDependentTask(rollbackDependent);
     }
 
     @Override
