@@ -1,60 +1,98 @@
 package io.utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
+import static io.utils.TestTaskExecution.BEFORE_EXECUTION;
+import static io.utils.TestTaskExecution.EXECUTION;
+import static io.utils.TestTaskExecution.ROLLBACK_BEFORE_EXECUTION;
+import static io.utils.TestTaskExecution.ROLLBACK_EXECUTION;
+
 public class TaskExecutionChecker {
 
-    private boolean executed;
-
-    private boolean rolledBack;
-    private boolean beforeExecuted;
-    private boolean beforeRolledBack;
+    private final List<TestTaskExecution> history = new ArrayList<>();
 
     public TaskExecutionChecker() {
-        this(false, false, false, false);
-    }
-
-    public TaskExecutionChecker(boolean executed, boolean rolledBack, boolean beforeExecuted, boolean beforeRolledBack) {
-        this.executed = executed;
-        this.rolledBack = rolledBack;
-        this.beforeExecuted = beforeExecuted;
-        this.beforeRolledBack = beforeRolledBack;
     }
 
     public void reset() {
-        executed = false;
-        rolledBack = false;
-        beforeExecuted = false;
-        beforeRolledBack = false;
+        history.clear();
     }
 
     public boolean isExecuted() {
-        return executed;
+        return history.contains(EXECUTION);
     }
 
     public void markExecution() {
-        executed = true;
+        history.add(EXECUTION);
     }
 
     public boolean isRolledBack() {
-        return rolledBack;
+        return history.contains(ROLLBACK_EXECUTION);
     }
 
     public void markRollBackExecution() {
-        rolledBack = true;
+        history.add(ROLLBACK_EXECUTION);
     }
 
     public boolean isBeforeExecuted() {
-        return beforeExecuted;
+        return history.contains(BEFORE_EXECUTION);
     }
 
     public void markBeforeExecution() {
-        beforeExecuted = true;
+        history.add(BEFORE_EXECUTION);
     }
 
     public boolean isBeforeExecutionRolledBack() {
-        return beforeRolledBack;
+        return history.contains(ROLLBACK_BEFORE_EXECUTION);
     }
 
     public void markBeforeExecutionRollBack() {
-        beforeRolledBack = true;
+        history.add(ROLLBACK_BEFORE_EXECUTION);
     }
+
+    public void checkOrderStrict(TestTaskExecution execution, TestTaskExecution... otherExecutions) {
+        List<TestTaskExecution> allExecutions = new ArrayList<>();
+        allExecutions.add(execution);
+        allExecutions.addAll(Arrays.asList(otherExecutions));
+        if(allExecutions.size() != history.size()) {
+            throw new RuntimeException(String.format("(strict)Expected executions[%d] doesn't match actual executions[%d]" +
+                    "\nexpected:\n\t%s" +
+                    "\nactual:\n%s",
+                    allExecutions.size(),
+                    history.size(),
+                    allExecutions.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t")),
+                    history.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t"))
+                    ));
+        }
+        checkExecutions(allExecutions);
+    }
+
+
+    public void checkOrder(TestTaskExecution execution, TestTaskExecution... otherExecutions) {
+
+        List<TestTaskExecution> allExecutions = new ArrayList<>();
+        allExecutions.add(execution);
+        allExecutions.addAll(Arrays.asList(otherExecutions));
+
+        checkExecutions(allExecutions);
+    }
+
+    private void checkExecutions(List<TestTaskExecution> allExecutions) {
+        for (int index = 0; index < allExecutions.size(); index++) {
+            if (history.size() <= index) {
+                throw new RuntimeException(String.format("history[%d executions] shorter than expected history",
+                        history.size()));
+            }
+
+            if (allExecutions.get(index) != history.get(index)) {
+                throw new RuntimeException(String.format("Execution not matched at index[%d]. Expected[%s] actual[%s]",
+                        index, allExecutions.get(index), history.get(index)));
+            }
+        }
+    }
+
 }

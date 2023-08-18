@@ -78,8 +78,6 @@ public class StepNavigator {
     public final StepNavigationOutput executeTask(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isInitialExecutionRequired()) {
 
-
-
             // Main execution
             TaskStep executedStep = transactionWrapper != null && task.getDescriptor().isTransactional()
                     ? executeTaskWrapped(task, executionContext, runtimeManager)

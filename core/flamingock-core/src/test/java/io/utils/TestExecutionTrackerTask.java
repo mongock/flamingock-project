@@ -5,7 +5,7 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackBeforeExecution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 
-public class CheckedTask {
+public class TestExecutionTrackerTask {
 
 
     public static final TaskExecutionChecker checker = new TaskExecutionChecker();

@@ -12,19 +12,27 @@ import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.util.Result;
-import io.utils.TaskExecutionChecker;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.utils.TestTaskExecution.BEFORE_EXECUTION;
+import static io.utils.TestTaskExecution.EXECUTION;
+import static io.utils.TestTaskExecution.ROLLBACK_BEFORE_EXECUTION;
+import static io.utils.TestTaskExecution.ROLLBACK_EXECUTION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class StepNavigatorTest {
+
+    @BeforeEach
+    void beforeEach() {
+        TaskWithBeforeExecution.checker.reset();
+    }
 
     @Test
     @DisplayName("SHOULD run beforeExecution.Rollback IF task contains beforeExecution WHEN task fails")
@@ -61,15 +69,15 @@ class StepNavigatorTest {
             stepNavigator.executeTask(executableTasks.get(1), executionContext);
         } catch (Exception expectedException) {
             //ignore
-            System.out.println(expectedException.getMessage());
         }
 
         //THEN
-        TaskExecutionChecker checker = TaskWithBeforeExecution.checker;
-        assertTrue(checker.isBeforeExecuted());
-        assertTrue(checker.isExecuted());
-        assertTrue(checker.isRolledBack());
-        assertTrue(checker.isBeforeExecutionRolledBack());
+        TaskWithBeforeExecution.checker.checkOrderStrict(
+                BEFORE_EXECUTION,
+                EXECUTION,
+                ROLLBACK_EXECUTION,
+                ROLLBACK_BEFORE_EXECUTION
+        );
     }
 
 }
