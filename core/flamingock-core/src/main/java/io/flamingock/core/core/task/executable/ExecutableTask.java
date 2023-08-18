@@ -18,7 +18,14 @@ public interface ExecutableTask extends Task {
 
     boolean isInitialExecutionRequired();
 
+    void addDependentTask(RollableTask rollbackDependent);
 
+    List<? extends RollableTask> getDependentTasks();
+
+    /**
+     * This is a Abstract factory of factories. Depending on the descriptor it will use one of the factories,
+     * that could be ChangeUnitFactory, PluginFactory(not implemented yet), etc.
+     */
     final class Factory implements ExecutableTaskFactory {
 
         private final ExecutableChangeUnit.Factory changeUnitFactory;

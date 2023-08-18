@@ -9,6 +9,7 @@ import io.flamingock.core.core.task.executable.ExecutableTask;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CompleteAutoRolledBackStep extends RolledBackStep implements SuccessableStep, FailedStep, RollbackDependent {
     public CompleteAutoRolledBackStep(ExecutableTask task, boolean rollbackSuccess) {
@@ -18,6 +19,9 @@ public class CompleteAutoRolledBackStep extends RolledBackStep implements Succes
 
     @Override
     public List<RollableStep> getRollbackDependents() {
-        return Collections.emptyList();
+        return task.getDependentTasks()
+                .stream()
+                .map(RollableStep::new)
+                .collect(Collectors.toList());
     }
 }

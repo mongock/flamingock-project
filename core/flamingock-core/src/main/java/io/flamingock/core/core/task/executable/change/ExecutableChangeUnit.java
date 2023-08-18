@@ -28,8 +28,6 @@ import java.util.Optional;
  */
 public interface ExecutableChangeUnit extends ExecutableTask {
 
-    void addDependentTask(RollableTask rollbackDependent);
-
 
     class Factory implements ExecutableTaskFactory {
         private final Map<String, AuditEntryStatus> statesMap;
