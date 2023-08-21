@@ -100,7 +100,7 @@ public interface ExecutableChangeUnit extends ExecutableTask {
                     baseTask.getDescriptor().getOrder(),
                     baseTask.getDescriptor().getSource(),
                     baseTask.getDescriptor().isRunAlways(),
-                    baseTask.getDescriptor().isTransactional()
+                    false//A beforeExecution task will never be transactional
             );
 
             Optional<Method> beforeExecutionMethodOptional = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), BeforeExecution.class);

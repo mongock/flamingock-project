@@ -202,16 +202,6 @@ public class StepNavigator {
         return rolledBack;
     }
 
-    private Optional<ManualRolledBackStep> manualRollback(FailedExecutionOrAuditStep failed) {
-        if (failed.getRollable().isPresent()) {
-            ManualRolledBackStep rolledBack = manualRollback(failed.getRollable().get());
-            return Optional.of(rolledBack);
-        } else {
-            logger.warn("ROLLBACK NOT PROVIDED FOR - {}", failed.getTask().getDescriptor().getId());
-            return Optional.empty();
-        }
-    }
-
     private void auditManualRollback(ManualRolledBackStep rolledBackStep,
                                      ExecutionContext executionContext,
                                      LocalDateTime executedAt) {
