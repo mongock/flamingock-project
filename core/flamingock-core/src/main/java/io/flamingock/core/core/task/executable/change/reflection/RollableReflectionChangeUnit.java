@@ -7,6 +7,7 @@ import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.task.executable.change.ExecutableChangeUnit;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * This class is a reflection version of the changeUnit.
@@ -31,11 +32,14 @@ public class RollableReflectionChangeUnit extends AbstractRollableTask<SortedRef
 
     }
 
-
+    @Override
+    public void  addDependentTask(RollableTask rollbackDependent) {
+        baseTask.addDependentTask(rollbackDependent);
+    }
 
     @Override
-    public void addRollbackDependent(RollableTask rollbackDependent) {
-        baseTask.addRollbackDependent(rollbackDependent);
+    public List<? extends RollableTask> getDependentTasks() {
+        return baseTask.getDependentTasks();
     }
 
     @Override

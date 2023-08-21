@@ -10,7 +10,7 @@ public final class RollableStep extends AbstractTaskStep {
     private final RollableTask rollableTask;
 
 
-    RollableStep(RollableTask rollableTask) {
+    public RollableStep(RollableTask rollableTask) {
         super(rollableTask);
         this.rollableTask = rollableTask;
     }

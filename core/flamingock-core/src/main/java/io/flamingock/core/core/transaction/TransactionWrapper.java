@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 
 public interface TransactionWrapper {
 
-
     <T> T wrapInTransaction(TaskDescriptor taskDescriptor, DependencyInjectable dependencyInjectable, Supplier<T> operation);
 
 }

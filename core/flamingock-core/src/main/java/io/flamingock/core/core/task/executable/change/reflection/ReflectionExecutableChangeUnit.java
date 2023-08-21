@@ -1,5 +1,6 @@
 package io.flamingock.core.core.task.executable.change.reflection;
 
+import io.flamingock.core.core.execution.summary.DefaultStepSummarizer;
 import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.AbstractExecutableTask;
@@ -7,6 +8,8 @@ import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.task.executable.change.ExecutableChangeUnit;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class is a reflection version of the changeUnit.
@@ -24,6 +27,7 @@ import java.lang.reflect.Method;
 public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<SortedReflectionTaskDescriptor> implements ExecutableChangeUnit {
 
     private final Method executionMethod;
+    private List<RollableTask> dependentTasks;
 
 
     public ReflectionExecutableChangeUnit(SortedReflectionTaskDescriptor descriptor,
@@ -31,13 +35,20 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
                                           Method executionMethod) {
         super(descriptor, requiredExecution);
         this.executionMethod = executionMethod;
+        dependentTasks = new LinkedList<>();
 
     }
 
 
     @Override
-    public void addRollbackDependent(RollableTask rollbackDependent) {
+    public void addDependentTask(RollableTask dependenTask) {
+        dependentTasks.add(dependenTask);
 
+    }
+
+    @Override
+    public List<? extends RollableTask> getDependentTasks() {
+        return dependentTasks;
     }
 
     @Override

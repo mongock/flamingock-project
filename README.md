@@ -1,7 +1,5 @@
-
 # TODO
-- Sort changeUnits
-- Lock
+- operation type(EXECUTION, BEFORE, ROLL_BACK) for before execution in audit
 
 # Technical debts
 - create legacy module

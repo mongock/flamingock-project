@@ -7,9 +7,9 @@ import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.util.Result;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep
         implements SuccessableStep, FailedStep, RollbackDependent {
@@ -28,7 +28,7 @@ public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep
         super(task, successExecutionAudit);
     }
 
-    public final Optional<RollableStep> getRollableIfPresent() {
+    public final Optional<RollableStep> getRollable() {
         return task instanceof RollableTask
                 ? Optional.of(new RollableStep((RollableTask) task))
                 : Optional.empty();
@@ -36,7 +36,10 @@ public abstract class FailedExecutionOrAuditStep extends AfterExecutionAuditStep
 
     @Override
     public final List<RollableStep> getRollbackDependents() {
-        return Collections.emptyList();
+        return task.getDependentTasks()
+                .stream()
+                .map(RollableStep::new)
+                .collect(Collectors.toList());
     }
 
 }

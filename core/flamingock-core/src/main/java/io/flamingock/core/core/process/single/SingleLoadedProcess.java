@@ -21,9 +21,11 @@ public class SingleLoadedProcess implements LoadedProcess<SingleAuditProcessStat
 
     @Override
     public SingleExecutableProcess applyState(SingleAuditProcessStatus state) {
+
+        ExecutableTask.Factory factory = new ExecutableTask.Factory(state.getStatesMap());
         List<ExecutableTask> tasks = taskDescriptors
                 .stream()
-                .map(descriptor -> ExecutableTask.build(descriptor, state.getEntryStatus(descriptor.getId()).orElse(null)))
+                .map(factory::getTasks)
                 .flatMap(List::stream)
                 .collect(Collectors.toCollection(LinkedList::new));
 
