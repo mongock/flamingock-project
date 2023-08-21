@@ -14,13 +14,14 @@ public interface ExecutableTask extends Task {
 
     void execute(RuntimeManager runtimeHelper);
 
-    Optional<Rollback> getRollback();
-
     String getExecutionMethodName();
 
     boolean isInitialExecutionRequired();
 
     void addDependentRollbacks(Rollback rollbackDependent);
+
+    //TODO remove getRollback() method and add it to `addDependentRollbacks`, but change it to simply `addRollback`
+    Optional<Rollback> getRollback();
 
     List<? extends Rollback> getDependentTasks();
 
