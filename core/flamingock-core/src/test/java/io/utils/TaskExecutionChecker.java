@@ -61,7 +61,7 @@ public class TaskExecutionChecker {
         if(allExecutions.size() != history.size()) {
             throw new RuntimeException(String.format("(strict)Expected executions[%d] doesn't match actual executions[%d]" +
                     "\nexpected:\n\t%s" +
-                    "\nactual:\n%s",
+                    "\nactual:\n\t%s\n",
                     allExecutions.size(),
                     history.size(),
                     allExecutions.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t")),

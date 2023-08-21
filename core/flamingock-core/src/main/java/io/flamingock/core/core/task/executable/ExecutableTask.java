@@ -14,16 +14,18 @@ public interface ExecutableTask extends Task {
 
     void execute(RuntimeManager runtimeHelper);
 
+    Optional<Rollback> getRollback();
+
     String getExecutionMethodName();
 
     boolean isInitialExecutionRequired();
 
-    void addDependentTask(RollableTask rollbackDependent);
+    void addDependentRollbacks(Rollback rollbackDependent);
 
-    List<? extends RollableTask> getDependentTasks();
+    List<? extends Rollback> getDependentTasks();
 
     /**
-     * This is a Abstract factory of factories. Depending on the descriptor it will use one of the factories,
+     * This is an Abstract factory of factories. Depending on the descriptor it will use one of the factories,
      * that could be ChangeUnitFactory, PluginFactory(not implemented yet), etc.
      */
     final class Factory implements ExecutableTaskFactory {

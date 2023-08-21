@@ -1,9 +1,10 @@
 package io.mongock.core.process.stubs.task;
 
 import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.task.executable.RollableTask;
+import io.flamingock.core.core.task.executable.Rollback;
 
 import java.util.List;
+import java.util.Optional;
 
 public class FailedTestExecutableTask extends TestExecutableTask {
     public FailedTestExecutableTask(String id) {
@@ -17,12 +18,17 @@ public class FailedTestExecutableTask extends TestExecutableTask {
     }
 
     @Override
-    public void addDependentTask(RollableTask rollbackDependent) {
+    public Optional<Rollback> getRollback() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void addDependentRollbacks(Rollback rollbackDependent) {
 
     }
 
     @Override
-    public List<? extends RollableTask> getDependentTasks() {
+    public List<? extends Rollback> getDependentTasks() {
         return null;
     }
 

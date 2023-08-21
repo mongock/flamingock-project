@@ -12,9 +12,7 @@ import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescript
 import io.flamingock.core.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.ExecutableTaskFactory;
-import io.flamingock.core.core.task.executable.RollableTask;
 import io.flamingock.core.core.task.executable.change.reflection.ReflectionExecutableChangeUnit;
-import io.flamingock.core.core.task.executable.change.reflection.RollableReflectionChangeUnit;
 import io.flamingock.core.core.util.ReflectionUtil;
 
 import java.lang.reflect.Method;
@@ -64,16 +62,13 @@ public interface ExecutableChangeUnit extends ExecutableTask {
                             taskDescriptor.getSource().getName(),
                             Execution.class.getSimpleName())));
 
-            ReflectionExecutableChangeUnit baseTask = new ReflectionExecutableChangeUnit(
+            Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackExecution.class);
+            ReflectionExecutableChangeUnit task = new ReflectionExecutableChangeUnit(
                     taskDescriptor,
                     AuditEntryStatus.isRequiredExecution(initialState),
-                    executionMethod);
+                    executionMethod,
+                    rollbackMethodOpt.orElse(null));
 
-
-            ExecutableChangeUnit decoratedBaseTaskWithRollback = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackExecution.class)
-                    .map(rollbackMethod ->
-                            (ExecutableChangeUnit) new RollableReflectionChangeUnit(baseTask, rollbackMethod)
-                    ).orElse(baseTask);
 
             /*
             If there is any rollback dependency(@BeforeExecution in ChangeUnits) they are added as normal task
@@ -81,14 +76,11 @@ public interface ExecutableChangeUnit extends ExecutableTask {
             dependent, so they  are rolled back in case the main task fails.
              */
             List<ExecutableTask> tasks = new LinkedList<>();
-            getBeforeExecutionOptional(baseTask)
-                    .ifPresent(beforeExecutionTask -> {
-                        tasks.add(beforeExecutionTask);
-                        if (beforeExecutionTask instanceof RollableTask) {
-                            decoratedBaseTaskWithRollback.addDependentTask((RollableTask) beforeExecutionTask);
-                        }
-                    });
-            tasks.add(decoratedBaseTaskWithRollback);
+            getBeforeExecutionOptional(task).ifPresent(beforeExecutionTask -> {
+                tasks.add(beforeExecutionTask);
+                beforeExecutionTask.getRollback().ifPresent(task::addDependentRollbacks);
+            });
+            tasks.add(task);
             return tasks;
         }
 
@@ -109,16 +101,14 @@ public interface ExecutableChangeUnit extends ExecutableTask {
             }
             AuditEntryStatus initialState = statesMap.get(taskDescriptor.getId());
             Method beforeExecutionMethod = beforeExecutionMethodOptional.get();
-            ReflectionExecutableChangeUnit beforeExecutionTask = new ReflectionExecutableChangeUnit(
+            Optional<Method> rollbackBeforeExecution = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackBeforeExecution.class);
+
+
+            return Optional.of(new ReflectionExecutableChangeUnit(
                     taskDescriptor,
                     AuditEntryStatus.isRequiredExecution(initialState),
-                    beforeExecutionMethod);
-
-            ExecutableChangeUnit decoratedBeforeExecutionTaskWithRollback = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackBeforeExecution.class)
-                    .map(rollbackMethod ->
-                            (ExecutableChangeUnit) new RollableReflectionChangeUnit(beforeExecutionTask, rollbackMethod)
-                    ).orElse(baseTask);
-            return Optional.of(decoratedBeforeExecutionTaskWithRollback);
+                    beforeExecutionMethod,
+                    rollbackBeforeExecution.orElse(null)));
 
         }
 
