@@ -78,7 +78,8 @@ public interface ExecutableChangeUnit extends ExecutableTask {
             List<ExecutableTask> tasks = new LinkedList<>();
             getBeforeExecutionOptional(task).ifPresent(beforeExecutionTask -> {
                 tasks.add(beforeExecutionTask);
-                beforeExecutionTask.getRollback().ifPresent(task::addDependentRollbacks);
+                beforeExecutionTask.getDependentRollbacks().forEach(task::addDependentRollbacks);
+//                beforeExecutionTask.getRollback().ifPresent(task::addDependentRollbacks);
             });
             tasks.add(task);
             return tasks;

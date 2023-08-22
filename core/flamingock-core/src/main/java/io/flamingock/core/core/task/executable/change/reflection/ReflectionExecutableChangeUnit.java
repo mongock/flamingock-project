@@ -31,11 +31,7 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
 
     private final Method executionMethod;
 
-    private final Method rollbackMethod;
-
     private final List<Rollback> dependentTasks;
-
-
 
     public ReflectionExecutableChangeUnit(SortedReflectionTaskDescriptor descriptor,
                                           boolean requiredExecution,
@@ -50,8 +46,10 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
                                           Method rollbackMethod) {
         super(descriptor, requiredExecution);
         this.executionMethod = executionMethod;
-        this.rollbackMethod = rollbackMethod;
         dependentTasks = new LinkedList<>();
+        if(rollbackMethod != null) {
+            dependentTasks.add(buildRollBack(rollbackMethod));
+        }
 
     }
 
@@ -63,7 +61,7 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
     }
 
     @Override
-    public List<? extends Rollback> getDependentTasks() {
+    public List<? extends Rollback> getDependentRollbacks() {
         return dependentTasks;
     }
 
@@ -72,21 +70,13 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
         runtimeHelper.executeMethod(runtimeHelper.getInstance(descriptor.getSource()), executionMethod);
     }
 
-    @Override
-    public Optional<Rollback> getRollback() {
-        if(rollbackMethod != null) {
-            return Optional.of(buildRollBack());
-        } else {
-            return Optional.empty();
-        }
-    }
 
     @Override
     public String getExecutionMethodName() {
         return executionMethod.getName();
     }
 
-    private Rollback buildRollBack() {
+    private Rollback buildRollBack(Method rollbackMethod) {
         return new Rollback() {
             @Override
             public ExecutableTask getTask() {

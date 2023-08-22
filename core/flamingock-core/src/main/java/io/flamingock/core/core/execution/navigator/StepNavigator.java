@@ -101,16 +101,17 @@ public class StepNavigator {
             if (failedTaskStep instanceof CompleteAutoRolledBackStep) {
                 summarizer.add((CompleteAutoRolledBackStep) failedTaskStep);
 
-            } else {
-                //failed execution
-                FailedExecutionOrAuditStep failedExecutionOrAudit = (FailedExecutionOrAuditStep) failedTaskStep;
-                if (failedExecutionOrAudit.getRollable().isPresent()) {
-                    ManualRolledBackStep rolledBack = manualRollback(failedExecutionOrAudit.getRollable().get());
-                    auditManualRollback(rolledBack, executionContext, LocalDateTime.now());
-                } else {
-                    logger.warn("ROLLBACK NOT PROVIDED FOR - {}", failedExecutionOrAudit.getTask().getDescriptor().getId());
-                }
             }
+//            else {
+//                //failed execution
+//                FailedExecutionOrAuditStep failedExecutionOrAudit = (FailedExecutionOrAuditStep) failedTaskStep;
+//                if (failedExecutionOrAudit.getRollable().isPresent()) {
+//                    ManualRolledBackStep rolledBack = manualRollback(failedExecutionOrAudit.getRollable().get());
+//                    auditManualRollback(rolledBack, executionContext, LocalDateTime.now());
+//                } else {
+//                    logger.warn("ROLLBACK NOT PROVIDED FOR - {}", failedExecutionOrAudit.getTask().getDescriptor().getId());
+//                }
+//            }
             ((RollbackDependent)failedTaskStep).getRollbackDependents().forEach(rollbackDependent -> {
                 ManualRolledBackStep rolledBack = manualRollback(rollbackDependent);
                 auditManualRollback(rolledBack, executionContext, LocalDateTime.now());

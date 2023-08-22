@@ -20,10 +20,7 @@ public interface ExecutableTask extends Task {
 
     void addDependentRollbacks(Rollback rollbackDependent);
 
-    //TODO remove getRollback() method and add it to `addDependentRollbacks`, but change it to simply `addRollback`
-    Optional<Rollback> getRollback();
-
-    List<? extends Rollback> getDependentTasks();
+    List<? extends Rollback> getDependentRollbacks();
 
     /**
      * This is an Abstract factory of factories. Depending on the descriptor it will use one of the factories,
