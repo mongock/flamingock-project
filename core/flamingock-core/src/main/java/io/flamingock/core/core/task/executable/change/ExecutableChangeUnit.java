@@ -71,15 +71,14 @@ public interface ExecutableChangeUnit extends ExecutableTask {
 
 
             /*
-            If there is any rollback dependency(@BeforeExecution in ChangeUnits) they are added as normal task
-            before the main task and, if it also provides BeforeExecutionRollback, also added to the main task as rollback
-            dependent, so they  are rolled back in case the main task fails.
+            If there is any rollback dependency(@BeforeExecution in ChangeUnits, legacy ChangeSet, etc.) they are added as normal task
+            before the main task and, if it also provides @BeforeExecutionRollback, it's also added to the main task's rollbackChain,
+            so they  are rolled back in case the main task fails.
              */
             List<ExecutableTask> tasks = new LinkedList<>();
             getBeforeExecutionOptional(task).ifPresent(beforeExecutionTask -> {
                 tasks.add(beforeExecutionTask);
-                beforeExecutionTask.getDependentRollbacks().forEach(task::addDependentRollbacks);
-//                beforeExecutionTask.getRollback().ifPresent(task::addDependentRollbacks);
+                beforeExecutionTask.getRollbackChain().forEach(task::addRollback);
             });
             tasks.add(task);
             return tasks;

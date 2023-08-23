@@ -15,12 +15,12 @@ public class SuccessTestExecutableTask extends TestExecutableTask {
     }
 
     @Override
-    public void addDependentRollbacks(Rollback rollbackDependent) {
+    public void addRollback(Rollback rollback) {
 
     }
 
     @Override
-    public List<? extends Rollback> getDependentRollbacks() {
+    public List<? extends Rollback> getRollbackChain() {
         return null;
     }
 }

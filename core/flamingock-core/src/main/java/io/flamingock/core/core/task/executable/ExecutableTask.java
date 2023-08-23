@@ -18,9 +18,9 @@ public interface ExecutableTask extends Task {
 
     boolean isInitialExecutionRequired();
 
-    void addDependentRollbacks(Rollback rollbackDependent);
+    void addRollback(Rollback rollback);
 
-    List<? extends Rollback> getDependentRollbacks();
+    List<? extends Rollback> getRollbackChain();
 
     /**
      * This is an Abstract factory of factories. Depending on the descriptor it will use one of the factories,

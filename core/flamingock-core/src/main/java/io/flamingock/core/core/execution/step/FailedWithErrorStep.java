@@ -1,5 +1,5 @@
 package io.flamingock.core.core.execution.step;
 
-public interface FailedStepWithError extends FailedStep {
+public interface FailedWithErrorStep extends FailedStep {
     Throwable getError();
 }
