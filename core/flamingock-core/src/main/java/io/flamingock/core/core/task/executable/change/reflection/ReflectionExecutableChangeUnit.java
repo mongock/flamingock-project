@@ -1,18 +1,15 @@
 package io.flamingock.core.core.task.executable.change.reflection;
 
-import io.flamingock.core.core.execution.summary.DefaultStepSummarizer;
 import io.flamingock.core.core.runtime.RuntimeManager;
 import io.flamingock.core.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
 import io.flamingock.core.core.task.executable.AbstractExecutableTask;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.task.executable.Rollback;
 import io.flamingock.core.core.task.executable.change.ExecutableChangeUnit;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This class is a reflection version of the changeUnit.
@@ -31,11 +28,7 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
 
     private final Method executionMethod;
 
-    private final Method rollbackMethod;
-
-    private final List<Rollback> dependentTasks;
-
-
+    private final List<Rollback> rollbackChain;
 
     public ReflectionExecutableChangeUnit(SortedReflectionTaskDescriptor descriptor,
                                           boolean requiredExecution,
@@ -50,21 +43,21 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
                                           Method rollbackMethod) {
         super(descriptor, requiredExecution);
         this.executionMethod = executionMethod;
-        this.rollbackMethod = rollbackMethod;
-        dependentTasks = new LinkedList<>();
-
-    }
-
-
-    @Override
-    public void addDependentRollbacks(Rollback dependentTask) {
-        dependentTasks.add(dependentTask);
-
+        rollbackChain = new LinkedList<>();
+        if(rollbackMethod != null) {
+            rollbackChain.add(buildRollBack(rollbackMethod));
+        }
     }
 
     @Override
-    public List<? extends Rollback> getDependentTasks() {
-        return dependentTasks;
+    public void addRollback(Rollback rollback) {
+        rollbackChain.add(rollback);
+
+    }
+
+    @Override
+    public List<? extends Rollback> getRollbackChain() {
+        return rollbackChain;
     }
 
     @Override
@@ -73,20 +66,11 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
     }
 
     @Override
-    public Optional<Rollback> getRollback() {
-        if(rollbackMethod != null) {
-            return Optional.of(buildRollBack());
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public String getExecutionMethodName() {
         return executionMethod.getName();
     }
 
-    private Rollback buildRollBack() {
+    private Rollback buildRollBack(Method rollbackMethod) {
         return new Rollback() {
             @Override
             public ExecutableTask getTask() {

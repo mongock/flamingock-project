@@ -17,18 +17,14 @@ public class FailedTestExecutableTask extends TestExecutableTask {
         throw new RuntimeException("Deliberate execution at task[" + getDescriptor() + "]");
     }
 
-    @Override
-    public Optional<Rollback> getRollback() {
-        return Optional.empty();
-    }
 
     @Override
-    public void addDependentRollbacks(Rollback rollbackDependent) {
+    public void addRollback(Rollback rollback) {
 
     }
 
     @Override
-    public List<? extends Rollback> getDependentTasks() {
+    public List<? extends Rollback> getRollbackChain() {
         return null;
     }
 

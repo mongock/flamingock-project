@@ -1,16 +1,13 @@
 package io.flamingock.core.core.execution.navigator;
 
-import io.flamingock.core.api.exception.CoreException;
 import io.flamingock.core.core.audit.AuditWriter;
 import io.flamingock.core.core.audit.writer.AuditItem;
 import io.flamingock.core.core.audit.writer.RuntimeContext;
 import io.flamingock.core.core.execution.executor.ExecutionContext;
 import io.flamingock.core.core.execution.step.ExecutableStep;
-import io.flamingock.core.core.execution.step.FailedStep;
-import io.flamingock.core.core.execution.step.RollbackDependent;
+import io.flamingock.core.core.execution.step.RollableFailedStep;
 import io.flamingock.core.core.execution.step.TaskStep;
 import io.flamingock.core.core.execution.step.afteraudit.AfterExecutionAuditStep;
-import io.flamingock.core.core.execution.step.afteraudit.FailedExecutionOrAuditStep;
 import io.flamingock.core.core.execution.step.afteraudit.RollableStep;
 import io.flamingock.core.core.execution.step.complete.CompletedAlreadyAppliedStep;
 import io.flamingock.core.core.execution.step.complete.CompletedSuccessStep;
@@ -31,11 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class StepNavigator {
     private static final Logger logger = LoggerFactory.getLogger(StepNavigator.class);
-
     private StepSummarizer summarizer;
     private AuditWriter auditWriter;
 
@@ -43,14 +38,19 @@ public class StepNavigator {
 
     private TransactionWrapper transactionWrapper;
 
-    StepNavigator(AuditWriter auditWriter,
-                  StepSummarizer summarizer,
-                  RuntimeManager runtimeManager,
-                  TransactionWrapper transactionWrapper) {
+    StepNavigator(AuditWriter auditWriter, StepSummarizer summarizer, RuntimeManager runtimeManager, TransactionWrapper transactionWrapper) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
         this.runtimeManager = runtimeManager;
         this.transactionWrapper = transactionWrapper;
+    }
+
+    private static void logAuditResult(Result saveResult, String id, String operation) {
+        if (saveResult instanceof Result.Error) {
+            logger.info("FAILED AUDIT " + operation + " TASK - {}\n{}", id, (((Result.Error) saveResult).getError().getLocalizedMessage()));
+        } else {
+            logger.info("SUCCESS AUDIT " + operation + " TASK - {}", id);
+        }
     }
 
     void clean() {
@@ -80,11 +80,12 @@ public class StepNavigator {
 
             // Main execution
             TaskStep executedStep = transactionWrapper != null && task.getDescriptor().isTransactional()
-                    ? executeTaskWrapped(task, executionContext, runtimeManager)
-                    : executeTaskUnwrapped(task, executionContext);
+                    ? executeWithinTransaction(task, executionContext, runtimeManager)
+                    : auditExecution(executeTask(task), executionContext, LocalDateTime.now());
 
-            return executedStep instanceof FailedStep
-                    ? rollback((FailedStep) executedStep, executionContext)
+
+            return executedStep instanceof RollableFailedStep
+                    ? rollback((RollableFailedStep) executedStep, executionContext)
                     : new StepNavigationOutput(true, summarizer.getSummary());
 
         } else {
@@ -95,38 +96,7 @@ public class StepNavigator {
         }
     }
 
-    private StepNavigationOutput rollback(FailedStep failedTaskStep, ExecutionContext executionContext) {
-
-        if(failedTaskStep instanceof CompleteAutoRolledBackStep || failedTaskStep instanceof FailedExecutionOrAuditStep) {
-            if (failedTaskStep instanceof CompleteAutoRolledBackStep) {
-                summarizer.add((CompleteAutoRolledBackStep) failedTaskStep);
-
-            } else {
-                //failed execution
-                FailedExecutionOrAuditStep failedExecutionOrAudit = (FailedExecutionOrAuditStep) failedTaskStep;
-                if (failedExecutionOrAudit.getRollable().isPresent()) {
-                    ManualRolledBackStep rolledBack = manualRollback(failedExecutionOrAudit.getRollable().get());
-                    auditManualRollback(rolledBack, executionContext, LocalDateTime.now());
-                } else {
-                    logger.warn("ROLLBACK NOT PROVIDED FOR - {}", failedExecutionOrAudit.getTask().getDescriptor().getId());
-                }
-            }
-            ((RollbackDependent)failedTaskStep).getRollbackDependents().forEach(rollbackDependent -> {
-                ManualRolledBackStep rolledBack = manualRollback(rollbackDependent);
-                auditManualRollback(rolledBack, executionContext, LocalDateTime.now());
-            });
-
-            return new StepNavigationOutput(false, summarizer.getSummary());
-        } else {
-            throw new CoreException(
-                    "FailedStep task[%s] doesn't implement CompleteAutoRolledBackStep nor FailedExecutionOrAuditStep",
-                    failedTaskStep.toString());
-        }
-    }
-
-    private TaskStep executeTaskWrapped(ExecutableTask task,
-                                        ExecutionContext executionContext,
-                                        DependencyInjectable dependencyInjectable) {
+    private TaskStep executeWithinTransaction(ExecutableTask task, ExecutionContext executionContext, DependencyInjectable dependencyInjectable) {
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
             ExecutionStep executed = executeTask(task);
             if (executed instanceof SuccessExecutionStep) {
@@ -140,20 +110,13 @@ public class StepNavigator {
         });
     }
 
-    private TaskStep executeTaskUnwrapped(ExecutableTask task, ExecutionContext executionContext) {
-        ExecutionStep executed = executeTask(task);
-        return auditExecution(executed, executionContext, LocalDateTime.now());
-    }
-
     private ExecutionStep executeTask(ExecutableTask task) {
         ExecutionStep executed = new ExecutableStep(task).execute(runtimeManager);
         summarizer.add(executed);
         if (executed instanceof FailedExecutionStep) {
             FailedExecutionStep failed = (FailedExecutionStep) executed;
             logger.info("FAILED - " + executed.getTask().getDescriptor().getId());
-            String msg = String.format("error execution task[%s] after %d ms",
-                    failed.getTask().getDescriptor().getId(),
-                    failed.getDuration());
+            String msg = String.format("error execution task[%s] after %d ms", failed.getTask().getDescriptor().getId(), failed.getDuration());
             logger.warn(msg, failed.getError());
 
         } else {
@@ -162,71 +125,49 @@ public class StepNavigator {
         return executed;
     }
 
-    private AfterExecutionAuditStep auditExecution(ExecutionStep executionStep,
-                                                   ExecutionContext executionContext,
-                                                   LocalDateTime executedAt) {
-        RuntimeContext runtimeContext = RuntimeContext.builder()
-                .setTaskStep(executionStep)
-                .setExecutedAt(executedAt)
-                .build();
+    private AfterExecutionAuditStep auditExecution(ExecutionStep executionStep, ExecutionContext executionContext, LocalDateTime executedAt) {
+        RuntimeContext runtimeContext = RuntimeContext.builder().setTaskStep(executionStep).setExecutedAt(executedAt).build();
 
-        Result auditResult = auditWriter.writeStep(
-                new AuditItem(
-                        AuditItem.Operation.EXECUTION,
-                        executionStep.getTaskDescriptor(),
-                        executionContext,
-                        runtimeContext)
-        );
+        Result auditResult = auditWriter.writeStep(new AuditItem(AuditItem.Operation.EXECUTION, executionStep.getTaskDescriptor(), executionContext, runtimeContext));
         logAuditResult(auditResult, executionStep.getTaskDescriptor().getId(), "EXECUTION");
         AfterExecutionAuditStep afterExecutionAudit = executionStep.applyAuditResult(auditResult);
         summarizer.add(afterExecutionAudit);
         return afterExecutionAudit;
     }
 
+    private StepNavigationOutput rollback(RollableFailedStep rollableFailedStep, ExecutionContext executionContext) {
+        if (rollableFailedStep instanceof CompleteAutoRolledBackStep) {
+            //It's autoRollable(handled by the database engine or similar)
+            summarizer.add((CompleteAutoRolledBackStep) rollableFailedStep);
+        }
+        rollableFailedStep.getRollbackSteps().forEach(rollableStep -> {
+            ManualRolledBackStep rolledBack = manualRollback(rollableStep);
+            auditManualRollback(rolledBack, executionContext, LocalDateTime.now());
+        });
+
+        return new StepNavigationOutput(false, summarizer.getSummary());
+    }
+
     private ManualRolledBackStep manualRollback(RollableStep rollable) {
         ManualRolledBackStep rolledBack = rollable.rollback(runtimeManager);
         if (rolledBack instanceof FailedManualRolledBackStep) {
-            logger.info("ROLL BACK FAILED - {} after {} ms",
-                    rolledBack.getTask().getDescriptor().getId(),
-                    rolledBack.getDuration());
-            String msg = String.format("error rollback task[%s] after %d ms",
-                    rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
+            logger.info("ROLL BACK FAILED - {} after {} ms", rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
+            String msg = String.format("error rollback task[%s] after %d ms", rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
             logger.error(msg, ((FailedManualRolledBackStep) rolledBack).getError());
+
         } else {
-            logger.info("ROLLED BACK - {} after {} ms",
-                    rolledBack.getTask().getDescriptor().getId(),
-                    rolledBack.getDuration());
+            logger.info("ROLLED BACK - {} after {} ms", rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
         }
 
         summarizer.add(rolledBack);
         return rolledBack;
     }
 
-    private void auditManualRollback(ManualRolledBackStep rolledBackStep,
-                                     ExecutionContext executionContext,
-                                     LocalDateTime executedAt) {
-        RuntimeContext runtimeContext = RuntimeContext.builder()
-                .setTaskStep(rolledBackStep)
-                .setExecutedAt(executedAt)
-                .build();
-        Result auditResult = auditWriter.writeStep(
-                new AuditItem(
-                        AuditItem.Operation.ROLLBACK,
-                        rolledBackStep.getTaskDescriptor(),
-                        executionContext,
-                        runtimeContext)
-        );
+    private void auditManualRollback(ManualRolledBackStep rolledBackStep, ExecutionContext executionContext, LocalDateTime executedAt) {
+        RuntimeContext runtimeContext = RuntimeContext.builder().setTaskStep(rolledBackStep).setExecutedAt(executedAt).build();
+        Result auditResult = auditWriter.writeStep(new AuditItem(AuditItem.Operation.ROLLBACK, rolledBackStep.getTaskDescriptor(), executionContext, runtimeContext));
         logAuditResult(auditResult, rolledBackStep.getTaskDescriptor().getId(), "ROLLBACK");
         CompletedFailedManualRollback failedStep = rolledBackStep.applyAuditResult(auditResult);
         summarizer.add(failedStep);
-    }
-
-
-    private static void logAuditResult(Result saveResult, String id, String operation) {
-        if (saveResult instanceof Result.Error) {
-            logger.info("FAILED AUDIT " + operation + " TASK - {}\n{}", id, (((Result.Error) saveResult).getError()));
-        } else {
-            logger.info("SUCCESS AUDIT " + operation + " TASK - {}", id);
-        }
     }
 }

@@ -1,6 +1,6 @@
 package io.flamingock.core.core.audit.writer;
 
-import io.flamingock.core.core.execution.step.FailedStepWithError;
+import io.flamingock.core.core.execution.step.FailedWithErrorStep;
 import io.flamingock.core.core.execution.step.TaskStep;
 import io.flamingock.core.core.execution.step.execution.ExecutionStep;
 import io.flamingock.core.core.execution.step.rolledback.ManualRolledBackStep;
@@ -77,27 +77,23 @@ public final class RuntimeContext {
         }
 
         public Builder setTaskStep(ExecutionStep taskStep) {
-            setTaskStepPrivate(taskStep);
+            duration = taskStep.getDuration();
+            methodExecutor = taskStep.getTask().getExecutionMethodName();
+            setFailure(taskStep);
             return this;
-        }
-
-        private void setTaskStepPrivate(ExecutionStep executedStep) {
-            duration = executedStep.getDuration();
-            methodExecutor = executedStep.getTask().getExecutionMethodName();
-            setFailure(executedStep);
         }
 
         public Builder setTaskStep(ManualRolledBackStep rolledBackStep) {
             duration = rolledBackStep.getDuration();
-            methodExecutor = rolledBackStep.getTask().getExecutionMethodName();
+            methodExecutor = rolledBackStep.getRollback().getRollbackMethodName();
             setFailure(rolledBackStep);
             return this;
         }
 
         private void setFailure(TaskStep taskStep) {
-            if (taskStep instanceof FailedStepWithError) {
+            if (taskStep instanceof FailedWithErrorStep) {
                 executionResult = ExecutionResult.FAILED;
-                error = ((FailedStepWithError) taskStep).getError();
+                error = ((FailedWithErrorStep) taskStep).getError();
             } else {
                 executionResult = ExecutionResult.SUCCESS;
                 error = null;

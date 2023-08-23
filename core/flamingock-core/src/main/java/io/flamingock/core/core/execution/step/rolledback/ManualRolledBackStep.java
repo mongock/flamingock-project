@@ -9,9 +9,11 @@ import io.flamingock.core.core.util.Result;
 public class ManualRolledBackStep extends RolledBackStep implements SuccessableStep, FailedStep {
 
     private final long duration;
+    private final Rollback rollback;
 
     protected ManualRolledBackStep(Rollback rollback, boolean rollbackSuccess, long duration) {
         super(rollback.getTask(), rollbackSuccess);
+        this.rollback = rollback;
         this.duration = duration;
     }
 
@@ -31,4 +33,7 @@ public class ManualRolledBackStep extends RolledBackStep implements SuccessableS
         return duration;
     }
 
+    public Rollback getRollback() {
+        return rollback;
+    }
 }
