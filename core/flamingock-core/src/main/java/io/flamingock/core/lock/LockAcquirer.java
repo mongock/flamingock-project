@@ -4,7 +4,7 @@ import io.flamingock.core.audit.domain.AuditStageStatus;
 import io.flamingock.core.stage.ExecutableStage;
 import io.flamingock.core.stage.LoadedStage;
 
-public interface LockAcquirer<AUDIT_PROCESS_STATE extends AuditStageStatus, EXECUTABLE_PROCESS extends ExecutableStage> {
+public interface LockAcquirer {
 
     default LockAcquisition acquireIfRequired(LoadedStage loadedStage) throws LockException {
         return acquireIfRequired(loadedStage, LockOptions.builder().build());

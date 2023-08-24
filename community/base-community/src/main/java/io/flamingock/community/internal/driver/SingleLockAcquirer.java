@@ -11,7 +11,7 @@ import io.flamingock.core.lock.LockOptions;
 import io.flamingock.core.stage.ExecutableStage;
 import io.flamingock.core.util.TimeService;
 
-public class SingleLockAcquirer extends AbstractLockAcquirer<SingleAuditStageStatus, ExecutableStage> {
+public class SingleLockAcquirer extends AbstractLockAcquirer {
 
     private final LockRepository lockRepository;
 

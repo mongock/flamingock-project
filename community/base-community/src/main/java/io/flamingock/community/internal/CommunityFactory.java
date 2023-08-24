@@ -3,17 +3,15 @@ package io.flamingock.community.internal;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.Factory;
 import io.flamingock.core.audit.single.SingleAuditReader;
-import io.flamingock.core.audit.single.SingleAuditStageStatus;
-import io.flamingock.core.stage.executor.SequentialStageExecutor;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.stage.ExecutableStage;
 import io.flamingock.core.stage.StageDefinition;
+import io.flamingock.core.stage.executor.SequentialStageExecutor;
 import io.flamingock.core.task.filter.TaskFilter;
 
 import java.util.Arrays;
 
-public class CommunityFactory implements Factory<SingleAuditStageStatus, ExecutableStage, CommunityConfiguration> {
+public class CommunityFactory implements Factory<CommunityConfiguration> {
     private final ConnectionEngine connectionEngine;
     private final TaskFilter[] filters;
 
@@ -23,7 +21,7 @@ public class CommunityFactory implements Factory<SingleAuditStageStatus, Executa
     }
 
     @Override
-    public LockAcquirer<SingleAuditStageStatus, ExecutableStage> getLockProvider() {
+    public LockAcquirer getLockAcquirer() {
         return connectionEngine.getLockProvider();
     }
 

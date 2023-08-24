@@ -21,29 +21,31 @@ import io.flamingock.core.stage.StageDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractRunner<AUDIT_STAGE_STATUS extends AuditStageStatus, EXECUTABLE_STAGE extends ExecutableStage>
+public abstract class AbstractRunner
         implements Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractRunner.class);
 
-    private final LockAcquirer<AUDIT_STAGE_STATUS, EXECUTABLE_STAGE> lockProvider;
+    private final LockAcquirer lockAcquirer;
 
     private final SingleAuditReader auditReader;
 
     private final EventPublisher eventPublisher;
 
     private final boolean throwExceptionIfCannotObtainLock;
+
     private final SequentialStageExecutor processExecutor;
+
     private final StageExecutionContext stageExecutionContext;
 
 
-    public AbstractRunner(LockAcquirer<AUDIT_STAGE_STATUS, EXECUTABLE_STAGE> lockAcquirer,
+    public AbstractRunner(LockAcquirer lockAcquirer,
                           SingleAuditReader auditReader,
                           SequentialStageExecutor processExecutor,
                           StageExecutionContext stageExecutionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock) {
-        this.lockProvider = lockAcquirer;
+        this.lockAcquirer = lockAcquirer;
         this.auditReader = auditReader;
         this.processExecutor = processExecutor;
         this.stageExecutionContext = stageExecutionContext;
@@ -56,7 +58,7 @@ public abstract class AbstractRunner<AUDIT_STAGE_STATUS extends AuditStageStatus
 
         LoadedStage loadedStage = processDefinition.load();
 
-        try (LockAcquisition lockAcquisition = lockProvider.acquireIfRequired(loadedStage)) {
+        try (LockAcquisition lockAcquisition = lockAcquirer.acquireIfRequired(loadedStage)) {
 
             if(lockAcquisition.isRequired()) {
                 if(lockAcquisition.isAcquired()) {
