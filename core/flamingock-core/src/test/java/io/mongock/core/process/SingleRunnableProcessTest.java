@@ -19,7 +19,7 @@ class SingleRunnableProcessTest {
 //
 //        //WHEN
 //        StageExecutionContext executionContext = new StageExecutionContext(null, null, null, null);
-//        List<StepSummaryLine> steps = new SequentialStageExecutor(mock(DependencyContext.class), stateSaver)
+//        List<StepSummaryLine> steps = new StageExecutor(mock(DependencyContext.class), stateSaver)
 //                .run(process, executionContext, mock(Lock.class))
 //                .getSummary()
 //                .getLines();
@@ -88,7 +88,7 @@ class SingleRunnableProcessTest {
 //
 //        //WHEN
 //        StageExecutionContext executionContext = new StageExecutionContext(null, null, null, null);
-//        StageExecutor.Output output = new SequentialStageExecutor(mock(DependencyContext.class), stateSaver)
+//        StageExecutor.Output output = new StageExecutor(mock(DependencyContext.class), stateSaver)
 //                .run(process, executionContext, mock(Lock.class));
 //        String actualSummary = output.getSummary().getPretty();
 //        System.out.println(actualSummary);

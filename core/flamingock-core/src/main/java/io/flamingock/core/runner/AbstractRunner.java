@@ -6,10 +6,6 @@ import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.result.MigrationIgnoredResult;
 import io.flamingock.core.event.result.MigrationSuccessResult;
-import io.flamingock.core.stage.execution.StageExecutionContext;
-import io.flamingock.core.stage.execution.StageExecutionException;
-import io.flamingock.core.stage.execution.SequentialStageExecutor;
-import io.flamingock.core.stage.execution.StageExecutor;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
@@ -17,6 +13,9 @@ import io.flamingock.core.lock.LockException;
 import io.flamingock.core.stage.ExecutableStage;
 import io.flamingock.core.stage.LoadedStage;
 import io.flamingock.core.stage.StageDefinition;
+import io.flamingock.core.stage.execution.StageExecutionContext;
+import io.flamingock.core.stage.execution.StageExecutionException;
+import io.flamingock.core.stage.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,14 +32,14 @@ public abstract class AbstractRunner
 
     private final boolean throwExceptionIfCannotObtainLock;
 
-    private final SequentialStageExecutor stageExecutor;
+    private final StageExecutor stageExecutor;
 
     private final StageExecutionContext stageExecutionContext;
 
 
     public AbstractRunner(LockAcquirer lockAcquirer,
                           SingleAuditReader auditReader,
-                          SequentialStageExecutor stageExecutor,
+                          StageExecutor stageExecutor,
                           StageExecutionContext stageExecutionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock) {
@@ -59,8 +58,8 @@ public abstract class AbstractRunner
 
         try (LockAcquisition lockAcquisition = lockAcquirer.acquireIfRequired(loadedStage)) {
 
-            if(lockAcquisition.isRequired()) {
-                if(lockAcquisition.isAcquired()) {
+            if (lockAcquisition.isRequired()) {
+                if (lockAcquisition.isAcquired()) {
                     startProcess(((LockAcquisition.Acquired) lockAcquisition).getLock(), loadedStage);
                 } else {
                     throw new LockException("Lock required but not acquired");

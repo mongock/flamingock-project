@@ -17,19 +17,48 @@ import io.flamingock.core.util.StreamUtil;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public abstract class StageExecutor {
+public class StageExecutor {
     protected final AuditWriter auditWriter;
 
     protected final TransactionWrapper transactionWrapper;
     private final DependencyContext dependencyContext;
     private final boolean parallel;
 
-    public StageExecutor(DependencyContext dependencyContext,
+    public static StageExecutor getSequentialStageExecutor(DependencyContext dependencyContext,
+                                                         AuditWriter auditWriter) {
+        return getParallelStageExecutor(dependencyContext, auditWriter, null);
+    }
+
+    public static StageExecutor getSequentialStageExecutor(DependencyContext dependencyContext,
+                                                         AuditWriter auditWriter,
+                                                         TransactionWrapper transactionWrapper) {
+        return getStageExecutor(dependencyContext, auditWriter, false, transactionWrapper);
+    }
+
+    public static StageExecutor getParallelStageExecutor(DependencyContext dependencyContext,
+                                                         AuditWriter auditWriter) {
+        return getParallelStageExecutor(dependencyContext, auditWriter, null);
+    }
+
+    public static StageExecutor getParallelStageExecutor(DependencyContext dependencyContext,
+                                                         AuditWriter auditWriter,
+                                                         TransactionWrapper transactionWrapper) {
+        return getStageExecutor(dependencyContext, auditWriter, true, transactionWrapper);
+    }
+
+    private static StageExecutor getStageExecutor(DependencyContext dependencyContext,
+                                                         AuditWriter auditWriter,
+                                                         boolean parallel,
+                                                         TransactionWrapper transactionWrapper) {
+        return new StageExecutor(dependencyContext, auditWriter, parallel, transactionWrapper);
+    }
+
+    private StageExecutor(DependencyContext dependencyContext,
                          AuditWriter auditWriter,
                          boolean parallel) {
         this(dependencyContext, auditWriter, parallel, null);
     }
-    public StageExecutor(DependencyContext dependencyContext,
+    private StageExecutor(DependencyContext dependencyContext,
                          AuditWriter auditWriter,
                          boolean parallel,
                          TransactionWrapper transactionWrapper) {
