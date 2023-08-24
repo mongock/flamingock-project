@@ -15,11 +15,11 @@ class SingleRunnableProcessTest {
 //        SuccessTestExecutableTask task1 = new SuccessTestExecutableTask("task1");
 //        SuccessTestExecutableTask task2 = new SuccessTestExecutableTask("task2");
 //        SuccessTestExecutableTask task3 = new SuccessTestExecutableTask("task3");
-//        SingleExecutableProcess process = new SingleExecutableProcess(Arrays.asList(task1, task2, task3));
+//        ExecutableStage process = new ExecutableStage(Arrays.asList(task1, task2, task3));
 //
 //        //WHEN
-//        ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-//        List<StepSummaryLine> steps = new SeqSingleProcessExecutor(mock(DependencyContext.class), stateSaver)
+//        StageExecutionContext executionContext = new StageExecutionContext(null, null, null, null);
+//        List<StepSummaryLine> steps = new SequentialStageExecutor(mock(DependencyContext.class), stateSaver)
 //                .run(process, executionContext, mock(Lock.class))
 //                .getSummary()
 //                .getLines();
@@ -84,11 +84,11 @@ class SingleRunnableProcessTest {
 //        SuccessTestExecutableTask task1 = new SuccessTestExecutableTask("task1");
 //        FailedTestExecutableTask task2 = new FailedTestExecutableTask("task2");
 //        SuccessTestExecutableTask task3 = new SuccessTestExecutableTask("task3");
-//        SingleExecutableProcess process = new SingleExecutableProcess(Arrays.asList(task1, task2, task3));
+//        ExecutableStage process = new ExecutableStage(Arrays.asList(task1, task2, task3));
 //
 //        //WHEN
-//        ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
-//        ProcessExecutor.Output output = new SeqSingleProcessExecutor(mock(DependencyContext.class), stateSaver)
+//        StageExecutionContext executionContext = new StageExecutionContext(null, null, null, null);
+//        StageExecutor.Output output = new SequentialStageExecutor(mock(DependencyContext.class), stateSaver)
 //                .run(process, executionContext, mock(Lock.class));
 //        String actualSummary = output.getSummary().getPretty();
 //        System.out.println(actualSummary);

@@ -1,8 +1,8 @@
 package io.flamingock.core.spring;
 
-import io.flamingock.core.core.runtime.dependency.Dependency;
-import io.flamingock.core.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.core.runtime.dependency.exception.ForbiddenParameterException;
+import io.flamingock.core.runtime.dependency.Dependency;
+import io.flamingock.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.runtime.dependency.exception.ForbiddenParameterException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 

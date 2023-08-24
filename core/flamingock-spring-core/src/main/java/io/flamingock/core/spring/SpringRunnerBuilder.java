@@ -1,7 +1,7 @@
 package io.flamingock.core.spring;
 
-import io.flamingock.core.core.runner.Runner;
-import io.flamingock.core.core.runner.RunnerBuilder;
+import io.flamingock.core.runner.Runner;
+import io.flamingock.core.runner.RunnerBuilder;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.ApplicationRunner;
 

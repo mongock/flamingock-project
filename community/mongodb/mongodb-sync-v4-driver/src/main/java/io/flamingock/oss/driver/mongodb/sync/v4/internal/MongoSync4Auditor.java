@@ -8,8 +8,8 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import io.flamingock.community.internal.driver.MongockAuditor;
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
-import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
-import io.flamingock.core.core.util.Result;
+import io.flamingock.core.audit.single.SingleAuditStageStatus;
+import io.flamingock.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
@@ -83,8 +83,8 @@ public class MongoSync4Auditor extends MongockAuditor {
 
 
     @Override
-    public SingleAuditProcessStatus getAuditProcessStatus() {
-        SingleAuditProcessStatus.Builder builder = SingleAuditProcessStatus.builder();
+    public SingleAuditStageStatus getAuditProcessStatus() {
+        SingleAuditStageStatus.Builder builder = SingleAuditStageStatus.builder();
         collection.find()
                 .into(new LinkedList<>())
                 .stream()

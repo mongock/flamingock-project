@@ -1,7 +1,7 @@
 package io.flamingock.commuinty.runner.springboot;
 
 import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.core.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.spring.configurator.SpringbootConfiguration;
 
 public final class CommunitySpringboot {

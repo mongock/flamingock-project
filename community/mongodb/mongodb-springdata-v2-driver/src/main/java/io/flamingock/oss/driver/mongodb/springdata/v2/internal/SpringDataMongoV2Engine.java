@@ -1,13 +1,13 @@
 package io.flamingock.oss.driver.mongodb.springdata.v2.internal;
 
 import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.core.core.configurator.CoreConfiguration;
-import io.flamingock.core.core.transaction.TransactionWrapper;
+import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.config.SpringDataMongoV2Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.MongockLockAcquirer;
+import io.flamingock.community.internal.driver.SingleLockAcquirer;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
     private final CommunityConfiguration communityConfiguration;
 
     private SpringDataMongoV2Auditor auditor;
-    private MongockLockAcquirer lockProvider;
+    private SingleLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final SpringDataMongoV2Configuration driverConfiguration;
     private final CoreConfiguration coreConfiguration;
@@ -49,7 +49,7 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
         auditor.initialize(communityConfiguration.isIndexCreation());
         SpringDataMongoV2LockRepository lockRepository = new SpringDataMongoV2LockRepository(mongoTemplate.getDb(), communityConfiguration.getLockRepositoryName());
         lockRepository.initialize(communityConfiguration.isIndexCreation());
-        lockProvider = new MongockLockAcquirer(lockRepository, auditor, coreConfiguration);
+        lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
     }
 
     @Override
-    public MongockLockAcquirer getLockProvider() {
+    public SingleLockAcquirer getLockProvider() {
         return lockProvider;
     }
 

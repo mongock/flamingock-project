@@ -4,7 +4,7 @@ import com.mongodb.client.MongoClient;
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.core.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4Engine;
 import org.slf4j.Logger;

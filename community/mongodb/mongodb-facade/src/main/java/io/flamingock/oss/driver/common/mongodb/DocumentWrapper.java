@@ -1,6 +1,6 @@
 package io.flamingock.oss.driver.common.mongodb;
 
-import io.flamingock.core.core.util.TimeUtil;
+import io.flamingock.core.util.TimeUtil;
 
 import java.time.LocalDateTime;
 import java.util.Date;

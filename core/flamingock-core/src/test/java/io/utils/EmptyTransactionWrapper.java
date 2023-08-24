@@ -1,8 +1,8 @@
 package io.utils;
 
-import io.flamingock.core.core.runtime.dependency.DependencyInjectable;
-import io.flamingock.core.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.core.transaction.TransactionWrapper;
+import io.flamingock.core.runtime.dependency.DependencyInjectable;
+import io.flamingock.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.function.Supplier;
 

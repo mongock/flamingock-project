@@ -1,6 +1,6 @@
 package io.flamingock.examples.community.mongodb.sync.events;
 
-import io.flamingock.core.core.event.MigrationFailureEvent;
+import io.flamingock.core.event.MigrationFailureEvent;
 
 import java.util.function.Consumer;
 

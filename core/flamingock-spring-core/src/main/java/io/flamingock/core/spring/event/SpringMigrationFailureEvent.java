@@ -1,7 +1,7 @@
 package io.flamingock.core.spring.event;
 
-import io.flamingock.core.core.event.ResultEvent;
-import io.flamingock.core.core.event.result.MigrationFailedResult;
+import io.flamingock.core.event.ResultEvent;
+import io.flamingock.core.event.result.MigrationFailedResult;
 import org.springframework.context.ApplicationEvent;
 
 public class SpringMigrationFailureEvent extends ApplicationEvent implements ResultEvent {

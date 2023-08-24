@@ -24,7 +24,7 @@ import static io.flamingock.community.internal.persistence.LockEntryField.EXPIRE
 import static io.flamingock.community.internal.persistence.LockEntryField.KEY_FIELD;
 import static io.flamingock.community.internal.persistence.LockEntryField.OWNER_FIELD;
 import static io.flamingock.community.internal.persistence.LockEntryField.STATUS_FIELD;
-import static io.flamingock.core.core.lock.LockStatus.LOCK_HELD;
+import static io.flamingock.core.lock.LockStatus.LOCK_HELD;
 
 public class Mongo3LockRepository implements LockRepository {
 

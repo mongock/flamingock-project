@@ -1,6 +1,6 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.driver;
 
-import io.flamingock.core.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v3.internal.SpringDataMongoV3Engine;
 import io.flamingock.community.internal.CommunityConfiguration;

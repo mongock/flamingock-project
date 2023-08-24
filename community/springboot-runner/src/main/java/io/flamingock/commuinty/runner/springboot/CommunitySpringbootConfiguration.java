@@ -2,10 +2,10 @@ package io.flamingock.commuinty.runner.springboot;
 
 import io.flamingock.community.internal.CommunityConfigurable;
 import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.core.core.configurator.CoreConfigurable;
-import io.flamingock.core.core.configurator.CoreConfiguration;
-import io.flamingock.core.core.configurator.LegacyMigration;
-import io.flamingock.core.core.configurator.TransactionStrategy;
+import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.LegacyMigration;
+import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.spring.configurator.SpringRunnerType;
 import io.flamingock.core.spring.configurator.SpringbootConfigurable;
 import io.flamingock.core.spring.configurator.SpringbootConfiguration;

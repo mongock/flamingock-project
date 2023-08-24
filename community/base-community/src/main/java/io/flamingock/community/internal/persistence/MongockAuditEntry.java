@@ -1,7 +1,7 @@
 package io.flamingock.community.internal.persistence;
 
-import io.flamingock.core.core.audit.domain.AuditEntry;
-import io.flamingock.core.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.audit.domain.AuditEntry;
+import io.flamingock.core.audit.domain.AuditEntryStatus;
 
 import java.time.LocalDateTime;
 
