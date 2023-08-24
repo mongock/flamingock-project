@@ -1,4 +1,4 @@
-package io.flamingock.core.stage.executor;
+package io.flamingock.core.stage.execution;
 
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.task.navigation.navigator.ReusableStepNavigatorBuilder;
@@ -10,7 +10,7 @@ import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.stream.Stream;
 
-public class SequentialStageExecutor extends AbstractStageExecutor {
+public class SequentialStageExecutor extends StageExecutor {
 
     public SequentialStageExecutor(DependencyContext dependencyManager,
                                    AuditWriter auditWriter) {

@@ -1,16 +1,15 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.CoreException;
-import io.flamingock.core.audit.domain.AuditStageStatus;
 import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.result.MigrationIgnoredResult;
 import io.flamingock.core.event.result.MigrationSuccessResult;
-import io.flamingock.core.stage.executor.StageExecutionContext;
-import io.flamingock.core.stage.executor.StageExecutionException;
-import io.flamingock.core.stage.executor.SequentialStageExecutor;
-import io.flamingock.core.stage.executor.StageExecutor;
+import io.flamingock.core.stage.execution.StageExecutionContext;
+import io.flamingock.core.stage.execution.StageExecutionException;
+import io.flamingock.core.stage.execution.SequentialStageExecutor;
+import io.flamingock.core.stage.execution.StageExecutor;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;

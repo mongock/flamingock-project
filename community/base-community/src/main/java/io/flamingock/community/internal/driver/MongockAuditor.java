@@ -7,7 +7,7 @@ import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.audit.writer.AbstractAuditWriter;
 import io.flamingock.core.audit.writer.AuditItem;
 import io.flamingock.core.audit.writer.RuntimeContext;
-import io.flamingock.core.stage.executor.StageExecutionContext;
+import io.flamingock.core.stage.execution.StageExecutionContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.util.ThrowableUtil;
 

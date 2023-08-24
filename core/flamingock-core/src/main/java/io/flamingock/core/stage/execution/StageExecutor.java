@@ -1,27 +1,28 @@
-package io.flamingock.core.stage.executor;
+package io.flamingock.core.stage.execution;
 
 import io.flamingock.core.audit.AuditWriter;
+import io.flamingock.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.navigation.navigator.StepNavigationOutput;
 import io.flamingock.core.task.navigation.navigator.StepNavigatorBuilder;
 import io.flamingock.core.task.navigation.summary.DefaultStepSummarizer;
 import io.flamingock.core.task.navigation.summary.ProcessSummary;
+import io.flamingock.core.task.navigation.summary.StepSummary;
 import io.flamingock.core.lock.Lock;
-import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.stage.ExecutableStage;
-import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.core.util.StreamUtil;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public abstract class AbstractStageExecutor implements StageExecutor {
+public abstract class StageExecutor {
     protected final AuditWriter auditWriter;
 
     protected final TransactionWrapper transactionWrapper;
     private final DependencyContext dependencyContext;
 
-    public AbstractStageExecutor(DependencyContext dependencyContext,
+    public StageExecutor(DependencyContext dependencyContext,
                                  AuditWriter auditWriter,
                                  TransactionWrapper transactionWrapper) {
         this.dependencyContext = dependencyContext;
@@ -29,7 +30,7 @@ public abstract class AbstractStageExecutor implements StageExecutor {
         this.transactionWrapper = transactionWrapper;
     }
 
-    @Override
+
     public Output run(ExecutableStage executableProcess,
                       StageExecutionContext stageExecutionContext,
                       Lock lock) throws StageExecutionException {
@@ -67,4 +68,16 @@ public abstract class AbstractStageExecutor implements StageExecutor {
 
     abstract protected StepNavigatorBuilder getStepNavigatorBuilder();
 
+    class Output {
+
+        private final StepSummary summary;
+
+        public Output(StepSummary summary) {
+            this.summary = summary;
+        }
+
+        public StepSummary getSummary() {
+            return summary;
+        }
+    }
 }

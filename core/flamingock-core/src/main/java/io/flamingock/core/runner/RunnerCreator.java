@@ -5,7 +5,7 @@ import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.stage.StageDefinition;
-import io.flamingock.core.stage.executor.StageExecutionContext;
+import io.flamingock.core.stage.execution.StageExecutionContext;
 import io.flamingock.core.util.StringUtil;
 
 public final class RunnerCreator {
