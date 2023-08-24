@@ -1,10 +1,9 @@
 package io.mongock.core.process.stubs.task;
 
-import io.flamingock.core.core.runtime.RuntimeManager;
-import io.flamingock.core.core.task.executable.Rollback;
+import io.flamingock.core.runtime.RuntimeManager;
+import io.flamingock.core.task.executable.Rollback;
 
 import java.util.List;
-import java.util.Optional;
 
 public class FailedTestExecutableTask extends TestExecutableTask {
     public FailedTestExecutableTask(String id) {

@@ -1,6 +1,6 @@
 package io.flamingock.community.internal.driver;
 
-import io.flamingock.core.core.transaction.TransactionWrapper;
+import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 

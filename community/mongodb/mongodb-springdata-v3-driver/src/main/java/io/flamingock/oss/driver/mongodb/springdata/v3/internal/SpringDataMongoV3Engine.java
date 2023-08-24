@@ -1,8 +1,8 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.internal;
 
 import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.core.core.configurator.CoreConfiguration;
-import io.flamingock.core.core.transaction.TransactionWrapper;
+import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.community.internal.driver.ConnectionEngine;

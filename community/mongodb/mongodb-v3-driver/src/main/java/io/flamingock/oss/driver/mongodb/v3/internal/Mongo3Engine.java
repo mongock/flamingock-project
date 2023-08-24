@@ -7,8 +7,8 @@ import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.community.internal.driver.MongockAuditor;
 import io.flamingock.community.internal.driver.SingleLockAcquirer;
-import io.flamingock.core.core.configurator.CoreConfiguration;
-import io.flamingock.core.core.transaction.TransactionWrapper;
+import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 

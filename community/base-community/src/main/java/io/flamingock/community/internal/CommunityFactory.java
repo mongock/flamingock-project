@@ -1,15 +1,15 @@
 package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.core.core.Factory;
-import io.flamingock.core.core.audit.single.SingleAuditReader;
-import io.flamingock.core.core.audit.single.SingleAuditStageStatus;
-import io.flamingock.core.core.execution.executor.SeqSingleProcessExecutor;
-import io.flamingock.core.core.lock.LockAcquirer;
-import io.flamingock.core.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.core.stage.ExecutableStage;
-import io.flamingock.core.core.stage.StageDefinition;
-import io.flamingock.core.core.task.filter.TaskFilter;
+import io.flamingock.core.Factory;
+import io.flamingock.core.audit.single.SingleAuditReader;
+import io.flamingock.core.audit.single.SingleAuditStageStatus;
+import io.flamingock.core.stage.executor.SequentialStageExecutor;
+import io.flamingock.core.lock.LockAcquirer;
+import io.flamingock.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.stage.ExecutableStage;
+import io.flamingock.core.stage.StageDefinition;
+import io.flamingock.core.task.filter.TaskFilter;
 
 import java.util.Arrays;
 
@@ -38,11 +38,11 @@ public class CommunityFactory implements Factory<SingleAuditStageStatus, Executa
     }
 
     @Override
-    public SeqSingleProcessExecutor getProcessExecutor(DependencyContext dependencyContext) {
+    public SequentialStageExecutor getProcessExecutor(DependencyContext dependencyContext) {
 
         return connectionEngine.getTransactionWrapper()
-                .map(transactionWrapper -> new SeqSingleProcessExecutor(dependencyContext, connectionEngine.getAuditor(), transactionWrapper))
-                .orElseGet(() -> new SeqSingleProcessExecutor(dependencyContext, connectionEngine.getAuditor()));
+                .map(transactionWrapper -> new SequentialStageExecutor(dependencyContext, connectionEngine.getAuditor(), transactionWrapper))
+                .orElseGet(() -> new SequentialStageExecutor(dependencyContext, connectionEngine.getAuditor()));
     }
 
 

@@ -1,7 +1,7 @@
 package io.flamingock.commuinty.runner.springboot;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.core.core.util.Constants;
+import io.flamingock.core.util.Constants;
 import io.flamingock.core.spring.SpringRunnerBuilder;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.ApplicationRunner;

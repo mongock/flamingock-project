@@ -6,8 +6,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
-import io.flamingock.core.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.core.execution.executor.ProcessExecutionException;
+import io.flamingock.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.stage.executor.StageExecutionException;
 import io.flamingock.oss.driver.mongodb.springdata.v2.driver.SpringDataMongoV2Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -143,7 +143,7 @@ class SpringDataMongoV2DriverTest {
     @DisplayName("When standalone runs the driver with transactions enabled and execution fails should persist only the executed audit logs")
     void failedWithTransaction() {
         //Given-When
-        assertThrows(ProcessExecutionException.class, () -> {
+        assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
                     .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithTransaction")
@@ -179,7 +179,7 @@ class SpringDataMongoV2DriverTest {
     @DisplayName("When standalone runs the driver with transactions disabled and execution fails (with rollback method) should persist all the audit logs up to the failed one (ROLLED_BACK)")
     void failedWithoutTransactionWithRollback() {
         //Given-When
-        assertThrows(ProcessExecutionException.class, () -> {
+        assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
                     .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithRollback")
@@ -217,7 +217,7 @@ class SpringDataMongoV2DriverTest {
     @DisplayName("When standalone runs the driver with transactions disabled and execution fails (without rollback method) should persist all the audit logs up to the failed one (FAILED)")
     void failedWithoutTransactionWithoutRollback() {
         //Given-When
-        assertThrows(ProcessExecutionException.class, () -> {
+        assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
                     .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithoutRollback")

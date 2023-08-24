@@ -1,8 +1,8 @@
 package io.flamingock.oss.driver.common.mongodb;
 
 import io.flamingock.community.internal.persistence.LockEntry;
-import io.flamingock.core.core.lock.LockStatus;
-import io.flamingock.core.core.util.TimeUtil;
+import io.flamingock.core.lock.LockStatus;
+import io.flamingock.core.util.TimeUtil;
 
 import java.util.function.Supplier;
 

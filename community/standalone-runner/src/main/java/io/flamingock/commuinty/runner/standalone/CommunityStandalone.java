@@ -1,8 +1,8 @@
 package io.flamingock.commuinty.runner.standalone;
 
 import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.core.core.configurator.CoreConfiguration;
-import io.flamingock.core.core.runtime.dependency.SimpleDependencyInjectableContext;
+import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.runtime.dependency.SimpleDependencyInjectableContext;
 
 public final class CommunityStandalone {
 

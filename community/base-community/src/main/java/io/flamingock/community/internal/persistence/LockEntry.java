@@ -1,6 +1,6 @@
 package io.flamingock.community.internal.persistence;
 
-import io.flamingock.core.core.lock.LockStatus;
+import io.flamingock.core.lock.LockStatus;
 
 import java.time.LocalDateTime;
 import java.util.Date;

@@ -1,6 +1,6 @@
 package io.flamingock.core.spring;
 
-import io.flamingock.core.core.task.filter.TaskFilter;
+import io.flamingock.core.task.filter.TaskFilter;
 import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;

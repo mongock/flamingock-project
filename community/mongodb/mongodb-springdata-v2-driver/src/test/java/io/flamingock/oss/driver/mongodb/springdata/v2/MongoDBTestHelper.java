@@ -3,7 +3,7 @@ package io.flamingock.oss.driver.mongodb.springdata.v2;
 import com.mongodb.client.MongoDatabase;
 
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
-import io.flamingock.core.core.util.TimeUtil;
+import io.flamingock.core.util.TimeUtil;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.internal.mongodb.SpringDataMongoV2DocumentWrapper;
 
