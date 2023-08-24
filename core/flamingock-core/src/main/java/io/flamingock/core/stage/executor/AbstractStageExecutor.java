@@ -22,11 +22,6 @@ public abstract class AbstractStageExecutor implements StageExecutor {
     private final DependencyContext dependencyContext;
 
     public AbstractStageExecutor(DependencyContext dependencyContext,
-                                 AuditWriter auditWriter) {
-        this(dependencyContext, auditWriter, null);
-    }
-
-    public AbstractStageExecutor(DependencyContext dependencyContext,
                                  AuditWriter auditWriter,
                                  TransactionWrapper transactionWrapper) {
         this.dependencyContext = dependencyContext;

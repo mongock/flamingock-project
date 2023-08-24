@@ -4,7 +4,7 @@ import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.writer.AuditItem;
 import io.flamingock.core.stage.executor.StageExecutionContext;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
-        import io.flamingock.core.task.navigation.summary.StepSummarizer;
+import io.flamingock.core.task.navigation.summary.StepSummarizer;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;

@@ -32,19 +32,14 @@ public class SpringDataMongoV3TransactionWrapper implements TransactionWrapper {
 
     @Override
     public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, DependencyInjectable dependencyInjectable, Supplier<T> operation) {
-        if (taskDescriptor.isTransactional()) {//this is not needed because it's StepNavigator's responsibility to check iit
-            TransactionStatus txStatus = getTxStatus(txManager);
-            T result = operation.get();
-            if (result instanceof FailedStep) {
-                txManager.rollback(txStatus);
-            } else {
-                txManager.commit(txStatus);
-            }
-            return result;
+        TransactionStatus txStatus = getTxStatus(txManager);
+        T result = operation.get();
+        if (result instanceof FailedStep) {
+            txManager.rollback(txStatus);
+        } else {
+            txManager.commit(txStatus);
         }
-        else {
-            return operation.get();
-        }
+        return result;
     }
 
     protected TransactionStatus getTxStatus(PlatformTransactionManager txManager) {
