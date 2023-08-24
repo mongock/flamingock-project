@@ -55,11 +55,17 @@ public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessSt
         LoadedProcess<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> loadedProcess = processDefinition.load();
 
         try (LockAcquisition lockAcquisition = lockProvider.acquireIfRequired(loadedProcess)) {
-            if (lockAcquisition instanceof LockAcquisition.Acquired) {
-                startProcess(((LockAcquisition.Acquired) lockAcquisition).getLock(), loadedProcess);
+
+            if(lockAcquisition.isRequired()) {
+                if(lockAcquisition.isAcquired()) {
+                    startProcess(((LockAcquisition.Acquired) lockAcquisition).getLock(), loadedProcess);
+                } else {
+                    throw new LockException("Lock required but not acquired");
+                }
             } else {
                 skipProcess();
             }
+
         } catch (LockException exception) {
             eventPublisher.publishMigrationFailedEvent(exception);
             if (throwExceptionIfCannotObtainLock) {
