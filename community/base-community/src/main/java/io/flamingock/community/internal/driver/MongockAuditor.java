@@ -4,6 +4,7 @@ import io.flamingock.community.internal.persistence.MongockAuditEntry;
 import io.flamingock.core.core.audit.AuditReader;
 import io.flamingock.core.core.audit.AuditWriter;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.core.audit.single.SingleAuditReader;
 import io.flamingock.core.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.core.audit.writer.AbstractAuditWriter;
 import io.flamingock.core.core.audit.writer.AuditItem;
@@ -14,7 +15,7 @@ import io.flamingock.core.core.util.ThrowableUtil;
 
 public abstract class MongockAuditor
         extends AbstractAuditWriter<MongockAuditEntry>
-        implements AuditWriter, AuditReader<SingleAuditStageStatus> {
+        implements AuditWriter, SingleAuditReader {
 
     @Override
     protected final MongockAuditEntry map(AuditItem auditItem) {

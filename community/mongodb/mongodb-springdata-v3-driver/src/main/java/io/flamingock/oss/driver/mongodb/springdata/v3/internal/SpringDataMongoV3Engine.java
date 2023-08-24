@@ -7,7 +7,7 @@ import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Co
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.MongockLockAcquirer;
+import io.flamingock.community.internal.driver.SingleLockAcquirer;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ public class SpringDataMongoV3Engine implements ConnectionEngine {
     private final CommunityConfiguration communityConfiguration;
 
     private SpringDataMongoV3Auditor auditor;
-    private MongockLockAcquirer lockProvider;
+    private SingleLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final SpringDataMongoV3Configuration driverConfiguration;
     private final CoreConfiguration coreConfiguration;
@@ -49,7 +49,7 @@ public class SpringDataMongoV3Engine implements ConnectionEngine {
         auditor.initialize(communityConfiguration.isIndexCreation());
         SpringDataMongoV3LockRepository lockRepository = new SpringDataMongoV3LockRepository(mongoTemplate.getDb(), communityConfiguration.getLockRepositoryName());
         lockRepository.initialize(communityConfiguration.isIndexCreation());
-        lockProvider = new MongockLockAcquirer(lockRepository, auditor, coreConfiguration);
+        lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class SpringDataMongoV3Engine implements ConnectionEngine {
     }
 
     @Override
-    public MongockLockAcquirer getLockProvider() {
+    public SingleLockAcquirer getLockProvider() {
         return lockProvider;
     }
 

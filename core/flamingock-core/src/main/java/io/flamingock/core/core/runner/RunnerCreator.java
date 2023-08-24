@@ -32,7 +32,7 @@ public final class RunnerCreator {
                   DependencyContext dependencyContext,
                   boolean isThrowExceptionIfCannotObtainLock) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final StageDefinition<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> stageDefinition = factory.getDefinitionProcess(extraProperties);
+        final StageDefinition stageDefinition = factory.getDefinitionProcess(extraProperties);
         return new AbstractRunner<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),

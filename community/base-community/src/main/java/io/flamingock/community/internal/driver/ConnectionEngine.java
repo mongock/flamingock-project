@@ -10,7 +10,7 @@ public interface ConnectionEngine {
 
   MongockAuditor getAuditor();
 
-  MongockLockAcquirer getLockProvider();
+  SingleLockAcquirer getLockProvider();
 
   Optional<TransactionWrapper> getTransactionWrapper();
 

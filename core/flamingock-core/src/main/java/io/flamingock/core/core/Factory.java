@@ -2,7 +2,9 @@ package io.flamingock.core.core;
 
 import io.flamingock.core.core.audit.AuditReader;
 import io.flamingock.core.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.core.audit.single.SingleAuditReader;
 import io.flamingock.core.core.execution.executor.ProcessExecutor;
+import io.flamingock.core.core.execution.executor.SeqSingleProcessExecutor;
 import io.flamingock.core.core.lock.LockAcquirer;
 import io.flamingock.core.core.stage.ExecutableStage;
 import io.flamingock.core.core.stage.StageDefinition;
@@ -15,10 +17,10 @@ public interface Factory<
 
     LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> getLockProvider();
 
-    AuditReader<AUDIT_PROCESS_STATE> getAuditReader();
+    SingleAuditReader getAuditReader();
 
-    StageDefinition<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> getDefinitionProcess(CONFIGURATION config);
+    StageDefinition getDefinitionProcess(CONFIGURATION config);
 
-    ProcessExecutor<EXECUTABLE_PROCESS> getProcessExecutor(DependencyContext dependencyManager);
+    SeqSingleProcessExecutor getProcessExecutor(DependencyContext dependencyManager);
 
 }
