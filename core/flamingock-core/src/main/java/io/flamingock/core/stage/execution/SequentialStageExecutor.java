@@ -20,12 +20,12 @@ public class SequentialStageExecutor extends StageExecutor {
     public SequentialStageExecutor(DependencyContext dependencyManager,
                                    AuditWriter auditWriter,
                                    TransactionWrapper transactionWrapper) {
-        super(dependencyManager, auditWriter, transactionWrapper);
+        super(dependencyManager, auditWriter, false, transactionWrapper);
     }
 
 
-    protected Stream<? extends ExecutableTask> getTaskStream(ExecutableStage executableProcess) {
-        return executableProcess.getTasks().stream();
+    protected Stream<? extends ExecutableTask> getTaskStream(ExecutableStage executableStage) {
+        return executableStage.getTasks().stream();
     }
 
     @Override

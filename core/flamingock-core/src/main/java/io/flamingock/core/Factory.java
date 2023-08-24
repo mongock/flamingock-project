@@ -14,6 +14,6 @@ public interface Factory<CONFIGURATION> {
 
     StageDefinition getDefinitionProcess(CONFIGURATION config);
 
-    SequentialStageExecutor getProcessExecutor(DependencyContext dependencyManager);
+    SequentialStageExecutor getStageExecutor(DependencyContext dependencyManager);
 
 }

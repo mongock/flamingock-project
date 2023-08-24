@@ -36,7 +36,7 @@ public class CommunityFactory implements Factory<CommunityConfiguration> {
     }
 
     @Override
-    public SequentialStageExecutor getProcessExecutor(DependencyContext dependencyContext) {
+    public SequentialStageExecutor getStageExecutor(DependencyContext dependencyContext) {
 
         return connectionEngine.getTransactionWrapper()
                 .map(transactionWrapper -> new SequentialStageExecutor(dependencyContext, connectionEngine.getAuditor(), transactionWrapper))

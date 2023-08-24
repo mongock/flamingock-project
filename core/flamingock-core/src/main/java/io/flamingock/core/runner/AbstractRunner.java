@@ -33,26 +33,26 @@ public abstract class AbstractRunner
 
     private final boolean throwExceptionIfCannotObtainLock;
 
-    private final SequentialStageExecutor processExecutor;
+    private final SequentialStageExecutor stageExecutor;
 
     private final StageExecutionContext stageExecutionContext;
 
 
     public AbstractRunner(LockAcquirer lockAcquirer,
                           SingleAuditReader auditReader,
-                          SequentialStageExecutor processExecutor,
+                          SequentialStageExecutor stageExecutor,
                           StageExecutionContext stageExecutionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock) {
         this.lockAcquirer = lockAcquirer;
         this.auditReader = auditReader;
-        this.processExecutor = processExecutor;
+        this.stageExecutor = stageExecutor;
         this.stageExecutionContext = stageExecutionContext;
         this.eventPublisher = eventPublisher;
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
-    public void execute(StageDefinition processDefinition) throws CoreException {
+    public void run(StageDefinition processDefinition) throws CoreException {
         eventPublisher.publishMigrationStarted();
 
         LoadedStage loadedStage = processDefinition.load();
@@ -98,7 +98,7 @@ public abstract class AbstractRunner
         ExecutableStage executableStage = loadedStage.applyState(currentAuditProcessStatus);
         logger.debug("Applied state to process:\n{}", executableStage);
 
-        StageExecutor.Output executionOutput = processExecutor.run(executableStage, stageExecutionContext, lock);
+        StageExecutor.Output executionOutput = stageExecutor.execute(executableStage, stageExecutionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));
     }

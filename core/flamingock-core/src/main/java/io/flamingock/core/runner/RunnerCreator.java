@@ -33,13 +33,13 @@ public final class RunnerCreator {
         return new AbstractRunner(
                 factory.getLockAcquirer(),
                 factory.getAuditReader(),
-                factory.getProcessExecutor(dependencyContext),
+                factory.getStageExecutor(dependencyContext),
                 buildExecutionContext(coreConfiguration),
                 eventPublisher,
                 isThrowExceptionIfCannotObtainLock) {
             @Override
             public void run() {
-                this.execute(stageDefinition);
+                this.run(stageDefinition);
             }
         };
     }
