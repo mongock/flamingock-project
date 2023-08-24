@@ -1,13 +1,13 @@
 package io.flamingock.core.core.lock;
 
-import io.flamingock.core.core.audit.domain.AuditProcessStatus;
-import io.flamingock.core.core.process.ExecutableProcess;
-import io.flamingock.core.core.process.LoadedProcess;
+import io.flamingock.core.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.core.stage.ExecutableStage;
+import io.flamingock.core.core.stage.LoadedStage;
 
-public interface LockAcquirer<AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess> {
+public interface LockAcquirer<AUDIT_PROCESS_STATE extends AuditStageStatus, EXECUTABLE_PROCESS extends ExecutableStage> {
 
-    default LockAcquisition acquireIfRequired(LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> loadedProcess) throws LockException {
-        return acquireIfRequired(loadedProcess, LockOptions.builder().build());
+    default LockAcquisition acquireIfRequired(LoadedStage<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> loadedStage) throws LockException {
+        return acquireIfRequired(loadedStage, LockOptions.builder().build());
     }
 
     /**
@@ -23,11 +23,11 @@ public interface LockAcquirer<AUDIT_PROCESS_STATE extends AuditProcessStatus, EX
      */
     /**
      *
-     * @param loadedProcess
+     * @param loadedStage
      * @param options
      * @return
      * @throws LockException
      */
-    LockAcquisition acquireIfRequired(LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> loadedProcess,
+    LockAcquisition acquireIfRequired(LoadedStage<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> loadedStage,
                                       LockOptions options) throws LockException;
 }

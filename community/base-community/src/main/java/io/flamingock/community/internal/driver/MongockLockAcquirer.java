@@ -3,15 +3,15 @@ package io.flamingock.community.internal.driver;
 
 import io.flamingock.community.internal.persistence.LockRepository;
 import io.flamingock.core.core.audit.AuditReader;
-import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
+import io.flamingock.core.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.lock.AbstractLockAcquirer;
 import io.flamingock.core.core.lock.Lock;
 import io.flamingock.core.core.lock.LockOptions;
-import io.flamingock.core.core.process.single.SingleExecutableProcess;
+import io.flamingock.core.core.stage.ExecutableStage;
 import io.flamingock.core.core.util.TimeService;
 
-public class MongockLockAcquirer extends AbstractLockAcquirer<SingleAuditProcessStatus, SingleExecutableProcess> {
+public class MongockLockAcquirer extends AbstractLockAcquirer<SingleAuditStageStatus, ExecutableStage> {
 
     private final LockRepository lockRepository;
 
@@ -24,7 +24,7 @@ public class MongockLockAcquirer extends AbstractLockAcquirer<SingleAuditProcess
      * @param coreConfiguration
      */
     public MongockLockAcquirer(LockRepository lockRepository,
-                               AuditReader<SingleAuditProcessStatus> auditReader,
+                               AuditReader<SingleAuditStageStatus> auditReader,
                                CoreConfiguration coreConfiguration) {
         super(auditReader);
         this.lockRepository = lockRepository;

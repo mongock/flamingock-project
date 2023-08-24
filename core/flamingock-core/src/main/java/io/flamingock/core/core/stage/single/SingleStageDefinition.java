@@ -1,8 +1,9 @@
-package io.flamingock.core.core.process.single;
+package io.flamingock.core.core.stage.single;
 
-import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
-import io.flamingock.core.core.process.DefinitionProcess;
-import io.flamingock.core.core.process.LoadedProcess;
+import io.flamingock.core.core.audit.single.SingleAuditStageStatus;
+import io.flamingock.core.core.stage.ExecutableStage;
+import io.flamingock.core.core.stage.StageDefinition;
+import io.flamingock.core.core.stage.LoadedStage;
 import io.flamingock.core.core.task.descriptor.SortedTaskDescriptor;
 import io.flamingock.core.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.core.task.descriptor.reflection.ReflectionTaskDescriptor;
@@ -16,31 +17,31 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> {
+public class SingleStageDefinition implements StageDefinition<SingleAuditStageStatus, ExecutableStage> {
 
     private final Collection<String> scanPackages;
     private Collection<TaskFilter> filters = new ArrayList<>();
 
     //We can pass here other sources, like yamls, etc.
-    public SingleDefinitionProcess(Collection<String> scanPackages) {
+    public SingleStageDefinition(Collection<String> scanPackages) {
         this.scanPackages = scanPackages;
     }
 
-    public SingleDefinitionProcess setFilters(Collection<TaskFilter> filters) {
+    public SingleStageDefinition setFilters(Collection<TaskFilter> filters) {
         this.filters = filters != null ? filters : Collections.emptyList();
         return this;
     }
 
     /**
-     * Depending on the tasks inside the package or some field in the yaml, it returns a SingleLoadedProcess
+     * Depending on the tasks inside the package or some field in the yaml, it returns a SingleLoadedStage
      * or ParallelSingleLoadedProcess.
      * <br />
      *
-     * @return a sorted SingleLoadedProcess, non-sorted SingleLoadedProcess or a ParallelSingleLoadedProcess(non sorted),
+     * @return a sorted SingleLoadedStage, non-sorted SingleLoadedStage or a ParallelSingleLoadedProcess(non sorted),
      * depending on the task in the scanPackage,or some field in the yaml.
      */
     @Override
-    public LoadedProcess<SingleAuditProcessStatus, SingleExecutableProcess> load() {
+    public LoadedStage<SingleAuditStageStatus, ExecutableStage> load() {
         //descriptors will potentially contain all the descriptors extracted form scanPackage, yaml, etc.
         List<TaskDescriptor> descriptors = getFilteredDescriptorsFromScanPackages(scanPackages, filters);
 
@@ -51,7 +52,7 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
 
         if (descriptors.stream().allMatch(descriptor -> descriptor instanceof SortedTaskDescriptor)) {
             //if all descriptors are sorted, we return a sorted collection
-            return new SingleLoadedProcess(descriptors.stream().sorted().collect(Collectors.toList()));
+            return new SingleLoadedStage(descriptors.stream().sorted().collect(Collectors.toList()));
 
         } else if (orderedDescriptorOptional.isPresent()) {
             //if at least one of them are sorted, but not all. An exception is thrown
@@ -59,7 +60,7 @@ public class SingleDefinitionProcess implements DefinitionProcess<SingleAuditPro
 
         } else {
             //if none of the tasks are sorted, a unsorted collection is returned
-            return new SingleLoadedProcess(descriptors);
+            return new SingleLoadedStage(descriptors);
         }
     }
 

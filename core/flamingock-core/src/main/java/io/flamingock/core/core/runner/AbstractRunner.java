@@ -2,7 +2,7 @@ package io.flamingock.core.core.runner;
 
 import io.flamingock.core.api.exception.CoreException;
 import io.flamingock.core.core.audit.AuditReader;
-import io.flamingock.core.core.audit.domain.AuditProcessStatus;
+import io.flamingock.core.core.audit.domain.AuditStageStatus;
 import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.event.result.MigrationIgnoredResult;
 import io.flamingock.core.core.event.result.MigrationSuccessResult;
@@ -13,31 +13,31 @@ import io.flamingock.core.core.lock.Lock;
 import io.flamingock.core.core.lock.LockAcquirer;
 import io.flamingock.core.core.lock.LockAcquisition;
 import io.flamingock.core.core.lock.LockException;
-import io.flamingock.core.core.process.DefinitionProcess;
-import io.flamingock.core.core.process.ExecutableProcess;
-import io.flamingock.core.core.process.LoadedProcess;
+import io.flamingock.core.core.stage.ExecutableStage;
+import io.flamingock.core.core.stage.LoadedStage;
+import io.flamingock.core.core.stage.StageDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess>
+public abstract class AbstractRunner<AUDIT_STAGE_STATUS extends AuditStageStatus, EXECUTABLE_STAGE extends ExecutableStage>
         implements Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractRunner.class);
 
-    private final LockAcquirer<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> lockProvider;
+    private final LockAcquirer<AUDIT_STAGE_STATUS, EXECUTABLE_STAGE> lockProvider;
 
-    private final AuditReader<AUDIT_PROCESS_STATUS> auditReader;
+    private final AuditReader<AUDIT_STAGE_STATUS> auditReader;
 
     private final EventPublisher eventPublisher;
 
     private final boolean throwExceptionIfCannotObtainLock;
-    private final ProcessExecutor<EXECUTABLE_PROCESS> processExecutor;
+    private final ProcessExecutor<EXECUTABLE_STAGE> processExecutor;
     private final ExecutionContext executionContext;
 
 
-    public AbstractRunner(LockAcquirer<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> lockAcquirer,
-                          AuditReader<AUDIT_PROCESS_STATUS> auditReader,
-                          ProcessExecutor<EXECUTABLE_PROCESS> processExecutor,
+    public AbstractRunner(LockAcquirer<AUDIT_STAGE_STATUS, EXECUTABLE_STAGE> lockAcquirer,
+                          AuditReader<AUDIT_STAGE_STATUS> auditReader,
+                          ProcessExecutor<EXECUTABLE_STAGE> processExecutor,
                           ExecutionContext executionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock) {
@@ -49,16 +49,16 @@ public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessSt
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
-    public void execute(DefinitionProcess<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> processDefinition) throws CoreException {
+    public void execute(StageDefinition<AUDIT_STAGE_STATUS, EXECUTABLE_STAGE> processDefinition) throws CoreException {
         eventPublisher.publishMigrationStarted();
 
-        LoadedProcess<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> loadedProcess = processDefinition.load();
+        LoadedStage<AUDIT_STAGE_STATUS, EXECUTABLE_STAGE> loadedStage = processDefinition.load();
 
-        try (LockAcquisition lockAcquisition = lockProvider.acquireIfRequired(loadedProcess)) {
+        try (LockAcquisition lockAcquisition = lockProvider.acquireIfRequired(loadedStage)) {
 
             if(lockAcquisition.isRequired()) {
                 if(lockAcquisition.isAcquired()) {
-                    startProcess(((LockAcquisition.Acquired) lockAcquisition).getLock(), loadedProcess);
+                    startProcess(((LockAcquisition.Acquired) lockAcquisition).getLock(), loadedStage);
                 } else {
                     throw new LockException("Lock required but not acquired");
                 }
@@ -88,14 +88,14 @@ public abstract class AbstractRunner<AUDIT_PROCESS_STATUS extends AuditProcessSt
         }
     }
 
-    private void startProcess(Lock lock, LoadedProcess<AUDIT_PROCESS_STATUS, EXECUTABLE_PROCESS> process) throws ProcessExecutionException {
-        AUDIT_PROCESS_STATUS currentAuditProcessStatus = auditReader.getAuditProcessStatus();
+    private void startProcess(Lock lock, LoadedStage<AUDIT_STAGE_STATUS, EXECUTABLE_STAGE> loadedStage) throws ProcessExecutionException {
+        AUDIT_STAGE_STATUS currentAuditProcessStatus = auditReader.getAuditProcessStatus();
         logger.debug("Pulled remote state:\n{}", currentAuditProcessStatus);
 
-        EXECUTABLE_PROCESS executableProcess = process.applyState(currentAuditProcessStatus);
-        logger.debug("Applied state to process:\n{}", executableProcess);
+        EXECUTABLE_STAGE executableStage = loadedStage.applyState(currentAuditProcessStatus);
+        logger.debug("Applied state to process:\n{}", executableStage);
 
-        ProcessExecutor.Output executionOutput = processExecutor.run(executableProcess, executionContext, lock);
+        ProcessExecutor.Output executionOutput = processExecutor.run(executableStage, executionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));
     }

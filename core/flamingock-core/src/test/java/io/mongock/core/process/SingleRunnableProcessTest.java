@@ -15,7 +15,7 @@ class SingleRunnableProcessTest {
 //        SuccessTestExecutableTask task1 = new SuccessTestExecutableTask("task1");
 //        SuccessTestExecutableTask task2 = new SuccessTestExecutableTask("task2");
 //        SuccessTestExecutableTask task3 = new SuccessTestExecutableTask("task3");
-//        SingleExecutableProcess process = new SingleExecutableProcess(Arrays.asList(task1, task2, task3));
+//        ExecutableStage process = new ExecutableStage(Arrays.asList(task1, task2, task3));
 //
 //        //WHEN
 //        ExecutionContext executionContext = new ExecutionContext(null, null, null, null);
@@ -84,7 +84,7 @@ class SingleRunnableProcessTest {
 //        SuccessTestExecutableTask task1 = new SuccessTestExecutableTask("task1");
 //        FailedTestExecutableTask task2 = new FailedTestExecutableTask("task2");
 //        SuccessTestExecutableTask task3 = new SuccessTestExecutableTask("task3");
-//        SingleExecutableProcess process = new SingleExecutableProcess(Arrays.asList(task1, task2, task3));
+//        ExecutableStage process = new ExecutableStage(Arrays.asList(task1, task2, task3));
 //
 //        //WHEN
 //        ExecutionContext executionContext = new ExecutionContext(null, null, null, null);

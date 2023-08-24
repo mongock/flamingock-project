@@ -2,14 +2,14 @@ package io.flamingock.core.core.audit.single;
 
 import io.flamingock.core.core.audit.domain.AuditEntry;
 import io.flamingock.core.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.core.audit.domain.AuditProcessStatus;
+import io.flamingock.core.core.audit.domain.AuditStageStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SingleAuditProcessStatus implements AuditProcessStatus {
+public class SingleAuditStageStatus implements AuditStageStatus {
 
     public static Builder builder() {
         return new Builder();
@@ -17,7 +17,7 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
 
     private final Map<String, AuditEntryStatus> statesMap;
 
-    private SingleAuditProcessStatus(Map<String, AuditEntryStatus> statesMap) {
+    private SingleAuditStageStatus(Map<String, AuditEntryStatus> statesMap) {
         this.statesMap = statesMap;
     }
 
@@ -45,10 +45,10 @@ public class SingleAuditProcessStatus implements AuditProcessStatus {
         }
 
 
-        public SingleAuditProcessStatus build() {
+        public SingleAuditStageStatus build() {
             Map<String, AuditEntryStatus> statesMap = entryMap.values().stream()
                     .collect(Collectors.toMap(AuditEntry::getChangeId, AuditEntry::getState));
-            return new SingleAuditProcessStatus(statesMap);
+            return new SingleAuditStageStatus(statesMap);
         }
 
 

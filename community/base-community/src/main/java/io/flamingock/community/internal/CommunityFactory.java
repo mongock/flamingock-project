@@ -3,19 +3,19 @@ package io.flamingock.community.internal;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.core.Factory;
 import io.flamingock.core.core.audit.AuditReader;
-import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
+import io.flamingock.core.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.core.execution.executor.ProcessExecutor;
 import io.flamingock.core.core.execution.executor.SeqSingleProcessExecutor;
 import io.flamingock.core.core.lock.LockAcquirer;
-import io.flamingock.core.core.process.DefinitionProcess;
-import io.flamingock.core.core.process.single.SingleDefinitionProcess;
-import io.flamingock.core.core.process.single.SingleExecutableProcess;
+import io.flamingock.core.core.stage.ExecutableStage;
+import io.flamingock.core.core.stage.StageDefinition;
+import io.flamingock.core.core.stage.single.SingleStageDefinition;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.core.task.filter.TaskFilter;
 
 import java.util.Arrays;
 
-public class CommunityFactory implements Factory<SingleAuditProcessStatus, SingleExecutableProcess, CommunityConfiguration> {
+public class CommunityFactory implements Factory<SingleAuditStageStatus, ExecutableStage, CommunityConfiguration> {
     private final ConnectionEngine connectionEngine;
     private final TaskFilter[] filters;
 
@@ -25,22 +25,22 @@ public class CommunityFactory implements Factory<SingleAuditProcessStatus, Singl
     }
 
     @Override
-    public LockAcquirer<SingleAuditProcessStatus, SingleExecutableProcess> getLockProvider() {
+    public LockAcquirer<SingleAuditStageStatus, ExecutableStage> getLockProvider() {
         return connectionEngine.getLockProvider();
     }
 
     @Override
-    public AuditReader<SingleAuditProcessStatus> getAuditReader() {
+    public AuditReader<SingleAuditStageStatus> getAuditReader() {
         return connectionEngine.getAuditor();
     }
 
     @Override
-    public DefinitionProcess<SingleAuditProcessStatus, SingleExecutableProcess> getDefinitionProcess(CommunityConfiguration configuration) {
-        return new SingleDefinitionProcess(configuration.getMigrationScanPackage()).setFilters(Arrays.asList(filters));
+    public StageDefinition<SingleAuditStageStatus, ExecutableStage> getDefinitionProcess(CommunityConfiguration configuration) {
+        return new SingleStageDefinition(configuration.getMigrationScanPackage()).setFilters(Arrays.asList(filters));
     }
 
     @Override
-    public ProcessExecutor<SingleExecutableProcess> getProcessExecutor(DependencyContext dependencyContext) {
+    public ProcessExecutor<ExecutableStage> getProcessExecutor(DependencyContext dependencyContext) {
 
         return connectionEngine.getTransactionWrapper()
                 .map(transactionWrapper -> new SeqSingleProcessExecutor(dependencyContext, connectionEngine.getAuditor(), transactionWrapper))

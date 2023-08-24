@@ -4,7 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
-import io.flamingock.core.core.audit.single.SingleAuditProcessStatus;
+import io.flamingock.core.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
@@ -77,8 +77,8 @@ public class SpringDataMongoV2Auditor extends MongockAuditor {
 
 
     @Override
-    public SingleAuditProcessStatus getAuditProcessStatus() {
-        SingleAuditProcessStatus.Builder builder = SingleAuditProcessStatus.builder();
+    public SingleAuditStageStatus getAuditProcessStatus() {
+        SingleAuditStageStatus.Builder builder = SingleAuditStageStatus.builder();
         collection.find()
                 .into(new LinkedList<>())
                 .stream()

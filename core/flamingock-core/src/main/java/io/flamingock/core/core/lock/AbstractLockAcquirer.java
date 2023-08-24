@@ -1,12 +1,12 @@
 package io.flamingock.core.core.lock;
 
 import io.flamingock.core.core.audit.AuditReader;
-import io.flamingock.core.core.audit.domain.AuditProcessStatus;
-import io.flamingock.core.core.process.ExecutableProcess;
-import io.flamingock.core.core.process.LoadedProcess;
+import io.flamingock.core.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.core.stage.ExecutableStage;
+import io.flamingock.core.core.stage.LoadedStage;
 import io.flamingock.core.core.util.TimeService;
 
-public abstract class AbstractLockAcquirer<AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess>
+public abstract class AbstractLockAcquirer<AUDIT_PROCESS_STATE extends AuditStageStatus, EXECUTABLE_PROCESS extends ExecutableStage>
         implements LockAcquirer<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> {
 
     private final AuditReader<AUDIT_PROCESS_STATE> auditReader;
@@ -16,10 +16,10 @@ public abstract class AbstractLockAcquirer<AUDIT_PROCESS_STATE extends AuditProc
     }
 
     @Override
-    public LockAcquisition acquireIfRequired(LoadedProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> loadedProcess,
+    public LockAcquisition acquireIfRequired(LoadedStage<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> loadedStage,
                                              LockOptions lockOptions) throws LockException {
         AUDIT_PROCESS_STATE currentAuditProcessStatus = auditReader.getAuditProcessStatus();
-        EXECUTABLE_PROCESS executableProcess = loadedProcess.applyState(currentAuditProcessStatus);
+        EXECUTABLE_PROCESS executableProcess = loadedStage.applyState(currentAuditProcessStatus);
         if (executableProcess.doesRequireExecution()) {
             Lock lock = acquireLock(lockOptions);
             if(lockOptions.isWithDaemon()) {

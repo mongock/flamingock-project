@@ -6,8 +6,8 @@ import io.flamingock.core.core.execution.navigator.StepNavigatorBuilder;
 import io.flamingock.core.core.execution.summary.DefaultStepSummarizer;
 import io.flamingock.core.core.execution.summary.ProcessSummary;
 import io.flamingock.core.core.lock.Lock;
-import io.flamingock.core.core.process.single.SingleExecutableProcess;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.core.stage.ExecutableStage;
 import io.flamingock.core.core.task.executable.ExecutableTask;
 import io.flamingock.core.core.transaction.TransactionWrapper;
 import io.flamingock.core.core.util.StreamUtil;
@@ -15,7 +15,7 @@ import io.flamingock.core.core.util.StreamUtil;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<SingleExecutableProcess> {
+public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<ExecutableStage> {
     protected final AuditWriter auditWriter;
 
     protected final TransactionWrapper transactionWrapper;
@@ -35,7 +35,7 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
     }
 
     @Override
-    public Output run(SingleExecutableProcess executableProcess,
+    public Output run(ExecutableStage executableProcess,
                       ExecutionContext executionContext,
                       Lock lock) throws ProcessExecutionException {
 
@@ -68,7 +68,7 @@ public abstract class AbstractSingleProcessExecutor implements ProcessExecutor<S
         return new Output(summary);
     }
 
-    abstract protected Stream<? extends ExecutableTask> getTaskStream(SingleExecutableProcess executableProcess);
+    abstract protected Stream<? extends ExecutableTask> getTaskStream(ExecutableStage executableProcess);
 
     abstract protected StepNavigatorBuilder getStepNavigatorBuilder();
 

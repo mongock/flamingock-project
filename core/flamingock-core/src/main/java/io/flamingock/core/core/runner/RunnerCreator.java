@@ -1,12 +1,12 @@
 package io.flamingock.core.core.runner;
 
 import io.flamingock.core.core.Factory;
-import io.flamingock.core.core.audit.domain.AuditProcessStatus;
+import io.flamingock.core.core.audit.domain.AuditStageStatus;
 import io.flamingock.core.core.configurator.CoreConfiguration;
 import io.flamingock.core.core.event.EventPublisher;
 import io.flamingock.core.core.execution.executor.ExecutionContext;
-import io.flamingock.core.core.process.DefinitionProcess;
-import io.flamingock.core.core.process.ExecutableProcess;
+import io.flamingock.core.core.stage.StageDefinition;
+import io.flamingock.core.core.stage.ExecutableStage;
 import io.flamingock.core.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.core.util.StringUtil;
 
@@ -24,7 +24,7 @@ public final class RunnerCreator {
         );
     }
 
-    public static <AUDIT_PROCESS_STATE extends AuditProcessStatus, EXECUTABLE_PROCESS extends ExecutableProcess, EXTRA_PROPS>
+    public static <AUDIT_PROCESS_STATE extends AuditStageStatus, EXECUTABLE_PROCESS extends ExecutableStage, EXTRA_PROPS>
     Runner create(Factory<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS, EXTRA_PROPS> factory,
                   CoreConfiguration coreConfiguration,
                   EXTRA_PROPS extraProperties,
@@ -32,7 +32,7 @@ public final class RunnerCreator {
                   DependencyContext dependencyContext,
                   boolean isThrowExceptionIfCannotObtainLock) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final DefinitionProcess<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> definitionProcess = factory.getDefinitionProcess(extraProperties);
+        final StageDefinition<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS> stageDefinition = factory.getDefinitionProcess(extraProperties);
         return new AbstractRunner<AUDIT_PROCESS_STATE, EXECUTABLE_PROCESS>(
                 factory.getLockProvider(),
                 factory.getAuditReader(),
@@ -42,7 +42,7 @@ public final class RunnerCreator {
                 isThrowExceptionIfCannotObtainLock) {
             @Override
             public void run() {
-                this.execute(definitionProcess);
+                this.execute(stageDefinition);
             }
         };
     }
