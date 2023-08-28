@@ -4,7 +4,7 @@ import io.flamingock.core.Factory;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.stage.StageDefinition;
+import io.flamingock.core.stage.DefinitionStage;
 import io.flamingock.core.stage.execution.StageExecutionContext;
 import io.flamingock.core.stage.execution.StageExecutor;
 import io.flamingock.core.util.StringUtil;
@@ -30,7 +30,7 @@ public final class RunnerCreator {
                                                 DependencyContext dependencyContext,
                                                 boolean isThrowExceptionIfCannotObtainLock) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final StageDefinition stageDefinition = factory.getDefinitionProcess(extraProperties);
+        final DefinitionStage definitionStage = factory.getDefinitionProcess(extraProperties);
         final StageExecutor stageExecutor = StageExecutor.getSequentialStageExecutor(
                 dependencyContext,
                 factory.getAuditWriter(),
@@ -44,7 +44,7 @@ public final class RunnerCreator {
                 isThrowExceptionIfCannotObtainLock) {
             @Override
             public void run() {
-                this.run(stageDefinition);
+                this.run(definitionStage);
             }
         };
     }

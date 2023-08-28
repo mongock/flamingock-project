@@ -12,7 +12,7 @@ import io.flamingock.core.lock.LockAcquisition;
 import io.flamingock.core.lock.LockException;
 import io.flamingock.core.stage.ExecutableStage;
 import io.flamingock.core.stage.LoadedStage;
-import io.flamingock.core.stage.StageDefinition;
+import io.flamingock.core.stage.DefinitionStage;
 import io.flamingock.core.stage.execution.StageExecutionContext;
 import io.flamingock.core.stage.execution.StageExecutionException;
 import io.flamingock.core.stage.execution.StageExecutor;
@@ -51,7 +51,7 @@ public abstract class AbstractRunner
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
-    public void run(StageDefinition processDefinition) throws CoreException {
+    public void run(DefinitionStage processDefinition) throws CoreException {
         eventPublisher.publishMigrationStarted();
 
         LoadedStage loadedStage = processDefinition.load();
