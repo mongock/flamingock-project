@@ -1,7 +1,5 @@
 package io.flamingock.community.internal;
 
-import java.util.List;
-
 public interface CommunityConfigurable {
 
     String getMigrationRepositoryName();

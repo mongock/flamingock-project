@@ -1,8 +1,5 @@
 package io.flamingock.community.internal;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static io.flamingock.core.util.Constants.LEGACY_DEFAULT_LOCK_REPOSITORY_NAME;
 import static io.flamingock.core.util.Constants.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
 

@@ -1,6 +1,5 @@
 package io.flamingock.core.configurator;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +48,7 @@ public interface CoreConfigurator<HOLDER> {
     Long getLockQuitTryingAfterMillis();
 
     long getLockTryFrequencyMillis();
+
     boolean isThrowExceptionIfCannotObtainLock();
 
     boolean isTrackIgnored();
