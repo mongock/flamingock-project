@@ -10,17 +10,16 @@ import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
 import io.flamingock.core.lock.LockException;
+import io.flamingock.core.stage.DefinitionStage;
 import io.flamingock.core.stage.ExecutableStage;
 import io.flamingock.core.stage.LoadedStage;
-import io.flamingock.core.stage.DefinitionStage;
 import io.flamingock.core.stage.execution.StageExecutionContext;
 import io.flamingock.core.stage.execution.StageExecutionException;
 import io.flamingock.core.stage.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractRunner
-        implements Runner {
+public abstract class AbstractRunner implements Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractRunner.class);
 
@@ -37,12 +36,7 @@ public abstract class AbstractRunner
     private final StageExecutionContext stageExecutionContext;
 
 
-    public AbstractRunner(LockAcquirer lockAcquirer,
-                          SingleAuditReader auditReader,
-                          StageExecutor stageExecutor,
-                          StageExecutionContext stageExecutionContext,
-                          EventPublisher eventPublisher,
-                          boolean throwExceptionIfCannotObtainLock) {
+    public AbstractRunner(LockAcquirer lockAcquirer, SingleAuditReader auditReader, StageExecutor stageExecutor, StageExecutionContext stageExecutionContext, EventPublisher eventPublisher, boolean throwExceptionIfCannotObtainLock) {
         this.lockAcquirer = lockAcquirer;
         this.auditReader = auditReader;
         this.stageExecutor = stageExecutor;
