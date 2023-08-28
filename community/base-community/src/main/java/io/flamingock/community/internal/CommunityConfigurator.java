@@ -2,20 +2,13 @@ package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
 
+import java.util.Collections;
 import java.util.List;
 
 public interface CommunityConfigurator<HOLDER> {
     HOLDER setDriver(ConnectionDriver<?> connectionDriver);
 
     ConnectionDriver<?> getDriver();
-
-    List<String> getMigrationScanPackage();
-
-    HOLDER addMigrationScanPackages(List<String> migrationScanPackageList);
-
-    HOLDER addMigrationScanPackage(String migrationScanPackage);
-    
-    HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
     
     String getMigrationRepositoryName();
 

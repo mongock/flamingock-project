@@ -1,5 +1,7 @@
 package io.flamingock.core.configurator;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -98,6 +100,32 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
     @Override
     public HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy) {
         properties.setTransactionStrategy(transactionStrategy);
+        return holderSupplier.get();
+    }
+
+
+    @Override
+    public List<String> getMigrationScanPackage() {
+        return getCoreProperties().getMigrationScanPackage();
+    }
+
+    @Override
+    public HOLDER addMigrationScanPackages(List<String> migrationScanPackageList) {
+        List<String> packagesCurrentlyStored = getMigrationScanPackage();
+        if (migrationScanPackageList != null) {
+            packagesCurrentlyStored.addAll(migrationScanPackageList);
+        }
+        return setMigrationScanPackage(packagesCurrentlyStored);
+    }
+
+    @Override
+    public HOLDER addMigrationScanPackage(String migrationScanPackage) {
+        return this.addMigrationScanPackages(Collections.singletonList(migrationScanPackage));
+    }
+
+    @Override
+    public HOLDER setMigrationScanPackage(List<String> migrationScanPackage) {
+        getCoreProperties().setMigrationScanPackage(migrationScanPackage);
         return holderSupplier.get();
     }
 

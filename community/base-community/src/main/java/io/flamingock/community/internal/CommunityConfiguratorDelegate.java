@@ -17,6 +17,7 @@ public class CommunityConfiguratorDelegate<HOLDER> implements CommunityConfigura
         this.holderSupplier = holderSupplier;
 
     }
+    
 
     @Override
     public HOLDER setDriver(ConnectionDriver<?> connectionDriver) {
@@ -29,30 +30,6 @@ public class CommunityConfiguratorDelegate<HOLDER> implements CommunityConfigura
         return connectionDriver;
     }
 
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return communityConfiguration.getMigrationScanPackage();
-    }
-
-    @Override
-    public HOLDER addMigrationScanPackages(List<String> migrationScanPackageList) {
-        List<String> packagesCurrentlyStored = getMigrationScanPackage();
-        if (migrationScanPackageList != null) {
-            packagesCurrentlyStored.addAll(migrationScanPackageList);
-        }
-        return setMigrationScanPackage(packagesCurrentlyStored);
-    }
-
-    @Override
-    public HOLDER addMigrationScanPackage(String migrationScanPackage) {
-        return this.addMigrationScanPackages(Collections.singletonList(migrationScanPackage));
-    }
-
-    @Override
-    public HOLDER setMigrationScanPackage(List<String> migrationScanPackage) {
-        communityConfiguration.setMigrationScanPackage(migrationScanPackage);
-        return holderSupplier.get();
-    }
 
     @Override
     public String getMigrationRepositoryName() {

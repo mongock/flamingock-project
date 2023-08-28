@@ -177,12 +177,12 @@ public class CommunitySpringbootConfiguration implements CoreConfigurable, Commu
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityConfiguration.getMigrationScanPackage();
+        return coreConfiguration.getMigrationScanPackage();
     }
 
     @Override
     public void setMigrationScanPackage(List<String> migrationScanPackage) {
-        communityConfiguration.setMigrationScanPackage(migrationScanPackage);
+        coreConfiguration.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override

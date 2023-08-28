@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
  * This class represents the process defined by the user in the builder, yaml, etc.
  * It doesn't necessary contain directly the tasks, it can contain the scanPackage, etc.
  */
-public class StageDefinition {
+public class DefinitionStage {
 
     private final Collection<String> scanPackages;
     private Collection<TaskFilter> filters = new ArrayList<>();
 
     //We can pass here other sources, like yamls, etc.
-    public StageDefinition(Collection<String> scanPackages) {
+    public DefinitionStage(Collection<String> scanPackages) {
         this.scanPackages = scanPackages;
     }
 
@@ -40,7 +40,7 @@ public class StageDefinition {
                 .collect(Collectors.toList());
     }
 
-    public StageDefinition setFilters(Collection<TaskFilter> filters) {
+    public DefinitionStage setFilters(Collection<TaskFilter> filters) {
         this.filters = filters != null ? filters : Collections.emptyList();
         return this;
     }

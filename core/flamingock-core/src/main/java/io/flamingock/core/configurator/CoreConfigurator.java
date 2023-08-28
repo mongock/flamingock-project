@@ -1,5 +1,6 @@
 package io.flamingock.core.configurator;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CoreConfigurator<HOLDER> {
@@ -34,11 +35,20 @@ public interface CoreConfigurator<HOLDER> {
 
     HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy);
 
+    List<String> getMigrationScanPackage();
+
+    HOLDER addMigrationScanPackages(List<String> migrationScanPackageList);
+
+    HOLDER addMigrationScanPackage(String migrationScanPackage);
+
+    HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
+
     long getLockAcquiredForMillis();
 
     Long getLockQuitTryingAfterMillis();
 
     long getLockTryFrequencyMillis();
+
     boolean isThrowExceptionIfCannotObtainLock();
 
     boolean isTrackIgnored();

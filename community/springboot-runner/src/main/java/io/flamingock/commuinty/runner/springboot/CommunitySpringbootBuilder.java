@@ -3,7 +3,6 @@ package io.flamingock.commuinty.runner.springboot;
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityConfigurator;
 import io.flamingock.community.internal.CommunityConfiguratorDelegate;
-import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
@@ -25,12 +24,14 @@ import io.flamingock.core.spring.configurator.SpringbootConfiguratorDelegate;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
 import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
+import io.flamingock.core.stage.DefinitionStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -75,10 +76,14 @@ public class CommunitySpringbootBuilder
         connectionEngine.initialize();
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
+
         return RunnerCreator.create(
-                new CommunityFactory(connectionEngine, new SpringProfileFilter(activeProfiles)),
+                new DefinitionStage(coreConfiguratorDelegate.getMigrationScanPackage()).setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles))),
+                connectionEngine.getAuditor(),
+                connectionEngine.getAuditor(),
+                connectionEngine.getTransactionWrapper().orElse(null),
+                connectionEngine.getLockProvider(),
                 coreConfiguratorDelegate.getCoreProperties(),
-                communityConfiguratorDelegate.getCommunityProperties(),
                 eventPublisher,
                 new SpringDependencyContext(getSpringContext()),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
@@ -249,22 +254,22 @@ public class CommunitySpringbootBuilder
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityConfiguratorDelegate.getMigrationScanPackage();
+        return coreConfiguratorDelegate.getMigrationScanPackage();
     }
 
     @Override
     public CommunitySpringbootBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        return communityConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
+        return coreConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
     }
 
     @Override
     public CommunitySpringbootBuilder addMigrationScanPackage(String migrationScanPackage) {
-        return communityConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
+        return coreConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
     }
 
     @Override
     public CommunitySpringbootBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return communityConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
+        return coreConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override

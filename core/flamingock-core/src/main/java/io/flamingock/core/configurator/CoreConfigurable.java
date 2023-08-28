@@ -1,5 +1,6 @@
 package io.flamingock.core.configurator;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CoreConfigurable {
@@ -58,4 +59,8 @@ public interface CoreConfigurable {
     String getDefaultAuthor();
 
     TransactionStrategy getTransactionStrategy();
+
+    List<String> getMigrationScanPackage();
+
+    void setMigrationScanPackage(List<String> migrationScanPackage);
 }

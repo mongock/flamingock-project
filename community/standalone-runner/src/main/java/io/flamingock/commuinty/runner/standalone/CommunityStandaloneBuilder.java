@@ -3,7 +3,6 @@ package io.flamingock.commuinty.runner.standalone;
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityConfigurator;
 import io.flamingock.community.internal.CommunityConfiguratorDelegate;
-import io.flamingock.community.internal.CommunityFactory;
 import io.flamingock.community.internal.driver.ConnectionDriver;
 import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
@@ -22,6 +21,7 @@ import io.flamingock.core.runner.RunnerBuilder;
 import io.flamingock.core.runner.RunnerCreator;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.stage.DefinitionStage;
 
 import java.util.List;
 import java.util.Map;
@@ -65,9 +65,12 @@ public class CommunityStandaloneBuilder
                 .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
         connectionEngine.initialize();
         return RunnerCreator.create(
-                new CommunityFactory(connectionEngine),
+                new DefinitionStage(coreConfiguratorDelegate.getMigrationScanPackage()),
+                connectionEngine.getAuditor(),
+                connectionEngine.getAuditor(),
+                connectionEngine.getTransactionWrapper().orElse(null),
+                connectionEngine.getLockProvider(),
                 coreConfiguratorDelegate.getCoreProperties(),
-                communityConfiguratorDelegate.getCommunityProperties(),
                 eventPublisher,
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
@@ -239,22 +242,22 @@ public class CommunityStandaloneBuilder
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityConfiguratorDelegate.getMigrationScanPackage();
+        return coreConfiguratorDelegate.getMigrationScanPackage();
     }
 
     @Override
     public CommunityStandaloneBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        return communityConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
+        return coreConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
     }
 
     @Override
     public CommunityStandaloneBuilder addMigrationScanPackage(String migrationScanPackage) {
-        return communityConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
+        return coreConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return communityConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
+        return coreConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override

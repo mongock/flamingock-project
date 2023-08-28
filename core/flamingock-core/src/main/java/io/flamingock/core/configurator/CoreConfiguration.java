@@ -1,6 +1,8 @@
 package io.flamingock.core.configurator;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import static io.flamingock.core.util.Constants.DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;
@@ -62,6 +64,8 @@ public class CoreConfiguration implements CoreConfigurable {
      * - EXECUTION: The entire migration's execution is wrapped in a transaction.
      */
     private TransactionStrategy transactionStrategy = TransactionStrategy.CHANGE_UNIT;
+
+    private List<String> migrationScanPackage = new LinkedList<>();
 
     @Override
     public void setLockAcquiredForMillis(long lockAcquiredForMillis) {
@@ -204,6 +208,16 @@ public class CoreConfiguration implements CoreConfigurable {
         return transactionStrategy;
     }
 
+    @Override
+    public List<String> getMigrationScanPackage() {
+        return migrationScanPackage;
+    }
+
+    @Override
+    public void setMigrationScanPackage(List<String> migrationScanPackage) {
+        this.migrationScanPackage = migrationScanPackage;
+    }
+
     public static class LockProperties {
 
         /**
@@ -269,5 +283,7 @@ public class CoreConfiguration implements CoreConfigurable {
         public boolean isThrowExceptionIfCannotObtainLock() {
             return throwExceptionIfCannotObtainLock;
         }
+
+
     }
 }
