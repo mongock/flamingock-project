@@ -1,5 +1,7 @@
 package io.flamingock.core.configurator;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public interface CoreConfigurator<HOLDER> {
@@ -33,6 +35,14 @@ public interface CoreConfigurator<HOLDER> {
     HOLDER setDefaultAuthor(String defaultMigrationAuthor);
 
     HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy);
+
+    List<String> getMigrationScanPackage();
+
+    HOLDER addMigrationScanPackages(List<String> migrationScanPackageList);
+
+    HOLDER addMigrationScanPackage(String migrationScanPackage);
+
+    HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
 
     long getLockAcquiredForMillis();
 

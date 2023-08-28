@@ -3,9 +3,6 @@ package io.flamingock.community.internal;
 import java.util.List;
 
 public interface CommunityConfigurable {
-    List<String> getMigrationScanPackage();
-
-    void setMigrationScanPackage(List<String> migrationScanPackage);
 
     String getMigrationRepositoryName();
 

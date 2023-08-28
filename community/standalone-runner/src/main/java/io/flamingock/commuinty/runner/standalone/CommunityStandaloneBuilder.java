@@ -67,7 +67,6 @@ public class CommunityStandaloneBuilder
         return RunnerCreator.create(
                 new CommunityFactory(connectionEngine),
                 coreConfiguratorDelegate.getCoreProperties(),
-                communityConfiguratorDelegate.getCommunityProperties(),
                 eventPublisher,
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
@@ -239,22 +238,22 @@ public class CommunityStandaloneBuilder
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityConfiguratorDelegate.getMigrationScanPackage();
+        return coreConfiguratorDelegate.getMigrationScanPackage();
     }
 
     @Override
     public CommunityStandaloneBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        return communityConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
+        return coreConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
     }
 
     @Override
     public CommunityStandaloneBuilder addMigrationScanPackage(String migrationScanPackage) {
-        return communityConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
+        return coreConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
     }
 
     @Override
     public CommunityStandaloneBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return communityConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
+        return coreConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override

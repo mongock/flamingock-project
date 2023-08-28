@@ -23,14 +23,13 @@ public final class RunnerCreator {
         );
     }
 
-    public static <CONFIGURATION> Runner create(Factory<CONFIGURATION> factory,
+    public static Runner create(Factory factory,
                                                 CoreConfiguration coreConfiguration,
-                                                CONFIGURATION extraProperties,
                                                 EventPublisher eventPublisher,
                                                 DependencyContext dependencyContext,
                                                 boolean isThrowExceptionIfCannotObtainLock) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
-        final DefinitionStage definitionStage = factory.getDefinitionProcess(extraProperties);
+        final DefinitionStage definitionStage = factory.getDefinitionProcess(coreConfiguration);
         final StageExecutor stageExecutor = StageExecutor.getSequentialStageExecutor(
                 dependencyContext,
                 factory.getAuditWriter(),

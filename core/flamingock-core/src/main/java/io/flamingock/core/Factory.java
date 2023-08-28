@@ -2,20 +2,22 @@ package io.flamingock.core;
 
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.single.SingleAuditReader;
+import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.stage.DefinitionStage;
 import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 
-public interface Factory<CONFIGURATION> {
+public interface Factory {
 
     LockAcquirer getLockAcquirer();
 
     SingleAuditReader getAuditReader();
     AuditWriter getAuditWriter();
 
-    DefinitionStage getDefinitionProcess(CONFIGURATION config);
+    DefinitionStage getDefinitionProcess(CoreConfiguration config);
 
     Optional<TransactionWrapper> getTransactionWrapper();
 

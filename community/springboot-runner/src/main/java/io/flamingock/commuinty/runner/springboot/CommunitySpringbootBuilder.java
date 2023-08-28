@@ -78,7 +78,6 @@ public class CommunitySpringbootBuilder
         return RunnerCreator.create(
                 new CommunityFactory(connectionEngine, new SpringProfileFilter(activeProfiles)),
                 coreConfiguratorDelegate.getCoreProperties(),
-                communityConfiguratorDelegate.getCommunityProperties(),
                 eventPublisher,
                 new SpringDependencyContext(getSpringContext()),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
@@ -249,22 +248,22 @@ public class CommunitySpringbootBuilder
 
     @Override
     public List<String> getMigrationScanPackage() {
-        return communityConfiguratorDelegate.getMigrationScanPackage();
+        return coreConfiguratorDelegate.getMigrationScanPackage();
     }
 
     @Override
     public CommunitySpringbootBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        return communityConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
+        return coreConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
     }
 
     @Override
     public CommunitySpringbootBuilder addMigrationScanPackage(String migrationScanPackage) {
-        return communityConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
+        return coreConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
     }
 
     @Override
     public CommunitySpringbootBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return communityConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
+        return coreConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override

@@ -4,6 +4,7 @@ import io.flamingock.community.internal.driver.ConnectionEngine;
 import io.flamingock.core.Factory;
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.single.SingleAuditReader;
+import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.stage.DefinitionStage;
 import io.flamingock.core.task.filter.TaskFilter;
@@ -12,7 +13,7 @@ import io.flamingock.core.transaction.TransactionWrapper;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class CommunityFactory implements Factory<CommunityConfiguration> {
+public class CommunityFactory implements Factory {
     private final ConnectionEngine connectionEngine;
     private final TaskFilter[] filters;
 
@@ -37,7 +38,7 @@ public class CommunityFactory implements Factory<CommunityConfiguration> {
     }
 
     @Override
-    public DefinitionStage getDefinitionProcess(CommunityConfiguration configuration) {
+    public DefinitionStage getDefinitionProcess(CoreConfiguration configuration) {
         return new DefinitionStage(configuration.getMigrationScanPackage()).setFilters(Arrays.asList(filters));
     }
 
