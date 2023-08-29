@@ -1,4 +1,4 @@
-package io.flamingock.core.stage;
+package io.flamingock.core.pipeline.stage;
 
 import io.flamingock.core.task.executable.ExecutableTask;
 
@@ -7,9 +7,15 @@ import java.util.Objects;
 
 public class ExecutableStage {
     protected final List<? extends ExecutableTask> tasks;
+    private final boolean parallel;
 
-    public ExecutableStage(List<? extends ExecutableTask> tasks) {
+    public ExecutableStage(List<? extends ExecutableTask> tasks, boolean parallel) {
         this.tasks = tasks;
+        this.parallel = parallel;
+    }
+
+    public boolean isParallel() {
+        return parallel;
     }
 
     public List<? extends ExecutableTask> getTasks() {

@@ -8,7 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.stage.execution.StageExecutionException;
+import io.flamingock.core.pipeline.stage.execution.StageExecutionException;
 import io.flamingock.oss.driver.mongodb.v3.driver.Mongo3Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

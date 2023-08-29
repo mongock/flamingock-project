@@ -1,4 +1,4 @@
-package io.flamingock.core.stage;
+package io.flamingock.core.pipeline.stage;
 
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
@@ -15,9 +15,11 @@ import java.util.stream.Collectors;
 public class LoadedStage {
 
     private final Collection<? extends TaskDescriptor> taskDescriptors;
+    private final boolean parallel;
 
-    public LoadedStage(Collection<? extends TaskDescriptor> taskDescriptors) {
+    public LoadedStage(Collection<? extends TaskDescriptor> taskDescriptors, boolean parallel) {
         this.taskDescriptors = taskDescriptors;
+        this.parallel = parallel;
     }
 
     public ExecutableStage applyState(SingleAuditStageStatus state) {
@@ -29,7 +31,7 @@ public class LoadedStage {
                 .flatMap(List::stream)
                 .collect(Collectors.toCollection(LinkedList::new));
 
-        return new ExecutableStage(tasks);
+        return new ExecutableStage(tasks, parallel);
     }
 
 }

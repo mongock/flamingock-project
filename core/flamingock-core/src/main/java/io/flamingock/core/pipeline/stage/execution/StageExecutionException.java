@@ -1,4 +1,4 @@
-package io.flamingock.core.stage.execution;
+package io.flamingock.core.pipeline.stage.execution;
 
 import io.flamingock.core.task.navigation.summary.StageSummary;
 

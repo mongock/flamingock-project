@@ -1,9 +1,9 @@
-package io.flamingock.core.stage.execution;
+package io.flamingock.core.pipeline.stage.execution;
 
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.lock.Lock;
+import io.flamingock.core.pipeline.stage.ExecutableStage;
 import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.stage.ExecutableStage;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.navigation.navigator.ReusableStepNavigatorBuilder;
 import io.flamingock.core.task.navigation.navigator.StepNavigationOutput;
@@ -20,50 +20,32 @@ public class StageExecutor {
 
     protected final TransactionWrapper transactionWrapper;
     private final DependencyContext dependencyContext;
-    private final boolean parallel;
 
-    private StageExecutor(DependencyContext dependencyContext, AuditWriter auditWriter, boolean parallel) {
-        this(dependencyContext, auditWriter, parallel, null);
+    private StageExecutor(DependencyContext dependencyContext, AuditWriter auditWriter) {
+        this(dependencyContext, auditWriter, null);
     }
 
-    private StageExecutor(DependencyContext dependencyContext, AuditWriter auditWriter, boolean parallel, TransactionWrapper transactionWrapper) {
+    public StageExecutor(DependencyContext dependencyContext,
+                          AuditWriter auditWriter,
+                          TransactionWrapper transactionWrapper) {
         this.dependencyContext = dependencyContext;
         this.auditWriter = auditWriter;
-        this.parallel = parallel;
         this.transactionWrapper = transactionWrapper;
     }
 
-    public static StageExecutor getSequentialStageExecutor(DependencyContext dependencyContext, AuditWriter auditWriter) {
-        return getParallelStageExecutor(dependencyContext, auditWriter, null);
-    }
-
-    public static StageExecutor getSequentialStageExecutor(DependencyContext dependencyContext, AuditWriter auditWriter, TransactionWrapper transactionWrapper) {
-        return getStageExecutor(dependencyContext, auditWriter, false, transactionWrapper);
-    }
-
-    public static StageExecutor getParallelStageExecutor(DependencyContext dependencyContext, AuditWriter auditWriter) {
-        return getParallelStageExecutor(dependencyContext, auditWriter, null);
-    }
-
-    public static StageExecutor getParallelStageExecutor(DependencyContext dependencyContext, AuditWriter auditWriter, TransactionWrapper transactionWrapper) {
-        return getStageExecutor(dependencyContext, auditWriter, true, transactionWrapper);
-    }
-
-    private static StageExecutor getStageExecutor(DependencyContext dependencyContext, AuditWriter auditWriter, boolean parallel, TransactionWrapper transactionWrapper) {
-        return new StageExecutor(dependencyContext, auditWriter, parallel, transactionWrapper);
-    }
-
-    public Output execute(ExecutableStage executableProcess, StageExecutionContext stageExecutionContext, Lock lock) throws StageExecutionException {
+    public Output execute(ExecutableStage executableStage,
+                          StageExecutionContext stageExecutionContext,
+                          Lock lock) throws StageExecutionException {
 
         StageSummary summary = new StageSummary();
 
-        StepNavigatorBuilder stepNavigatorBuilder = getStepNavigatorBuilder();
+        StepNavigatorBuilder stepNavigatorBuilder = getStepNavigatorBuilder(executableStage.isParallel());
 
         //TODO think that we can build the StepNavigator sequentially and then execute it in Parallel
         // this would save memory footprint
 
         try {
-            getTaskStream(executableProcess)
+            getTaskStream(executableStage)
                     .map(task -> stepNavigatorBuilder
                             .setAuditWriter(auditWriter)
                             .setStaticContext(dependencyContext)
@@ -87,10 +69,12 @@ public class StageExecutor {
     }
 
     protected Stream<? extends ExecutableTask> getTaskStream(ExecutableStage executableStage) {
-        return parallel ? executableStage.getTasks().parallelStream() : executableStage.getTasks().stream();
+        return executableStage.isParallel()
+                ? executableStage.getTasks().parallelStream()
+                : executableStage.getTasks().stream();
     }
 
-    protected StepNavigatorBuilder getStepNavigatorBuilder() {
+    protected StepNavigatorBuilder getStepNavigatorBuilder(boolean parallel) {
         StepNavigatorBuilder immutableStepNavigatorBuilder = null;
         return parallel ? immutableStepNavigatorBuilder //TODO  implement ConcurrentStepNavigatorBuilder
                 : new ReusableStepNavigatorBuilder();

@@ -1,4 +1,4 @@
-package io.flamingock.core.stage;
+package io.flamingock.core.pipeline.stage;
 
 import io.flamingock.core.task.descriptor.SortedTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
@@ -17,15 +17,18 @@ import java.util.stream.Collectors;
  * This class represents the process defined by the user in the builder, yaml, etc.
  * It doesn't necessary contain directly the tasks, it can contain the scanPackage, etc.
  */
-public class DefinitionStage {
+public class StageDefinition {
 
     private final Collection<String> scanPackages;
+    private final boolean parallel;
     private Collection<TaskFilter> filters = new ArrayList<>();
 
     //We can pass here other sources, like yamls, etc.
-    public DefinitionStage(Collection<String> scanPackages) {
+    public StageDefinition(Collection<String> scanPackages/*todo StageConfiguration stageConfiguration*/) {
         this.scanPackages = scanPackages;
+        this.parallel = false;//stageConfiguration.isParallel()
     }
+
 
     private static List<TaskDescriptor> getFilteredDescriptorsFromScanPackages(
             Collection<String> scanPackages,
@@ -40,20 +43,19 @@ public class DefinitionStage {
                 .collect(Collectors.toList());
     }
 
-    public DefinitionStage setFilters(Collection<TaskFilter> filters) {
+    public StageDefinition setFilters(Collection<TaskFilter> filters) {
         this.filters = filters != null ? filters : Collections.emptyList();
         return this;
     }
 
-    /**
+    /*
      * Depending on the tasks inside the package or some field in the yaml, it returns a SingleLoadedStage
      * or ParallelSingleLoadedProcess.
      * <br />
      *
      * @return a sorted SingleLoadedStage, non-sorted SingleLoadedStage or a ParallelSingleLoadedProcess(non sorted),
      * depending on the task in the scanPackage,or some field in the yaml.
-     */
-    /**
+
      * It loads the definition from the source(scanPackage, yaml definition, etc.) and returns the LoadedStage
      * with contain the task Definition.
      * <br />
@@ -74,15 +76,15 @@ public class DefinitionStage {
 
         if (descriptors.stream().allMatch(descriptor -> descriptor instanceof SortedTaskDescriptor)) {
             //if all descriptors are sorted, we return a sorted collection
-            return new LoadedStage(descriptors.stream().sorted().collect(Collectors.toList()));
+            return new LoadedStage(descriptors.stream().sorted().collect(Collectors.toList()), parallel);
 
         } else if (orderedDescriptorOptional.isPresent()) {
             //if at least one of them are sorted, but not all. An exception is thrown
             throw new IllegalArgumentException("Either all tasks are ordered or none is. Ordered task found: " + orderedDescriptorOptional.get().getId());
 
         } else {
-            //if none of the tasks are sorted, a unsorted collection is returned
-            return new LoadedStage(descriptors);
+            //if none of the tasks are sorted, an unsorted collection is returned
+            return new LoadedStage(descriptors, parallel);
         }
     }
 

@@ -1,8 +1,6 @@
 package io.flamingock.core.lock;
 
-import io.flamingock.core.audit.domain.AuditStageStatus;
-import io.flamingock.core.stage.ExecutableStage;
-import io.flamingock.core.stage.LoadedStage;
+import io.flamingock.core.pipeline.stage.LoadedStage;
 
 public interface LockAcquirer {
 
