@@ -1,33 +1,32 @@
 package io.flamingock.core.lock;
 
+import java.util.Optional;
+
 public abstract class LockAcquisition implements AutoCloseable {
 
     private final boolean required;
-    private final boolean acquired;
 
-    public LockAcquisition(boolean required, boolean acquired) {
+    public LockAcquisition(boolean required) {
         this.required = required;
-        this.acquired = acquired;
     }
 
-    public boolean isRequired() {
-        return required;
+    public final boolean isNotRequired() {
+        return !required;
     }
-    public boolean isAcquired() {
-        return acquired;
-    }
+
+    public abstract Optional<Lock> lock();
 
     public static class Acquired extends LockAcquisition {
         private final Lock lock;
 
 
         public Acquired(Lock lock) {
-            super(true, true);
+            super(true);
             this.lock = lock;
         }
 
-        public Lock getLock() {
-            return lock;
+        public Optional<Lock> lock() {
+            return Optional.of(lock);
         }
 
 
@@ -36,21 +35,17 @@ public abstract class LockAcquisition implements AutoCloseable {
             lock.close();
         }
 
-        @Override
-        public boolean isRequired() {
-            return true;
-        }
 
-        @Override
-        public boolean isAcquired() {
-            return true;
-        }
     }
 
     public static class NoRequired extends LockAcquisition {
 
         public NoRequired() {
-            super(false, false);
+            super(false);
+        }
+
+        public Optional<Lock> lock() {
+            return Optional.empty();
         }
 
         @Override

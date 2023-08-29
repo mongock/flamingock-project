@@ -51,15 +51,12 @@ public abstract class AbstractRunner implements Runner {
         LoadedStage loadedStage = processDefinition.load();
 
         try (LockAcquisition lockAcquisition = lockAcquirer.acquireIfRequired(loadedStage)) {
-
-            if (lockAcquisition.isRequired()) {
-                if (lockAcquisition.isAcquired()) {
-                    startProcess(((LockAcquisition.Acquired) lockAcquisition).getLock(), loadedStage);
-                } else {
-                    throw new LockException("Lock required but not acquired");
-                }
-            } else {
+            if(lockAcquisition.isNotRequired()) {
                 skipProcess();
+            } else if(lockAcquisition.lock().isPresent()) {
+                startProcess(lockAcquisition.lock().get(), loadedStage);
+            } else {
+                throw new LockException("Lock required but not acquired");
             }
 
         } catch (LockException exception) {
