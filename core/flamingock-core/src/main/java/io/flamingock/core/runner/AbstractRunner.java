@@ -36,7 +36,12 @@ public abstract class AbstractRunner implements Runner {
     private final StageExecutionContext stageExecutionContext;
 
 
-    public AbstractRunner(LockAcquirer lockAcquirer, SingleAuditReader auditReader, StageExecutor stageExecutor, StageExecutionContext stageExecutionContext, EventPublisher eventPublisher, boolean throwExceptionIfCannotObtainLock) {
+    public AbstractRunner(LockAcquirer lockAcquirer,
+                          SingleAuditReader auditReader,
+                          StageExecutor stageExecutor,
+                          StageExecutionContext stageExecutionContext,
+                          EventPublisher eventPublisher,
+                          boolean throwExceptionIfCannotObtainLock) {
         this.lockAcquirer = lockAcquirer;
         this.auditReader = auditReader;
         this.stageExecutor = stageExecutor;
@@ -45,16 +50,16 @@ public abstract class AbstractRunner implements Runner {
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
-    public void run(DefinitionStage processDefinition) throws CoreException {
+    public void run(DefinitionStage definitionStage) throws CoreException {
         eventPublisher.publishMigrationStarted();
 
-        LoadedStage loadedStage = processDefinition.load();
+        LoadedStage loadedStage = definitionStage.load();
 
         try (LockAcquisition lockAcquisition = lockAcquirer.acquireIfRequired(loadedStage)) {
             if(lockAcquisition.isNotRequired()) {
-                skipProcess();
+                skipStage();
             } else if(lockAcquisition.lock().isPresent()) {
-                startProcess(lockAcquisition.lock().get(), loadedStage);
+                startStage(lockAcquisition.lock().get(), loadedStage);
             } else {
                 throw new LockException("Lock required but not acquired");
             }
@@ -69,10 +74,10 @@ public abstract class AbstractRunner implements Runner {
                 logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" + "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" + "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
             }
 
-        } catch (StageExecutionException processException) {
-            logger.info("Process summary\n{}", processException.getSummary().getPretty());
-            eventPublisher.publishMigrationFailedEvent(processException);
-            throw processException;
+        } catch (StageExecutionException stageExecutionException) {
+            logger.info("Process summary\n{}", stageExecutionException.getSummary().getPretty());
+            eventPublisher.publishMigrationFailedEvent(stageExecutionException);
+            throw stageExecutionException;
         } catch (Exception exception) {
             CoreException coreEx = exception instanceof CoreException ? (CoreException) exception : new CoreException(exception);
             logger.error("Error executing the process. ABORTED OPERATION", coreEx);
@@ -81,11 +86,11 @@ public abstract class AbstractRunner implements Runner {
         }
     }
 
-    private void startProcess(Lock lock, LoadedStage loadedStage) throws StageExecutionException {
-        SingleAuditStageStatus currentAuditProcessStatus = auditReader.getAuditProcessStatus();
-        logger.debug("Pulled remote state:\n{}", currentAuditProcessStatus);
+    private void startStage(Lock lock, LoadedStage loadedStage) throws StageExecutionException {
+        SingleAuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
+        logger.debug("Pulled remote state:\n{}", currentAuditStageStatus);
 
-        ExecutableStage executableStage = loadedStage.applyState(currentAuditProcessStatus);
+        ExecutableStage executableStage = loadedStage.applyState(currentAuditStageStatus);
         logger.debug("Applied state to process:\n{}", executableStage);
 
         StageExecutor.Output executionOutput = stageExecutor.execute(executableStage, stageExecutionContext, lock);
@@ -93,7 +98,7 @@ public abstract class AbstractRunner implements Runner {
         eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));
     }
 
-    private void skipProcess() {
+    private void skipStage() {
         logger.info("Skipping the process. All the tasks are already executed.");
         eventPublisher.publishMigrationSuccessEvent(new MigrationIgnoredResult());
     }

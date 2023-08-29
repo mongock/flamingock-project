@@ -1,22 +1,22 @@
 package io.flamingock.core.stage.execution;
 
-import io.flamingock.core.task.navigation.summary.ProcessSummary;
+import io.flamingock.core.task.navigation.summary.StageSummary;
 
 public class StageExecutionException extends RuntimeException {
 
-    private final ProcessSummary summary;
+    private final StageSummary summary;
 
 
-    public StageExecutionException(ProcessSummary summary) {
+    public StageExecutionException(StageSummary summary) {
         this.summary = summary;
     }
 
-    public StageExecutionException(Throwable throwable, ProcessSummary summary) {
+    public StageExecutionException(Throwable throwable, StageSummary summary) {
         super(throwable);
         this.summary = summary;
     }
 
-    public ProcessSummary getSummary() {
+    public StageSummary getSummary() {
         return summary;
     }
 }

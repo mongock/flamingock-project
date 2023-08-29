@@ -77,7 +77,7 @@ public class SpringDataMongoV2Auditor extends MongockAuditor {
 
 
     @Override
-    public SingleAuditStageStatus getAuditProcessStatus() {
+    public SingleAuditStageStatus getAuditStageStatus() {
         SingleAuditStageStatus.Builder builder = SingleAuditStageStatus.builder();
         collection.find()
                 .into(new LinkedList<>())

@@ -15,10 +15,9 @@ public abstract class AbstractLockAcquirer implements LockAcquirer {
     }
 
     @Override
-    public LockAcquisition acquireIfRequired(LoadedStage loadedStage,
-                                             LockOptions lockOptions) throws LockException {
-        SingleAuditStageStatus currentAuditProcessStatus = auditReader.getAuditProcessStatus();
-        ExecutableStage executableStage = loadedStage.applyState(currentAuditProcessStatus);
+    public LockAcquisition acquireIfRequired(LoadedStage loadedStage, LockOptions lockOptions) throws LockException {
+        SingleAuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
+        ExecutableStage executableStage = loadedStage.applyState(currentAuditStageStatus);
         if (executableStage.doesRequireExecution()) {
             Lock lock = acquireLock(lockOptions);
             if (lockOptions.isWithDaemon()) {

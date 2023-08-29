@@ -4,16 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProcessSummary implements StepSummary {
+public class StageSummary implements StepSummary {
 
-    private final List<StepSummary> processSummaries = new LinkedList<>();
+    private final List<StepSummary> stageSummaries = new LinkedList<>();
 
     public void addSummary(StepSummary summary) {
-        processSummaries.add(summary);
+        stageSummaries.add(summary);
     }
 
     public List<StepSummary> getSummaries() {
-        return processSummaries;
+        return stageSummaries;
     }
 
     @Override

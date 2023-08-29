@@ -9,12 +9,10 @@ import io.flamingock.core.task.navigation.navigator.ReusableStepNavigatorBuilder
 import io.flamingock.core.task.navigation.navigator.StepNavigationOutput;
 import io.flamingock.core.task.navigation.navigator.StepNavigatorBuilder;
 import io.flamingock.core.task.navigation.summary.DefaultStepSummarizer;
-import io.flamingock.core.task.navigation.summary.ProcessSummary;
+import io.flamingock.core.task.navigation.summary.StageSummary;
 import io.flamingock.core.task.navigation.summary.StepSummary;
 import io.flamingock.core.transaction.TransactionWrapper;
-import io.flamingock.core.util.StreamUtil;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class StageExecutor {
@@ -57,18 +55,29 @@ public class StageExecutor {
 
     public Output execute(ExecutableStage executableProcess, StageExecutionContext stageExecutionContext, Lock lock) throws StageExecutionException {
 
-        ProcessSummary summary = new ProcessSummary();
+        StageSummary summary = new StageSummary();
 
         StepNavigatorBuilder stepNavigatorBuilder = getStepNavigatorBuilder();
 
         //TODO think that we can build the StepNavigator sequentially and then execute it in Parallel
         // this would save memory footprint
-        Stream<StepNavigationOutput> taskStepStream = getTaskStream(executableProcess).map(task -> stepNavigatorBuilder.setAuditWriter(auditWriter).setStaticContext(dependencyContext).setLock(lock).setTransactionWrapper(transactionWrapper).setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer
-                .build().executeTask(task, stageExecutionContext)).peek(summary::addSummary);
 
         try {
-            Optional<StepNavigationOutput> failedOutput = StreamUtil.processUntil(taskStepStream, StepNavigationOutput::isFailed);
-            failedOutput.ifPresent(failed -> {throw new StageExecutionException(summary);});
+            getTaskStream(executableProcess)
+                    .map(task -> stepNavigatorBuilder
+                            .setAuditWriter(auditWriter)
+                            .setStaticContext(dependencyContext)
+                            .setLock(lock)
+                            .setTransactionWrapper(transactionWrapper)
+                            .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer
+                            .build()
+                            .executeTask(task, stageExecutionContext)
+                    ).peek(summary::addSummary)
+                    .filter(StepNavigationOutput::isFailed)
+                    .findFirst()
+                    .ifPresent(failed -> {
+                        throw new StageExecutionException(summary);
+                    });
 
         } catch (Throwable throwable) {
             throw new StageExecutionException(throwable, summary);
