@@ -10,12 +10,13 @@ import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
 import io.flamingock.core.lock.LockException;
-import io.flamingock.core.stage.DefinitionStage;
-import io.flamingock.core.stage.ExecutableStage;
-import io.flamingock.core.stage.LoadedStage;
-import io.flamingock.core.stage.execution.StageExecutionContext;
-import io.flamingock.core.stage.execution.StageExecutionException;
-import io.flamingock.core.stage.execution.StageExecutor;
+import io.flamingock.core.pipeline.PipelineDefinition;
+import io.flamingock.core.pipeline.stage.StageDefinition;
+import io.flamingock.core.pipeline.stage.ExecutableStage;
+import io.flamingock.core.pipeline.stage.LoadedStage;
+import io.flamingock.core.pipeline.stage.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.stage.execution.StageExecutionException;
+import io.flamingock.core.pipeline.stage.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,11 +51,15 @@ public abstract class AbstractRunner implements Runner {
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
-    public void run(DefinitionStage definitionStage) throws CoreException {
-        eventPublisher.publishMigrationStarted();
+    public void run(PipelineDefinition pipelineDefinition) throws CoreException {
+        eventPublisher.publishMigrationStarted();//TODO change name to eventPublisher.publishPipelineStarted();
+        pipelineDefinition.getStages().forEach(this::runStage);
 
-        LoadedStage loadedStage = definitionStage.load();
+    }
 
+    private void runStage(StageDefinition stageDefinition) {
+        //TODO eventPublisher.publishStageStarted();
+        LoadedStage loadedStage = stageDefinition.load();
         try (LockAcquisition lockAcquisition = lockAcquirer.acquireIfRequired(loadedStage)) {
             if(lockAcquisition.isNotRequired()) {
                 skipStage();

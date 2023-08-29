@@ -11,6 +11,7 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.pipeline.PipelineDefinition;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerCreator;
 import io.flamingock.core.spring.SpringDependencyContext;
@@ -24,7 +25,7 @@ import io.flamingock.core.spring.configurator.SpringbootConfiguratorDelegate;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
 import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
-import io.flamingock.core.stage.DefinitionStage;
+import io.flamingock.core.pipeline.stage.StageDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -76,9 +77,9 @@ public class CommunitySpringbootBuilder
         connectionEngine.initialize();
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
-
+        StageDefinition stageDefinition = new StageDefinition(coreConfiguratorDelegate.getMigrationScanPackage()).setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)));
         return RunnerCreator.create(
-                new DefinitionStage(coreConfiguratorDelegate.getMigrationScanPackage()).setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles))),
+                new PipelineDefinition(Collections.singletonList(stageDefinition)),
                 connectionEngine.getAuditor(),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
