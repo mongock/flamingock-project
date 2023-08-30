@@ -16,13 +16,13 @@ import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.MigrationFailureEvent;
 import io.flamingock.core.event.MigrationStartedEvent;
 import io.flamingock.core.event.MigrationSuccessEvent;
-import io.flamingock.core.pipeline.PipelineDefinition;
+import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerBuilder;
 import io.flamingock.core.runner.RunnerCreator;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
-import io.flamingock.core.pipeline.stage.StageDefinition;
+import io.flamingock.core.pipeline.stage.Stage;
 
 import java.util.Collections;
 import java.util.List;
@@ -66,9 +66,9 @@ public class CommunityStandaloneBuilder
                 .getDriver()
                 .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
         connectionEngine.initialize();
-        StageDefinition stageDefinition = new StageDefinition(coreConfiguratorDelegate.getMigrationScanPackage());
+        Stage stage = new Stage(coreConfiguratorDelegate.getMigrationScanPackage());
         return RunnerCreator.create(
-                new PipelineDefinition(Collections.singletonList(stageDefinition)),
+                new Pipeline(Collections.singletonList(stage)),
                 connectionEngine.getAuditor(),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),

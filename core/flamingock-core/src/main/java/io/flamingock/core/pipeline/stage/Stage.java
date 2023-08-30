@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
  * This class represents the process defined by the user in the builder, yaml, etc.
  * It doesn't necessary contain directly the tasks, it can contain the scanPackage, etc.
  */
-public class StageDefinition {
+public class Stage {
 
     private final Collection<String> scanPackages;
     private final boolean parallel;
     private Collection<TaskFilter> filters = new ArrayList<>();
 
     //We can pass here other sources, like yamls, etc.
-    public StageDefinition(Collection<String> scanPackages/*todo StageConfiguration stageConfiguration*/) {
+    public Stage(Collection<String> scanPackages/*todo StageConfiguration stageConfiguration*/) {
         this.scanPackages = scanPackages;
         this.parallel = false;//stageConfiguration.isParallel()
     }
@@ -43,7 +43,7 @@ public class StageDefinition {
                 .collect(Collectors.toList());
     }
 
-    public StageDefinition setFilters(Collection<TaskFilter> filters) {
+    public Stage setFilters(Collection<TaskFilter> filters) {
         this.filters = filters != null ? filters : Collections.emptyList();
         return this;
     }

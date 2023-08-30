@@ -43,6 +43,8 @@ public interface CoreConfigurator<HOLDER> {
 
     HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
 
+
+
     long getLockAcquiredForMillis();
 
     Long getLockQuitTryingAfterMillis();

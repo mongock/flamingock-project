@@ -10,8 +10,8 @@ import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
 import io.flamingock.core.lock.LockException;
-import io.flamingock.core.pipeline.PipelineDefinition;
-import io.flamingock.core.pipeline.stage.StageDefinition;
+import io.flamingock.core.pipeline.Pipeline;
+import io.flamingock.core.pipeline.stage.Stage;
 import io.flamingock.core.pipeline.stage.ExecutableStage;
 import io.flamingock.core.pipeline.stage.LoadedStage;
 import io.flamingock.core.pipeline.stage.execution.StageExecutionContext;
@@ -51,15 +51,15 @@ public abstract class AbstractRunner implements Runner {
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
-    public void run(PipelineDefinition pipelineDefinition) throws CoreException {
+    public void run(Pipeline pipeline) throws CoreException {
         eventPublisher.publishMigrationStarted();//TODO change name to eventPublisher.publishPipelineStarted();
-        pipelineDefinition.getStages().forEach(this::runStage);
+        pipeline.getStages().forEach(this::runStage);
 
     }
 
-    private void runStage(StageDefinition stageDefinition) {
+    private void runStage(Stage stage) {
         //TODO eventPublisher.publishStageStarted();
-        LoadedStage loadedStage = stageDefinition.load();
+        LoadedStage loadedStage = stage.load();
         try (LockAcquisition lockAcquisition = lockAcquirer.acquireIfRequired(loadedStage)) {
             if(lockAcquisition.isNotRequired()) {
                 skipStage();
