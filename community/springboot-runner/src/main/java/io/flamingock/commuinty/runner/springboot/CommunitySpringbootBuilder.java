@@ -11,7 +11,7 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.pipeline.PipelineDefinition;
+import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerCreator;
 import io.flamingock.core.spring.SpringDependencyContext;
@@ -25,13 +25,16 @@ import io.flamingock.core.spring.configurator.SpringbootConfiguratorDelegate;
 import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
 import io.flamingock.core.spring.event.SpringMigrationStartedEvent;
 import io.flamingock.core.spring.event.SpringMigrationSuccessEvent;
-import io.flamingock.core.pipeline.stage.StageDefinition;
+import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.task.filter.TaskFilter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -65,30 +68,48 @@ public class CommunitySpringbootBuilder
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
     public Runner build() {
-        EventPublisher eventPublisher = new EventPublisher(
-                () -> getEventPublisher().publishEvent(new SpringMigrationStartedEvent(this)),
-                result -> getEventPublisher().publishEvent(new SpringMigrationSuccessEvent(this, result)),
-                result -> getEventPublisher().publishEvent(new SpringMigrationFailureEvent(this, result))
-        );
+        ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
 
-        ConnectionEngine connectionEngine = communityConfiguratorDelegate
-                .getDriver()
-                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
-        connectionEngine.initialize();
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
-        StageDefinition stageDefinition = new StageDefinition(coreConfiguratorDelegate.getMigrationScanPackage()).setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)));
+
         return RunnerCreator.create(
-                new PipelineDefinition(Collections.singletonList(stageDefinition)),
+                buildPipeline(activeProfiles),
                 connectionEngine.getAuditor(),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
                 connectionEngine.getLockProvider(),
                 coreConfiguratorDelegate.getCoreProperties(),
-                eventPublisher,
+                createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
+    }
+
+    @NotNull
+    private EventPublisher createEventPublisher() {
+        return new EventPublisher(
+                () -> getEventPublisher().publishEvent(new SpringMigrationStartedEvent(this)),
+                result -> getEventPublisher().publishEvent(new SpringMigrationSuccessEvent(this, result)),
+                result -> getEventPublisher().publishEvent(new SpringMigrationFailureEvent(this, result))
+        );
+    }
+
+    @NotNull
+    private ConnectionEngine getAndInitilizeConnectionEngine() {
+        ConnectionEngine connectionEngine = communityConfiguratorDelegate
+                .getDriver()
+                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
+        connectionEngine.initialize();
+        return connectionEngine;
+    }
+
+    @NotNull
+    private Pipeline buildPipeline(String[] activeProfiles) {
+        return Pipeline.builder()
+                .setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
+                .addStages(coreConfiguratorDelegate.getCoreProperties().getStages())
+                .build();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -97,6 +118,11 @@ public class CommunitySpringbootBuilder
     @Override
     public CoreConfiguration getCoreProperties() {
         return coreConfiguratorDelegate.getCoreProperties();
+    }
+
+    @Override
+    public CommunitySpringbootBuilder addStage(Stage stage) {
+        return coreConfiguratorDelegate.addStage(stage);
     }
 
     @Override
@@ -168,6 +194,7 @@ public class CommunitySpringbootBuilder
     public CommunitySpringbootBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
         return coreConfiguratorDelegate.setTransactionStrategy(transactionStrategy);
     }
+
 
     @Override
     public long getLockAcquiredForMillis() {
@@ -251,26 +278,6 @@ public class CommunitySpringbootBuilder
     @Override
     public ConnectionDriver<?> getDriver() {
         return communityConfiguratorDelegate.getDriver();
-    }
-
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return coreConfiguratorDelegate.getMigrationScanPackage();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        return coreConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
-    }
-
-    @Override
-    public CommunitySpringbootBuilder addMigrationScanPackage(String migrationScanPackage) {
-        return coreConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return coreConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override

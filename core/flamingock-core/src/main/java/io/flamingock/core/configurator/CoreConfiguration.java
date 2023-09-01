@@ -1,10 +1,14 @@
 package io.flamingock.core.configurator;
 
+import io.flamingock.core.pipeline.Stage;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static io.flamingock.core.util.CollectionUtil.assignOrEmpty;
 import static io.flamingock.core.util.Constants.DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;
 import static io.flamingock.core.util.Constants.DEFAULT_MIGRATION_AUTHOR;
 import static io.flamingock.core.util.Constants.DEFAULT_QUIT_TRYING_AFTER_MILLIS;
@@ -65,7 +69,19 @@ public class CoreConfiguration implements CoreConfigurable {
      */
     private TransactionStrategy transactionStrategy = TransactionStrategy.CHANGE_UNIT;
 
-    private List<String> migrationScanPackage = new LinkedList<>();
+
+    private List<Stage> stages = new ArrayList<>();
+
+
+    @Override
+    public void setStages(List<Stage> stages) {
+        this.stages = assignOrEmpty(stages);
+    }
+
+    @Override
+    public List<Stage> getStages() {
+        return stages;
+    }
 
     @Override
     public void setLockAcquiredForMillis(long lockAcquiredForMillis) {
@@ -208,15 +224,6 @@ public class CoreConfiguration implements CoreConfigurable {
         return transactionStrategy;
     }
 
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return migrationScanPackage;
-    }
-
-    @Override
-    public void setMigrationScanPackage(List<String> migrationScanPackage) {
-        this.migrationScanPackage = migrationScanPackage;
-    }
 
     public static class LockProperties {
 

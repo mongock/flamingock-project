@@ -8,7 +8,8 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.pipeline.stage.execution.StageExecutionException;
+import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.oss.driver.mongodb.v3.driver.Mongo3Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -73,7 +74,7 @@ class Mongo3DriverTest {
         //Given-When
         CommunityStandalone.builder()
                 .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-                .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction")
+                .addStage(new Stage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
@@ -110,7 +111,7 @@ class Mongo3DriverTest {
         //Given-When
         CommunityStandalone.builder()
                 .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-                .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithoutTransaction")
+                .addStage(new Stage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithoutTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(false)
@@ -148,7 +149,7 @@ class Mongo3DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithTransaction")
+                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithTransaction"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(true)
@@ -184,7 +185,7 @@ class Mongo3DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithRollback")
+                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithRollback"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)
@@ -222,7 +223,7 @@ class Mongo3DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithoutRollback")
+                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithoutRollback"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)

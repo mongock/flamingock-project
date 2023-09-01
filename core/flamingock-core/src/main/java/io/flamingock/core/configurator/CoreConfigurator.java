@@ -1,11 +1,15 @@
 package io.flamingock.core.configurator;
 
-import java.util.List;
+
+import io.flamingock.core.pipeline.Stage;
+
 import java.util.Map;
 
 public interface CoreConfigurator<HOLDER> {
 
     CoreConfiguration getCoreProperties();
+
+    HOLDER addStage(Stage stage);
 
     HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis);
 
@@ -35,13 +39,6 @@ public interface CoreConfigurator<HOLDER> {
 
     HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy);
 
-    List<String> getMigrationScanPackage();
-
-    HOLDER addMigrationScanPackages(List<String> migrationScanPackageList);
-
-    HOLDER addMigrationScanPackage(String migrationScanPackage);
-
-    HOLDER setMigrationScanPackage(List<String> migrationScanPackage);
 
     long getLockAcquiredForMillis();
 
@@ -70,4 +67,5 @@ public interface CoreConfigurator<HOLDER> {
     String getDefaultAuthor();
 
     TransactionStrategy getTransactionStrategy();
+
 }

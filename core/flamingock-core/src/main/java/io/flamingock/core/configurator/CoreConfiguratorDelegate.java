@@ -1,7 +1,8 @@
 package io.flamingock.core.configurator;
 
-import java.util.Collections;
-import java.util.List;
+
+import io.flamingock.core.pipeline.Stage;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -17,6 +18,12 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
     @Override
     public CoreConfiguration getCoreProperties() {
         return properties;
+    }
+
+    @Override
+    public HOLDER addStage(Stage stage) {
+        properties.getStages().add(stage);
+        return holderSupplier.get();
     }
 
     @Override
@@ -105,31 +112,6 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
 
 
     @Override
-    public List<String> getMigrationScanPackage() {
-        return getCoreProperties().getMigrationScanPackage();
-    }
-
-    @Override
-    public HOLDER addMigrationScanPackages(List<String> migrationScanPackageList) {
-        List<String> packagesCurrentlyStored = getMigrationScanPackage();
-        if (migrationScanPackageList != null) {
-            packagesCurrentlyStored.addAll(migrationScanPackageList);
-        }
-        return setMigrationScanPackage(packagesCurrentlyStored);
-    }
-
-    @Override
-    public HOLDER addMigrationScanPackage(String migrationScanPackage) {
-        return this.addMigrationScanPackages(Collections.singletonList(migrationScanPackage));
-    }
-
-    @Override
-    public HOLDER setMigrationScanPackage(List<String> migrationScanPackage) {
-        getCoreProperties().setMigrationScanPackage(migrationScanPackage);
-        return holderSupplier.get();
-    }
-
-    @Override
     public long getLockAcquiredForMillis() {
         return properties.getLockAcquiredForMillis();
     }
@@ -198,4 +180,5 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
     public TransactionStrategy getTransactionStrategy() {
         return properties.getTransactionStrategy();
     }
+
 }

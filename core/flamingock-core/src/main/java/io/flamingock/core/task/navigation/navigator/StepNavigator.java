@@ -3,7 +3,7 @@ package io.flamingock.core.task.navigation.navigator;
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.writer.AuditItem;
 import io.flamingock.core.audit.writer.RuntimeContext;
-import io.flamingock.core.pipeline.stage.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.navigation.step.ExecutableStep;
 import io.flamingock.core.task.navigation.step.RollableFailedStep;
 import io.flamingock.core.task.navigation.step.TaskStep;

@@ -1,4 +1,4 @@
-package io.flamingock.core.pipeline.stage.execution;
+package io.flamingock.core.pipeline.execution;
 
 import java.util.Map;
 

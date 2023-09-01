@@ -6,6 +6,7 @@ import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
+import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.spring.configurator.SpringRunnerType;
 import io.flamingock.core.spring.configurator.SpringbootConfigurable;
 import io.flamingock.core.spring.configurator.SpringbootConfiguration;
@@ -33,6 +34,16 @@ public class CommunitySpringbootConfiguration implements CoreConfigurable, Commu
 
     public SpringbootConfiguration getSpringbootProperties() {
         return springbootConfiguration;
+    }
+
+    @Override
+    public void setStages(List<Stage> stages) {
+        coreConfiguration.setStages(stages);
+    }
+
+    @Override
+    public List<Stage> getStages() {
+        return coreConfiguration.getStages();
     }
 
     @Override
@@ -175,15 +186,6 @@ public class CommunitySpringbootConfiguration implements CoreConfigurable, Commu
         return coreConfiguration.getTransactionStrategy();
     }
 
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return coreConfiguration.getMigrationScanPackage();
-    }
-
-    @Override
-    public void setMigrationScanPackage(List<String> migrationScanPackage) {
-        coreConfiguration.setMigrationScanPackage(migrationScanPackage);
-    }
 
     @Override
     public String getMigrationRepositoryName() {

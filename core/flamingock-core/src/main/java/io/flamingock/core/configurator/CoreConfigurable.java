@@ -1,9 +1,20 @@
 package io.flamingock.core.configurator;
 
+import io.flamingock.core.pipeline.Stage;
+
 import java.util.List;
 import java.util.Map;
 
 public interface CoreConfigurable {
+
+    void setStages(List<Stage> stages);
+
+    List<Stage> getStages();
+
+
+
+
+
     void setLockAcquiredForMillis(long lockAcquiredForMillis);
 
     void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis);
@@ -60,7 +71,4 @@ public interface CoreConfigurable {
 
     TransactionStrategy getTransactionStrategy();
 
-    List<String> getMigrationScanPackage();
-
-    void setMigrationScanPackage(List<String> migrationScanPackage);
 }

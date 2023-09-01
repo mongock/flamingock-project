@@ -5,11 +5,10 @@ import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.lock.LockAcquirer;
-import io.flamingock.core.pipeline.PipelineDefinition;
+import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.pipeline.stage.StageDefinition;
-import io.flamingock.core.pipeline.stage.execution.StageExecutionContext;
-import io.flamingock.core.pipeline.stage.execution.StageExecutor;
+import io.flamingock.core.pipeline.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.execution.StageExecutor;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.core.util.StringUtil;
 
@@ -22,7 +21,7 @@ public final class RunnerCreator {
         return new StageExecutionContext(StringUtil.executionId(), StringUtil.hostname(), configuration.getDefaultAuthor(), configuration.getMetadata());
     }
 
-    public static Runner create(PipelineDefinition pipelineDefinition,
+    public static Runner create(Pipeline pipeline,
                                 SingleAuditReader auditReader,
                                 AuditWriter auditWriter,
                                 TransactionWrapper transactionWrapper,
@@ -36,7 +35,7 @@ public final class RunnerCreator {
         return new AbstractRunner(lockAcquirer, auditReader, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
             @Override
             public void run() {
-                this.run(pipelineDefinition);
+                this.run(pipeline);
             }
         };
     }

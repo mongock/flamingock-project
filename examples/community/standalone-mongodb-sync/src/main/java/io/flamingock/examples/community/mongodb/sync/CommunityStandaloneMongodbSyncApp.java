@@ -5,6 +5,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
+import io.flamingock.core.pipeline.Stage;
 import io.flamingock.examples.community.mongodb.sync.events.FailureEventListener;
 import io.flamingock.examples.community.mongodb.sync.events.StartedEventListener;
 import io.flamingock.examples.community.mongodb.sync.events.SuccessEventListener;
@@ -29,7 +30,7 @@ public class CommunityStandaloneMongodbSyncApp {
                 .setLockAcquiredForMillis(60 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                 .setLockQuitTryingAfterMillis(3 * 60 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
                 .setLockTryFrequencyMillis(1000L)//this is just to show how is set. Default value is still 1000L
-                .addMigrationScanPackage("io.flamingock.examples.community.mongodb.sync.changes")
+                .addStage(new Stage("io.flamingock.examples.community.mongodb.sync.changes"))
                 .addDependency(mongoClient.getDatabase(databaseName))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)

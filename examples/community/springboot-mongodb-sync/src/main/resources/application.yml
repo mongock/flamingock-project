@@ -1,6 +1,8 @@
 flamingock:
-  migration-scan-package:
-    - io.flamingock.examples.community.changes
+  stages:
+    - name: stage1
+      scan-packages:
+        - io.flamingock.examples.community.changes
   transactionEnabled: true
 
 spring:

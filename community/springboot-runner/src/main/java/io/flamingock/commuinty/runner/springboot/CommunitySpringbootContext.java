@@ -40,13 +40,13 @@ public class CommunitySpringbootContext {
 
 
     private SpringRunnerBuilder getBuilder(ConnectionDriver<?> connectionDriver,
-                                           CommunitySpringbootConfiguration properties,
+                                           CommunitySpringbootConfiguration configuration,
                                            ApplicationContext springContext,
                                            ApplicationEventPublisher applicationEventPublisher) {
         return CommunitySpringboot.builder(
-                        properties.getCoreProperties(),
-                        properties.getCommunityProperties(),
-                        properties.getSpringbootProperties()
+                        configuration.getCoreProperties(),
+                        configuration.getCommunityProperties(),
+                        configuration.getSpringbootProperties()
                 ).setDriver(connectionDriver)
                 .setSpringContext(springContext)
                 .setEventPublisher(applicationEventPublisher);

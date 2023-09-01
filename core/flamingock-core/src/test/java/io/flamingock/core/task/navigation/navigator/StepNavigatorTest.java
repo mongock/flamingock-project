@@ -2,7 +2,7 @@ package io.flamingock.core.task.navigation.navigator;
 
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.writer.AuditItem;
-import io.flamingock.core.pipeline.stage.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
 import io.flamingock.core.lock.Lock;
@@ -39,6 +39,9 @@ class StepNavigatorTest {
     void beforeEach() {
         TaskWithBeforeExecution.checker.reset();
     }
+
+
+
 
     @Test
     @DisplayName("SHOULD run beforeExecution.Rollback IF task contains beforeExecution WHEN task fails")

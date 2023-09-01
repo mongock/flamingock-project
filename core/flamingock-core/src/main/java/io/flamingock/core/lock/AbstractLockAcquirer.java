@@ -2,8 +2,8 @@ package io.flamingock.core.lock;
 
 import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
-import io.flamingock.core.pipeline.stage.ExecutableStage;
-import io.flamingock.core.pipeline.stage.LoadedStage;
+import io.flamingock.core.pipeline.ExecutableStage;
+import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.util.TimeService;
 
 public abstract class AbstractLockAcquirer implements LockAcquirer {
