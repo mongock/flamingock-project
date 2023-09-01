@@ -22,10 +22,12 @@ import io.flamingock.core.runner.RunnerBuilder;
 import io.flamingock.core.runner.RunnerCreator;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
-import io.flamingock.core.pipeline.stage.Stage;
+import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.task.filter.TaskFilter;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -58,26 +60,42 @@ public class CommunityStandaloneBuilder
 
     @Override
     public Runner build() {
-        EventPublisher eventPublisher = new EventPublisher(
-                getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new MigrationStartedEvent()) : null,
-                getMigrationSuccessListener() != null ? result -> getMigrationSuccessListener().accept(new MigrationSuccessEvent(result)) : null,
-                getMigrationFailureListener() != null ? result -> getMigrationFailureListener().accept(new MigrationFailureEvent(result)) : null);
-        ConnectionEngine connectionEngine = communityConfiguratorDelegate
-                .getDriver()
-                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
-        connectionEngine.initialize();
-        Stage stage = new Stage(coreConfiguratorDelegate.getMigrationScanPackage());
+        ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
         return RunnerCreator.create(
-                new Pipeline(Collections.singletonList(stage)),
+                buildPipeline(),
                 connectionEngine.getAuditor(),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
                 connectionEngine.getLockProvider(),
                 coreConfiguratorDelegate.getCoreProperties(),
-                eventPublisher,
+                creatEventPublisher(),
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
+    }
+
+    @NotNull
+    private EventPublisher creatEventPublisher() {
+        return new EventPublisher(
+                getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new MigrationStartedEvent()) : null,
+                getMigrationSuccessListener() != null ? result -> getMigrationSuccessListener().accept(new MigrationSuccessEvent(result)) : null,
+                getMigrationFailureListener() != null ? result -> getMigrationFailureListener().accept(new MigrationFailureEvent(result)) : null);
+    }
+
+    @NotNull
+    private ConnectionEngine getAndInitilizeConnectionEngine() {
+        ConnectionEngine connectionEngine = communityConfiguratorDelegate
+                .getDriver()
+                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
+        connectionEngine.initialize();
+        return connectionEngine;
+    }
+
+    @NotNull
+    private Pipeline buildPipeline() {
+        return Pipeline.builder()
+                .addStages(coreConfiguratorDelegate.getCoreProperties().getStages())
+                .build();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +104,11 @@ public class CommunityStandaloneBuilder
     @Override
     public CoreConfiguration getCoreProperties() {
         return coreConfiguratorDelegate.getCoreProperties();
+    }
+
+    @Override
+    public CommunityStandaloneBuilder addStage(Stage stage) {
+        return coreConfiguratorDelegate.addStage(stage);
     }
 
     @Override
@@ -241,26 +264,6 @@ public class CommunityStandaloneBuilder
     @Override
     public ConnectionDriver<?> getDriver() {
         return communityConfiguratorDelegate.getDriver();
-    }
-
-    @Override
-    public List<String> getMigrationScanPackage() {
-        return coreConfiguratorDelegate.getMigrationScanPackage();
-    }
-
-    @Override
-    public CommunityStandaloneBuilder addMigrationScanPackages(List<String> migrationScanPackageList) {
-        return coreConfiguratorDelegate.addMigrationScanPackages(migrationScanPackageList);
-    }
-
-    @Override
-    public CommunityStandaloneBuilder addMigrationScanPackage(String migrationScanPackage) {
-        return coreConfiguratorDelegate.addMigrationScanPackage(migrationScanPackage);
-    }
-
-    @Override
-    public CommunityStandaloneBuilder setMigrationScanPackage(List<String> migrationScanPackage) {
-        return coreConfiguratorDelegate.setMigrationScanPackage(migrationScanPackage);
     }
 
     @Override

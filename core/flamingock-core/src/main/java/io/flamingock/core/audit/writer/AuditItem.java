@@ -1,6 +1,6 @@
 package io.flamingock.core.audit.writer;
 
-import io.flamingock.core.pipeline.stage.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 
 public class AuditItem {

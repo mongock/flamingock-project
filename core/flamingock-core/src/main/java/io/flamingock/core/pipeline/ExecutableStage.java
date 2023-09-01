@@ -1,4 +1,4 @@
-package io.flamingock.core.pipeline.stage;
+package io.flamingock.core.pipeline;
 
 import io.flamingock.core.task.executable.ExecutableTask;
 

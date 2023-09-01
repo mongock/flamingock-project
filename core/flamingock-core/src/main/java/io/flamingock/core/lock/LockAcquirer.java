@@ -1,6 +1,6 @@
 package io.flamingock.core.lock;
 
-import io.flamingock.core.pipeline.stage.LoadedStage;
+import io.flamingock.core.pipeline.LoadedStage;
 
 public interface LockAcquirer {
 

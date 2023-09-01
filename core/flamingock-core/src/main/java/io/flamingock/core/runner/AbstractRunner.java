@@ -11,12 +11,12 @@ import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
 import io.flamingock.core.lock.LockException;
 import io.flamingock.core.pipeline.Pipeline;
-import io.flamingock.core.pipeline.stage.Stage;
-import io.flamingock.core.pipeline.stage.ExecutableStage;
-import io.flamingock.core.pipeline.stage.LoadedStage;
-import io.flamingock.core.pipeline.stage.execution.StageExecutionContext;
-import io.flamingock.core.pipeline.stage.execution.StageExecutionException;
-import io.flamingock.core.pipeline.stage.execution.StageExecutor;
+import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.pipeline.ExecutableStage;
+import io.flamingock.core.pipeline.LoadedStage;
+import io.flamingock.core.pipeline.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.execution.StageExecutionException;
+import io.flamingock.core.pipeline.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

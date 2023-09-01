@@ -7,7 +7,8 @@ import com.mongodb.client.MongoClients;
 import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.pipeline.stage.execution.StageExecutionException;
+import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.oss.driver.mongodb.springdata.v2.driver.SpringDataMongoV2Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,6 +21,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +74,7 @@ class SpringDataMongoV2DriverTest {
         //Given-When
         CommunityStandalone.builder()
                 .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction")
+                .addStage(new Stage(Collections.singletonList("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction")))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
@@ -108,7 +111,7 @@ class SpringDataMongoV2DriverTest {
         //Given-When
         CommunityStandalone.builder()
                 .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithoutTransaction")
+                .addStage(new Stage(Collections.singletonList("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithoutTransaction")))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .setTransactionEnabled(false)
@@ -146,7 +149,7 @@ class SpringDataMongoV2DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithTransaction")
+                    .addStage(new Stage(Collections.singletonList("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithTransaction")))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .setTransactionEnabled(true)
@@ -182,7 +185,7 @@ class SpringDataMongoV2DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithRollback")
+                    .addStage(new Stage(Collections.singletonList("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithRollback")))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)
@@ -220,7 +223,7 @@ class SpringDataMongoV2DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                    .addMigrationScanPackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithoutRollback")
+                    .addStage(new Stage(Collections.singletonList("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithoutRollback")))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)
