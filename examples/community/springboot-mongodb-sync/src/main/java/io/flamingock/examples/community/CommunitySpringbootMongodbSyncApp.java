@@ -2,8 +2,9 @@ package io.flamingock.examples.community;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.commuinty.runner.springboot.EnableFlamingock;
+
 import io.flamingock.community.internal.driver.ConnectionDriver;
+import io.flamingock.community.runner.springboot.EnableFlamingock;
 import io.flamingock.examples.community.events.FailureEventListener;
 import io.flamingock.examples.community.events.StartedEventListener;
 import io.flamingock.examples.community.events.SuccessEventListener;

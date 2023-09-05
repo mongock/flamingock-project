@@ -4,7 +4,8 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
+
+import io.flamingock.community.runner.standalone.CommunityStandalone;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.examples.community.mongodb.sync.events.FailureEventListener;
 import io.flamingock.examples.community.mongodb.sync.events.StartedEventListener;

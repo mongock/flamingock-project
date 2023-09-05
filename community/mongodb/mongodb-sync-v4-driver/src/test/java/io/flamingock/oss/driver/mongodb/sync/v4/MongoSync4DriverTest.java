@@ -5,8 +5,9 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.commuinty.runner.standalone.CommunityStandalone;
+
 import io.flamingock.community.internal.persistence.MongockAuditEntry;
+import io.flamingock.community.runner.standalone.CommunityStandalone;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
