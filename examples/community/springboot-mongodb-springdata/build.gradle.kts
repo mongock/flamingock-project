@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
 
-    implementation(project(":community:springboot-runner"))
+    implementation(project(":community:springboot-v2-runner"))
     implementation(project(":community:mongodb:mongodb-springdata-v3-driver"))
     
     implementation("org.slf4j:slf4j-simple:2.0.6")

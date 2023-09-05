@@ -9,9 +9,9 @@ include("core:flamingock-core")
 project(":core:flamingock-core").projectDir = file("core/flamingock-core")
 project(":core:flamingock-core").name = "flamingock-core"
 
-include("core:flamingock-spring-core")
-project(":core:flamingock-spring-core").projectDir = file("core/flamingock-spring-core")
-project(":core:flamingock-spring-core").name = "flamingock-spring-core"
+include("core:flamingock-springboot-v2-core")
+project(":core:flamingock-springboot-v2-core").projectDir = file("core/flamingock-springboot-v2-core")
+project(":core:flamingock-springboot-v2-core").name = "flamingock-springboot-v2-core"
 
 include("core:flamingock-springboot-v3-core")
 project(":core:flamingock-springboot-v3-core").projectDir = file("core/flamingock-springboot-v3-core")
@@ -28,9 +28,9 @@ include("community:standalone-runner")
 project(":community:standalone-runner").name = "standalone-runner"
 project(":community:standalone-runner").projectDir = file("community/standalone-runner")
 
-include("community:springboot-runner")
-project(":community:springboot-runner").name = "springboot-runner"
-project(":community:springboot-runner").projectDir = file("community/springboot-runner")
+include("community:springboot-v2-runner")
+project(":community:springboot-v2-runner").name = "springboot-v2-runner"
+project(":community:springboot-v2-runner").projectDir = file("community/springboot-v2-runner")
 
 include("community:springboot-v3-runner")
 project(":community:springboot-v3-runner").name = "springboot-v3-runner"
