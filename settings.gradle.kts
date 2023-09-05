@@ -75,3 +75,7 @@ project(":examples:community:springboot-mongodb-sync").projectDir = file("exampl
 include("examples:community:springboot-mongodb-springdata")
 project(":examples:community:springboot-mongodb-springdata").name = "springboot-mongodb-springdata"
 project(":examples:community:springboot-mongodb-springdata").projectDir = file("examples/community/springboot-mongodb-springdata")
+
+include("examples:community:springboot-v3-mongodb-springdata-v4")
+project(":examples:community:springboot-v3-mongodb-springdata-v4").name = "springboot-v3-mongodb-springdata-v4"
+project(":examples:community:springboot-v3-mongodb-springdata-v4").projectDir = file("examples/community/springboot-v3-mongodb-springdata-v4")
