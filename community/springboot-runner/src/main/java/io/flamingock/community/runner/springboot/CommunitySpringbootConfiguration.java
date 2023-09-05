@@ -1,4 +1,4 @@
-package io.flamingock.commuinty.runner.springboot;
+package io.flamingock.community.runner.springboot;
 
 import io.flamingock.community.internal.CommunityConfigurable;
 import io.flamingock.community.internal.CommunityConfiguration;

@@ -1,4 +1,4 @@
-package io.flamingock.commuinty.runner.springboot;
+package io.flamingock.community.runner.springboot;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
