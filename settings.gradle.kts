@@ -56,6 +56,10 @@ include("community:mongodb:mongodb-springdata-v2-driver")
 project(":community:mongodb:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
 project(":community:mongodb:mongodb-springdata-v2-driver").projectDir = file("community/mongodb/mongodb-springdata-v2-driver")
 
+include("community:mongodb:mongodb-springdata-v4-driver")
+project(":community:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
+project(":community:mongodb:mongodb-springdata-v4-driver").projectDir = file("community/mongodb/mongodb-springdata-v4-driver")
+
 //////////////////////////////////////
 // EXAMPLES
 //////////////////////////////////////
