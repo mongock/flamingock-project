@@ -13,6 +13,10 @@ include("core:flamingock-spring-core")
 project(":core:flamingock-spring-core").projectDir = file("core/flamingock-spring-core")
 project(":core:flamingock-spring-core").name = "flamingock-spring-core"
 
+include("core:flamingock-springboot-v3-core")
+project(":core:flamingock-springboot-v3-core").projectDir = file("core/flamingock-springboot-v3-core")
+project(":core:flamingock-springboot-v3-core").name = "flamingock-springboot-v3-core"
+
 //////////////////////////////////////
 // COMMUNITY
 //////////////////////////////////////
@@ -27,6 +31,10 @@ project(":community:standalone-runner").projectDir = file("community/standalone-
 include("community:springboot-runner")
 project(":community:springboot-runner").name = "springboot-runner"
 project(":community:springboot-runner").projectDir = file("community/springboot-runner")
+
+include("community:springboot-v3-runner")
+project(":community:springboot-v3-runner").name = "springboot-v3-runner"
+project(":community:springboot-v3-runner").projectDir = file("community/springboot-v3-runner")
 
 include("community:mongodb:mongodb-facade")
 project(":community:mongodb:mongodb-facade").name = "mongodb-facade"
