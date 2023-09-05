@@ -1,6 +1,6 @@
 dependencies {
 //    INTERNAL
-    api(project(":core:flamingock-spring-core"))
+    api(project(":core:flamingock-springboot-v3-core"))
     api(project(":community:base-community"))
 
     compileOnly("org.springframework.boot:spring-boot:3.1.3")
