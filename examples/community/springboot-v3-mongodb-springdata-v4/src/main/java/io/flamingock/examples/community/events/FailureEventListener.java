@@ -1,6 +1,6 @@
 package io.flamingock.examples.community.events;
 
-import io.flamingock.core.spring.event.SpringMigrationFailureEvent;
+import io.flamingock.core.springboot.v3.event.SpringMigrationFailureEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
