@@ -9,9 +9,13 @@ include("core:flamingock-core")
 project(":core:flamingock-core").projectDir = file("core/flamingock-core")
 project(":core:flamingock-core").name = "flamingock-core"
 
-include("core:flamingock-spring-core")
-project(":core:flamingock-spring-core").projectDir = file("core/flamingock-spring-core")
-project(":core:flamingock-spring-core").name = "flamingock-spring-core"
+include("core:flamingock-springboot-v2-core")
+project(":core:flamingock-springboot-v2-core").projectDir = file("core/flamingock-springboot-v2-core")
+project(":core:flamingock-springboot-v2-core").name = "flamingock-springboot-v2-core"
+
+include("core:flamingock-springboot-v3-core")
+project(":core:flamingock-springboot-v3-core").projectDir = file("core/flamingock-springboot-v3-core")
+project(":core:flamingock-springboot-v3-core").name = "flamingock-springboot-v3-core"
 
 //////////////////////////////////////
 // COMMUNITY
@@ -24,9 +28,13 @@ include("community:standalone-runner")
 project(":community:standalone-runner").name = "standalone-runner"
 project(":community:standalone-runner").projectDir = file("community/standalone-runner")
 
-include("community:springboot-runner")
-project(":community:springboot-runner").name = "springboot-runner"
-project(":community:springboot-runner").projectDir = file("community/springboot-runner")
+include("community:springboot-v2-runner")
+project(":community:springboot-v2-runner").name = "springboot-v2-runner"
+project(":community:springboot-v2-runner").projectDir = file("community/springboot-v2-runner")
+
+include("community:springboot-v3-runner")
+project(":community:springboot-v3-runner").name = "springboot-v3-runner"
+project(":community:springboot-v3-runner").projectDir = file("community/springboot-v3-runner")
 
 include("community:mongodb:mongodb-facade")
 project(":community:mongodb:mongodb-facade").name = "mongodb-facade"
@@ -48,6 +56,10 @@ include("community:mongodb:mongodb-springdata-v2-driver")
 project(":community:mongodb:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
 project(":community:mongodb:mongodb-springdata-v2-driver").projectDir = file("community/mongodb/mongodb-springdata-v2-driver")
 
+include("community:mongodb:mongodb-springdata-v4-driver")
+project(":community:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
+project(":community:mongodb:mongodb-springdata-v4-driver").projectDir = file("community/mongodb/mongodb-springdata-v4-driver")
+
 //////////////////////////////////////
 // EXAMPLES
 //////////////////////////////////////
@@ -63,3 +75,7 @@ project(":examples:community:springboot-mongodb-sync").projectDir = file("exampl
 include("examples:community:springboot-mongodb-springdata")
 project(":examples:community:springboot-mongodb-springdata").name = "springboot-mongodb-springdata"
 project(":examples:community:springboot-mongodb-springdata").projectDir = file("examples/community/springboot-mongodb-springdata")
+
+include("examples:community:springboot-v3-mongodb-springdata-v4")
+project(":examples:community:springboot-v3-mongodb-springdata-v4").name = "springboot-v3-mongodb-springdata-v4"
+project(":examples:community:springboot-v3-mongodb-springdata-v4").projectDir = file("examples/community/springboot-v3-mongodb-springdata-v4")
