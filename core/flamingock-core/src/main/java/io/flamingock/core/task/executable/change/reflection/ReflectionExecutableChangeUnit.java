@@ -5,7 +5,6 @@ import io.flamingock.core.task.descriptor.reflection.SortedReflectionTaskDescrip
 import io.flamingock.core.task.executable.AbstractExecutableTask;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.executable.Rollback;
-import io.flamingock.core.task.executable.change.ExecutableChangeUnit;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -24,7 +23,7 @@ import java.util.List;
  * However, the methods are extracted in advance, so we can spot wrong configuration before starting the process and
  * fail fast.
  */
-public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<SortedReflectionTaskDescriptor> implements ExecutableChangeUnit {
+public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<SortedReflectionTaskDescriptor> implements ExecutableTask {
 
     private final Method executionMethod;
 

@@ -4,7 +4,7 @@ import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.task.Task;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.task.executable.change.ExecutableChangeUnit;
+import io.flamingock.core.task.executable.change.ExecutableChangeUnitFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -28,10 +28,10 @@ public interface ExecutableTask extends Task {
      */
     final class Factory implements ExecutableTaskFactory {
 
-        private final ExecutableChangeUnit.Factory changeUnitFactory;
+        private final ExecutableChangeUnitFactory changeUnitFactory;
 
         public Factory(Map<String, AuditEntryStatus> initialStatesMap) {
-            changeUnitFactory = new ExecutableChangeUnit.Factory(initialStatesMap);
+            changeUnitFactory = new ExecutableChangeUnitFactory(initialStatesMap);
         }
 
         @Override
