@@ -3,6 +3,7 @@ package io.flamingock.core.pipeline;
 import io.flamingock.core.task.descriptor.SortedTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.reflection.ReflectionTaskDescriptor;
+import io.flamingock.core.task.descriptor.reflection.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.core.util.ReflectionUtil;
 
@@ -61,8 +62,8 @@ public class Stage {
                 .map(ReflectionUtil::loadClassesFromPackage)
                 .flatMap(Collection::stream)
                 .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
-                .map(source -> ReflectionTaskDescriptor.recycledBuilder().setSource(source))
-                .map(ReflectionTaskDescriptor.Builder::build)
+                .map(source -> ReflectionTaskDescriptorBuilder.recycledBuilder().setSource(source))
+                .map(ReflectionTaskDescriptorBuilder::build)
                 .collect(Collectors.toList());
     }
 

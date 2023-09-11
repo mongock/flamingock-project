@@ -1,4 +1,4 @@
-package io.flamingock.core.task.executable.change.reflection;
+package io.flamingock.core.task.executable.change;
 
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;

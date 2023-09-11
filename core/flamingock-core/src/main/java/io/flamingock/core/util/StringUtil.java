@@ -14,7 +14,10 @@ public final class StringUtil {
                 "%s-%s",
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd-HH_mm_ss_SSSSSSSSS")),
                 String.valueOf(UUID.randomUUID().getMostSignificantBits()).replace("-", ""));
+    }
 
+    public static String getBeforeExecutionId(String baseId) {
+        return String.format("%s_%s", baseId, "before");
     }
 
 

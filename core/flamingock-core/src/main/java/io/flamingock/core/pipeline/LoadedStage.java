@@ -3,6 +3,7 @@ package io.flamingock.core.pipeline;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
+import io.flamingock.core.task.executable.ExecutableTaskRootFactory;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -24,7 +25,7 @@ public class LoadedStage {
 
     public ExecutableStage applyState(SingleAuditStageStatus state) {
 
-        ExecutableTask.Factory factory = new ExecutableTask.Factory(state.getStatesMap());
+        ExecutableTaskRootFactory factory = new ExecutableTaskRootFactory(state.getStatesMap());
         List<ExecutableTask> tasks = taskDescriptors
                 .stream()
                 .map(factory::getTasks)

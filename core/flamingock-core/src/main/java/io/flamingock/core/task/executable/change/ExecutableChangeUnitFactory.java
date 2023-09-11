@@ -12,8 +12,8 @@ import io.flamingock.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.executable.ExecutableTaskFactory;
-import io.flamingock.core.task.executable.change.reflection.ReflectionExecutableChangeUnit;
 import io.flamingock.core.util.ReflectionUtil;
+import io.flamingock.core.util.StringUtil;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -82,7 +82,7 @@ public class ExecutableChangeUnitFactory  implements ExecutableTaskFactory {
     private Optional<ExecutableTask> getBeforeExecutionOptional(ReflectionExecutableChangeUnit baseTask) {
         //Creates a new TaskDescriptor, based on the main one, but with the "beforeExecution id, also based on the main one"
         SortedReflectionTaskDescriptor taskDescriptor = new SortedReflectionTaskDescriptor(
-                BeforeExecutionIdGenerator.getId(baseTask.getDescriptor().getId()),
+                StringUtil.getBeforeExecutionId(baseTask.getDescriptor().getId()),
                 baseTask.getDescriptor().getOrder(),
                 baseTask.getDescriptor().getSource(),
                 baseTask.getDescriptor().isRunAlways(),
