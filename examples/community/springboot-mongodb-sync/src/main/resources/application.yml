@@ -1,7 +1,7 @@
 flamingock:
   stages:
     - name: stage1
-      scan-packages:
+      code-packages:
         - io.flamingock.examples.community.changes
   transactionEnabled: true
 

@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 
 /**
  * This class represents the process defined by the user in the builder, yaml, etc.
- * It doesn't necessary contain directly the tasks, it can contain the scanPackage, etc.
+ * It doesn't necessary contain directly the tasks, it can contain the code packages, etc.
  */
 public class Stage {
 
     private String name;
-    private Collection<String> scanPackages;
+    private Collection<String> codePackages;
     private boolean parallel;
     private Collection<TaskFilter> filters;
 
@@ -31,28 +31,29 @@ public class Stage {
     }
 
 
-    public Stage(String... scanPackages) {
-        this(Arrays.asList(scanPackages));
+    public Stage(String... codePackages) {
+        this(Arrays.asList(codePackages));
     }
 
-    public Stage(Collection<String> scanPackages) {
-        this(scanPackages, new LinkedHashSet<>(), false);
+    public Stage(Collection<String> codePackages) {
+        this(codePackages, new LinkedHashSet<>(), false);
     }
 
-    public Stage(Collection<String> scanPackages, boolean parallel) {
-        this(scanPackages, new LinkedList<>(), parallel);
+    public Stage(Collection<String> codePackages, boolean parallel) {
+        this(codePackages, new LinkedList<>(), parallel);
 
     }
 
-    public Stage(Collection<String> scanPackages, Collection<TaskFilter> filters, boolean parallel) {
-        this.scanPackages = new LinkedHashSet<>(scanPackages);
+    public Stage(Collection<String> codePackages, Collection<TaskFilter> filters, boolean parallel) {
+        this.codePackages = new LinkedHashSet<>(codePackages);
         this.filters = filters != null ? filters : Collections.emptyList();
         this.parallel = parallel;//stageConfiguration.isParallel()
     }
 
-    private static List<TaskDescriptor> getFilteredDescriptorsFromScanPackages(Collection<String> scanPackages, Collection<TaskFilter> filters) {
+    private static List<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages,
+                                                                               Collection<TaskFilter> filters) {
 
-        return scanPackages.stream()
+        return codePackages.stream()
                 .map(ReflectionUtil::loadClassesFromPackage)
                 .flatMap(Collection::stream)
                 .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
@@ -69,12 +70,12 @@ public class Stage {
         this.name = name;
     }
 
-    public Collection<String> getScanPackages() {
-        return scanPackages;
+    public Collection<String> getCodePackages() {
+        return codePackages;
     }
 
-    public void setScanPackages(Collection<String> scanPackages) {
-        this.scanPackages = scanPackages;
+    public void setCodePackages(Collection<String> codePackages) {
+        this.codePackages = codePackages;
     }
 
     private Collection<TaskFilter> getFilters() {
@@ -84,7 +85,7 @@ public class Stage {
     public Stage addFilters(Collection<TaskFilter> filters) {
         Collection<TaskFilter> allFilters = this.filters != null ? new LinkedList<>(this.filters) : new LinkedHashSet<>();
         if (filters != null) allFilters.addAll(filters);
-        return new Stage(this.scanPackages, allFilters, this.parallel);
+        return new Stage(this.codePackages, allFilters, this.parallel);
     }
 
     /*
@@ -106,7 +107,7 @@ public class Stage {
      */
     public LoadedStage load() {
         //descriptors will potentially contain all the descriptors extracted form scanPackage, yaml, etc.
-        List<TaskDescriptor> descriptors = getFilteredDescriptorsFromScanPackages(scanPackages, getFilters());
+        List<TaskDescriptor> descriptors = getFilteredDescriptorsFromCodePackages(codePackages, getFilters());
 
         Optional<TaskDescriptor> orderedDescriptorOptional = descriptors.stream().filter(descriptor -> descriptor instanceof SortedTaskDescriptor).findFirst();
 
