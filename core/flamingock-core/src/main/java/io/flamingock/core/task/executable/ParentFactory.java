@@ -12,11 +12,11 @@ import java.util.Optional;
  * This is an Abstract factory of factories. Depending on the descriptor it will use one of the factories,
  * that could be ChangeUnitFactory, PluginFactory(not implemented yet), etc.
  */
-public class ExecutableTaskRootFactory implements ExecutableTaskFactory {
+public class ParentFactory implements ExecutableTaskFactory {
 
     private final ExecutableChangeUnitFactory changeUnitFactory;
 
-    public ExecutableTaskRootFactory(Map<String, AuditEntryStatus> initialStatesMap) {
+    public ParentFactory(Map<String, AuditEntryStatus> initialStatesMap) {
         changeUnitFactory = new ExecutableChangeUnitFactory(initialStatesMap);
     }
 
