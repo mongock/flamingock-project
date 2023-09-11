@@ -3,10 +3,10 @@ package io.flamingock.core.task.descriptor.reflection;
 import io.flamingock.core.api.annotations.ChangeUnit;
 
 public class ReflectionTaskDescriptorBuilder {
-    private static final ReflectionTaskDescriptorBuilder BUILDER = new ReflectionTaskDescriptorBuilder();
+    private static final ReflectionTaskDescriptorBuilder REFLECTION_TASK_DESCRIPTOR_BUILDER = new ReflectionTaskDescriptorBuilder();
 
     public static ReflectionTaskDescriptorBuilder recycledBuilder() {
-        return BUILDER;
+        return REFLECTION_TASK_DESCRIPTOR_BUILDER;
     }
 
     private Class<?> source;

@@ -58,11 +58,12 @@ public class Stage {
     private static List<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages,
                                                                                Collection<TaskFilter> filters) {
 
+        ReflectionTaskDescriptorBuilder builder = ReflectionTaskDescriptorBuilder.recycledBuilder();
         return codePackages.stream()
                 .map(ReflectionUtil::loadClassesFromPackage)
                 .flatMap(Collection::stream)
                 .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
-                .map(source -> ReflectionTaskDescriptorBuilder.recycledBuilder().setSource(source))
+                .map(builder::setSource)
                 .map(ReflectionTaskDescriptorBuilder::build)
                 .collect(Collectors.toList());
     }

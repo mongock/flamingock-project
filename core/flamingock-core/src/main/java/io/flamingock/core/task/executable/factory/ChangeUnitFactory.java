@@ -1,4 +1,4 @@
-package io.flamingock.core.task.executable.change;
+package io.flamingock.core.task.executable.factory;
 
 import io.flamingock.core.api.annotations.BeforeExecution;
 import io.flamingock.core.api.annotations.ChangeUnit;
@@ -11,22 +11,20 @@ import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.reflection.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
-import io.flamingock.core.task.executable.ExecutableTaskFactory;
+import io.flamingock.core.task.executable.ReflectionExecutableTask;
 import io.flamingock.core.util.ReflectionUtil;
 import io.flamingock.core.util.StringUtil;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-public class ExecutableChangeUnitFactory  implements ExecutableTaskFactory {
-    private final Map<String, AuditEntryStatus> statesMap;
 
-    public ExecutableChangeUnitFactory(Map<String, AuditEntryStatus> initialStatesMap) {
-        this.statesMap = initialStatesMap;
-    }
+/**
+ * Factory for ChangeUnit classes
+ */
+public class ChangeUnitFactory implements ExecutableTaskFactory {
 
     @Override
     public boolean matchesDescriptor(TaskDescriptor descriptor) {
@@ -35,20 +33,21 @@ public class ExecutableChangeUnitFactory  implements ExecutableTaskFactory {
     }
 
     @Override
-    public List<? extends ExecutableTask> getTasks(TaskDescriptor descriptor) {
+    public List<ReflectionExecutableTask> extractTasks(TaskDescriptor descriptor, AuditEntryStatus initialState) {
         //It assumes "matchesDescriptor" was previously called for this descriptor.
         SortedTaskDescriptor sortedReflectionDescriptor = (SortedTaskDescriptor) descriptor;
         if (sortedReflectionDescriptor instanceof ReflectionTaskDescriptor) {
-            return getTasksFromReflection((SortedReflectionTaskDescriptor) sortedReflectionDescriptor);
+            return getTasksFromReflection(
+                    (SortedReflectionTaskDescriptor) sortedReflectionDescriptor,
+                    initialState);
         }
 
         throw new IllegalArgumentException("Unrecognized task: " + sortedReflectionDescriptor.pretty());
 
     }
 
-    private List<? extends ExecutableTask> getTasksFromReflection(SortedReflectionTaskDescriptor taskDescriptor) {
-
-        AuditEntryStatus initialState = statesMap.get(taskDescriptor.getId());
+    private List<ReflectionExecutableTask> getTasksFromReflection(SortedReflectionTaskDescriptor taskDescriptor,
+                                                                  AuditEntryStatus initialState) {
 
         Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), Execution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
@@ -57,7 +56,7 @@ public class ExecutableChangeUnitFactory  implements ExecutableTaskFactory {
                         Execution.class.getSimpleName())));
 
         Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackExecution.class);
-        ReflectionExecutableChangeUnit task = new ReflectionExecutableChangeUnit(
+        ReflectionExecutableTask task = new ReflectionExecutableTask(
                 taskDescriptor,
                 AuditEntryStatus.isRequiredExecution(initialState),
                 executionMethod,
@@ -69,8 +68,8 @@ public class ExecutableChangeUnitFactory  implements ExecutableTaskFactory {
             before the main task and, if it also provides @BeforeExecutionRollback, it's also added to the main task's rollbackChain,
             so they  are rolled back in case the main task fails.
              */
-        List<ExecutableTask> tasks = new LinkedList<>();
-        getBeforeExecutionOptional(task).ifPresent(beforeExecutionTask -> {
+        List<ReflectionExecutableTask> tasks = new LinkedList<>();
+        getBeforeExecutionOptional(task, initialState).ifPresent(beforeExecutionTask -> {
             tasks.add(beforeExecutionTask);
             beforeExecutionTask.getRollbackChain().forEach(task::addRollback);
         });
@@ -79,7 +78,8 @@ public class ExecutableChangeUnitFactory  implements ExecutableTaskFactory {
     }
 
 
-    private Optional<ExecutableTask> getBeforeExecutionOptional(ReflectionExecutableChangeUnit baseTask) {
+    private Optional<ReflectionExecutableTask> getBeforeExecutionOptional(ReflectionExecutableTask baseTask,
+                                                                AuditEntryStatus initialState) {
         //Creates a new TaskDescriptor, based on the main one, but with the "beforeExecution id, also based on the main one"
         SortedReflectionTaskDescriptor taskDescriptor = new SortedReflectionTaskDescriptor(
                 StringUtil.getBeforeExecutionId(baseTask.getDescriptor().getId()),
@@ -93,12 +93,11 @@ public class ExecutableChangeUnitFactory  implements ExecutableTaskFactory {
         if (!beforeExecutionMethodOptional.isPresent()) {
             return Optional.empty();
         }
-        AuditEntryStatus initialState = statesMap.get(taskDescriptor.getId());
         Method beforeExecutionMethod = beforeExecutionMethodOptional.get();
         Optional<Method> rollbackBeforeExecution = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackBeforeExecution.class);
 
 
-        return Optional.of(new ReflectionExecutableChangeUnit(
+        return Optional.of(new ReflectionExecutableTask(
                 taskDescriptor,
                 AuditEntryStatus.isRequiredExecution(initialState),
                 beforeExecutionMethod,

@@ -1,17 +1,14 @@
-package io.flamingock.core.task.executable.change;
+package io.flamingock.core.task.executable;
 
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
-import io.flamingock.core.task.executable.AbstractExecutableTask;
-import io.flamingock.core.task.executable.ExecutableTask;
-import io.flamingock.core.task.executable.Rollback;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * This class is a reflection version of the changeUnit.
+ * This class is a reflection version of the ExecutableTask.
  * </br>
  * It creates a new instance on demand in every execution(execution and rollback), because it's intended to be executed
  * just once. The only case it will be potentially executed twice is if it fails, and in that case will only happen
@@ -23,23 +20,23 @@ import java.util.List;
  * However, the methods are extracted in advance, so we can spot wrong configuration before starting the process and
  * fail fast.
  */
-public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<SortedReflectionTaskDescriptor> implements ExecutableTask {
+public class ReflectionExecutableTask extends AbstractExecutableTask<SortedReflectionTaskDescriptor> implements ExecutableTask {
 
     private final Method executionMethod;
 
     private final List<Rollback> rollbackChain;
 
-    public ReflectionExecutableChangeUnit(SortedReflectionTaskDescriptor descriptor,
-                                          boolean requiredExecution,
-                                          Method executionMethod) {
+    public ReflectionExecutableTask(SortedReflectionTaskDescriptor descriptor,
+                                    boolean requiredExecution,
+                                    Method executionMethod) {
         this(descriptor, requiredExecution, executionMethod, null);
 
     }
 
-    public ReflectionExecutableChangeUnit(SortedReflectionTaskDescriptor descriptor,
-                                          boolean requiredExecution,
-                                          Method executionMethod,
-                                          Method rollbackMethod) {
+    public ReflectionExecutableTask(SortedReflectionTaskDescriptor descriptor,
+                                    boolean requiredExecution,
+                                    Method executionMethod,
+                                    Method rollbackMethod) {
         super(descriptor, requiredExecution);
         this.executionMethod = executionMethod;
         rollbackChain = new LinkedList<>();
@@ -73,7 +70,7 @@ public class ReflectionExecutableChangeUnit extends AbstractExecutableTask<Sorte
         return new Rollback() {
             @Override
             public ExecutableTask getTask() {
-                return ReflectionExecutableChangeUnit.this;
+                return ReflectionExecutableTask.this;
             }
 
             @Override

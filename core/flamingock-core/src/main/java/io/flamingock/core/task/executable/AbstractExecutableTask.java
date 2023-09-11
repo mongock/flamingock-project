@@ -45,7 +45,7 @@ public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> 
 
     @Override
     public String toString() {
-        return "ReflectionExecutableChangeUnit{" +
+        return "ReflectionExecutableTask{" +
                 ", id='" + descriptor + '\'' +
                 ", state=" + initialExecutionRequired +
                 "} ";

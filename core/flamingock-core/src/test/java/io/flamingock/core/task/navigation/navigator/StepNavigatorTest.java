@@ -3,7 +3,7 @@ package io.flamingock.core.task.navigation.navigator;
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.writer.AuditItem;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
-import io.flamingock.core.task.executable.ParentFactory;
+import io.flamingock.core.task.executable.factory.ParentFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
 import io.flamingock.core.lock.Lock;
@@ -65,8 +65,8 @@ class StepNavigatorTest {
                 false,
                 false
         );
-        List<? extends ExecutableTask> executableTasks = new ParentFactory(new HashMap<>())
-                .getTasks(taskDescriptor);
+        List<? extends ExecutableTask> executableTasks = ParentFactory.INSTANCE
+                .extractTasks(taskDescriptor, null);
 
         StageExecutionContext stageExecutionContext = new StageExecutionContext(
                 "executionId", "hsotname", "author", new HashMap<>()
@@ -112,8 +112,8 @@ class StepNavigatorTest {
                 false,
                 true
         );
-        List<? extends ExecutableTask> executableTasks = new ParentFactory(new HashMap<>())
-                .getTasks(taskDescriptor);
+        List<? extends ExecutableTask> executableTasks = ParentFactory.INSTANCE
+                .extractTasks(taskDescriptor, null);
 
         EmptyTransactionWrapper transactionWrapper = new EmptyTransactionWrapper();
         StepNavigator stepNavigator = new StepNavigator(auditWriterMock, stepSummarizerMock, runtimeManagerMock, transactionWrapper);

@@ -1,11 +1,10 @@
-package io.flamingock.core.task.executable;
+package io.flamingock.core.task.executable.factory;
 
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.task.executable.change.ExecutableChangeUnitFactory;
+import io.flamingock.core.task.executable.ExecutableTask;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -14,11 +13,12 @@ import java.util.Optional;
  */
 public class ParentFactory implements ExecutableTaskFactory {
 
-    private final ExecutableChangeUnitFactory changeUnitFactory;
+    public static final ParentFactory INSTANCE = new ParentFactory();
 
-    public ParentFactory(Map<String, AuditEntryStatus> initialStatesMap) {
-        changeUnitFactory = new ExecutableChangeUnitFactory(initialStatesMap);
-    }
+    private ParentFactory() {}
+
+    private final ChangeUnitFactory changeUnitFactory = new ChangeUnitFactory();;
+
 
     @Override
     public boolean matchesDescriptor(TaskDescriptor descriptor) {
@@ -26,9 +26,9 @@ public class ParentFactory implements ExecutableTaskFactory {
     }
 
     @Override
-    public List<? extends ExecutableTask> getTasks(TaskDescriptor taskDescriptor) {
+    public List<? extends ExecutableTask> extractTasks(TaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         return findFactory(taskDescriptor)
-                .map(factory -> factory.getTasks(taskDescriptor))
+                .map(factory -> factory.extractTasks(taskDescriptor, initialState))
                 .orElseThrow(() -> new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", taskDescriptor.getClass().getName())));
     }
 
