@@ -24,6 +24,10 @@ public class Stage {
 
     private String name;
     private Collection<String> codePackages;
+
+
+    private Collection<String> fileDirectories;
+
     private boolean parallel;
     private Collection<TaskFilter> filters;
 
@@ -76,6 +80,14 @@ public class Stage {
 
     public void setCodePackages(Collection<String> codePackages) {
         this.codePackages = codePackages;
+    }
+
+    public Collection<String> getFileDirectories() {
+        return fileDirectories;
+    }
+
+    public void setFileDirectories(Collection<String> fileDirectories) {
+        this.fileDirectories = fileDirectories;
     }
 
     private Collection<TaskFilter> getFilters() {

@@ -3,4 +3,6 @@ flamingock:
     - name: stage1
       code-packages:
         - io.flamingock.examples.community.changes
+      file-directories:
+        - flamingock/stage1
   transactionEnabled: true

@@ -1,0 +1,7 @@
+changeUnit:
+  id: create-collection
+  order: 1
+  template:
+    name: mongodb-create-collection-template
+    configuration:
+      collection-name: collection_from_template
