@@ -79,7 +79,7 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
         //Creates a new TaskDescriptor, based on the main one, but with the "beforeExecution id, also based on the main one"
         ReflectionTaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
                 StringUtil.getBeforeExecutionId(baseTask.getDescriptor().getId()),
-                baseTask.getDescriptor().getOrder(),
+                baseTask.getDescriptor().getOrder().orElse(null),
                 baseTask.getDescriptor().getSource(),
                 baseTask.getDescriptor().isRunAlways(),
                 false//A beforeExecution task will never be transactional

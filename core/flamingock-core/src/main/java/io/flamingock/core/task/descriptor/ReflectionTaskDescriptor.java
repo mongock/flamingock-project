@@ -1,5 +1,7 @@
 package io.flamingock.core.task.descriptor;
 
+import java.util.Optional;
+
 public class ReflectionTaskDescriptor extends AbstractTaskDescriptor implements TaskDescriptor {
 
     private final Class<?> source;
@@ -12,8 +14,8 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor implements 
     }
 
     @Override
-    public String getOrder() {
-        return order;
+    public Optional<String> getOrder() {
+        return Optional.ofNullable(order);
     }
 
 

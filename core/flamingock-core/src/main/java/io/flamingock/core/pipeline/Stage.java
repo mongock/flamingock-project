@@ -116,11 +116,11 @@ public class Stage {
 
 
         //TODO check that all are sorted
-        if (descriptors.stream().allMatch(Objects::nonNull)) {
+        if (descriptors.stream().allMatch(TaskDescriptor::isSortable)) {
             //if all descriptors are sorted, we return a sorted collection
             return new LoadedStage(descriptors.stream().sorted().collect(Collectors.toList()), parallel);
 
-        } else if (descriptors.parallelStream().anyMatch(Objects::nonNull)) {
+        } else if (descriptors.parallelStream().anyMatch(TaskDescriptor::isSortable)) {
             //if at least one of them are sorted, but not all. An exception is thrown
             throw new IllegalArgumentException("Either all tasks are ordered or none is");
 
