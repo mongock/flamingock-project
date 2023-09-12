@@ -2,7 +2,6 @@ package io.flamingock.core.task.executable;
 
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
-import io.flamingock.core.task.descriptor.SortedReflectionTaskDescriptor;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;

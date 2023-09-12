@@ -1,6 +1,5 @@
 package io.flamingock.core.pipeline;
 
-import io.flamingock.core.task.descriptor.SortedTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.filter.TaskFilter;
@@ -11,7 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -117,11 +115,12 @@ public class Stage {
         Collection<TaskDescriptor> descriptors = getFilteredDescriptorsFromCodePackages(codePackages, getFilters());
 
 
-        if (descriptors.stream().allMatch(descriptor -> descriptor instanceof SortedTaskDescriptor)) {
+        //TODO check that all are sorted
+        if (descriptors.stream().allMatch(Objects::nonNull)) {
             //if all descriptors are sorted, we return a sorted collection
             return new LoadedStage(descriptors.stream().sorted().collect(Collectors.toList()), parallel);
 
-        } else if (descriptors.parallelStream().anyMatch(descriptor -> descriptor instanceof SortedTaskDescriptor)) {
+        } else if (descriptors.parallelStream().anyMatch(Objects::nonNull)) {
             //if at least one of them are sorted, but not all. An exception is thrown
             throw new IllegalArgumentException("Either all tasks are ordered or none is");
 

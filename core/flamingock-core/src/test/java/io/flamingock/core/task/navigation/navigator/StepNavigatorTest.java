@@ -10,7 +10,7 @@ import io.flamingock.core.lock.Lock;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.task.descriptor.SortedReflectionTaskDescriptor;
+import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.util.Result;
 import io.utils.EmptyTransactionWrapper;
@@ -58,7 +58,7 @@ class StepNavigatorTest {
                 .build();
 
         //AND
-        TaskDescriptor taskDescriptor = new SortedReflectionTaskDescriptor(
+        TaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
                 "task-with-before-execution",
                 "1",
                 TaskWithBeforeExecution.class,
@@ -105,7 +105,7 @@ class StepNavigatorTest {
                 .build();
 
         //AND
-        TaskDescriptor taskDescriptor = new SortedReflectionTaskDescriptor(
+        TaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
                 "task-with-before-execution",
                 "1",
                 TaskWithBeforeExecution.class,

@@ -35,7 +35,7 @@ public class ReflectionTaskDescriptorBuilder {
     private static ReflectionTaskDescriptor getDescriptorFromChangeUnit(Class<?> source) {
         ChangeUnit changeUnitAnnotation = source.getAnnotation(ChangeUnit.class);
 
-        return new SortedReflectionTaskDescriptor(
+        return new ReflectionTaskDescriptor(
                 changeUnitAnnotation.id(),
                 changeUnitAnnotation.order(),
                 source,

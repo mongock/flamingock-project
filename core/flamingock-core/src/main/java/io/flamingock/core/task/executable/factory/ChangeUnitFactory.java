@@ -7,8 +7,6 @@ import io.flamingock.core.api.annotations.RollbackBeforeExecution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
-import io.flamingock.core.task.descriptor.SortedReflectionTaskDescriptor;
-import io.flamingock.core.task.descriptor.SortedTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.executable.ReflectionExecutableTask;
 import io.flamingock.core.util.ReflectionUtil;
@@ -27,26 +25,25 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
 
     @Override
     public boolean matchesDescriptor(TaskDescriptor descriptor) {
-        return descriptor instanceof SortedTaskDescriptor &&
-                ((SortedReflectionTaskDescriptor) descriptor).getSource().isAnnotationPresent(ChangeUnit.class);
+        return descriptor != null &&
+                ((ReflectionTaskDescriptor) descriptor).getSource().isAnnotationPresent(ChangeUnit.class);
     }
 
     @Override
-    public List<ReflectionExecutableTask<SortedReflectionTaskDescriptor>> extractTasks(TaskDescriptor descriptor, AuditEntryStatus initialState) {
+    public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(TaskDescriptor descriptor, AuditEntryStatus initialState) {
         //It assumes "matchesDescriptor" was previously called for this descriptor.
-        SortedTaskDescriptor sortedReflectionDescriptor = (SortedTaskDescriptor) descriptor;
-        if (sortedReflectionDescriptor instanceof ReflectionTaskDescriptor) {
+        if (descriptor instanceof ReflectionTaskDescriptor) {
             return getTasksFromReflection(
-                    (SortedReflectionTaskDescriptor) sortedReflectionDescriptor,
+                    (ReflectionTaskDescriptor) descriptor,
                     initialState);
         }
 
-        throw new IllegalArgumentException("Unrecognized task: " + sortedReflectionDescriptor.pretty());
+        throw new IllegalArgumentException("Unrecognized task: " + descriptor.pretty());
 
     }
 
-    private List<ReflectionExecutableTask<SortedReflectionTaskDescriptor>> getTasksFromReflection(SortedReflectionTaskDescriptor taskDescriptor,
-                                                                  AuditEntryStatus initialState) {
+    private List<ReflectionExecutableTask<ReflectionTaskDescriptor>> getTasksFromReflection(ReflectionTaskDescriptor taskDescriptor,
+                                                                                            AuditEntryStatus initialState) {
 
         Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), Execution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
@@ -55,7 +52,7 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
                         Execution.class.getSimpleName())));
 
         Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackExecution.class);
-        ReflectionExecutableTask<SortedReflectionTaskDescriptor> task = new ReflectionExecutableTask<>(
+        ReflectionExecutableTask<ReflectionTaskDescriptor> task = new ReflectionExecutableTask<>(
                 taskDescriptor,
                 AuditEntryStatus.isRequiredExecution(initialState),
                 executionMethod,
@@ -67,7 +64,7 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
             before the main task and, if it also provides @BeforeExecutionRollback, it's also added to the main task's rollbackChain,
             so they  are rolled back in case the main task fails.
              */
-        List<ReflectionExecutableTask<SortedReflectionTaskDescriptor>> tasks = new LinkedList<>();
+        List<ReflectionExecutableTask<ReflectionTaskDescriptor>> tasks = new LinkedList<>();
         getBeforeExecutionOptional(task, initialState).ifPresent(beforeExecutionTask -> {
             tasks.add(beforeExecutionTask);
             beforeExecutionTask.getRollbackChain().forEach(task::addRollback);
@@ -77,10 +74,10 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
     }
 
 
-    private Optional<ReflectionExecutableTask<SortedReflectionTaskDescriptor>> getBeforeExecutionOptional(ReflectionExecutableTask<SortedReflectionTaskDescriptor> baseTask,
-                                                                          AuditEntryStatus initialState) {
+    private Optional<ReflectionExecutableTask<ReflectionTaskDescriptor>> getBeforeExecutionOptional(ReflectionExecutableTask<ReflectionTaskDescriptor> baseTask,
+                                                                                                    AuditEntryStatus initialState) {
         //Creates a new TaskDescriptor, based on the main one, but with the "beforeExecution id, also based on the main one"
-        SortedReflectionTaskDescriptor taskDescriptor = new SortedReflectionTaskDescriptor(
+        ReflectionTaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
                 StringUtil.getBeforeExecutionId(baseTask.getDescriptor().getId()),
                 baseTask.getDescriptor().getOrder(),
                 baseTask.getDescriptor().getSource(),
