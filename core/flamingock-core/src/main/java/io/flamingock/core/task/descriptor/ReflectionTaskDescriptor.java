@@ -1,4 +1,4 @@
-package io.flamingock.core.task.descriptor.reflection;
+package io.flamingock.core.task.descriptor;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.task.descriptor.AbstractTaskDescriptor;
@@ -14,8 +14,6 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
     public Class<?> getSource() {
         return source;
     }
-
-
 
     @Override
     public String getClassImplementor() {

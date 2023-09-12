@@ -2,8 +2,7 @@ package io.flamingock.core.pipeline;
 
 import io.flamingock.core.task.descriptor.SortedTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.task.descriptor.reflection.ReflectionTaskDescriptor;
-import io.flamingock.core.task.descriptor.reflection.ReflectionTaskDescriptorBuilder;
+import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.core.util.ReflectionUtil;
 
@@ -14,7 +13,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -26,10 +24,9 @@ public class Stage {
     private String name;
     private Collection<String> codePackages;
 
-
     private Collection<String> fileDirectories;
 
-    private boolean parallel;
+    private boolean parallel = false;
     private Collection<TaskFilter> filters;
 
     public Stage() {
@@ -55,18 +52,6 @@ public class Stage {
         this.parallel = parallel;//stageConfiguration.isParallel()
     }
 
-    private static List<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages,
-                                                                               Collection<TaskFilter> filters) {
-
-        ReflectionTaskDescriptorBuilder builder = ReflectionTaskDescriptorBuilder.recycledBuilder();
-        return codePackages.stream()
-                .map(ReflectionUtil::loadClassesFromPackage)
-                .flatMap(Collection::stream)
-                .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
-                .map(builder::setSource)
-                .map(ReflectionTaskDescriptorBuilder::build)
-                .collect(Collectors.toList());
-    }
 
     public String getName() {
         return name;
@@ -90,6 +75,14 @@ public class Stage {
 
     public void setFileDirectories(Collection<String> fileDirectories) {
         this.fileDirectories = fileDirectories;
+    }
+
+    public boolean isParallel() {
+        return parallel;
+    }
+
+    public void setParallel(boolean parallel) {
+        this.parallel = parallel;
     }
 
     private Collection<TaskFilter> getFilters() {
@@ -123,20 +116,31 @@ public class Stage {
         //descriptors will potentially contain all the descriptors extracted form scanPackage, yaml, etc.
         List<TaskDescriptor> descriptors = getFilteredDescriptorsFromCodePackages(codePackages, getFilters());
 
-        Optional<TaskDescriptor> orderedDescriptorOptional = descriptors.stream().filter(descriptor -> descriptor instanceof SortedTaskDescriptor).findFirst();
 
         if (descriptors.stream().allMatch(descriptor -> descriptor instanceof SortedTaskDescriptor)) {
             //if all descriptors are sorted, we return a sorted collection
             return new LoadedStage(descriptors.stream().sorted().collect(Collectors.toList()), parallel);
 
-        } else if (orderedDescriptorOptional.isPresent()) {
+        } else if (descriptors.parallelStream().anyMatch(descriptor -> descriptor instanceof SortedTaskDescriptor)) {
             //if at least one of them are sorted, but not all. An exception is thrown
-            throw new IllegalArgumentException("Either all tasks are ordered or none is. Ordered task found: " + orderedDescriptorOptional.get().getId());
+            throw new IllegalArgumentException("Either all tasks are ordered or none is");
 
         } else {
             //if none of the tasks are sorted, an unsorted collection is returned
             return new LoadedStage(descriptors, parallel);
         }
+    }
+
+    private static List<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages, Collection<TaskFilter> filters) {
+        ReflectionTaskDescriptorBuilder builder = ReflectionTaskDescriptorBuilder.recycledBuilder();
+        return codePackages.
+                stream()
+                .map(ReflectionUtil::loadClassesFromPackage)
+                .flatMap(Collection::stream)
+                .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
+                .map(builder::setSource)
+                .map(ReflectionTaskDescriptorBuilder::build)
+                .collect(Collectors.toList());
     }
 
     @Override

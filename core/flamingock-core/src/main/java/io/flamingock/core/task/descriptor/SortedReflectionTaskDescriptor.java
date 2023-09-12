@@ -1,6 +1,4 @@
-package io.flamingock.core.task.descriptor.reflection;
-
-import io.flamingock.core.task.descriptor.SortedTaskDescriptor;
+package io.flamingock.core.task.descriptor;
 
 public class SortedReflectionTaskDescriptor extends ReflectionTaskDescriptor implements SortedTaskDescriptor {
 

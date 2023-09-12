@@ -1,7 +1,7 @@
 package io.flamingock.core.task.executable;
 
 import io.flamingock.core.runtime.RuntimeManager;
-import io.flamingock.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
+import io.flamingock.core.task.descriptor.SortedReflectionTaskDescriptor;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -26,12 +26,6 @@ public class ReflectionExecutableTask extends AbstractExecutableTask<SortedRefle
 
     private final List<Rollback> rollbackChain;
 
-    public ReflectionExecutableTask(SortedReflectionTaskDescriptor descriptor,
-                                    boolean requiredExecution,
-                                    Method executionMethod) {
-        this(descriptor, requiredExecution, executionMethod, null);
-
-    }
 
     public ReflectionExecutableTask(SortedReflectionTaskDescriptor descriptor,
                                     boolean requiredExecution,

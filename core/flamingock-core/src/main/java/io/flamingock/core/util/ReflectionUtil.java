@@ -17,6 +17,7 @@ public final class ReflectionUtil {
                 .findFirst();
     }
 
+    //TODO expand this beyond ChangeUnit
     public static Collection<Class<?>> loadClassesFromPackage(String packagePath) {
         return new Reflections(packagePath).getTypesAnnotatedWith(ChangeUnit.class);
     }

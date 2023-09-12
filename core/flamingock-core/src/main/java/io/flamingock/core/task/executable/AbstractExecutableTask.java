@@ -12,7 +12,7 @@ public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> 
 
     public AbstractExecutableTask(DESCRIPTOR descriptor, boolean initialExecutionRequired) {
         if (descriptor == null) {
-            throw new IllegalArgumentException("Abstract.id cannot be null");
+            throw new IllegalArgumentException("task descriptor cannot be null");
         }
         this.descriptor = descriptor;
         this.initialExecutionRequired = initialExecutionRequired;

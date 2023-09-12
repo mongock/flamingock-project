@@ -1,6 +1,8 @@
 flamingock:
   stages:
-    - name: stage1
+    - name: stage2
+      parallel: true
+      depends: stage1
       code-packages:
         - io.flamingock.examples.community.changes
       file-directories:
