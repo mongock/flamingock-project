@@ -1,7 +1,7 @@
 flamingock:
   stages:
     - name: stage2
-      parallel: true
+      parallel: false
       depends: stage1
       code-packages:
         - io.flamingock.examples.community.changes
