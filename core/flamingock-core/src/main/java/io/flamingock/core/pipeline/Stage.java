@@ -114,7 +114,7 @@ public class Stage {
      */
     public LoadedStage load() {
         //descriptors will potentially contain all the descriptors extracted form scanPackage, yaml, etc.
-        List<TaskDescriptor> descriptors = getFilteredDescriptorsFromCodePackages(codePackages, getFilters());
+        Collection<TaskDescriptor> descriptors = getFilteredDescriptorsFromCodePackages(codePackages, getFilters());
 
 
         if (descriptors.stream().allMatch(descriptor -> descriptor instanceof SortedTaskDescriptor)) {
@@ -131,7 +131,7 @@ public class Stage {
         }
     }
 
-    private static List<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages, Collection<TaskFilter> filters) {
+    private static Collection<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages, Collection<TaskFilter> filters) {
         ReflectionTaskDescriptorBuilder builder = ReflectionTaskDescriptorBuilder.recycledBuilder();
         return codePackages.
                 stream()
