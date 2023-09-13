@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface ExecutableTaskFactory {
 
-    boolean matchesDescriptor(TaskDescriptor descriptor);
     List<? extends ExecutableTask> extractTasks(TaskDescriptor taskDescriptor, AuditEntryStatus initialState);
 }

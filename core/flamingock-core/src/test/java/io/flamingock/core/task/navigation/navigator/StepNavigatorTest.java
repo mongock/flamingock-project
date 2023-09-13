@@ -3,7 +3,7 @@ package io.flamingock.core.task.navigation.navigator;
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.writer.AuditItem;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
-import io.flamingock.core.task.executable.factory.ParentFactory;
+import io.flamingock.core.task.executable.factory.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
 import io.flamingock.core.lock.Lock;
@@ -65,7 +65,7 @@ class StepNavigatorTest {
                 false,
                 false
         );
-        List<? extends ExecutableTask> executableTasks = ParentFactory.INSTANCE
+        List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
                 .extractTasks(taskDescriptor, null);
 
         StageExecutionContext stageExecutionContext = new StageExecutionContext(
@@ -112,7 +112,7 @@ class StepNavigatorTest {
                 false,
                 true
         );
-        List<? extends ExecutableTask> executableTasks = ParentFactory.INSTANCE
+        List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
                 .extractTasks(taskDescriptor, null);
 
         EmptyTransactionWrapper transactionWrapper = new EmptyTransactionWrapper();

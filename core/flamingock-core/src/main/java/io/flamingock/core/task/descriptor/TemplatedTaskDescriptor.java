@@ -1,15 +1,13 @@
 package io.flamingock.core.task.descriptor;
 
 import java.util.Map;
-import java.util.Objects;
 
-public class TemplatedTaskDescriptor extends ReflectionTaskDescriptor{
+public class TemplatedTaskDescriptor extends ReflectionTaskDescriptor {
 
 
     private final Map<String, Object> templateConfiguration;
 
-    public TemplatedTaskDescriptor(String id,
-                                   String order,
+    public TemplatedTaskDescriptor(String id, String order,
                                    Class<?> source,
                                    boolean runAlways,
                                    boolean transactional,
@@ -18,5 +16,7 @@ public class TemplatedTaskDescriptor extends ReflectionTaskDescriptor{
         this.templateConfiguration = templateConfiguration;
     }
 
-
+    public Map<String, Object> getTemplateConfiguration() {
+        return templateConfiguration;
+    }
 }

@@ -21,7 +21,8 @@ import java.util.Optional;
 /**
  * Factory for ChangeUnit classes
  */
-public class ChangeUnitFactory implements ExecutableTaskFactory {
+public class TemplatedExecutableTaskFactory implements ExecutableTaskFactory {
+
 
     @Override
     public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(TaskDescriptor descriptor, AuditEntryStatus initialState) {

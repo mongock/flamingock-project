@@ -2,7 +2,7 @@ package io.flamingock.core.runtime;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.ChangeUnitConstructor;
-import io.flamingock.core.api.exception.CoreException;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
@@ -68,7 +68,7 @@ public final class RuntimeManager implements DependencyInjectable {
         try {
             return constructor.newInstance(signatureParameters.toArray());
         } catch (Exception e) {
-            throw new CoreException(e);
+            throw new FlamingockException(e);
         }
     }
 
@@ -93,10 +93,10 @@ public final class RuntimeManager implements DependencyInjectable {
             logger.debug("Not found constructor for class[{}] annotated with {}", type.getName(), ChangeUnitConstructor.class.getSimpleName());
             Constructor<?>[] constructors = type.getConstructors();
             if (constructors.length == 0) {
-                throw new CoreException("Cannot find a valid constructor for class[%s]", type.getName());
+                throw new FlamingockException("Cannot find a valid constructor for class[%s]", type.getName());
             }
             if (constructors.length > 1) {
-                throw new CoreException("Found multiple constructors without annotation %s  for class[%s].\n" +
+                throw new FlamingockException("Found multiple constructors without annotation %s  for class[%s].\n" +
                         "When more than one constructor, exactly one of them must be annotated. And it will be taken as default "
                         , ChangeUnitConstructor.class.getSimpleName()
                         , type.getName()
@@ -106,7 +106,7 @@ public final class RuntimeManager implements DependencyInjectable {
 
         } else {
             //annotatedConstructors.size() > 1
-            throw new CoreException("Found multiple constructors for class[%s] annotated with %s." +
+            throw new FlamingockException("Found multiple constructors for class[%s] annotated with %s." +
                     " Annotate the one you want Mongock to use to instantiate your changeUnit",
                     type.getName(),
                     ChangeUnitConstructor.class.getSimpleName());

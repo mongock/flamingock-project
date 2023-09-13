@@ -4,7 +4,7 @@ import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
-import io.flamingock.core.task.executable.factory.ParentFactory;
+import io.flamingock.core.task.executable.factory.ParentExecutableTaskFactory;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -20,12 +20,12 @@ public class LoadedStage {
     private final Collection<? extends TaskDescriptor> taskDescriptors;
     private final boolean parallel;
 
-    private final ParentFactory factory;
+    private final ParentExecutableTaskFactory factory;
 
     public LoadedStage(Collection<? extends TaskDescriptor> taskDescriptors, boolean parallel) {
         this.taskDescriptors = taskDescriptors;
         this.parallel = parallel;
-        factory = ParentFactory.INSTANCE;
+        factory = ParentExecutableTaskFactory.INSTANCE;
     }
 
     public ExecutableStage applyState(SingleAuditStageStatus state) {

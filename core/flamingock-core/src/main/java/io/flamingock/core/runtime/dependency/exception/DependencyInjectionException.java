@@ -1,9 +1,9 @@
 package io.flamingock.core.runtime.dependency.exception;
 
 
-import io.flamingock.core.api.exception.CoreException;
+import io.flamingock.core.api.exception.FlamingockException;
 
-public class DependencyInjectionException extends CoreException {
+public class DependencyInjectionException extends FlamingockException {
 
   private final Class<?> wrongParameter;
   private final String name;

@@ -1,6 +1,6 @@
 package io.flamingock.core.runner;
 
-import io.flamingock.core.api.exception.CoreException;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
@@ -51,7 +51,7 @@ public abstract class AbstractRunner implements Runner {
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
-    public void run(Pipeline pipeline) throws CoreException {
+    public void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publishMigrationStarted();//TODO change name to eventPublisher.publishPipelineStarted();
         pipeline.getStages().forEach(this::runStage);
 
@@ -84,7 +84,7 @@ public abstract class AbstractRunner implements Runner {
             eventPublisher.publishMigrationFailedEvent(stageExecutionException);
             throw stageExecutionException;
         } catch (Exception exception) {
-            CoreException coreEx = exception instanceof CoreException ? (CoreException) exception : new CoreException(exception);
+            FlamingockException coreEx = exception instanceof FlamingockException ? (FlamingockException) exception : new FlamingockException(exception);
             logger.error("Error executing the process. ABORTED OPERATION", coreEx);
             eventPublisher.publishMigrationFailedEvent(coreEx);
             throw coreEx;

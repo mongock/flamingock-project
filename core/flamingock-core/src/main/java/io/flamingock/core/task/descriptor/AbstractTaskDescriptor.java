@@ -1,17 +1,24 @@
 package io.flamingock.core.task.descriptor;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public abstract class AbstractTaskDescriptor implements TaskDescriptor {
 
     private final String id;
 
+    private final String order;
+
     private final boolean runAlways;
     
     private final boolean transactional;
 
-    public AbstractTaskDescriptor(String id, boolean runAlways, boolean transactional) {
+    public AbstractTaskDescriptor(String id,
+                                  String order,
+                                  boolean runAlways,
+                                  boolean transactional) {
         this.id = id;
+        this.order = order;
         this.runAlways = runAlways;
         this.transactional = transactional;
     }
@@ -30,6 +37,11 @@ public abstract class AbstractTaskDescriptor implements TaskDescriptor {
     @Override
     public boolean isTransactional() {
         return transactional;
+    }
+
+    @Override
+    public Optional<String> getOrder() {
+        return Optional.ofNullable(order);
     }
 
     @Override
