@@ -52,7 +52,12 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Reflect
 
     @Override
     public void execute(RuntimeManager runtimeHelper) {
-        runtimeHelper.executeMethod(runtimeHelper.getInstance(descriptor.getSourceClass()), executionMethod);
+        Object instance = runtimeHelper.getInstance(descriptor.getSourceClass());
+        executeWithInstance(runtimeHelper, instance);
+    }
+
+    protected void executeWithInstance(RuntimeManager runtimeHelper, Object instance) {
+        runtimeHelper.executeMethod(instance, executionMethod);
     }
 
     @Override

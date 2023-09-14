@@ -1,4 +1,4 @@
-package io.flamingock.core.task.executable.factory;
+package io.flamingock.core.task.executable;
 
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;

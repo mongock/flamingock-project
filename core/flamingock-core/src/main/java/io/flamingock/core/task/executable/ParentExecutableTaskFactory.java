@@ -1,10 +1,10 @@
-package io.flamingock.core.task.executable.factory;
+package io.flamingock.core.task.executable;
 
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptor;
-import io.flamingock.core.task.executable.ExecutableTask;
+import io.flamingock.core.task.executable.template.TemplatedExecutableTaskFactory;
 
 import java.util.HashMap;
 import java.util.List;

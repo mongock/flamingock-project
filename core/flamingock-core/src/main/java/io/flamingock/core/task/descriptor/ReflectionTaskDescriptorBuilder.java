@@ -20,7 +20,7 @@ public class ReflectionTaskDescriptorBuilder {
     }
 
 
-    public ReflectionTaskDescriptor build() {
+    public ReflectionTaskDescriptor<?> build() {
         if (isChangeUnit(source)) {
             return getDescriptorFromChangeUnit(source);
         } else {
@@ -32,10 +32,10 @@ public class ReflectionTaskDescriptorBuilder {
         return source.isAnnotationPresent((ChangeUnit.class));
     }
 
-    private static ReflectionTaskDescriptor getDescriptorFromChangeUnit(Class<?> source) {
+    private static ReflectionTaskDescriptor<?> getDescriptorFromChangeUnit(Class<?> source) {
         ChangeUnit changeUnitAnnotation = source.getAnnotation(ChangeUnit.class);
 
-        return new ReflectionTaskDescriptor(
+        return new ReflectionTaskDescriptor<>(
                 changeUnitAnnotation.id(),
                 changeUnitAnnotation.order(),
                 source,

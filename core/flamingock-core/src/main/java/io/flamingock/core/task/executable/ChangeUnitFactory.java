@@ -1,4 +1,4 @@
-package io.flamingock.core.task.executable.factory;
+package io.flamingock.core.task.executable;
 
 import io.flamingock.core.api.annotations.BeforeExecution;
 import io.flamingock.core.api.annotations.Execution;
@@ -7,6 +7,7 @@ import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.task.executable.ExecutableTaskFactory;
 import io.flamingock.core.task.executable.ReflectionExecutableTask;
 import io.flamingock.core.util.ReflectionUtil;
 import io.flamingock.core.util.StringUtil;
@@ -25,13 +26,11 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
     @Override
     public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(TaskDescriptor descriptor, AuditEntryStatus initialState) {
         //It assumes "matchesDescriptor" was previously called for this descriptor.
-        if (descriptor instanceof ReflectionTaskDescriptor) {
-            return getTasksFromReflection(
-                    (ReflectionTaskDescriptor) descriptor,
-                    initialState);
+        if (ReflectionTaskDescriptor.class.equals(descriptor.getClass())) {
+            return getTasksFromReflection((ReflectionTaskDescriptor) descriptor, initialState);
         }
 
-        throw new IllegalArgumentException("Unrecognized task: " + descriptor.pretty());
+        throw new IllegalArgumentException(String.format("%s not able to process: %s", this.getClass().getSimpleName(), descriptor.getClass().getSimpleName()));
 
     }
 

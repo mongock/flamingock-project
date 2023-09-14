@@ -1,34 +1,29 @@
 package io.flamingock.core.task.descriptor;
 
 import io.flamingock.core.api.annotations.template.FlamingockTemplate;
+import io.flamingock.core.api.annotations.template.TemplateConfiguration;
 
 import java.util.Map;
 
-public class TemplatedTaskDescriptor extends AbstractTaskDescriptor {
+public class TemplatedTaskDescriptor extends ReflectionTaskDescriptor<FlamingockTemplate> {
 
 
-    private final Map<String, Object> templateConfiguration;
-    private final FlamingockTemplate template;
+    private final TemplateConfiguration templateConfiguration;
 
     public TemplatedTaskDescriptor(String id,
                                    String order,
-                                   FlamingockTemplate template,
+                                   Class<FlamingockTemplate> templateClass,
                                    boolean runAlways,
                                    boolean transactional,
-                                   Map<String, Object> templateConfiguration) {
-        super(id, order, runAlways, transactional);
-        this.template = template;
+                                   TemplateConfiguration templateConfiguration) {
+        super(id, order, templateClass, runAlways, transactional);
         this.templateConfiguration = templateConfiguration;
-
     }
 
-
-    public Map<String, Object> getTemplateConfiguration() {
+    public TemplateConfiguration getTemplateConfiguration() {
         return templateConfiguration;
     }
 
-    @Override
-    public String getSourceName() {
-        return template.getName();
-    }
+
+
 }

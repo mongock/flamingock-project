@@ -4,7 +4,7 @@ import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
-import io.flamingock.core.task.executable.factory.ParentExecutableTaskFactory;
+import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 
 import java.util.Collection;
 import java.util.LinkedList;
