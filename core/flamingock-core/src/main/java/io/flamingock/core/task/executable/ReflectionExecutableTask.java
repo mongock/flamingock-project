@@ -52,7 +52,7 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Reflect
 
     @Override
     public void execute(RuntimeManager runtimeHelper) {
-        runtimeHelper.executeMethod(runtimeHelper.getInstance(descriptor.getSource()), executionMethod);
+        runtimeHelper.executeMethod(runtimeHelper.getInstance(descriptor.getSourceClass()), executionMethod);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Reflect
 
             @Override
             public void rollback(RuntimeManager runtimeHelper) {
-                runtimeHelper.executeMethod(runtimeHelper.getInstance(descriptor.getSource()), rollbackMethod);
+                runtimeHelper.executeMethod(runtimeHelper.getInstance(descriptor.getSourceClass()), rollbackMethod);
             }
 
             @Override

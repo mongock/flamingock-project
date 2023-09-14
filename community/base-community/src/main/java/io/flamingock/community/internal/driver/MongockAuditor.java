@@ -27,7 +27,7 @@ public abstract class MongockAuditor
                 runtimeContext.getExecutedAt(),
                 getAuditStatus(auditItem),
                 getExecutionType(auditItem),
-                taskDescriptor.getClassImplementor(),
+                taskDescriptor.getSourceName(),
                 runtimeContext.getMethodExecutor(),
                 runtimeContext.getDuration(),
                 stageExecutionContext.getHostname(),

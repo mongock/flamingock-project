@@ -1,7 +1,6 @@
 package io.flamingock.core.task.executable.factory;
 
 import io.flamingock.core.api.annotations.BeforeExecution;
-import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackBeforeExecution;
 import io.flamingock.core.api.annotations.RollbackExecution;
@@ -39,13 +38,13 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
     private List<ReflectionExecutableTask<ReflectionTaskDescriptor>> getTasksFromReflection(ReflectionTaskDescriptor taskDescriptor,
                                                                                             AuditEntryStatus initialState) {
 
-        Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), Execution.class)
+        Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), Execution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
                         "ExecutableChangeUnit[%s] without %s method",
-                        taskDescriptor.getSource().getName(),
+                        taskDescriptor.getSourceClass().getName(),
                         Execution.class.getSimpleName())));
 
-        Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackExecution.class);
+        Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), RollbackExecution.class);
         ReflectionExecutableTask<ReflectionTaskDescriptor> task = new ReflectionExecutableTask<>(
                 taskDescriptor,
                 AuditEntryStatus.isRequiredExecution(initialState),
@@ -74,17 +73,17 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
         ReflectionTaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
                 StringUtil.getBeforeExecutionId(baseTask.getDescriptor().getId()),
                 baseTask.getDescriptor().getOrder().orElse(null),
-                baseTask.getDescriptor().getSource(),
+                baseTask.getDescriptor().getSourceClass(),
                 baseTask.getDescriptor().isRunAlways(),
                 false//A beforeExecution task will never be transactional
         );
 
-        Optional<Method> beforeExecutionMethodOptional = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), BeforeExecution.class);
+        Optional<Method> beforeExecutionMethodOptional = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), BeforeExecution.class);
         if (!beforeExecutionMethodOptional.isPresent()) {
             return Optional.empty();
         }
         Method beforeExecutionMethod = beforeExecutionMethodOptional.get();
-        Optional<Method> rollbackBeforeExecution = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSource(), RollbackBeforeExecution.class);
+        Optional<Method> rollbackBeforeExecution = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), RollbackBeforeExecution.class);
 
 
         return Optional.of(new ReflectionExecutableTask<>(

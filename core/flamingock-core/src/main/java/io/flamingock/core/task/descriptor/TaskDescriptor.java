@@ -10,7 +10,7 @@ public interface TaskDescriptor extends Comparable<TaskDescriptor> {
 
     boolean isTransactional();
 
-    String getClassImplementor();
+    String getSourceName();
 
     Optional<String> getOrder();
 

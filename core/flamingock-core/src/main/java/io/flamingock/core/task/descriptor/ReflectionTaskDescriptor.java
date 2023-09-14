@@ -1,7 +1,5 @@
 package io.flamingock.core.task.descriptor;
 
-import java.util.Optional;
-
 public class ReflectionTaskDescriptor extends AbstractTaskDescriptor implements TaskDescriptor {
 
     private final Class<?> source;
@@ -11,12 +9,12 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor implements 
         this.source = source;
     }
 
-    public Class<?> getSource() {
+    public Class<?> getSourceClass() {
         return source;
     }
 
     @Override
-    public String getClassImplementor() {
+    public String getSourceName() {
         return source.getName();
     }
 
