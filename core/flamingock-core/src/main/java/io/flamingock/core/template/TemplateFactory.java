@@ -9,7 +9,7 @@ public final class TemplateFactory {
     private TemplateFactory() {
     }
 
-    public static Optional<FlamingockTemplate> getTemplate(String templateName) {
+    public static Optional<Class<FlamingockTemplate>> getTemplate(String templateName) {
         return Optional.empty();
     }
  }

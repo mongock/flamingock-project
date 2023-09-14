@@ -1,7 +1,6 @@
 changeUnit:
-  id: create-collection
+  id: create-collection-from-template
   order: 1
-  profiles: dev,qa
   template:
     name: mongodb/create-collection-template
     configuration:

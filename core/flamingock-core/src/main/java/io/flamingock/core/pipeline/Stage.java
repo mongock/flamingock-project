@@ -1,10 +1,13 @@
 package io.flamingock.core.pipeline;
 
+import io.flamingock.core.api.annotations.template.TemplateConfiguration;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
+import io.flamingock.core.task.descriptor.TemplatedTaskDescriptorBuilder;
 import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.core.util.ReflectionUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -111,11 +114,11 @@ public class Stage {
      * @return the LoadedStage with contain the task Definition
      */
     public LoadedStage load() {
-        //descriptors will potentially contain all the descriptors extracted form scanPackage, yaml, etc.
-        Collection<TaskDescriptor> descriptors = getFilteredDescriptorsFromCodePackages(codePackages, getFilters());
+        Collection<TaskFilter> filters = getFilters();
+        Collection<TaskDescriptor> descriptors = new ArrayList<>();
+        descriptors.addAll(getFilteredDescriptorsFromCodePackages(codePackages, filters));
+//        descriptors.addAll(getFilteredDescriptorsFromDirectory(fileDirectories, filters));
 
-
-        //TODO check that all are sorted
         if (descriptors.stream().allMatch(TaskDescriptor::isSortable)) {
             //if all descriptors are sorted, we return a sorted collection
             return new LoadedStage(descriptors.stream().sorted().collect(Collectors.toList()), parallel);
@@ -140,6 +143,23 @@ public class Stage {
                 .map(builder::setSource)
                 .map(ReflectionTaskDescriptorBuilder::build)
                 .collect(Collectors.toList());
+    }
+
+    //TODO implement this
+    private static Collection<TaskDescriptor> getFilteredDescriptorsFromDirectory(Collection<String> directories, Collection<TaskFilter> filters) {
+        TemplatedTaskDescriptorBuilder builder = TemplatedTaskDescriptorBuilder.recycledBuilder();
+        TemplateConfiguration templateConfiguration = new TemplateConfiguration();
+        templateConfiguration.put("collection-name", "collection_from_template");
+        return Collections.singletonList(
+                builder
+                        .setId("create-collection-from-template")
+                        .setOrder("1")
+                        .setTemplate("mongodb/create-collection-template")
+                        .setTemplateConfiguration(templateConfiguration)
+                        .setTransactional(false)
+                        .setRunAlways(false)
+                        .build()
+        );
     }
 
     @Override

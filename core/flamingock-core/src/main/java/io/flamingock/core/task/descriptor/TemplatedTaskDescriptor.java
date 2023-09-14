@@ -13,9 +13,10 @@ public class TemplatedTaskDescriptor extends ReflectionTaskDescriptor<Flamingock
     public TemplatedTaskDescriptor(String id,
                                    String order,
                                    Class<FlamingockTemplate> templateClass,
+                                   boolean transactional,
                                    boolean runAlways,
                                    TemplateConfiguration templateConfiguration) {
-        super(id, order, templateClass, runAlways, TransactionalFlamingockTemplate.class.isAssignableFrom(templateClass));
+        super(id, order, templateClass, runAlways, transactional);
         this.templateConfiguration = templateConfiguration;
     }
 
