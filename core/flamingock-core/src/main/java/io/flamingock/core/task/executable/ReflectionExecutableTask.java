@@ -22,9 +22,9 @@ import java.util.List;
  */
 public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends ReflectionTaskDescriptor> extends AbstractExecutableTask<REFLECTION_TASK_DESCRIPTOR> implements ExecutableTask {
 
-    private final Method executionMethod;
+    protected final Method executionMethod;
 
-    private final List<Rollback> rollbackChain;
+    protected final List<Rollback> rollbackChain;
 
 
     public ReflectionExecutableTask(REFLECTION_TASK_DESCRIPTOR descriptor,
@@ -51,14 +51,16 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Reflect
     }
 
     @Override
-    public void execute(RuntimeManager runtimeHelper) {
-        Object instance = runtimeHelper.getInstance(descriptor.getSourceClass());
-        executeWithInstance(runtimeHelper, instance);
+    public void execute(RuntimeManager runtimeManager) {
+        executeInternal(runtimeManager, runtimeManager.getInstance(descriptor.getSourceClass()), executionMethod);
+
     }
 
-    protected void executeWithInstance(RuntimeManager runtimeHelper, Object instance) {
-        runtimeHelper.executeMethod(instance, executionMethod);
+    protected void executeInternal(RuntimeManager runtimeManager, Object instance, Method method ) {
+        runtimeManager.executeMethod(instance, method);
     }
+
+
 
     @Override
     public String getExecutionMethodName() {
@@ -73,8 +75,8 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Reflect
             }
 
             @Override
-            public void rollback(RuntimeManager runtimeHelper) {
-                runtimeHelper.executeMethod(runtimeHelper.getInstance(descriptor.getSourceClass()), rollbackMethod);
+            public void rollback(RuntimeManager runtimeManager) {
+                executeInternal(runtimeManager, runtimeManager.getInstance(descriptor.getSourceClass()), rollbackMethod);
             }
 
             @Override
