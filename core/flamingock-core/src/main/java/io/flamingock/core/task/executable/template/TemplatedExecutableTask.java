@@ -17,10 +17,10 @@ public class TemplatedExecutableTask extends ReflectionExecutableTask<TemplatedT
     }
 
     @Override
-    protected void executeInternal(RuntimeManager runtimeManager, Object instance, Method method ) {
-//        runtimeManager.executeMethod(instance, method);
+    protected void executeInternal(RuntimeManager runtimeManager, Method method ) {
+        FlamingockTemplate instance = runtimeManager.getTypedInstance(descriptor.getSourceClass());
+        instance.setConfiguration(descriptor.getTemplateConfiguration());
         runtimeManager.addDependency(new Dependency(descriptor.getTemplateConfiguration()));
-        ((FlamingockTemplate)instance).setConfiguration(descriptor.getTemplateConfiguration());
         runtimeManager.executeMethod(instance, method);
     }
 }

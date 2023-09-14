@@ -52,12 +52,12 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Reflect
 
     @Override
     public void execute(RuntimeManager runtimeManager) {
-        executeInternal(runtimeManager, runtimeManager.getInstance(descriptor.getSourceClass()), executionMethod);
+        executeInternal(runtimeManager, executionMethod);
 
     }
 
-    protected void executeInternal(RuntimeManager runtimeManager, Object instance, Method method ) {
-        runtimeManager.executeMethod(instance, method);
+    protected void executeInternal(RuntimeManager runtimeManager, Method method ) {
+        runtimeManager.executeMethod(runtimeManager.getInstance(descriptor.getSourceClass()), method);
     }
 
 
@@ -76,7 +76,7 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Reflect
 
             @Override
             public void rollback(RuntimeManager runtimeManager) {
-                executeInternal(runtimeManager, runtimeManager.getInstance(descriptor.getSourceClass()), rollbackMethod);
+                executeInternal(runtimeManager, rollbackMethod);
             }
 
             @Override
