@@ -1,6 +1,6 @@
-package io.flamingock.core.pipeline;
+package io.flamingock.examples.community.template;
 
-public class CustomConfiguration {
+public class MongoCreateCollectionConfiguration {
 
     private String collectionName;
 
