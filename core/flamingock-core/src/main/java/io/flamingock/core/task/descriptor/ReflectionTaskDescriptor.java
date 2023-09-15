@@ -1,15 +1,15 @@
 package io.flamingock.core.task.descriptor;
 
-public class ReflectionTaskDescriptor<SOURCE_CLASS> extends AbstractTaskDescriptor implements TaskDescriptor {
+public class ReflectionTaskDescriptor extends AbstractTaskDescriptor implements TaskDescriptor {
 
-    protected final Class<SOURCE_CLASS> source;
+    protected final Class<?> source;
 
-    public ReflectionTaskDescriptor(String id, String order, Class<SOURCE_CLASS> source, boolean runAlways, boolean transactional) {
+    public ReflectionTaskDescriptor(String id, String order, Class<?> source, boolean runAlways, boolean transactional) {
         super(id, order, runAlways, transactional);
         this.source = source;
     }
 
-    public Class<SOURCE_CLASS> getSourceClass() {
+    public Class<?> getSourceClass() {
         return source;
     }
 
@@ -21,5 +21,12 @@ public class ReflectionTaskDescriptor<SOURCE_CLASS> extends AbstractTaskDescript
     @Override
     public String pretty() {
         return toString();
+    }
+
+    @Override
+    public String toString() {
+        return "ReflectionTaskDescriptor{" +
+                "source=" + source +
+                '}';
     }
 }

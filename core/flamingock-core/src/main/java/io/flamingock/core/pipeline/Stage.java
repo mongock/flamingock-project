@@ -1,14 +1,17 @@
 package io.flamingock.core.pipeline;
 
-import io.flamingock.core.api.annotations.template.TemplateConfiguration;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptorBuilder;
 import io.flamingock.core.task.filter.TaskFilter;
+import io.flamingock.core.task.navigation.navigator.StepNavigator;
+import io.flamingock.core.template.TemplatedTaskDefinition;
+import io.flamingock.core.util.FileUtil;
 import io.flamingock.core.util.ReflectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -21,36 +24,27 @@ import java.util.stream.Collectors;
  * It doesn't necessary contain directly the tasks, it can contain the code packages, etc.
  */
 public class Stage {
+    private static final Logger logger = LoggerFactory.getLogger(StepNavigator.class);
 
     private String name;
     private Collection<String> codePackages;
 
     private Collection<String> fileDirectories;
 
-    private boolean parallel = false;
     private Collection<TaskFilter> filters;
+    private boolean parallel = false;
 
     public Stage() {
     }
 
 
-    public Stage(String... codePackages) {
-        this(Arrays.asList(codePackages));
-    }
 
-    public Stage(Collection<String> codePackages) {
-        this(codePackages, new LinkedHashSet<>(), false);
-    }
-
-    public Stage(Collection<String> codePackages, boolean parallel) {
-        this(codePackages, new LinkedList<>(), parallel);
-
-    }
-
-    public Stage(Collection<String> codePackages, Collection<TaskFilter> filters, boolean parallel) {
-        this.codePackages = new LinkedHashSet<>(codePackages);
-        this.filters = filters != null ? filters : Collections.emptyList();
-        this.parallel = parallel;//stageConfiguration.isParallel()
+    public Stage(Stage prototype) {
+        this.name = prototype.name;
+        this.codePackages = prototype.codePackages != null ? new LinkedHashSet<>(prototype.getCodePackages()) : null;
+        this.fileDirectories = prototype.fileDirectories != null ? new LinkedHashSet<>(prototype.getFileDirectories()) : null;
+        this.filters = filters != null ? new LinkedHashSet<>(prototype.getFilters()) : null;
+        this.parallel = prototype.parallel;
     }
 
 
@@ -93,7 +87,34 @@ public class Stage {
     public Stage addFilters(Collection<TaskFilter> filters) {
         Collection<TaskFilter> allFilters = this.filters != null ? new LinkedList<>(this.filters) : new LinkedHashSet<>();
         if (filters != null) allFilters.addAll(filters);
-        return new Stage(this.codePackages, allFilters, this.parallel);
+        if(filters != null) {
+            filters.forEach(this::addFilter);
+        }
+        return this;
+    }
+
+    public Stage addFilter(TaskFilter filter) {
+        if(filters == null) {
+            filters = new LinkedHashSet<>();
+        }
+        filters.add(filter);
+        return this;
+    }
+
+    public Stage addCodePackage(String codePackage) {
+        if(codePackages == null) {
+            codePackages = new LinkedHashSet<>();
+        }
+        codePackages.add(codePackage);
+        return this;
+    }
+
+    public Stage addFileDirectory(String fileDirectory) {
+        if(fileDirectories == null) {
+            fileDirectories = new LinkedHashSet<>();
+        }
+        fileDirectories.add(fileDirectory);
+        return this;
     }
 
     /*
@@ -115,9 +136,8 @@ public class Stage {
      */
     public LoadedStage load() {
         Collection<TaskFilter> filters = getFilters();
-        Collection<TaskDescriptor> descriptors = new ArrayList<>();
-        descriptors.addAll(getFilteredDescriptorsFromCodePackages(codePackages, filters));
-//        descriptors.addAll(getFilteredDescriptorsFromDirectory(fileDirectories, filters));
+        Collection<TaskDescriptor> descriptors = new ArrayList<>(getFilteredDescriptorsFromCodePackages(codePackages, filters));
+        descriptors.addAll(getFilteredDescriptorsFromDirectory(fileDirectories, filters));
 
         if (descriptors.stream().allMatch(TaskDescriptor::isSortable)) {
             //if all descriptors are sorted, we return a sorted collection
@@ -134,32 +154,29 @@ public class Stage {
     }
 
     private static Collection<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages, Collection<TaskFilter> filters) {
-        ReflectionTaskDescriptorBuilder builder = ReflectionTaskDescriptorBuilder.recycledBuilder();
+
         return codePackages.
                 stream()
                 .map(ReflectionUtil::loadClassesFromPackage)
                 .flatMap(Collection::stream)
                 .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
-                .map(builder::setSource)
+                .map(ReflectionTaskDescriptorBuilder.recycledBuilder()::setSource)
                 .map(ReflectionTaskDescriptorBuilder::build)
                 .collect(Collectors.toList());
     }
 
     //TODO implement this
     private static Collection<TaskDescriptor> getFilteredDescriptorsFromDirectory(Collection<String> directories, Collection<TaskFilter> filters) {
-        TemplatedTaskDescriptorBuilder builder = TemplatedTaskDescriptorBuilder.recycledBuilder();
-        TemplateConfiguration templateConfiguration = new TemplateConfiguration();
-        templateConfiguration.put("collection-name", "collection_from_template");
-        return Collections.singletonList(
-                builder
-                        .setId("create-collection-from-template")
-                        .setOrder("1")
-                        .setTemplate("mongodb/create-collection-template")
-                        .setTemplateConfiguration(templateConfiguration)
-                        .setTransactional(false)
-                        .setRunAlways(false)
-                        .build()
-        );
+
+        return directories.stream()
+                .map(FileUtil::loadFilesFromDirectory)
+                .flatMap(Collection::stream)
+                .map(file -> FileUtil.getFromYamlFile(file, TemplatedTaskDefinition.class))
+//                .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
+                .map(TemplatedTaskDescriptorBuilder.recycledBuilder()::setFromDefinition)
+                .map(TemplatedTaskDescriptorBuilder::build)
+                .collect(Collectors.toList());
+
     }
 
     @Override

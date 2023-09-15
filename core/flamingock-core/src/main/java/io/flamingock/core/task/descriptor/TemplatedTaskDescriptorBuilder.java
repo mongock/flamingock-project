@@ -1,9 +1,11 @@
 package io.flamingock.core.task.descriptor;
 
 import io.flamingock.core.api.annotations.template.FlamingockTemplate;
-import io.flamingock.core.api.annotations.template.TemplateConfiguration;
 import io.flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.template.TemplatedTaskDefinition;
 import io.flamingock.core.template.TemplateFactory;
+
+import java.util.Map;
 
 
 //TODO how to set transactional and runAlways
@@ -22,9 +24,9 @@ public class TemplatedTaskDescriptorBuilder {
 
     private boolean transactional;
 
-    private String template;
+    private String templateName;
 
-    private TemplateConfiguration templateConfiguration;
+    private Map<String, Object> templateConfiguration;
 
     private TemplatedTaskDescriptorBuilder() {
     }
@@ -49,22 +51,32 @@ public class TemplatedTaskDescriptorBuilder {
         return this;
     }
 
-    public TemplatedTaskDescriptorBuilder setTemplate(String template) {
-        this.template = template;
+    public TemplatedTaskDescriptorBuilder setTemplateName(String templateName) {
+        this.templateName = templateName;
         return this;
     }
 
-    public TemplatedTaskDescriptorBuilder setTemplateConfiguration(TemplateConfiguration templateConfiguration) {
+    public TemplatedTaskDescriptorBuilder setTemplateConfiguration(Map<String, Object> templateConfiguration) {
         this.templateConfiguration = templateConfiguration;
         return this;
     }
 
     public TemplatedTaskDescriptor build() {
 
-        Class<FlamingockTemplate> templateClass = TemplateFactory.getTemplate(template)
-                .orElseThrow(() -> new FlamingockException("Template not found: " + template));
+        Class<?> templateClass = TemplateFactory.getTemplate(templateName)
+                .orElseThrow(() -> new FlamingockException("Template not found: " + templateName));
 
         return new TemplatedTaskDescriptor(id, order, templateClass, transactional, runAlways, templateConfiguration);
 
+    }
+
+    public TemplatedTaskDescriptorBuilder setFromDefinition(TemplatedTaskDefinition templatedTaskDefinition) {
+        setId(templatedTaskDefinition.getId());
+        setOrder(templatedTaskDefinition.getOrder());
+        setTemplateName(templatedTaskDefinition.getTemplateName());
+        setTemplateConfiguration(templatedTaskDefinition.getConfiguration());
+//        setTransactional(templateYaml.getTransactional());
+//        setRunAlways(templateYaml.getRunAlways());
+        return this;
     }
 }

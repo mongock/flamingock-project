@@ -4,9 +4,11 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public final class ReflectionUtil {
@@ -22,5 +24,8 @@ public final class ReflectionUtil {
         return new Reflections(packagePath).getTypesAnnotatedWith(ChangeUnit.class);
     }
 
+    public static List<Class<?>> getParameters(Executable executable) {
+        return Arrays.asList(executable.getParameterTypes());
+    }
 
 }

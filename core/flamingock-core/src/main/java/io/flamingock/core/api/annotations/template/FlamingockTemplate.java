@@ -2,11 +2,11 @@ package io.flamingock.core.api.annotations.template;
 
 import io.flamingock.core.api.exception.FlamingockException;
 
+import java.util.Map;
+
 public interface FlamingockTemplate {
 
-    String getName();
+    void setConfiguration(Map<String, Object> configuration);
 
-    void setConfiguration(TemplateConfiguration configuration);
-
-    void validateConfiguration() throws FlamingockException;
+    boolean validateConfiguration();
 }

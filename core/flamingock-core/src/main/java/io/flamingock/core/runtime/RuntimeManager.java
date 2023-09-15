@@ -73,16 +73,6 @@ public final class RuntimeManager implements DependencyInjectable {
         }
     }
 
-    public <T> T getTypedInstance(Class<T> type) {
-        Constructor<T> constructor = getTypedConstructor(type);
-        List<Object> signatureParameters = getSignatureParameters(constructor);
-        logMethodWithArguments(constructor.getName(), signatureParameters);
-        try {
-            return constructor.newInstance(signatureParameters.toArray());
-        } catch (Exception e) {
-            throw new FlamingockException(e);
-        }
-    }
 
 
     public Object executeMethod(Object instance, Method method) {

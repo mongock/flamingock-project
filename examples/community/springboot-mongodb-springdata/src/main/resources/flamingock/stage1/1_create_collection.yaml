@@ -1,7 +1,5 @@
-changeUnit:
-  id: create-collection-from-template
-  order: 1
-  template:
-    name: mongodb/create-collection-template
-    configuration:
-      collection-name: collection_from_template
+id: create-collection-from-template
+order: 4
+templateName: mongodb/create-collection-template
+configuration:
+    collectionName: collection_from_template
