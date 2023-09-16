@@ -5,6 +5,11 @@ rootProject.name = "flamingock-project"
 //////////////////////////////////////
 // CORE
 //////////////////////////////////////
+include("core:flamingock-template")
+project(":core:flamingock-template").projectDir = file("core/flamingock-template")
+project(":core:flamingock-template").name = "flamingock-template"
+
+
 include("core:flamingock-core")
 project(":core:flamingock-core").projectDir = file("core/flamingock-core")
 project(":core:flamingock-core").name = "flamingock-core"
@@ -79,3 +84,8 @@ project(":examples:community:springboot-mongodb-springdata").projectDir = file("
 include("examples:community:springboot-v3-mongodb-springdata-v4")
 project(":examples:community:springboot-v3-mongodb-springdata-v4").name = "springboot-v3-mongodb-springdata-v4"
 project(":examples:community:springboot-v3-mongodb-springdata-v4").projectDir = file("examples/community/springboot-v3-mongodb-springdata-v4")
+
+include("examples:community:mongodb-template")
+project(":examples:community:mongodb-template").name = "mongodb-template"
+project(":examples:community:mongodb-template").projectDir = file("examples/community/mongodb-template")
+

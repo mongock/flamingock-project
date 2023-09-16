@@ -1,4 +1,4 @@
-package io.flamingock.core.api.annotations.template;
+package io.flamingock.template.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TemplateConfigSetter {
+public @interface TemplateExecution {
 
 }

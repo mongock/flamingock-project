@@ -1,7 +1,5 @@
 package io.flamingock.core.task.descriptor;
 
-import io.flamingock.core.api.annotations.template.FlamingockTemplate;
-
 import java.util.Map;
 
 

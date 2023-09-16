@@ -2,6 +2,7 @@ package io.flamingock.core.configurator;
 
 
 import io.flamingock.core.pipeline.Stage;
+import io.flamingock.template.TemplateModule;
 
 import java.util.Map;
 
@@ -38,6 +39,8 @@ public interface CoreConfigurator<HOLDER> {
     HOLDER setDefaultAuthor(String defaultMigrationAuthor);
 
     HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy);
+
+    HOLDER addTemplateModule(TemplateModule templateModule);
 
 
     long getLockAcquiredForMillis();

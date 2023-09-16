@@ -1,15 +1,14 @@
 package io.flamingock.core.task.executable.template;
 
-import io.flamingock.core.api.annotations.template.TemplateConfigSetter;
-import io.flamingock.core.api.annotations.template.TemplateConfigValidator;
-import io.flamingock.core.api.annotations.template.TemplateExecution;
-import io.flamingock.core.api.annotations.template.TemplateRollbackExecution;
+import io.flamingock.template.annotations.TemplateConfigSetter;
+import io.flamingock.template.annotations.TemplateConfigValidator;
+import io.flamingock.template.annotations.TemplateExecution;
+import io.flamingock.template.annotations.TemplateRollbackExecution;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.StepNavigator;
-import io.flamingock.core.util.Pair;
 import io.flamingock.core.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

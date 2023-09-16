@@ -2,17 +2,23 @@ package io.flamingock.core.configurator;
 
 
 import io.flamingock.core.pipeline.Stage;
+import io.flamingock.template.TemplateModule;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER>{
     private final Supplier<HOLDER> holderSupplier;
     private final CoreConfiguration properties;
 
+    private final Set<TemplateModule> templateModules;
+
     public CoreConfiguratorDelegate(CoreConfiguration properties, Supplier<HOLDER> holderSupplier) {
         this.properties = properties;
         this.holderSupplier = holderSupplier;
+        templateModules = new HashSet<>();
     }
 
     @Override
@@ -107,6 +113,12 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
     @Override
     public HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy) {
         properties.setTransactionStrategy(transactionStrategy);
+        return holderSupplier.get();
+    }
+
+    @Override
+    public HOLDER addTemplateModule(TemplateModule templateModule) {
+        templateModules.add(templateModule);
         return holderSupplier.get();
     }
 

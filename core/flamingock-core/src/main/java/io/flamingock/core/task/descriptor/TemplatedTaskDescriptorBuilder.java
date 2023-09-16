@@ -1,6 +1,5 @@
 package io.flamingock.core.task.descriptor;
 
-import io.flamingock.core.api.annotations.template.FlamingockTemplate;
 import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.template.TemplatedTaskDefinition;
 import io.flamingock.core.template.TemplateFactory;

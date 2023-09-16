@@ -1,7 +1,5 @@
 package io.flamingock.core.template;
 
-import io.flamingock.core.api.annotations.template.FlamingockTemplate;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package io.flamingock.examples.community.template;
+package com.company.template.mongodb;
 
 public class MongoCreateCollectionConfiguration {
 

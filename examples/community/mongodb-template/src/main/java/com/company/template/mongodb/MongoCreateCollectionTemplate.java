@@ -1,9 +1,9 @@
-package io.flamingock.examples.community.template;
+package com.company.template.mongodb;
 
-import io.flamingock.core.api.annotations.template.TemplateConfigSetter;
-import io.flamingock.core.api.annotations.template.TemplateConfigValidator;
-import io.flamingock.core.api.annotations.template.TemplateExecution;
-import io.flamingock.core.api.annotations.template.TemplateRollbackExecution;
+import io.flamingock.template.annotations.TemplateConfigSetter;
+import io.flamingock.template.annotations.TemplateConfigValidator;
+import io.flamingock.template.annotations.TemplateExecution;
+import io.flamingock.template.annotations.TemplateRollbackExecution;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 public class MongoCreateCollectionTemplate {
