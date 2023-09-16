@@ -1,4 +1,4 @@
-package io.flamingock.core.template;
+package io.flamingock.template;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ public class TemplatedTaskDefinition {
 
     private String templateName;
 
-    private Map<String, Object> configuration;
+    private Map<String, Object> templateConfiguration;
 
     public String getId() {
         return id;
@@ -35,11 +35,11 @@ public class TemplatedTaskDefinition {
         this.templateName = templateName;
     }
 
-    public Map<String, Object> getConfiguration() {
-        return configuration;
+    public Map<String, Object> getTemplateConfiguration() {
+        return templateConfiguration;
     }
 
-    public void setConfiguration(Map<String, Object> configuration) {
-        this.configuration = configuration;
+    public void setTemplateConfiguration(Map<String, Object> templateConfiguration) {
+        this.templateConfiguration = templateConfiguration;
     }
 }

@@ -1,8 +1,8 @@
 package io.flamingock.core.task.descriptor;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.template.TemplatedTaskDefinition;
-import io.flamingock.core.template.TemplateFactory;
+import io.flamingock.template.TemplatedTaskDefinition;
+import io.flamingock.template.TemplateFactory;
 
 import java.util.Map;
 
@@ -73,7 +73,7 @@ public class TemplatedTaskDescriptorBuilder {
         setId(templatedTaskDefinition.getId());
         setOrder(templatedTaskDefinition.getOrder());
         setTemplateName(templatedTaskDefinition.getTemplateName());
-        setTemplateConfiguration(templatedTaskDefinition.getConfiguration());
+        setTemplateConfiguration(templatedTaskDefinition.getTemplateConfiguration());
 //        setTransactional(templateYaml.getTransactional());
 //        setRunAlways(templateYaml.getRunAlways());
         return this;

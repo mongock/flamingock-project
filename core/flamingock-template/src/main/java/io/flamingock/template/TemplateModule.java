@@ -4,4 +4,5 @@ import java.util.Set;
 
 public interface TemplateModule {
     Set<TemplateSpec> getTemplates();
+
 }

@@ -62,6 +62,7 @@ public class CommunityStandaloneBuilder
     @Override
     public Runner build() {
         ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
+        registerTemplates();
         return RunnerCreator.create(
                 buildPipeline(),
                 connectionEngine.getAuditor(),
@@ -73,6 +74,10 @@ public class CommunityStandaloneBuilder
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
+    }
+
+    private void registerTemplates() {
+
     }
 
     @NotNull

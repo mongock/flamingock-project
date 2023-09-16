@@ -1,13 +1,11 @@
 package io.flamingock.examples.community;
 
 import io.flamingock.community.runner.springboot.v2.EnableFlamingock;
-import io.flamingock.core.template.TemplateFactory;
 import io.flamingock.examples.community.client.ClientRepository;
 import io.flamingock.examples.community.events.FailureEventListener;
 import io.flamingock.examples.community.events.StartedEventListener;
 import io.flamingock.examples.community.events.SuccessEventListener;
 
-import com.company.template.mongodb.MongoCreateCollectionTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

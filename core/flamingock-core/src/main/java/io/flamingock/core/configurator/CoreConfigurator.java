@@ -4,6 +4,7 @@ package io.flamingock.core.configurator;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.template.TemplateModule;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CoreConfigurator<HOLDER> {

@@ -5,7 +5,7 @@ import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptorBuilder;
 import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.core.task.navigation.navigator.StepNavigator;
-import io.flamingock.core.template.TemplatedTaskDefinition;
+import io.flamingock.template.TemplatedTaskDefinition;
 import io.flamingock.core.util.FileUtil;
 import io.flamingock.core.util.ReflectionUtil;
 import org.slf4j.Logger;

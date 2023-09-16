@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MongoTemplateModule implements TemplateModule {
+public class MongoCreateCollectionTemplateModule implements TemplateModule {
 
     private static final Set<TemplateSpec> templates;
 
@@ -22,4 +22,5 @@ public class MongoTemplateModule implements TemplateModule {
     public Set<TemplateSpec> getTemplates() {
         return templates;
     }
+
 }
