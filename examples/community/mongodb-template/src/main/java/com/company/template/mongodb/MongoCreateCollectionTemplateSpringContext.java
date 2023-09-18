@@ -3,6 +3,7 @@ package com.company.template.mongodb;
 
 import io.flamingock.community.runner.springboot.v2.CommunitySpringboot;
 import io.flamingock.community.runner.springboot.v2.CommunitySpringbootBuilder;
+import io.flamingock.core.configurator.CoreConfigurator;
 import io.flamingock.core.springboot.v2.SpringRunnerBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 public class MongoCreateCollectionTemplateSpringContext {
     
     @Bean
-    public MongoCreateCollectionTemplateModule mongoCreateCollectionTemplateModule(CommunitySpringbootBuilder communitySpringbootBuilder) {
+    public MongoCreateCollectionTemplateModule mongoCreateCollectionTemplateModule(CoreConfigurator<?> CoreConfigurator) {
         MongoCreateCollectionTemplateModule module = new MongoCreateCollectionTemplateModule();
-        communitySpringbootBuilder.addTemplateModule(module);
+        CoreConfigurator.addTemplateModule(module);
         return module;
     }
 }
