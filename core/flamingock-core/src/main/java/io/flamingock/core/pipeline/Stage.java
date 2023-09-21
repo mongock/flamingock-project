@@ -165,9 +165,11 @@ public class Stage {
                 .collect(Collectors.toList());
     }
 
-    //TODO implement this
     private static Collection<TaskDescriptor> getFilteredDescriptorsFromDirectory(Collection<String> directories, Collection<TaskFilter> filters) {
 
+        if(directories == null) {
+            return Collections.emptyList();
+        }
         return directories.stream()
                 .map(FileUtil::loadFilesFromDirectory)
                 .flatMap(Collection::stream)
