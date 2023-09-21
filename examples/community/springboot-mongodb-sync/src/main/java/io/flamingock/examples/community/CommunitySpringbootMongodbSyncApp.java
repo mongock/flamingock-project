@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Bean;
 public class CommunitySpringbootMongodbSyncApp {
     public final static String DATABASE_NAME = "test";
 
+    public final static String CLIENTS_COLLECTION_NAME = "clientCollection";
+
     public static void main(String[] args) {
         SpringApplication.run(CommunitySpringbootMongodbSyncApp.class, args);
     }

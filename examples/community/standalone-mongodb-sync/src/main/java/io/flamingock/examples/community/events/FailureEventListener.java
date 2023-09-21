@@ -1,4 +1,4 @@
-package io.flamingock.examples.community.mongodb.sync.events;
+package io.flamingock.examples.community.events;
 
 import io.flamingock.core.event.MigrationFailureEvent;
 
