@@ -1,8 +1,8 @@
 package io.flamingock.core.lock;
 
-import io.flamingock.core.api.exception.CoreException;
+import io.flamingock.core.api.exception.FlamingockException;
 
-public class LockException extends CoreException {
+public class LockException extends FlamingockException {
   public LockException(Throwable throwable) {
     super(throwable);
   }

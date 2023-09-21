@@ -2,6 +2,8 @@ package io.flamingock.core.configurator;
 
 
 import io.flamingock.core.pipeline.Stage;
+import io.flamingock.template.TemplateFactory;
+import io.flamingock.template.TemplateModule;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -107,6 +109,12 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
     @Override
     public HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy) {
         properties.setTransactionStrategy(transactionStrategy);
+        return holderSupplier.get();
+    }
+
+    @Override
+    public HOLDER addTemplateModule(TemplateModule templateModule) {
+        TemplateFactory.registerModule(templateModule);
         return holderSupplier.get();
     }
 

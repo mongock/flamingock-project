@@ -19,31 +19,24 @@ public class CommunitySpringbootContext {
     @Bean("flamingock-runner")
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:ApplicationRunner}'.toLowerCase().equals('applicationrunner')")
-    public ApplicationRunner applicationRunner(ConnectionDriver<?> connectionDriver,
-                                               CommunitySpringbootConfiguration springConfiguration,
-                                               ApplicationContext springContext,
-                                               ApplicationEventPublisher applicationEventPublisher) {
-        return getBuilder(connectionDriver, springConfiguration, springContext, applicationEventPublisher)
-                .buildApplicationRunner();
+    public ApplicationRunner applicationRunner(CommunitySpringbootBuilder communitySpringbootBuilder) {
+        return communitySpringbootBuilder.buildApplicationRunner();
     }
 
 
     @Bean("flamingock-runner")
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:null}'.toLowerCase().equals('initializingbean')")
-    public InitializingBean initializingBeanRunner(ConnectionDriver<?> connectionDriver,
-                                                   CommunitySpringbootConfiguration springConfiguration,
-                                                   ApplicationContext springContext,
-                                                   ApplicationEventPublisher applicationEventPublisher) {
-        return getBuilder(connectionDriver, springConfiguration, springContext, applicationEventPublisher)
-                .buildInitializingBeanRunner();
+    public InitializingBean initializingBeanRunner(CommunitySpringbootBuilder communitySpringbootBuilder) {
+        return communitySpringbootBuilder.buildInitializingBeanRunner();
     }
 
-
-    private SpringRunnerBuilder getBuilder(ConnectionDriver<?> connectionDriver,
-                                           CommunitySpringbootConfiguration configuration,
-                                           ApplicationContext springContext,
-                                           ApplicationEventPublisher applicationEventPublisher) {
+    @Bean("flamingock-builder")
+    @Profile(Constants.NON_CLI_PROFILE)
+    public CommunitySpringbootBuilder communitySpringbootBuilder(ConnectionDriver<?> connectionDriver,
+                                                   CommunitySpringbootConfiguration configuration,
+                                                   ApplicationContext springContext,
+                                                   ApplicationEventPublisher applicationEventPublisher) {
         return CommunitySpringboot.builder(
                         configuration.getCoreProperties(),
                         configuration.getCommunityProperties(),

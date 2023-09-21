@@ -1,12 +1,15 @@
 package io.flamingock.core.pipeline;
 
+import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
+import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -17,17 +20,21 @@ public class LoadedStage {
     private final Collection<? extends TaskDescriptor> taskDescriptors;
     private final boolean parallel;
 
+    private final ParentExecutableTaskFactory factory;
+
     public LoadedStage(Collection<? extends TaskDescriptor> taskDescriptors, boolean parallel) {
         this.taskDescriptors = taskDescriptors;
         this.parallel = parallel;
+        factory = ParentExecutableTaskFactory.INSTANCE;
     }
 
     public ExecutableStage applyState(SingleAuditStageStatus state) {
 
-        ExecutableTask.Factory factory = new ExecutableTask.Factory(state.getStatesMap());
+        Map<String, AuditEntryStatus> statesMap = state.getStatesMap();
+
         List<ExecutableTask> tasks = taskDescriptors
                 .stream()
-                .map(factory::getTasks)
+                .map(taskDescriptor -> factory.extractTasks(taskDescriptor, statesMap.get(taskDescriptor.getId())))
                 .flatMap(List::stream)
                 .collect(Collectors.toCollection(LinkedList::new));
 

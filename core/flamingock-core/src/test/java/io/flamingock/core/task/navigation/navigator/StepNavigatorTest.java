@@ -3,13 +3,14 @@ package io.flamingock.core.task.navigation.navigator;
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.writer.AuditItem;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
+import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.task.descriptor.reflection.SortedReflectionTaskDescriptor;
+import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.util.Result;
 import io.utils.EmptyTransactionWrapper;
@@ -57,15 +58,15 @@ class StepNavigatorTest {
                 .build();
 
         //AND
-        TaskDescriptor taskDescriptor = new SortedReflectionTaskDescriptor(
+        TaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
                 "task-with-before-execution",
                 "1",
                 TaskWithBeforeExecution.class,
                 false,
                 false
         );
-        List<? extends ExecutableTask> executableTasks = new ExecutableTask.Factory(new HashMap<>())
-                .getTasks(taskDescriptor);
+        List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
+                .extractTasks(taskDescriptor, null);
 
         StageExecutionContext stageExecutionContext = new StageExecutionContext(
                 "executionId", "hsotname", "author", new HashMap<>()
@@ -104,15 +105,15 @@ class StepNavigatorTest {
                 .build();
 
         //AND
-        TaskDescriptor taskDescriptor = new SortedReflectionTaskDescriptor(
+        TaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
                 "task-with-before-execution",
                 "1",
                 TaskWithBeforeExecution.class,
                 false,
                 true
         );
-        List<? extends ExecutableTask> executableTasks = new ExecutableTask.Factory(new HashMap<>())
-                .getTasks(taskDescriptor);
+        List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
+                .extractTasks(taskDescriptor, null);
 
         EmptyTransactionWrapper transactionWrapper = new EmptyTransactionWrapper();
         StepNavigator stepNavigator = new StepNavigator(auditWriterMock, stepSummarizerMock, runtimeManagerMock, transactionWrapper);

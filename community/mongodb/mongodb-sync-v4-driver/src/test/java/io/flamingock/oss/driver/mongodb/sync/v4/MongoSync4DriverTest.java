@@ -75,7 +75,7 @@ class MongoSync4DriverTest {
         //Given-When
         CommunityStandalone.builder()
                 .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                .addStage(new Stage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
+                .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
@@ -112,7 +112,7 @@ class MongoSync4DriverTest {
         //Given-When
         CommunityStandalone.builder()
                 .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                .addStage(new Stage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction"))
+                .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(false)
@@ -150,7 +150,7 @@ class MongoSync4DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithTransaction"))
+                    .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithTransaction"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(true)
@@ -186,7 +186,7 @@ class MongoSync4DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback"))
+                    .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)
@@ -224,7 +224,7 @@ class MongoSync4DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithoutRollback"))
+                    .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithoutRollback"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)

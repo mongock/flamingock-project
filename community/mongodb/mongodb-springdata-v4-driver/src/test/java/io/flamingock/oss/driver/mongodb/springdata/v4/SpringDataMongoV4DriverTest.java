@@ -73,7 +73,7 @@ class SpringDataMongoV4DriverTest {
         //Given-When
         CommunityStandalone.builder()
                 .setDriver(new SpringDataMongoV4Driver(mongoTemplate))
-                .addStage(new Stage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.happyPathWithTransaction"))
+                .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.happyPathWithTransaction"))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
@@ -110,7 +110,7 @@ class SpringDataMongoV4DriverTest {
         //Given-When
         CommunityStandalone.builder()
                 .setDriver(new SpringDataMongoV4Driver(mongoTemplate))
-                .addStage(new Stage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.happyPathWithoutTransaction"))
+                .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.happyPathWithoutTransaction"))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .setTransactionEnabled(false)
@@ -148,7 +148,7 @@ class SpringDataMongoV4DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV4Driver(mongoTemplate))
-                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.failedWithTransaction"))
+                    .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.failedWithTransaction"))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .setTransactionEnabled(true)
@@ -184,7 +184,7 @@ class SpringDataMongoV4DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV4Driver(mongoTemplate))
-                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.failedWithoutTransactionWithRollback"))
+                    .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.failedWithoutTransactionWithRollback"))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)
@@ -222,7 +222,7 @@ class SpringDataMongoV4DriverTest {
         assertThrows(StageExecutionException.class, () -> {
             CommunityStandalone.builder()
                     .setDriver(new SpringDataMongoV4Driver(mongoTemplate))
-                    .addStage(new Stage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.failedWithoutTransactionWithoutRollback"))
+                    .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.failedWithoutTransactionWithoutRollback"))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)

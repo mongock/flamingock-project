@@ -27,6 +27,7 @@ import io.flamingock.core.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.core.springboot.v3.SpringUtil;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.task.filter.TaskFilter;
+import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -193,6 +194,11 @@ public class CommunitySpringbootBuilder
     @Override
     public CommunitySpringbootBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
         return coreConfiguratorDelegate.setTransactionStrategy(transactionStrategy);
+    }
+
+    @Override
+    public CommunitySpringbootBuilder addTemplateModule(TemplateModule templateModule) {
+        return coreConfiguratorDelegate.addTemplateModule(templateModule);
     }
 
 

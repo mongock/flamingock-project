@@ -31,7 +31,7 @@ public class CommunityStandaloneMongodbSyncApp {
                 .setLockAcquiredForMillis(60 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                 .setLockQuitTryingAfterMillis(3 * 60 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
                 .setLockTryFrequencyMillis(1000L)//this is just to show how is set. Default value is still 1000L
-                .addStage(new Stage("io.flamingock.examples.community.mongodb.sync.changes"))
+                .addStage(new Stage().addCodePackage("io.flamingock.examples.community.mongodb.sync.changes"))
                 .addDependency(mongoClient.getDatabase(databaseName))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)

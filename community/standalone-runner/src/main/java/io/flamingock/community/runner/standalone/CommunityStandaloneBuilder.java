@@ -24,6 +24,7 @@ import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.task.filter.TaskFilter;
+import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -61,6 +62,7 @@ public class CommunityStandaloneBuilder
     @Override
     public Runner build() {
         ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
+        registerTemplates();
         return RunnerCreator.create(
                 buildPipeline(),
                 connectionEngine.getAuditor(),
@@ -72,6 +74,10 @@ public class CommunityStandaloneBuilder
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
+    }
+
+    private void registerTemplates() {
+
     }
 
     @NotNull
@@ -179,6 +185,11 @@ public class CommunityStandaloneBuilder
     @Override
     public CommunityStandaloneBuilder setTransactionStrategy(TransactionStrategy transactionStrategy) {
         return coreConfiguratorDelegate.setTransactionStrategy(transactionStrategy);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder addTemplateModule(TemplateModule templateModule) {
+        return coreConfiguratorDelegate.addTemplateModule(templateModule);
     }
 
     @Override
