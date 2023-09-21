@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureMockMvc
 @Import({CommunitySpringbootMongodbSpringdataApp.class})
 @ContextConfiguration(initializers = MongoInitializer.class)
-class SpringDataSuccessExecutionTest {
+class SpringData3SuccessExecutionTest {
 
     @Autowired
     private StartedEventListener startedEventListener;
