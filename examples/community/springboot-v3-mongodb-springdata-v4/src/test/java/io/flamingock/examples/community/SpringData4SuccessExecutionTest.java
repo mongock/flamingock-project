@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static io.flamingock.core.util.Constants.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
+import static io.flamingock.examples.community.CommunitySpringbootMongodbSpringdataApp.CLIENTS_COLLECTION_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -51,7 +52,7 @@ class SpringData4SuccessExecutionTest {
     @Test
     @DisplayName("SHOULD create clientCollection and insert two clients")
     void functionalTest() {
-        Set<String> clients = mongoTemplate.getCollection("clientCollection")
+        Set<String> clients = mongoTemplate.getCollection(CLIENTS_COLLECTION_NAME)
                 .find()
                 .map(document -> document.getString("name"))
                 .into(new HashSet<>());

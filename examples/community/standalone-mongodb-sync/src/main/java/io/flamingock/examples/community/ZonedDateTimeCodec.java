@@ -1,4 +1,4 @@
-package io.flamingock.examples.community.mongodb.sync;
+package io.flamingock.examples.community;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
