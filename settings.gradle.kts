@@ -65,6 +65,14 @@ include("community:mongodb:mongodb-springdata-v4-driver")
 project(":community:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
 project(":community:mongodb:mongodb-springdata-v4-driver").projectDir = file("community/mongodb/mongodb-springdata-v4-driver")
 
+include("community:couchbase:couchbase-driver")
+project(":community:couchbase:couchbase-driver").name = "couchbase-driver"
+project(":community:couchbase:couchbase-driver").projectDir = file("community/couchbase/couchbase-driver")
+
+include("community:couchbase:couchbase-springboot-v2-driver")
+project(":community:couchbase:couchbase-springboot-v2-driver").name = "couchbase-springboot-v2-driver"
+project(":community:couchbase:couchbase-springboot-v2-driver").projectDir = file("community/couchbase/couchbase-springboot-v2-driver")
+
 //////////////////////////////////////
 // EXAMPLES
 //////////////////////////////////////
@@ -89,3 +97,10 @@ include("examples:community:mongodb-template")
 project(":examples:community:mongodb-template").name = "mongodb-template"
 project(":examples:community:mongodb-template").projectDir = file("examples/community/mongodb-template")
 
+include("examples:community:couchbase:standalone-couchbase")
+project(":examples:community:couchbase:standalone-couchbase").name = "standalone-couchbase"
+project(":examples:community:couchbase:standalone-couchbase").projectDir = file("examples/community/couchbase/standalone-couchbase")
+
+include("examples:community:couchbase:springboot-v2-couchbase")
+project(":examples:community:couchbase:springboot-v2-couchbase").name = "springboot-v2-couchbase"
+project(":examples:community:couchbase:springboot-v2-couchbase").projectDir = file("examples/community/couchbase/springboot-v2-couchbase")
