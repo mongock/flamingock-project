@@ -9,7 +9,6 @@ jobs:
         java: [ '8', '17' ]
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) build
     steps:
-
       - name: Checkout project
         uses: actions/checkout@v2
       - name: Setup java
