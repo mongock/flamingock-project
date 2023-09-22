@@ -3,7 +3,7 @@ dependencies {
     api(project(":community:mongodb:mongodb-facade"))
     api(project(":community:mongodb:mongodb-sync-v4-driver"))
 
-    implementation("org.springframework.data:spring-data-mongodb:3.2.0")
+    implementation("org.springframework.data:spring-data-mongodb:3.2.12")
     implementation("org.mongodb:mongodb-driver-sync:4.3.3")
 
     compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.7.12")
