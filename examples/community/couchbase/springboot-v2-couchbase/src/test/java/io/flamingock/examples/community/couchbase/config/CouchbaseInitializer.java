@@ -11,7 +11,7 @@ import org.testcontainers.junit.jupiter.Container;
 @Configuration
 public class CouchbaseInitializer  implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-    private static final String BUCKET_NAME = "bucket";
+    public static final String BUCKET_NAME = "bucket";
 
     @Container
     public static final CouchbaseContainer container = new CouchbaseContainer("couchbase/server").withBucket(new BucketDefinition(BUCKET_NAME));
