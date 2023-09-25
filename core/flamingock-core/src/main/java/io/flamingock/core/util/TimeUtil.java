@@ -1,9 +1,11 @@
 package io.flamingock.core.util;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.TimeZone;
 
 public final class TimeUtil {
     private TimeUtil() {
@@ -20,7 +22,10 @@ public final class TimeUtil {
             return toLocalDateTime((Date)value);
         } else if (value.getClass().equals(LocalDateTime.class)) {
             return (LocalDateTime) value;
-        } else {
+        } else if (value.getClass().equals(Long.class)) {
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli((Long)value), TimeZone.getDefault().toZoneId());
+        }
+         else {
             throw new RuntimeException(String.format("%s cannot be cast to %s", value.getClass().getName(), Date.class.getName()));
         }
     }
