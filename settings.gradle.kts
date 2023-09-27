@@ -97,10 +97,10 @@ include("examples:community:mongodb-template")
 project(":examples:community:mongodb-template").name = "mongodb-template"
 project(":examples:community:mongodb-template").projectDir = file("examples/community/mongodb-template")
 
-include("examples:community:couchbase:standalone-couchbase")
-project(":examples:community:couchbase:standalone-couchbase").name = "standalone-couchbase"
-project(":examples:community:couchbase:standalone-couchbase").projectDir = file("examples/community/couchbase/standalone-couchbase")
-
-include("examples:community:couchbase:springboot-v2-couchbase")
-project(":examples:community:couchbase:springboot-v2-couchbase").name = "springboot-v2-couchbase"
-project(":examples:community:couchbase:springboot-v2-couchbase").projectDir = file("examples/community/couchbase/springboot-v2-couchbase")
+//include("examples:community:couchbase:standalone-couchbase")
+//project(":examples:community:couchbase:standalone-couchbase").name = "standalone-couchbase"
+//project(":examples:community:couchbase:standalone-couchbase").projectDir = file("examples/community/couchbase/standalone-couchbase")
+//
+//include("examples:community:couchbase:springboot-v2-couchbase")
+//project(":examples:community:couchbase:springboot-v2-couchbase").name = "springboot-v2-couchbase"
+//project(":examples:community:couchbase:springboot-v2-couchbase").projectDir = file("examples/community/couchbase/springboot-v2-couchbase")

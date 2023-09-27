@@ -8,16 +8,19 @@ import io.flamingock.core.task.navigation.navigator.StepNavigator;
 import io.flamingock.template.TemplatedTaskDefinition;
 import io.flamingock.core.util.FileUtil;
 import io.flamingock.core.util.ReflectionUtil;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class represents the process defined by the user in the builder, yaml, etc.
@@ -155,14 +158,30 @@ public class Stage {
 
     private static Collection<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages, Collection<TaskFilter> filters) {
 
-        return codePackages.
-                stream()
-                .map(ReflectionUtil::loadClassesFromPackage)
-                .flatMap(Collection::stream)
+//        codePackages.
+//                stream()
+//                .map(ReflectionUtil::loadClassesFromPackage)
+
+        return Stream.of(
+                "io.flamingock.examples.community.changes.ACreateCollection",
+                "io.flamingock.examples.community.changes.BInsertDocument",
+                "io.flamingock.examples.community.changes.CInsertAnotherDocument"
+                )
+//                .flatMap(Collection::stream)
+                .map(Stage::getaClass)
                 .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
                 .map(ReflectionTaskDescriptorBuilder.recycledBuilder()::setSource)
                 .map(ReflectionTaskDescriptorBuilder::build)
                 .collect(Collectors.toList());
+    }
+
+    @NotNull
+    private static Class<?> getaClass(String className) {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static Collection<TaskDescriptor> getFilteredDescriptorsFromDirectory(Collection<String> directories, Collection<TaskFilter> filters) {

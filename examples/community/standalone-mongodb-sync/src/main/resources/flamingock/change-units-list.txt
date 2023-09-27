@@ -1,0 +1,3 @@
+io.flamingock.examples.community.changes.ACreateCollection
+io.flamingock.examples.community.changes.BInsertDocument
+io.flamingock.examples.community.changes.CInsertAnotherDocument
