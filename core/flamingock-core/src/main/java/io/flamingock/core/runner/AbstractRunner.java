@@ -4,8 +4,8 @@ import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.event.result.IgnoredEventResult;
-import io.flamingock.core.event.result.EventSuccessResult;
+import io.flamingock.core.event.model.IgnoredEvent;
+import io.flamingock.core.event.model.CompletedEvent;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
@@ -100,11 +100,11 @@ public abstract class AbstractRunner implements Runner {
 
         StageExecutor.Output executionOutput = stageExecutor.execute(executableStage, stageExecutionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
-        eventPublisher.publishFlamingockSuccessEvent(new EventSuccessResult(executionOutput));
+        eventPublisher.publishFlamingockSuccessEvent(new CompletedEvent(executionOutput));
     }
 
     private void skipStage() {
         logger.info("Skipping the process. All the tasks are already executed.");
-        eventPublisher.publishFlamingockSuccessEvent(new IgnoredEventResult());
+        eventPublisher.publishFlamingockSuccessEvent(new IgnoredEvent());
     }
 }

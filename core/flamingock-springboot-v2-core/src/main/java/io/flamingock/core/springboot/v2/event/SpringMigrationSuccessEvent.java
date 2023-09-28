@@ -2,13 +2,13 @@ package io.flamingock.core.springboot.v2.event;
 
 
 import io.flamingock.core.event.ResultEvent;
-import io.flamingock.core.event.result.EventResult;
-import io.flamingock.core.event.result.EventSuccessResult;
+import io.flamingock.core.event.model.Event;
+import io.flamingock.core.event.model.SuccessEvent;
 import org.springframework.context.ApplicationEvent;
 
 public class SpringMigrationSuccessEvent extends ApplicationEvent implements ResultEvent {
 
-  private final EventSuccessResult migrationResult;
+  private final SuccessEvent successEvent;
 
   /**
    * Create a new {@code ApplicationEvent}.
@@ -16,20 +16,20 @@ public class SpringMigrationSuccessEvent extends ApplicationEvent implements Res
    * @param source the object on which the event initially occurred or with
    *               which the event is associated (never {@code null})
    */
-  public SpringMigrationSuccessEvent(Object source, EventSuccessResult migrationResult) {
+  public SpringMigrationSuccessEvent(Object source, SuccessEvent event) {
     super(source);
-    this.migrationResult = migrationResult;
+    this.successEvent = event;
   }
 
   @Override
-  public EventResult getMigrationResult() {
-    return migrationResult;
+  public Event getSuccessEvent() {
+    return successEvent;
   }
 
   @Override
   public String toString() {
     return "SpringMigrationSuccessEvent{" +
-        "migrationResult=" + migrationResult +
+        "migrationResult=" + successEvent +
         "} " + super.toString();
   }
 }

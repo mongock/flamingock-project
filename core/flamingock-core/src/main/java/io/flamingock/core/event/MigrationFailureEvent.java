@@ -1,14 +1,14 @@
 package io.flamingock.core.event;
 
-import io.flamingock.core.event.result.EventFailedResult;
+import io.flamingock.core.event.model.FailedEvent;
 
 public class MigrationFailureEvent implements ResultEvent {
 
-  private final EventFailedResult migrationResult;
+  private final FailedEvent migrationResult;
 
   public MigrationFailureEvent(Exception exception) {
 
-    this.migrationResult = new EventFailedResult(exception);
+    this.migrationResult = new FailedEvent(exception);
   }
 
   public Exception getException() {
@@ -16,7 +16,7 @@ public class MigrationFailureEvent implements ResultEvent {
   }
 
   @Override
-  public EventFailedResult getMigrationResult() {
+  public FailedEvent getSuccessEvent() {
     return migrationResult;
   }
 }

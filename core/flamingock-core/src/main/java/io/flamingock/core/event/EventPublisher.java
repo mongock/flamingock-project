@@ -1,14 +1,15 @@
 package io.flamingock.core.event;
 
 
-import io.flamingock.core.event.result.EventSuccessResult;
+import io.flamingock.core.event.model.CompletedEvent;
+import io.flamingock.core.event.model.SuccessEvent;
 
 import java.util.function.Consumer;
 
 public class EventPublisher {
 
   private final Runnable flamingockStartedListener;
-  private final Consumer<EventSuccessResult> flamingockSuccessListener;
+  private final Consumer<SuccessEvent> flamingockSuccessListener;
   private final Consumer<Exception> flamingockFailedListener;
 
 
@@ -17,7 +18,7 @@ public class EventPublisher {
   }
 
   public EventPublisher(Runnable flamingockStartedListener,
-                        Consumer<EventSuccessResult> flamingockSuccessListener,
+                        Consumer<SuccessEvent> flamingockSuccessListener,
                         Consumer<Exception> flamingockFailedListener) {
     this.flamingockSuccessListener = flamingockSuccessListener;
     this.flamingockFailedListener = flamingockFailedListener;
@@ -30,9 +31,9 @@ public class EventPublisher {
     }
   }
 
-  public void publishFlamingockSuccessEvent(EventSuccessResult migrationResult) {
+  public void publishFlamingockSuccessEvent(SuccessEvent event) {
     if (flamingockSuccessListener != null) {
-      flamingockSuccessListener.accept(migrationResult);
+      flamingockSuccessListener.accept(event);
     }
   }
 
@@ -46,7 +47,7 @@ public class EventPublisher {
     return flamingockStartedListener;
   }
 
-  public Consumer<EventSuccessResult> getFlamingockSuccessListener() {
+  public Consumer<SuccessEvent> getFlamingockSuccessListener() {
     return flamingockSuccessListener;
   }
 

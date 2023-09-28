@@ -1,11 +1,11 @@
 package io.flamingock.core.springboot.v3.event;
 
 import io.flamingock.core.event.ResultEvent;
-import io.flamingock.core.event.result.EventFailedResult;
+import io.flamingock.core.event.model.FailedEvent;
 import org.springframework.context.ApplicationEvent;
 
 public class SpringMigrationFailureEvent extends ApplicationEvent implements ResultEvent {
-  private final EventFailedResult migrationResult;
+  private final FailedEvent migrationResult;
 
   /**
    * Create a new {@code ApplicationEvent}.
@@ -15,12 +15,12 @@ public class SpringMigrationFailureEvent extends ApplicationEvent implements Res
    */
   public SpringMigrationFailureEvent(Object source, Exception ex) {
     super(source);
-    migrationResult = new EventFailedResult(ex);
+    migrationResult = new FailedEvent(ex);
   }
 
 
   @Override
-  public EventFailedResult getMigrationResult() {
+  public FailedEvent getSuccessEvent() {
     return migrationResult;
   }
 
