@@ -17,7 +17,7 @@ This spike is intended to clarify if and how Flamingock can support native image
 The gradle-task/maven-plugin could just create the configuration file GraalVM needs with the changeUnits classes.
 However, in the midterm we want to allow proxies, which will probably require inspecting the changeUnit's methods, which is much easier with features, as they allow using reflections at the building image time.
 
-## Test it!
+## How to run it
 - Build jar with 
 ```shell
 ./gradlew build -x test
