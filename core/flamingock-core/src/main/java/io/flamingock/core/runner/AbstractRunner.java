@@ -4,8 +4,8 @@ import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.event.result.MigrationIgnoredResult;
-import io.flamingock.core.event.result.MigrationSuccessResult;
+import io.flamingock.core.event.result.IgnoredEventResult;
+import io.flamingock.core.event.result.EventSuccessResult;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
@@ -52,7 +52,7 @@ public abstract class AbstractRunner implements Runner {
     }
 
     public void run(Pipeline pipeline) throws FlamingockException {
-        eventPublisher.publishMigrationStarted();//TODO change name to eventPublisher.publishPipelineStarted();
+        eventPublisher.publishFlamingockStarted();//TODO change name to eventPublisher.publishPipelineStarted();
         pipeline.getStages().forEach(this::runStage);
 
     }
@@ -70,7 +70,7 @@ public abstract class AbstractRunner implements Runner {
             }
 
         } catch (LockException exception) {
-            eventPublisher.publishMigrationFailedEvent(exception);
+            eventPublisher.publishFlamingockFailedEvent(exception);
             if (throwExceptionIfCannotObtainLock) {
                 logger.error("Required process lock not acquired. ABORTED OPERATION", exception);
                 throw exception;
@@ -81,12 +81,12 @@ public abstract class AbstractRunner implements Runner {
 
         } catch (StageExecutionException stageExecutionException) {
             logger.info("Process summary\n{}", stageExecutionException.getSummary().getPretty());
-            eventPublisher.publishMigrationFailedEvent(stageExecutionException);
+            eventPublisher.publishFlamingockFailedEvent(stageExecutionException);
             throw stageExecutionException;
         } catch (Exception exception) {
             FlamingockException coreEx = exception instanceof FlamingockException ? (FlamingockException) exception : new FlamingockException(exception);
             logger.error("Error executing the process. ABORTED OPERATION", coreEx);
-            eventPublisher.publishMigrationFailedEvent(coreEx);
+            eventPublisher.publishFlamingockFailedEvent(coreEx);
             throw coreEx;
         }
     }
@@ -100,11 +100,11 @@ public abstract class AbstractRunner implements Runner {
 
         StageExecutor.Output executionOutput = stageExecutor.execute(executableStage, stageExecutionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
-        eventPublisher.publishMigrationSuccessEvent(new MigrationSuccessResult(executionOutput));
+        eventPublisher.publishFlamingockSuccessEvent(new EventSuccessResult(executionOutput));
     }
 
     private void skipStage() {
         logger.info("Skipping the process. All the tasks are already executed.");
-        eventPublisher.publishMigrationSuccessEvent(new MigrationIgnoredResult());
+        eventPublisher.publishFlamingockSuccessEvent(new IgnoredEventResult());
     }
 }

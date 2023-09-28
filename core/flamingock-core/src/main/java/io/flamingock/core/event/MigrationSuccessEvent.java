@@ -1,20 +1,20 @@
 package io.flamingock.core.event;
 
 
-import io.flamingock.core.event.result.MigrationResult;
-import io.flamingock.core.event.result.MigrationSuccessResult;
+import io.flamingock.core.event.result.EventResult;
+import io.flamingock.core.event.result.EventSuccessResult;
 
 public class MigrationSuccessEvent implements ResultEvent {
 
-  private final MigrationSuccessResult migrationResult;
+  private final EventSuccessResult migrationResult;
 
-  public MigrationSuccessEvent(MigrationSuccessResult migrationResult) {
+  public MigrationSuccessEvent(EventSuccessResult migrationResult) {
     this.migrationResult = migrationResult;
   }
 
 
   @Override
-  public MigrationResult getMigrationResult() {
+  public EventResult getMigrationResult() {
     return migrationResult;
   }
 }

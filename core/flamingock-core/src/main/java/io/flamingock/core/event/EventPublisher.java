@@ -1,56 +1,56 @@
 package io.flamingock.core.event;
 
 
-import io.flamingock.core.event.result.MigrationSuccessResult;
+import io.flamingock.core.event.result.EventSuccessResult;
 
 import java.util.function.Consumer;
 
 public class EventPublisher {
 
-  private final Runnable migrationStartedListener;
-  private final Consumer<MigrationSuccessResult> migrationSuccessListener;
-  private final Consumer<Exception> migrationFailedListener;
+  private final Runnable flamingockStartedListener;
+  private final Consumer<EventSuccessResult> flamingockSuccessListener;
+  private final Consumer<Exception> flamingockFailedListener;
 
 
   public EventPublisher() {
     this(null, null, null);
   }
 
-  public EventPublisher(Runnable migrationStartedListener,
-                        Consumer<MigrationSuccessResult> migrationSuccessListener,
-                        Consumer<Exception> migrationFailedListener) {
-    this.migrationSuccessListener = migrationSuccessListener;
-    this.migrationFailedListener = migrationFailedListener;
-    this.migrationStartedListener = migrationStartedListener;
+  public EventPublisher(Runnable flamingockStartedListener,
+                        Consumer<EventSuccessResult> flamingockSuccessListener,
+                        Consumer<Exception> flamingockFailedListener) {
+    this.flamingockSuccessListener = flamingockSuccessListener;
+    this.flamingockFailedListener = flamingockFailedListener;
+    this.flamingockStartedListener = flamingockStartedListener;
   }
 
-  public void publishMigrationStarted() {
-    if (migrationStartedListener != null) {
-      migrationStartedListener.run();
+  public void publishFlamingockStarted() {
+    if (flamingockStartedListener != null) {
+      flamingockStartedListener.run();
     }
   }
 
-  public void publishMigrationSuccessEvent(MigrationSuccessResult migrationResult) {
-    if (migrationSuccessListener != null) {
-      migrationSuccessListener.accept(migrationResult);
+  public void publishFlamingockSuccessEvent(EventSuccessResult migrationResult) {
+    if (flamingockSuccessListener != null) {
+      flamingockSuccessListener.accept(migrationResult);
     }
   }
 
-  public void publishMigrationFailedEvent(Exception ex) {
-    if (migrationFailedListener != null) {
-      migrationFailedListener.accept(ex);
+  public void publishFlamingockFailedEvent(Exception ex) {
+    if (flamingockFailedListener != null) {
+      flamingockFailedListener.accept(ex);
     }
   }
 
-  public Runnable getMigrationStartedListener() {
-    return migrationStartedListener;
+  public Runnable getFlamingockStartedListener() {
+    return flamingockStartedListener;
   }
 
-  public Consumer<MigrationSuccessResult> getMigrationSuccessListener() {
-    return migrationSuccessListener;
+  public Consumer<EventSuccessResult> getFlamingockSuccessListener() {
+    return flamingockSuccessListener;
   }
 
-  public Consumer<Exception> getMigrationFailedListener() {
-    return migrationFailedListener;
+  public Consumer<Exception> getFlamingockFailedListener() {
+    return flamingockFailedListener;
   }
 }

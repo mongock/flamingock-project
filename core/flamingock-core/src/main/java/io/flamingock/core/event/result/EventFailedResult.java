@@ -1,10 +1,10 @@
 package io.flamingock.core.event.result;
 
-public class MigrationFailedResult extends MigrationResult {
+public class EventFailedResult extends EventResult {
 
   private final Exception exception;
 
-  public MigrationFailedResult(Exception exception) {
+  public EventFailedResult(Exception exception) {
     super(false);
     this.exception = exception;
   }
