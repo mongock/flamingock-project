@@ -26,7 +26,6 @@ import io.flamingock.core.springboot.v3.SpringProfileFilter;
 import io.flamingock.core.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.core.springboot.v3.SpringUtil;
 import io.flamingock.core.pipeline.Stage;
-import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -35,9 +34,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class CommunitySpringbootBuilder
@@ -284,26 +281,6 @@ public class CommunitySpringbootBuilder
     @Override
     public ConnectionDriver<?> getDriver() {
         return communityConfiguratorDelegate.getDriver();
-    }
-
-    @Override
-    public String getMigrationRepositoryName() {
-        return communityConfiguratorDelegate.getMigrationRepositoryName();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setMigrationRepositoryName(String value) {
-        return communityConfiguratorDelegate.setMigrationRepositoryName(value);
-    }
-
-    @Override
-    public String getLockRepositoryName() {
-        return communityConfiguratorDelegate.getLockRepositoryName();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setLockRepositoryName(String value) {
-        return communityConfiguratorDelegate.setLockRepositoryName(value);
     }
 
     @Override

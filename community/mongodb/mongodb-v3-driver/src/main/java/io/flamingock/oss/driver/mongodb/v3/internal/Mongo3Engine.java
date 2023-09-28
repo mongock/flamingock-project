@@ -44,11 +44,11 @@ public class Mongo3Engine implements ConnectionEngine {
         SessionManager<ClientSession> sessionManager = new SessionManager<>(mongoClient::startSession);
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new Mongo3TransactionWrapper(sessionManager) : null;
         auditor = new Mongo3Auditor(database,
-                communityConfiguration.getMigrationRepositoryName(),
+                driverConfiguration.getMigrationRepositoryName(),
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
         auditor.initialize(communityConfiguration.isIndexCreation());
-        Mongo3LockRepository lockRepository = new Mongo3LockRepository(database, communityConfiguration.getLockRepositoryName());
+        Mongo3LockRepository lockRepository = new Mongo3LockRepository(database, driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(communityConfiguration.isIndexCreation());
         lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }

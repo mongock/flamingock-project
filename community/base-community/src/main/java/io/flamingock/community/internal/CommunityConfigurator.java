@@ -10,14 +10,6 @@ public interface CommunityConfigurator<HOLDER> {
 
     ConnectionDriver<?> getDriver();
     
-    String getMigrationRepositoryName();
-
-    HOLDER setMigrationRepositoryName(String value);
-
-    String getLockRepositoryName();
-
-    HOLDER setLockRepositoryName(String value);
-
     boolean isIndexCreation();
 
     HOLDER setIndexCreation(boolean value);

@@ -23,12 +23,9 @@ import io.flamingock.core.runner.RunnerCreator;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.pipeline.Stage;
-import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -275,26 +272,6 @@ public class CommunityStandaloneBuilder
     @Override
     public ConnectionDriver<?> getDriver() {
         return communityConfiguratorDelegate.getDriver();
-    }
-
-    @Override
-    public String getMigrationRepositoryName() {
-        return communityConfiguratorDelegate.getMigrationRepositoryName();
-    }
-
-    @Override
-    public CommunityStandaloneBuilder setMigrationRepositoryName(String value) {
-        return communityConfiguratorDelegate.setMigrationRepositoryName(value);
-    }
-
-    @Override
-    public String getLockRepositoryName() {
-        return communityConfiguratorDelegate.getLockRepositoryName();
-    }
-
-    @Override
-    public CommunityStandaloneBuilder setLockRepositoryName(String value) {
-        return communityConfiguratorDelegate.setLockRepositoryName(value);
     }
 
     @Override

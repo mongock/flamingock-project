@@ -187,26 +187,6 @@ public class CommunitySpringbootConfiguration implements CoreConfigurable, Commu
     }
 
 
-    @Override
-    public String getMigrationRepositoryName() {
-        return communityConfiguration.getMigrationRepositoryName();
-    }
-
-    @Override
-    public void setMigrationRepositoryName(String value) {
-        communityConfiguration.setMigrationRepositoryName(value);
-    }
-
-    @Override
-    public String getLockRepositoryName() {
-        return communityConfiguration.getLockRepositoryName();
-    }
-
-    @Override
-    public void setLockRepositoryName(String value) {
-        communityConfiguration.setLockRepositoryName(value);
-    }
-
     public boolean isIndexCreation() {
         return communityConfiguration.isIndexCreation();
     }

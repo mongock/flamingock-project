@@ -44,10 +44,10 @@ public class SpringDataMongoV4Engine implements ConnectionEngine {
                     driverConfiguration.getReadPreference().getValue());
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new SpringDataMongoV4TransactionWrapper(mongoTemplate, readWriteConfiguration) : null;
         auditor = new SpringDataMongoV4Auditor(mongoTemplate,
-                communityConfiguration.getMigrationRepositoryName(),
+                driverConfiguration.getMigrationRepositoryName(),
                 readWriteConfiguration);
         auditor.initialize(communityConfiguration.isIndexCreation());
-        SpringDataMongoV4LockRepository lockRepository = new SpringDataMongoV4LockRepository(mongoTemplate.getDb(), communityConfiguration.getLockRepositoryName());
+        SpringDataMongoV4LockRepository lockRepository = new SpringDataMongoV4LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(communityConfiguration.isIndexCreation());
         lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
