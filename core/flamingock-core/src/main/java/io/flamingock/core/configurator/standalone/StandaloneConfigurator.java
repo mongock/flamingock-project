@@ -3,7 +3,8 @@ package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.core.event.MigrationFailureEvent;
 import io.flamingock.core.event.MigrationStartedEvent;
-import io.flamingock.core.event.MigrationSuccessEvent;
+
+import io.flamingock.core.event.model.SuccessEvent;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 
 import java.util.function.Consumer;
@@ -51,7 +52,7 @@ public interface StandaloneConfigurator<HOLDER> {
   HOLDER setMigrationStartedListener(Consumer<MigrationStartedEvent> listener);
 
   //TODO javadoc
-  HOLDER setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener);
+  HOLDER setMigrationSuccessListener(Consumer<SuccessEvent> listener);
 
   //TODO javadoc
   HOLDER setMigrationFailureListener(Consumer<MigrationFailureEvent> listener);
@@ -59,7 +60,7 @@ public interface StandaloneConfigurator<HOLDER> {
   Consumer<MigrationStartedEvent> getMigrationStartedListener();
 
   //TODO javadoc
-  Consumer<MigrationSuccessEvent> getMigrationSuccessListener();
+  Consumer<SuccessEvent> getMigrationSuccessListener();
 
   //TODO javadoc
   Consumer<MigrationFailureEvent> getMigrationFailureListener();

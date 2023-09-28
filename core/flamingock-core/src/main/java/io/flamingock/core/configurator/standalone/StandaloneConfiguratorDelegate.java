@@ -2,7 +2,8 @@ package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.core.event.MigrationFailureEvent;
 import io.flamingock.core.event.MigrationStartedEvent;
-import io.flamingock.core.event.MigrationSuccessEvent;
+
+import io.flamingock.core.event.model.SuccessEvent;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
@@ -15,7 +16,7 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     private final DependencyInjectableContext dependencyManager;
     private final Supplier<HOLDER> holderSupplier;
     private Consumer<MigrationStartedEvent> processStartedListener;
-    private Consumer<MigrationSuccessEvent> processSuccessListener;
+    private Consumer<SuccessEvent> processSuccessListener;
     private Consumer<MigrationFailureEvent> processFailedListener;
 
     public StandaloneConfiguratorDelegate(DependencyInjectableContext dependencyManager, Supplier<HOLDER> holderSupplier) {
@@ -56,7 +57,7 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public HOLDER setMigrationSuccessListener(Consumer<MigrationSuccessEvent> listener) {
+    public HOLDER setMigrationSuccessListener(Consumer<SuccessEvent> listener) {
         this.processSuccessListener = listener;
         return holderSupplier.get();
     }
@@ -73,7 +74,7 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public Consumer<MigrationSuccessEvent> getMigrationSuccessListener() {
+    public Consumer<SuccessEvent> getMigrationSuccessListener() {
         return processSuccessListener;
     }
 
