@@ -44,10 +44,10 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
                     driverConfiguration.getReadPreference().getValue());
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new SpringDataMongoV2TransactionWrapper(mongoTemplate, readWriteConfiguration) : null;
         auditor = new SpringDataMongoV2Auditor(mongoTemplate,
-                communityConfiguration.getMigrationRepositoryName(),
+                driverConfiguration.getMigrationRepositoryName(),
                 readWriteConfiguration);
         auditor.initialize(communityConfiguration.isIndexCreation());
-        SpringDataMongoV2LockRepository lockRepository = new SpringDataMongoV2LockRepository(mongoTemplate.getDb(), communityConfiguration.getLockRepositoryName());
+        SpringDataMongoV2LockRepository lockRepository = new SpringDataMongoV2LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(communityConfiguration.isIndexCreation());
         lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }

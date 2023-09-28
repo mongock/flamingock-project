@@ -4,8 +4,7 @@ import com.mongodb.ReadConcernLevel;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 
-import io.flamingock.community.internal.DriverConfigurable;
-
+import io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @ConfigurationProperties("flamingock.mongo-db")
-public class SpringDataMongoV4Configuration implements DriverConfigurable {
+public class SpringDataMongoV4Configuration extends MongoDBDriverConfiguration {
 
     public static SpringDataMongoV4Configuration getDefault() {
         return new SpringDataMongoV4Configuration();

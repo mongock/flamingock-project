@@ -44,11 +44,11 @@ public class MongoSync4Engine implements ConnectionEngine {
         SessionManager<ClientSession> sessionManager = new SessionManager<>(mongoClient::startSession);
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new MongoSync4TransactionWrapper(sessionManager) : null;
         auditor = new MongoSync4Auditor(database,
-                communityConfiguration.getMigrationRepositoryName(),
+                driverConfiguration.getMigrationRepositoryName(),
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
         auditor.initialize(communityConfiguration.isIndexCreation());
-        MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, communityConfiguration.getLockRepositoryName());
+        MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(communityConfiguration.isIndexCreation());
         lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }

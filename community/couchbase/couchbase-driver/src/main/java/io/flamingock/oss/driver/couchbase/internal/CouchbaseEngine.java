@@ -38,10 +38,8 @@ public class CouchbaseEngine implements ConnectionEngine {
 
     @Override
     public void initialize() {
-        //TODO: use communityConfiguration.getMigrationRepositoryName()
         auditor = new CouchbaseAuditor(cluster, collection);
         auditor.initialize(communityConfiguration.isIndexCreation());
-        //TODO: use communityConfiguration.getLockRepositoryName()
         CouchbaseLockRepository lockRepository = new CouchbaseLockRepository(cluster, collection);
         lockRepository.initialize(communityConfiguration.isIndexCreation());
         lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);

@@ -1,9 +1,9 @@
 package io.flamingock.oss.driver.mongodb.sync.v4;
 
-import io.flamingock.community.internal.DriverConfigurable;
+import io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 
-public class MongoDBSync4Configuration implements DriverConfigurable {
+public class MongoDBSync4Configuration extends MongoDBDriverConfiguration {
 
     public static MongoDBSync4Configuration getDefault() {
         return new MongoDBSync4Configuration(ReadWriteConfiguration.getDefault());

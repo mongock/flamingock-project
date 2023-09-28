@@ -14,7 +14,7 @@ dependencies {
 
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "io.flamingock.examples.community.mongodb.sync.CommunityStandaloneMongodbSyncApp"
+        attributes["Main-Class"] = "io.flamingock.examples.community.CommunityStandaloneMongodbSyncApp"
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(sourceSets.main.get().output)

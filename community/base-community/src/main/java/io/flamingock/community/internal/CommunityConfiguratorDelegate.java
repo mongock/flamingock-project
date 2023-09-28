@@ -2,8 +2,6 @@ package io.flamingock.community.internal;
 
 import io.flamingock.community.internal.driver.ConnectionDriver;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class CommunityConfiguratorDelegate<HOLDER> implements CommunityConfigurator<HOLDER> {
@@ -28,28 +26,6 @@ public class CommunityConfiguratorDelegate<HOLDER> implements CommunityConfigura
     @Override
     public ConnectionDriver<?> getDriver() {
         return connectionDriver;
-    }
-
-
-    @Override
-    public String getMigrationRepositoryName() {
-        return communityConfiguration.getMigrationRepositoryName();
-    }
-
-    @Override
-    public HOLDER setMigrationRepositoryName(String value) {
-        communityConfiguration.setMigrationRepositoryName(value);
-        return holderSupplier.get();
-    }
-
-    @Override
-    public String getLockRepositoryName() {
-        return communityConfiguration.getLockRepositoryName();
-    }
-
-    @Override
-    public HOLDER setLockRepositoryName(String value) {
-        return holderSupplier.get();
     }
 
     @Override
