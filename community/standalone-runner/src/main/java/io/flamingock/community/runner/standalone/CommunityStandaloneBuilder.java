@@ -275,16 +275,6 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public boolean isIndexCreation() {
-        return communityConfiguratorDelegate.isIndexCreation();
-    }
-
-    @Override
-    public CommunityStandaloneBuilder setIndexCreation(boolean value) {
-        return communityConfiguratorDelegate.setIndexCreation(value);
-    }
-
-    @Override
     public CommunityConfiguration getCommunityProperties() {
         return communityConfiguratorDelegate.getCommunityProperties();
     }

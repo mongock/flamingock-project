@@ -186,16 +186,6 @@ public class CommunitySpringbootConfiguration implements CoreConfigurable, Commu
         return coreConfiguration.getTransactionStrategy();
     }
 
-
-    public boolean isIndexCreation() {
-        return communityConfiguration.isIndexCreation();
-    }
-
-    @Override
-    public void setIndexCreation(boolean value) {
-        communityConfiguration.setIndexCreation(value);
-    }
-
     @Override
     public SpringRunnerType getRunnerType() {
         return springbootConfiguration.getRunnerType();

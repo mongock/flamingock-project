@@ -47,9 +47,9 @@ public class MongoSync4Engine implements ConnectionEngine {
                 driverConfiguration.getMigrationRepositoryName(),
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
-        auditor.initialize(communityConfiguration.isIndexCreation());
+        auditor.initialize(driverConfiguration.isIndexCreation());
         MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, driverConfiguration.getLockRepositoryName());
-        lockRepository.initialize(communityConfiguration.isIndexCreation());
+        lockRepository.initialize(driverConfiguration.isIndexCreation());
         lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 

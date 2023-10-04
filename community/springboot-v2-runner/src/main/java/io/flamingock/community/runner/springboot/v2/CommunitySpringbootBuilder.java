@@ -284,16 +284,6 @@ public class CommunitySpringbootBuilder
     }
 
     @Override
-    public boolean isIndexCreation() {
-        return communityConfiguratorDelegate.isIndexCreation();
-    }
-
-    @Override
-    public CommunitySpringbootBuilder setIndexCreation(boolean value) {
-        return communityConfiguratorDelegate.setIndexCreation(value);
-    }
-
-    @Override
     public CommunityConfiguration getCommunityProperties() {
         return communityConfiguratorDelegate.getCommunityProperties();
     }
