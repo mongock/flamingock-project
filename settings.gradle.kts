@@ -77,25 +77,25 @@ project(":community:couchbase:couchbase-springboot-v2-driver").projectDir = file
 // EXAMPLES
 //////////////////////////////////////
 
-include("examples:community:standalone-mongodb-sync")
-project(":examples:community:standalone-mongodb-sync").name = "standalone-mongodb-sync"
-project(":examples:community:standalone-mongodb-sync").projectDir = file("examples/community/standalone-mongodb-sync")
+include("examples:community:mongodb:standalone-mongodb-sync")
+project(":examples:community:mongodb:standalone-mongodb-sync").name = "standalone-mongodb-sync"
+project(":examples:community:mongodb:standalone-mongodb-sync").projectDir = file("examples/community/mongodb/standalone-mongodb-sync")
 
-include("examples:community:springboot-mongodb-sync")
-project(":examples:community:springboot-mongodb-sync").name = "springboot-mongodb-sync"
-project(":examples:community:springboot-mongodb-sync").projectDir = file("examples/community/springboot-mongodb-sync")
+include("examples:community:mongodb:springboot-mongodb-sync")
+project(":examples:community:mongodb:springboot-mongodb-sync").name = "springboot-mongodb-sync"
+project(":examples:community:mongodb:springboot-mongodb-sync").projectDir = file("examples/community/mongodb/springboot-mongodb-sync")
 
-include("examples:community:springboot-mongodb-springdata")
-project(":examples:community:springboot-mongodb-springdata").name = "springboot-mongodb-springdata"
-project(":examples:community:springboot-mongodb-springdata").projectDir = file("examples/community/springboot-mongodb-springdata")
+include("examples:community:mongodb:springboot-mongodb-springdata")
+project(":examples:community:mongodb:springboot-mongodb-springdata").name = "springboot-mongodb-springdata"
+project(":examples:community:mongodb:springboot-mongodb-springdata").projectDir = file("examples/community/mongodb/springboot-mongodb-springdata")
 
-include("examples:community:springboot-v3-mongodb-springdata-v4")
-project(":examples:community:springboot-v3-mongodb-springdata-v4").name = "springboot-v3-mongodb-springdata-v4"
-project(":examples:community:springboot-v3-mongodb-springdata-v4").projectDir = file("examples/community/springboot-v3-mongodb-springdata-v4")
+include("examples:community:mongodb:springboot-v3-mongodb-springdata-v4")
+project(":examples:community:mongodb:springboot-v3-mongodb-springdata-v4").name = "springboot-v3-mongodb-springdata-v4"
+project(":examples:community:mongodb:springboot-v3-mongodb-springdata-v4").projectDir = file("examples/community/mongodb/springboot-v3-mongodb-springdata-v4")
 
-include("examples:community:mongodb-template")
-project(":examples:community:mongodb-template").name = "mongodb-template"
-project(":examples:community:mongodb-template").projectDir = file("examples/community/mongodb-template")
+include("examples:community:mongodb:mongodb-template")
+project(":examples:community:mongodb:mongodb-template").name = "mongodb-template"
+project(":examples:community:mongodb:mongodb-template").projectDir = file("examples/community/mongodb/mongodb-template")
 
 include("examples:community:couchbase:standalone-couchbase")
 project(":examples:community:couchbase:standalone-couchbase").name = "standalone-couchbase"

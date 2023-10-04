@@ -18,7 +18,7 @@ public class CouchbaseInitializer  implements ApplicationContextInitializer<Conf
 
     @Override
     public void initialize(ConfigurableApplicationContext context) {
-        container.start();
+        container.withStartupAttempts(3).start();
         TestPropertyValues
             .of("spring.data.couchbase.bucket-name=" + BUCKET_NAME,
                 "spring.couchbase.connection-string=" + container.getConnectionString(),
