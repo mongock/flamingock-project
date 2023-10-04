@@ -7,6 +7,7 @@ import io.flamingock.core.util.TimeUtil;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.mongodb.springdata.v3.internal.mongodb.SpringDataMongoV3DocumentWrapper;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,10 @@ public class MongoDBTestHelper {
 
     public MongoDBTestHelper(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
+    }
+
+    public boolean collectionExists(String collectionName) {
+        return mongoDatabase.listCollectionNames().into(new ArrayList()).contains(collectionName);
     }
 
     public List<String> getAuditLogSorted(String auditLogCollection) {

@@ -10,6 +10,7 @@ import io.flamingock.community.runner.standalone.CommunityStandalone;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
+import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v4.driver.SpringDataMongoV4Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,18 +27,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.LEGACY_DEFAULT_LOCK_REPOSITORY_NAME;
+import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Testcontainers
 class SpringDataMongoV4DriverTest {
 
     private static final String DB_NAME = "test";
 
-    private static final String AUDIT_LOG_COLLECTION = "mongockChangeLog";
-
     private static final String CLIENTS_COLLECTION = "clientCollection";
+
+    private static final String CUSTOM_MIGRATION_REPOSITORY_NAME = "testFlamingockAudit";
+    private static final String CUSTOM_LOCK_REPOSITORY_NAME = "testFlamingockLock";
 
     private static MongoTemplate mongoTemplate;
 
@@ -59,12 +62,59 @@ class SpringDataMongoV4DriverTest {
 
     @BeforeEach
     void setupEach() {
-        mongoTemplate.getCollection(AUDIT_LOG_COLLECTION).drop();
+        mongoTemplate.getCollection(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME).drop();
+        mongoTemplate.getCollection(LEGACY_DEFAULT_LOCK_REPOSITORY_NAME).drop();
+        mongoTemplate.getCollection(CUSTOM_MIGRATION_REPOSITORY_NAME).drop();
+        mongoTemplate.getCollection(CUSTOM_LOCK_REPOSITORY_NAME).drop();
     }
 
     @AfterEach
     void tearDownEach() {
         mongoTemplate.getCollection(CLIENTS_COLLECTION).drop();
+    }
+
+    @Test
+    @DisplayName("When standalone runs the driver with DEFAULT repository names related collections should exists")
+    void happyPathWithDefaultRepositoryNames() {
+        //Given-When
+        CommunityStandalone.builder()
+                .setDriver(new SpringDataMongoV4Driver(mongoTemplate))
+                .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.happyPathWithTransaction"))
+                .addDependency(mongoTemplate)
+                .setTrackIgnored(true)
+                .setTransactionEnabled(true)
+                .build()
+                .run();
+
+        assertTrue(mongoDBTestHelper.collectionExists(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME));
+        assertTrue(mongoDBTestHelper.collectionExists(LEGACY_DEFAULT_LOCK_REPOSITORY_NAME));
+
+        assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_MIGRATION_REPOSITORY_NAME));
+        assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_LOCK_REPOSITORY_NAME));
+    }
+
+    @Test
+    @DisplayName("When standalone runs the driver with CUSTOM repository names related collections should exists")
+    void happyPathWithCustomRepositoryNames() {
+        //Given-When
+        SpringDataMongoV4Configuration driverConfiguration = SpringDataMongoV4Configuration.getDefault();
+        driverConfiguration.setMigrationRepositoryName(CUSTOM_MIGRATION_REPOSITORY_NAME);
+        driverConfiguration.setLockRepositoryName(CUSTOM_LOCK_REPOSITORY_NAME);
+
+        CommunityStandalone.builder()
+                .setDriver(new SpringDataMongoV4Driver(mongoTemplate).setDriverConfiguration(driverConfiguration))
+                .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.happyPathWithTransaction"))
+                .addDependency(mongoTemplate)
+                .setTrackIgnored(true)
+                .setTransactionEnabled(true)
+                .build()
+                .run();
+
+        assertFalse(mongoDBTestHelper.collectionExists(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME));
+        assertFalse(mongoDBTestHelper.collectionExists(LEGACY_DEFAULT_LOCK_REPOSITORY_NAME));
+
+        assertTrue(mongoDBTestHelper.collectionExists(CUSTOM_MIGRATION_REPOSITORY_NAME));
+        assertTrue(mongoDBTestHelper.collectionExists(CUSTOM_LOCK_REPOSITORY_NAME));
     }
 
     @Test
@@ -82,7 +132,7 @@ class SpringDataMongoV4DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(AUDIT_LOG_COLLECTION);
+        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -99,9 +149,6 @@ class SpringDataMongoV4DriverTest {
         assertEquals(2, clients.size());
         assertTrue(clients.contains("Federico"));
         assertTrue(clients.contains("Jorge"));
-
-        //tear-down
-        mongoTemplate.getCollection(CLIENTS_COLLECTION).drop();
     }
 
     @Test
@@ -119,7 +166,7 @@ class SpringDataMongoV4DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(AUDIT_LOG_COLLECTION);
+        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -136,9 +183,6 @@ class SpringDataMongoV4DriverTest {
         assertEquals(2, clients.size());
         assertTrue(clients.contains("Federico"));
         assertTrue(clients.contains("Jorge"));
-
-        //tear-down
-        mongoTemplate.getCollection(CLIENTS_COLLECTION).drop();
     }
 
     @Test
@@ -158,7 +202,7 @@ class SpringDataMongoV4DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(AUDIT_LOG_COLLECTION);
+        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(2, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -172,9 +216,6 @@ class SpringDataMongoV4DriverTest {
                 .into(new HashSet<>());
         assertEquals(1, clients.size());
         assertTrue(clients.contains("Federico"));
-
-        //tear-down
-        mongoTemplate.getCollection(CLIENTS_COLLECTION).drop();
     }
 
     @Test
@@ -194,7 +235,7 @@ class SpringDataMongoV4DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(AUDIT_LOG_COLLECTION);
+        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -210,9 +251,6 @@ class SpringDataMongoV4DriverTest {
                 .into(new HashSet<>());
         assertEquals(1, clients.size());
         assertTrue(clients.contains("Federico"));
-
-        //tear-down
-        mongoTemplate.getCollection(CLIENTS_COLLECTION).drop();
     }
 
     @Test
@@ -232,7 +270,7 @@ class SpringDataMongoV4DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(AUDIT_LOG_COLLECTION);
+        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -249,8 +287,5 @@ class SpringDataMongoV4DriverTest {
         assertEquals(2, clients.size());
         assertTrue(clients.contains("Federico"));
         assertTrue(clients.contains("Jorge"));
-
-        //tear-down
-        mongoTemplate.getCollection(CLIENTS_COLLECTION).drop();
     }
 }
