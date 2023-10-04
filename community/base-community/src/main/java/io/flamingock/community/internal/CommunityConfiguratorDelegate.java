@@ -29,17 +29,6 @@ public class CommunityConfiguratorDelegate<HOLDER> implements CommunityConfigura
     }
 
     @Override
-    public boolean isIndexCreation() {
-        return communityConfiguration.isIndexCreation();
-    }
-
-    @Override
-    public HOLDER setIndexCreation(boolean value) {
-        communityConfiguration.setIndexCreation(value);
-        return holderSupplier.get();
-    }
-
-    @Override
     public CommunityConfiguration getCommunityProperties() {
         return communityConfiguration;
     }

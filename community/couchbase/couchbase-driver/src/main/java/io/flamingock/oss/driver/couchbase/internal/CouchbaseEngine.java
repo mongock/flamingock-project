@@ -39,9 +39,9 @@ public class CouchbaseEngine implements ConnectionEngine {
     @Override
     public void initialize() {
         auditor = new CouchbaseAuditor(cluster, collection);
-        auditor.initialize(communityConfiguration.isIndexCreation());
+        auditor.initialize(driverConfiguration.isIndexCreation());
         CouchbaseLockRepository lockRepository = new CouchbaseLockRepository(cluster, collection);
-        lockRepository.initialize(communityConfiguration.isIndexCreation());
+        lockRepository.initialize(driverConfiguration.isIndexCreation());
         lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 

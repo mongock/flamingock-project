@@ -46,9 +46,9 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
         auditor = new SpringDataMongoV2Auditor(mongoTemplate,
                 driverConfiguration.getMigrationRepositoryName(),
                 readWriteConfiguration);
-        auditor.initialize(communityConfiguration.isIndexCreation());
+        auditor.initialize(driverConfiguration.isIndexCreation());
         SpringDataMongoV2LockRepository lockRepository = new SpringDataMongoV2LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
-        lockRepository.initialize(communityConfiguration.isIndexCreation());
+        lockRepository.initialize(driverConfiguration.isIndexCreation());
         lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
