@@ -9,7 +9,7 @@ dependencies {
     implementation(project(":community:springboot-v2-runner"))
     implementation(project(":community:mongodb:mongodb-springdata-v3-driver"))
 
-    implementation(project(":examples:community:mongodb-template"))
+    implementation(project(":examples:community:mongodb:mongodb-template"))
     
     implementation("org.slf4j:slf4j-simple:2.0.6")
     implementation("org.springframework.boot:spring-boot-starter-web")
