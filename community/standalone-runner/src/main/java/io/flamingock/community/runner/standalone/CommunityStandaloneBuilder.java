@@ -13,7 +13,7 @@ import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.standalone.StandaloneConfigurator;
 import io.flamingock.core.configurator.standalone.StandaloneConfiguratorDelegate;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.event.MigrationFailureEvent;
+import io.flamingock.core.event.model.FailedEvent;
 
 import io.flamingock.core.event.model.StartedEvent;
 import io.flamingock.core.event.model.SuccessEvent;
@@ -83,7 +83,7 @@ public class CommunityStandaloneBuilder
         return new EventPublisher(
                 getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new StartedEvent()) : null,
                 getMigrationSuccessListener() != null ? event -> getMigrationSuccessListener().accept(event) : null,
-                getMigrationFailureListener() != null ? result -> getMigrationFailureListener().accept(new MigrationFailureEvent(result)) : null);
+                getMigrationFailureListener() != null ? result -> getMigrationFailureListener().accept(new FailedEvent(result)) : null);
     }
 
     @NotNull
@@ -320,7 +320,7 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationFailureListener(Consumer<MigrationFailureEvent> listener) {
+    public CommunityStandaloneBuilder setMigrationFailureListener(Consumer<FailedEvent> listener) {
         return standaloneConfiguratorDelegate.setMigrationFailureListener(listener);
     }
 
@@ -335,7 +335,7 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public Consumer<MigrationFailureEvent> getMigrationFailureListener() {
+    public Consumer<FailedEvent> getMigrationFailureListener() {
         return standaloneConfiguratorDelegate.getMigrationFailureListener();
     }
 }

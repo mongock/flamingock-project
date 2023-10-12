@@ -18,9 +18,9 @@ import io.flamingock.core.springboot.v2.configurator.SpringRunnerType;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfiguration;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfigurator;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfiguratorDelegate;
-import io.flamingock.core.springboot.v2.event.SpringMigrationFailureEvent;
-import io.flamingock.core.springboot.v2.event.SpringMigrationStartedEvent;
-import io.flamingock.core.springboot.v2.event.SpringMigrationSuccessEvent;
+import io.flamingock.core.springboot.v2.event.SpringFailedEvent;
+import io.flamingock.core.springboot.v2.event.SpringStartedEvent;
+import io.flamingock.core.springboot.v2.event.SpringCompletedEvent;
 import io.flamingock.core.springboot.v2.SpringDependencyContext;
 import io.flamingock.core.springboot.v2.SpringProfileFilter;
 import io.flamingock.core.springboot.v2.SpringRunnerBuilder;
@@ -87,9 +87,9 @@ public class CommunitySpringbootBuilder
     @NotNull
     private EventPublisher createEventPublisher() {
         return new EventPublisher(
-                () -> getEventPublisher().publishEvent(new SpringMigrationStartedEvent(this)),
-                result -> getEventPublisher().publishEvent(new SpringMigrationSuccessEvent(this, result)),
-                result -> getEventPublisher().publishEvent(new SpringMigrationFailureEvent(this, result))
+                () -> getEventPublisher().publishEvent(new SpringStartedEvent(this)),
+                result -> getEventPublisher().publishEvent(new SpringCompletedEvent(this, result)),
+                result -> getEventPublisher().publishEvent(new SpringFailedEvent(this, result))
         );
     }
 
