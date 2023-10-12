@@ -1,14 +1,11 @@
 package io.flamingock.core.event.model;
 
-public class CompletedEvent implements SuccessEvent {
+public interface CompletedEvent extends Event {
 
-  private final Object result;
-
-  public CompletedEvent(Object result) {
-    this.result = result;
+  @Override
+  default boolean isSuccess() {
+    return true;
   }
 
-  public Object getResult() {
-    return result;
-  }
+  Object getResult();
 }

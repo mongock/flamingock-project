@@ -4,10 +4,9 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import io.flamingock.examples.community.CommunityStandaloneMongodbSyncApp;
 import io.flamingock.examples.community.events.FailureEventListener;
 import io.flamingock.examples.community.events.StartedEventListener;
-import io.flamingock.examples.community.events.SuccessEventListener;
+import io.flamingock.examples.community.events.CompletedEventListener;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -91,7 +90,7 @@ public class SuccessExecutionTest {
     @DisplayName("SHOULD trigger start and success event WHEN executed IF happy path")
     void events() {
         assertTrue(StartedEventListener.executed);
-        assertTrue(SuccessEventListener.executed);
+        assertTrue(CompletedEventListener.executed);
         assertFalse(FailureEventListener.executed);
     }
 

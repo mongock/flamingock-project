@@ -1,7 +1,9 @@
 package io.flamingock.core.configurator.standalone;
 
 
+import io.flamingock.core.event.model.CompletedEvent;
 import io.flamingock.core.event.model.FailedEvent;
+import io.flamingock.core.event.model.IgnoredEvent;
 import io.flamingock.core.event.model.StartedEvent;
 import io.flamingock.core.event.model.SuccessEvent;
 import io.flamingock.core.runtime.dependency.DependencyContext;
@@ -52,7 +54,10 @@ public interface StandaloneConfigurator<HOLDER> {
     HOLDER setMigrationStartedListener(Consumer<StartedEvent> listener);
 
     //TODO javadoc
-    HOLDER setMigrationSuccessListener(Consumer<SuccessEvent> listener);
+    HOLDER setMigrationSuccessListener(Consumer<CompletedEvent> listener);
+
+    //TODO javadoc
+    HOLDER setPipelineIgnoredListener(Consumer<IgnoredEvent> listener);
 
     //TODO javadoc
     HOLDER setMigrationFailureListener(Consumer<FailedEvent> listener);
@@ -60,7 +65,10 @@ public interface StandaloneConfigurator<HOLDER> {
     Consumer<StartedEvent> getMigrationStartedListener();
 
     //TODO javadoc
-    Consumer<SuccessEvent> getMigrationSuccessListener();
+    Consumer<CompletedEvent> getMigrationSuccessListener();
+
+    //TODO javadoc
+    Consumer<IgnoredEvent> getPipelineIgnoredListener();
 
     //TODO javadoc
     Consumer<FailedEvent> getMigrationFailureListener();

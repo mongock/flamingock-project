@@ -13,8 +13,10 @@ import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.standalone.StandaloneConfigurator;
 import io.flamingock.core.configurator.standalone.StandaloneConfiguratorDelegate;
 import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.event.model.CompletedEvent;
 import io.flamingock.core.event.model.FailedEvent;
 
+import io.flamingock.core.event.model.IgnoredEvent;
 import io.flamingock.core.event.model.StartedEvent;
 import io.flamingock.core.event.model.SuccessEvent;
 import io.flamingock.core.pipeline.Pipeline;
@@ -81,9 +83,10 @@ public class CommunityStandaloneBuilder
     @NotNull
     private EventPublisher buildEventPublisher() {
         return new EventPublisher(
-                getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new StartedEvent()) : null,
+                getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new StartedEvent(){}) : null,
                 getMigrationSuccessListener() != null ? event -> getMigrationSuccessListener().accept(event) : null,
-                getMigrationFailureListener() != null ? result -> getMigrationFailureListener().accept(new FailedEvent(result)) : null);
+                getPipelineIgnoredListener() != null ? event -> getPipelineIgnoredListener().accept(event) : null,
+                getMigrationFailureListener() != null ? exception -> getMigrationFailureListener().accept(() -> exception) : null);
     }
 
     @NotNull
@@ -315,8 +318,13 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationSuccessListener(Consumer<SuccessEvent> listener) {
+    public CommunityStandaloneBuilder setMigrationSuccessListener(Consumer<CompletedEvent> listener) {
         return standaloneConfiguratorDelegate.setMigrationSuccessListener(listener);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder setPipelineIgnoredListener(Consumer<IgnoredEvent> listener) {
+        return standaloneConfiguratorDelegate.setPipelineIgnoredListener(listener);
     }
 
     @Override
@@ -330,9 +338,15 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public Consumer<SuccessEvent> getMigrationSuccessListener() {
+    public Consumer<CompletedEvent> getMigrationSuccessListener() {
         return standaloneConfiguratorDelegate.getMigrationSuccessListener();
     }
+
+    @Override
+    public Consumer<IgnoredEvent> getPipelineIgnoredListener() {
+        return standaloneConfiguratorDelegate.getPipelineIgnoredListener();
+    }
+
 
     @Override
     public Consumer<FailedEvent> getMigrationFailureListener() {

@@ -9,7 +9,7 @@ import io.flamingock.community.runner.standalone.CommunityStandalone;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.examples.community.events.FailureEventListener;
 import io.flamingock.examples.community.events.StartedEventListener;
-import io.flamingock.examples.community.events.SuccessEventListener;
+import io.flamingock.examples.community.events.CompletedEventListener;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -39,7 +39,7 @@ public class CommunityStandaloneMongodbSyncApp {
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
                 .setMigrationStartedListener(new StartedEventListener())
-                .setMigrationSuccessListener(new SuccessEventListener())
+                .setMigrationSuccessListener(new CompletedEventListener())
                 .setMigrationFailureListener(new FailureEventListener())
                 .build()
                 .run();

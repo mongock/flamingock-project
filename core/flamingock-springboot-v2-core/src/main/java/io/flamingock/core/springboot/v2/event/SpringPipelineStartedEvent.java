@@ -1,8 +1,9 @@
-package io.flamingock.core.springboot.v3.event;
+package io.flamingock.core.springboot.v2.event;
 
+import io.flamingock.core.event.model.StartedEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringMigrationStartedEvent extends ApplicationEvent {
+public class SpringPipelineStartedEvent extends ApplicationEvent implements StartedEvent {
 
 
   /**
@@ -11,7 +12,7 @@ public class SpringMigrationStartedEvent extends ApplicationEvent {
    * @param source the object on which the event initially occurred or with
    *               which the event is associated (never {@code null})
    */
-  public SpringMigrationStartedEvent(Object source) {
+  public SpringPipelineStartedEvent(Object source) {
     super(source);
   }
 

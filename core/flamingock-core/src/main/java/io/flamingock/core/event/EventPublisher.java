@@ -2,56 +2,58 @@ package io.flamingock.core.event;
 
 
 import io.flamingock.core.event.model.CompletedEvent;
+import io.flamingock.core.event.model.IgnoredEvent;
 import io.flamingock.core.event.model.SuccessEvent;
 
 import java.util.function.Consumer;
 
 public class EventPublisher {
 
-  private final Runnable flamingockStartedListener;
-  private final Consumer<SuccessEvent> flamingockSuccessListener;
-  private final Consumer<Exception> flamingockFailedListener;
+  private final Runnable pipelineStartedListener;
+  private final Consumer<CompletedEvent> pipelineCompletedListener;
+
+
+  private final Consumer<IgnoredEvent> pipelineIgnoredListener;
+  private final Consumer<Exception> pipelineFailedListener;
 
 
   public EventPublisher() {
-    this(null, null, null);
+    this(null, null, null, null);
   }
 
-  public EventPublisher(Runnable flamingockStartedListener,
-                        Consumer<SuccessEvent> flamingockSuccessListener,
-                        Consumer<Exception> flamingockFailedListener) {
-    this.flamingockSuccessListener = flamingockSuccessListener;
-    this.flamingockFailedListener = flamingockFailedListener;
-    this.flamingockStartedListener = flamingockStartedListener;
+  public EventPublisher(Runnable pipelineStartedListener,
+                        Consumer<CompletedEvent> pipelineCompletedListener,
+                        Consumer<IgnoredEvent> pipelineIgnoredListener,
+                        Consumer<Exception> pipelineFailedListener) {
+    this.pipelineStartedListener = pipelineStartedListener;
+    this.pipelineCompletedListener = pipelineCompletedListener;
+    this.pipelineIgnoredListener = pipelineIgnoredListener;
+    this.pipelineFailedListener = pipelineFailedListener;
   }
 
-  public void publishFlamingockStarted() {
-    if (flamingockStartedListener != null) {
-      flamingockStartedListener.run();
+  public void publishPipelineStarted() {
+    if (pipelineStartedListener != null) {
+      pipelineStartedListener.run();
     }
   }
 
-  public void publishFlamingockSuccessEvent(SuccessEvent event) {
-    if (flamingockSuccessListener != null) {
-      flamingockSuccessListener.accept(event);
+  public void publishPipelineSuccessEvent(CompletedEvent event) {
+    if (pipelineCompletedListener != null) {
+      pipelineCompletedListener.accept(event);
     }
   }
 
-  public void publishFlamingockFailedEvent(Exception ex) {
-    if (flamingockFailedListener != null) {
-      flamingockFailedListener.accept(ex);
+  public void publishPipelineIgnoredEvent(IgnoredEvent event) {
+    if (pipelineIgnoredListener != null) {
+      pipelineIgnoredListener.accept(event);
     }
   }
 
-  public Runnable getFlamingockStartedListener() {
-    return flamingockStartedListener;
+  public void publishPipelineFailedEvent(Exception ex) {
+    if (pipelineFailedListener != null) {
+      pipelineFailedListener.accept(ex);
+    }
   }
 
-  public Consumer<SuccessEvent> getFlamingockSuccessListener() {
-    return flamingockSuccessListener;
-  }
 
-  public Consumer<Exception> getFlamingockFailedListener() {
-    return flamingockFailedListener;
-  }
 }

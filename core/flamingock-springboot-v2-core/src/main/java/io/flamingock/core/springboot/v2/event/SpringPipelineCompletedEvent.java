@@ -1,15 +1,12 @@
-package io.flamingock.core.springboot.v3.event;
+package io.flamingock.core.springboot.v2.event;
 
 
-import io.flamingock.core.event.ResultEvent;
-import io.flamingock.core.event.model.Event;
 import io.flamingock.core.event.model.CompletedEvent;
-import io.flamingock.core.event.model.SuccessEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringMigrationSuccessEvent extends ApplicationEvent implements ResultEvent {
+public class SpringPipelineCompletedEvent extends ApplicationEvent implements CompletedEvent {
 
-  private final SuccessEvent event;
+  private final CompletedEvent event;
 
   /**
    * Create a new {@code ApplicationEvent}.
@@ -17,7 +14,7 @@ public class SpringMigrationSuccessEvent extends ApplicationEvent implements Res
    * @param source the object on which the event initially occurred or with
    *               which the event is associated (never {@code null})
    */
-  public SpringMigrationSuccessEvent(Object source, SuccessEvent event) {
+  public SpringPipelineCompletedEvent(Object source, CompletedEvent event) {
     super(source);
     this.event = event;
   }
@@ -28,5 +25,16 @@ public class SpringMigrationSuccessEvent extends ApplicationEvent implements Res
     return "SpringMigrationSuccessEvent{" +
         "migrationResult=" + event +
         "} " + super.toString();
+  }
+
+
+  @Override
+  public boolean isSuccess() {
+    return event.isSuccess();
+  }
+
+  @Override
+  public Object getResult() {
+    return event.getResult();
   }
 }

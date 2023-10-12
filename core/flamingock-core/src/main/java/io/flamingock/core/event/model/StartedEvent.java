@@ -1,9 +1,9 @@
 package io.flamingock.core.event.model;
 
-public class StartedEvent implements Event {
+public interface StartedEvent extends Event {
 
   @Override
-  public boolean isSuccess() {
+  default boolean isSuccess() {
     return true;
   }
 }

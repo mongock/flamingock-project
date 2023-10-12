@@ -1,6 +1,8 @@
 package io.flamingock.core.configurator.standalone;
 
+import io.flamingock.core.event.model.CompletedEvent;
 import io.flamingock.core.event.model.FailedEvent;
+import io.flamingock.core.event.model.IgnoredEvent;
 import io.flamingock.core.event.model.StartedEvent;
 import io.flamingock.core.event.model.SuccessEvent;
 import io.flamingock.core.runtime.dependency.Dependency;
@@ -15,7 +17,8 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     private final DependencyInjectableContext dependencyManager;
     private final Supplier<HOLDER> holderSupplier;
     private Consumer<StartedEvent> processStartedListener;
-    private Consumer<SuccessEvent> processSuccessListener;
+    private Consumer<CompletedEvent> processSuccessListener;
+    private Consumer<IgnoredEvent> processIgnoredListener;
     private Consumer<FailedEvent> processFailedListener;
 
     public StandaloneConfiguratorDelegate(DependencyInjectableContext dependencyManager, Supplier<HOLDER> holderSupplier) {
@@ -56,8 +59,14 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public HOLDER setMigrationSuccessListener(Consumer<SuccessEvent> listener) {
+    public HOLDER setMigrationSuccessListener(Consumer<CompletedEvent> listener) {
         this.processSuccessListener = listener;
+        return holderSupplier.get();
+    }
+
+    @Override
+    public HOLDER setPipelineIgnoredListener(Consumer<IgnoredEvent> listener) {
+        this.processIgnoredListener = listener;
         return holderSupplier.get();
     }
 
@@ -73,8 +82,13 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public Consumer<SuccessEvent> getMigrationSuccessListener() {
+    public Consumer<CompletedEvent> getMigrationSuccessListener() {
         return processSuccessListener;
+    }
+
+    @Override
+    public Consumer<IgnoredEvent> getPipelineIgnoredListener() {
+        return processIgnoredListener;
     }
 
     @Override

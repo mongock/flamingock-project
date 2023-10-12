@@ -1,16 +1,17 @@
 package io.flamingock.examples.community.events;
 
 
+import io.flamingock.core.event.model.CompletedEvent;
 import io.flamingock.core.event.model.SuccessEvent;
 
 import java.util.function.Consumer;
 
-public class SuccessEventListener implements Consumer<SuccessEvent> {
+public class CompletedEventListener implements Consumer<CompletedEvent> {
 
     public static boolean executed = false;
 
     @Override
-    public void accept(SuccessEvent event) {
+    public void accept(CompletedEvent event) {
         executed = true;
     }
 }

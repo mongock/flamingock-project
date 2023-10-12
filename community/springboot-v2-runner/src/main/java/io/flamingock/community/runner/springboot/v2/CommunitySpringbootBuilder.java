@@ -11,6 +11,7 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.event.model.FailedEvent;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerCreator;
@@ -18,9 +19,10 @@ import io.flamingock.core.springboot.v2.configurator.SpringRunnerType;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfiguration;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfigurator;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfiguratorDelegate;
-import io.flamingock.core.springboot.v2.event.SpringFailedEvent;
-import io.flamingock.core.springboot.v2.event.SpringStartedEvent;
-import io.flamingock.core.springboot.v2.event.SpringCompletedEvent;
+import io.flamingock.core.springboot.v2.event.SpringPipelineFailedEvent;
+import io.flamingock.core.springboot.v2.event.SpringPipelineIgnoredEvent;
+import io.flamingock.core.springboot.v2.event.SpringPipelineStartedEvent;
+import io.flamingock.core.springboot.v2.event.SpringPipelineCompletedEvent;
 import io.flamingock.core.springboot.v2.SpringDependencyContext;
 import io.flamingock.core.springboot.v2.SpringProfileFilter;
 import io.flamingock.core.springboot.v2.SpringRunnerBuilder;
@@ -87,9 +89,10 @@ public class CommunitySpringbootBuilder
     @NotNull
     private EventPublisher createEventPublisher() {
         return new EventPublisher(
-                () -> getEventPublisher().publishEvent(new SpringStartedEvent(this)),
-                result -> getEventPublisher().publishEvent(new SpringCompletedEvent(this, result)),
-                result -> getEventPublisher().publishEvent(new SpringFailedEvent(this, result))
+                () -> getEventPublisher().publishEvent(new SpringPipelineStartedEvent(this)),
+                event -> getEventPublisher().publishEvent(new SpringPipelineCompletedEvent(this, event)),
+                event -> getEventPublisher().publishEvent(new SpringPipelineIgnoredEvent(this, event)),
+                exception -> getEventPublisher().publishEvent(new SpringPipelineFailedEvent(this, () -> exception))
         );
     }
 

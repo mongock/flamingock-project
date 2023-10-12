@@ -52,7 +52,7 @@ public abstract class AbstractRunner implements Runner {
     }
 
     public void run(Pipeline pipeline) throws FlamingockException {
-        eventPublisher.publishFlamingockStarted();//TODO change name to eventPublisher.publishPipelineStarted();
+        eventPublisher.publishPipelineStarted();//TODO change name to eventPublisher.publishPipelineStarted();
         pipeline.getStages().forEach(this::runStage);
 
     }
@@ -70,7 +70,7 @@ public abstract class AbstractRunner implements Runner {
             }
 
         } catch (LockException exception) {
-            eventPublisher.publishFlamingockFailedEvent(exception);
+            eventPublisher.publishPipelineFailedEvent(exception);
             if (throwExceptionIfCannotObtainLock) {
                 logger.error("Required process lock not acquired. ABORTED OPERATION", exception);
                 throw exception;
@@ -81,12 +81,12 @@ public abstract class AbstractRunner implements Runner {
 
         } catch (StageExecutionException stageExecutionException) {
             logger.info("Process summary\n{}", stageExecutionException.getSummary().getPretty());
-            eventPublisher.publishFlamingockFailedEvent(stageExecutionException);
+            eventPublisher.publishPipelineFailedEvent(stageExecutionException);
             throw stageExecutionException;
         } catch (Exception exception) {
             FlamingockException coreEx = exception instanceof FlamingockException ? (FlamingockException) exception : new FlamingockException(exception);
             logger.error("Error executing the process. ABORTED OPERATION", coreEx);
-            eventPublisher.publishFlamingockFailedEvent(coreEx);
+            eventPublisher.publishPipelineFailedEvent(coreEx);
             throw coreEx;
         }
     }
@@ -100,11 +100,11 @@ public abstract class AbstractRunner implements Runner {
 
         StageExecutor.Output executionOutput = stageExecutor.execute(executableStage, stageExecutionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
-        eventPublisher.publishFlamingockSuccessEvent(new CompletedEvent(executionOutput));
+        eventPublisher.publishPipelineSuccessEvent(() -> executionOutput);
     }
 
     private void skipStage() {
         logger.info("Skipping the process. All the tasks are already executed.");
-        eventPublisher.publishFlamingockSuccessEvent(new IgnoredEvent());
+        eventPublisher.publishPipelineIgnoredEvent(new IgnoredEvent(){});
     }
 }
