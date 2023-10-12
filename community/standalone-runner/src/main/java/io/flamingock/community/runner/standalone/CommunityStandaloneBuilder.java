@@ -14,8 +14,8 @@ import io.flamingock.core.configurator.standalone.StandaloneConfigurator;
 import io.flamingock.core.configurator.standalone.StandaloneConfiguratorDelegate;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.MigrationFailureEvent;
-import io.flamingock.core.event.MigrationStartedEvent;
 
+import io.flamingock.core.event.model.StartedEvent;
 import io.flamingock.core.event.model.SuccessEvent;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
@@ -68,7 +68,7 @@ public class CommunityStandaloneBuilder
                 connectionEngine.getTransactionWrapper().orElse(null),
                 connectionEngine.getLockProvider(),
                 coreConfiguratorDelegate.getCoreProperties(),
-                creatEventPublisher(),
+                buildEventPublisher(),
                 getDependencyContext(),
                 getCoreProperties().isThrowExceptionIfCannotObtainLock()
         );
@@ -79,9 +79,9 @@ public class CommunityStandaloneBuilder
     }
 
     @NotNull
-    private EventPublisher creatEventPublisher() {
+    private EventPublisher buildEventPublisher() {
         return new EventPublisher(
-                getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new MigrationStartedEvent()) : null,
+                getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new StartedEvent()) : null,
                 getMigrationSuccessListener() != null ? event -> getMigrationSuccessListener().accept(event) : null,
                 getMigrationFailureListener() != null ? result -> getMigrationFailureListener().accept(new MigrationFailureEvent(result)) : null);
     }
@@ -310,7 +310,7 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationStartedListener(Consumer<MigrationStartedEvent> listener) {
+    public CommunityStandaloneBuilder setMigrationStartedListener(Consumer<StartedEvent> listener) {
         return standaloneConfiguratorDelegate.setMigrationStartedListener(listener);
     }
 
@@ -325,7 +325,7 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public Consumer<MigrationStartedEvent> getMigrationStartedListener() {
+    public Consumer<StartedEvent> getMigrationStartedListener() {
         return standaloneConfiguratorDelegate.getMigrationStartedListener();
     }
 

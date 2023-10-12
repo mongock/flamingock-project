@@ -22,10 +22,6 @@ public class SpringMigrationSuccessEvent extends ApplicationEvent implements Res
     this.event = event;
   }
 
-  @Override
-  public Event getSuccessEvent() {
-    return event;
-  }
 
   @Override
   public String toString() {

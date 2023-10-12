@@ -15,8 +15,5 @@ public class MigrationFailureEvent implements ResultEvent {
     return migrationResult.getException();
   }
 
-  @Override
-  public FailedEvent getSuccessEvent() {
-    return migrationResult;
-  }
+
 }

@@ -5,5 +5,4 @@ import io.flamingock.core.event.model.Event;
 
 public interface ResultEvent {
 
-  Event getSuccessEvent();
 }

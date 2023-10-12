@@ -19,10 +19,6 @@ public class SpringMigrationFailureEvent extends ApplicationEvent implements Res
   }
 
 
-  @Override
-  public FailedEvent getSuccessEvent() {
-    return migrationResult;
-  }
 
   @Override
   public String toString() {
