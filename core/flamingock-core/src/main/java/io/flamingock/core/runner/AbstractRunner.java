@@ -4,9 +4,10 @@ import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.event.model.PipelineFailedEvent;
-import io.flamingock.core.event.model.PipelineIgnoredEvent;
-import io.flamingock.core.event.model.PipelineStartedEvent;
+import io.flamingock.core.event.model.impl.BasicPipelineCompletedEvent;
+import io.flamingock.core.event.model.impl.BasicPipelineFailedEvent;
+import io.flamingock.core.event.model.impl.BasicPipelineIgnoredEvent;
+import io.flamingock.core.event.model.impl.BasicPipelineStartedEvent;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
@@ -53,7 +54,7 @@ public abstract class AbstractRunner implements Runner {
     }
 
     public void run(Pipeline pipeline) throws FlamingockException {
-        eventPublisher.publishPipelineStarted(new PipelineStartedEvent(){});//TODO change name to eventPublisher.publishPipelineStarted();
+        eventPublisher.publish(new BasicPipelineStartedEvent());//TODO change name to eventPublisher.publishPipelineStarted();
         pipeline.getStages().forEach(this::runStage);
 
     }
@@ -71,7 +72,7 @@ public abstract class AbstractRunner implements Runner {
             }
 
         } catch (LockException exception) {
-            eventPublisher.publishPipelineFailedEvent(() -> exception);
+            eventPublisher.publish(new BasicPipelineFailedEvent(exception));
             if (throwExceptionIfCannotObtainLock) {
                 logger.error("Required process lock not acquired. ABORTED OPERATION", exception);
                 throw exception;
@@ -82,12 +83,12 @@ public abstract class AbstractRunner implements Runner {
 
         } catch (StageExecutionException exception) {
             logger.info("Process summary\n{}", exception.getSummary().getPretty());
-            eventPublisher.publishPipelineFailedEvent(() -> exception);
+            eventPublisher.publish(new BasicPipelineFailedEvent(exception));
             throw exception;
         } catch (Exception generalException) {
             FlamingockException exception = generalException instanceof FlamingockException ? (FlamingockException) generalException : new FlamingockException(generalException);
             logger.error("Error executing the process. ABORTED OPERATION", exception);
-            eventPublisher.publishPipelineFailedEvent(() -> exception);
+            eventPublisher.publish(new BasicPipelineFailedEvent(exception));
             throw exception;
         }
     }
@@ -101,11 +102,11 @@ public abstract class AbstractRunner implements Runner {
 
         StageExecutor.Output executionOutput = stageExecutor.execute(executableStage, stageExecutionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
-        eventPublisher.publishPipelineSuccessEvent(() -> executionOutput);
+        eventPublisher.publish(new BasicPipelineCompletedEvent(executionOutput));
     }
 
     private void skipStage() {
         logger.info("Skipping the process. All the tasks are already executed.");
-        eventPublisher.publishPipelineIgnoredEvent(new PipelineIgnoredEvent(){});
+        eventPublisher.publish(new BasicPipelineIgnoredEvent());
     }
 }

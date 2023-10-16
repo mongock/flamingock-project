@@ -11,12 +11,15 @@ import java.util.function.Consumer;
 
 public class EventPublisher {
 
-    private final Consumer<PipelineStartedEvent> pipelineStartedListener;
-    private final Consumer<PipelineCompletedEvent> pipelineCompletedListener;
+    private Consumer<PipelineStartedEvent> pipelineStartedListener;
+    private Consumer<PipelineCompletedEvent> pipelineCompletedListener;
 
 
-    private final Consumer<PipelineIgnoredEvent> pipelineIgnoredListener;
-    private final Consumer<PipelineFailedEvent> pipelineFailedListener;
+    private Consumer<PipelineIgnoredEvent> pipelineIgnoredListener;
+    private Consumer<PipelineFailedEvent> pipelineFailedListener;
+
+
+    private Consumer<Event> globalEventListener;
 
 
     public EventPublisher() {
@@ -34,28 +37,21 @@ public class EventPublisher {
     }
 
 
+    public void publish(Event event) {
+        if(event instanceof PipelineStartedEvent && pipelineStartedListener != null) {
+            pipelineStartedListener.accept((PipelineStartedEvent) event);
 
-    public void publishPipelineStarted(PipelineStartedEvent event) {
-        if (pipelineStartedListener != null) {
-            pipelineStartedListener.accept(event);
-        }
-    }
+        } else if(event instanceof PipelineCompletedEvent && pipelineCompletedListener != null) {
+            pipelineCompletedListener.accept((PipelineCompletedEvent) event);
 
-    public void publishPipelineSuccessEvent(PipelineCompletedEvent event) {
-        if (pipelineCompletedListener != null) {
-            pipelineCompletedListener.accept(event);
-        }
-    }
+        } else if(event instanceof PipelineIgnoredEvent && pipelineIgnoredListener != null) {
+            pipelineIgnoredListener.accept((PipelineIgnoredEvent) event);
 
-    public void publishPipelineIgnoredEvent(PipelineIgnoredEvent event) {
-        if (pipelineIgnoredListener != null) {
-            pipelineIgnoredListener.accept(event);
-        }
-    }
+        } else if(event instanceof PipelineFailedEvent && pipelineFailedListener != null) {
+            pipelineFailedListener.accept((PipelineFailedEvent) event);
 
-    public void publishPipelineFailedEvent(PipelineFailedEvent event) {
-        if (pipelineFailedListener != null) {
-            pipelineFailedListener.accept(event);
+        } else if(globalEventListener != null){
+            globalEventListener.accept(event);
         }
     }
 
