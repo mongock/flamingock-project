@@ -13,12 +13,11 @@ import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.standalone.StandaloneConfigurator;
 import io.flamingock.core.configurator.standalone.StandaloneConfiguratorDelegate;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.event.model.CompletedEvent;
-import io.flamingock.core.event.model.FailedEvent;
+import io.flamingock.core.event.model.PipelineCompletedEvent;
+import io.flamingock.core.event.model.PipelineFailedEvent;
 
-import io.flamingock.core.event.model.IgnoredEvent;
-import io.flamingock.core.event.model.StartedEvent;
-import io.flamingock.core.event.model.SuccessEvent;
+import io.flamingock.core.event.model.PipelineIgnoredEvent;
+import io.flamingock.core.event.model.PipelineStartedEvent;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerBuilder;
@@ -313,43 +312,43 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationStartedListener(Consumer<StartedEvent> listener) {
+    public CommunityStandaloneBuilder setMigrationStartedListener(Consumer<PipelineStartedEvent> listener) {
         return standaloneConfiguratorDelegate.setMigrationStartedListener(listener);
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationSuccessListener(Consumer<CompletedEvent> listener) {
+    public CommunityStandaloneBuilder setMigrationSuccessListener(Consumer<PipelineCompletedEvent> listener) {
         return standaloneConfiguratorDelegate.setMigrationSuccessListener(listener);
     }
 
     @Override
-    public CommunityStandaloneBuilder setPipelineIgnoredListener(Consumer<IgnoredEvent> listener) {
+    public CommunityStandaloneBuilder setPipelineIgnoredListener(Consumer<PipelineIgnoredEvent> listener) {
         return standaloneConfiguratorDelegate.setPipelineIgnoredListener(listener);
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationFailureListener(Consumer<FailedEvent> listener) {
+    public CommunityStandaloneBuilder setMigrationFailureListener(Consumer<PipelineFailedEvent> listener) {
         return standaloneConfiguratorDelegate.setMigrationFailureListener(listener);
     }
 
     @Override
-    public Consumer<StartedEvent> getMigrationStartedListener() {
+    public Consumer<PipelineStartedEvent> getMigrationStartedListener() {
         return standaloneConfiguratorDelegate.getMigrationStartedListener();
     }
 
     @Override
-    public Consumer<CompletedEvent> getMigrationSuccessListener() {
+    public Consumer<PipelineCompletedEvent> getMigrationSuccessListener() {
         return standaloneConfiguratorDelegate.getMigrationSuccessListener();
     }
 
     @Override
-    public Consumer<IgnoredEvent> getPipelineIgnoredListener() {
+    public Consumer<PipelineIgnoredEvent> getPipelineIgnoredListener() {
         return standaloneConfiguratorDelegate.getPipelineIgnoredListener();
     }
 
 
     @Override
-    public Consumer<FailedEvent> getMigrationFailureListener() {
+    public Consumer<PipelineFailedEvent> getMigrationFailureListener() {
         return standaloneConfiguratorDelegate.getMigrationFailureListener();
     }
 }

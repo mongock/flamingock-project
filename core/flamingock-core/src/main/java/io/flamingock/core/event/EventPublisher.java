@@ -1,19 +1,19 @@
 package io.flamingock.core.event;
 
 
-import io.flamingock.core.event.model.CompletedEvent;
-import io.flamingock.core.event.model.IgnoredEvent;
-import io.flamingock.core.event.model.StartedEvent;
+import io.flamingock.core.event.model.PipelineCompletedEvent;
+import io.flamingock.core.event.model.PipelineIgnoredEvent;
+import io.flamingock.core.event.model.PipelineStartedEvent;
 
 import java.util.function.Consumer;
 
 public class EventPublisher {
 
-    private final Consumer<StartedEvent> pipelineStartedListener;
-    private final Consumer<CompletedEvent> pipelineCompletedListener;
+    private final Consumer<PipelineStartedEvent> pipelineStartedListener;
+    private final Consumer<PipelineCompletedEvent> pipelineCompletedListener;
 
 
-    private final Consumer<IgnoredEvent> pipelineIgnoredListener;
+    private final Consumer<PipelineIgnoredEvent> pipelineIgnoredListener;
     private final Consumer<Exception> pipelineFailedListener;
 
 
@@ -21,9 +21,9 @@ public class EventPublisher {
         this(null, null, null, null);
     }
 
-    public EventPublisher(Consumer<StartedEvent> pipelineStartedListener,
-                          Consumer<CompletedEvent> pipelineCompletedListener,
-                          Consumer<IgnoredEvent> pipelineIgnoredListener,
+    public EventPublisher(Consumer<PipelineStartedEvent> pipelineStartedListener,
+                          Consumer<PipelineCompletedEvent> pipelineCompletedListener,
+                          Consumer<PipelineIgnoredEvent> pipelineIgnoredListener,
                           Consumer<Exception> pipelineFailedListener) {
         this.pipelineStartedListener = pipelineStartedListener;
         this.pipelineCompletedListener = pipelineCompletedListener;
@@ -31,19 +31,19 @@ public class EventPublisher {
         this.pipelineFailedListener = pipelineFailedListener;
     }
 
-    public void publishPipelineStarted(StartedEvent event) {
+    public void publishPipelineStarted(PipelineStartedEvent event) {
         if (pipelineStartedListener != null) {
             pipelineStartedListener.accept(event);
         }
     }
 
-    public void publishPipelineSuccessEvent(CompletedEvent event) {
+    public void publishPipelineSuccessEvent(PipelineCompletedEvent event) {
         if (pipelineCompletedListener != null) {
             pipelineCompletedListener.accept(event);
         }
     }
 
-    public void publishPipelineIgnoredEvent(IgnoredEvent event) {
+    public void publishPipelineIgnoredEvent(PipelineIgnoredEvent event) {
         if (pipelineIgnoredListener != null) {
             pipelineIgnoredListener.accept(event);
         }

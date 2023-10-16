@@ -1,10 +1,10 @@
 package io.flamingock.core.configurator.standalone;
 
 
-import io.flamingock.core.event.model.CompletedEvent;
-import io.flamingock.core.event.model.FailedEvent;
-import io.flamingock.core.event.model.IgnoredEvent;
-import io.flamingock.core.event.model.StartedEvent;
+import io.flamingock.core.event.model.PipelineCompletedEvent;
+import io.flamingock.core.event.model.PipelineFailedEvent;
+import io.flamingock.core.event.model.PipelineIgnoredEvent;
+import io.flamingock.core.event.model.PipelineStartedEvent;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 
 import java.util.function.Consumer;
@@ -50,25 +50,25 @@ public interface StandaloneConfigurator<HOLDER> {
     HOLDER addDependency(String name, Class<?> type, Object instance);
 
     //TODO javadoc
-    HOLDER setMigrationStartedListener(Consumer<StartedEvent> listener);
+    HOLDER setMigrationStartedListener(Consumer<PipelineStartedEvent> listener);
 
     //TODO javadoc
-    HOLDER setMigrationSuccessListener(Consumer<CompletedEvent> listener);
+    HOLDER setMigrationSuccessListener(Consumer<PipelineCompletedEvent> listener);
 
     //TODO javadoc
-    HOLDER setPipelineIgnoredListener(Consumer<IgnoredEvent> listener);
+    HOLDER setPipelineIgnoredListener(Consumer<PipelineIgnoredEvent> listener);
 
     //TODO javadoc
-    HOLDER setMigrationFailureListener(Consumer<FailedEvent> listener);
+    HOLDER setMigrationFailureListener(Consumer<PipelineFailedEvent> listener);
 
-    Consumer<StartedEvent> getMigrationStartedListener();
-
-    //TODO javadoc
-    Consumer<CompletedEvent> getMigrationSuccessListener();
+    Consumer<PipelineStartedEvent> getMigrationStartedListener();
 
     //TODO javadoc
-    Consumer<IgnoredEvent> getPipelineIgnoredListener();
+    Consumer<PipelineCompletedEvent> getMigrationSuccessListener();
 
     //TODO javadoc
-    Consumer<FailedEvent> getMigrationFailureListener();
+    Consumer<PipelineIgnoredEvent> getPipelineIgnoredListener();
+
+    //TODO javadoc
+    Consumer<PipelineFailedEvent> getMigrationFailureListener();
 }

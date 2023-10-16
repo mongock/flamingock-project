@@ -1,9 +1,9 @@
 package io.flamingock.core.springboot.v3.event;
 
-import io.flamingock.core.event.model.StartedEvent;
+import io.flamingock.core.event.model.PipelineStartedEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringPipelineStartedEvent extends ApplicationEvent implements StartedEvent {
+public class SpringPipelineStartedEvent extends ApplicationEvent implements PipelineStartedEvent {
 
 
   /**

@@ -1,12 +1,12 @@
 package io.flamingock.core.springboot.v2.event;
 
-import io.flamingock.core.event.model.StartedEvent;
+import io.flamingock.core.event.model.PipelineStartedEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringPipelineStartedEvent extends ApplicationEvent implements StartedEvent {
+public class SpringPipelineStartedEvent extends ApplicationEvent implements PipelineStartedEvent {
 
 
-  private final StartedEvent event;
+  private final PipelineStartedEvent event;
 
   /**
    * Create a new {@code ApplicationEvent}.
@@ -14,7 +14,7 @@ public class SpringPipelineStartedEvent extends ApplicationEvent implements Star
    * @param source the object on which the event initially occurred or with
    *               which the event is associated (never {@code null})
    */
-  public SpringPipelineStartedEvent(Object source, StartedEvent event) {
+  public SpringPipelineStartedEvent(Object source, PipelineStartedEvent event) {
     super(source);
     this.event = event;
   }

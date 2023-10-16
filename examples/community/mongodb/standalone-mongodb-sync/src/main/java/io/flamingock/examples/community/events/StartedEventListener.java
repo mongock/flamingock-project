@@ -1,15 +1,15 @@
 package io.flamingock.examples.community.events;
 
-import io.flamingock.core.event.model.StartedEvent;
+import io.flamingock.core.event.model.PipelineStartedEvent;
 
 import java.util.function.Consumer;
 
-public class StartedEventListener implements Consumer<StartedEvent> {
+public class StartedEventListener implements Consumer<PipelineStartedEvent> {
 
     public static boolean executed = false;
 
     @Override
-    public void accept(StartedEvent migrationStartedEvent) {
+    public void accept(PipelineStartedEvent migrationStartedEvent) {
         executed = true;
     }
 }

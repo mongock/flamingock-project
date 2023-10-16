@@ -1,9 +1,9 @@
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.event.model.CompletedEvent;
-import io.flamingock.core.event.model.FailedEvent;
-import io.flamingock.core.event.model.IgnoredEvent;
-import io.flamingock.core.event.model.StartedEvent;
+import io.flamingock.core.event.model.PipelineCompletedEvent;
+import io.flamingock.core.event.model.PipelineFailedEvent;
+import io.flamingock.core.event.model.PipelineIgnoredEvent;
+import io.flamingock.core.event.model.PipelineStartedEvent;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
@@ -15,10 +15,10 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
 
     private final DependencyInjectableContext dependencyManager;
     private final Supplier<HOLDER> holderSupplier;
-    private Consumer<StartedEvent> processStartedListener;
-    private Consumer<CompletedEvent> processSuccessListener;
-    private Consumer<IgnoredEvent> processIgnoredListener;
-    private Consumer<FailedEvent> processFailedListener;
+    private Consumer<PipelineStartedEvent> processStartedListener;
+    private Consumer<PipelineCompletedEvent> processSuccessListener;
+    private Consumer<PipelineIgnoredEvent> processIgnoredListener;
+    private Consumer<PipelineFailedEvent> processFailedListener;
 
     public StandaloneConfiguratorDelegate(DependencyInjectableContext dependencyManager, Supplier<HOLDER> holderSupplier) {
         this.dependencyManager = dependencyManager;
@@ -52,46 +52,46 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public HOLDER setMigrationStartedListener(Consumer<StartedEvent> listener) {
+    public HOLDER setMigrationStartedListener(Consumer<PipelineStartedEvent> listener) {
         this.processStartedListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public HOLDER setMigrationSuccessListener(Consumer<CompletedEvent> listener) {
+    public HOLDER setMigrationSuccessListener(Consumer<PipelineCompletedEvent> listener) {
         this.processSuccessListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public HOLDER setPipelineIgnoredListener(Consumer<IgnoredEvent> listener) {
+    public HOLDER setPipelineIgnoredListener(Consumer<PipelineIgnoredEvent> listener) {
         this.processIgnoredListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public HOLDER setMigrationFailureListener(Consumer<FailedEvent> listener) {
+    public HOLDER setMigrationFailureListener(Consumer<PipelineFailedEvent> listener) {
         this.processFailedListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public Consumer<StartedEvent> getMigrationStartedListener() {
+    public Consumer<PipelineStartedEvent> getMigrationStartedListener() {
         return processStartedListener;
     }
 
     @Override
-    public Consumer<CompletedEvent> getMigrationSuccessListener() {
+    public Consumer<PipelineCompletedEvent> getMigrationSuccessListener() {
         return processSuccessListener;
     }
 
     @Override
-    public Consumer<IgnoredEvent> getPipelineIgnoredListener() {
+    public Consumer<PipelineIgnoredEvent> getPipelineIgnoredListener() {
         return processIgnoredListener;
     }
 
     @Override
-    public Consumer<FailedEvent> getMigrationFailureListener() {
+    public Consumer<PipelineFailedEvent> getMigrationFailureListener() {
         return processFailedListener;
     }
 

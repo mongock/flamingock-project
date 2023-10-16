@@ -11,7 +11,6 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.event.model.FailedEvent;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerCreator;
