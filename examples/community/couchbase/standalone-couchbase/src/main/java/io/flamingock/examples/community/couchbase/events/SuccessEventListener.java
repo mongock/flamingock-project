@@ -2,7 +2,6 @@ package io.flamingock.examples.community.couchbase.events;
 
 
 import io.flamingock.core.event.model.CompletedEvent;
-import io.flamingock.core.event.model.SuccessEvent;
 
 import java.util.function.Consumer;
 

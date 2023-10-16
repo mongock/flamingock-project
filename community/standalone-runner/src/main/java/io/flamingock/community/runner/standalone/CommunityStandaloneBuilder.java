@@ -83,7 +83,7 @@ public class CommunityStandaloneBuilder
     @NotNull
     private EventPublisher buildEventPublisher() {
         return new EventPublisher(
-                getMigrationStartedListener() != null ? () -> getMigrationStartedListener().accept(new StartedEvent(){}) : null,
+                getMigrationStartedListener() != null ? event -> getMigrationStartedListener().accept(event) : null,
                 getMigrationSuccessListener() != null ? event -> getMigrationSuccessListener().accept(event) : null,
                 getPipelineIgnoredListener() != null ? event -> getPipelineIgnoredListener().accept(event) : null,
                 getMigrationFailureListener() != null ? exception -> getMigrationFailureListener().accept(() -> exception) : null);

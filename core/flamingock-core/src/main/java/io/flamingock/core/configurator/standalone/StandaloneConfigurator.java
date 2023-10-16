@@ -5,7 +5,6 @@ import io.flamingock.core.event.model.CompletedEvent;
 import io.flamingock.core.event.model.FailedEvent;
 import io.flamingock.core.event.model.IgnoredEvent;
 import io.flamingock.core.event.model.StartedEvent;
-import io.flamingock.core.event.model.SuccessEvent;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 
 import java.util.function.Consumer;

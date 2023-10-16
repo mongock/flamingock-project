@@ -17,15 +17,6 @@ public class SpringPipelineFailedEvent extends ApplicationEvent implements Faile
         this.event = event;
     }
 
-
-    @Override
-    public String toString() {
-        return "SpringMigrationFailureEvent{" +
-                "migrationResult=" + event +
-                ", source=" + source +
-                "} " + super.toString();
-    }
-
     @Override
     public Exception getException() {
         return event.getException();
@@ -34,5 +25,14 @@ public class SpringPipelineFailedEvent extends ApplicationEvent implements Faile
     @Override
     public boolean isSuccess() {
         return event.isSuccess();
+    }
+
+
+    @Override
+    public String toString() {
+        return "SpringPipelineFailedEvent{" +
+                "event=" + event +
+                ", source=" + source +
+                '}';
     }
 }

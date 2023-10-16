@@ -6,6 +6,7 @@ import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.IgnoredEvent;
 import io.flamingock.core.event.model.CompletedEvent;
+import io.flamingock.core.event.model.StartedEvent;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.lock.LockAcquisition;
@@ -52,7 +53,7 @@ public abstract class AbstractRunner implements Runner {
     }
 
     public void run(Pipeline pipeline) throws FlamingockException {
-        eventPublisher.publishPipelineStarted();//TODO change name to eventPublisher.publishPipelineStarted();
+        eventPublisher.publishPipelineStarted(new StartedEvent(){});//TODO change name to eventPublisher.publishPipelineStarted();
         pipeline.getStages().forEach(this::runStage);
 
     }

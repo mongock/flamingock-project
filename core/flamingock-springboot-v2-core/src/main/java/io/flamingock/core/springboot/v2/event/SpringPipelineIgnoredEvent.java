@@ -19,18 +19,16 @@ public class SpringPipelineIgnoredEvent extends ApplicationEvent implements Igno
         this.event = event;
     }
 
-
-    @Override
-    public String toString() {
-        return "SpringMigrationSuccessEvent{" +
-                "migrationResult=" + event +
-                "} " + super.toString();
-    }
-
-
     @Override
     public boolean isSuccess() {
         return event.isSuccess();
     }
 
+    @Override
+    public String toString() {
+        return "SpringPipelineIgnoredEvent{" +
+                "event=" + event +
+                ", source=" + source +
+                '}';
+    }
 }

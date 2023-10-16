@@ -89,7 +89,7 @@ public class CommunitySpringbootBuilder
     @NotNull
     private EventPublisher createEventPublisher() {
         return new EventPublisher(
-                () -> getEventPublisher().publishEvent(new SpringPipelineStartedEvent(this)),
+                event -> getEventPublisher().publishEvent(new SpringPipelineStartedEvent(this)),
                 completedEvent -> getEventPublisher().publishEvent(new SpringPipelineCompletedEvent(this, completedEvent)),
                 ignoredEvent -> getEventPublisher().publishEvent(new SpringPipelineIgnoredEvent(this, ignoredEvent)),
                 exception -> getEventPublisher().publishEvent(new SpringPipelineFailedEvent(this, () -> exception))

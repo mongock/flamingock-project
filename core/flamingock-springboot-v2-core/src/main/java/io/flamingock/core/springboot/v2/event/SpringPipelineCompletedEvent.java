@@ -19,15 +19,6 @@ public class SpringPipelineCompletedEvent extends ApplicationEvent implements Co
     this.event = event;
   }
 
-
-  @Override
-  public String toString() {
-    return "SpringMigrationSuccessEvent{" +
-        "migrationResult=" + event +
-        "} " + super.toString();
-  }
-
-
   @Override
   public boolean isSuccess() {
     return event.isSuccess();
@@ -36,5 +27,13 @@ public class SpringPipelineCompletedEvent extends ApplicationEvent implements Co
   @Override
   public Object getResult() {
     return event.getResult();
+  }
+
+  @Override
+  public String toString() {
+    return "SpringPipelineCompletedEvent{" +
+            "event=" + event +
+            ", source=" + source +
+            '}';
   }
 }
