@@ -19,10 +19,6 @@ public class SpringPipelineIgnoredEvent extends ApplicationEvent implements Pipe
         this.event = event;
     }
 
-    @Override
-    public boolean isSuccess() {
-        return event.isSuccess();
-    }
 
     @Override
     public String toString() {

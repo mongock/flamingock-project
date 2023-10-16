@@ -22,10 +22,6 @@ public class SpringPipelineFailedEvent extends ApplicationEvent implements Pipel
         return event.getException();
     }
 
-    @Override
-    public boolean isSuccess() {
-        return event.isSuccess();
-    }
 
 
     @Override

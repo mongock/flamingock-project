@@ -4,6 +4,7 @@ import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.audit.single.SingleAuditReader;
 import io.flamingock.core.audit.single.SingleAuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.event.model.PipelineFailedEvent;
 import io.flamingock.core.event.model.PipelineIgnoredEvent;
 import io.flamingock.core.event.model.PipelineStartedEvent;
 import io.flamingock.core.lock.Lock;
@@ -70,7 +71,7 @@ public abstract class AbstractRunner implements Runner {
             }
 
         } catch (LockException exception) {
-            eventPublisher.publishPipelineFailedEvent(exception);
+            eventPublisher.publishPipelineFailedEvent(() -> exception);
             if (throwExceptionIfCannotObtainLock) {
                 logger.error("Required process lock not acquired. ABORTED OPERATION", exception);
                 throw exception;
@@ -79,15 +80,15 @@ public abstract class AbstractRunner implements Runner {
                 logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" + "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" + "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
             }
 
-        } catch (StageExecutionException stageExecutionException) {
-            logger.info("Process summary\n{}", stageExecutionException.getSummary().getPretty());
-            eventPublisher.publishPipelineFailedEvent(stageExecutionException);
-            throw stageExecutionException;
-        } catch (Exception exception) {
-            FlamingockException coreEx = exception instanceof FlamingockException ? (FlamingockException) exception : new FlamingockException(exception);
-            logger.error("Error executing the process. ABORTED OPERATION", coreEx);
-            eventPublisher.publishPipelineFailedEvent(coreEx);
-            throw coreEx;
+        } catch (StageExecutionException exception) {
+            logger.info("Process summary\n{}", exception.getSummary().getPretty());
+            eventPublisher.publishPipelineFailedEvent(() -> exception);
+            throw exception;
+        } catch (Exception generalException) {
+            FlamingockException exception = generalException instanceof FlamingockException ? (FlamingockException) generalException : new FlamingockException(generalException);
+            logger.error("Error executing the process. ABORTED OPERATION", exception);
+            eventPublisher.publishPipelineFailedEvent(() -> exception);
+            throw exception;
         }
     }
 

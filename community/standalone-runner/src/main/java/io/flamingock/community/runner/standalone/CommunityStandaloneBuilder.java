@@ -85,7 +85,7 @@ public class CommunityStandaloneBuilder
                 getMigrationStartedListener() != null ? event -> getMigrationStartedListener().accept(event) : null,
                 getMigrationSuccessListener() != null ? event -> getMigrationSuccessListener().accept(event) : null,
                 getPipelineIgnoredListener() != null ? event -> getPipelineIgnoredListener().accept(event) : null,
-                getMigrationFailureListener() != null ? exception -> getMigrationFailureListener().accept(() -> exception) : null);
+                getMigrationFailureListener() != null ? event -> getMigrationFailureListener().accept(event) : null);
     }
 
     @NotNull

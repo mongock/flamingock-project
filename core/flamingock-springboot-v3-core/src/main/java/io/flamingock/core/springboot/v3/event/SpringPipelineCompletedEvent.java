@@ -27,12 +27,6 @@ public class SpringPipelineCompletedEvent extends ApplicationEvent implements Pi
         "} " + super.toString();
   }
 
-
-  @Override
-  public boolean isSuccess() {
-    return event.isSuccess();
-  }
-
   @Override
   public Object getResult() {
     return event.getResult();
