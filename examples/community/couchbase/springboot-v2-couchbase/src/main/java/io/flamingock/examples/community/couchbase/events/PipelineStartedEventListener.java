@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class StartedEventListener implements ApplicationListener<SpringPipelineStartedEvent> {
-    private final Logger logger = LoggerFactory.getLogger(StartedEventListener.class);
+public class PipelineStartedEventListener implements ApplicationListener<SpringPipelineStartedEvent> {
+    private final Logger logger = LoggerFactory.getLogger(PipelineStartedEventListener.class);
     public boolean executed = false;
 
     @Override

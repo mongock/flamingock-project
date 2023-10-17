@@ -81,11 +81,11 @@ public class CommunityStandaloneBuilder
 
     @NotNull
     private EventPublisher buildEventPublisher() {
-        return new EventPublisher(
-                getMigrationStartedListener() != null ? event -> getMigrationStartedListener().accept(event) : null,
-                getMigrationSuccessListener() != null ? event -> getMigrationSuccessListener().accept(event) : null,
-                getPipelineIgnoredListener() != null ? event -> getPipelineIgnoredListener().accept(event) : null,
-                getMigrationFailureListener() != null ? event -> getMigrationFailureListener().accept(event) : null);
+        return new EventPublisher()
+                .listenPipelineStarted(getPipelineStartedListener())
+                .listenPipelineCompleted(getPipelineCompletedListener())
+                .listenPipelineIgnored(getPipelineIgnoredListener())
+                .listenPipelineFailed(getPipelineFailureListener());
     }
 
     @NotNull
@@ -312,13 +312,13 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationStartedListener(Consumer<PipelineStartedEvent> listener) {
-        return standaloneConfiguratorDelegate.setMigrationStartedListener(listener);
+    public CommunityStandaloneBuilder setPipelineStartedListener(Consumer<PipelineStartedEvent> listener) {
+        return standaloneConfiguratorDelegate.setPipelineStartedListener(listener);
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationSuccessListener(Consumer<PipelineCompletedEvent> listener) {
-        return standaloneConfiguratorDelegate.setMigrationSuccessListener(listener);
+    public CommunityStandaloneBuilder setPipelineCompletedListener(Consumer<PipelineCompletedEvent> listener) {
+        return standaloneConfiguratorDelegate.setPipelineCompletedListener(listener);
     }
 
     @Override
@@ -327,18 +327,18 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setMigrationFailureListener(Consumer<PipelineFailedEvent> listener) {
-        return standaloneConfiguratorDelegate.setMigrationFailureListener(listener);
+    public CommunityStandaloneBuilder setPipelineFailureListener(Consumer<PipelineFailedEvent> listener) {
+        return standaloneConfiguratorDelegate.setPipelineFailureListener(listener);
     }
 
     @Override
-    public Consumer<PipelineStartedEvent> getMigrationStartedListener() {
-        return standaloneConfiguratorDelegate.getMigrationStartedListener();
+    public Consumer<PipelineStartedEvent> getPipelineStartedListener() {
+        return standaloneConfiguratorDelegate.getPipelineStartedListener();
     }
 
     @Override
-    public Consumer<PipelineCompletedEvent> getMigrationSuccessListener() {
-        return standaloneConfiguratorDelegate.getMigrationSuccessListener();
+    public Consumer<PipelineCompletedEvent> getPipelineCompletedListener() {
+        return standaloneConfiguratorDelegate.getPipelineCompletedListener();
     }
 
     @Override
@@ -348,7 +348,7 @@ public class CommunityStandaloneBuilder
 
 
     @Override
-    public Consumer<PipelineFailedEvent> getMigrationFailureListener() {
-        return standaloneConfiguratorDelegate.getMigrationFailureListener();
+    public Consumer<PipelineFailedEvent> getPipelineFailureListener() {
+        return standaloneConfiguratorDelegate.getPipelineFailureListener();
     }
 }

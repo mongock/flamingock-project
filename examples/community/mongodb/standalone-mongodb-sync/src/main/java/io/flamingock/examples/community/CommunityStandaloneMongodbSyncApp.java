@@ -38,9 +38,9 @@ public class CommunityStandaloneMongodbSyncApp {
                 .addDependency(mongoClient.getDatabase(databaseName))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
-                .setMigrationStartedListener(new StartedEventListener())
-                .setMigrationSuccessListener(new CompletedEventListener())
-                .setMigrationFailureListener(new FailureEventListener())
+                .setPipelineStartedListener(new StartedEventListener())
+                .setPipelineCompletedListener(new CompletedEventListener())
+                .setPipelineFailureListener(new FailureEventListener())
                 .build()
                 .run();
     }

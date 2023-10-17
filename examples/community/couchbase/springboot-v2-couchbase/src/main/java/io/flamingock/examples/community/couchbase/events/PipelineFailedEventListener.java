@@ -5,9 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class FailureEventListener implements ApplicationListener<SpringPipelineFailedEvent> {
+public class PipelineFailedEventListener implements ApplicationListener<SpringPipelineFailedEvent> {
 
-    private final Logger logger = LoggerFactory.getLogger(FailureEventListener.class);
+    private final Logger logger = LoggerFactory.getLogger(PipelineFailedEventListener.class);
 
     public boolean executed = false;
 

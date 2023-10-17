@@ -1,9 +1,9 @@
 package io.flamingock.examples.community.couchbase;
 
 import io.flamingock.community.runner.springboot.v2.EnableFlamingock;
-import io.flamingock.examples.community.couchbase.events.FailureEventListener;
-import io.flamingock.examples.community.couchbase.events.StartedEventListener;
-import io.flamingock.examples.community.couchbase.events.SuccessEventListener;
+import io.flamingock.examples.community.couchbase.events.PipelineFailedEventListener;
+import io.flamingock.examples.community.couchbase.events.PipelineStartedEventListener;
+import io.flamingock.examples.community.couchbase.events.PipelineCompletedEventListener;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,18 +18,18 @@ public class CommunitySpringbootV2CouchbaseApp {
     }
 
     @Bean
-    public StartedEventListener startFlamingockListener() {
-        return new StartedEventListener();
+    public PipelineStartedEventListener pipelineStartedEventListener() {
+        return new PipelineStartedEventListener();
     }
 
     @Bean
-    public SuccessEventListener successFlamingockListener() {
-        return new SuccessEventListener();
+    public PipelineCompletedEventListener pipelineCompletedEventListener() {
+        return new PipelineCompletedEventListener();
     }
 
     @Bean
-    public FailureEventListener sailedFlamingockListener() {
-        return new FailureEventListener();
+    public PipelineFailedEventListener pipelineFailedEventListener() {
+        return new PipelineFailedEventListener();
     }
 
 }

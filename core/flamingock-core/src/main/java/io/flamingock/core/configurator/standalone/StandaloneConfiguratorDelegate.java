@@ -52,13 +52,13 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public HOLDER setMigrationStartedListener(Consumer<PipelineStartedEvent> listener) {
+    public HOLDER setPipelineStartedListener(Consumer<PipelineStartedEvent> listener) {
         this.processStartedListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public HOLDER setMigrationSuccessListener(Consumer<PipelineCompletedEvent> listener) {
+    public HOLDER setPipelineCompletedListener(Consumer<PipelineCompletedEvent> listener) {
         this.processSuccessListener = listener;
         return holderSupplier.get();
     }
@@ -70,18 +70,18 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public HOLDER setMigrationFailureListener(Consumer<PipelineFailedEvent> listener) {
+    public HOLDER setPipelineFailureListener(Consumer<PipelineFailedEvent> listener) {
         this.processFailedListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public Consumer<PipelineStartedEvent> getMigrationStartedListener() {
+    public Consumer<PipelineStartedEvent> getPipelineStartedListener() {
         return processStartedListener;
     }
 
     @Override
-    public Consumer<PipelineCompletedEvent> getMigrationSuccessListener() {
+    public Consumer<PipelineCompletedEvent> getPipelineCompletedListener() {
         return processSuccessListener;
     }
 
@@ -91,7 +91,7 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public Consumer<PipelineFailedEvent> getMigrationFailureListener() {
+    public Consumer<PipelineFailedEvent> getPipelineFailureListener() {
         return processFailedListener;
     }
 

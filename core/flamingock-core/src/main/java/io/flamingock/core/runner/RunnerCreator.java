@@ -21,6 +21,9 @@ public final class RunnerCreator {
         return new StageExecutionContext(StringUtil.executionId(), StringUtil.hostname(), configuration.getDefaultAuthor(), configuration.getMetadata());
     }
 
+
+
+
     public static Runner create(Pipeline pipeline,
                                 SingleAuditReader auditReader,
                                 AuditWriter auditWriter,
@@ -32,7 +35,7 @@ public final class RunnerCreator {
                                 boolean isThrowExceptionIfCannotObtainLock) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final StageExecutor stageExecutor = new StageExecutor(dependencyContext, auditWriter, transactionWrapper);
-        return new AbstractRunner(lockAcquirer, auditReader, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
+        return new PipelineRunner(lockAcquirer, auditReader, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
             @Override
             public void run() {
                 this.run(pipeline);

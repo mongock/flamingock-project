@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class SuccessEventListener implements ApplicationListener<SpringPipelineCompletedEvent> {
-    private final Logger logger = LoggerFactory.getLogger(SuccessEventListener.class);
+public class PipelineCompletedEventListener implements ApplicationListener<SpringPipelineCompletedEvent> {
+    private final Logger logger = LoggerFactory.getLogger(PipelineCompletedEventListener.class);
     public boolean executed = false;
 
     @Override

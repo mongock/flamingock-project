@@ -87,12 +87,12 @@ public class CommunitySpringbootBuilder
 
     @NotNull
     private EventPublisher createEventPublisher() {
-        return new EventPublisher(
-                event -> getEventPublisher().publishEvent(new SpringPipelineStartedEvent(this, event)),
-                event -> getEventPublisher().publishEvent(new SpringPipelineCompletedEvent(this, event)),
-                event -> getEventPublisher().publishEvent(new SpringPipelineIgnoredEvent(this, event)),
-                event -> getEventPublisher().publishEvent(new SpringPipelineFailedEvent(this, event))
-        );
+
+        return new EventPublisher()
+                .listenPipelineStarted(e-> getEventPublisher().publishEvent(new SpringPipelineStartedEvent(this, e)))
+                .listenPipelineCompleted(e-> getEventPublisher().publishEvent(new SpringPipelineCompletedEvent(this, e)))
+                .listenPipelineIgnored(e-> getEventPublisher().publishEvent(new SpringPipelineIgnoredEvent(this, e)))
+                .listenPipelineFailed(e-> getEventPublisher().publishEvent(new SpringPipelineFailedEvent(this, e)));
     }
 
     @NotNull

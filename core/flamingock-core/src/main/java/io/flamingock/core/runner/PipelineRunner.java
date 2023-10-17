@@ -22,9 +22,9 @@ import io.flamingock.core.pipeline.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractRunner implements Runner {
+public abstract class PipelineRunner implements Runner {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractRunner.class);
+    private static final Logger logger = LoggerFactory.getLogger(PipelineRunner.class);
 
     private final LockAcquirer lockAcquirer;
 
@@ -39,7 +39,7 @@ public abstract class AbstractRunner implements Runner {
     private final StageExecutionContext stageExecutionContext;
 
 
-    public AbstractRunner(LockAcquirer lockAcquirer,
+    public PipelineRunner(LockAcquirer lockAcquirer,
                           SingleAuditReader auditReader,
                           StageExecutor stageExecutor,
                           StageExecutionContext stageExecutionContext,

@@ -50,25 +50,25 @@ public interface StandaloneConfigurator<HOLDER> {
     HOLDER addDependency(String name, Class<?> type, Object instance);
 
     //TODO javadoc
-    HOLDER setMigrationStartedListener(Consumer<PipelineStartedEvent> listener);
+    HOLDER setPipelineStartedListener(Consumer<PipelineStartedEvent> listener);
 
     //TODO javadoc
-    HOLDER setMigrationSuccessListener(Consumer<PipelineCompletedEvent> listener);
+    HOLDER setPipelineCompletedListener(Consumer<PipelineCompletedEvent> listener);
 
     //TODO javadoc
     HOLDER setPipelineIgnoredListener(Consumer<PipelineIgnoredEvent> listener);
 
     //TODO javadoc
-    HOLDER setMigrationFailureListener(Consumer<PipelineFailedEvent> listener);
+    HOLDER setPipelineFailureListener(Consumer<PipelineFailedEvent> listener);
 
-    Consumer<PipelineStartedEvent> getMigrationStartedListener();
+    Consumer<PipelineStartedEvent> getPipelineStartedListener();
 
     //TODO javadoc
-    Consumer<PipelineCompletedEvent> getMigrationSuccessListener();
+    Consumer<PipelineCompletedEvent> getPipelineCompletedListener();
 
     //TODO javadoc
     Consumer<PipelineIgnoredEvent> getPipelineIgnoredListener();
 
     //TODO javadoc
-    Consumer<PipelineFailedEvent> getMigrationFailureListener();
+    Consumer<PipelineFailedEvent> getPipelineFailureListener();
 }
