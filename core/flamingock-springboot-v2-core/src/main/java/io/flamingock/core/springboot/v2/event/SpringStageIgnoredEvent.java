@@ -2,11 +2,12 @@ package io.flamingock.core.springboot.v2.event;
 
 
 import io.flamingock.core.event.model.IPipelineIgnoredEvent;
+import io.flamingock.core.event.model.IStageIgnoredEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringPipelineIgnoredEvent extends ApplicationEvent implements IPipelineIgnoredEvent {
+public class SpringStageIgnoredEvent extends ApplicationEvent implements IPipelineIgnoredEvent {
 
-    private final IPipelineIgnoredEvent event;
+    private final IStageIgnoredEvent event;
 
     /**
      * Create a new {@code ApplicationEvent}.
@@ -14,7 +15,7 @@ public class SpringPipelineIgnoredEvent extends ApplicationEvent implements IPip
      * @param source the object on which the event initially occurred or with
      *               which the event is associated (never {@code null})
      */
-    public SpringPipelineIgnoredEvent(Object source, IPipelineIgnoredEvent event) {
+    public SpringStageIgnoredEvent(Object source, IStageIgnoredEvent event) {
         super(source);
         this.event = event;
     }

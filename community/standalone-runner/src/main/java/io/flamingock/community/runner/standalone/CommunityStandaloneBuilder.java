@@ -13,11 +13,15 @@ import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.standalone.StandaloneConfigurator;
 import io.flamingock.core.configurator.standalone.StandaloneConfiguratorDelegate;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.event.model.PipelineCompletedEvent;
-import io.flamingock.core.event.model.PipelineFailedEvent;
+import io.flamingock.core.event.model.IPipelineCompletedEvent;
+import io.flamingock.core.event.model.IPipelineFailedEvent;
 
-import io.flamingock.core.event.model.PipelineIgnoredEvent;
-import io.flamingock.core.event.model.PipelineStartedEvent;
+import io.flamingock.core.event.model.IPipelineIgnoredEvent;
+import io.flamingock.core.event.model.IPipelineStartedEvent;
+import io.flamingock.core.event.model.IStageCompletedEvent;
+import io.flamingock.core.event.model.IStageFailedEvent;
+import io.flamingock.core.event.model.IStageIgnoredEvent;
+import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerBuilder;
@@ -82,10 +86,17 @@ public class CommunityStandaloneBuilder
     @NotNull
     private EventPublisher buildEventPublisher() {
         return new EventPublisher()
-                .listenPipelineStarted(getPipelineStartedListener())
-                .listenPipelineCompleted(getPipelineCompletedListener())
-                .listenPipelineIgnored(getPipelineIgnoredListener())
-                .listenPipelineFailed(getPipelineFailureListener());
+                //pipeline events
+                .addListener(IPipelineStartedEvent.class, getPipelineStartedListener())
+                .addListener(IPipelineCompletedEvent.class, getPipelineCompletedListener())
+                .addListener(IPipelineIgnoredEvent.class, getPipelineIgnoredListener())
+                .addListener(IPipelineFailedEvent.class, getPipelineFailureListener())
+                //stage events
+                .addListener(IStageStartedEvent.class, getStageStartedListener())
+                .addListener(IStageCompletedEvent.class, getStageCompletedListener())
+                .addListener(IStageIgnoredEvent.class, getStageIgnoredListener())
+                .addListener(IStageFailedEvent.class, getStageFailureListener())
+                ;
     }
 
     @NotNull
@@ -312,43 +323,83 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setPipelineStartedListener(Consumer<PipelineStartedEvent> listener) {
+    public CommunityStandaloneBuilder setPipelineStartedListener(Consumer<IPipelineStartedEvent> listener) {
         return standaloneConfiguratorDelegate.setPipelineStartedListener(listener);
     }
 
     @Override
-    public CommunityStandaloneBuilder setPipelineCompletedListener(Consumer<PipelineCompletedEvent> listener) {
+    public CommunityStandaloneBuilder setPipelineCompletedListener(Consumer<IPipelineCompletedEvent> listener) {
         return standaloneConfiguratorDelegate.setPipelineCompletedListener(listener);
     }
 
     @Override
-    public CommunityStandaloneBuilder setPipelineIgnoredListener(Consumer<PipelineIgnoredEvent> listener) {
+    public CommunityStandaloneBuilder setPipelineIgnoredListener(Consumer<IPipelineIgnoredEvent> listener) {
         return standaloneConfiguratorDelegate.setPipelineIgnoredListener(listener);
     }
 
     @Override
-    public CommunityStandaloneBuilder setPipelineFailureListener(Consumer<PipelineFailedEvent> listener) {
+    public CommunityStandaloneBuilder setPipelineFailureListener(Consumer<IPipelineFailedEvent> listener) {
         return standaloneConfiguratorDelegate.setPipelineFailureListener(listener);
     }
 
     @Override
-    public Consumer<PipelineStartedEvent> getPipelineStartedListener() {
+    public CommunityStandaloneBuilder setStageStartedListener(Consumer<IStageStartedEvent> listener) {
+        return standaloneConfiguratorDelegate.setStageStartedListener(listener);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder setStageCompletedListener(Consumer<IStageCompletedEvent> listener) {
+        return standaloneConfiguratorDelegate.setStageCompletedListener(listener);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder setStageIgnoredListener(Consumer<IStageIgnoredEvent> listener) {
+        return standaloneConfiguratorDelegate.setStageIgnoredListener(listener);
+    }
+
+    @Override
+    public CommunityStandaloneBuilder setStageFailureListener(Consumer<IStageFailedEvent> listener) {
+        return standaloneConfiguratorDelegate.setStageFailureListener(listener);
+    }
+
+    @Override
+    public Consumer<IPipelineStartedEvent> getPipelineStartedListener() {
         return standaloneConfiguratorDelegate.getPipelineStartedListener();
     }
 
     @Override
-    public Consumer<PipelineCompletedEvent> getPipelineCompletedListener() {
+    public Consumer<IPipelineCompletedEvent> getPipelineCompletedListener() {
         return standaloneConfiguratorDelegate.getPipelineCompletedListener();
     }
 
     @Override
-    public Consumer<PipelineIgnoredEvent> getPipelineIgnoredListener() {
+    public Consumer<IPipelineIgnoredEvent> getPipelineIgnoredListener() {
         return standaloneConfiguratorDelegate.getPipelineIgnoredListener();
     }
 
 
     @Override
-    public Consumer<PipelineFailedEvent> getPipelineFailureListener() {
+    public Consumer<IPipelineFailedEvent> getPipelineFailureListener() {
         return standaloneConfiguratorDelegate.getPipelineFailureListener();
+    }
+
+    @Override
+    public Consumer<IStageStartedEvent> getStageStartedListener() {
+        return standaloneConfiguratorDelegate.getStageStartedListener();
+    }
+
+    @Override
+    public Consumer<IStageCompletedEvent> getStageCompletedListener() {
+        return standaloneConfiguratorDelegate.getStageCompletedListener();
+    }
+
+    @Override
+    public Consumer<IStageIgnoredEvent> getStageIgnoredListener() {
+        return standaloneConfiguratorDelegate.getStageIgnoredListener();
+    }
+
+    @Override
+    public Consumer<IStageFailedEvent> getStageFailureListener() {
+        return standaloneConfiguratorDelegate.getStageFailureListener();
     }
 }

@@ -2,15 +2,10 @@ package io.flamingock.core.event;
 
 
 import io.flamingock.core.event.model.Event;
-import io.flamingock.core.event.model.PipelineCompletedEvent;
-import io.flamingock.core.event.model.PipelineFailedEvent;
-import io.flamingock.core.event.model.PipelineIgnoredEvent;
-import io.flamingock.core.event.model.PipelineStartedEvent;
 import io.flamingock.core.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,26 +20,30 @@ public class EventPublisher {
     public EventPublisher() {
     }
 
-    public EventPublisher listenPipelineStarted(Consumer<PipelineStartedEvent> listener) {
-        return addListener(PipelineStartedEvent.class, listener);
+    public <T extends Event> EventPublisher addListener(Class<T> eventType, Consumer<T> listener) {
+        return addListenerInternal(eventType, listener);
     }
 
-    public EventPublisher listenPipelineCompleted(Consumer<PipelineCompletedEvent> listener) {
-        return addListener(PipelineCompletedEvent.class, listener);
+//    public EventPublisher listenPipelineStarted(Consumer<PipelineStartedEvent> listener) {
+//        return addListenerInternal(PipelineStartedEvent.class, listener);
+//    }
+//
+//    public EventPublisher listenPipelineCompleted(Consumer<PipelineCompletedEvent> listener) {
+//        return addListenerInternal(PipelineCompletedEvent.class, listener);
+//
+//    }
+//
+//    public EventPublisher listenPipelineIgnored(Consumer<PipelineIgnoredEvent> listener) {
+//        return addListenerInternal(PipelineIgnoredEvent.class, listener);
+//
+//    }
+//
+//    public EventPublisher listenPipelineFailed(Consumer<PipelineFailedEvent> listener) {
+//        return addListenerInternal(PipelineFailedEvent.class, listener);
+//
+//    }
 
-    }
-
-    public EventPublisher listenPipelineIgnored(Consumer<PipelineIgnoredEvent> listener) {
-        return addListener(PipelineIgnoredEvent.class, listener);
-
-    }
-
-    public EventPublisher listenPipelineFailed(Consumer<PipelineFailedEvent> listener) {
-        return addListener(PipelineFailedEvent.class, listener);
-
-    }
-
-    private EventPublisher addListener(Class<? extends Event> eventType, Consumer<? extends Event> listener) {
+    private EventPublisher addListenerInternal(Class<? extends Event> eventType, Consumer<? extends Event> listener) {
         if(listener != null) {
             listeners.add(new Pair<>(eventType, listener));
         }

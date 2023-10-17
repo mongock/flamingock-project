@@ -1,16 +1,16 @@
 package io.flamingock.examples.community.events;
 
 
-import io.flamingock.core.event.model.PipelineCompletedEvent;
+import io.flamingock.core.event.model.IPipelineCompletedEvent;
 
 import java.util.function.Consumer;
 
-public class CompletedEventListener implements Consumer<PipelineCompletedEvent> {
+public class CompletedEventListener implements Consumer<IPipelineCompletedEvent> {
 
     public static boolean executed = false;
 
     @Override
-    public void accept(PipelineCompletedEvent event) {
+    public void accept(IPipelineCompletedEvent event) {
         executed = true;
     }
 }

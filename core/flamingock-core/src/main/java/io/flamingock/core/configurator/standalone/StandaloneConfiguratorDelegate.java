@@ -1,9 +1,13 @@
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.event.model.PipelineCompletedEvent;
-import io.flamingock.core.event.model.PipelineFailedEvent;
-import io.flamingock.core.event.model.PipelineIgnoredEvent;
-import io.flamingock.core.event.model.PipelineStartedEvent;
+import io.flamingock.core.event.model.IPipelineCompletedEvent;
+import io.flamingock.core.event.model.IPipelineFailedEvent;
+import io.flamingock.core.event.model.IPipelineIgnoredEvent;
+import io.flamingock.core.event.model.IPipelineStartedEvent;
+import io.flamingock.core.event.model.IStageCompletedEvent;
+import io.flamingock.core.event.model.IStageFailedEvent;
+import io.flamingock.core.event.model.IStageIgnoredEvent;
+import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
@@ -15,10 +19,14 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
 
     private final DependencyInjectableContext dependencyManager;
     private final Supplier<HOLDER> holderSupplier;
-    private Consumer<PipelineStartedEvent> processStartedListener;
-    private Consumer<PipelineCompletedEvent> processSuccessListener;
-    private Consumer<PipelineIgnoredEvent> processIgnoredListener;
-    private Consumer<PipelineFailedEvent> processFailedListener;
+    private Consumer<IPipelineStartedEvent> pipelineStartedListener;
+    private Consumer<IPipelineCompletedEvent> pipelineCompletedListener;
+    private Consumer<IPipelineIgnoredEvent> pipelineIgnoredListener;
+    private Consumer<IPipelineFailedEvent> pipelineFailedListener;
+    private Consumer<IStageStartedEvent> stageStartedListener;
+    private Consumer<IStageCompletedEvent> stageCompletedListener;
+    private Consumer<IStageIgnoredEvent> stageIgnoredListener;
+    private Consumer<IStageFailedEvent> stageFailedListener;
 
     public StandaloneConfiguratorDelegate(DependencyInjectableContext dependencyManager, Supplier<HOLDER> holderSupplier) {
         this.dependencyManager = dependencyManager;
@@ -52,47 +60,91 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public HOLDER setPipelineStartedListener(Consumer<PipelineStartedEvent> listener) {
-        this.processStartedListener = listener;
+    public HOLDER setPipelineStartedListener(Consumer<IPipelineStartedEvent> listener) {
+        this.pipelineStartedListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public HOLDER setPipelineCompletedListener(Consumer<PipelineCompletedEvent> listener) {
-        this.processSuccessListener = listener;
+    public HOLDER setPipelineCompletedListener(Consumer<IPipelineCompletedEvent> listener) {
+        this.pipelineCompletedListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public HOLDER setPipelineIgnoredListener(Consumer<PipelineIgnoredEvent> listener) {
-        this.processIgnoredListener = listener;
+    public HOLDER setPipelineIgnoredListener(Consumer<IPipelineIgnoredEvent> listener) {
+        this.pipelineIgnoredListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public HOLDER setPipelineFailureListener(Consumer<PipelineFailedEvent> listener) {
-        this.processFailedListener = listener;
+    public HOLDER setPipelineFailureListener(Consumer<IPipelineFailedEvent> listener) {
+        this.pipelineFailedListener = listener;
         return holderSupplier.get();
     }
 
     @Override
-    public Consumer<PipelineStartedEvent> getPipelineStartedListener() {
-        return processStartedListener;
+    public HOLDER setStageStartedListener(Consumer<IStageStartedEvent> listener) {
+        this.stageStartedListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
-    public Consumer<PipelineCompletedEvent> getPipelineCompletedListener() {
-        return processSuccessListener;
+    public HOLDER setStageCompletedListener(Consumer<IStageCompletedEvent> listener) {
+        this.stageCompletedListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
-    public Consumer<PipelineIgnoredEvent> getPipelineIgnoredListener() {
-        return processIgnoredListener;
+    public HOLDER setStageIgnoredListener(Consumer<IStageIgnoredEvent> listener) {
+        this.stageIgnoredListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
-    public Consumer<PipelineFailedEvent> getPipelineFailureListener() {
-        return processFailedListener;
+    public HOLDER setStageFailureListener(Consumer<IStageFailedEvent> listener) {
+        this.stageFailedListener = listener;
+        return holderSupplier.get();
+    }
+
+    @Override
+    public Consumer<IPipelineStartedEvent> getPipelineStartedListener() {
+        return pipelineStartedListener;
+    }
+
+    @Override
+    public Consumer<IPipelineCompletedEvent> getPipelineCompletedListener() {
+        return pipelineCompletedListener;
+    }
+
+    @Override
+    public Consumer<IPipelineIgnoredEvent> getPipelineIgnoredListener() {
+        return pipelineIgnoredListener;
+    }
+
+    @Override
+    public Consumer<IPipelineFailedEvent> getPipelineFailureListener() {
+        return pipelineFailedListener;
+    }
+
+    @Override
+    public Consumer<IStageStartedEvent> getStageStartedListener() {
+        return stageStartedListener;
+    }
+
+    @Override
+    public Consumer<IStageCompletedEvent> getStageCompletedListener() {
+        return stageCompletedListener;
+    }
+
+    @Override
+    public Consumer<IStageIgnoredEvent> getStageIgnoredListener() {
+        return stageIgnoredListener;
+    }
+
+    @Override
+    public Consumer<IStageFailedEvent> getStageFailureListener() {
+        return stageFailedListener;
     }
 
 }

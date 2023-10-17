@@ -1,10 +1,14 @@
 package io.flamingock.core.configurator.standalone;
 
 
-import io.flamingock.core.event.model.PipelineCompletedEvent;
-import io.flamingock.core.event.model.PipelineFailedEvent;
-import io.flamingock.core.event.model.PipelineIgnoredEvent;
-import io.flamingock.core.event.model.PipelineStartedEvent;
+import io.flamingock.core.event.model.IPipelineCompletedEvent;
+import io.flamingock.core.event.model.IPipelineFailedEvent;
+import io.flamingock.core.event.model.IPipelineIgnoredEvent;
+import io.flamingock.core.event.model.IPipelineStartedEvent;
+import io.flamingock.core.event.model.IStageCompletedEvent;
+import io.flamingock.core.event.model.IStageFailedEvent;
+import io.flamingock.core.event.model.IStageIgnoredEvent;
+import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 
 import java.util.function.Consumer;
@@ -50,25 +54,48 @@ public interface StandaloneConfigurator<HOLDER> {
     HOLDER addDependency(String name, Class<?> type, Object instance);
 
     //TODO javadoc
-    HOLDER setPipelineStartedListener(Consumer<PipelineStartedEvent> listener);
+    HOLDER setPipelineStartedListener(Consumer<IPipelineStartedEvent> listener);
 
     //TODO javadoc
-    HOLDER setPipelineCompletedListener(Consumer<PipelineCompletedEvent> listener);
+    HOLDER setPipelineCompletedListener(Consumer<IPipelineCompletedEvent> listener);
 
     //TODO javadoc
-    HOLDER setPipelineIgnoredListener(Consumer<PipelineIgnoredEvent> listener);
+    HOLDER setPipelineIgnoredListener(Consumer<IPipelineIgnoredEvent> listener);
 
     //TODO javadoc
-    HOLDER setPipelineFailureListener(Consumer<PipelineFailedEvent> listener);
-
-    Consumer<PipelineStartedEvent> getPipelineStartedListener();
+    HOLDER setPipelineFailureListener(Consumer<IPipelineFailedEvent> listener);
 
     //TODO javadoc
-    Consumer<PipelineCompletedEvent> getPipelineCompletedListener();
+    HOLDER setStageStartedListener(Consumer<IStageStartedEvent> listener);
 
     //TODO javadoc
-    Consumer<PipelineIgnoredEvent> getPipelineIgnoredListener();
+    HOLDER setStageCompletedListener(Consumer<IStageCompletedEvent> listener);
 
     //TODO javadoc
-    Consumer<PipelineFailedEvent> getPipelineFailureListener();
+    HOLDER setStageIgnoredListener(Consumer<IStageIgnoredEvent> listener);
+
+    //TODO javadoc
+    HOLDER setStageFailureListener(Consumer<IStageFailedEvent> listener);
+
+    Consumer<IPipelineStartedEvent> getPipelineStartedListener();
+
+    //TODO javadoc
+    Consumer<IPipelineCompletedEvent> getPipelineCompletedListener();
+
+    //TODO javadoc
+    Consumer<IPipelineIgnoredEvent> getPipelineIgnoredListener();
+
+    //TODO javadoc
+    Consumer<IPipelineFailedEvent> getPipelineFailureListener();
+
+    Consumer<IStageStartedEvent> getStageStartedListener();
+
+    //TODO javadoc
+    Consumer<IStageCompletedEvent> getStageCompletedListener();
+
+    //TODO javadoc
+    Consumer<IStageIgnoredEvent> getStageIgnoredListener();
+
+    //TODO javadoc
+    Consumer<IStageFailedEvent> getStageFailureListener();
 }

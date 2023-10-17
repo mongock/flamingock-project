@@ -1,10 +1,11 @@
 package io.flamingock.core.springboot.v3.event;
 
 import io.flamingock.core.event.model.IPipelineFailedEvent;
+import io.flamingock.core.event.model.IStageFailedEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringPipelineFailedEvent extends ApplicationEvent implements IPipelineFailedEvent {
-    private final IPipelineFailedEvent event;
+public class SpringStageFailedEvent extends ApplicationEvent implements IPipelineFailedEvent {
+    private final IStageFailedEvent event;
 
     /**
      * Create a new {@code ApplicationEvent}.
@@ -12,18 +13,9 @@ public class SpringPipelineFailedEvent extends ApplicationEvent implements IPipe
      * @param source the object on which the event initially occurred or with
      *               which the event is associated (never {@code null})
      */
-    public SpringPipelineFailedEvent(Object source, IPipelineFailedEvent event) {
+    public SpringStageFailedEvent(Object source, IStageFailedEvent event) {
         super(source);
         this.event = event;
-    }
-
-
-    @Override
-    public String toString() {
-        return "SpringMigrationFailureEvent{" +
-                "migrationResult=" + event +
-                ", source=" + source +
-                "} " + super.toString();
     }
 
     @Override
@@ -32,4 +24,12 @@ public class SpringPipelineFailedEvent extends ApplicationEvent implements IPipe
     }
 
 
+
+    @Override
+    public String toString() {
+        return "SpringPipelineFailedEvent{" +
+                "event=" + event +
+                ", source=" + source +
+                '}';
+    }
 }

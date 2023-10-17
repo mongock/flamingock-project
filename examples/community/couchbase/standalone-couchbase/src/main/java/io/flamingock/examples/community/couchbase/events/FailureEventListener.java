@@ -1,15 +1,15 @@
 package io.flamingock.examples.community.couchbase.events;
 
-import io.flamingock.core.event.model.PipelineFailedEvent;
+import io.flamingock.core.event.model.IPipelineFailedEvent;
 
 import java.util.function.Consumer;
 
-public class FailureEventListener implements Consumer<PipelineFailedEvent> {
+public class FailureEventListener implements Consumer<IPipelineFailedEvent> {
 
     public static boolean executed = false;
 
     @Override
-    public void accept(PipelineFailedEvent migrationStartedEvent) {
+    public void accept(IPipelineFailedEvent migrationStartedEvent) {
         executed = true;
     }
 }

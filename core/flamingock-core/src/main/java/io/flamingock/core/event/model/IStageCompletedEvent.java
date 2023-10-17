@@ -1,6 +1,6 @@
 package io.flamingock.core.event.model;
 
-public interface PipelineCompletedEvent extends Event {
+public interface IStageCompletedEvent extends Event {
 
   Object getResult();
 }

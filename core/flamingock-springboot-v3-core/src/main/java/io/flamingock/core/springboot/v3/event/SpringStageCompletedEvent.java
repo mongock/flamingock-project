@@ -2,11 +2,12 @@ package io.flamingock.core.springboot.v3.event;
 
 
 import io.flamingock.core.event.model.IPipelineCompletedEvent;
+import io.flamingock.core.event.model.IStageCompletedEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringPipelineCompletedEvent extends ApplicationEvent implements IPipelineCompletedEvent {
+public class SpringStageCompletedEvent extends ApplicationEvent implements IPipelineCompletedEvent {
 
-  private final IPipelineCompletedEvent event;
+  private final IStageCompletedEvent event;
 
   /**
    * Create a new {@code ApplicationEvent}.
@@ -14,7 +15,7 @@ public class SpringPipelineCompletedEvent extends ApplicationEvent implements IP
    * @param source the object on which the event initially occurred or with
    *               which the event is associated (never {@code null})
    */
-  public SpringPipelineCompletedEvent(Object source, IPipelineCompletedEvent event) {
+  public SpringStageCompletedEvent(Object source, IStageCompletedEvent event) {
     super(source);
     this.event = event;
   }
@@ -22,8 +23,9 @@ public class SpringPipelineCompletedEvent extends ApplicationEvent implements IP
 
   @Override
   public String toString() {
-    return "SpringMigrationSuccessEvent{" +
-        "migrationResult=" + event +
-        "} " + super.toString();
+    return "SpringPipelineCompletedEvent{" +
+            "event=" + event +
+            ", source=" + source +
+            '}';
   }
 }

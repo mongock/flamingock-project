@@ -11,6 +11,14 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.event.model.IPipelineCompletedEvent;
+import io.flamingock.core.event.model.IPipelineFailedEvent;
+import io.flamingock.core.event.model.IPipelineIgnoredEvent;
+import io.flamingock.core.event.model.IPipelineStartedEvent;
+import io.flamingock.core.event.model.IStageCompletedEvent;
+import io.flamingock.core.event.model.IStageFailedEvent;
+import io.flamingock.core.event.model.IStageIgnoredEvent;
+import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerCreator;
@@ -27,6 +35,10 @@ import io.flamingock.core.springboot.v3.SpringProfileFilter;
 import io.flamingock.core.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.core.springboot.v3.SpringUtil;
 import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.springboot.v3.event.SpringStageCompletedEvent;
+import io.flamingock.core.springboot.v3.event.SpringStageFailedEvent;
+import io.flamingock.core.springboot.v3.event.SpringStageIgnoredEvent;
+import io.flamingock.core.springboot.v3.event.SpringStageStartedEvent;
 import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -89,10 +101,16 @@ public class CommunitySpringbootBuilder
     private EventPublisher createEventPublisher() {
 
         return new EventPublisher()
-                .listenPipelineStarted(e-> getEventPublisher().publishEvent(new SpringPipelineStartedEvent(this, e)))
-                .listenPipelineCompleted(e-> getEventPublisher().publishEvent(new SpringPipelineCompletedEvent(this, e)))
-                .listenPipelineIgnored(e-> getEventPublisher().publishEvent(new SpringPipelineIgnoredEvent(this, e)))
-                .listenPipelineFailed(e-> getEventPublisher().publishEvent(new SpringPipelineFailedEvent(this, e)));
+                //pipeline
+                .addListener(IPipelineStartedEvent.class, e-> getEventPublisher().publishEvent(new SpringPipelineStartedEvent(this, e)))
+                .addListener(IPipelineCompletedEvent.class, e-> getEventPublisher().publishEvent(new SpringPipelineCompletedEvent(this, e)))
+                .addListener(IPipelineIgnoredEvent.class, e-> getEventPublisher().publishEvent(new SpringPipelineIgnoredEvent(this, e)))
+                .addListener(IPipelineFailedEvent.class, e-> getEventPublisher().publishEvent(new SpringPipelineFailedEvent(this, e)))
+                //stage
+                .addListener(IStageStartedEvent.class, e-> getEventPublisher().publishEvent(new SpringStageStartedEvent(this, e)))
+                .addListener(IStageCompletedEvent.class, e-> getEventPublisher().publishEvent(new SpringStageCompletedEvent(this, e)))
+                .addListener(IStageIgnoredEvent.class, e-> getEventPublisher().publishEvent(new SpringStageIgnoredEvent(this, e)))
+                .addListener(IStageFailedEvent.class, e-> getEventPublisher().publishEvent(new SpringStageFailedEvent(this, e)));
     }
 
     @NotNull

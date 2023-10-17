@@ -1,10 +1,10 @@
 package io.flamingock.core.springboot.v2.event;
 
-import io.flamingock.core.event.model.PipelineFailedEvent;
+import io.flamingock.core.event.model.IPipelineFailedEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringPipelineFailedEvent extends ApplicationEvent implements PipelineFailedEvent {
-    private final PipelineFailedEvent event;
+public class SpringPipelineFailedEvent extends ApplicationEvent implements IPipelineFailedEvent {
+    private final IPipelineFailedEvent event;
 
     /**
      * Create a new {@code ApplicationEvent}.
@@ -12,7 +12,7 @@ public class SpringPipelineFailedEvent extends ApplicationEvent implements Pipel
      * @param source the object on which the event initially occurred or with
      *               which the event is associated (never {@code null})
      */
-    public SpringPipelineFailedEvent(Object source, PipelineFailedEvent event) {
+    public SpringPipelineFailedEvent(Object source, IPipelineFailedEvent event) {
         super(source);
         this.event = event;
     }
