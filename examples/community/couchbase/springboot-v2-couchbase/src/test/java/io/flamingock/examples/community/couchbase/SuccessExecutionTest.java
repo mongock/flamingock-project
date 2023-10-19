@@ -8,9 +8,9 @@ import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.QueryScanConsistency;
 import io.flamingock.examples.community.couchbase.config.CouchbaseInitializer;
-import io.flamingock.examples.community.couchbase.events.FailureEventListener;
-import io.flamingock.examples.community.couchbase.events.StartedEventListener;
-import io.flamingock.examples.community.couchbase.events.SuccessEventListener;
+import io.flamingock.examples.community.couchbase.events.PipelineFailedEventListener;
+import io.flamingock.examples.community.couchbase.events.PipelineStartedEventListener;
+import io.flamingock.examples.community.couchbase.events.PipelineCompletedEventListener;
 import io.flamingock.oss.driver.couchbase.internal.util.N1QLQueryProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,13 +41,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class SuccessExecutionTest {
 
     @Autowired
-    private StartedEventListener startedEventListener;
+    private PipelineStartedEventListener startedEventListener;
 
     @Autowired
-    private SuccessEventListener successEventListener;
+    private PipelineCompletedEventListener successEventListener;
 
     @Autowired
-    private FailureEventListener failureEventListener;
+    private PipelineFailedEventListener failureEventListener;
 
     @Autowired
     private Cluster cluster;

@@ -11,6 +11,14 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.event.model.IPipelineCompletedEvent;
+import io.flamingock.core.event.model.IPipelineFailedEvent;
+import io.flamingock.core.event.model.IPipelineIgnoredEvent;
+import io.flamingock.core.event.model.IPipelineStartedEvent;
+import io.flamingock.core.event.model.IStageCompletedEvent;
+import io.flamingock.core.event.model.IStageFailedEvent;
+import io.flamingock.core.event.model.IStageIgnoredEvent;
+import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerCreator;
@@ -18,14 +26,19 @@ import io.flamingock.core.springboot.v2.configurator.SpringRunnerType;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfiguration;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfigurator;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfiguratorDelegate;
-import io.flamingock.core.springboot.v2.event.SpringMigrationFailureEvent;
-import io.flamingock.core.springboot.v2.event.SpringMigrationStartedEvent;
-import io.flamingock.core.springboot.v2.event.SpringMigrationSuccessEvent;
+import io.flamingock.core.springboot.v2.event.SpringPipelineCompletedEvent;
+import io.flamingock.core.springboot.v2.event.SpringPipelineFailedEvent;
+import io.flamingock.core.springboot.v2.event.SpringPipelineIgnoredEvent;
+import io.flamingock.core.springboot.v2.event.SpringPipelineStartedEvent;
 import io.flamingock.core.springboot.v2.SpringDependencyContext;
 import io.flamingock.core.springboot.v2.SpringProfileFilter;
 import io.flamingock.core.springboot.v2.SpringRunnerBuilder;
 import io.flamingock.core.springboot.v2.SpringUtil;
 import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.springboot.v2.event.SpringStageCompletedEvent;
+import io.flamingock.core.springboot.v2.event.SpringStageFailedEvent;
+import io.flamingock.core.springboot.v2.event.SpringStageIgnoredEvent;
+import io.flamingock.core.springboot.v2.event.SpringStageStartedEvent;
 import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -86,11 +99,18 @@ public class CommunitySpringbootBuilder
 
     @NotNull
     private EventPublisher createEventPublisher() {
-        return new EventPublisher(
-                () -> getEventPublisher().publishEvent(new SpringMigrationStartedEvent(this)),
-                result -> getEventPublisher().publishEvent(new SpringMigrationSuccessEvent(this, result)),
-                result -> getEventPublisher().publishEvent(new SpringMigrationFailureEvent(this, result))
-        );
+
+        return new EventPublisher()
+                //pipeline
+                .addListener(IPipelineStartedEvent.class, e-> getEventPublisher().publishEvent(new SpringPipelineStartedEvent(this, e)))
+                .addListener(IPipelineCompletedEvent.class, e-> getEventPublisher().publishEvent(new SpringPipelineCompletedEvent(this, e)))
+                .addListener(IPipelineIgnoredEvent.class, e-> getEventPublisher().publishEvent(new SpringPipelineIgnoredEvent(this, e)))
+                .addListener(IPipelineFailedEvent.class, e-> getEventPublisher().publishEvent(new SpringPipelineFailedEvent(this, e)))
+                //stage
+                .addListener(IStageStartedEvent.class, e-> getEventPublisher().publishEvent(new SpringStageStartedEvent(this, e)))
+                .addListener(IStageCompletedEvent.class, e-> getEventPublisher().publishEvent(new SpringStageCompletedEvent(this, e)))
+                .addListener(IStageIgnoredEvent.class, e-> getEventPublisher().publishEvent(new SpringStageIgnoredEvent(this, e)))
+                .addListener(IStageFailedEvent.class, e-> getEventPublisher().publishEvent(new SpringStageFailedEvent(this, e)));
     }
 
     @NotNull

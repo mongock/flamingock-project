@@ -1,56 +1,71 @@
 package io.flamingock.core.event;
 
 
-import io.flamingock.core.event.result.MigrationSuccessResult;
+import io.flamingock.core.event.model.Event;
+import io.flamingock.core.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class EventPublisher {
 
-  private final Runnable migrationStartedListener;
-  private final Consumer<MigrationSuccessResult> migrationSuccessListener;
-  private final Consumer<Exception> migrationFailedListener;
+    private static final Logger logger = LoggerFactory.getLogger(EventPublisher.class);
 
+    private final List<Pair<Class<? extends Event>, Consumer<? extends Event>>> listeners = new ArrayList<>();
 
-  public EventPublisher() {
-    this(null, null, null);
-  }
-
-  public EventPublisher(Runnable migrationStartedListener,
-                        Consumer<MigrationSuccessResult> migrationSuccessListener,
-                        Consumer<Exception> migrationFailedListener) {
-    this.migrationSuccessListener = migrationSuccessListener;
-    this.migrationFailedListener = migrationFailedListener;
-    this.migrationStartedListener = migrationStartedListener;
-  }
-
-  public void publishMigrationStarted() {
-    if (migrationStartedListener != null) {
-      migrationStartedListener.run();
+    public EventPublisher() {
     }
-  }
 
-  public void publishMigrationSuccessEvent(MigrationSuccessResult migrationResult) {
-    if (migrationSuccessListener != null) {
-      migrationSuccessListener.accept(migrationResult);
+    public <T extends Event> EventPublisher addListener(Class<T> eventType, Consumer<T> listener) {
+        return addListenerInternal(eventType, listener);
     }
-  }
 
-  public void publishMigrationFailedEvent(Exception ex) {
-    if (migrationFailedListener != null) {
-      migrationFailedListener.accept(ex);
+//    public EventPublisher listenPipelineStarted(Consumer<PipelineStartedEvent> listener) {
+//        return addListenerInternal(PipelineStartedEvent.class, listener);
+//    }
+//
+//    public EventPublisher listenPipelineCompleted(Consumer<PipelineCompletedEvent> listener) {
+//        return addListenerInternal(PipelineCompletedEvent.class, listener);
+//
+//    }
+//
+//    public EventPublisher listenPipelineIgnored(Consumer<PipelineIgnoredEvent> listener) {
+//        return addListenerInternal(PipelineIgnoredEvent.class, listener);
+//
+//    }
+//
+//    public EventPublisher listenPipelineFailed(Consumer<PipelineFailedEvent> listener) {
+//        return addListenerInternal(PipelineFailedEvent.class, listener);
+//
+//    }
+
+    private EventPublisher addListenerInternal(Class<? extends Event> eventType, Consumer<? extends Event> listener) {
+        if(listener != null) {
+            listeners.add(new Pair<>(eventType, listener));
+        }
+        return this;
     }
-  }
 
-  public Runnable getMigrationStartedListener() {
-    return migrationStartedListener;
-  }
+    public void publish(Event event) {
+        Consumer<Event> eventConsumer = getListener(event.getClass())
+                .orElse(event1 -> logger.debug("No registered listener for Event[{}]", event1.toString()));
+        eventConsumer.accept(event);
+    }
 
-  public Consumer<MigrationSuccessResult> getMigrationSuccessListener() {
-    return migrationSuccessListener;
-  }
 
-  public Consumer<Exception> getMigrationFailedListener() {
-    return migrationFailedListener;
-  }
+    //We ensure programmatically that the type of event is aligned with the consumer,
+    //although we return a generic Consumer<Event>
+    @SuppressWarnings("unchecked")
+    private <T extends Event> Optional<Consumer<Event>> getListener(Class<T> eventType) {
+        return listeners
+                .stream()
+                .filter(pair -> pair.getFirst().isAssignableFrom(eventType))
+                .map(Pair::getSecond)
+                .map(consumer -> (Consumer<Event>) consumer)
+                .findFirst();
+    }
 }

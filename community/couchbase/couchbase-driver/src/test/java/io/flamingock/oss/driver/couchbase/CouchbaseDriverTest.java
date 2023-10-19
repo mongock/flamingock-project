@@ -11,6 +11,7 @@ import io.flamingock.community.runner.standalone.CommunityStandalone;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
+import io.flamingock.core.runner.Runner;
 import io.flamingock.oss.driver.couchbase.driver.CouchbaseDriver;
 import org.junit.jupiter.api.*;
 import org.testcontainers.couchbase.BucketDefinition;
@@ -131,14 +132,15 @@ class CouchbaseDriverTest {
         //Given-When
         Collection collection = cluster.bucket(BUCKET_NAME).defaultCollection();
         assertThrows(StageExecutionException.class, () -> {
-            CommunityStandalone.builder()
+            Runner build = CommunityStandalone.builder()
                     .setDriver(new CouchbaseDriver(cluster, collection))
                     .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.couchbase.changes.failedWithoutRollback"))
                     .addDependency(cluster)
                     .addDependency(collection)
                     .setTrackIgnored(true)
                     .setTransactionEnabled(false)
-                    .build()
+                    .build();
+            build
                     .run();
         });
 

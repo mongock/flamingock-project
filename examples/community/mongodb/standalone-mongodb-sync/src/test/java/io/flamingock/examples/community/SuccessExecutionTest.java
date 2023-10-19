@@ -4,10 +4,12 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import io.flamingock.examples.community.CommunityStandaloneMongodbSyncApp;
-import io.flamingock.examples.community.events.FailureEventListener;
-import io.flamingock.examples.community.events.StartedEventListener;
-import io.flamingock.examples.community.events.SuccessEventListener;
+import io.flamingock.examples.community.events.PipelineFailedListener;
+import io.flamingock.examples.community.events.PipelineStartedListener;
+import io.flamingock.examples.community.events.PipelineCompletedListener;
+import io.flamingock.examples.community.events.StageCompletedListener;
+import io.flamingock.examples.community.events.StageFailedListener;
+import io.flamingock.examples.community.events.StageStartedListener;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -90,9 +92,12 @@ public class SuccessExecutionTest {
     @Test
     @DisplayName("SHOULD trigger start and success event WHEN executed IF happy path")
     void events() {
-        assertTrue(StartedEventListener.executed);
-        assertTrue(SuccessEventListener.executed);
-        assertFalse(FailureEventListener.executed);
+        assertTrue(PipelineStartedListener.executed);
+        assertTrue(PipelineCompletedListener.executed);
+        assertFalse(PipelineFailedListener.executed);
+        assertEquals(1, StageStartedListener.executed);
+        assertEquals(1, StageCompletedListener.executed);
+        assertEquals(0, StageFailedListener.executed);
     }
 
 }

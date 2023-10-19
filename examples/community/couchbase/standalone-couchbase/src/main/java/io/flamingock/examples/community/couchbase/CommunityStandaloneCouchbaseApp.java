@@ -30,9 +30,9 @@ public class CommunityStandaloneCouchbaseApp {
                 .addDependency(collection)
                 .setTrackIgnored(true)
                 .setTransactionEnabled(false)
-                .setMigrationStartedListener(new StartedEventListener())
-                .setMigrationSuccessListener(new SuccessEventListener())
-                .setMigrationFailureListener(new FailureEventListener())
+                .setPipelineStartedListener(new StartedEventListener())
+                .setPipelineCompletedListener(new SuccessEventListener())
+                .setPipelineFailedListener(new FailureEventListener())
                 .build()
                 .run();
     }
