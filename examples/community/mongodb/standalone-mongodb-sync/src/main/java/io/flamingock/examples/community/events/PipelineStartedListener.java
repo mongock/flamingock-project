@@ -4,7 +4,7 @@ import io.flamingock.core.event.model.IPipelineStartedEvent;
 
 import java.util.function.Consumer;
 
-public class StartedEventListener implements Consumer<IPipelineStartedEvent> {
+public class PipelineStartedListener implements Consumer<IPipelineStartedEvent> {
 
     public static boolean executed = false;
 

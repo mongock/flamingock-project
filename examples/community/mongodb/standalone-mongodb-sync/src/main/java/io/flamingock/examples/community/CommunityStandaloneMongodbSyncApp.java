@@ -7,9 +7,12 @@ import com.mongodb.client.MongoClients;
 
 import io.flamingock.community.runner.standalone.CommunityStandalone;
 import io.flamingock.core.pipeline.Stage;
-import io.flamingock.examples.community.events.FailureEventListener;
-import io.flamingock.examples.community.events.StartedEventListener;
-import io.flamingock.examples.community.events.CompletedEventListener;
+import io.flamingock.examples.community.events.PipelineFailedListener;
+import io.flamingock.examples.community.events.PipelineStartedListener;
+import io.flamingock.examples.community.events.PipelineCompletedListener;
+import io.flamingock.examples.community.events.StageCompletedListener;
+import io.flamingock.examples.community.events.StageFailedListener;
+import io.flamingock.examples.community.events.StageStartedListener;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -38,9 +41,12 @@ public class CommunityStandaloneMongodbSyncApp {
                 .addDependency(mongoClient.getDatabase(databaseName))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
-                .setPipelineStartedListener(new StartedEventListener())
-                .setPipelineCompletedListener(new CompletedEventListener())
-                .setPipelineFailureListener(new FailureEventListener())
+                .setPipelineStartedListener(new PipelineStartedListener())
+                .setPipelineCompletedListener(new PipelineCompletedListener())
+                .setPipelineFailedListener(new PipelineFailedListener())
+                .setStageStartedListener(new StageStartedListener())
+                .setStageCompletedListener(new StageCompletedListener())
+                .setStageFailedListener(new StageFailedListener())
                 .build()
                 .run();
     }

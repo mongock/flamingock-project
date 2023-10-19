@@ -4,7 +4,7 @@ import io.flamingock.core.event.model.IPipelineFailedEvent;
 
 import java.util.function.Consumer;
 
-public class FailureEventListener implements Consumer<IPipelineFailedEvent> {
+public class PipelineFailedListener implements Consumer<IPipelineFailedEvent> {
 
     public static boolean executed = false;
 

@@ -2,9 +2,12 @@ package io.flamingock.examples.community;
 
 
 import io.flamingock.examples.community.config.MongoInitializer;
-import io.flamingock.examples.community.events.FailureEventListener;
-import io.flamingock.examples.community.events.StartedEventListener;
-import io.flamingock.examples.community.events.SuccessEventListener;
+import io.flamingock.examples.community.events.PipelineFailedListener;
+import io.flamingock.examples.community.events.PipelineStartedListener;
+import io.flamingock.examples.community.events.PipelineCompletedListener;
+import io.flamingock.examples.community.events.StageCompletedListener;
+import io.flamingock.examples.community.events.StageFailedListener;
+import io.flamingock.examples.community.events.StageStartedListener;
 import org.bson.Document;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,13 +37,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SpringData3SuccessExecutionTest {
 
     @Autowired
-    private StartedEventListener startedEventListener;
+    private PipelineStartedListener pipelineStartedListener;
 
     @Autowired
-    private SuccessEventListener successEventListener;
+    private PipelineCompletedListener pipelineCompletedListener;
 
     @Autowired
-    private FailureEventListener failureEventListener;
+    private PipelineFailedListener pipelineFailedListener;
+
+    @Autowired
+    private StageStartedListener stageStartedListener;
+
+    @Autowired
+    private StageCompletedListener stageCompletedListener;
+
+    @Autowired
+    private StageFailedListener stageFailedListener;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -93,8 +105,12 @@ class SpringData3SuccessExecutionTest {
     @Test
     @DisplayName("SHOULD trigger start and success event WHEN executed IF happy path")
     void events() {
-        assertTrue(startedEventListener.executed);
-        assertTrue(successEventListener.executed);
-        assertFalse(failureEventListener.executed);
+        assertTrue(pipelineStartedListener.executed);
+        assertTrue(pipelineCompletedListener.executed);
+        assertFalse(pipelineFailedListener.executed);
+
+        assertEquals(1, stageStartedListener.executed);
+        assertEquals(1, stageCompletedListener.executed);
+        assertEquals(0, stageFailedListener.executed);
     }
 }

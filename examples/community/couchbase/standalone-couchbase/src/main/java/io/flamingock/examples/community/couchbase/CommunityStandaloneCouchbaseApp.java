@@ -32,7 +32,7 @@ public class CommunityStandaloneCouchbaseApp {
                 .setTransactionEnabled(false)
                 .setPipelineStartedListener(new StartedEventListener())
                 .setPipelineCompletedListener(new SuccessEventListener())
-                .setPipelineFailureListener(new FailureEventListener())
+                .setPipelineFailedListener(new FailureEventListener())
                 .build()
                 .run();
     }

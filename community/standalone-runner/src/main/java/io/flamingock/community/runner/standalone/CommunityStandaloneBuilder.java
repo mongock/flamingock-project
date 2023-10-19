@@ -338,8 +338,8 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setPipelineFailureListener(Consumer<IPipelineFailedEvent> listener) {
-        return standaloneConfiguratorDelegate.setPipelineFailureListener(listener);
+    public CommunityStandaloneBuilder setPipelineFailedListener(Consumer<IPipelineFailedEvent> listener) {
+        return standaloneConfiguratorDelegate.setPipelineFailedListener(listener);
     }
 
     @Override
@@ -358,8 +358,8 @@ public class CommunityStandaloneBuilder
     }
 
     @Override
-    public CommunityStandaloneBuilder setStageFailureListener(Consumer<IStageFailedEvent> listener) {
-        return standaloneConfiguratorDelegate.setStageFailureListener(listener);
+    public CommunityStandaloneBuilder setStageFailedListener(Consumer<IStageFailedEvent> listener) {
+        return standaloneConfiguratorDelegate.setStageFailedListener(listener);
     }
 
     @Override

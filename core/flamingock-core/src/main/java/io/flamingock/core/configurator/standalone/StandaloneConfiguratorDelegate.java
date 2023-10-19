@@ -78,7 +78,7 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public HOLDER setPipelineFailureListener(Consumer<IPipelineFailedEvent> listener) {
+    public HOLDER setPipelineFailedListener(Consumer<IPipelineFailedEvent> listener) {
         this.pipelineFailedListener = listener;
         return holderSupplier.get();
     }
@@ -102,7 +102,7 @@ public class StandaloneConfiguratorDelegate<HOLDER> implements StandaloneConfigu
     }
 
     @Override
-    public HOLDER setStageFailureListener(Consumer<IStageFailedEvent> listener) {
+    public HOLDER setStageFailedListener(Consumer<IStageFailedEvent> listener) {
         this.stageFailedListener = listener;
         return holderSupplier.get();
     }

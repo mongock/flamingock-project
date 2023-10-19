@@ -5,7 +5,7 @@ import io.flamingock.core.event.model.IPipelineCompletedEvent;
 
 import java.util.function.Consumer;
 
-public class CompletedEventListener implements Consumer<IPipelineCompletedEvent> {
+public class PipelineCompletedListener implements Consumer<IPipelineCompletedEvent> {
 
     public static boolean executed = false;
 

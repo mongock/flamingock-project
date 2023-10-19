@@ -63,7 +63,7 @@ public interface StandaloneConfigurator<HOLDER> {
     HOLDER setPipelineIgnoredListener(Consumer<IPipelineIgnoredEvent> listener);
 
     //TODO javadoc
-    HOLDER setPipelineFailureListener(Consumer<IPipelineFailedEvent> listener);
+    HOLDER setPipelineFailedListener(Consumer<IPipelineFailedEvent> listener);
 
     //TODO javadoc
     HOLDER setStageStartedListener(Consumer<IStageStartedEvent> listener);
@@ -75,7 +75,7 @@ public interface StandaloneConfigurator<HOLDER> {
     HOLDER setStageIgnoredListener(Consumer<IStageIgnoredEvent> listener);
 
     //TODO javadoc
-    HOLDER setStageFailureListener(Consumer<IStageFailedEvent> listener);
+    HOLDER setStageFailedListener(Consumer<IStageFailedEvent> listener);
 
     Consumer<IPipelineStartedEvent> getPipelineStartedListener();
 

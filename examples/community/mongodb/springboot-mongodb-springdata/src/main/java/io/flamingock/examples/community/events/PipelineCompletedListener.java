@@ -1,17 +1,13 @@
 package io.flamingock.examples.community.events;
 
 import io.flamingock.core.springboot.v2.event.SpringPipelineCompletedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class SuccessEventListener implements ApplicationListener<SpringPipelineCompletedEvent> {
-    private final Logger logger = LoggerFactory.getLogger(SuccessEventListener.class);
+public class PipelineCompletedListener implements ApplicationListener<SpringPipelineCompletedEvent> {
     public boolean executed = false;
 
     @Override
     public void onApplicationEvent(SpringPipelineCompletedEvent event) {
         executed = true;
-        logger.info("Flamingock succeeded....");
     }
 }
