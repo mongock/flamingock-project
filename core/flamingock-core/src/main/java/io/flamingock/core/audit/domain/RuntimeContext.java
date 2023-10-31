@@ -1,4 +1,4 @@
-package io.flamingock.core.audit.writer;
+package io.flamingock.core.audit.domain;
 
 import io.flamingock.core.task.navigation.step.FailedWithErrorStep;
 import io.flamingock.core.task.navigation.step.TaskStep;

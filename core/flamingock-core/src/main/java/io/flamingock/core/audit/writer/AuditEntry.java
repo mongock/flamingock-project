@@ -1,4 +1,4 @@
-package io.flamingock.core.audit.domain;
+package io.flamingock.core.audit.writer;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static io.flamingock.core.audit.domain.AuditEntryStatus.EXECUTED;
-import static io.flamingock.core.audit.domain.AuditEntryStatus.FAILED;
-import static io.flamingock.core.audit.domain.AuditEntryStatus.ROLLBACK_FAILED;
-import static io.flamingock.core.audit.domain.AuditEntryStatus.ROLLED_BACK;
+import static io.flamingock.core.audit.writer.AuditEntryStatus.EXECUTED;
+import static io.flamingock.core.audit.writer.AuditEntryStatus.FAILED;
+import static io.flamingock.core.audit.writer.AuditEntryStatus.ROLLBACK_FAILED;
+import static io.flamingock.core.audit.writer.AuditEntryStatus.ROLLED_BACK;
 
 public class AuditEntry {
 

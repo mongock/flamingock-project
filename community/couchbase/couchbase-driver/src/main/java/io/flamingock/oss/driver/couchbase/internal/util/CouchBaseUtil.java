@@ -2,8 +2,8 @@ package io.flamingock.oss.driver.couchbase.internal.util;
 
 import com.couchbase.client.java.json.JsonObject;
 import io.flamingock.community.internal.persistence.LockEntry;
-import io.flamingock.core.audit.domain.AuditEntry;
-import io.flamingock.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.audit.writer.AuditEntry;
+import io.flamingock.core.audit.writer.AuditEntryStatus;
 import io.flamingock.core.lock.LockStatus;
 import io.flamingock.core.util.TimeUtil;
 

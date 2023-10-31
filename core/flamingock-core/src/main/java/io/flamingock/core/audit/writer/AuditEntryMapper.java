@@ -1,7 +1,7 @@
-package io.flamingock.core.audit.domain;
+package io.flamingock.core.audit.writer;
 
-import io.flamingock.core.audit.writer.AuditItem;
-import io.flamingock.core.audit.writer.RuntimeContext;
+import io.flamingock.core.audit.domain.AuditItem;
+import io.flamingock.core.audit.domain.RuntimeContext;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.util.ThrowableUtil;

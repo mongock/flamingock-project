@@ -1,8 +1,7 @@
-package io.flamingock.core.audit.domain;
+package io.flamingock.core.audit.writer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AuditStageStatus {

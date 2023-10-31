@@ -1,4 +1,4 @@
-package io.flamingock.core.audit.writer;
+package io.flamingock.core.audit.domain;
 
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;

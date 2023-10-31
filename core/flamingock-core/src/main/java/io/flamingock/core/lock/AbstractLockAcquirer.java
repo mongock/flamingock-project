@@ -1,7 +1,7 @@
 package io.flamingock.core.lock;
 
 import io.flamingock.core.audit.AuditReader;
-import io.flamingock.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.audit.writer.AuditStageStatus;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.util.TimeService;

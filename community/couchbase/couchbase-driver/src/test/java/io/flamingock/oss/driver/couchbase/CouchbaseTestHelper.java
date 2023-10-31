@@ -6,7 +6,7 @@ import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.QueryScanConsistency;
-import io.flamingock.core.audit.domain.AuditEntry;
+import io.flamingock.core.audit.writer.AuditEntry;
 import io.flamingock.oss.driver.couchbase.internal.util.CouchBaseUtil;
 import io.flamingock.oss.driver.couchbase.internal.util.N1QLQueryProvider;
 

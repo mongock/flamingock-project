@@ -2,7 +2,7 @@ package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.audit.AuditReader;
-import io.flamingock.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.audit.writer.AuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.impl.PipelineCompletedEvent;
 import io.flamingock.core.event.model.impl.PipelineFailedEvent;

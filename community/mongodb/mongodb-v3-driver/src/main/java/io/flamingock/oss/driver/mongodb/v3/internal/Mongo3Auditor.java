@@ -7,8 +7,8 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import io.flamingock.core.audit.Auditor;
-import io.flamingock.core.audit.domain.AuditEntry;
-import io.flamingock.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.audit.writer.AuditEntry;
+import io.flamingock.core.audit.writer.AuditStageStatus;
 import io.flamingock.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
@@ -28,7 +28,7 @@ import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_A
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_EXECUTION_ID;
 
-public class Mongo3Auditor extends Auditor {
+public class Mongo3Auditor implements Auditor {
     
     private static final Logger logger = LoggerFactory.getLogger(Mongo3Auditor.class);
 
@@ -63,7 +63,7 @@ public class Mongo3Auditor extends Auditor {
     }
 
     @Override
-    protected Result writeEntry(AuditEntry auditEntry) {
+    public Result writeEntry(AuditEntry auditEntry) {
         Bson filter = Filters.and(
                 Filters.eq(KEY_EXECUTION_ID, auditEntry.getExecutionId()),
                 Filters.eq(KEY_CHANGE_ID, auditEntry.getChangeId()),

@@ -11,8 +11,8 @@ import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.QueryScanConsistency;
 import io.flamingock.core.audit.Auditor;
-import io.flamingock.core.audit.domain.AuditEntry;
-import io.flamingock.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.audit.writer.AuditEntry;
+import io.flamingock.core.audit.writer.AuditStageStatus;
 import io.flamingock.core.util.Result;
 import io.flamingock.core.util.TimeUtil;
 import io.flamingock.oss.driver.couchbase.internal.util.CouchBaseUtil;
@@ -41,7 +41,7 @@ import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_T
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_AUDIT_ENTRY;
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_KEY;
 
-public class CouchbaseAuditor extends Auditor {
+public class CouchbaseAuditor implements Auditor {
 
     private static final Logger logger = LoggerFactory.getLogger(CouchbaseAuditor.class);
 
@@ -78,7 +78,7 @@ public class CouchbaseAuditor extends Auditor {
     }
 
     @Override
-    protected Result writeEntry(AuditEntry auditEntry) {
+    public Result writeEntry(AuditEntry auditEntry) {
 
         String key = keyGenerator.toKey(auditEntry);
         logger.debug("Saving audit entry with key {}", key);

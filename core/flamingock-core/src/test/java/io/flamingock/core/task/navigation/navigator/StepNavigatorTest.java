@@ -1,7 +1,7 @@
 package io.flamingock.core.task.navigation.navigator;
 
 import io.flamingock.core.audit.AuditWriter;
-import io.flamingock.core.audit.writer.AuditItem;
+import io.flamingock.core.audit.domain.AuditItem;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;

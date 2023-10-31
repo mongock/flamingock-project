@@ -2,7 +2,7 @@ package io.flamingock.oss.driver.mongodb.springdata.v4;
 
 import com.mongodb.client.MongoDatabase;
 
-import io.flamingock.core.audit.domain.AuditEntry;
+import io.flamingock.core.audit.writer.AuditEntry;
 import io.flamingock.core.util.TimeUtil;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.mongodb.springdata.v4.internal.mongodb.SpringDataMongoV4DocumentWrapper;

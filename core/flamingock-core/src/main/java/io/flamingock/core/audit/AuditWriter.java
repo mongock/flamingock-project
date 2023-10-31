@@ -1,6 +1,8 @@
 package io.flamingock.core.audit;
 
-import io.flamingock.core.audit.writer.AuditItem;
+import io.flamingock.core.audit.writer.AuditEntry;
+import io.flamingock.core.audit.writer.AuditEntryMapper;
+import io.flamingock.core.audit.domain.AuditItem;
 import io.flamingock.core.util.Result;
 
 /**
@@ -13,7 +15,11 @@ import io.flamingock.core.util.Result;
  */
 public interface AuditWriter {
 
-    Result writeStep(AuditItem auditItem);
+    default Result writeStep(AuditItem auditItem) {
+        return writeEntry(AuditEntryMapper.map(auditItem));
+    }
+
+    Result writeEntry(AuditEntry auditEntry);
 
 
 }
