@@ -1,6 +1,7 @@
-package io.flamingock.community.internal.driver;
+package io.flamingock.core.driver;
 
 import io.flamingock.core.audit.Auditor;
+import io.flamingock.core.lock.LockAcquirer;
 import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
@@ -11,7 +12,7 @@ public interface ConnectionEngine {
 
   Auditor getAuditor();
 
-  LocalLockAcquirer getLockProvider();
+  LockAcquirer getLockProvider();
 
   Optional<TransactionWrapper> getTransactionWrapper();
 

@@ -1,6 +1,7 @@
 package io.flamingock.community.internal;
 
-import io.flamingock.community.internal.driver.ConnectionDriver;
+import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.configurator.CommunityConfiguration;
 
 public interface CommunityConfigurator<HOLDER> {
     HOLDER setDriver(ConnectionDriver<?> connectionDriver);

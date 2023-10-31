@@ -1,7 +1,7 @@
 package io.flamingock.community.runner.springboot.v2;
 
-import io.flamingock.community.internal.CommunityConfigurable;
-import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.configurator.CommunityConfigurable;
+import io.flamingock.core.configurator.CommunityConfiguration;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.LegacyMigration;

@@ -1,8 +1,8 @@
 package io.flamingock.oss.driver.couchbase;
 
-import io.flamingock.community.internal.DriverConfigurable;
+import io.flamingock.core.configurator.LocalConfigurable;
 
-public class CouchbaseConfiguration implements DriverConfigurable {
+public class CouchbaseConfiguration implements LocalConfigurable {
 
     public static CouchbaseConfiguration getDefault() {
         return new CouchbaseConfiguration();

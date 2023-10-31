@@ -1,4 +1,4 @@
-package io.flamingock.community.internal;
+package io.flamingock.core.configurator;
 
 public class CommunityConfiguration implements CommunityConfigurable {
 

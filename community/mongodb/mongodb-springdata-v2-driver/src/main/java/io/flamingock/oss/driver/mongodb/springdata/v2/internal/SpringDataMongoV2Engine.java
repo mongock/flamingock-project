@@ -1,11 +1,11 @@
 package io.flamingock.oss.driver.mongodb.springdata.v2.internal;
 
-import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.configurator.CommunityConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.config.SpringDataMongoV2Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.audit.Auditor;
 import io.flamingock.community.internal.driver.LocalLockAcquirer;
 

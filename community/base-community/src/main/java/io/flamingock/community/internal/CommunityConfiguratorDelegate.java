@@ -1,6 +1,7 @@
 package io.flamingock.community.internal;
 
-import io.flamingock.community.internal.driver.ConnectionDriver;
+import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.configurator.CommunityConfiguration;
 
 import java.util.function.Supplier;
 

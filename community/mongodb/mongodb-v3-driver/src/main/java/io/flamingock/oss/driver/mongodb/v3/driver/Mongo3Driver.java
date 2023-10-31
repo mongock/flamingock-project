@@ -1,9 +1,9 @@
 package io.flamingock.oss.driver.mongodb.v3.driver;
 
 import com.mongodb.client.MongoClient;
-import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.configurator.CommunityConfiguration;
+import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.Mongo3Engine;

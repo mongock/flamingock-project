@@ -2,9 +2,8 @@ package io.flamingock.oss.driver.couchbase.internal;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
-import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.core.audit.Auditor;
+import io.flamingock.core.configurator.CommunityConfiguration;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.community.internal.driver.LocalLockAcquirer;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;

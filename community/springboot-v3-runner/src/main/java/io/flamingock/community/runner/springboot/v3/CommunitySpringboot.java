@@ -1,6 +1,6 @@
 package io.flamingock.community.runner.springboot.v3;
 
-import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.configurator.CommunityConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.springboot.v3.configurator.SpringbootConfiguration;
 

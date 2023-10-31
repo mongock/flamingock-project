@@ -1,10 +1,10 @@
 package io.flamingock.community.runner.springboot.v2;
 
-import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.configurator.CommunityConfiguration;
 import io.flamingock.community.internal.CommunityConfigurator;
 import io.flamingock.community.internal.CommunityConfiguratorDelegate;
-import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.CoreConfigurator;
 import io.flamingock.core.configurator.CoreConfiguratorDelegate;
