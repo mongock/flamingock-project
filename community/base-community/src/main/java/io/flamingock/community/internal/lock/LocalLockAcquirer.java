@@ -1,7 +1,6 @@
-package io.flamingock.community.internal.driver;
+package io.flamingock.community.internal.lock;
 
 
-import io.flamingock.community.internal.persistence.LockRepository;
 import io.flamingock.core.audit.AuditReader;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.lock.AbstractLockAcquirer;

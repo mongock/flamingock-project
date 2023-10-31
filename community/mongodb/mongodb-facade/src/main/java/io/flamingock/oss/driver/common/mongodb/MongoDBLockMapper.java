@@ -1,15 +1,15 @@
 package io.flamingock.oss.driver.common.mongodb;
 
-import io.flamingock.community.internal.persistence.LockEntry;
+import io.flamingock.community.internal.lock.LockEntry;
 import io.flamingock.core.lock.LockStatus;
 import io.flamingock.core.util.TimeUtil;
 
 import java.util.function.Supplier;
 
-import static io.flamingock.community.internal.persistence.LockEntryField.EXPIRES_AT_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.KEY_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.OWNER_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.STATUS_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.EXPIRES_AT_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.KEY_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.OWNER_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.STATUS_FIELD;
 
 public class MongoDBLockMapper<DOCUMENT_WRAPPER extends DocumentWrapper> {
 

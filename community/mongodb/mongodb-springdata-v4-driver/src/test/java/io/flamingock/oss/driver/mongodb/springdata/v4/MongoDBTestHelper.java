@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 import org.bson.Document;
 
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_TIMESTAMP;
+import static io.flamingock.community.internal.AuditEntryField.KEY_CHANGE_ID;
+import static io.flamingock.community.internal.AuditEntryField.KEY_TIMESTAMP;
 
 public class MongoDBTestHelper {
     public final MongoDatabase mongoDatabase;

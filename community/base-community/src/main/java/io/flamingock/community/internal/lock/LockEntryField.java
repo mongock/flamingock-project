@@ -1,4 +1,4 @@
-package io.flamingock.community.internal.persistence;
+package io.flamingock.community.internal.lock;
 
 public class LockEntryField {
     public static final String KEY_FIELD = "key";

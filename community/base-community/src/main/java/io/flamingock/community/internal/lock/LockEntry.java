@@ -1,4 +1,4 @@
-package io.flamingock.community.internal.persistence;
+package io.flamingock.community.internal.lock;
 
 import io.flamingock.core.lock.LockStatus;
 

@@ -4,7 +4,7 @@ import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
 import io.flamingock.core.configurator.CommunityConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
-import io.flamingock.community.internal.driver.LocalLockAcquirer;
+import io.flamingock.community.internal.lock.LocalLockAcquirer;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;

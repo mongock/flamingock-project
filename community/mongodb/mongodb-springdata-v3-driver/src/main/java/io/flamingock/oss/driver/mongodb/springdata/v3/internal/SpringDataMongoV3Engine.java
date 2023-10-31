@@ -7,7 +7,7 @@ import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Co
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.audit.Auditor;
-import io.flamingock.community.internal.driver.LocalLockAcquirer;
+import io.flamingock.community.internal.lock.LocalLockAcquirer;
 
 import java.util.Optional;
 

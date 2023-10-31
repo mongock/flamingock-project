@@ -1,8 +1,5 @@
-package io.flamingock.community.internal.driver;
+package io.flamingock.community.internal.lock;
 
-import io.flamingock.community.internal.persistence.LockEntry;
-import io.flamingock.community.internal.persistence.LockPersistenceException;
-import io.flamingock.community.internal.persistence.LockRepository;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockException;
 import io.flamingock.core.lock.LockStatus;

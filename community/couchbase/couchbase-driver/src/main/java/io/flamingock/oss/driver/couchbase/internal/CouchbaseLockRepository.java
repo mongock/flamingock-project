@@ -7,9 +7,9 @@ import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.kv.RemoveOptions;
 import com.couchbase.client.java.kv.ReplaceOptions;
-import io.flamingock.community.internal.persistence.LockEntry;
-import io.flamingock.community.internal.persistence.LockPersistenceException;
-import io.flamingock.community.internal.persistence.LockRepository;
+import io.flamingock.community.internal.lock.LockEntry;
+import io.flamingock.community.internal.lock.LockPersistenceException;
+import io.flamingock.community.internal.lock.LockRepository;
 import io.flamingock.core.util.TimeUtil;
 import io.flamingock.oss.driver.couchbase.internal.util.CouchBaseUtil;
 import io.flamingock.oss.driver.couchbase.internal.util.LockEntryKeyGenerator;
@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Set;
 
-import static io.flamingock.community.internal.persistence.LockEntryField.EXPIRES_AT_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.KEY_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.OWNER_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.STATUS_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.EXPIRES_AT_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.KEY_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.OWNER_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.STATUS_FIELD;
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_KEY;
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_LOCK_ENTRY;
 

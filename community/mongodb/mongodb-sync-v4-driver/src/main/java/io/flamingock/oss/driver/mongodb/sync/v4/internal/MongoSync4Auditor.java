@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_AUTHOR;
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_EXECUTION_ID;
+import static io.flamingock.community.internal.AuditEntryField.KEY_AUTHOR;
+import static io.flamingock.community.internal.AuditEntryField.KEY_CHANGE_ID;
+import static io.flamingock.community.internal.AuditEntryField.KEY_EXECUTION_ID;
 
 public class MongoSync4Auditor implements Auditor {
     

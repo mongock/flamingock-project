@@ -1,8 +1,8 @@
 package io.flamingock.community.runner.standalone;
 
 import io.flamingock.core.configurator.CommunityConfiguration;
-import io.flamingock.community.internal.CommunityConfigurator;
-import io.flamingock.community.internal.CommunityConfiguratorDelegate;
+import io.flamingock.core.configurator.LocalConfigurator;
+import io.flamingock.core.configurator.LocalConfiguratorDelegate;
 import io.flamingock.core.driver.ConnectionDriver;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
@@ -38,13 +38,13 @@ import java.util.function.Consumer;
 public class CommunityStandaloneBuilder
         implements
         CoreConfigurator<CommunityStandaloneBuilder>,
-        CommunityConfigurator<CommunityStandaloneBuilder>,
+        LocalConfigurator<CommunityStandaloneBuilder>,
         StandaloneConfigurator<CommunityStandaloneBuilder>,
         RunnerBuilder {
 
     private final CoreConfiguratorDelegate<CommunityStandaloneBuilder> coreConfiguratorDelegate;
 
-    private final CommunityConfiguratorDelegate<CommunityStandaloneBuilder> communityConfiguratorDelegate;
+    private final LocalConfiguratorDelegate<CommunityStandaloneBuilder> communityConfiguratorDelegate;
 
     private final StandaloneConfiguratorDelegate<CommunityStandaloneBuilder> standaloneConfiguratorDelegate;
 
@@ -53,7 +53,7 @@ public class CommunityStandaloneBuilder
                                CommunityConfiguration communityConfiguration,
                                DependencyInjectableContext dependencyInjectableContext) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
-        this.communityConfiguratorDelegate = new CommunityConfiguratorDelegate<>(communityConfiguration, () -> this);
+        this.communityConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
     }
 

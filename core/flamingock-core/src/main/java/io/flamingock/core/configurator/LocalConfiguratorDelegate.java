@@ -1,17 +1,16 @@
-package io.flamingock.community.internal;
+package io.flamingock.core.configurator;
 
 import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.configurator.CommunityConfiguration;
 
 import java.util.function.Supplier;
 
-public class CommunityConfiguratorDelegate<HOLDER> implements CommunityConfigurator<HOLDER> {
+public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLDER> {
 
     private final CommunityConfiguration communityConfiguration;
     private final Supplier<HOLDER> holderSupplier;
     private ConnectionDriver<?> connectionDriver;
 
-    public CommunityConfiguratorDelegate(CommunityConfiguration communityConfiguration, Supplier<HOLDER> holderSupplier) {
+    public LocalConfiguratorDelegate(CommunityConfiguration communityConfiguration, Supplier<HOLDER> holderSupplier) {
         this.communityConfiguration = communityConfiguration;
         this.holderSupplier = holderSupplier;
 

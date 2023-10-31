@@ -11,10 +11,6 @@ public interface CoreConfigurable {
 
     List<Stage> getStages();
 
-
-
-
-
     void setLockAcquiredForMillis(long lockAcquiredForMillis);
 
     void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis);

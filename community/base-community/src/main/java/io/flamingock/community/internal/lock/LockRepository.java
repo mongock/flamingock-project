@@ -1,4 +1,4 @@
-package io.flamingock.community.internal.persistence;
+package io.flamingock.community.internal.lock;
 
 /**
  * <p>Repository interface to manage lock in database, which will be used by LockManager</p>

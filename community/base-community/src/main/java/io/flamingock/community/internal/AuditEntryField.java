@@ -1,4 +1,4 @@
-package io.flamingock.community.internal.persistence;
+package io.flamingock.community.internal;
 
 public final class AuditEntryField {
     public static final String KEY_EXECUTION_ID = "executionId";

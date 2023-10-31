@@ -1,4 +1,4 @@
-package io.flamingock.community.internal.persistence;
+package io.flamingock.community.internal.lock;
 
 /**
  * @since 04/04/2018
