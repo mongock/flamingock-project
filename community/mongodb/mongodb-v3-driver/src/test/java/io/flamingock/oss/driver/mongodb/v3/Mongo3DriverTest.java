@@ -7,7 +7,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 import io.flamingock.core.audit.writer.AuditEntry;
-import io.flamingock.community.runner.standalone.CommunityStandalone;
+import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.audit.writer.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
@@ -77,7 +77,7 @@ class Mongo3DriverTest {
     @DisplayName("When standalone runs the driver with DEFAULT repository names related collections should exists")
     void happyPathWithDefaultRepositoryNames() {
         //Given-When
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
                 .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
@@ -101,7 +101,7 @@ class Mongo3DriverTest {
         driverConfiguration.setMigrationRepositoryName(CUSTOM_MIGRATION_REPOSITORY_NAME);
         driverConfiguration.setLockRepositoryName(CUSTOM_LOCK_REPOSITORY_NAME);
 
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new Mongo3Driver(mongoClient, DB_NAME).setDriverConfiguration(driverConfiguration))
                 .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
@@ -121,7 +121,7 @@ class Mongo3DriverTest {
     @DisplayName("When standalone runs the driver with transactions enabled should persist the audit logs and the user's collection updated")
     void happyPathWithTransaction() {
         //Given-When
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
                 .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
@@ -155,7 +155,7 @@ class Mongo3DriverTest {
     @DisplayName("When standalone runs the driver with transactions disabled should persist the audit logs and the user's collection updated")
     void happyPathWithoutTransaction() {
         //Given-When
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
                 .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithoutTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
@@ -190,7 +190,7 @@ class Mongo3DriverTest {
     void failedWithTransaction() {
         //Given-When
         assertThrows(StageExecutionException.class, () -> {
-            CommunityStandalone.builder()
+            FlamingockStandalone.local()
                     .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
                     .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithTransaction"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
@@ -223,7 +223,7 @@ class Mongo3DriverTest {
     void failedWithoutTransactionWithRollback() {
         //Given-When
         assertThrows(StageExecutionException.class, () -> {
-            CommunityStandalone.builder()
+            FlamingockStandalone.local()
                     .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
                     .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithRollback"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
@@ -258,7 +258,7 @@ class Mongo3DriverTest {
     void failedWithoutTransactionWithoutRollback() {
         //Given-When
         assertThrows(StageExecutionException.class, () -> {
-            CommunityStandalone.builder()
+            FlamingockStandalone.local()
                     .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
                     .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithoutRollback"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))

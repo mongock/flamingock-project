@@ -1,4 +1,4 @@
-package io.flamingock.core.configurator;
+package io.flamingock.core.configurator.local;
 
 import io.flamingock.core.driver.ConnectionDriver;
 import io.flamingock.core.configurator.CommunityConfiguration;

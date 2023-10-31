@@ -3,7 +3,7 @@ package io.flamingock.examples.community.couchbase;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
 
-import io.flamingock.community.runner.standalone.CommunityStandalone;
+import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.examples.community.couchbase.events.FailureEventListener;
 import io.flamingock.examples.community.couchbase.events.StartedEventListener;
@@ -20,7 +20,7 @@ public class CommunityStandaloneCouchbaseApp {
 
     public void run(Cluster cluster, String bucketName) {
         Collection collection = cluster.bucket(bucketName).defaultCollection();
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new CouchbaseDriver(cluster, collection))
                 .setLockAcquiredForMillis(60 * 1000L)// this is just to show how is set. Default value is still 60 * 1000L
                 .setLockQuitTryingAfterMillis(3 * 60 * 1000L)// this is just to show how is set. Default value is still 3 * 60 * 1000L

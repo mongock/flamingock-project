@@ -1,5 +1,6 @@
-package io.flamingock.core.configurator;
+package io.flamingock.core.configurator.local;
 
+import io.flamingock.core.configurator.CommunityConfiguration;
 import io.flamingock.core.driver.ConnectionDriver;
 
 import java.util.function.Supplier;
