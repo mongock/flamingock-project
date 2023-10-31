@@ -1,7 +1,7 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.core.audit.AuditWriter;
-import io.flamingock.core.audit.single.SingleAuditReader;
+import io.flamingock.core.audit.AuditReader;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.lock.LockAcquirer;
@@ -25,7 +25,7 @@ public final class RunnerCreator {
 
 
     public static Runner create(Pipeline pipeline,
-                                SingleAuditReader auditReader,
+                                AuditReader auditReader,
                                 AuditWriter auditWriter,
                                 TransactionWrapper transactionWrapper,
                                 LockAcquirer lockAcquirer,

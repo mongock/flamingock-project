@@ -1,19 +1,5 @@
 package io.flamingock.oss.driver.couchbase.internal;
 
-import io.flamingock.community.internal.persistence.LockEntry;
-import io.flamingock.community.internal.persistence.LockPersistenceException;
-import io.flamingock.community.internal.persistence.LockRepository;
-import io.flamingock.core.util.TimeUtil;
-import io.flamingock.oss.driver.couchbase.internal.entry.CouchbaseLockEntry;
-import io.flamingock.oss.driver.couchbase.internal.util.LockEntryKeyGenerator;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.couchbase.client.core.error.DocumentNotFoundException;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
@@ -21,14 +7,25 @@ import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.kv.RemoveOptions;
 import com.couchbase.client.java.kv.ReplaceOptions;
+import io.flamingock.community.internal.persistence.LockEntry;
+import io.flamingock.community.internal.persistence.LockPersistenceException;
+import io.flamingock.community.internal.persistence.LockRepository;
+import io.flamingock.core.util.TimeUtil;
+import io.flamingock.oss.driver.couchbase.internal.util.CouchBaseUtil;
+import io.flamingock.oss.driver.couchbase.internal.util.LockEntryKeyGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_KEY;
-import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_LOCK_ENTRY;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Set;
 
+import static io.flamingock.community.internal.persistence.LockEntryField.EXPIRES_AT_FIELD;
 import static io.flamingock.community.internal.persistence.LockEntryField.KEY_FIELD;
 import static io.flamingock.community.internal.persistence.LockEntryField.OWNER_FIELD;
 import static io.flamingock.community.internal.persistence.LockEntryField.STATUS_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.EXPIRES_AT_FIELD;
+import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_KEY;
+import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_LOCK_ENTRY;
 
 public class CouchbaseLockRepository implements LockRepository {
 
@@ -40,7 +37,7 @@ public class CouchbaseLockRepository implements LockRepository {
     protected final Cluster cluster;
     protected final CouchbaseGenericRepository couchbaseGenericRepository;
 
-    private LockEntryKeyGenerator keyGenerator = new LockEntryKeyGenerator();
+    private final LockEntryKeyGenerator keyGenerator = new LockEntryKeyGenerator();
 
     protected CouchbaseLockRepository(Cluster cluster, Collection collection) {
         this.cluster = cluster;
@@ -65,7 +62,7 @@ public class CouchbaseLockRepository implements LockRepository {
         String key = keyGenerator.toKey(newLock);
         try {
             GetResult result = collection.get(key);
-            LockEntry existingLock = new CouchbaseLockEntry(result.contentAsObject());
+            LockEntry existingLock = CouchBaseUtil.lockEntryFromEntity(result.contentAsObject());
             if (newLock.getOwner().equals(existingLock.getOwner()) ||
                     LocalDateTime.now().isAfter(existingLock.getExpiresAt())) {
                 logger.debug("Lock with key {} already owned by us or is expired, so trying to perform a lock.",
@@ -100,7 +97,7 @@ public class CouchbaseLockRepository implements LockRepository {
         String key = keyGenerator.toKey(newLock);
         try {
             GetResult result = collection.get(key);
-            LockEntry existingLock = new CouchbaseLockEntry(result.contentAsObject());
+            LockEntry existingLock = CouchBaseUtil.lockEntryFromEntity(result.contentAsObject());
             if (newLock.getOwner().equals(existingLock.getOwner())) {
                 logger.debug("Lock with key {} already owned by us, so trying to perform a lock.",
                         existingLock.getKey());
@@ -123,7 +120,7 @@ public class CouchbaseLockRepository implements LockRepository {
         String key = keyGenerator.toKey(lockKey);
         try {
             GetResult result = collection.get(key);
-            return new CouchbaseLockEntry(result.contentAsObject());
+            return CouchBaseUtil.lockEntryFromEntity(result.contentAsObject());
         } catch (DocumentNotFoundException documentNotFoundException) {
             logger.debug("Lock for key {} was not found.", key);
             return null;
@@ -135,7 +132,7 @@ public class CouchbaseLockRepository implements LockRepository {
         String key = keyGenerator.toKey(lockKey);
         try {
             GetResult result = collection.get(key);
-            LockEntry existingLock = new CouchbaseLockEntry(result.contentAsObject());
+            LockEntry existingLock = CouchBaseUtil.lockEntryFromEntity(result.contentAsObject());
             if (owner.equals(existingLock.getOwner())) {
                 logger.debug("Lock for key {} belongs to us, so removing.", key);
                 collection.remove(key, RemoveOptions.removeOptions().cas(result.cas()));

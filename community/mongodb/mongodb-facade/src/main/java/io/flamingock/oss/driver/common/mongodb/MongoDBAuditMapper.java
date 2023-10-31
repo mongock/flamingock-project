@@ -1,6 +1,6 @@
 package io.flamingock.oss.driver.common.mongodb;
 
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
+import io.flamingock.core.audit.domain.AuditEntry;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.util.TimeUtil;
 
@@ -28,16 +28,16 @@ public class MongoDBAuditMapper<DOCUMENT_WRAPPER extends DocumentWrapper> {
         this.documentckSupplier = documentCreator;
     }
 
-    public DOCUMENT_WRAPPER toDocument(MongockAuditEntry auditEntry) {
+    public DOCUMENT_WRAPPER toDocument(AuditEntry auditEntry) {
         DOCUMENT_WRAPPER document = documentckSupplier.get();
         document.append(KEY_EXECUTION_ID, auditEntry.getExecutionId());
         document.append(KEY_CHANGE_ID, auditEntry.getChangeId());
         document.append(KEY_AUTHOR, auditEntry.getAuthor());
-        document.append(KEY_TIMESTAMP, TimeUtil.toDate(auditEntry.getTimestamp()));
+        document.append(KEY_TIMESTAMP, TimeUtil.toDate(auditEntry.getCreatedAt()));
         document.append(KEY_STATE, auditEntry.getState().name());
         document.append(KEY_TYPE, auditEntry.getType().name());
-        document.append(KEY_CHANGELOG_CLASS, auditEntry.getChangeLogClass());
-        document.append(KEY_CHANGESET_METHOD, auditEntry.getChangeSetMethod());
+        document.append(KEY_CHANGELOG_CLASS, auditEntry.getClassName());
+        document.append(KEY_CHANGESET_METHOD, auditEntry.getMethodName());
         document.append(KEY_METADATA, auditEntry.getMetadata());
         document.append(KEY_EXECUTION_MILLIS, auditEntry.getExecutionMillis());
         document.append(KEY_EXECUTION_HOSTNAME, auditEntry.getExecutionHostname());
@@ -46,14 +46,14 @@ public class MongoDBAuditMapper<DOCUMENT_WRAPPER extends DocumentWrapper> {
         return document;
     }
 
-    public MongockAuditEntry fromDocument(DocumentWrapper entry) {
-        return new MongockAuditEntry(
+    public AuditEntry fromDocument(DocumentWrapper entry) {
+        return new AuditEntry(
                 entry.getString(KEY_EXECUTION_ID),
                 entry.getString(KEY_CHANGE_ID),
                 entry.getString(KEY_AUTHOR),
                 TimeUtil.toLocalDateTime(entry.get(KEY_TIMESTAMP)),
                 entry.containsKey(KEY_STATE) ? AuditEntryStatus.valueOf(entry.getString(KEY_STATE)) : null,
-                entry.containsKey(KEY_TYPE) ? MongockAuditEntry.ExecutionType.valueOf(entry.getString(KEY_TYPE)) : null,
+                entry.containsKey(KEY_TYPE) ? AuditEntry.ExecutionType.valueOf(entry.getString(KEY_TYPE)) : null,
                 entry.getString(KEY_CHANGELOG_CLASS),
                 entry.getString(KEY_CHANGESET_METHOD),
                 entry.containsKey(KEY_EXECUTION_MILLIS) && entry.get(KEY_EXECUTION_MILLIS) != null

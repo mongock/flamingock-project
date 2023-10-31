@@ -17,9 +17,9 @@ import java.time.ZoneId;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 
-public class MongockLock implements Lock {
+public class LocalLock implements Lock {
 
-    private static final Logger logger = LoggerFactory.getLogger(MongockLock.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocalLock.class);
 
 
 
@@ -54,19 +54,19 @@ public class MongockLock implements Lock {
                         String owner,
                         LockRepository lockRepository,
                         TimeService timeService) {
-        MongockLock lock = new MongockLock(leaseMillis, stopTryingAfterMillis, retryFrequencyMillis, owner, lockRepository, timeService);
+        LocalLock lock = new LocalLock(leaseMillis, stopTryingAfterMillis, retryFrequencyMillis, owner, lockRepository, timeService);
         lock.acquire();
         return lock;
 
     }
 
 
-    private MongockLock(long leaseMillis,
-                        long stopTryingAfterMillis,
-                        long retryFrequencyMillis,
-                        String owner,
-                        LockRepository lockRepository,
-                        TimeService timeService) {
+    private LocalLock(long leaseMillis,
+                      long stopTryingAfterMillis,
+                      long retryFrequencyMillis,
+                      String owner,
+                      LockRepository lockRepository,
+                      TimeService timeService) {
         this.leaseMillis = leaseMillis;
         this.stopTryingAfterMillis = stopTryingAfterMillis;
         this.retryFrequencyMillis = retryFrequencyMillis;

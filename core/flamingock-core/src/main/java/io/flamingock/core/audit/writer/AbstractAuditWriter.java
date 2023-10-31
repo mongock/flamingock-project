@@ -2,6 +2,7 @@ package io.flamingock.core.audit.writer;
 
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.domain.AuditEntry;
+import io.flamingock.core.audit.domain.AuditEntryMapper;
 import io.flamingock.core.util.Result;
 
 /**
@@ -12,14 +13,15 @@ import io.flamingock.core.util.Result;
  * However, the `mapper responsibility` is intended to be delegated to a Mapper class, but that's is left to decide
  * to the developer implementing this abstract class.
  */
-public abstract class AbstractAuditWriter<AUDIT_ENTRY extends AuditEntry> implements AuditWriter {
+public abstract class AbstractAuditWriter implements AuditWriter {
 
+    @Override
     public final Result writeStep(AuditItem auditItem) {
-        return writeEntry(map(auditItem));
+        return writeEntry(AuditEntryMapper.map(auditItem));
     }
 
-    protected abstract Result writeEntry(AUDIT_ENTRY auditEntry);
+    protected abstract Result writeEntry(AuditEntry auditEntry);
 
-    protected abstract AUDIT_ENTRY map(AuditItem taskStep);
+
 
 }

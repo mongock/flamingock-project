@@ -1,21 +1,5 @@
 package io.flamingock.oss.driver.couchbase.internal;
 
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
-import io.flamingock.core.audit.single.SingleAuditStageStatus;
-import io.flamingock.core.util.Result;
-import io.flamingock.core.util.TimeUtil;
-import io.flamingock.oss.driver.couchbase.internal.entry.CouchbaseAuditEntry;
-import io.flamingock.oss.driver.couchbase.internal.util.AuditEntryKeyGenerator;
-import io.flamingock.oss.driver.couchbase.internal.util.N1QLQueryProvider;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.couchbase.client.core.error.CouchbaseException;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
@@ -26,9 +10,20 @@ import com.couchbase.client.java.kv.UpsertOptions;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.QueryScanConsistency;
+import io.flamingock.core.audit.Auditor;
+import io.flamingock.core.audit.domain.AuditEntry;
+import io.flamingock.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.util.Result;
+import io.flamingock.core.util.TimeUtil;
+import io.flamingock.oss.driver.couchbase.internal.util.CouchBaseUtil;
+import io.flamingock.oss.driver.couchbase.internal.util.AuditEntryKeyGenerator;
+import io.flamingock.oss.driver.couchbase.internal.util.N1QLQueryProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_KEY;
-import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_AUDIT_ENTRY;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_AUTHOR;
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGELOG_CLASS;
@@ -43,8 +38,10 @@ import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_S
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_SYSTEM_CHANGE;
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_TIMESTAMP;
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_TYPE;
+import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_AUDIT_ENTRY;
+import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_KEY;
 
-public class CouchbaseAuditor extends MongockAuditor {
+public class CouchbaseAuditor extends Auditor {
 
     private static final Logger logger = LoggerFactory.getLogger(CouchbaseAuditor.class);
 
@@ -69,7 +66,6 @@ public class CouchbaseAuditor extends MongockAuditor {
         this.couchbaseGenericRepository = new CouchbaseGenericRepository(cluster, collection, QUERY_FIELDS);
     }
 
-    @Override
     protected void initialize(boolean indexCreation) {
         this.couchbaseGenericRepository.initialize(indexCreation);
     }
@@ -82,7 +78,7 @@ public class CouchbaseAuditor extends MongockAuditor {
     }
 
     @Override
-    protected Result writeEntry(MongockAuditEntry auditEntry) {
+    protected Result writeEntry(AuditEntry auditEntry) {
 
         String key = keyGenerator.toKey(auditEntry);
         logger.debug("Saving audit entry with key {}", key);
@@ -97,16 +93,16 @@ public class CouchbaseAuditor extends MongockAuditor {
         return Result.OK();
     }
 
-    private JsonObject toEntity(MongockAuditEntry auditEntry) {
+    private JsonObject toEntity(AuditEntry auditEntry) {
         JsonObject document = JsonObject.create();
         this.couchbaseGenericRepository.addField(document, KEY_EXECUTION_ID, auditEntry.getExecutionId());
         this.couchbaseGenericRepository.addField(document, KEY_CHANGE_ID, auditEntry.getChangeId());
         this.couchbaseGenericRepository.addField(document, KEY_AUTHOR, auditEntry.getAuthor());
-        this.couchbaseGenericRepository.addField(document, KEY_TIMESTAMP, TimeUtil.toDate(auditEntry.getTimestamp()));
+        this.couchbaseGenericRepository.addField(document, KEY_TIMESTAMP, TimeUtil.toDate(auditEntry.getCreatedAt()));
         this.couchbaseGenericRepository.addField(document, KEY_STATE, auditEntry.getState().name());
         this.couchbaseGenericRepository.addField(document, KEY_TYPE, auditEntry.getType().name());
-        this.couchbaseGenericRepository.addField(document, KEY_CHANGELOG_CLASS, auditEntry.getChangeLogClass());
-        this.couchbaseGenericRepository.addField(document, KEY_CHANGESET_METHOD, auditEntry.getChangeSetMethod());
+        this.couchbaseGenericRepository.addField(document, KEY_CHANGELOG_CLASS, auditEntry.getClassName());
+        this.couchbaseGenericRepository.addField(document, KEY_CHANGESET_METHOD, auditEntry.getMethodName());
         this.couchbaseGenericRepository.addField(document, KEY_METADATA, auditEntry.getMetadata());
         this.couchbaseGenericRepository.addField(document, KEY_EXECUTION_MILLIS, auditEntry.getExecutionMillis());
         this.couchbaseGenericRepository.addField(document, KEY_EXECUTION_HOSTNAME, auditEntry.getExecutionHostname());
@@ -117,8 +113,8 @@ public class CouchbaseAuditor extends MongockAuditor {
     }
 
     @Override
-    public SingleAuditStageStatus getAuditStageStatus() {
-        SingleAuditStageStatus.Builder builder = SingleAuditStageStatus.builder();
+    public AuditStageStatus getAuditStageStatus() {
+        AuditStageStatus.Builder builder = AuditStageStatus.builder();
         QueryResult result = cluster.query(
                 N1QLQueryProvider.selectAllChangesQuery(collection.bucketName(), collection.scopeName(),
                         collection.name()),
@@ -127,9 +123,11 @@ public class CouchbaseAuditor extends MongockAuditor {
         result
                 .rowsAsObject()
                 .stream()
-                .map(CouchbaseAuditEntry::new)
+                .map(CouchBaseUtil::auditEntryFromEntity)
                 .collect(Collectors.toList())
                 .forEach(builder::addEntry);
         return builder.build();
     }
+
+
 }

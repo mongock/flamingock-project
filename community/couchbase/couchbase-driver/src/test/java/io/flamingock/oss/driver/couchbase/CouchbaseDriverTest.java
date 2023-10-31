@@ -6,7 +6,7 @@ import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.manager.query.DropQueryIndexOptions;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryScanConsistency;
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
+import io.flamingock.core.audit.domain.AuditEntry;
 import io.flamingock.community.runner.standalone.CommunityStandalone;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
@@ -69,7 +69,7 @@ class CouchbaseDriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
+        List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
         assertEquals("create-index", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -108,7 +108,7 @@ class CouchbaseDriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
+        List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
         assertEquals("create-index", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -146,7 +146,7 @@ class CouchbaseDriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
+        List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
         assertEquals("create-index", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());

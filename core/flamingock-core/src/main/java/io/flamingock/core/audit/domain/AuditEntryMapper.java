@@ -1,26 +1,21 @@
-package io.flamingock.community.internal.driver;
+package io.flamingock.core.audit.domain;
 
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
-import io.flamingock.core.audit.AuditWriter;
-import io.flamingock.core.audit.domain.AuditEntryStatus;
-import io.flamingock.core.audit.single.SingleAuditReader;
-import io.flamingock.core.audit.writer.AbstractAuditWriter;
 import io.flamingock.core.audit.writer.AuditItem;
 import io.flamingock.core.audit.writer.RuntimeContext;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.util.ThrowableUtil;
 
-public abstract class MongockAuditor
-        extends AbstractAuditWriter<MongockAuditEntry>
-        implements AuditWriter, SingleAuditReader {
+public final class AuditEntryMapper {
 
-    @Override
-    protected final MongockAuditEntry map(AuditItem auditItem) {
+    private AuditEntryMapper(){
+    }
+
+    public static  AuditEntry map(AuditItem auditItem) {
         TaskDescriptor taskDescriptor = auditItem.getTaskDescriptor();
         StageExecutionContext stageExecutionContext = auditItem.getExecutionContext();
         RuntimeContext runtimeContext = auditItem.getRuntimeContext();
-        return new MongockAuditEntry(
+        return new AuditEntry(
                 stageExecutionContext.getExecutionId(),
                 taskDescriptor.getId(),
                 stageExecutionContext.getAuthor(),
@@ -37,20 +32,7 @@ public abstract class MongockAuditor
         );
     }
 
-    protected abstract void initialize(boolean indexCreation);
-
-    //TODO implement
-    private boolean getSystemChange(AuditItem auditItem) {
-        return false;
-    }
-
-    //TODO implement
-    private MongockAuditEntry.ExecutionType getExecutionType(AuditItem auditItem) {
-        return MongockAuditEntry.ExecutionType.EXECUTION;
-    }
-
-
-    private AuditEntryStatus getAuditStatus(AuditItem auditable) {
+    private static AuditEntryStatus getAuditStatus(AuditItem auditable) {
         switch (auditable.getOperation()) {
             case EXECUTION:
                 return auditable.getRuntimeContext().isSuccess() ? AuditEntryStatus.EXECUTED : AuditEntryStatus.FAILED;
@@ -59,4 +41,13 @@ public abstract class MongockAuditor
                 return auditable.getRuntimeContext().isSuccess() ? AuditEntryStatus.ROLLED_BACK : AuditEntryStatus.ROLLBACK_FAILED;
         }
     }
+
+    private static AuditEntry.ExecutionType getExecutionType(AuditItem auditItem) {
+        return AuditEntry.ExecutionType.EXECUTION;
+    }
+
+    private static boolean getSystemChange(AuditItem auditItem) {
+        return false;
+    }
+
 }

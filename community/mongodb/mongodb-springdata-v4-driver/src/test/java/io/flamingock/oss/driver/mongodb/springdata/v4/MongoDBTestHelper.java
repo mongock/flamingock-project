@@ -2,7 +2,7 @@ package io.flamingock.oss.driver.mongodb.springdata.v4;
 
 import com.mongodb.client.MongoDatabase;
 
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
+import io.flamingock.core.audit.domain.AuditEntry;
 import io.flamingock.core.util.TimeUtil;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.mongodb.springdata.v4.internal.mongodb.SpringDataMongoV4DocumentWrapper;
@@ -40,7 +40,7 @@ public class MongoDBTestHelper {
                 .collect(Collectors.toList());
     }
 
-    public List<MongockAuditEntry> getAuditEntriesSorted(String auditLogCollection) {
+    public List<AuditEntry> getAuditEntriesSorted(String auditLogCollection) {
         return mongoDatabase.getCollection(auditLogCollection).find()
                 .into(new LinkedList<>())
                 .stream()

@@ -6,9 +6,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
-import io.flamingock.core.audit.single.SingleAuditStageStatus;
+import io.flamingock.core.audit.Auditor;
+import io.flamingock.core.audit.domain.AuditEntry;
+import io.flamingock.core.audit.domain.AuditStageStatus;
 import io.flamingock.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
@@ -28,7 +28,7 @@ import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_A
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
 import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_EXECUTION_ID;
 
-public class Mongo3Auditor extends MongockAuditor {
+public class Mongo3Auditor extends Auditor {
     
     private static final Logger logger = LoggerFactory.getLogger(Mongo3Auditor.class);
 
@@ -48,7 +48,6 @@ public class Mongo3Auditor extends MongockAuditor {
         this.sessionManager = sessionManager;
     }
 
-    @Override
     protected void initialize(boolean indexCreation) {
         CollectionInitializator<Mongo3DocumentWrapper> initializer = new CollectionInitializator<>(
                 new Mongo3CollectionWrapper(collection),
@@ -64,7 +63,7 @@ public class Mongo3Auditor extends MongockAuditor {
     }
 
     @Override
-    protected Result writeEntry(MongockAuditEntry auditEntry) {
+    protected Result writeEntry(AuditEntry auditEntry) {
         Bson filter = Filters.and(
                 Filters.eq(KEY_EXECUTION_ID, auditEntry.getExecutionId()),
                 Filters.eq(KEY_CHANGE_ID, auditEntry.getChangeId()),
@@ -84,8 +83,8 @@ public class Mongo3Auditor extends MongockAuditor {
 
 
     @Override
-    public SingleAuditStageStatus getAuditStageStatus() {
-        SingleAuditStageStatus.Builder builder = SingleAuditStageStatus.builder();
+    public AuditStageStatus getAuditStageStatus() {
+        AuditStageStatus.Builder builder = AuditStageStatus.builder();
         collection.find()
                 .into(new LinkedList<>())
                 .stream()

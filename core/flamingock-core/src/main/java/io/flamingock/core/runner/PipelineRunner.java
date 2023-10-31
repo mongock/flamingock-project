@@ -1,12 +1,11 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.audit.single.SingleAuditReader;
-import io.flamingock.core.audit.single.SingleAuditStageStatus;
+import io.flamingock.core.audit.AuditReader;
+import io.flamingock.core.audit.domain.AuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.impl.PipelineCompletedEvent;
 import io.flamingock.core.event.model.impl.PipelineFailedEvent;
-import io.flamingock.core.event.model.impl.PipelineIgnoredEvent;
 import io.flamingock.core.event.model.impl.PipelineStartedEvent;
 import io.flamingock.core.event.model.impl.StageCompletedEvent;
 import io.flamingock.core.event.model.impl.StageFailedEvent;
@@ -32,7 +31,7 @@ public abstract class PipelineRunner implements Runner {
 
     private final LockAcquirer lockAcquirer;
 
-    private final SingleAuditReader auditReader;
+    private final AuditReader auditReader;
 
     private final EventPublisher eventPublisher;
 
@@ -44,7 +43,7 @@ public abstract class PipelineRunner implements Runner {
 
 
     public PipelineRunner(LockAcquirer lockAcquirer,
-                          SingleAuditReader auditReader,
+                          AuditReader auditReader,
                           StageExecutor stageExecutor,
                           StageExecutionContext stageExecutionContext,
                           EventPublisher eventPublisher,
@@ -102,7 +101,7 @@ public abstract class PipelineRunner implements Runner {
 
     private void startStage(Lock lock, LoadedStage loadedStage) throws StageExecutionException {
         eventPublisher.publish(new StageStartedEvent());
-        SingleAuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
+        AuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
         logger.debug("Pulled remote state:\n{}", currentAuditStageStatus);
 
         ExecutableStage executableStage = loadedStage.applyState(currentAuditStageStatus);

@@ -3,12 +3,11 @@ package io.flamingock.oss.driver.couchbase;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
 import com.couchbase.client.java.json.JsonObject;
-import com.couchbase.client.java.manager.query.QueryIndex;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.QueryScanConsistency;
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
-import io.flamingock.oss.driver.couchbase.internal.entry.CouchbaseAuditEntry;
+import io.flamingock.core.audit.domain.AuditEntry;
+import io.flamingock.oss.driver.couchbase.internal.util.CouchBaseUtil;
 import io.flamingock.oss.driver.couchbase.internal.util.N1QLQueryProvider;
 
 import java.util.Comparator;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_AUDIT_ENTRY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CouchbaseTestHelper {
 
@@ -26,7 +24,7 @@ public class CouchbaseTestHelper {
         this.cluster = cluster;
     }
 
-    public List<MongockAuditEntry> getAuditEntriesSorted(Collection collection) {
+    public List<AuditEntry> getAuditEntriesSorted(Collection collection) {
         QueryResult result = cluster.query(
                 N1QLQueryProvider.selectAllChangesQuery(collection.bucketName(), collection.scopeName(),
                         collection.name()),
@@ -35,8 +33,8 @@ public class CouchbaseTestHelper {
         return result
                 .rowsAsObject()
                 .stream()
-                .map(CouchbaseAuditEntry::new)
-                .sorted(Comparator.comparing(CouchbaseAuditEntry::getTimestamp))
+                .map(CouchBaseUtil::auditEntryFromEntity)
+                .sorted(Comparator.comparing(AuditEntry::getCreatedAt))
                 .collect(Collectors.toList());
     }
 

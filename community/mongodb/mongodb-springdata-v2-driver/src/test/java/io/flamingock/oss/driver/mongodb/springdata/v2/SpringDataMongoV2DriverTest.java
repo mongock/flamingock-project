@@ -5,7 +5,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
+import io.flamingock.core.audit.domain.AuditEntry;
 import io.flamingock.community.runner.standalone.CommunityStandalone;
 import io.flamingock.core.audit.domain.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
@@ -23,8 +23,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -134,7 +132,7 @@ class SpringDataMongoV2DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -168,7 +166,7 @@ class SpringDataMongoV2DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -204,7 +202,7 @@ class SpringDataMongoV2DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(2, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -237,7 +235,7 @@ class SpringDataMongoV2DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -272,7 +270,7 @@ class SpringDataMongoV2DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());

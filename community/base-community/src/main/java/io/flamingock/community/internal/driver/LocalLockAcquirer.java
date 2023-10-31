@@ -2,14 +2,14 @@ package io.flamingock.community.internal.driver;
 
 
 import io.flamingock.community.internal.persistence.LockRepository;
-import io.flamingock.core.audit.single.SingleAuditReader;
+import io.flamingock.core.audit.AuditReader;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.lock.AbstractLockAcquirer;
 import io.flamingock.core.lock.Lock;
 import io.flamingock.core.lock.LockOptions;
 import io.flamingock.core.util.TimeService;
 
-public class SingleLockAcquirer extends AbstractLockAcquirer {
+public class LocalLockAcquirer extends AbstractLockAcquirer {
 
     private final LockRepository lockRepository;
 
@@ -21,9 +21,9 @@ public class SingleLockAcquirer extends AbstractLockAcquirer {
      * @param auditReader
      * @param coreConfiguration
      */
-    public SingleLockAcquirer(LockRepository lockRepository,
-                              SingleAuditReader auditReader,
-                              CoreConfiguration coreConfiguration) {
+    public LocalLockAcquirer(LockRepository lockRepository,
+                             AuditReader auditReader,
+                             CoreConfiguration coreConfiguration) {
         super(auditReader);
         this.lockRepository = lockRepository;
         this.configuration = coreConfiguration;
@@ -32,7 +32,7 @@ public class SingleLockAcquirer extends AbstractLockAcquirer {
 
     @Override
     protected Lock acquireLock(LockOptions lockOptions) {
-        return MongockLock.getLock(
+        return LocalLock.getLock(
                 configuration.getLockAcquiredForMillis(),
                 configuration.getLockQuitTryingAfterMillis(),
                 configuration.getLockTryFrequencyMillis(),

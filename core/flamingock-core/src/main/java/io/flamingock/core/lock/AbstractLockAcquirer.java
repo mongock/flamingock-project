@@ -1,22 +1,22 @@
 package io.flamingock.core.lock;
 
-import io.flamingock.core.audit.single.SingleAuditReader;
-import io.flamingock.core.audit.single.SingleAuditStageStatus;
+import io.flamingock.core.audit.AuditReader;
+import io.flamingock.core.audit.domain.AuditStageStatus;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.util.TimeService;
 
 public abstract class AbstractLockAcquirer implements LockAcquirer {
 
-    private final SingleAuditReader auditReader;
+    private final AuditReader auditReader;
 
-    public AbstractLockAcquirer(SingleAuditReader auditReader) {
+    public AbstractLockAcquirer(AuditReader auditReader) {
         this.auditReader = auditReader;
     }
 
     @Override
     public LockAcquisition acquireIfRequired(LoadedStage loadedStage, LockOptions lockOptions) throws LockException {
-        SingleAuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
+        AuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
         ExecutableStage executableStage = loadedStage.applyState(currentAuditStageStatus);
         if (executableStage.doesRequireExecution()) {
             Lock lock = acquireLock(lockOptions);

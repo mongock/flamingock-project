@@ -6,8 +6,8 @@ import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.SingleLockAcquirer;
+import io.flamingock.core.audit.Auditor;
+import io.flamingock.community.internal.driver.LocalLockAcquirer;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ public class SpringDataMongoV3Engine implements ConnectionEngine {
     private final CommunityConfiguration communityConfiguration;
 
     private SpringDataMongoV3Auditor auditor;
-    private SingleLockAcquirer lockProvider;
+    private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final SpringDataMongoV3Configuration driverConfiguration;
     private final CoreConfiguration coreConfiguration;
@@ -49,16 +49,16 @@ public class SpringDataMongoV3Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         SpringDataMongoV3LockRepository lockRepository = new SpringDataMongoV3LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
+        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
-    public MongockAuditor getAuditor() {
+    public Auditor getAuditor() {
         return auditor;
     }
 
     @Override
-    public SingleLockAcquirer getLockProvider() {
+    public LocalLockAcquirer getLockProvider() {
         return lockProvider;
     }
 

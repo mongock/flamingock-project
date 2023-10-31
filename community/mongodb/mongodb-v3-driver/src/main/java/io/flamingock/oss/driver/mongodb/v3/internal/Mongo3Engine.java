@@ -5,8 +5,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.community.internal.CommunityConfiguration;
 import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.SingleLockAcquirer;
+import io.flamingock.core.audit.Auditor;
+import io.flamingock.community.internal.driver.LocalLockAcquirer;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
@@ -21,7 +21,7 @@ public class Mongo3Engine implements ConnectionEngine {
     private final CommunityConfiguration communityConfiguration;
 
     private Mongo3Auditor auditor;
-    private SingleLockAcquirer lockProvider;
+    private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final MongoDB3Configuration driverConfiguration;
     private final CoreConfiguration coreConfiguration;
@@ -50,16 +50,16 @@ public class Mongo3Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         Mongo3LockRepository lockRepository = new Mongo3LockRepository(database, driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
+        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
-    public MongockAuditor getAuditor() {
+    public Auditor getAuditor() {
         return auditor;
     }
 
     @Override
-    public SingleLockAcquirer getLockProvider() {
+    public LocalLockAcquirer getLockProvider() {
         return lockProvider;
     }
 

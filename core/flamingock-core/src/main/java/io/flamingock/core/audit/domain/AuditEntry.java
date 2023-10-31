@@ -1,7 +1,5 @@
 package io.flamingock.core.audit.domain;
 
-import io.flamingock.core.util.ThrowableUtil;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +19,8 @@ public class AuditEntry {
             FAILED,
             ROLLBACK_FAILED)));
 
+    public enum ExecutionType {EXECUTION, BEFORE_EXECUTION}
+
     private final String executionId;
 
     private final String changeId;
@@ -35,7 +35,6 @@ public class AuditEntry {
 
     private final String methodName;
 
-
     private final Object metadata;
 
     private final long executionMillis;
@@ -43,70 +42,28 @@ public class AuditEntry {
     private final String executionHostname;
 
     private final String errorTrace;
+    private final ExecutionType type;
+
+    protected Boolean systemChange;
 
 
-    public static AuditEntry instance(String executionId,
-                                      String changeId,
-                                      String author,
-                                      LocalDateTime createdAt,
-                                      AuditEntryStatus state,
-                                      String className,
-                                      String methodName,
-                                      long executionMillis,
-                                      String executionHostname,
-                                      Object metadata) {
-        return new AuditEntry(executionId,
-                changeId,
-                author,
-                createdAt,
-                state,
-                className,
-                methodName,
-                executionMillis,
-                executionHostname,
-                metadata,
-                null);
-    }
-
-    public static AuditEntry withError(String executionId,
-                                       String changeId,
-                                       String author,
-                                       LocalDateTime createdAt,
-                                       AuditEntryStatus state,
-                                       String className,
-                                       String methodName,
-                                       long executionMillis,
-                                       String executionHostname,
-                                       Object metadata,
-                                       Throwable errorTrace) {
-        return new AuditEntry(executionId,
-                changeId,
-                author,
-                createdAt,
-                state,
-                className,
-                methodName,
-                executionMillis,
-                executionHostname,
-                metadata,
-                ThrowableUtil.serialize(errorTrace));
-    }
-
-    protected AuditEntry(String executionId,
-                         String changeId,
-                         String author,
-                         LocalDateTime createdAt,
-                         AuditEntryStatus state,
-                         String className,
-                         String methodName,
-                         long executionMillis,
-                         String executionHostname,
-                         Object metadata,
-                         String errorTrace) {
+    public AuditEntry(String executionId,
+                      String changeId,
+                      String author,
+                      LocalDateTime timestamp,
+                      AuditEntryStatus state,
+                      ExecutionType type,
+                      String className,
+                      String methodName,
+                      long executionMillis,
+                      String executionHostname,
+                      Object metadata,
+                      boolean systemChange,
+                      String errorTrace) {
         this.executionId = executionId;
         this.changeId = changeId;
         this.author = author;
-        this.createdAt = createdAt;
+        this.createdAt = timestamp;
         this.state = state;
         this.className = className;
         this.methodName = methodName;
@@ -114,7 +71,11 @@ public class AuditEntry {
         this.executionMillis = executionMillis;
         this.executionHostname = executionHostname;
         this.errorTrace = errorTrace;
+        this.type = type;
+
+        this.systemChange = systemChange;
     }
+
 
     public String getExecutionId() {
         return executionId;
@@ -160,6 +121,14 @@ public class AuditEntry {
         return errorTrace;
     }
 
+    public Boolean getSystemChange() {
+        return systemChange;
+    }
+
+    public ExecutionType getType() {
+        return type;
+    }
+
     public static AuditEntry getMostRelevant(AuditEntry currentEntry, AuditEntry newEntry) {
         if (newEntry == null) {
             return currentEntry;
@@ -170,9 +139,9 @@ public class AuditEntry {
         }
     }
 
+
     private boolean shouldBeReplacedBy(AuditEntry newEntry) {
         return RELEVANT_STATES.contains(newEntry.state) && newEntry.getCreatedAt().isAfter(this.getCreatedAt());
     }
-
 
 }
