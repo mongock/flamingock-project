@@ -5,9 +5,9 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
-import io.flamingock.community.runner.standalone.CommunityStandalone;
-import io.flamingock.core.audit.domain.AuditEntryStatus;
+import io.flamingock.core.audit.writer.AuditEntry;
+import io.flamingock.core.configurator.standalone.FlamingockStandalone;
+import io.flamingock.core.audit.writer.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
@@ -77,7 +77,7 @@ class SpringDataMongoV3DriverTest {
     @DisplayName("When standalone runs the driver with DEFAULT repository names related collections should exists")
     void happyPathWithDefaultRepositoryNames() {
         //Given-When
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new SpringDataMongoV3Driver(mongoTemplate))
                 .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoTemplate)
@@ -101,7 +101,7 @@ class SpringDataMongoV3DriverTest {
         driverConfiguration.setMigrationRepositoryName(CUSTOM_MIGRATION_REPOSITORY_NAME);
         driverConfiguration.setLockRepositoryName(CUSTOM_LOCK_REPOSITORY_NAME);
 
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new SpringDataMongoV3Driver(mongoTemplate).setDriverConfiguration(driverConfiguration))
                 .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoTemplate)
@@ -121,7 +121,7 @@ class SpringDataMongoV3DriverTest {
     @DisplayName("When standalone runs the driver with transactions enabled should persist the audit logs and the user's collection updated")
     void happyPathWithTransaction() {
         //Given-When
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new SpringDataMongoV3Driver(mongoTemplate))
                 .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoTemplate)
@@ -132,7 +132,7 @@ class SpringDataMongoV3DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -155,7 +155,7 @@ class SpringDataMongoV3DriverTest {
     @DisplayName("When standalone runs the driver with transactions disabled should persist the audit logs and the user's collection updated")
     void happyPathWithoutTransaction() {
         //Given-When
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new SpringDataMongoV3Driver(mongoTemplate))
                 .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v3.changes.happyPathWithoutTransaction"))
                 .addDependency(mongoTemplate)
@@ -166,7 +166,7 @@ class SpringDataMongoV3DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -190,7 +190,7 @@ class SpringDataMongoV3DriverTest {
     void failedWithTransaction() {
         //Given-When
         assertThrows(StageExecutionException.class, () -> {
-            CommunityStandalone.builder()
+            FlamingockStandalone.local()
                     .setDriver(new SpringDataMongoV3Driver(mongoTemplate))
                     .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v3.changes.failedWithTransaction"))
                     .addDependency(mongoTemplate)
@@ -202,7 +202,7 @@ class SpringDataMongoV3DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(2, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -223,7 +223,7 @@ class SpringDataMongoV3DriverTest {
     void failedWithoutTransactionWithRollback() {
         //Given-When
         assertThrows(StageExecutionException.class, () -> {
-            CommunityStandalone.builder()
+            FlamingockStandalone.local()
                     .setDriver(new SpringDataMongoV3Driver(mongoTemplate))
                     .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v3.changes.failedWithoutTransactionWithRollback"))
                     .addDependency(mongoTemplate)
@@ -235,7 +235,7 @@ class SpringDataMongoV3DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
@@ -258,7 +258,7 @@ class SpringDataMongoV3DriverTest {
     void failedWithoutTransactionWithoutRollback() {
         //Given-When
         assertThrows(StageExecutionException.class, () -> {
-            CommunityStandalone.builder()
+            FlamingockStandalone.local()
                     .setDriver(new SpringDataMongoV3Driver(mongoTemplate))
                     .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v3.changes.failedWithoutTransactionWithoutRollback"))
                     .addDependency(mongoTemplate)
@@ -270,7 +270,7 @@ class SpringDataMongoV3DriverTest {
 
         //Then
         //Checking auditLog
-        List<MongockAuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getChangeId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());

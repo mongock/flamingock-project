@@ -1,9 +1,9 @@
 package io.flamingock.oss.driver.mongodb.sync.v4.driver;
 
 import com.mongodb.client.MongoClient;
-import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4Engine;
@@ -51,7 +51,7 @@ public class MongoSync4Driver implements ConnectionDriver<MongoDBSync4Configurat
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, CommunityConfiguration communityConfiguration) {
+    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, LocalConfiguration communityConfiguration) {
         return new MongoSync4Engine(
                 mongoClient,
                 databaseName,

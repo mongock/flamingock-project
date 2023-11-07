@@ -23,7 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_TIMESTAMP;
+import static io.flamingock.community.internal.AuditEntryField.KEY_TIMESTAMP;
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_AUDIT_ENTRY;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

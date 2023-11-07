@@ -1,5 +1,6 @@
 package io.flamingock.core.configurator;
 
+import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.pipeline.Stage;
 
 import java.util.List;
@@ -10,10 +11,6 @@ public interface CoreConfigurable {
     void setStages(List<Stage> stages);
 
     List<Stage> getStages();
-
-
-
-
 
     void setLockAcquiredForMillis(long lockAcquiredForMillis);
 

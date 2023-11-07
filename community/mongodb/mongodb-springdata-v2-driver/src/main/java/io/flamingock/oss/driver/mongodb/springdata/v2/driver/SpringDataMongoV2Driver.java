@@ -3,9 +3,9 @@ package io.flamingock.oss.driver.mongodb.springdata.v2.driver;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.oss.driver.mongodb.springdata.v2.config.SpringDataMongoV2Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v2.internal.SpringDataMongoV2Engine;
-import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.driver.ConnectionEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -47,7 +47,7 @@ public class SpringDataMongoV2Driver implements ConnectionDriver<SpringDataMongo
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, CommunityConfiguration communityConfiguration) {
+    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, LocalConfiguration communityConfiguration) {
         return new SpringDataMongoV2Engine(
                 mongoTemplate,
                 coreConfiguration,

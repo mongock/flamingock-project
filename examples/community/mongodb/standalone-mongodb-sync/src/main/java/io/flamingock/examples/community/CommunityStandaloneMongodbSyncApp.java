@@ -5,7 +5,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
-import io.flamingock.community.runner.standalone.CommunityStandalone;
+import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.examples.community.events.PipelineFailedListener;
 import io.flamingock.examples.community.events.PipelineStartedListener;
@@ -32,7 +32,7 @@ public class CommunityStandaloneMongodbSyncApp {
 
 
     public  void run(MongoClient mongoClient, String databaseName) {
-        CommunityStandalone.builder()
+        FlamingockStandalone.local()
                 .setDriver(new MongoSync4Driver(mongoClient, databaseName))
                 .setLockAcquiredForMillis(60 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                 .setLockQuitTryingAfterMillis(3 * 60 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L

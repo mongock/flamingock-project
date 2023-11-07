@@ -1,10 +1,10 @@
 package io.flamingock.community.runner.springboot.v3;
 
-import io.flamingock.community.internal.CommunityConfigurable;
-import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
-import io.flamingock.core.configurator.LegacyMigration;
+import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.springboot.v3.configurator.SpringRunnerType;
@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 @ConfigurationProperties("flamingock")
-public class CommunitySpringbootConfiguration implements CoreConfigurable, CommunityConfigurable, SpringbootConfigurable {
+public class CommunitySpringbootConfiguration implements CoreConfigurable, LocalConfigurable, SpringbootConfigurable {
 
     private final CoreConfiguration coreConfiguration = new CoreConfiguration();
 
-    private final CommunityConfiguration communityConfiguration = new CommunityConfiguration();
+    private final LocalConfiguration communityConfiguration = new LocalConfiguration();
 
     private final SpringbootConfiguration springbootConfiguration = new SpringbootConfiguration();
 
@@ -28,7 +28,7 @@ public class CommunitySpringbootConfiguration implements CoreConfigurable, Commu
         return coreConfiguration;
     }
 
-    public CommunityConfiguration getCommunityProperties() {
+    public LocalConfiguration getCommunityProperties() {
         return communityConfiguration;
     }
 

@@ -3,10 +3,10 @@ package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.SingleLockAcquirer;
+import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.audit.Auditor;
+import io.flamingock.community.internal.lock.LocalLockAcquirer;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
@@ -18,10 +18,10 @@ public class MongoSync4Engine implements ConnectionEngine {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;
-    private final CommunityConfiguration communityConfiguration;
+    private final LocalConfiguration communityConfiguration;
 
     private MongoSync4Auditor auditor;
-    private SingleLockAcquirer lockProvider;
+    private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final MongoDBSync4Configuration driverConfiguration;
     private final CoreConfiguration coreConfiguration;
@@ -30,7 +30,7 @@ public class MongoSync4Engine implements ConnectionEngine {
     public MongoSync4Engine(MongoClient mongoClient,
                             String databaseName,
                             CoreConfiguration coreConfiguration,
-                            CommunityConfiguration communityConfiguration,
+                            LocalConfiguration communityConfiguration,
                             MongoDBSync4Configuration driverConfiguration) {
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);
@@ -50,16 +50,16 @@ public class MongoSync4Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
+        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
-    public MongockAuditor getAuditor() {
+    public Auditor getAuditor() {
         return auditor;
     }
 
     @Override
-    public SingleLockAcquirer getLockProvider() {
+    public LocalLockAcquirer getLockProvider() {
         return lockProvider;
     }
 

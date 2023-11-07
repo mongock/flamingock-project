@@ -1,6 +1,6 @@
 package io.flamingock.oss.driver.common.mongodb;
 
-import io.flamingock.community.internal.DriverConfigurable;
+import io.flamingock.core.driver.DriverConfigurable;
 
 public class MongoDBDriverConfiguration implements DriverConfigurable {
 

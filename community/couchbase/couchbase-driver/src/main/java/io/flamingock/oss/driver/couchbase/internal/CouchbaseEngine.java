@@ -2,10 +2,9 @@ package io.flamingock.oss.driver.couchbase.internal;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
-import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.SingleLockAcquirer;
+import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.community.internal.lock.LocalLockAcquirer;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
@@ -16,10 +15,10 @@ public class CouchbaseEngine implements ConnectionEngine {
 
     private final Collection collection;
     private final Cluster cluster;
-    private final CommunityConfiguration communityConfiguration;
+    private final LocalConfiguration communityConfiguration;
 
     private CouchbaseAuditor auditor;
-    private SingleLockAcquirer lockProvider;
+    private LocalLockAcquirer lockProvider;
     private final CouchbaseConfiguration driverConfiguration;
     private final CoreConfiguration coreConfiguration;
 
@@ -27,7 +26,7 @@ public class CouchbaseEngine implements ConnectionEngine {
     public CouchbaseEngine(Cluster cluster, 
                             Collection collection,
                             CoreConfiguration coreConfiguration,
-                            CommunityConfiguration communityConfiguration,
+                            LocalConfiguration communityConfiguration,
                             CouchbaseConfiguration driverConfiguration) {
         this.cluster = cluster;
         this.collection = collection;
@@ -42,16 +41,16 @@ public class CouchbaseEngine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         CouchbaseLockRepository lockRepository = new CouchbaseLockRepository(cluster, collection);
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
+        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
-    public MongockAuditor getAuditor() {
+    public CouchbaseAuditor getAuditor() {
         return auditor;
     }
 
     @Override
-    public SingleLockAcquirer getLockProvider() {
+    public LocalLockAcquirer getLockProvider() {
         return lockProvider;
     }
 

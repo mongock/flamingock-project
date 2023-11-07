@@ -2,7 +2,7 @@ package io.flamingock.oss.driver.mongodb.springdata.v3;
 
 import com.mongodb.client.MongoDatabase;
 
-import io.flamingock.community.internal.persistence.MongockAuditEntry;
+import io.flamingock.core.audit.writer.AuditEntry;
 import io.flamingock.core.util.TimeUtil;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.mongodb.springdata.v3.internal.mongodb.SpringDataMongoV3DocumentWrapper;
@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 import org.bson.Document;
 
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_CHANGE_ID;
-import static io.flamingock.community.internal.persistence.AuditEntryField.KEY_TIMESTAMP;
+import static io.flamingock.community.internal.AuditEntryField.KEY_CHANGE_ID;
+import static io.flamingock.community.internal.AuditEntryField.KEY_TIMESTAMP;
 
 public class MongoDBTestHelper {
     public final MongoDatabase mongoDatabase;
@@ -40,7 +40,7 @@ public class MongoDBTestHelper {
                 .collect(Collectors.toList());
     }
 
-    public List<MongockAuditEntry> getAuditEntriesSorted(String auditLogCollection) {
+    public List<AuditEntry> getAuditEntriesSorted(String auditLogCollection) {
         return mongoDatabase.getCollection(auditLogCollection).find()
                 .into(new LinkedList<>())
                 .stream()

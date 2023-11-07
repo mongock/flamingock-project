@@ -1,6 +1,6 @@
 package io.flamingock.community.runner.springboot.v2;
 
-import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfiguration;
 
@@ -10,11 +10,11 @@ public final class CommunitySpringboot {
     }
 
     public static CommunitySpringbootBuilder builder() {
-        return builder(new CoreConfiguration(), new CommunityConfiguration(), new SpringbootConfiguration());
+        return builder(new CoreConfiguration(), new LocalConfiguration(), new SpringbootConfiguration());
     }
 
     static CommunitySpringbootBuilder builder(CoreConfiguration coreConfiguration,
-                                              CommunityConfiguration communityConfiguration,
+                                              LocalConfiguration communityConfiguration,
                                               SpringbootConfiguration springbootConfiguration) {
         return new CommunitySpringbootBuilder(coreConfiguration, communityConfiguration, springbootConfiguration);
     }

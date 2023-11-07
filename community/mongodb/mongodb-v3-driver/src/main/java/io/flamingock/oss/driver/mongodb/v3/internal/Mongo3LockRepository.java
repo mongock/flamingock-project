@@ -8,9 +8,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
-import io.flamingock.community.internal.persistence.LockEntry;
-import io.flamingock.community.internal.persistence.LockPersistenceException;
-import io.flamingock.community.internal.persistence.LockRepository;
+import io.flamingock.community.internal.lock.LockEntry;
+import io.flamingock.community.internal.lock.LockPersistenceException;
+import io.flamingock.community.internal.lock.LockRepository;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBLockMapper;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.Mongo3CollectionWrapper;
@@ -20,10 +20,10 @@ import org.bson.conversions.Bson;
 
 import java.util.Date;
 
-import static io.flamingock.community.internal.persistence.LockEntryField.EXPIRES_AT_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.KEY_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.OWNER_FIELD;
-import static io.flamingock.community.internal.persistence.LockEntryField.STATUS_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.EXPIRES_AT_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.KEY_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.OWNER_FIELD;
+import static io.flamingock.community.internal.lock.LockEntryField.STATUS_FIELD;
 import static io.flamingock.core.lock.LockStatus.LOCK_HELD;
 
 public class Mongo3LockRepository implements LockRepository {

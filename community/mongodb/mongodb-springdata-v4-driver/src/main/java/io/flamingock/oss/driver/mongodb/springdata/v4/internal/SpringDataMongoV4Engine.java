@@ -1,13 +1,13 @@
 package io.flamingock.oss.driver.mongodb.springdata.v4.internal;
 
-import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.SingleLockAcquirer;
+import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.audit.Auditor;
+import io.flamingock.community.internal.lock.LocalLockAcquirer;
 
 import java.util.Optional;
 
@@ -18,10 +18,10 @@ import com.mongodb.ReadConcern;
 public class SpringDataMongoV4Engine implements ConnectionEngine {
 
     private final MongoTemplate mongoTemplate;
-    private final CommunityConfiguration communityConfiguration;
+    private final LocalConfiguration communityConfiguration;
 
     private SpringDataMongoV4Auditor auditor;
-    private SingleLockAcquirer lockProvider;
+    private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final SpringDataMongoV4Configuration driverConfiguration;
     private final CoreConfiguration coreConfiguration;
@@ -29,7 +29,7 @@ public class SpringDataMongoV4Engine implements ConnectionEngine {
 
     public SpringDataMongoV4Engine(MongoTemplate mongoTemplate,
                             CoreConfiguration coreConfiguration,
-                            CommunityConfiguration communityConfiguration,
+                            LocalConfiguration communityConfiguration,
                             SpringDataMongoV4Configuration driverConfiguration) {
         this.mongoTemplate = mongoTemplate;
         this.driverConfiguration = driverConfiguration;
@@ -49,16 +49,16 @@ public class SpringDataMongoV4Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         SpringDataMongoV4LockRepository lockRepository = new SpringDataMongoV4LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
+        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
-    public MongockAuditor getAuditor() {
+    public Auditor getAuditor() {
         return auditor;
     }
 
     @Override
-    public SingleLockAcquirer getLockProvider() {
+    public LocalLockAcquirer getLockProvider() {
         return lockProvider;
     }
 

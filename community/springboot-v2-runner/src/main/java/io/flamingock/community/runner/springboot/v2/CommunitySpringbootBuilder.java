@@ -1,14 +1,14 @@
 package io.flamingock.community.runner.springboot.v2;
 
-import io.flamingock.community.internal.CommunityConfiguration;
-import io.flamingock.community.internal.CommunityConfigurator;
-import io.flamingock.community.internal.CommunityConfiguratorDelegate;
-import io.flamingock.community.internal.driver.ConnectionDriver;
-import io.flamingock.community.internal.driver.ConnectionEngine;
+import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.configurator.local.LocalConfigurator;
+import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
+import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.CoreConfigurator;
 import io.flamingock.core.configurator.CoreConfiguratorDelegate;
-import io.flamingock.core.configurator.LegacyMigration;
+import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.IPipelineCompletedEvent;
@@ -53,7 +53,7 @@ import java.util.Map;
 public class CommunitySpringbootBuilder
         implements
         CoreConfigurator<CommunitySpringbootBuilder>,
-        CommunityConfigurator<CommunitySpringbootBuilder>,
+        LocalConfigurator<CommunitySpringbootBuilder>,
         SpringbootConfigurator<CommunitySpringbootBuilder>,
         SpringRunnerBuilder {
 
@@ -61,16 +61,16 @@ public class CommunitySpringbootBuilder
 
     private final CoreConfiguratorDelegate<CommunitySpringbootBuilder> coreConfiguratorDelegate;
 
-    private final CommunityConfiguratorDelegate<CommunitySpringbootBuilder> communityConfiguratorDelegate;
+    private final LocalConfiguratorDelegate<CommunitySpringbootBuilder> communityConfiguratorDelegate;
 
     private final SpringbootConfiguratorDelegate<CommunitySpringbootBuilder> springbootConfiguratorDelegate;
 
 
     CommunitySpringbootBuilder(CoreConfiguration coreConfiguration,
-                               CommunityConfiguration communityConfiguration,
+                               LocalConfiguration communityConfiguration,
                                SpringbootConfiguration springbootConfiguration) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
-        this.communityConfiguratorDelegate = new CommunityConfiguratorDelegate<>(communityConfiguration, () -> this);
+        this.communityConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
         this.springbootConfiguratorDelegate = new SpringbootConfiguratorDelegate<>(springbootConfiguration, () -> this);
     }
 
@@ -304,7 +304,7 @@ public class CommunitySpringbootBuilder
     }
 
     @Override
-    public CommunityConfiguration getCommunityProperties() {
+    public LocalConfiguration getCommunityProperties() {
         return communityConfiguratorDelegate.getCommunityProperties();
     }
 

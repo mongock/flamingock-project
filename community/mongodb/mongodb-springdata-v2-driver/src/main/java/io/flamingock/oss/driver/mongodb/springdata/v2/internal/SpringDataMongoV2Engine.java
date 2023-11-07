@@ -1,13 +1,13 @@
 package io.flamingock.oss.driver.mongodb.springdata.v2.internal;
 
-import io.flamingock.community.internal.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.config.SpringDataMongoV2Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.community.internal.driver.ConnectionEngine;
-import io.flamingock.community.internal.driver.MongockAuditor;
-import io.flamingock.community.internal.driver.SingleLockAcquirer;
+import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.audit.Auditor;
+import io.flamingock.community.internal.lock.LocalLockAcquirer;
 
 import java.util.Optional;
 
@@ -18,10 +18,10 @@ import com.mongodb.ReadConcern;
 public class SpringDataMongoV2Engine implements ConnectionEngine {
 
     private final MongoTemplate mongoTemplate;
-    private final CommunityConfiguration communityConfiguration;
+    private final LocalConfiguration communityConfiguration;
 
     private SpringDataMongoV2Auditor auditor;
-    private SingleLockAcquirer lockProvider;
+    private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final SpringDataMongoV2Configuration driverConfiguration;
     private final CoreConfiguration coreConfiguration;
@@ -29,7 +29,7 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
 
     public SpringDataMongoV2Engine(MongoTemplate mongoTemplate,
                             CoreConfiguration coreConfiguration,
-                            CommunityConfiguration communityConfiguration,
+                            LocalConfiguration communityConfiguration,
                             SpringDataMongoV2Configuration driverConfiguration) {
         this.mongoTemplate = mongoTemplate;
         this.driverConfiguration = driverConfiguration;
@@ -49,16 +49,16 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         SpringDataMongoV2LockRepository lockRepository = new SpringDataMongoV2LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new SingleLockAcquirer(lockRepository, auditor, coreConfiguration);
+        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
-    public MongockAuditor getAuditor() {
+    public Auditor getAuditor() {
         return auditor;
     }
 
     @Override
-    public SingleLockAcquirer getLockProvider() {
+    public LocalLockAcquirer getLockProvider() {
         return lockProvider;
     }
 

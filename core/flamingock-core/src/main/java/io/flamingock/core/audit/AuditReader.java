@@ -1,9 +1,7 @@
 package io.flamingock.core.audit;
 
-import io.flamingock.core.audit.domain.AuditStageStatus;
+import io.flamingock.core.audit.writer.AuditStageStatus;
 
-public interface AuditReader<AUDIT_STAGE_STATUS extends AuditStageStatus> {
-
-    AUDIT_STAGE_STATUS getAuditStageStatus();
-
+public interface AuditReader {
+    AuditStageStatus getAuditStageStatus();
 }
