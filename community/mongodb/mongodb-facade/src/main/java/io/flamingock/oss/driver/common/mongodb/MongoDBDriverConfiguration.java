@@ -1,8 +1,8 @@
 package io.flamingock.oss.driver.common.mongodb;
 
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.driver.DriverConfigurable;
 
-public class MongoDBDriverConfiguration implements LocalConfigurable {
+public class MongoDBDriverConfiguration implements DriverConfigurable {
 
     public final static String LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME = "mongockChangeLog";
     public final static String LEGACY_DEFAULT_LOCK_REPOSITORY_NAME = "mongockLock";

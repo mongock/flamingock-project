@@ -1,6 +1,6 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.internal;
 
-import io.flamingock.core.configurator.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
@@ -18,7 +18,7 @@ import com.mongodb.ReadConcern;
 public class SpringDataMongoV3Engine implements ConnectionEngine {
 
     private final MongoTemplate mongoTemplate;
-    private final CommunityConfiguration communityConfiguration;
+    private final LocalConfiguration communityConfiguration;
 
     private SpringDataMongoV3Auditor auditor;
     private LocalLockAcquirer lockProvider;
@@ -29,7 +29,7 @@ public class SpringDataMongoV3Engine implements ConnectionEngine {
 
     public SpringDataMongoV3Engine(MongoTemplate mongoTemplate,
                             CoreConfiguration coreConfiguration,
-                            CommunityConfiguration communityConfiguration,
+                            LocalConfiguration communityConfiguration,
                             SpringDataMongoV3Configuration driverConfiguration) {
         this.mongoTemplate = mongoTemplate;
         this.driverConfiguration = driverConfiguration;

@@ -1,5 +1,10 @@
 package io.flamingock.core.configurator.local;
 
-//Marker interface for Driver configuration
+
+/**
+ * Interface for potential configuration for local runners.
+ * Don't confuse with DriverConfigurable
+ */
 public interface LocalConfigurable {
+
 }

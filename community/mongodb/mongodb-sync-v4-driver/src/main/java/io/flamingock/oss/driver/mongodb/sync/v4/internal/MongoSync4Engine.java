@@ -3,7 +3,7 @@ package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.configurator.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.audit.Auditor;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
@@ -18,7 +18,7 @@ public class MongoSync4Engine implements ConnectionEngine {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;
-    private final CommunityConfiguration communityConfiguration;
+    private final LocalConfiguration communityConfiguration;
 
     private MongoSync4Auditor auditor;
     private LocalLockAcquirer lockProvider;
@@ -30,7 +30,7 @@ public class MongoSync4Engine implements ConnectionEngine {
     public MongoSync4Engine(MongoClient mongoClient,
                             String databaseName,
                             CoreConfiguration coreConfiguration,
-                            CommunityConfiguration communityConfiguration,
+                            LocalConfiguration communityConfiguration,
                             MongoDBSync4Configuration driverConfiguration) {
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);

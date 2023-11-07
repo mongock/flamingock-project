@@ -1,8 +1,5 @@
 package io.flamingock.core.configurator.cloud;
 
-import io.flamingock.core.configurator.CommunityConfiguration;
-import io.flamingock.core.driver.ConnectionDriver;
-
 import java.util.function.Supplier;
 
 public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLDER> {

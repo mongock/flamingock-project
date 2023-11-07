@@ -1,6 +1,6 @@
 package io.flamingock.community.runner.springboot.v2;
 
-import io.flamingock.core.configurator.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
 import io.flamingock.core.driver.ConnectionDriver;
@@ -67,7 +67,7 @@ public class CommunitySpringbootBuilder
 
 
     CommunitySpringbootBuilder(CoreConfiguration coreConfiguration,
-                               CommunityConfiguration communityConfiguration,
+                               LocalConfiguration communityConfiguration,
                                SpringbootConfiguration springbootConfiguration) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
         this.communityConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
@@ -304,7 +304,7 @@ public class CommunitySpringbootBuilder
     }
 
     @Override
-    public CommunityConfiguration getCommunityProperties() {
+    public LocalConfiguration getCommunityProperties() {
         return communityConfiguratorDelegate.getCommunityProperties();
     }
 

@@ -1,6 +1,6 @@
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.configurator.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalConfigurator;
@@ -24,7 +24,7 @@ public class LocalStandaloneBuilder
 
 
     LocalStandaloneBuilder(CoreConfiguration coreConfiguration,
-                           CommunityConfiguration communityConfiguration,
+                           LocalConfiguration communityConfiguration,
                            DependencyInjectableContext dependencyInjectableContext) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
@@ -89,7 +89,7 @@ public class LocalStandaloneBuilder
     }
 
     @Override
-    public CommunityConfiguration getCommunityProperties() {
+    public LocalConfiguration getCommunityProperties() {
         return localConfiguratorDelegate.getCommunityProperties();
     }
 

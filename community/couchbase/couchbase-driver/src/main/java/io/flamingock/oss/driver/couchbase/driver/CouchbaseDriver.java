@@ -2,7 +2,7 @@ package io.flamingock.oss.driver.couchbase.driver;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
-import io.flamingock.core.configurator.CommunityConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.driver.ConnectionDriver;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
@@ -51,7 +51,7 @@ public class CouchbaseDriver implements ConnectionDriver<CouchbaseConfiguration>
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, CommunityConfiguration communityConfiguration) {
+    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, LocalConfiguration communityConfiguration) {
         return new CouchbaseEngine(
                 cluster,
                 collection,
