@@ -1,4 +1,4 @@
-package io.flamingock.core.configurator;
+package io.flamingock.core.configurator.legacy;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.changock.migration.api.annotations.NonLockGuardedType;

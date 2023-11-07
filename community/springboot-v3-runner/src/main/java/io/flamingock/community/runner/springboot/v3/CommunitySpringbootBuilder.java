@@ -8,7 +8,7 @@ import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.CoreConfigurator;
 import io.flamingock.core.configurator.CoreConfiguratorDelegate;
-import io.flamingock.core.configurator.LegacyMigration;
+import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.IPipelineCompletedEvent;

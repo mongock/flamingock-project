@@ -4,7 +4,7 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
-import io.flamingock.core.configurator.LegacyMigration;
+import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.springboot.v2.configurator.SpringRunnerType;

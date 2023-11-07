@@ -29,10 +29,6 @@ include("community:base-community")
 project(":community:base-community").name = "base-community"
 project(":community:base-community").projectDir = file("community/base-community")
 
-include("community:standalone-runner")
-project(":community:standalone-runner").name = "standalone-runner"
-project(":community:standalone-runner").projectDir = file("community/standalone-runner")
-
 include("community:springboot-v2-runner")
 project(":community:springboot-v2-runner").name = "springboot-v2-runner"
 project(":community:springboot-v2-runner").projectDir = file("community/springboot-v2-runner")
