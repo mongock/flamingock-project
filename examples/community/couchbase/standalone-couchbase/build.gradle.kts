@@ -1,9 +1,10 @@
 dependencies {
-    implementation(project(":community:standalone-runner"))
+    implementation(project(":core:flamingock-core"))
     implementation(project(":community:couchbase:couchbase-driver"))
     implementation("com.couchbase.client:java-client:3.4.4")
     implementation("org.slf4j:slf4j-simple:2.0.6")
 
+    
     testImplementation("org.testcontainers:couchbase:1.18.3")
     testImplementation("org.testcontainers:junit-jupiter:1.18.3")
 }
