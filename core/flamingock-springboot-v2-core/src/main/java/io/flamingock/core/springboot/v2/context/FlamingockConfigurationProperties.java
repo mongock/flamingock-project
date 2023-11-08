@@ -1,11 +1,13 @@
-package io.flamingock.community.runner.springboot.v2;
+package io.flamingock.core.springboot.v2.context;
 
-import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
-import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.configurator.TransactionStrategy;
+import io.flamingock.core.configurator.cloud.CloudConfigurable;
+import io.flamingock.core.configurator.cloud.CloudConfiguration;
+import io.flamingock.core.configurator.legacy.LegacyMigration;
+import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.springboot.v2.configurator.SpringRunnerType;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfigurable;
@@ -16,25 +18,38 @@ import java.util.List;
 import java.util.Map;
 
 @ConfigurationProperties("flamingock")
-public class CommunitySpringbootConfiguration implements CoreConfigurable, LocalConfigurable, SpringbootConfigurable {
+public class FlamingockConfigurationProperties
+        implements
+        CoreConfigurable,
+        LocalConfigurable,
+        CloudConfigurable,
+        SpringbootConfigurable {
+    private SpringRunnerType runnerType = SpringRunnerType.ApplicationRunner;
 
     private final CoreConfiguration coreConfiguration = new CoreConfiguration();
 
-    private final LocalConfiguration communityConfiguration = new LocalConfiguration();
-
     private final SpringbootConfiguration springbootConfiguration = new SpringbootConfiguration();
+
+    private final CloudConfiguration cloudConfiguration = new CloudConfiguration();
+
+    private final LocalConfiguration localConfiguration = new LocalConfiguration();
 
     public CoreConfiguration getCoreProperties() {
         return coreConfiguration;
     }
 
-    public LocalConfiguration getCommunityProperties() {
-        return communityConfiguration;
-    }
-
     public SpringbootConfiguration getSpringbootProperties() {
         return springbootConfiguration;
     }
+
+    public LocalConfiguration getLocalProperties() {
+        return localConfiguration;
+    }
+
+    public CloudConfiguration getCloudProperties() {
+        return cloudConfiguration;
+    }
+
 
     @Override
     public void setStages(List<Stage> stages) {
@@ -188,14 +203,37 @@ public class CommunitySpringbootConfiguration implements CoreConfigurable, Local
 
     @Override
     public SpringRunnerType getRunnerType() {
-        return springbootConfiguration.getRunnerType();
+        return runnerType;
     }
 
     @Override
     public void setRunnerType(SpringRunnerType runnerType) {
-        springbootConfiguration.setRunnerType(runnerType);
+        this.runnerType = runnerType;
     }
 
 
+    @Override
+    public void setApiKey(String apiKey) {
+        cloudConfiguration.setApiKey(apiKey);
+    }
 
+    @Override
+    public void setToken(String token) {
+        cloudConfiguration.setToken(token);
+    }
+
+    @Override
+    public String getApiKey() {
+        return cloudConfiguration.getApiKey();
+    }
+
+    @Override
+    public String getToken() {
+        return cloudConfiguration.getToken();
+    }
+
+    public boolean isCloudConfigurationEmpty() {
+        return cloudConfiguration.getApiKey() == null
+        && cloudConfiguration.getToken() == null;
+    }
 }

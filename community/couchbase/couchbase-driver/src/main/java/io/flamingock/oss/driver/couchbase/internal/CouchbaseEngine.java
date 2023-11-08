@@ -2,10 +2,10 @@ package io.flamingock.oss.driver.couchbase.internal;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
-import io.flamingock.core.configurator.local.LocalConfiguration;
-import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
-import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
 
@@ -15,24 +15,24 @@ public class CouchbaseEngine implements ConnectionEngine {
 
     private final Collection collection;
     private final Cluster cluster;
-    private final LocalConfiguration communityConfiguration;
+    private final LocalConfigurable LocalConfiguration;
 
     private CouchbaseAuditor auditor;
     private LocalLockAcquirer lockProvider;
     private final CouchbaseConfiguration driverConfiguration;
-    private final CoreConfiguration coreConfiguration;
+    private final CoreConfigurable coreConfiguration;
 
 
-    public CouchbaseEngine(Cluster cluster, 
-                            Collection collection,
-                            CoreConfiguration coreConfiguration,
-                            LocalConfiguration communityConfiguration,
-                            CouchbaseConfiguration driverConfiguration) {
+    public CouchbaseEngine(Cluster cluster,
+                           Collection collection,
+                           CoreConfigurable coreConfiguration,
+                           LocalConfigurable LocalConfiguration,
+                           CouchbaseConfiguration driverConfiguration) {
         this.cluster = cluster;
         this.collection = collection;
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.communityConfiguration = communityConfiguration;
+        this.LocalConfiguration = LocalConfiguration;
     }
 
     @Override

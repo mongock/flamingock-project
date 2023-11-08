@@ -3,11 +3,11 @@ package io.flamingock.oss.driver.mongodb.v3.internal;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.configurator.local.LocalConfiguration;
-import io.flamingock.core.driver.ConnectionEngine;
-import io.flamingock.core.audit.Auditor;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
-import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.audit.Auditor;
+import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
@@ -18,25 +18,25 @@ public class Mongo3Engine implements ConnectionEngine {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;
-    private final LocalConfiguration communityConfiguration;
+    private final LocalConfigurable localConfiguration;
 
     private Mongo3Auditor auditor;
     private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final MongoDB3Configuration driverConfiguration;
-    private final CoreConfiguration coreConfiguration;
+    private final CoreConfigurable coreConfiguration;
 
 
     public Mongo3Engine(MongoClient mongoClient,
-                            String databaseName,
-                            CoreConfiguration coreConfiguration,
-                            LocalConfiguration communityConfiguration,
-                            MongoDB3Configuration driverConfiguration) {
+                        String databaseName,
+                        CoreConfigurable coreConfiguration,
+                        LocalConfigurable localConfiguration,
+                        MongoDB3Configuration driverConfiguration) {
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.communityConfiguration = communityConfiguration;
+        this.localConfiguration = localConfiguration;
     }
 
     @Override

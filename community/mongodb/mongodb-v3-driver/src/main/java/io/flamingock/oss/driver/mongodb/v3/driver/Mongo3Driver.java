@@ -1,6 +1,8 @@
 package io.flamingock.oss.driver.mongodb.v3.driver;
 
 import com.mongodb.client.MongoClient;
+import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.driver.ConnectionDriver;
 import io.flamingock.core.driver.ConnectionEngine;
@@ -51,7 +53,7 @@ public class Mongo3Driver implements ConnectionDriver<MongoDB3Configuration> {
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, LocalConfiguration communityConfiguration) {
+    public ConnectionEngine getConnectionEngine(CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration) {
         return new Mongo3Engine(
                 mongoClient,
                 databaseName,

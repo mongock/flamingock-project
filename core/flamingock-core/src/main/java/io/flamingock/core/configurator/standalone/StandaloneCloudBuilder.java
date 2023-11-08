@@ -8,18 +8,18 @@ import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 
-public class CloudStandaloneBuilder
-        extends AbstractStandaloneBuilder<CloudStandaloneBuilder>
-        implements CloudConfigurator<CloudStandaloneBuilder> {
+public class StandaloneCloudBuilder
+        extends AbstractStandaloneBuilder<StandaloneCloudBuilder>
+        implements CloudConfigurator<StandaloneCloudBuilder> {
 
-    private final CoreConfiguratorDelegate<CloudStandaloneBuilder> coreConfiguratorDelegate;
+    private final CoreConfiguratorDelegate<StandaloneCloudBuilder> coreConfiguratorDelegate;
 
-    private final StandaloneConfiguratorDelegate<CloudStandaloneBuilder> standaloneConfiguratorDelegate;
+    private final StandaloneConfiguratorDelegate<StandaloneCloudBuilder> standaloneConfiguratorDelegate;
 
-    private final CloudConfigurator<CloudStandaloneBuilder> cloudConfiguratorDelegate;
+    private final CloudConfigurator<StandaloneCloudBuilder> cloudConfiguratorDelegate;
 
 
-    CloudStandaloneBuilder(CoreConfiguration coreConfiguration,
+    StandaloneCloudBuilder(CoreConfiguration coreConfiguration,
                            CloudConfiguration cloudConfiguration,
                            DependencyInjectableContext dependencyInjectableContext) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
@@ -35,12 +35,12 @@ public class CloudStandaloneBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected CoreConfiguratorDelegate<CloudStandaloneBuilder> coreConfiguratorDelegate() {
+    protected CoreConfiguratorDelegate<StandaloneCloudBuilder> coreConfiguratorDelegate() {
         return coreConfiguratorDelegate;
     }
 
     @Override
-    protected StandaloneConfiguratorDelegate<CloudStandaloneBuilder> standaloneConfiguratorDelegate() {
+    protected StandaloneConfiguratorDelegate<StandaloneCloudBuilder> standaloneConfiguratorDelegate() {
         return standaloneConfiguratorDelegate;
     }
 
@@ -64,12 +64,12 @@ public class CloudStandaloneBuilder
 
 
     @Override
-    public CloudStandaloneBuilder setApiKey(String apiKey) {
+    public StandaloneCloudBuilder setApiKey(String apiKey) {
         return cloudConfiguratorDelegate.setApiKey(apiKey);
     }
 
     @Override
-    public CloudStandaloneBuilder setToken(String token) {
+    public StandaloneCloudBuilder setToken(String token) {
         return cloudConfiguratorDelegate.setToken(token);
     }
 

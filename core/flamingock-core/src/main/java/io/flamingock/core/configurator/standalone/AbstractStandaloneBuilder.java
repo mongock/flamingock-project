@@ -1,5 +1,6 @@
 package io.flamingock.core.configurator.standalone;
 
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.CoreConfigurator;
 import io.flamingock.core.configurator.CoreConfiguratorDelegate;
@@ -77,7 +78,7 @@ abstract class AbstractStandaloneBuilder<HOLDER>
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public CoreConfiguration getCoreProperties() {
+    public CoreConfigurable getCoreProperties() {
         return coreConfiguratorDelegate().getCoreProperties();
     }
 

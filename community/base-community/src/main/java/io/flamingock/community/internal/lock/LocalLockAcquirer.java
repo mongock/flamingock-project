@@ -2,6 +2,7 @@ package io.flamingock.community.internal.lock;
 
 
 import io.flamingock.core.audit.AuditReader;
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.lock.AbstractLockAcquirer;
 import io.flamingock.core.lock.Lock;
@@ -12,7 +13,7 @@ public class LocalLockAcquirer extends AbstractLockAcquirer {
 
     private final LockRepository lockRepository;
 
-    private final CoreConfiguration configuration;
+    private final CoreConfigurable configuration;
 
 
     /**
@@ -22,7 +23,7 @@ public class LocalLockAcquirer extends AbstractLockAcquirer {
      */
     public LocalLockAcquirer(LockRepository lockRepository,
                              AuditReader auditReader,
-                             CoreConfiguration coreConfiguration) {
+                             CoreConfigurable coreConfiguration) {
         super(auditReader);
         this.lockRepository = lockRepository;
         this.configuration = coreConfiguration;

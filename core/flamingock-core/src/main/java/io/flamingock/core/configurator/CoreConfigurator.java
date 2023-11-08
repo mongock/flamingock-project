@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface CoreConfigurator<HOLDER> {
 
-    CoreConfiguration getCoreProperties();
+    CoreConfigurable getCoreProperties();
 
     HOLDER addStage(Stage stage);
 

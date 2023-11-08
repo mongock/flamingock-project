@@ -1,5 +1,7 @@
 package io.flamingock.community.runner.springboot.v3;
 
+import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
@@ -117,7 +119,7 @@ public class CommunitySpringbootBuilder
     private ConnectionEngine getAndInitilizeConnectionEngine() {
         ConnectionEngine connectionEngine = communityConfiguratorDelegate
                 .getDriver()
-                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
+                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getLocalProperties());
         connectionEngine.initialize();
         return connectionEngine;
     }
@@ -134,7 +136,7 @@ public class CommunitySpringbootBuilder
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public CoreConfiguration getCoreProperties() {
+    public CoreConfigurable getCoreProperties() {
         return coreConfiguratorDelegate.getCoreProperties();
     }
 
@@ -304,8 +306,8 @@ public class CommunitySpringbootBuilder
     }
 
     @Override
-    public LocalConfiguration getCommunityProperties() {
-        return communityConfiguratorDelegate.getCommunityProperties();
+    public LocalConfigurable getLocalProperties() {
+        return communityConfiguratorDelegate.getLocalProperties();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

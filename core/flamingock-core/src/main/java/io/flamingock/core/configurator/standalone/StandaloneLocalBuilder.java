@@ -1,5 +1,6 @@
 package io.flamingock.core.configurator.standalone;
 
+import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.CoreConfiguratorDelegate;
@@ -12,18 +13,18 @@ import io.flamingock.core.runner.RunnerCreator;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.jetbrains.annotations.NotNull;
 
-public class LocalStandaloneBuilder
-        extends AbstractStandaloneBuilder<LocalStandaloneBuilder>
-        implements LocalConfigurator<LocalStandaloneBuilder> {
+public class StandaloneLocalBuilder
+        extends AbstractStandaloneBuilder<StandaloneLocalBuilder>
+        implements LocalConfigurator<StandaloneLocalBuilder> {
 
-    private final CoreConfiguratorDelegate<LocalStandaloneBuilder> coreConfiguratorDelegate;
+    private final CoreConfiguratorDelegate<StandaloneLocalBuilder> coreConfiguratorDelegate;
 
-    private final StandaloneConfiguratorDelegate<LocalStandaloneBuilder> standaloneConfiguratorDelegate;
+    private final StandaloneConfiguratorDelegate<StandaloneLocalBuilder> standaloneConfiguratorDelegate;
 
-    private final LocalConfiguratorDelegate<LocalStandaloneBuilder> localConfiguratorDelegate;
+    private final LocalConfiguratorDelegate<StandaloneLocalBuilder> localConfiguratorDelegate;
 
 
-    LocalStandaloneBuilder(CoreConfiguration coreConfiguration,
+    StandaloneLocalBuilder(CoreConfiguration coreConfiguration,
                            LocalConfiguration communityConfiguration,
                            DependencyInjectableContext dependencyInjectableContext) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
@@ -39,12 +40,12 @@ public class LocalStandaloneBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected CoreConfiguratorDelegate<LocalStandaloneBuilder> coreConfiguratorDelegate() {
+    protected CoreConfiguratorDelegate<StandaloneLocalBuilder> coreConfiguratorDelegate() {
         return coreConfiguratorDelegate;
     }
 
     @Override
-    protected StandaloneConfiguratorDelegate<LocalStandaloneBuilder> standaloneConfiguratorDelegate() {
+    protected StandaloneConfiguratorDelegate<StandaloneLocalBuilder> standaloneConfiguratorDelegate() {
         return standaloneConfiguratorDelegate;
     }
 
@@ -69,7 +70,7 @@ public class LocalStandaloneBuilder
     private ConnectionEngine getAndInitilizeConnectionEngine() {
         ConnectionEngine connectionEngine = localConfiguratorDelegate
                 .getDriver()
-                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), localConfiguratorDelegate.getCommunityProperties());
+                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), localConfiguratorDelegate.getLocalProperties());
         connectionEngine.initialize();
         return connectionEngine;
     }
@@ -79,7 +80,7 @@ public class LocalStandaloneBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public LocalStandaloneBuilder setDriver(ConnectionDriver<?> connectionDriver) {
+    public StandaloneLocalBuilder setDriver(ConnectionDriver<?> connectionDriver) {
         return localConfiguratorDelegate.setDriver(connectionDriver);
     }
 
@@ -89,8 +90,8 @@ public class LocalStandaloneBuilder
     }
 
     @Override
-    public LocalConfiguration getCommunityProperties() {
-        return localConfiguratorDelegate.getCommunityProperties();
+    public LocalConfigurable getLocalProperties() {
+        return localConfiguratorDelegate.getLocalProperties();
     }
 
 
