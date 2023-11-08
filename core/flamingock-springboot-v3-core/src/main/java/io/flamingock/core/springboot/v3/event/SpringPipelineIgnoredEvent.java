@@ -22,9 +22,9 @@ public class SpringPipelineIgnoredEvent extends ApplicationEvent implements IPip
 
     @Override
     public String toString() {
-        return "SpringMigrationSuccessEvent{" +
-                "migrationResult=" + event +
-                "} " + super.toString();
+        return "SpringPipelineIgnoredEvent{" +
+                "event=" + event +
+                ", source=" + source +
+                '}';
     }
-
 }

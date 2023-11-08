@@ -1,7 +1,6 @@
 package io.flamingock.core.springboot.v3.configurator;
 
 
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 

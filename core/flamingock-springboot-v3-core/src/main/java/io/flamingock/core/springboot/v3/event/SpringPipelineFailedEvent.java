@@ -17,19 +17,18 @@ public class SpringPipelineFailedEvent extends ApplicationEvent implements IPipe
         this.event = event;
     }
 
-
-    @Override
-    public String toString() {
-        return "SpringMigrationFailureEvent{" +
-                "migrationResult=" + event +
-                ", source=" + source +
-                "} " + super.toString();
-    }
-
     @Override
     public Exception getException() {
         return event.getException();
     }
 
 
+
+    @Override
+    public String toString() {
+        return "SpringPipelineFailedEvent{" +
+                "event=" + event +
+                ", source=" + source +
+                '}';
+    }
 }
