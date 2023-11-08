@@ -21,8 +21,9 @@ public class SpringPipelineStartedEvent extends ApplicationEvent implements IPip
 
   @Override
   public String toString() {
-    return "SpringMigrationStartedEvent{" +
-        "source=" + source +
-        "} " + super.toString();
+    return "SpringPipelineStartedEvent{" +
+            "event=" + event +
+            ", source=" + source +
+            '}';
   }
 }

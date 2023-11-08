@@ -19,11 +19,11 @@ public class SpringPipelineCompletedEvent extends ApplicationEvent implements IP
     this.event = event;
   }
 
-
   @Override
   public String toString() {
-    return "SpringMigrationSuccessEvent{" +
-        "migrationResult=" + event +
-        "} " + super.toString();
+    return "SpringPipelineCompletedEvent{" +
+            "event=" + event +
+            ", source=" + source +
+            '}';
   }
 }
