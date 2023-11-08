@@ -1,6 +1,6 @@
 package io.flamingock.examples.community.couchbase;
 
-import io.flamingock.community.runner.springboot.v2.EnableFlamingock;
+import io.flamingock.core.springboot.v2.context.EnableFlamingock;
 import io.flamingock.examples.community.couchbase.events.PipelineFailedEventListener;
 import io.flamingock.examples.community.couchbase.events.PipelineStartedEventListener;
 import io.flamingock.examples.community.couchbase.events.PipelineCompletedEventListener;

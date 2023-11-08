@@ -117,7 +117,7 @@ public class CommunitySpringbootBuilder
     private ConnectionEngine getAndInitilizeConnectionEngine() {
         ConnectionEngine connectionEngine = communityConfiguratorDelegate
                 .getDriver()
-                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getCommunityProperties());
+                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), communityConfiguratorDelegate.getLocalProperties());
         connectionEngine.initialize();
         return connectionEngine;
     }
@@ -304,8 +304,8 @@ public class CommunitySpringbootBuilder
     }
 
     @Override
-    public LocalConfiguration getCommunityProperties() {
-        return communityConfiguratorDelegate.getCommunityProperties();
+    public LocalConfiguration getLocalProperties() {
+        return communityConfiguratorDelegate.getLocalProperties();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

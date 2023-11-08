@@ -1,4 +1,4 @@
-package io.flamingock.community.runner.springboot.v2;
+package io.flamingock.core.springboot.v2.context;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @EnableConfigurationProperties
-@Import({CommunitySpringbootContext.class, CommunitySpringbootConfiguration.class})
+@Import({SpringbootContext.class, FlamingockConfigurationProperties.class})
 public @interface EnableFlamingock {
 }

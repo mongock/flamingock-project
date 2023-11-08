@@ -10,15 +10,15 @@ public final class FlamingockStandalone {
     private FlamingockStandalone() {
     }
 
-    public static CloudStandaloneBuilder cloud() {
-        return new CloudStandaloneBuilder(
+    public static StandaloneCloudBuilder cloud() {
+        return new StandaloneCloudBuilder(
                 new CoreConfiguration(),
                 new CloudConfiguration(),
                 new SimpleDependencyInjectableContext());
     }
 
-    public static LocalStandaloneBuilder local() {
-        return new LocalStandaloneBuilder(
+    public static StandaloneLocalBuilder local() {
+        return new StandaloneLocalBuilder(
                 new CoreConfiguration(),
                 new LocalConfiguration(),
                 new SimpleDependencyInjectableContext());

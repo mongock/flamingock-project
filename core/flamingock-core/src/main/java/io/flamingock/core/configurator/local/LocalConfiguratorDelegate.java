@@ -28,7 +28,7 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
     }
 
     @Override
-    public LocalConfiguration getCommunityProperties() {
+    public LocalConfiguration getLocalProperties() {
         return communityConfiguration;
     }
 }

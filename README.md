@@ -1,16 +1,21 @@
-# TODO
-- operation type(EXECUTION, BEFORE, ROLL_BACK) for before execution in audit
+# Big refactor 
 
-# Technical debts
-- create legacy module
-- Remove RuntimeManager.getDependencyManager() and pass the DependencyManager to navigator
-- Provide support for dependency injection per task
-- Ensure changeUnit order in ChangeUnits
-- Implement Lock
-- When a non-transactional change fails, the rollback override the failed execution in DB. 
-  It should contain both, so we have the history
-- Test/debug mongodb dates
-- See potential similarities between `ReflectionUtil` and `RuntimeHelper`
-- Ideally, even in failed scenario, the Summary shows all the tasks, including the ones that wasn't executed because a
-  previous one failed.
-- Summary(specially the one returned in the event) should have the list of executed ids
+## Current state
+In the spring context, I want to check if I need to inject the local or cloud builder. 
+Currently, we don't have fields within the LocalConfiguration to do
+```java
+if(cloudConfiguration.allFieldsNull() && localCOnfiguration.atLeastOnePopulated()) {
+    return localBUilder
+} else {
+    return cloudBuilder;
+}
+```
+
+## Options
+1. Check Driver configuration: Problema each driver configuratio  has differente Spring properties
+    - Call all them `driver`
+    - Have a list of them in core
+
+
+## Others
+ Remove LocalCOnfiguration: With DriverConfigurationShould be enough
