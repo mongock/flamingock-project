@@ -4,6 +4,7 @@ import com.mongodb.ReadConcern;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
 import io.flamingock.core.audit.Auditor;
 import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class SpringDataMongoV2Engine implements ConnectionEngine {
 
     private final MongoTemplate mongoTemplate;
-    private final LocalConfiguration communityConfiguration;
+    private final LocalConfigurable localConfiguration;
 
     private SpringDataMongoV2Auditor auditor;
     private LocalLockAcquirer lockProvider;
@@ -27,12 +28,12 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
 
     public SpringDataMongoV2Engine(MongoTemplate mongoTemplate,
                                    CoreConfigurable coreConfiguration,
-                                   LocalConfiguration communityConfiguration,
+                                   LocalConfigurable localConfiguration,
                                    SpringDataMongoV2Configuration driverConfiguration) {
         this.mongoTemplate = mongoTemplate;
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.communityConfiguration = communityConfiguration;
+        this.localConfiguration = localConfiguration;
     }
 
     @Override

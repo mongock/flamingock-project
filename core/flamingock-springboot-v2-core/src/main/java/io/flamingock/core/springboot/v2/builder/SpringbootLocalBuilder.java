@@ -2,6 +2,7 @@ package io.flamingock.core.springboot.v2.builder;
 
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
@@ -32,7 +33,7 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
 
     SpringbootLocalBuilder(CoreConfiguration coreConfiguration,
                            SpringbootConfiguration springbootConfiguration,
-                           LocalConfiguration localConfiguration) {
+                           LocalConfigurable localConfiguration) {
         super(coreConfiguration, springbootConfiguration);
         this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(localConfiguration, () -> this);
     }
@@ -90,7 +91,7 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     }
 
     @Override
-    public LocalConfiguration getLocalProperties() {
+    public LocalConfigurable getLocalProperties() {
         return localConfiguratorDelegate.getLocalProperties();
     }
 

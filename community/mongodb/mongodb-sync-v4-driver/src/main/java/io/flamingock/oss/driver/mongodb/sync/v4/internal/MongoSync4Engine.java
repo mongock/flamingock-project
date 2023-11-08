@@ -4,11 +4,10 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.configurator.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.audit.Auditor;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
-import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
@@ -19,7 +18,7 @@ public class MongoSync4Engine implements ConnectionEngine {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;
-    private final LocalConfiguration communityConfiguration;
+    private final LocalConfigurable localConfiguration;
 
     private MongoSync4Auditor auditor;
     private LocalLockAcquirer lockProvider;
@@ -31,13 +30,13 @@ public class MongoSync4Engine implements ConnectionEngine {
     public MongoSync4Engine(MongoClient mongoClient,
                             String databaseName,
                             CoreConfigurable coreConfiguration,
-                            LocalConfiguration communityConfiguration,
+                            LocalConfigurable localConfiguration,
                             MongoDBSync4Configuration driverConfiguration) {
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.communityConfiguration = communityConfiguration;
+        this.localConfiguration = localConfiguration;
     }
 
     @Override

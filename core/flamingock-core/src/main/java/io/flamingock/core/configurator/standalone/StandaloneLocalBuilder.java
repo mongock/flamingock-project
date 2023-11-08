@@ -1,5 +1,6 @@
 package io.flamingock.core.configurator.standalone;
 
+import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.CoreConfiguratorDelegate;
@@ -89,7 +90,7 @@ public class StandaloneLocalBuilder
     }
 
     @Override
-    public LocalConfiguration getLocalProperties() {
+    public LocalConfigurable getLocalProperties() {
         return localConfiguratorDelegate.getLocalProperties();
     }
 

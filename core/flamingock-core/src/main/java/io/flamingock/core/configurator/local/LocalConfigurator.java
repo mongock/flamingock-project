@@ -7,5 +7,5 @@ public interface LocalConfigurator<HOLDER> {
 
     ConnectionDriver<?> getDriver();
 
-    LocalConfiguration getLocalProperties();
+    LocalConfigurable getLocalProperties();
 }

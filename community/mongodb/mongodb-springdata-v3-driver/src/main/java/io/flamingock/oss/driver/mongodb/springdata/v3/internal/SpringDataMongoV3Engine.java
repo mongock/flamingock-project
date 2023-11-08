@@ -1,25 +1,22 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.internal;
 
+import com.mongodb.ReadConcern;
+import io.flamingock.community.internal.lock.LocalLockAcquirer;
+import io.flamingock.core.audit.Auditor;
 import io.flamingock.core.configurator.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfiguration;
-import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.core.driver.ConnectionEngine;
-import io.flamingock.core.audit.Auditor;
-import io.flamingock.community.internal.lock.LocalLockAcquirer;
-
-import java.util.Optional;
-
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import com.mongodb.ReadConcern;
+import java.util.Optional;
 
 public class SpringDataMongoV3Engine implements ConnectionEngine {
 
     private final MongoTemplate mongoTemplate;
-    private final LocalConfiguration communityConfiguration;
+    private final LocalConfigurable localConfiguration;
 
     private SpringDataMongoV3Auditor auditor;
     private LocalLockAcquirer lockProvider;
@@ -30,19 +27,19 @@ public class SpringDataMongoV3Engine implements ConnectionEngine {
 
     public SpringDataMongoV3Engine(MongoTemplate mongoTemplate,
                                    CoreConfigurable coreConfiguration,
-                            LocalConfiguration communityConfiguration,
-                            SpringDataMongoV3Configuration driverConfiguration) {
+                                   LocalConfigurable localConfiguration,
+                                   SpringDataMongoV3Configuration driverConfiguration) {
         this.mongoTemplate = mongoTemplate;
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.communityConfiguration = communityConfiguration;
+        this.localConfiguration = localConfiguration;
     }
 
     @Override
     public void initialize() {
         ReadWriteConfiguration readWriteConfiguration = new ReadWriteConfiguration(driverConfiguration.getBuiltMongoDBWriteConcern(),
-                    new ReadConcern(driverConfiguration.getReadConcern()),
-                    driverConfiguration.getReadPreference().getValue());
+                new ReadConcern(driverConfiguration.getReadConcern()),
+                driverConfiguration.getReadPreference().getValue());
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new SpringDataMongoV3TransactionWrapper(mongoTemplate, readWriteConfiguration) : null;
         auditor = new SpringDataMongoV3Auditor(mongoTemplate,
                 driverConfiguration.getMigrationRepositoryName(),

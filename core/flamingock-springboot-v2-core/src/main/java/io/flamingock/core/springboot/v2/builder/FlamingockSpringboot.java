@@ -2,6 +2,7 @@ package io.flamingock.core.springboot.v2.builder;
 
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
+import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.springboot.v2.configurator.SpringbootConfiguration;
 
@@ -20,7 +21,7 @@ public final class FlamingockSpringboot {
 
     public static SpringbootLocalBuilder localBuilder(CoreConfiguration coreConfiguration,
                                                SpringbootConfiguration springbootConfiguration,
-                                               LocalConfiguration localConfiguration) {
+                                               LocalConfigurable localConfiguration) {
         return new SpringbootLocalBuilder(coreConfiguration, springbootConfiguration, localConfiguration);
     }
 
