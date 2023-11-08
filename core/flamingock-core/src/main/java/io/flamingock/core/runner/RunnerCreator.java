@@ -2,6 +2,7 @@ package io.flamingock.core.runner;
 
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.audit.AuditReader;
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.lock.LockAcquirer;
@@ -17,7 +18,7 @@ public final class RunnerCreator {
     private RunnerCreator() {
     }
 
-    private static StageExecutionContext buildExecutionContext(CoreConfiguration configuration) {
+    private static StageExecutionContext buildExecutionContext(CoreConfigurable configuration) {
         return new StageExecutionContext(StringUtil.executionId(), StringUtil.hostname(), configuration.getDefaultAuthor(), configuration.getMetadata());
     }
 
@@ -29,7 +30,7 @@ public final class RunnerCreator {
                                 AuditWriter auditWriter,
                                 TransactionWrapper transactionWrapper,
                                 LockAcquirer lockAcquirer,
-                                CoreConfiguration coreConfiguration,
+                                CoreConfigurable coreConfiguration,
                                 EventPublisher eventPublisher,
                                 DependencyContext dependencyContext,
                                 boolean isThrowExceptionIfCannotObtainLock) {

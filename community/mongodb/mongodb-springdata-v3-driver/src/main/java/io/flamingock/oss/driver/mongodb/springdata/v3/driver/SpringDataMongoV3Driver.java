@@ -1,5 +1,6 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.driver;
 
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v3.internal.SpringDataMongoV3Engine;
@@ -47,7 +48,7 @@ public class SpringDataMongoV3Driver implements ConnectionDriver<SpringDataMongo
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine(CoreConfiguration coreConfiguration, LocalConfiguration communityConfiguration) {
+    public ConnectionEngine getConnectionEngine(CoreConfigurable coreConfiguration, LocalConfiguration communityConfiguration) {
         return new SpringDataMongoV3Engine(
                 mongoTemplate,
                 coreConfiguration,

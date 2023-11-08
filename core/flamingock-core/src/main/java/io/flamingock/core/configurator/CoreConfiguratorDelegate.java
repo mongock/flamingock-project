@@ -19,7 +19,7 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
     }
 
     @Override
-    public CoreConfiguration getCoreProperties() {
+    public CoreConfigurable getCoreProperties() {
         return properties;
     }
 

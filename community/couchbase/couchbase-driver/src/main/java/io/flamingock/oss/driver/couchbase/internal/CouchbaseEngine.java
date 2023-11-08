@@ -2,6 +2,7 @@ package io.flamingock.oss.driver.couchbase.internal;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
@@ -20,12 +21,12 @@ public class CouchbaseEngine implements ConnectionEngine {
     private CouchbaseAuditor auditor;
     private LocalLockAcquirer lockProvider;
     private final CouchbaseConfiguration driverConfiguration;
-    private final CoreConfiguration coreConfiguration;
+    private final CoreConfigurable coreConfiguration;
 
 
     public CouchbaseEngine(Cluster cluster, 
                             Collection collection,
-                            CoreConfiguration coreConfiguration,
+                           CoreConfigurable coreConfiguration,
                             LocalConfiguration communityConfiguration,
                             CouchbaseConfiguration driverConfiguration) {
         this.cluster = cluster;

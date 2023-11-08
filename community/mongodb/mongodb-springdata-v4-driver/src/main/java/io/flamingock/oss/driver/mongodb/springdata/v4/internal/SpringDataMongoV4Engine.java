@@ -1,5 +1,6 @@
 package io.flamingock.oss.driver.mongodb.springdata.v4.internal;
 
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.transaction.TransactionWrapper;
@@ -24,11 +25,11 @@ public class SpringDataMongoV4Engine implements ConnectionEngine {
     private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final SpringDataMongoV4Configuration driverConfiguration;
-    private final CoreConfiguration coreConfiguration;
+    private final CoreConfigurable coreConfiguration;
 
 
     public SpringDataMongoV4Engine(MongoTemplate mongoTemplate,
-                            CoreConfiguration coreConfiguration,
+                                   CoreConfigurable coreConfiguration,
                             LocalConfiguration communityConfiguration,
                             SpringDataMongoV4Configuration driverConfiguration) {
         this.mongoTemplate = mongoTemplate;

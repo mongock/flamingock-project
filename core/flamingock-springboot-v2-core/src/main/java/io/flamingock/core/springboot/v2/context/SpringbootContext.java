@@ -41,25 +41,24 @@ public class SpringbootContext {
                                                       ApplicationContext springContext,
                                                       ApplicationEventPublisher applicationEventPublisher) {
         SpringbootBaseBuilder<?> springRunnerBuilder;
-        if(configurationProperties.isCloudConfigurationEmpty() && !connectionDriverOptional.isPresent()) {
+        if (connectionDriverOptional.isPresent() && configurationProperties.isCloudConfigurationEmpty()) {
             springRunnerBuilder = FlamingockSpringboot.localBuilder(
-                            configurationProperties.getCoreProperties(),
-                            configurationProperties.getSpringbootProperties(),
-                            configurationProperties.getLocalProperties()
-                    ).setDriver(connectionDriverOptional.get());
+                    configurationProperties.getCoreProperties(),
+                    configurationProperties.getSpringbootProperties(),
+                    configurationProperties.getLocalProperties()
+            ).setDriver(connectionDriverOptional.get());
         } else {
             springRunnerBuilder = FlamingockSpringboot.cloudBuilder(
-                            configurationProperties.getCoreProperties(),
-                            configurationProperties.getSpringbootProperties(),
-                            configurationProperties.getCloudProperties()
-                    );
+                    configurationProperties.getCoreProperties(),
+                    configurationProperties.getSpringbootProperties(),
+                    configurationProperties.getCloudProperties()
+            );
         }
         return springRunnerBuilder
                 .setSpringContext(springContext)
                 .setEventPublisher(applicationEventPublisher);
 
     }
-
 
 
 }

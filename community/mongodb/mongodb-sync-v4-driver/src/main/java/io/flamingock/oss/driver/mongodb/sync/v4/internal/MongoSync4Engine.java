@@ -3,6 +3,7 @@ package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.audit.Auditor;
@@ -24,12 +25,12 @@ public class MongoSync4Engine implements ConnectionEngine {
     private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final MongoDBSync4Configuration driverConfiguration;
-    private final CoreConfiguration coreConfiguration;
+    private final CoreConfigurable coreConfiguration;
 
 
     public MongoSync4Engine(MongoClient mongoClient,
                             String databaseName,
-                            CoreConfiguration coreConfiguration,
+                            CoreConfigurable coreConfiguration,
                             LocalConfiguration communityConfiguration,
                             MongoDBSync4Configuration driverConfiguration) {
         this.mongoClient = mongoClient;

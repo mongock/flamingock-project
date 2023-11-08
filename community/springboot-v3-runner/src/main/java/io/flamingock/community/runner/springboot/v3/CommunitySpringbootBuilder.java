@@ -1,5 +1,6 @@
 package io.flamingock.community.runner.springboot.v3;
 
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
@@ -134,7 +135,7 @@ public class CommunitySpringbootBuilder
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public CoreConfiguration getCoreProperties() {
+    public CoreConfigurable getCoreProperties() {
         return coreConfiguratorDelegate.getCoreProperties();
     }
 

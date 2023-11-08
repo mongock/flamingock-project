@@ -91,7 +91,7 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public CoreConfiguration getCoreProperties() {
+    public CoreConfigurable getCoreProperties() {
         return coreConfiguratorDelegate.getCoreProperties();
     }
 

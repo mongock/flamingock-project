@@ -3,6 +3,7 @@ package io.flamingock.oss.driver.mongodb.v3.internal;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.audit.Auditor;
@@ -24,12 +25,12 @@ public class Mongo3Engine implements ConnectionEngine {
     private LocalLockAcquirer lockProvider;
     private TransactionWrapper transactionWrapper;
     private final MongoDB3Configuration driverConfiguration;
-    private final CoreConfiguration coreConfiguration;
+    private final CoreConfigurable coreConfiguration;
 
 
     public Mongo3Engine(MongoClient mongoClient,
                             String databaseName,
-                            CoreConfiguration coreConfiguration,
+                            CoreConfigurable coreConfiguration,
                             LocalConfiguration communityConfiguration,
                             MongoDB3Configuration driverConfiguration) {
         this.mongoClient = mongoClient;
