@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":community:springboot-v2-runner"))
+    implementation(project(":core:flamingock-springboot-v2-runner"))
     implementation(project(":core:flamingock-template"))
 
     implementation("org.springframework.data:spring-data-mongodb:3.2.12")

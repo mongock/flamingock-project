@@ -14,13 +14,13 @@ include("core:flamingock-core")
 project(":core:flamingock-core").projectDir = file("core/flamingock-core")
 project(":core:flamingock-core").name = "flamingock-core"
 
-include("core:flamingock-springboot-v2-core")
-project(":core:flamingock-springboot-v2-core").projectDir = file("core/flamingock-springboot-v2-core")
-project(":core:flamingock-springboot-v2-core").name = "flamingock-springboot-v2-core"
+include("core:flamingock-springboot-v2-runner")
+project(":core:flamingock-springboot-v2-runner").projectDir = file("core/flamingock-springboot-v2-runner")
+project(":core:flamingock-springboot-v2-runner").name = "flamingock-springboot-v2-runner"
 
-include("core:flamingock-springboot-v3-core")
-project(":core:flamingock-springboot-v3-core").projectDir = file("core/flamingock-springboot-v3-core")
-project(":core:flamingock-springboot-v3-core").name = "flamingock-springboot-v3-core"
+include("core:flamingock-springboot-v3-runner")
+project(":core:flamingock-springboot-v3-runner").projectDir = file("core/flamingock-springboot-v3-runner")
+project(":core:flamingock-springboot-v3-runner").name = "flamingock-springboot-v3-runner"
 
 //////////////////////////////////////
 // COMMUNITY
@@ -29,13 +29,13 @@ include("community:base-community")
 project(":community:base-community").name = "base-community"
 project(":community:base-community").projectDir = file("community/base-community")
 
-include("community:springboot-v2-runner")
-project(":community:springboot-v2-runner").name = "springboot-v2-runner"
-project(":community:springboot-v2-runner").projectDir = file("community/springboot-v2-runner")
+//include("core:springboot-v2-runner")
+//project(":core:flamingock-springboot-v2-runner").name = "springboot-v2-runner"
+//project(":core:flamingock-springboot-v2-runner").projectDir = file("core/springboot-v2-runner")
 
-include("community:springboot-v3-runner")
-project(":community:springboot-v3-runner").name = "springboot-v3-runner"
-project(":community:springboot-v3-runner").projectDir = file("community/springboot-v3-runner")
+//include("core:springboot-v3-runner")
+//project(":core:flamingock-springboot-v3-runner").name = "springboot-v3-runner"
+//project(":core:flamingock-springboot-v3-runner").projectDir = file("core/springboot-v3-runner")
 
 include("community:mongodb:mongodb-facade")
 project(":community:mongodb:mongodb-facade").name = "mongodb-facade"
