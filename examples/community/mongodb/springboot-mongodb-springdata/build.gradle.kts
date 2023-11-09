@@ -7,7 +7,7 @@ plugins {
 dependencies {
 
     implementation(project(":core:flamingock-springboot-v2-runner"))
-    implementation(project(":community:mongodb:mongodb-springdata-v3-driver"))
+    implementation(project(":local-drivers:mongodb:mongodb-springdata-v3-driver"))
 
     implementation(project(":examples:community:mongodb:mongodb-template"))
     

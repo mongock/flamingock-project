@@ -1,7 +1,7 @@
 
 dependencies {
-    api(project(":community:mongodb:mongodb-facade"))
-    api(project(":community:mongodb:mongodb-v3-driver"))
+    api(project(":local-drivers:mongodb:mongodb-facade"))
+    api(project(":local-drivers:mongodb:mongodb-v3-driver"))
 
     implementation("org.springframework.data:spring-data-mongodb:2.2.13.RELEASE")
     implementation("org.mongodb:mongodb-driver-sync:3.11.3")

@@ -3,8 +3,6 @@ plugins {
     `maven-publish`
     id("java")
 }
-group = "io.flamingock"
-version = "0.0.1-SNAPSHOT"
 
 subprojects {
 

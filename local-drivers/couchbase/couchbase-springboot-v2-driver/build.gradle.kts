@@ -1,7 +1,7 @@
 
 dependencies {
-    api(project(":community:base-community"))
-    api(project(":community:couchbase:couchbase-driver"))
+    api(project(":local-drivers:driver-common"))
+    api(project(":local-drivers:couchbase:couchbase-driver"))
 
     implementation("org.springframework.data:spring-data-couchbase:4.4.8")
     implementation("com.couchbase.client:java-client:3.4.4")

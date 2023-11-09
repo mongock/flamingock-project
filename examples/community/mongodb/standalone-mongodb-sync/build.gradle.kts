@@ -2,7 +2,7 @@
 val mongodbVersion = "4.3.3"
 dependencies {
     implementation(project(":core:flamingock-core"))
-    implementation(project(":community:mongodb:mongodb-sync-v4-driver"))
+    implementation(project(":local-drivers:mongodb:mongodb-sync-v4-driver"))
     implementation("org.mongodb:mongodb-driver-sync:$mongodbVersion")
     implementation("org.mongodb:mongodb-driver-core:$mongodbVersion")
     implementation("org.mongodb:bson:$mongodbVersion")

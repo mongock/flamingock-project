@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":core:flamingock-core"))
-    implementation(project(":community:couchbase:couchbase-driver"))
+    implementation(project(":local-drivers:couchbase:couchbase-driver"))
     implementation("com.couchbase.client:java-client:3.4.4")
     implementation("org.slf4j:slf4j-simple:2.0.6")
 

@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     implementation(project(":core:flamingock-springboot-v2-runner"))
-    implementation(project(":community:couchbase:couchbase-springboot-v2-driver"))
+    implementation(project(":local-drivers:couchbase:couchbase-springboot-v2-driver"))
     
     implementation("org.slf4j:slf4j-simple:2.0.6")
     implementation("org.springframework.boot:spring-boot-starter-web")
