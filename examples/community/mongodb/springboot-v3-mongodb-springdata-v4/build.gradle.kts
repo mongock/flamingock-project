@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:flamingock-springboot-v3-runner"))
+    implementation(project(":flamingock-springboot-v3-runner"))
     implementation(project(":local-drivers:mongodb:mongodb-springdata-v4-driver"))
     
     implementation("org.slf4j:slf4j-simple:2.0.7")
