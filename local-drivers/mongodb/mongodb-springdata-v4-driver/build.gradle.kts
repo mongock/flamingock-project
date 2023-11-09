@@ -1,7 +1,7 @@
 
 dependencies {
-    api(project(":drivers:mongodb:mongodb-facade"))
-    api(project(":drivers:mongodb:mongodb-sync-v4-driver"))
+    api(project(":local-drivers:mongodb:mongodb-facade"))
+    api(project(":local-drivers:mongodb:mongodb-sync-v4-driver"))
 
     implementation("org.springframework.data:spring-data-mongodb:4.1.3")
     implementation("org.mongodb:mongodb-driver-sync:4.9.1")

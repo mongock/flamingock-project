@@ -1,8 +1,9 @@
 
 dependencies {
-    api(project(":drivers:mongodb:mongodb-facade"))
+    api(project(":local-drivers:mongodb:mongodb-facade"))
 
-    implementation("org.mongodb:mongo-java-driver:3.12.8")
+
+    implementation("org.mongodb:mongodb-driver-sync:4.3.3")
 
     testImplementation(project(":core:flamingock-core"))
     testImplementation("org.testcontainers:mongodb:1.18.3")

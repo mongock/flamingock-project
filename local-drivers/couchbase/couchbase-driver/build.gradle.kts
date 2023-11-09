@@ -1,6 +1,6 @@
 
 dependencies {
-    api(project(":drivers:driver-common"))
+    api(project(":local-drivers:driver-common"))
     
     implementation("com.couchbase.client:java-client:3.4.4")
 

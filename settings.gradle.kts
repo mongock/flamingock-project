@@ -25,42 +25,42 @@ project(":core:flamingock-springboot-v3-runner").name = "flamingock-springboot-v
 //////////////////////////////////////
 // COMMUNITY
 //////////////////////////////////////
-include("drivers:driver-common")
-project(":drivers:driver-common").name = "driver-common"
-project(":drivers:driver-common").projectDir = file("drivers/driver-common")
+include("local-drivers:driver-common")
+project(":local-drivers:driver-common").name = "driver-common"
+project(":local-drivers:driver-common").projectDir = file("local-drivers/driver-common")
 
 
-include("drivers:mongodb:mongodb-facade")
-project(":drivers:mongodb:mongodb-facade").name = "mongodb-facade"
-project(":drivers:mongodb:mongodb-facade").projectDir = file("drivers/mongodb/mongodb-facade")
+include("local-drivers:mongodb:mongodb-facade")
+project(":local-drivers:mongodb:mongodb-facade").name = "mongodb-facade"
+project(":local-drivers:mongodb:mongodb-facade").projectDir = file("local-drivers/mongodb/mongodb-facade")
 
-include("drivers:mongodb:mongodb-sync-v4-driver")
-project(":drivers:mongodb:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
-project(":drivers:mongodb:mongodb-sync-v4-driver").projectDir = file("drivers/mongodb/mongodb-sync-v4-driver")
+include("local-drivers:mongodb:mongodb-sync-v4-driver")
+project(":local-drivers:mongodb:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
+project(":local-drivers:mongodb:mongodb-sync-v4-driver").projectDir = file("local-drivers/mongodb/mongodb-sync-v4-driver")
 
-include("drivers:mongodb:mongodb-v3-driver")
-project(":drivers:mongodb:mongodb-v3-driver").name = "mongodb-v3-driver"
-project(":drivers:mongodb:mongodb-v3-driver").projectDir = file("drivers/mongodb/mongodb-v3-driver")
+include("local-drivers:mongodb:mongodb-v3-driver")
+project(":local-drivers:mongodb:mongodb-v3-driver").name = "mongodb-v3-driver"
+project(":local-drivers:mongodb:mongodb-v3-driver").projectDir = file("local-drivers/mongodb/mongodb-v3-driver")
 
-include("drivers:mongodb:mongodb-springdata-v3-driver")
-project(":drivers:mongodb:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
-project(":drivers:mongodb:mongodb-springdata-v3-driver").projectDir = file("drivers/mongodb/mongodb-springdata-v3-driver")
+include("local-drivers:mongodb:mongodb-springdata-v3-driver")
+project(":local-drivers:mongodb:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
+project(":local-drivers:mongodb:mongodb-springdata-v3-driver").projectDir = file("local-drivers/mongodb/mongodb-springdata-v3-driver")
 
-include("drivers:mongodb:mongodb-springdata-v2-driver")
-project(":drivers:mongodb:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
-project(":drivers:mongodb:mongodb-springdata-v2-driver").projectDir = file("drivers/mongodb/mongodb-springdata-v2-driver")
+include("local-drivers:mongodb:mongodb-springdata-v2-driver")
+project(":local-drivers:mongodb:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
+project(":local-drivers:mongodb:mongodb-springdata-v2-driver").projectDir = file("local-drivers/mongodb/mongodb-springdata-v2-driver")
 
-include("drivers:mongodb:mongodb-springdata-v4-driver")
-project(":drivers:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
-project(":drivers:mongodb:mongodb-springdata-v4-driver").projectDir = file("drivers/mongodb/mongodb-springdata-v4-driver")
+include("local-drivers:mongodb:mongodb-springdata-v4-driver")
+project(":local-drivers:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
+project(":local-drivers:mongodb:mongodb-springdata-v4-driver").projectDir = file("local-drivers/mongodb/mongodb-springdata-v4-driver")
 
-include("drivers:couchbase:couchbase-driver")
-project(":drivers:couchbase:couchbase-driver").name = "couchbase-driver"
-project(":drivers:couchbase:couchbase-driver").projectDir = file("drivers/couchbase/couchbase-driver")
+include("local-drivers:couchbase:couchbase-driver")
+project(":local-drivers:couchbase:couchbase-driver").name = "couchbase-driver"
+project(":local-drivers:couchbase:couchbase-driver").projectDir = file("local-drivers/couchbase/couchbase-driver")
 
-include("drivers:couchbase:couchbase-springboot-v2-driver")
-project(":drivers:couchbase:couchbase-springboot-v2-driver").name = "couchbase-springboot-v2-driver"
-project(":drivers:couchbase:couchbase-springboot-v2-driver").projectDir = file("drivers/couchbase/couchbase-springboot-v2-driver")
+include("local-drivers:couchbase:couchbase-springboot-v2-driver")
+project(":local-drivers:couchbase:couchbase-springboot-v2-driver").name = "couchbase-springboot-v2-driver"
+project(":local-drivers:couchbase:couchbase-springboot-v2-driver").projectDir = file("local-drivers/couchbase/couchbase-springboot-v2-driver")
 
 //////////////////////////////////////
 // EXAMPLES
