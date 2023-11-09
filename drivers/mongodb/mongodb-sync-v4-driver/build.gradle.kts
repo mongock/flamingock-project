@@ -1,6 +1,6 @@
 
 dependencies {
-    api(project(":community:mongodb:mongodb-facade"))
+    api(project(":drivers:mongodb:mongodb-facade"))
 
 
     implementation("org.mongodb:mongodb-driver-sync:4.3.3")

@@ -1,6 +1,6 @@
 
 dependencies {
-    api(project(":community:mongodb:mongodb-facade"))
+    api(project(":drivers:mongodb:mongodb-facade"))
 
     implementation("org.mongodb:mongo-java-driver:3.12.8")
 
