@@ -1,6 +1,6 @@
 package io.flamingock.examples.community.events;
 
-import io.flamingock.core.springboot.v2.event.SpringPipelineFailedEvent;
+import io.flamingock.springboot.v2.event.SpringPipelineFailedEvent;
 import org.springframework.context.ApplicationListener;
 
 public class PipelineFailedListener implements ApplicationListener<SpringPipelineFailedEvent> {

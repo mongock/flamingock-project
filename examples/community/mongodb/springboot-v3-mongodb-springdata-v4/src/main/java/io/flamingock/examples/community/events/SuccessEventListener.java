@@ -1,6 +1,6 @@
 package io.flamingock.examples.community.events;
 
-import io.flamingock.core.springboot.v3.event.SpringPipelineCompletedEvent;
+import io.flamingock.springboot.v3.event.SpringPipelineCompletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;

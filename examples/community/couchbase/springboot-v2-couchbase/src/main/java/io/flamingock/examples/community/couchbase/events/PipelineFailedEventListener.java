@@ -1,6 +1,6 @@
 package io.flamingock.examples.community.couchbase.events;
 
-import io.flamingock.core.springboot.v2.event.SpringPipelineFailedEvent;
+import io.flamingock.springboot.v2.event.SpringPipelineFailedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
