@@ -7,7 +7,7 @@ plugins {
 val mongodbVersion = "4.3.3"
 dependencies {
 
-    implementation(project(":core:flamingock-springboot-v2-runner"))
+    implementation(project(":flamingock-springboot-v2-runner"))
     implementation(project(":local-drivers:mongodb:mongodb-sync-v4-driver"))
 
     implementation("org.slf4j:slf4j-simple:2.0.6")

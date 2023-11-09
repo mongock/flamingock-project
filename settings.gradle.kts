@@ -5,22 +5,22 @@ rootProject.name = "flamingock-project"
 //////////////////////////////////////
 // CORE
 //////////////////////////////////////
-include("core:flamingock-template")
-project(":core:flamingock-template").projectDir = file("core/flamingock-template")
-project(":core:flamingock-template").name = "flamingock-template"
+include("flamingock-template")
+project(":flamingock-template").projectDir = file("flamingock-template")
+project(":flamingock-template").name = "flamingock-template"
 
 
-include("core:flamingock-core")
-project(":core:flamingock-core").projectDir = file("core/flamingock-core")
-project(":core:flamingock-core").name = "flamingock-core"
+include("flamingock-core")
+project(":flamingock-core").projectDir = file("flamingock-core")
+project(":flamingock-core").name = "flamingock-core"
 
-include("core:flamingock-springboot-v2-runner")
-project(":core:flamingock-springboot-v2-runner").projectDir = file("core/flamingock-springboot-v2-runner")
-project(":core:flamingock-springboot-v2-runner").name = "flamingock-springboot-v2-runner"
+include("flamingock-springboot-v2-runner")
+project(":flamingock-springboot-v2-runner").projectDir = file("flamingock-springboot-v2-runner")
+project(":flamingock-springboot-v2-runner").name = "flamingock-springboot-v2-runner"
 
-include("core:flamingock-springboot-v3-runner")
-project(":core:flamingock-springboot-v3-runner").projectDir = file("core/flamingock-springboot-v3-runner")
-project(":core:flamingock-springboot-v3-runner").name = "flamingock-springboot-v3-runner"
+include("flamingock-springboot-v3-runner")
+project(":flamingock-springboot-v3-runner").projectDir = file("flamingock-springboot-v3-runner")
+project(":flamingock-springboot-v3-runner").name = "flamingock-springboot-v3-runner"
 
 //////////////////////////////////////
 // COMMUNITY

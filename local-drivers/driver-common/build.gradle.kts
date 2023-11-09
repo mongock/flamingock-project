@@ -1,5 +1,5 @@
 
 dependencies {
-    api(project(":core:flamingock-core"))
+    api(project(":flamingock-core"))
 }
 
