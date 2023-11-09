@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Profile;
 
-import io.flamingock.core.springboot.v2.SpringProfileFilter;
+import io.flamingock.springboot.v2.SpringProfileFilter;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -1,6 +1,6 @@
 package io.flamingock.examples.community;
 
-import io.flamingock.core.springboot.v2.context.EnableFlamingock;
+import io.flamingock.springboot.v2.context.EnableFlamingock;
 import io.flamingock.examples.community.client.ClientRepository;
 import io.flamingock.examples.community.events.PipelineFailedListener;
 import io.flamingock.examples.community.events.PipelineStartedListener;

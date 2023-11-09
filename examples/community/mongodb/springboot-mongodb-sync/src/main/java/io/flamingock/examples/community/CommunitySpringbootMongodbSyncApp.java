@@ -4,7 +4,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
 import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.springboot.v2.context.EnableFlamingock;
+import io.flamingock.springboot.v2.context.EnableFlamingock;
 import io.flamingock.examples.community.events.FailureEventListener;
 import io.flamingock.examples.community.events.StartedEventListener;
 import io.flamingock.examples.community.events.SuccessEventListener;

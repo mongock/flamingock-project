@@ -1,7 +1,7 @@
 package io.flamingock.examples.community;
 
 
-import io.flamingock.core.springboot.v3.context.EnableFlamingock;
+import io.flamingock.springboot.v3.context.EnableFlamingock;
 import io.flamingock.examples.community.client.ClientRepository;
 import io.flamingock.examples.community.events.FailureEventListener;
 import io.flamingock.examples.community.events.StartedEventListener;
