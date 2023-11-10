@@ -82,9 +82,9 @@ include("examples:community:mongodb:springboot-v3-mongodb-springdata-v4")
 project(":examples:community:mongodb:springboot-v3-mongodb-springdata-v4").name = "springboot-v3-mongodb-springdata-v4"
 project(":examples:community:mongodb:springboot-v3-mongodb-springdata-v4").projectDir = file("examples/community/mongodb/springboot-v3-mongodb-springdata-v4")
 
-include("examples:community:mongodb:mongodb-template")
-project(":examples:community:mongodb:mongodb-template").name = "mongodb-template"
-project(":examples:community:mongodb:mongodb-template").projectDir = file("examples/community/mongodb/mongodb-template")
+include("examples:community:mongodb:mysql-template")
+project(":examples:community:mongodb:mysql-template").name = "mysql-template"
+project(":examples:community:mongodb:mysql-template").projectDir = file("examples/community/mongodb/mysql-template")
 
 include("examples:community:couchbase:standalone-couchbase")
 project(":examples:community:couchbase:standalone-couchbase").name = "standalone-couchbase"

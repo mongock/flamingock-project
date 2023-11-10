@@ -2,8 +2,7 @@ dependencies {
     implementation(project(":flamingock-springboot-v2-runner"))
     implementation(project(":flamingock-template"))
 
-    implementation("org.springframework.data:spring-data-mongodb:3.2.12")
-    implementation("org.mongodb:mongodb-driver-sync:4.3.3")
+    runtimeOnly("com.mysql:mysql-connector-j:8.2.0")
 
     compileOnly("org.springframework.boot:spring-boot:2.7.12")
     compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.7.12")

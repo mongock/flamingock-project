@@ -30,6 +30,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 
 @EnableFlamingock
 @SpringBootApplication
@@ -41,6 +45,14 @@ public class CommunitySpringbootMongodbSpringdataApp {
 
     public static void main(String[] args) {
         SpringApplication.run(CommunitySpringbootMongodbSpringdataApp.class, args);
+    }
+
+    @Bean
+    public Connection mysqlConnection() throws ClassNotFoundException, SQLException {
+        String myDriver = "com.mysql.cj.jdbc.Driver";
+        String myUrl = "jdbc:mysql://localhost/flamingock";
+        Class.forName(myDriver);
+        return DriverManager.getConnection(myUrl, "flamingock_user", "password");
     }
 
     @Bean
