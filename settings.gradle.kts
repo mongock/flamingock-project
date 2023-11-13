@@ -86,10 +86,10 @@ include("examples:databases:mongodb:mysql-template")
 project(":examples:databases:mongodb:mysql-template").name = "mysql-template"
 project(":examples:databases:mongodb:mysql-template").projectDir = file("examples/databases/mongodb/mysql-template")
 
-include("examples:databases:couchbase:standalone-couchbase")
-project(":examples:databases:couchbase:standalone-couchbase").name = "standalone-couchbase"
-project(":examples:databases:couchbase:standalone-couchbase").projectDir = file("examples/databases/couchbase/standalone-couchbase")
+include("examples:databases:standalone-couchbase")
+project(":examples:databases:standalone-couchbase").name = "standalone-couchbase"
+project(":examples:databases:standalone-couchbase").projectDir = file("examples/databases/standalone-couchbase")
 
-include("examples:databases:couchbase:springboot-v2-couchbase")
-project(":examples:databases:couchbase:springboot-v2-couchbase").name = "springboot-v2-couchbase"
-project(":examples:databases:couchbase:springboot-v2-couchbase").projectDir = file("examples/databases/couchbase/springboot-v2-couchbase")
+include("examples:databases:springboot-v2-couchbase")
+project(":examples:databases:springboot-v2-couchbase").name = "springboot-v2-couchbase"
+project(":examples:databases:springboot-v2-couchbase").projectDir = file("examples/databases/springboot-v2-couchbase")
