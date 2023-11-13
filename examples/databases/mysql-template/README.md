@@ -10,7 +10,8 @@
 9. run "CREATE USER 'flamingock_user'@'%' IDENTIFIED BY 'password';"
 10. run "GRANT ALL PRIVILEGES ON *.* TO 'flamingock_user'@'%' WITH GRANT OPTION;"
 11. run "FLUSH PRIVILEGES;"
-12. connect from client to localhost on 3306 with flamingock_user/password
+12. run "create database flamingock;"
+13. connect from client to localhost on 3306 with flamingock_user/password
 
 # TODO
 - Currently, there is no a way to know if the rollback should be executed

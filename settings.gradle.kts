@@ -86,6 +86,10 @@ include("examples:databases:mysql-template")
 project(":examples:databases:mysql-template").name = "mysql-template"
 project(":examples:databases:mysql-template").projectDir = file("examples/databases/mysql-template")
 
+include("examples:databases:mysql-springboot")
+project(":examples:databases:mysql-springboot").name = "mysql-springboot"
+project(":examples:databases:mysql-springboot").projectDir = file("examples/databases/mysql-springboot")
+
 include("examples:databases:couchbase-standalone")
 project(":examples:databases:couchbase-standalone").name = "couchbase-standalone"
 project(":examples:databases:couchbase-standalone").projectDir = file("examples/databases/couchbase-standalone")
