@@ -70,9 +70,9 @@ include("examples:databases:standalone-mongodb-sync")
 project(":examples:databases:standalone-mongodb-sync").name = "standalone-mongodb-sync"
 project(":examples:databases:standalone-mongodb-sync").projectDir = file("examples/databases/standalone-mongodb-sync")
 
-include("examples:databases:springboot-mongodb-sync")
-project(":examples:databases:springboot-mongodb-sync").name = "springboot-mongodb-sync"
-project(":examples:databases:springboot-mongodb-sync").projectDir = file("examples/databases/springboot-mongodb-sync")
+include("examples:databases:mongodb-springboot-sync")
+project(":examples:databases:mongodb-springboot-sync").name = "mongodb-springboot-sync"
+project(":examples:databases:mongodb-springboot-sync").projectDir = file("examples/databases/mongodb-springboot-sync")
 
 include("examples:databases:mongodb-springboot-springdata")
 project(":examples:databases:mongodb-springboot-springdata").name = "mongodb-springboot-springdata"
