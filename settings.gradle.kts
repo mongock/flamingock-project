@@ -74,9 +74,9 @@ include("examples:databases:springboot-mongodb-sync")
 project(":examples:databases:springboot-mongodb-sync").name = "springboot-mongodb-sync"
 project(":examples:databases:springboot-mongodb-sync").projectDir = file("examples/databases/springboot-mongodb-sync")
 
-include("examples:databases:springboot-mongodb-springdata")
-project(":examples:databases:springboot-mongodb-springdata").name = "springboot-mongodb-springdata"
-project(":examples:databases:springboot-mongodb-springdata").projectDir = file("examples/databases/springboot-mongodb-springdata")
+include("examples:databases:mongodb-springboot-springdata")
+project(":examples:databases:mongodb-springboot-springdata").name = "mongodb-springboot-springdata"
+project(":examples:databases:mongodb-springboot-springdata").projectDir = file("examples/databases/mongodb-springboot-springdata")
 
 include("examples:databases:springboot-v3-mongodb-springdata-v4")
 project(":examples:databases:springboot-v3-mongodb-springdata-v4").name = "springboot-v3-mongodb-springdata-v4"
