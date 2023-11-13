@@ -22,10 +22,7 @@ import io.flamingock.template.annotations.TemplateExecution;
 import io.flamingock.template.annotations.TemplateRollbackExecution;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class MysqlTemplate {
 
@@ -49,6 +46,7 @@ public class MysqlTemplate {
 
     @TemplateRollbackExecution
     public void rollback(Connection connection) {
+        //TODO what if there is no rollback configuration provided, should be ignored?
         execute(connection, configuration.getRollbackSql());
     }
 
@@ -59,7 +57,6 @@ public class MysqlTemplate {
             throw new RuntimeException(e);
         }
     }
-
 
 
 }
