@@ -29,7 +29,6 @@ import java.sql.SQLException;
 @EnableFlamingock
 @SpringBootApplication
 public class MysqlSpringbootApp {
-    public final static String CLIENTS_COLLECTION_NAME = "clientCollection";
 
     public static void main(String[] args) {
         SpringApplication.run(MysqlSpringbootApp.class, args);
@@ -42,6 +41,5 @@ public class MysqlSpringbootApp {
         Class.forName(myDriver);
         return DriverManager.getConnection(myUrl, "flamingock_user", "password");
     }
-
 
 }
