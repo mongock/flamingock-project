@@ -170,7 +170,9 @@ public class Stage {
     }
 
     private static Collection<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages, Collection<TaskFilter> filters) {
-
+        if(codePackages == null) {
+            return Collections.emptyList();
+        }
         return codePackages.
                 stream()
                 .map(ReflectionUtil::loadClassesFromPackage)

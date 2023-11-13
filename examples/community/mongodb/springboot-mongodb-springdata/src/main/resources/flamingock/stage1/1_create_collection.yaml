@@ -1,5 +1,0 @@
-id: create-collection-from-template
-order: 4
-templateName: mongodb/create-collection-template
-templateConfiguration:
-    collectionName: collection_from_template
