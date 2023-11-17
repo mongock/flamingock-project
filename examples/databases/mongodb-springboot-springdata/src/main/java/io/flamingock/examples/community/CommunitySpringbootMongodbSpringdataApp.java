@@ -48,14 +48,6 @@ public class CommunitySpringbootMongodbSpringdataApp {
     }
 
     @Bean
-    public Connection mysqlConnection() throws ClassNotFoundException, SQLException {
-        String myDriver = "com.mysql.cj.jdbc.Driver";
-        String myUrl = "jdbc:mysql://localhost/flamingock";
-        Class.forName(myDriver);
-        return DriverManager.getConnection(myUrl, "flamingock_user", "password");
-    }
-
-    @Bean
     public PipelineStartedListener startFlamingockListener() {
         return new PipelineStartedListener();
     }
