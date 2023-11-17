@@ -82,9 +82,9 @@ include("examples:databases:mongodb-springboot-v3-springdata-v4")
 project(":examples:databases:mongodb-springboot-v3-springdata-v4").name = "mongodb-springboot-v3-springdata-v4"
 project(":examples:databases:mongodb-springboot-v3-springdata-v4").projectDir = file("examples/databases/mongodb-springboot-v3-springdata-v4")
 
-include("examples:databases:mysql-template")
-project(":examples:databases:mysql-template").name = "mysql-template"
-project(":examples:databases:mysql-template").projectDir = file("examples/databases/mysql-template")
+include("templates:mysql-template")
+project(":templates:mysql-template").name = "mysql-template"
+project(":templates:mysql-template").projectDir = file("templates/mysql-template")
 
 include("examples:databases:mysql-springboot")
 project(":examples:databases:mysql-springboot").name = "mysql-springboot"
