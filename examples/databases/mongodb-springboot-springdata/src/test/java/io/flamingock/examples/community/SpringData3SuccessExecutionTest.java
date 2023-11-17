@@ -109,12 +109,7 @@ class SpringData3SuccessExecutionTest {
         assertEquals("EXECUTED", cInsertAnotherDocument.get("state"));
         assertEquals("io.flamingock.examples.community.changes.CInsertAnotherDocument", cInsertAnotherDocument.get("changeLogClass"));
 
-        Document createCollectionTemplate = flamingockDocuments.get(3);
-        assertEquals("create-collection-from-template", createCollectionTemplate.get("changeId"));
-        assertEquals("EXECUTED", createCollectionTemplate.get("state"));
-        assertEquals("com.company.template.mongodb.MongoCreateCollectionTemplate", createCollectionTemplate.get("changeLogClass"));
-
-        assertEquals(4, flamingockDocuments.size());
+        assertEquals(3, flamingockDocuments.size());
     }
 
 
