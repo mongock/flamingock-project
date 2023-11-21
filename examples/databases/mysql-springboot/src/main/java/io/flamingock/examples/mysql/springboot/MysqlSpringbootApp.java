@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.examples.springboot;
+package io.flamingock.examples.mysql.springboot;
 
 import io.flamingock.springboot.v2.context.EnableFlamingock;
 import org.springframework.boot.SpringApplication;

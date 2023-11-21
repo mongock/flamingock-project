@@ -108,4 +108,5 @@ project(":examples:databases:couchbase-standalone").projectDir = file("examples/
 include("examples:databases:couchbase-springboot-v2")
 project(":examples:databases:couchbase-springboot-v2").name = "couchbase-springboot-v2"
 project(":examples:databases:couchbase-springboot-v2").projectDir = file("examples/databases/couchbase-springboot-v2")
-
+include("examples:databases:mysql-standalone")
+findProject(":examples:databases:mysql-standalone")?.name = "mysql-standalone"
