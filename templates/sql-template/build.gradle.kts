@@ -1,9 +1,6 @@
 dependencies {
     implementation(project(":flamingock-springboot-v2-runner"))
     implementation(project(":flamingock-template"))
-
-    runtimeOnly("com.mysql:mysql-connector-j:8.2.0")
-
     compileOnly("org.springframework.boot:spring-boot:2.7.12")
     compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.7.12")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.7.12")

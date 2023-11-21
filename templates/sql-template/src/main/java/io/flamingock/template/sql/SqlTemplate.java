@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.template.mysql;
+package io.flamingock.template.sql;
 
 import io.flamingock.template.annotations.TemplateConfigSetter;
 import io.flamingock.template.annotations.TemplateConfigValidator;
@@ -24,13 +24,12 @@ import io.flamingock.template.annotations.TemplateRollbackExecution;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class MysqlTemplate {
+public class SqlTemplate {
 
-    private MysqlTemplateConfiguration configuration;
-
+    private SqlTemplateConfiguration configuration;
 
     @TemplateConfigSetter
-    public void setConfiguration(MysqlTemplateConfiguration configuration) {
+    public void setConfiguration(SqlTemplateConfiguration configuration) {
         this.configuration = configuration;
     }
 
