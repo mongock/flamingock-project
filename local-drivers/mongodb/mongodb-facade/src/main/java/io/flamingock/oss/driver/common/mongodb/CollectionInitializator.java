@@ -28,7 +28,6 @@ import java.util.stream.StreamSupport;
 
 public class CollectionInitializator<DOCUMENT_WRAPPER extends DocumentWrapper> {
 
-
     private final static Logger logger = LoggerFactory.getLogger(CollectionInitializator.class);
 
 

@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
@@ -33,13 +34,17 @@ import java.util.Objects;
 
 public final class FileUtil {
 
+
     private FileUtil() {
     }
 
     public static List<File> loadFilesFromDirectory(String directory) {
         try {
-            return Arrays.asList(Objects.requireNonNull(new File(Stage.class.getClassLoader().getResource(directory).toURI())
-                    .listFiles()));
+            URL resource = Stage.class.getClassLoader().getResource(directory);
+            if (resource == null) {
+                throw new RuntimeException("Resource not found: "  + directory);
+            }
+            return Arrays.asList(Objects.requireNonNull(new File(resource.toURI()).listFiles()));
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
