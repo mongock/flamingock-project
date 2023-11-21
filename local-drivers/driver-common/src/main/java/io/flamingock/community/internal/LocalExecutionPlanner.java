@@ -80,25 +80,9 @@ public class LocalExecutionPlanner implements ExecutionPlanner {
                 new LockRefreshDaemon(lock, new TimeService()).start();
             }
             return Execution.newExecution(lock, executableStages);
-        } else {
 
+        } else {
             return Execution.CONTINUE();
-
-        }
-    }
-
-    @Override
-    public LockAcquisition acquiredIfRequired(LoadedStage loadedStage, LockOptions lockOptions) throws LockException {
-        AuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
-        ExecutableStage executableStage = loadedStage.applyState(currentAuditStageStatus);
-        if (executableStage.doesRequireExecution()) {
-            Lock lock = acquireLock(lockOptions);
-            if (lockOptions.isWithDaemon()) {
-                new LockRefreshDaemon(lock, new TimeService()).start();
-            }
-            return new LockAcquisition.Acquired(lock);
-        } else {
-            return new LockAcquisition.NoRequired();
         }
     }
 

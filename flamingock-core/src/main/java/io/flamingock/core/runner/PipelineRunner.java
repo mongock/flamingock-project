@@ -69,6 +69,10 @@ public abstract class PipelineRunner implements Runner {
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
+
+    //TODO it's not releasing the lock. Ideally is reuse so we don't need to do it every  time
+    // however initially it will return all the stages that require execution, that it's not urgent to reuse it,
+    // but it is to release it
     public void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publish(new PipelineStartedEvent());
         try {
