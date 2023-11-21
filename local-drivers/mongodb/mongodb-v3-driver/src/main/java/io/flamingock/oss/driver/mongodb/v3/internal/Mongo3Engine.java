@@ -19,7 +19,7 @@ package io.flamingock.oss.driver.mongodb.v3.internal;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.community.internal.lock.LocalLockAcquirer;
+import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.driver.audit.Auditor;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
@@ -37,7 +37,7 @@ public class Mongo3Engine implements ConnectionEngine {
     private final LocalConfigurable localConfiguration;
 
     private Mongo3Auditor auditor;
-    private LocalLockAcquirer lockProvider;
+    private LocalExecutionPlanner executionPlanner;
     private TransactionWrapper transactionWrapper;
     private final MongoDB3Configuration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
@@ -66,7 +66,7 @@ public class Mongo3Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         Mongo3LockRepository lockRepository = new Mongo3LockRepository(database, driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
+        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
@@ -75,8 +75,8 @@ public class Mongo3Engine implements ConnectionEngine {
     }
 
     @Override
-    public LocalLockAcquirer getLockProvider() {
-        return lockProvider;
+    public LocalExecutionPlanner getExecutionPlanner() {
+        return executionPlanner;
     }
 
 

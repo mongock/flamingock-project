@@ -34,10 +34,6 @@ public class LocalLock implements Lock {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalLock.class);
 
-
-
-
-
     private static final String DEFAULT_KEY = "DEFAULT_KEY";
     public static final String LOG_EXPIRED_TEMPLATE = "Lock[{}] not refreshed at[{}] because the it's canceled/expired[{}]";
 
@@ -61,7 +57,7 @@ public class LocalLock implements Lock {
     private volatile LocalDateTime expiresAt;
 
 
-    static Lock getLock(long leaseMillis,
+    public static Lock getLock(long leaseMillis,
                         long stopTryingAfterMillis,
                         long retryFrequencyMillis,
                         String owner,

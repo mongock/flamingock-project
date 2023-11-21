@@ -20,7 +20,7 @@ import io.flamingock.core.driver.audit.AuditWriter;
 import io.flamingock.core.driver.audit.AuditReader;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.driver.lock.LockAcquirer;
+import io.flamingock.core.driver.execution.ExecutionPlanner;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
@@ -41,17 +41,16 @@ public final class RunnerCreator {
 
 
     public static Runner create(Pipeline pipeline,
-                                AuditReader auditReader,
                                 AuditWriter auditWriter,
                                 TransactionWrapper transactionWrapper,
-                                LockAcquirer lockAcquirer,
+                                ExecutionPlanner executionPlanner,
                                 CoreConfigurable coreConfiguration,
                                 EventPublisher eventPublisher,
                                 DependencyContext dependencyContext,
                                 boolean isThrowExceptionIfCannotObtainLock) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final StageExecutor stageExecutor = new StageExecutor(dependencyContext, auditWriter, transactionWrapper);
-        return new PipelineRunner(lockAcquirer, auditReader, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
+        return new PipelineRunner(executionPlanner, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
             @Override
             public void run() {
                 this.run(pipeline);

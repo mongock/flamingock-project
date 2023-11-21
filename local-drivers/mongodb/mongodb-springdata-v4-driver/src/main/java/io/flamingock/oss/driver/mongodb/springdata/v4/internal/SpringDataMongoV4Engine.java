@@ -23,7 +23,7 @@ import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Co
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.driver.audit.Auditor;
-import io.flamingock.community.internal.lock.LocalLockAcquirer;
+import io.flamingock.community.internal.LocalExecutionPlanner;
 
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ public class SpringDataMongoV4Engine implements ConnectionEngine {
     private final LocalConfigurable localConfiguration;
 
     private SpringDataMongoV4Auditor auditor;
-    private LocalLockAcquirer lockProvider;
+    private LocalExecutionPlanner executionPlanner;
     private TransactionWrapper transactionWrapper;
     private final SpringDataMongoV4Configuration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
@@ -65,7 +65,7 @@ public class SpringDataMongoV4Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         SpringDataMongoV4LockRepository lockRepository = new SpringDataMongoV4LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
+        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
@@ -74,8 +74,8 @@ public class SpringDataMongoV4Engine implements ConnectionEngine {
     }
 
     @Override
-    public LocalLockAcquirer getLockProvider() {
-        return lockProvider;
+    public LocalExecutionPlanner getExecutionPlanner() {
+        return executionPlanner;
     }
 
 

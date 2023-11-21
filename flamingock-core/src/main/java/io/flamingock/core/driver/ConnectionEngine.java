@@ -17,7 +17,7 @@
 package io.flamingock.core.driver;
 
 import io.flamingock.core.driver.audit.Auditor;
-import io.flamingock.core.driver.lock.LockAcquirer;
+import io.flamingock.core.driver.execution.ExecutionPlanner;
 import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
@@ -28,7 +28,7 @@ public interface ConnectionEngine {
 
   Auditor getAuditor();
 
-  LockAcquirer getLockProvider();
+  ExecutionPlanner getExecutionPlanner();
 
   Optional<TransactionWrapper> getTransactionWrapper();
 

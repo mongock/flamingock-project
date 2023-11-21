@@ -18,7 +18,10 @@ package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.driver.audit.AuditReader;
-import io.flamingock.core.driver.audit.writer.AuditStageStatus;
+import io.flamingock.core.driver.execution.Execution;
+import io.flamingock.core.driver.execution.ExecutionPlanner;
+import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.driver.lock.LockException;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.impl.PipelineCompletedEvent;
 import io.flamingock.core.event.model.impl.PipelineFailedEvent;
@@ -27,27 +30,23 @@ import io.flamingock.core.event.model.impl.StageCompletedEvent;
 import io.flamingock.core.event.model.impl.StageFailedEvent;
 import io.flamingock.core.event.model.impl.StageIgnoredEvent;
 import io.flamingock.core.event.model.impl.StageStartedEvent;
-import io.flamingock.core.driver.lock.Lock;
-import io.flamingock.core.driver.lock.LockAcquirer;
-import io.flamingock.core.driver.lock.LockAcquisition;
-import io.flamingock.core.driver.lock.LockException;
-import io.flamingock.core.pipeline.Pipeline;
-import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.ExecutableStage;
-import io.flamingock.core.pipeline.LoadedStage;
+import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.flamingock.core.driver.execution.Execution.Action.EXECUTE;
+
 public abstract class PipelineRunner implements Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(PipelineRunner.class);
 
-    private final LockAcquirer lockAcquirer;
+    private final ExecutionPlanner executionPlanner;
 
-    private final AuditReader auditReader;
+
 
     private final EventPublisher eventPublisher;
 
@@ -58,14 +57,12 @@ public abstract class PipelineRunner implements Runner {
     private final StageExecutionContext stageExecutionContext;
 
 
-    public PipelineRunner(LockAcquirer lockAcquirer,
-                          AuditReader auditReader,
+    public PipelineRunner(ExecutionPlanner executionPlanner,
                           StageExecutor stageExecutor,
                           StageExecutionContext stageExecutionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock) {
-        this.lockAcquirer = lockAcquirer;
-        this.auditReader = auditReader;
+        this.executionPlanner = executionPlanner;
         this.stageExecutor = stageExecutor;
         this.stageExecutionContext = stageExecutionContext;
         this.eventPublisher = eventPublisher;
@@ -74,22 +71,13 @@ public abstract class PipelineRunner implements Runner {
 
     public void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publish(new PipelineStartedEvent());
-        pipeline.getStages().forEach(this::runStage);
-        eventPublisher.publish(new PipelineCompletedEvent());
-
-    }
-
-    private void runStage(Stage stage) {
-        LoadedStage loadedStage = stage.load();
-        try (LockAcquisition lockAcquisition = lockAcquirer.acquireIfRequired(loadedStage)) {
-            if(lockAcquisition.isNotRequired()) {
-                skipStage();
-            } else if(lockAcquisition.lock().isPresent()) {
-                startStage(lockAcquisition.lock().get(), loadedStage);
-            } else {
-                throw new LockException("Lock required but not acquired");
+        try {
+            Execution execution = executionPlanner.getNextExecution(pipeline);
+            while (execution.getAction() == EXECUTE) {
+                Lock lock = execution.getLock();
+                execution.getStages().forEach(executableStage -> runStage(lock, executableStage));
+                execution = executionPlanner.getNextExecution(pipeline);
             }
-
         } catch (LockException exception) {
             eventPublisher.publish(new StageFailedEvent(exception));
             eventPublisher.publish(new PipelineFailedEvent(exception));
@@ -99,6 +87,17 @@ public abstract class PipelineRunner implements Runner {
 
             } else {
                 logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" + "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" + "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
+            }
+        }
+        eventPublisher.publish(new PipelineCompletedEvent());
+    }
+
+    private void runStage(Lock lock, ExecutableStage executableStage) {
+        try {
+            if (executableStage.doesRequireExecution()) {
+                startStage(lock, executableStage);
+            } else {
+                skipStage(executableStage);
             }
 
         } catch (StageExecutionException exception) {
@@ -115,12 +114,9 @@ public abstract class PipelineRunner implements Runner {
         }
     }
 
-    private void startStage(Lock lock, LoadedStage loadedStage) throws StageExecutionException {
+    private void startStage(Lock lock, ExecutableStage executableStage) throws StageExecutionException {
         eventPublisher.publish(new StageStartedEvent());
-        AuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
-        logger.debug("Pulled remote state:\n{}", currentAuditStageStatus);
 
-        ExecutableStage executableStage = loadedStage.applyState(currentAuditStageStatus);
         logger.debug("Applied state to process:\n{}", executableStage);
 
         StageExecutor.Output executionOutput = stageExecutor.execute(executableStage, stageExecutionContext, lock);
@@ -128,8 +124,9 @@ public abstract class PipelineRunner implements Runner {
         eventPublisher.publish(new StageCompletedEvent(executionOutput));
     }
 
-    private void skipStage() {
-        logger.info("Skipping the process. All the tasks are already executed.");
+    private void skipStage(ExecutableStage executableStage) {
+        String stageId = "NEED_TO_ADD_STAGE_NAME";
+        logger.info("Skipping stage[{}]. All the tasks are already executed.", stageId);
         eventPublisher.publish(new StageIgnoredEvent());
     }
 }

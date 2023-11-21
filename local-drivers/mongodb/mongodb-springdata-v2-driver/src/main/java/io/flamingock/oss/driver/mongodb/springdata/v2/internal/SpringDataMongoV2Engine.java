@@ -17,7 +17,7 @@
 package io.flamingock.oss.driver.mongodb.springdata.v2.internal;
 
 import com.mongodb.ReadConcern;
-import io.flamingock.community.internal.lock.LocalLockAcquirer;
+import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.driver.audit.Auditor;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
@@ -35,7 +35,7 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
     private final LocalConfigurable localConfiguration;
 
     private SpringDataMongoV2Auditor auditor;
-    private LocalLockAcquirer lockProvider;
+    private LocalExecutionPlanner executionPlanner;
     private TransactionWrapper transactionWrapper;
     private final SpringDataMongoV2Configuration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
@@ -63,7 +63,7 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         SpringDataMongoV2LockRepository lockRepository = new SpringDataMongoV2LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
+        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
@@ -72,8 +72,8 @@ public class SpringDataMongoV2Engine implements ConnectionEngine {
     }
 
     @Override
-    public LocalLockAcquirer getLockProvider() {
-        return lockProvider;
+    public LocalExecutionPlanner getExecutionPlanner() {
+        return executionPlanner;
     }
 
 

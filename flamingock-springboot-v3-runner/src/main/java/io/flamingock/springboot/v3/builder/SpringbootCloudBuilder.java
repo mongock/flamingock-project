@@ -65,7 +65,6 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
         return RunnerCreator.create(
                 buildPipeline(activeProfiles),
                 null,//connectionEngine.getAuditor(),
-                null,//connectionEngine.getAuditor(),
                 null,//connectionEngine.getTransactionWrapper().orElse(null),
                 null,//connectionEngine.getLockProvider(),
                 getCoreProperties(),

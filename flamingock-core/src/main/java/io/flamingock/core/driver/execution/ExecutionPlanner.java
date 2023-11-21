@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.driver.lock;
+package io.flamingock.core.driver.execution;
 
+import io.flamingock.core.driver.lock.LockAcquisition;
+import io.flamingock.core.driver.lock.LockException;
+import io.flamingock.core.driver.lock.LockOptions;
 import io.flamingock.core.pipeline.LoadedStage;
+import io.flamingock.core.pipeline.Pipeline;
 
-public interface LockAcquirer {
+public interface ExecutionPlanner {
 
-    default LockAcquisition acquireIfRequired(LoadedStage loadedStage) throws LockException {
-        return acquireIfRequired(loadedStage, LockOptions.builder().build());
+    default LockAcquisition getNextExecution(LoadedStage loadedStage) throws LockException {
+        return acquiredIfRequired(loadedStage, LockOptions.builder().build());
+    }
+
+    default Execution getNextExecution(Pipeline pipeline) throws LockException {
+        return getNextExecution(pipeline, LockOptions.builder().build());
     }
 
     /**
@@ -42,5 +50,8 @@ public interface LockAcquirer {
      * @return
      * @throws LockException
      */
-    LockAcquisition acquireIfRequired(LoadedStage loadedStage, LockOptions options) throws LockException;
+    LockAcquisition acquiredIfRequired(LoadedStage loadedStage, LockOptions options) throws LockException;
+
+
+    Execution getNextExecution(Pipeline pipeline, LockOptions lockOptions) throws LockException;
 }
