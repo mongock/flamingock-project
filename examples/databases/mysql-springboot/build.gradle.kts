@@ -7,7 +7,6 @@ plugins {
 dependencies {
 
     implementation("com.mysql:mysql-connector-j:8.2.0")
-    implementation(project(":flamingock-template"))
 
     implementation(project(":flamingock-springboot-v2-runner"))
     implementation(project(":local-drivers:mongodb:mongodb-springdata-v3-driver"))
