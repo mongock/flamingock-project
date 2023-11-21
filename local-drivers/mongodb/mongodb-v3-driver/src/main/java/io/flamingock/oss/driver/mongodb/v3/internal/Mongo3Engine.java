@@ -20,7 +20,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
-import io.flamingock.core.audit.Auditor;
+import io.flamingock.core.driver.audit.Auditor;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.driver.ConnectionEngine;

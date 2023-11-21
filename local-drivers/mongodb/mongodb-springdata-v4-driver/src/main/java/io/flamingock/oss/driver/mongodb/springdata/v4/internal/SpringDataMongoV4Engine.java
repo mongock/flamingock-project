@@ -22,7 +22,7 @@ import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.core.driver.ConnectionEngine;
-import io.flamingock.core.audit.Auditor;
+import io.flamingock.core.driver.audit.Auditor;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
 
 import java.util.Optional;

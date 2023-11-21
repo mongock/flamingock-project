@@ -22,7 +22,7 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.driver.ConnectionEngine;
-import io.flamingock.core.audit.Auditor;
+import io.flamingock.core.driver.audit.Auditor;
 import io.flamingock.community.internal.lock.LocalLockAcquirer;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;

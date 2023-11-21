@@ -16,7 +16,7 @@
 
 package io.flamingock.core.task.executable;
 
-import io.flamingock.core.audit.writer.AuditEntryStatus;
+import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptor;

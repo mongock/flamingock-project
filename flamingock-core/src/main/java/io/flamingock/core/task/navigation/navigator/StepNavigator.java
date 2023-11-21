@@ -16,9 +16,9 @@
 
 package io.flamingock.core.task.navigation.navigator;
 
-import io.flamingock.core.audit.AuditWriter;
-import io.flamingock.core.audit.domain.AuditItem;
-import io.flamingock.core.audit.domain.RuntimeContext;
+import io.flamingock.core.driver.audit.AuditWriter;
+import io.flamingock.core.driver.audit.domain.AuditItem;
+import io.flamingock.core.driver.audit.domain.RuntimeContext;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.navigation.step.ExecutableStep;
 import io.flamingock.core.task.navigation.step.RollableFailedStep;

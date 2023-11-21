@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.audit.domain;
+package io.flamingock.core.driver.audit.domain;
 
 import io.flamingock.core.task.navigation.step.FailedWithErrorStep;
 import io.flamingock.core.task.navigation.step.TaskStep;

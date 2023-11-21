@@ -16,9 +16,9 @@
 
 package io.flamingock.community.internal.lock;
 
-import io.flamingock.core.lock.Lock;
-import io.flamingock.core.lock.LockException;
-import io.flamingock.core.lock.LockStatus;
+import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.driver.lock.LockException;
+import io.flamingock.core.driver.lock.LockStatus;
 import io.flamingock.core.util.TimeService;
 import io.flamingock.core.util.TimeUtil;
 import org.slf4j.Logger;

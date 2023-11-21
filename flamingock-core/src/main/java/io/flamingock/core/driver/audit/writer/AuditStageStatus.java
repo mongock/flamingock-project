@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.audit.writer;
+package io.flamingock.core.driver.audit.writer;
 
 import java.util.HashMap;
 import java.util.Map;

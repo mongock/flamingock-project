@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.audit;
+package io.flamingock.core.driver.audit.writer;
 
+public enum AuditEntryStatus {
+    EXECUTED, FAILED, ROLLED_BACK, ROLLBACK_FAILED;
 
-public interface Auditor extends AuditWriter, AuditReader {
+    public static boolean isRequiredExecution(AuditEntryStatus entryStatus) {
+        return entryStatus == null || entryStatus == FAILED || entryStatus == ROLLED_BACK || entryStatus == ROLLBACK_FAILED;
+    }
+
 
 }

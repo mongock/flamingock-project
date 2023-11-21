@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.audit;
+package io.flamingock.core.driver.audit;
 
-import io.flamingock.core.audit.writer.AuditStageStatus;
+import io.flamingock.core.driver.audit.writer.AuditStageStatus;
 
 public interface AuditReader {
     AuditStageStatus getAuditStageStatus();

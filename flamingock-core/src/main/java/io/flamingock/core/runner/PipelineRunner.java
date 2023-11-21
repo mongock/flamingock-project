@@ -17,8 +17,8 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.audit.AuditReader;
-import io.flamingock.core.audit.writer.AuditStageStatus;
+import io.flamingock.core.driver.audit.AuditReader;
+import io.flamingock.core.driver.audit.writer.AuditStageStatus;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.impl.PipelineCompletedEvent;
 import io.flamingock.core.event.model.impl.PipelineFailedEvent;
@@ -27,10 +27,10 @@ import io.flamingock.core.event.model.impl.StageCompletedEvent;
 import io.flamingock.core.event.model.impl.StageFailedEvent;
 import io.flamingock.core.event.model.impl.StageIgnoredEvent;
 import io.flamingock.core.event.model.impl.StageStartedEvent;
-import io.flamingock.core.lock.Lock;
-import io.flamingock.core.lock.LockAcquirer;
-import io.flamingock.core.lock.LockAcquisition;
-import io.flamingock.core.lock.LockException;
+import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.driver.lock.LockAcquirer;
+import io.flamingock.core.driver.lock.LockAcquisition;
+import io.flamingock.core.driver.lock.LockException;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.ExecutableStage;

@@ -16,12 +16,11 @@
 
 package io.flamingock.core.runner;
 
-import io.flamingock.core.audit.AuditWriter;
-import io.flamingock.core.audit.AuditReader;
+import io.flamingock.core.driver.audit.AuditWriter;
+import io.flamingock.core.driver.audit.AuditReader;
 import io.flamingock.core.configurator.CoreConfigurable;
-import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.lock.LockAcquirer;
+import io.flamingock.core.driver.lock.LockAcquirer;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
