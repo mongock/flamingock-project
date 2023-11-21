@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.flamingock.template.mysql;
+package io.flamingock.template.sql;
 
-public class MysqlTemplateConfiguration {
+public class SqlTemplateConfiguration {
 
     private String executionSql;
     private String rollbackSql;

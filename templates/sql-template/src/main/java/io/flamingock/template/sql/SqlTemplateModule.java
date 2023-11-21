@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.template.mysql;
+package io.flamingock.template.sql;
 
 
 import io.flamingock.template.TemplateModule;
@@ -24,13 +24,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MysqlTemplateModule implements TemplateModule {
+public class SqlTemplateModule implements TemplateModule {
 
     private static final Set<TemplateSpec> templates;
 
     static {
         HashSet<TemplateSpec> templatesSet = new HashSet<>();
-        templatesSet.add(new TemplateSpec("mysql-template", MysqlTemplate.class));
+        templatesSet.add(new TemplateSpec("sql-template", SqlTemplate.class));
         templates = Collections.unmodifiableSet(templatesSet);
     }
 

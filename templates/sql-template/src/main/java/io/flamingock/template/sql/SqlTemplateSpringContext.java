@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.template.mysql;
+package io.flamingock.template.sql;
 
 
 import io.flamingock.core.configurator.CoreConfigurator;
@@ -22,11 +22,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MysqlTemplateSpringContext {
+public class SqlTemplateSpringContext {
     
     @Bean
-    public MysqlTemplateModule mongoCreateCollectionTemplateModule(CoreConfigurator<?> CoreConfigurator) {
-        MysqlTemplateModule module = new MysqlTemplateModule();
+    public SqlTemplateModule mongoCreateCollectionTemplateModule(CoreConfigurator<?> CoreConfigurator) {
+        SqlTemplateModule module = new SqlTemplateModule();
         CoreConfigurator.addTemplateModule(module);
         return module;
     }

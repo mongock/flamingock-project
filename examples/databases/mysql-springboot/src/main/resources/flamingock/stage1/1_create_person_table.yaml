@@ -1,6 +1,6 @@
 id: create-persons-table-from-template
 order: 1
-templateName: mysql-template
+templateName: sql-template
 templateConfiguration:
     executionSql: |
         CREATE TABLE Persons (
