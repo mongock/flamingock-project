@@ -63,6 +63,21 @@ project(":local-drivers:couchbase:couchbase-springboot-v2-driver").name = "couch
 project(":local-drivers:couchbase:couchbase-springboot-v2-driver").projectDir = file("local-drivers/couchbase/couchbase-springboot-v2-driver")
 
 //////////////////////////////////////
+// TEMPLATES
+//////////////////////////////////////
+
+//SQL
+include("templates:sql-template")
+project(":templates:sql-template").name = "sql-template"
+project(":templates:sql-template").projectDir = file("templates/sql-template")
+
+
+include("templates:sql-springboot-template")
+project(":templates:sql-springboot-template").name = "sql-springboot-template"
+project(":templates:sql-springboot-template").projectDir = file("templates/sql-springboot-template")
+
+
+//////////////////////////////////////
 // EXAMPLES
 //////////////////////////////////////
 
@@ -82,10 +97,6 @@ include("examples:databases:mongodb-springboot-v3-springdata-v4")
 project(":examples:databases:mongodb-springboot-v3-springdata-v4").name = "mongodb-springboot-v3-springdata-v4"
 project(":examples:databases:mongodb-springboot-v3-springdata-v4").projectDir = file("examples/databases/mongodb-springboot-v3-springdata-v4")
 
-include("templates:sql-template")
-project(":templates:sql-template").name = "sql-template"
-project(":templates:sql-template").projectDir = file("templates/sql-template")
-
 include("examples:databases:mysql-springboot")
 project(":examples:databases:mysql-springboot").name = "mysql-springboot"
 project(":examples:databases:mysql-springboot").projectDir = file("examples/databases/mysql-springboot")
@@ -97,3 +108,4 @@ project(":examples:databases:couchbase-standalone").projectDir = file("examples/
 include("examples:databases:couchbase-springboot-v2")
 project(":examples:databases:couchbase-springboot-v2").name = "couchbase-springboot-v2"
 project(":examples:databases:couchbase-springboot-v2").projectDir = file("examples/databases/couchbase-springboot-v2")
+

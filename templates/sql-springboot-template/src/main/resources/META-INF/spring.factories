@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.flamingock.template.sql.SqlTemplateSpringContext
+  io.flamingock.template.sql.springboot.SqlTemplateSpringContext
