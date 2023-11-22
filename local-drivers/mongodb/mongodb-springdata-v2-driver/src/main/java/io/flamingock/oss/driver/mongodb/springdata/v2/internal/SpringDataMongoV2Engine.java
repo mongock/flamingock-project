@@ -22,6 +22,7 @@ import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.config.SpringDataMongoV2Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
@@ -52,7 +53,7 @@ public class SpringDataMongoV2Engine implements LocalConnectionEngine {
     }
 
     @Override
-    public void initialize() {
+    public void initialize(RunnerId runnerId) {
         ReadWriteConfiguration readWriteConfiguration = new ReadWriteConfiguration(driverConfiguration.getBuiltMongoDBWriteConcern(),
                 new ReadConcern(driverConfiguration.getReadConcern()),
                 driverConfiguration.getReadPreference().getValue());
@@ -61,9 +62,9 @@ public class SpringDataMongoV2Engine implements LocalConnectionEngine {
                 driverConfiguration.getMigrationRepositoryName(),
                 readWriteConfiguration);
         auditor.initialize(driverConfiguration.isIndexCreation());
-        SpringDataMongoV2LockRepository lockRepository = new SpringDataMongoV2LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
-        lockRepository.initialize(driverConfiguration.isIndexCreation());
-        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
+        SpringDataMongoV2LockService lockService = new SpringDataMongoV2LockService(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
+        lockService.initialize(driverConfiguration.isIndexCreation());
+        executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }
 
     @Override

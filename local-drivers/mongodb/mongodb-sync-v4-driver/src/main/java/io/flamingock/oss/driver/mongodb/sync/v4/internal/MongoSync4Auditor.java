@@ -22,9 +22,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
-import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
+import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
@@ -45,7 +45,7 @@ import static io.flamingock.community.internal.AuditEntryField.KEY_CHANGE_ID;
 import static io.flamingock.community.internal.AuditEntryField.KEY_EXECUTION_ID;
 
 public class MongoSync4Auditor implements Auditor {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(MongoSync4Auditor.class);
 
     private final MongoCollection<Document> collection;
@@ -69,7 +69,7 @@ public class MongoSync4Auditor implements Auditor {
                 () -> new MongoSync4DocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_AUTHOR, KEY_CHANGE_ID}
         );
-        if(indexCreation) {
+        if (indexCreation) {
             initializer.initialize();
         } else {
             initializer.justValidateCollection();
@@ -99,7 +99,7 @@ public class MongoSync4Auditor implements Auditor {
 
     @Override
     public AuditStageStatus getAuditStageStatus() {
-        AuditStageStatus.Builder builder = AuditStageStatus.builder();
+        AuditStageStatus.EntryBuilder builder = AuditStageStatus.entryBuilder();
         collection.find()
                 .into(new LinkedList<>())
                 .stream()

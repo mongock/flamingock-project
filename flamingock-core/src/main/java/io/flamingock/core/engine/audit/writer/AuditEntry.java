@@ -16,6 +16,8 @@
 
 package io.flamingock.core.engine.audit.writer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,6 +60,7 @@ public class AuditEntry {
     private final String executionHostname;
 
     private final String errorTrace;
+
     private final ExecutionType type;
 
     protected Boolean systemChange;
@@ -105,6 +108,7 @@ public class AuditEntry {
         return author;
     }
 
+    @JsonIgnore
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

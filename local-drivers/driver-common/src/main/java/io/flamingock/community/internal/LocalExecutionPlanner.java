@@ -18,19 +18,18 @@ package io.flamingock.community.internal;
 
 
 import io.flamingock.community.internal.lock.LocalLock;
-import io.flamingock.core.engine.lock.LockRepository;
+import io.flamingock.community.internal.lock.LocalLockService;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.engine.audit.AuditReader;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
-import io.flamingock.core.engine.execution.Execution;
+import io.flamingock.core.engine.execution.ExecutionPlan;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.engine.lock.LockException;
-import io.flamingock.core.engine.lock.LockOptions;
 import io.flamingock.core.engine.lock.LockRefreshDaemon;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.Pipeline;
-import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.util.TimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,60 +37,62 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LocalExecutionPlanner implements ExecutionPlanner {
+public class LocalExecutionPlanner extends ExecutionPlanner {
     private static final Logger logger = LoggerFactory.getLogger(LocalExecutionPlanner.class);
 
     private final AuditReader auditReader;
-    private final LockRepository lockRepository;
+    private final LocalLockService lockService;
 
     private final CoreConfigurable configuration;
+    private final RunnerId instanceId;
 
 
     /**
-     * @param lockRepository    lockRepository to persist the lock
+     * @param lockService    lockService to persist the lock
      * @param auditReader
      * @param coreConfiguration
      */
-    public LocalExecutionPlanner(LockRepository lockRepository,
+    public LocalExecutionPlanner(RunnerId instanceId,
+                                 LocalLockService lockService,
                                  AuditReader auditReader,
                                  CoreConfigurable coreConfiguration) {
+        this.instanceId = instanceId;
         this.auditReader = auditReader;
-        this.lockRepository = lockRepository;
+        this.lockService = lockService;
         this.configuration = coreConfiguration;
     }
 
     @Override
-    public Execution getNextExecution(Pipeline pipeline, LockOptions lockOptions) throws LockException {
+    protected ExecutionPlan getNextExecution(Pipeline pipeline) throws LockException {
         AuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
         logger.debug("Pulled remote state:\n{}", currentAuditStageStatus);
 
         List<ExecutableStage> executableStages = pipeline
-                .getStages()
+                .getLoadedStages()
                 .stream()
-                .map(Stage::load)
                 .map(loadedStage -> loadedStage.applyState(currentAuditStageStatus))
                 .collect(Collectors.toList());
 
         if (executableStages.stream().anyMatch(ExecutableStage::doesRequireExecution)) {
-            Lock lock = acquireLock(lockOptions);
-            if (lockOptions.isWithDaemon()) {
-                new LockRefreshDaemon(lock, new TimeService()).start();
+            Lock lock = acquireLock();
+            if (configuration.isEnableRefreshDaemon()) {
+                new LockRefreshDaemon(lock, TimeService.getDefault()).start();
             }
-            return Execution.newExecution(lock, executableStages);
+            return ExecutionPlan.newExecution(lock, executableStages);
 
         } else {
-            return Execution.CONTINUE();
+            return ExecutionPlan.CONTINUE();
         }
     }
 
-    private Lock acquireLock(LockOptions lockOptions) {
+    private Lock acquireLock() {
         return LocalLock.getLock(
                 configuration.getLockAcquiredForMillis(),
                 configuration.getLockQuitTryingAfterMillis(),
                 configuration.getLockTryFrequencyMillis(),
-                lockOptions.getOwner(),
-                lockRepository,
-                new TimeService()
+                instanceId,
+                lockService,
+                TimeService.getDefault()
         );
     }
 

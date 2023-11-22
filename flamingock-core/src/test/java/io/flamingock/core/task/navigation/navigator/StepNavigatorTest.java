@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import static io.utils.TestTaskExecution.BEFORE_EXECUTION;
 import static io.utils.TestTaskExecution.EXECUTION;
@@ -58,6 +59,10 @@ class StepNavigatorTest {
     }
 
 
+    @Test
+    public void testasda() {
+        System.out.println(UUID.randomUUID());
+    }
 
 
     @Test

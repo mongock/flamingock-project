@@ -17,13 +17,14 @@
 package io.flamingock.core.engine;
 
 import io.flamingock.core.engine.execution.ExecutionPlanner;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 
 public interface ConnectionEngine {
 
-  void initialize();
+  void initialize(RunnerId runnerId);
 
   ExecutionPlanner getExecutionPlanner();
 

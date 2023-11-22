@@ -32,14 +32,14 @@ public final class RollableStep extends AbstractTaskStep {
     }
 
     public ManualRolledBackStep rollback(RuntimeManager runtimeHelper) {
-        StopWatch stopWatch = StopWatch.start();
+        StopWatch stopWatch = StopWatch.startAndGet();
         try {
             rollback.rollback(runtimeHelper);
-            stopWatch.stop();
-            return ManualRolledBackStep.successfulRollback(rollback, stopWatch.getDuration());
+            stopWatch.lap();
+            return ManualRolledBackStep.successfulRollback(rollback, stopWatch.getLap());
         } catch (Throwable throwable) {
-            stopWatch.stop();
-            return  ManualRolledBackStep.failedRollback(rollback, stopWatch.getDuration(), throwable);
+            stopWatch.lap();
+            return  ManualRolledBackStep.failedRollback(rollback, stopWatch.getLap(), throwable);
         }
     }
 

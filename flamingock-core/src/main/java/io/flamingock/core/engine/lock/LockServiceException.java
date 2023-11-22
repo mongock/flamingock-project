@@ -19,7 +19,7 @@ package io.flamingock.core.engine.lock;
 /**
  * @since 04/04/2018
  */
-public class LockRepositoryException extends RuntimeException {
+public class LockServiceException extends RuntimeException {
 
   /**
    * Condition to update/insert lock
@@ -36,7 +36,7 @@ public class LockRepositoryException extends RuntimeException {
    */
   private final String dbErrorDetail;
 
-  public LockRepositoryException(String acquireLockQuery, String newLockEntity, String dbErrorDetail) {
+  public LockServiceException(String acquireLockQuery, String newLockEntity, String dbErrorDetail) {
     this.acquireLockQuery = acquireLockQuery;
     this.newLockEntity = newLockEntity;
     this.dbErrorDetail = dbErrorDetail;
@@ -50,7 +50,7 @@ public class LockRepositoryException extends RuntimeException {
     return newLockEntity;
   }
 
-  public String getDbErrorDetail() {
+  public String getErrorDetail() {
     return dbErrorDetail;
   }
 

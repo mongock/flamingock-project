@@ -31,11 +31,15 @@ public interface CoreConfigurable {
 
     void setLockAcquiredForMillis(long lockAcquiredForMillis);
 
-    void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis);
+    void setLockQuitTryingAfterMillis(long lockQuitTryingAfterMillis);
 
     void setLockTryFrequencyMillis(long lockTryFrequencyMillis);
 
     void setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock);
+
+    void setEnableRefreshDaemon(boolean enableRefreshDaemon);
+
+    boolean isEnableRefreshDaemon();
 
     void setTrackIgnored(boolean trackIgnored);
 

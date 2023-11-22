@@ -24,7 +24,9 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.community.internal.LocalExecutionPlanner;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
+import io.flamingock.core.util.TimeService;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 
@@ -56,7 +58,7 @@ public class MongoSync4Engine implements LocalConnectionEngine {
     }
 
     @Override
-    public void initialize() {
+    public void initialize(RunnerId runnerId) {
         SessionManager<ClientSession> sessionManager = new SessionManager<>(mongoClient::startSession);
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new MongoSync4TransactionWrapper(sessionManager) : null;
         auditor = new MongoSync4Auditor(database,
@@ -64,9 +66,9 @@ public class MongoSync4Engine implements LocalConnectionEngine {
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
         auditor.initialize(driverConfiguration.isIndexCreation());
-        MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, driverConfiguration.getLockRepositoryName());
-        lockRepository.initialize(driverConfiguration.isIndexCreation());
-        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
+        MongoSync4LockService lockService = new MongoSync4LockService(database, driverConfiguration.getLockRepositoryName(), TimeService.getDefault());
+        lockService.initialize(driverConfiguration.isIndexCreation());
+        executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }
 
     @Override

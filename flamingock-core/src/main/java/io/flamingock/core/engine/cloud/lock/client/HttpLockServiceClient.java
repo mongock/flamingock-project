@@ -1,0 +1,67 @@
+/*
+ * Copyright 2023 Flamingock ("https://oss.flamingock.io")
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.flamingock.core.engine.cloud.lock.client;
+
+import io.flamingock.core.engine.cloud.lock.LockExtensionRequest;
+import io.flamingock.core.engine.cloud.lock.LockResponse;
+import io.flamingock.core.engine.lock.LockKey;
+import io.flamingock.core.runner.RunnerId;
+import io.flamingock.core.util.http.Http;
+
+public class HttpLockServiceClient implements LockServiceClient {
+
+    private final String SERVICE_PARAM = "service";
+
+    private final Http.RequestBuilder httpFactory;
+
+    private final String pathTemplate;
+
+    public HttpLockServiceClient(String host,
+                                 String apiVersion,
+                                 Http.RequestBuilderFactory httpFactoryBuilder) {
+        this.pathTemplate = String.format("/%s/{%s}/lock", apiVersion, SERVICE_PARAM);
+        this.httpFactory = httpFactoryBuilder
+                .getRequestBuilder(host);
+    }
+
+    @Override
+    public LockResponse extendLock(LockKey lockKey,
+                                   RunnerId runnerId,
+                                   LockExtensionRequest extensionRequest) {
+        return httpFactory
+                .POST(pathTemplate + "/extension")
+                .addPathParameter(SERVICE_PARAM, lockKey.toString())
+                .withRunnerId(runnerId)
+                .setBody(extensionRequest)
+                .execute(LockResponse.class);
+    }
+
+    @Override
+    public LockResponse getLock(LockKey lockKey) {
+        return httpFactory.GET(pathTemplate)
+                .addPathParameter(SERVICE_PARAM, lockKey.toString())
+                .execute(LockResponse.class);
+    }
+
+    @Override
+    public void releaseLock(LockKey lockKey, RunnerId runnerId) {
+        httpFactory.DELETE(pathTemplate)
+                .addPathParameter(SERVICE_PARAM, lockKey.toString())
+                .withRunnerId(runnerId)
+                .execute();
+    }
+}

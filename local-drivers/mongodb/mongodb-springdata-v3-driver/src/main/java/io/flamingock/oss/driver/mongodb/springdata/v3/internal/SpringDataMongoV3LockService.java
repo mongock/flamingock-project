@@ -17,11 +17,12 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.internal;
 
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4LockRepository;
+import io.flamingock.core.util.TimeService;
+import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4LockService;
 
-public class SpringDataMongoV3LockRepository extends MongoSync4LockRepository {
+public class SpringDataMongoV3LockService extends MongoSync4LockService {
 
-    protected SpringDataMongoV3LockRepository(MongoDatabase mongoDatabase, String lockCollectionName) {
-        super(mongoDatabase, lockCollectionName);
+    protected SpringDataMongoV3LockService(MongoDatabase mongoDatabase, String lockCollectionName) {
+        super(mongoDatabase, lockCollectionName, TimeService.getDefault());
     }
 }

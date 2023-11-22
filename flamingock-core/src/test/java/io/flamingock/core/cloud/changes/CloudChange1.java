@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.internal;
+package io.flamingock.core.cloud.changes;
 
-import com.mongodb.client.MongoDatabase;
-import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4LockRepository;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
+import io.utils.TaskExecutionChecker;
+import io.utils.TestExecutionTrackerTask;
 
-public class SpringDataMongoV4LockRepository extends MongoSync4LockRepository {
+@ChangeUnit(id = "create-persons-table-from-template", order = "1")
+public class CloudChange1 {
+    public static final TaskExecutionChecker checker = new TaskExecutionChecker();
 
-    protected SpringDataMongoV4LockRepository(MongoDatabase mongoDatabase, String lockCollectionName) {
-        super(mongoDatabase, lockCollectionName);
+    @Execution
+    public void execution() {
+        checker.markExecution();
     }
+
+
 }

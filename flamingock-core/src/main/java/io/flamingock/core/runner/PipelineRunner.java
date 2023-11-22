@@ -17,7 +17,6 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.engine.execution.Execution;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.engine.lock.LockException;
@@ -37,8 +36,6 @@ import io.flamingock.core.pipeline.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.flamingock.core.engine.execution.Execution.Action.EXECUTE;
-
 public abstract class PipelineRunner implements Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(PipelineRunner.class);
@@ -53,12 +50,15 @@ public abstract class PipelineRunner implements Runner {
 
     private final StageExecutionContext stageExecutionContext;
 
+    private final RunnerId runnerId;
 
-    public PipelineRunner(ExecutionPlanner executionPlanner,
+    public PipelineRunner(RunnerId runnerId,
+                          ExecutionPlanner executionPlanner,
                           StageExecutor stageExecutor,
                           StageExecutionContext stageExecutionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock) {
+        this.runnerId = runnerId;
         this.executionPlanner = executionPlanner;
         this.stageExecutor = stageExecutor;
         this.stageExecutionContext = stageExecutionContext;
@@ -66,18 +66,13 @@ public abstract class PipelineRunner implements Runner {
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
     }
 
-
     public void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publish(new PipelineStartedEvent());
         boolean keepLooping = true;
         do {
-            try(Execution execution = executionPlanner.getNextExecution(pipeline)) {
-                if (execution.getAction() == EXECUTE) {
-                    Lock lock = execution.getLock();
-                    execution.getStages().forEach(executableStage -> runStage(lock, executableStage));
-                } else {
-                    keepLooping = false;
-                }
+            try {
+                keepLooping = executionPlanner.executeIfRequired(pipeline, this::runStage);
+
             } catch (LockException exception) {
                 keepLooping = false;
                 eventPublisher.publish(new StageFailedEvent(exception));
@@ -87,17 +82,18 @@ public abstract class PipelineRunner implements Runner {
                     throw exception;
 
                 } else {
-                    logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" + "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" + "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
+                    logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" +
+                            "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" +
+                            "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
                 }
             } catch (RuntimeException e) {
-              throw e;
+                throw e;
             } catch (Throwable throwable) {
                 processAndThrow(throwable);
             }
-        } while(keepLooping);
+        } while (keepLooping);
         eventPublisher.publish(new PipelineCompletedEvent());
     }
-
 
     private void runStage(Lock lock, ExecutableStage executableStage) {
         try {
@@ -128,8 +124,7 @@ public abstract class PipelineRunner implements Runner {
     }
 
     private void skipStage(ExecutableStage executableStage) {
-        String stageId = "NEED_TO_ADD_STAGE_NAME";
-        logger.info("Skipping stage[{}]. All the tasks are already executed.", stageId);
+        logger.info("Skipping stage[{}]. All the tasks are already executed.", executableStage.getName());
         eventPublisher.publish(new StageIgnoredEvent());
     }
 

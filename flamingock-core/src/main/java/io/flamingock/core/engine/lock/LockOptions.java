@@ -28,47 +28,28 @@ public class LockOptions {
     }
 
     private final boolean withDaemon;
-    private final String owner;
 
-    private LockOptions(boolean withDaemon, String owner) {
+    private LockOptions(boolean withDaemon) {
         this.withDaemon = withDaemon;
-        this.owner = owner;
     }
 
     public boolean isWithDaemon() {
         return withDaemon;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
 
     public static class Builder {
         private boolean withDaemon = true;
-        private String owner = null;
 
         public Builder withDaemon(boolean withDaemon) {
             this.withDaemon = withDaemon;
             return this;
         }
 
-        public Builder setOwner(String owner) {
-            this.owner = owner;
-            return this;
-        }
-
         public LockOptions build() {
-            return new LockOptions(withDaemon, owner != null ? owner : generateDefaultOwner());
+            return new LockOptions(withDaemon);
         }
 
 
-        private static String generateDefaultOwner() {
-            try {
-                return Inet4Address.getLocalHost().getHostName() + UUID.randomUUID();
-            } catch (final UnknownHostException e) {
-                return UUID.randomUUID().toString();
-            }
-        }
     }
 }

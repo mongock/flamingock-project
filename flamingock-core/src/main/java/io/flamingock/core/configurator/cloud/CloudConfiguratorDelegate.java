@@ -16,41 +16,91 @@
 
 package io.flamingock.core.configurator.cloud;
 
-import io.flamingock.core.engine.CloudConnectionEngine;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.flamingock.core.configurator.core.CoreConfigurable;
+import io.flamingock.core.engine.cloud.CloudConnectionEngine;
+import io.flamingock.core.runner.RunnerId;
+import io.flamingock.core.util.http.Http;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Supplier;
 
+import static com.fasterxml.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS;
+
 public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLDER> {
+
+    private static final Logger logger = LoggerFactory.getLogger(CloudConfiguratorDelegate.class);
 
     private final Supplier<HOLDER> holderSupplier;
 
-    private final CloudConfiguration cloudConfiguration;
+    private final CoreConfigurable coreConfiguration;
 
+    private final CloudConfigurable cloudConfiguration;
 
-    public CloudConfiguratorDelegate(CloudConfiguration cloudConfiguration, Supplier<HOLDER> holderSupplier) {
+    private final static ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
+            .enable(ACCEPT_CASE_INSENSITIVE_ENUMS)
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .serializationInclusion(JsonInclude.Include.NON_NULL)
+//            .registerModule(Jdk8Module())
+//            .registerModule(JavaTimeModule()) //No needed for now
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS)
+            .build();
+
+    public CloudConfiguratorDelegate(CoreConfigurable coreConfiguration,
+                                     CloudConfigurable cloudConfiguration,
+                                     Supplier<HOLDER> holderSupplier) {
         this.holderSupplier = holderSupplier;
+        this.coreConfiguration = coreConfiguration;
         this.cloudConfiguration = cloudConfiguration;
 
     }
 
     @Override
-    public HOLDER setApiKey(String apiKey) {
-        cloudConfiguration.setApiKey(apiKey);
+    public HOLDER setHost(String host) {
+        cloudConfiguration.setHost(host);
         return holderSupplier.get();
     }
 
     @Override
-    public HOLDER setToken(String token) {
-        cloudConfiguration.setToken(token);
+    public HOLDER setService(String service) {
+        cloudConfiguration.setService(service);
+        return holderSupplier.get();
+    }
+
+    @Override
+    public HOLDER setClientId(String clientId) {
+        cloudConfiguration.setClientId(clientId);
+        return holderSupplier.get();
+    }
+
+    @Override
+    public HOLDER setClientSecret(String clientSecret) {
+        cloudConfiguration.setClientSecret(clientSecret);
         return holderSupplier.get();
     }
 
 
-    public CloudConnectionEngine getAndInitializeConnectionEngine() {
-        CloudConnectionEngine connectionEngine = CloudConnectionEngine.getInstance();
-        connectionEngine.setConfiguration(cloudConfiguration);
-        connectionEngine.initialize();
+    public CloudConnectionEngine getAndInitializeConnectionEngine(RunnerId runnerId) {
+        logger.info("Generated runnerId:  {}", runnerId);
+        //TODO HttpClient needs to be closed after finishing
+        CloudConnectionEngine connectionEngine = new CloudConnectionEngine(
+                coreConfiguration,
+                cloudConfiguration,
+                Http.builderFactory(HttpClients.createDefault(), OBJECT_MAPPER)
+        );
+        connectionEngine.initialize(runnerId);
         return connectionEngine;
     }
+
+
 
 }

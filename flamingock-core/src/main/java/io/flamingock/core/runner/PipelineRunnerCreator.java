@@ -32,14 +32,8 @@ public final class PipelineRunnerCreator {
     private PipelineRunnerCreator() {
     }
 
-    private static StageExecutionContext buildExecutionContext(CoreConfigurable configuration) {
-        return new StageExecutionContext(StringUtil.executionId(), StringUtil.hostname(), configuration.getDefaultAuthor(), configuration.getMetadata());
-    }
-
-
-
-
-    public static Runner create(Pipeline pipeline,
+    public static Runner create(RunnerId runnerId,
+                                Pipeline pipeline,
                                 AuditWriter auditWriter,
                                 TransactionWrapper transactionWrapper,
                                 ExecutionPlanner executionPlanner,
@@ -49,12 +43,16 @@ public final class PipelineRunnerCreator {
                                 boolean isThrowExceptionIfCannotObtainLock) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final StageExecutor stageExecutor = new StageExecutor(dependencyContext, auditWriter, transactionWrapper);
-        return new PipelineRunner(executionPlanner, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
+        return new PipelineRunner(runnerId, executionPlanner, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
             @Override
             public void run() {
                 this.run(pipeline);
             }
         };
+    }
+
+    private static StageExecutionContext buildExecutionContext(CoreConfigurable configuration) {
+        return new StageExecutionContext(StringUtil.executionId(), StringUtil.hostname(), configuration.getDefaultAuthor(), configuration.getMetadata());
     }
 
 }

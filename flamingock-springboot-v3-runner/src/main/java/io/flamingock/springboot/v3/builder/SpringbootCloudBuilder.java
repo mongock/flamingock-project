@@ -16,13 +16,14 @@
 
 package io.flamingock.springboot.v3.builder;
 
-import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
-import io.flamingock.core.engine.CloudConnectionEngine;
-import io.flamingock.core.runner.Runner;
+import io.flamingock.core.configurator.core.CoreConfiguration;
+import io.flamingock.core.engine.cloud.CloudConnectionEngine;
 import io.flamingock.core.runner.PipelineRunnerCreator;
+import io.flamingock.core.runner.Runner;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -47,25 +48,29 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
                            SpringbootConfiguration springbootConfiguration,
                            CloudConfiguration cloudConfiguration) {
         super(coreConfiguration, springbootConfiguration);
-        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, this::getSelf);
+        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(coreConfiguration, cloudConfiguration, this::getSelf);
     }
 
     @Override
     protected SpringbootCloudBuilder getSelf() {
         return this;
     }
+
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
     public Runner build() {
+        RunnerId runnerId = RunnerId.generate();
+        logger.info("Generated runner id:  {}", runnerId);
 
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
-        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine();
+        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine(runnerId);
 
         return PipelineRunnerCreator.create(
+                runnerId,
                 buildPipeline(activeProfiles),
                 connectionEngine.getAuditWriter(),
                 connectionEngine.getTransactionWrapper().orElse(null),
@@ -82,13 +87,23 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public SpringbootCloudBuilder setApiKey(String apiKey) {
-        return cloudConfiguratorDelegate.setApiKey(apiKey);
+    public SpringbootCloudBuilder setHost(String host) {
+        return cloudConfiguratorDelegate.setHost(host);
     }
 
     @Override
-    public SpringbootCloudBuilder setToken(String token) {
-        return cloudConfiguratorDelegate.setToken(token);
+    public SpringbootCloudBuilder setService(String service) {
+        return cloudConfiguratorDelegate.setHost(service);
+    }
+
+    @Override
+    public SpringbootCloudBuilder setClientId(String clientId) {
+        return cloudConfiguratorDelegate.setClientId(clientId);
+    }
+
+    @Override
+    public SpringbootCloudBuilder setClientSecret(String clientSecret) {
+        return cloudConfiguratorDelegate.setClientSecret(clientSecret);
     }
 
 }

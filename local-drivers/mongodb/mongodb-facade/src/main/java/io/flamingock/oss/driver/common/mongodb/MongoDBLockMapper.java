@@ -16,10 +16,13 @@
 
 package io.flamingock.oss.driver.common.mongodb;
 
-import io.flamingock.core.engine.lock.LockEntry;
-import io.flamingock.core.engine.lock.LockStatus;
+import io.flamingock.core.engine.lock.LockAcquisition;
+import io.flamingock.community.internal.lock.LockEntry;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.util.TimeUtil;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.function.Supplier;
 
 import static io.flamingock.community.internal.lock.LockEntryField.EXPIRES_AT_FIELD;
@@ -44,12 +47,16 @@ public class MongoDBLockMapper<DOCUMENT_WRAPPER extends DocumentWrapper> {
         return document;
     }
 
-    public LockEntry fromDocument(DocumentWrapper entry) {
-        return new LockEntry(
-                entry.getString(KEY_FIELD),
-                entry.containsKey(STATUS_FIELD) ? LockStatus.valueOf(entry.getString(STATUS_FIELD)) : null,
-                entry.getString(OWNER_FIELD),
-                TimeUtil.toLocalDateTime(entry.get(STATUS_FIELD)));
+    public LockAcquisition fromDocument(DocumentWrapper document) {
+        long expiration = TimeUtil.toLocalDateTime(document.get(EXPIRES_AT_FIELD)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long diffMillis = expiration - now;
+        return new LockAcquisition(RunnerId.fromString(document.getString(OWNER_FIELD)), diffMillis);
+//        return new LockEntry(
+//                document.getString(KEY_FIELD),
+//                document.containsKey(STATUS_FIELD) ? LockStatus.valueOf(document.getString(STATUS_FIELD)) : null,
+//                document.getString(OWNER_FIELD),
+//                TimeUtil.toLocalDateTime(document.get(EXPIRES_AT_FIELD)));
 
     }
 }

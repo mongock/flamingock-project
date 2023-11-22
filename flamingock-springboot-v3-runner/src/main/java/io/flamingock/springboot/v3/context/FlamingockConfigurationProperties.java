@@ -82,8 +82,9 @@ public class FlamingockConfigurationProperties
         coreConfiguration.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
+
     @Override
-    public void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
+    public void setLockQuitTryingAfterMillis(long lockQuitTryingAfterMillis) {
         coreConfiguration.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
@@ -95,6 +96,16 @@ public class FlamingockConfigurationProperties
     @Override
     public void setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
         coreConfiguration.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+    }
+
+    @Override
+    public void setEnableRefreshDaemon(boolean enableRefreshDaemon) {
+        coreConfiguration.setEnableRefreshDaemon(enableRefreshDaemon);
+    }
+
+    @Override
+    public boolean isEnableRefreshDaemon() {
+        return coreConfiguration.isEnableRefreshDaemon();
     }
 
     @Override
@@ -234,23 +245,28 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
-    public void setApiKey(String apiKey) {
-        cloudConfiguration.setApiKey(apiKey);
+    public void setService(String service) {
+        cloudConfiguration.setService(service);
     }
 
     @Override
-    public void setToken(String token) {
-        cloudConfiguration.setToken(token);
+    public void setClientId(String clientId) {
+        cloudConfiguration.setClientId(clientId);
     }
 
     @Override
-    public String getApiKey() {
-        return cloudConfiguration.getApiKey();
+    public void setClientSecret(String clientSecret) {
+        cloudConfiguration.setClientSecret(clientSecret);
     }
 
     @Override
-    public String getToken() {
-        return cloudConfiguration.getToken();
+    public String getClientId() {
+        return cloudConfiguration.getClientId();
+    }
+
+    @Override
+    public String getClientSecret() {
+        return cloudConfiguration.getClientSecret();
     }
 
     @Override
@@ -258,8 +274,13 @@ public class FlamingockConfigurationProperties
         return cloudConfiguration.getHost();
     }
 
+    @Override
+    public String getService() {
+        return cloudConfiguration.getService();
+    }
+
     public boolean isCloudConfigurationEmpty() {
-        return cloudConfiguration.getApiKey() == null
-        && cloudConfiguration.getToken() == null;
+        return cloudConfiguration.getClientId() == null
+        && cloudConfiguration.getClientSecret() == null;
     }
 }

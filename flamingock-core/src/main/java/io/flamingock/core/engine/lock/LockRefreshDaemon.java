@@ -42,7 +42,7 @@ public class LockRefreshDaemon extends Thread {
         do {
             try {
                 logger.debug("Flamingock(daemon) refreshing lock");
-                keepRefreshing = lock.refresh();
+                keepRefreshing = lock.extend();
             } catch (LockException e) {
                 logger.warn("Flamingock(daemon)Error refreshing lock: {}", e.getMessage());
             } catch (Exception e) {

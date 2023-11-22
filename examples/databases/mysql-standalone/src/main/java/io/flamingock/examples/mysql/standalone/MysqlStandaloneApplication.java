@@ -43,6 +43,7 @@ public class MysqlStandaloneApplication {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         new MysqlStandaloneApplication()
                 .run(getMongoClient("mongodb://localhost:27017/"), DATABASE_NAME);
+
     }
 
 

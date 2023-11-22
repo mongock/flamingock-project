@@ -53,47 +53,54 @@ public class Stage {
     public Stage() {
     }
 
-
-
     public Stage(Stage prototype) {
-        this.name = prototype.name;
-        this.codePackages = prototype.codePackages != null ? new LinkedHashSet<>(prototype.getCodePackages()) : null;
-        this.fileDirectories = prototype.fileDirectories != null ? new LinkedHashSet<>(prototype.getFileDirectories()) : null;
-        this.filters = filters != null ? new LinkedHashSet<>(prototype.getFilters()) : null;
-        this.parallel = prototype.parallel;
+        this(prototype.getName(), prototype.getCodePackages(), prototype.getFileDirectories(), prototype.getFilters(), prototype.isParallel());
     }
+
+    public Stage(String name, Collection<String> codePackages, Collection<String> fileDirectories, Collection<TaskFilter> filters, boolean parallel) {
+        this.name = name;
+        this.codePackages = codePackages != null ? new LinkedHashSet<>(codePackages) : null;
+        this.fileDirectories = fileDirectories != null ? new LinkedHashSet<>(fileDirectories) : null;
+        this.filters = filters != null ? new LinkedHashSet<>(filters) : null;
+        this.parallel = parallel;
+    }
+
 
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Stage setName(String name) {
         this.name = name;
+        return this;
     }
 
     public Collection<String> getCodePackages() {
         return codePackages;
     }
 
-    public void setCodePackages(Collection<String> codePackages) {
+    public Stage setCodePackages(Collection<String> codePackages) {
         this.codePackages = codePackages;
+        return this;
     }
 
     public Collection<String> getFileDirectories() {
         return fileDirectories;
     }
 
-    public void setFileDirectories(Collection<String> fileDirectories) {
+    public Stage setFileDirectories(Collection<String> fileDirectories) {
         this.fileDirectories = fileDirectories;
+        return this;
     }
 
     public boolean isParallel() {
         return parallel;
     }
 
-    public void setParallel(boolean parallel) {
+    public Stage setParallel(boolean parallel) {
         this.parallel = parallel;
+        return this;
     }
 
     private Collection<TaskFilter> getFilters() {
@@ -157,7 +164,7 @@ public class Stage {
 
         if (descriptors.stream().allMatch(TaskDescriptor::isSortable)) {
             //if all descriptors are sorted, we return a sorted collection
-            return new LoadedStage(descriptors.stream().sorted().collect(Collectors.toList()), parallel);
+            return new LoadedStage(name,descriptors.stream().sorted().collect(Collectors.toList()), parallel);
 
         } else if (descriptors.parallelStream().anyMatch(TaskDescriptor::isSortable)) {
             //if at least one of them are sorted, but not all. An exception is thrown
@@ -165,7 +172,7 @@ public class Stage {
 
         } else {
             //if none of the tasks are sorted, an unsorted collection is returned
-            return new LoadedStage(descriptors, parallel);
+            return new LoadedStage(name, descriptors, parallel);
         }
     }
 
@@ -213,4 +220,7 @@ public class Stage {
     public int hashCode() {
         return name != null ? name.hashCode() : 0;
     }
+
+
+
 }

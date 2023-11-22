@@ -22,8 +22,11 @@ import java.util.stream.Collectors;
 
 public class AuditStageStatus {
 
-    public static Builder builder() {
-        return new Builder();
+    public static EntryBuilder entryBuilder() {
+        return new EntryBuilder();
+    }
+    public static StatusBuilder statusBuilder() {
+        return new StatusBuilder();
     }
 
     private final Map<String, AuditEntryStatus> entryStatesMap;
@@ -36,7 +39,7 @@ public class AuditStageStatus {
         return entryStatesMap;
     }
 
-    public static class Builder {
+    public static class EntryBuilder {
 
         private final Map<String, AuditEntry> entryMap = new HashMap<>();
 
@@ -50,6 +53,20 @@ public class AuditStageStatus {
         public AuditStageStatus build() {
             Map<String, AuditEntryStatus> statesMap = entryMap.values().stream()
                     .collect(Collectors.toMap(AuditEntry::getChangeId, AuditEntry::getState));
+            return new AuditStageStatus(statesMap);
+        }
+
+    }
+
+    public static class StatusBuilder {
+
+        private final Map<String, AuditEntryStatus> statesMap = new HashMap<>();
+
+        public void addState(String taskId, AuditEntryStatus status) {
+            statesMap.put(taskId, status);
+        }
+
+        public AuditStageStatus build() {
             return new AuditStageStatus(statesMap);
         }
 
