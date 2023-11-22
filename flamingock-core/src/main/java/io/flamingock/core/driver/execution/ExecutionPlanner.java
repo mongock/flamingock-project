@@ -16,10 +16,8 @@
 
 package io.flamingock.core.driver.execution;
 
-import io.flamingock.core.driver.lock.LockAcquisition;
 import io.flamingock.core.driver.lock.LockException;
 import io.flamingock.core.driver.lock.LockOptions;
-import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.pipeline.Pipeline;
 
 public interface ExecutionPlanner {

@@ -174,21 +174,6 @@ public class LocalLock implements Lock {
         }
     }
 
-    private void extendOrCreateNewLock(boolean createNewLockIfNotExisting) throws LockPersistenceException {
-        LocalDateTime expiresAt1 = timeService.currentDatePlusMillis(leaseMillis);
-        final LockEntry newEntry = new LockEntry(
-                DEFAULT_KEY,
-                LockStatus.LOCK_HELD,
-                owner,
-                expiresAt1);
-
-        if (createNewLockIfNotExisting) {
-            lockRepository.upsert(newEntry);
-        } else {
-            lockRepository.updateOnlyIfSameOwner(newEntry);
-        }
-        setExpiresAt(newEntry.getExpiresAt());
-    }
 
     @Override
     public LocalDateTime expiresAt() {
@@ -206,6 +191,34 @@ public class LocalLock implements Lock {
     @Override
     public boolean isExpired() {
         return timeService.isPast(expiresAt());
+    }
+
+
+    @Override
+    public String toString() {
+        return "MongockLock{" +
+                "owner='" + owner + '\'' +
+                ", leaseMillis=" + leaseMillis +
+                ", retryFrequencyMillis=" + retryFrequencyMillis +
+                ", stopTryingAfterMillis=" + stopTryingAfterMillis +
+                '}';
+    }
+
+
+    private void extendOrCreateNewLock(boolean createNewLockIfNotExisting) throws LockPersistenceException {
+        LocalDateTime expiresAt1 = timeService.currentDatePlusMillis(leaseMillis);
+        final LockEntry newEntry = new LockEntry(
+                DEFAULT_KEY,
+                LockStatus.LOCK_HELD,
+                owner,
+                expiresAt1);
+
+        if (createNewLockIfNotExisting) {
+            lockRepository.upsert(newEntry);
+        } else {
+            lockRepository.updateOnlyIfSameOwner(newEntry);
+        }
+        setExpiresAt(newEntry.getExpiresAt());
     }
 
     private void handleLockException(boolean acquiringLock, Instant shouldStopTryingAt, LockPersistenceException ex) {
@@ -256,16 +269,5 @@ public class LocalLock implements Lock {
             logger.error("ERROR acquiring the lock", ex);
             Thread.currentThread().interrupt();
         }
-    }
-
-
-    @Override
-    public String toString() {
-        return "MongockLock{" +
-                "owner='" + owner + '\'' +
-                ", leaseMillis=" + leaseMillis +
-                ", retryFrequencyMillis=" + retryFrequencyMillis +
-                ", stopTryingAfterMillis=" + stopTryingAfterMillis +
-                '}';
     }
 }

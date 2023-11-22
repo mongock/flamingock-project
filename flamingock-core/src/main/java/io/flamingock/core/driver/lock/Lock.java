@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public interface Lock {
 
     /**
-     * Ensures the lock is safely acquired(safely here means its acquired with enough margin to operate),
+     * Ensures the lock is safely acquired(safely here means it's acquired with enough margin to operate),
      * or throws an exception otherwise.
      * <br />
      * In case the lock is about to expire, it will try to refresh it. In this scenario, the lock won't be considered

@@ -59,10 +59,7 @@ public class LockRefreshDaemon extends Thread {
         if (!lock.isExpired()) {
             try {
                 long sleepingTime = TimeUtil.diffInMillis(lock.expiresAt(), timeService.currentDateTime()) / 3;
-                logger.info("Lock acquired until[{}]. Lock daemon sleeping until[{}]...for {}ms",
-                        lock.expiresAt(),
-                        timeService.currentDatePlusMillis(sleepingTime),
-                        sleepingTime);
+                logAcquisitionUntil(sleepingTime);
                 sleep(sleepingTime);
 
             } catch (InterruptedException ex) {
@@ -72,6 +69,13 @@ public class LockRefreshDaemon extends Thread {
             logger.debug("Lock is canceled/expired[{}]", lock.expiresAt());
         }
 
+    }
+
+    private void logAcquisitionUntil(long sleepingTime) {
+        logger.info("Lock acquired until[{}]. Lock daemon sleeping until[{}]...for {}ms",
+                lock.expiresAt(),
+                timeService.currentDatePlusMillis(sleepingTime),
+                sleepingTime);
     }
 
 
