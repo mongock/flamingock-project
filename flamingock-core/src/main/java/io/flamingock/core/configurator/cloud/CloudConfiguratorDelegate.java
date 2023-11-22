@@ -16,6 +16,8 @@
 
 package io.flamingock.core.configurator.cloud;
 
+import io.flamingock.core.driver.CloudConnectionEngine;
+
 import java.util.function.Supplier;
 
 public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLDER> {
@@ -44,12 +46,9 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     }
 
     @Override
-    public String getApiKey() {
-        return cloudConfiguration.getApiKey();
+    public CloudConfiguration getConfiguration() {
+        return cloudConfiguration;
     }
 
-    @Override
-    public String getToken() {
-        return cloudConfiguration.getToken();
-    }
+
 }

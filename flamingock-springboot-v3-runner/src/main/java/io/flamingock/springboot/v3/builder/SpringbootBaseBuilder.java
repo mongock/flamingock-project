@@ -99,7 +99,7 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
     final protected Pipeline buildPipeline(String[] activeProfiles) {
         return Pipeline.builder()
                 .setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
-                .addStages(coreConfiguratorDelegate.getCoreProperties().getStages())
+                .addStages(coreConfiguratorDelegate.getCoreConfiguration().getStages())
                 .build();
     }
 
@@ -107,8 +107,8 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public CoreConfigurable getCoreProperties() {
-        return coreConfiguratorDelegate.getCoreProperties();
+    public CoreConfigurable getCoreConfiguration() {
+        return coreConfiguratorDelegate.getCoreConfiguration();
     }
 
     @Override

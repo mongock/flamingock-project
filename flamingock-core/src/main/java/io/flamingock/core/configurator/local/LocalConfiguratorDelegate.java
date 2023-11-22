@@ -44,7 +44,7 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
     }
 
     @Override
-    public LocalConfigurable getLocalProperties() {
+    public LocalConfigurable getLocalConfiguration() {
         return LocalConfiguration;
     }
 }

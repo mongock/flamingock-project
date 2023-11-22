@@ -59,14 +59,14 @@ public class SpringbootContext {
         SpringbootBaseBuilder<?> springRunnerBuilder;
         if (connectionDriverOptional.isPresent() && configurationProperties.isCloudConfigurationEmpty()) {
             springRunnerBuilder = FlamingockSpringboot.localBuilder(
-                    configurationProperties.getCoreProperties(),
-                    configurationProperties.getSpringbootProperties(),
-                    configurationProperties.getLocalProperties()
+                    configurationProperties.getCoreConfiguration(),
+                    configurationProperties.getSpringbootConfiguration(),
+                    configurationProperties.getLocalConfiguration()
             ).setDriver(connectionDriverOptional.get());
         } else {
             springRunnerBuilder = FlamingockSpringboot.cloudBuilder(
-                    configurationProperties.getCoreProperties(),
-                    configurationProperties.getSpringbootProperties(),
+                    configurationProperties.getCoreConfiguration(),
+                    configurationProperties.getSpringbootConfiguration(),
                     configurationProperties.getCloudProperties()
             );
         }

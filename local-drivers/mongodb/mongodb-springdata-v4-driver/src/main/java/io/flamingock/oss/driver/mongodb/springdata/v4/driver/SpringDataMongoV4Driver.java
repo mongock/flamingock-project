@@ -17,13 +17,11 @@
 package io.flamingock.oss.driver.mongodb.springdata.v4.driver;
 
 import io.flamingock.core.configurator.CoreConfigurable;
-import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v4.internal.SpringDataMongoV4Engine;
-import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -65,7 +63,7 @@ public class SpringDataMongoV4Driver implements ConnectionDriver<SpringDataMongo
     }
 
     @Override
-    public ConnectionEngine getConnectionEngine(CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
+    public LocalConnectionEngine getConnectionEngine(CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
         return new SpringDataMongoV4Engine(
                 mongoTemplate,
                 coreConfiguration,

@@ -23,5 +23,5 @@ public interface LocalConfigurator<HOLDER> {
 
     ConnectionDriver<?> getDriver();
 
-    LocalConfigurable getLocalProperties();
+    LocalConfigurable getLocalConfiguration();
 }

@@ -16,12 +16,13 @@
 
 package io.flamingock.core.configurator.cloud;
 
+import io.flamingock.core.driver.CloudConnectionEngine;
+
 public interface CloudConfigurator<HOLDER> {
+
     HOLDER setApiKey(String apiKey);
 
     HOLDER setToken(String token);
 
-    String getApiKey();
-    String getToken();
-
+    CloudConfiguration getConfiguration();
 }

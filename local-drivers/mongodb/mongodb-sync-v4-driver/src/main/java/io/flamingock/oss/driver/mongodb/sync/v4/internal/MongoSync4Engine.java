@@ -21,7 +21,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
 import io.flamingock.core.driver.audit.Auditor;
 import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.transaction.TransactionWrapper;
@@ -30,7 +30,7 @@ import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 
 import java.util.Optional;
 
-public class MongoSync4Engine implements ConnectionEngine {
+public class MongoSync4Engine implements LocalConnectionEngine {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;

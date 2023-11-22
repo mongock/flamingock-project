@@ -32,7 +32,7 @@ import static io.flamingock.core.util.Constants.DEFAULT_TRY_FREQUENCY_MILLIS;
 
 public class CoreConfiguration implements CoreConfigurable {
 
-    private final LockProperties lockConfiguration  = new LockProperties();
+    private final LockConfiguration lockConfiguration  = new LockConfiguration();
     /**
      * If true, will track ignored changeSets in history. Default false
      */
@@ -241,7 +241,7 @@ public class CoreConfiguration implements CoreConfigurable {
     }
 
 
-    public static class LockProperties {
+    public static class LockConfiguration {
 
         /**
          * The period the lock will be reserved once acquired.

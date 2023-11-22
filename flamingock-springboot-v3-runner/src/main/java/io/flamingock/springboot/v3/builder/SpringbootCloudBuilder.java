@@ -67,17 +67,16 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
                 null,//connectionEngine.getAuditor(),
                 null,//connectionEngine.getTransactionWrapper().orElse(null),
                 null,//connectionEngine.getLockProvider(),
-                getCoreProperties(),
+                getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
-                getCoreProperties().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  CLOUD
     ///////////////////////////////////////////////////////////////////////////////////
-
 
     @Override
     public SpringbootCloudBuilder setApiKey(String apiKey) {
@@ -90,15 +89,8 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     }
 
     @Override
-    public String getApiKey() {
-        return cloudConfiguratorDelegate.getApiKey();
+    public CloudConfiguration getConfiguration() {
+        return cloudConfiguratorDelegate.getConfiguration();
     }
-
-    @Override
-    public String getToken() {
-        return cloudConfiguratorDelegate.getToken();
-    }
-
-
 
 }

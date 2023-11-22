@@ -50,15 +50,15 @@ public class FlamingockConfigurationProperties
 
     private final LocalConfiguration localConfiguration = new LocalConfiguration();
 
-    public CoreConfiguration getCoreProperties() {
+    public CoreConfiguration getCoreConfiguration() {
         return coreConfiguration;
     }
 
-    public SpringbootConfiguration getSpringbootProperties() {
+    public SpringbootConfiguration getSpringbootConfiguration() {
         return springbootConfiguration;
     }
 
-    public LocalConfiguration getLocalProperties() {
+    public LocalConfiguration getLocalConfiguration() {
         return localConfiguration;
     }
 
@@ -229,6 +229,11 @@ public class FlamingockConfigurationProperties
 
 
     @Override
+    public void setHost(String host) {
+        cloudConfiguration.setHost(host);
+    }
+
+    @Override
     public void setApiKey(String apiKey) {
         cloudConfiguration.setApiKey(apiKey);
     }
@@ -246,6 +251,11 @@ public class FlamingockConfigurationProperties
     @Override
     public String getToken() {
         return cloudConfiguration.getToken();
+    }
+
+    @Override
+    public String getHost() {
+        return cloudConfiguration.getHost();
     }
 
     public boolean isCloudConfigurationEmpty() {

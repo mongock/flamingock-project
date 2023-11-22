@@ -21,7 +21,7 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
 import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.springboot.v3.SpringDependencyContext;
@@ -57,7 +57,7 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
     public Runner build() {
-        ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
+        LocalConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
 
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
@@ -67,10 +67,10 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
                 connectionEngine.getExecutionPlanner(),
-                getCoreProperties(),
+                getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
-                getCoreProperties().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }
 
@@ -80,10 +80,10 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     }
 
     @NotNull
-    private ConnectionEngine getAndInitilizeConnectionEngine() {
-        ConnectionEngine connectionEngine = localConfiguratorDelegate
+    private LocalConnectionEngine getAndInitilizeConnectionEngine() {
+        LocalConnectionEngine connectionEngine = localConfiguratorDelegate
                 .getDriver()
-                .getConnectionEngine(getCoreProperties(), localConfiguratorDelegate.getLocalProperties());
+                .getConnectionEngine(getCoreConfiguration(), localConfiguratorDelegate.getLocalConfiguration());
         connectionEngine.initialize();
         return connectionEngine;
     }
@@ -104,8 +104,8 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     }
 
     @Override
-    public LocalConfigurable getLocalProperties() {
-        return localConfiguratorDelegate.getLocalProperties();
+    public LocalConfigurable getLocalConfiguration() {
+        return localConfiguratorDelegate.getLocalConfiguration();
     }
 
 }

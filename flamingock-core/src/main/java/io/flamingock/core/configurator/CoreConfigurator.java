@@ -25,7 +25,7 @@ import java.util.Map;
 
 public interface CoreConfigurator<HOLDER> {
 
-    CoreConfigurable getCoreProperties();
+    CoreConfigurable getCoreConfiguration();
 
     HOLDER addStage(Stage stage);
 

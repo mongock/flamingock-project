@@ -21,9 +21,12 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
+import io.flamingock.core.driver.CloudConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import org.jetbrains.annotations.NotNull;
 
 public class StandaloneCloudBuilder
         extends AbstractStandaloneBuilder<StandaloneCloudBuilder>
@@ -63,20 +66,27 @@ public class StandaloneCloudBuilder
 
     @Override
     public Runner build() {
-//        ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
+        CloudConnectionEngine connectionEngine = getAndInitializeConnectionEngine();
+
         registerTemplates();
         return PipelineRunnerCreator.create(
                 buildPipeline(),
                 null,//connectionEngine.getAuditor(),
                 null,//connectionEngine.getTransactionWrapper().orElse(null),
                 null,//connectionEngine.getLockProvider(),
-                coreConfiguratorDelegate.getCoreProperties(),
+                coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
-                getCoreProperties().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }
-
+    @NotNull
+    private CloudConnectionEngine getAndInitializeConnectionEngine() {
+        CloudConnectionEngine connectionEngine = CloudConnectionEngine.getInstance();
+        connectionEngine.setConfiguration(cloudConfiguratorDelegate.getConfiguration());
+        connectionEngine.initialize();
+        return connectionEngine;
+    }
 
     @Override
     public StandaloneCloudBuilder setApiKey(String apiKey) {
@@ -89,12 +99,8 @@ public class StandaloneCloudBuilder
     }
 
     @Override
-    public String getApiKey() {
-        return cloudConfiguratorDelegate.getApiKey();
+    public CloudConfiguration getConfiguration() {
+        return cloudConfiguratorDelegate.getConfiguration();
     }
 
-    @Override
-    public String getToken() {
-        return cloudConfiguratorDelegate.getToken();
-    }
 }

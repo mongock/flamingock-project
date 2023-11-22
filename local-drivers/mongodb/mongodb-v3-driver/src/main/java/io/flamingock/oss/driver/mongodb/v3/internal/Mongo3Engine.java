@@ -23,14 +23,14 @@ import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.driver.audit.Auditor;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 
 import java.util.Optional;
 
-public class Mongo3Engine implements ConnectionEngine {
+public class Mongo3Engine implements LocalConnectionEngine {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;
