@@ -16,7 +16,7 @@
 
 package io.flamingock.core.runtime.proxy;
 
-import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.engine.lock.Lock;
 import javassist.util.proxy.MethodHandler;
 
 import java.lang.reflect.InvocationTargetException;

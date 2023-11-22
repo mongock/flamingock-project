@@ -17,10 +17,10 @@
 package io.flamingock.oss.driver.mongodb.v3.driver;
 
 import com.mongodb.client.MongoClient;
-import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.driver.LocalConnectionEngine;
+import io.flamingock.core.engine.driver.ConnectionDriver;
+import io.flamingock.core.engine.LocalConnectionEngine;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.Mongo3Engine;
 import org.slf4j.Logger;

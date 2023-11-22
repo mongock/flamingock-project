@@ -16,11 +16,11 @@
 
 package io.flamingock.springboot.v3.builder;
 
-import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
-import io.flamingock.core.driver.CloudConnectionEngine;
+import io.flamingock.core.engine.CloudConnectionEngine;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.springboot.v3.SpringDependencyContext;

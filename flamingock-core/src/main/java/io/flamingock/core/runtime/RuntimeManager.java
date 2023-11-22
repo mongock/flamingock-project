@@ -20,7 +20,7 @@ import io.changock.migration.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.ChangeUnitConstructor;
 import io.flamingock.core.api.annotations.FlamingockConstructor;
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;

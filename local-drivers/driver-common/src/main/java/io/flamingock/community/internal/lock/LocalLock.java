@@ -16,10 +16,10 @@
 
 package io.flamingock.community.internal.lock;
 
-import io.flamingock.core.driver.lock.Lock;
-import io.flamingock.core.driver.lock.LockException;
-import io.flamingock.core.driver.lock.LockRepositoryException;
-import io.flamingock.core.driver.lock.LockRepository;
+import io.flamingock.core.engine.lock.Lock;
+import io.flamingock.core.engine.lock.LockException;
+import io.flamingock.core.engine.lock.LockRepositoryException;
+import io.flamingock.core.engine.lock.LockRepository;
 import io.flamingock.core.util.TimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

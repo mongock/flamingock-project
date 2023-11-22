@@ -16,7 +16,7 @@
 
 package io.flamingock.core.task.executable;
 
-import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
+import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 
 import java.util.List;

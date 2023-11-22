@@ -17,7 +17,7 @@
 package io.flamingock.template.sql.springboot;
 
 
-import io.flamingock.core.configurator.CoreConfigurator;
+import io.flamingock.core.configurator.core.CoreConfigurator;
 import io.flamingock.template.sql.SqlTemplateModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

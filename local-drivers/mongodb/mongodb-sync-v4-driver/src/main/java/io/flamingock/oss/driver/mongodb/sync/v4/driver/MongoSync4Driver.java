@@ -17,10 +17,10 @@
 package io.flamingock.oss.driver.mongodb.sync.v4.driver;
 
 import com.mongodb.client.MongoClient;
-import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.driver.LocalConnectionEngine;
+import io.flamingock.core.engine.driver.ConnectionDriver;
+import io.flamingock.core.engine.LocalConnectionEngine;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4Engine;
 import org.slf4j.Logger;

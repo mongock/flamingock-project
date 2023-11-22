@@ -16,17 +16,15 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.configurator.CoreConfiguration;
-import io.flamingock.core.configurator.CoreConfiguratorDelegate;
+import io.flamingock.core.configurator.core.CoreConfiguration;
+import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
-import io.flamingock.core.driver.CloudConnectionEngine;
-import io.flamingock.core.driver.LocalConnectionEngine;
+import io.flamingock.core.engine.CloudConnectionEngine;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
-import org.jetbrains.annotations.NotNull;
 
 public class StandaloneCloudBuilder
         extends AbstractStandaloneBuilder<StandaloneCloudBuilder>

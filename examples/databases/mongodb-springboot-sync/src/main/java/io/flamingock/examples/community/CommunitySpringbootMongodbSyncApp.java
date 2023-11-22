@@ -19,7 +19,7 @@ package io.flamingock.examples.community;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
-import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.engine.driver.ConnectionDriver;
 import io.flamingock.springboot.v2.context.EnableFlamingock;
 import io.flamingock.examples.community.events.FailureEventListener;
 import io.flamingock.examples.community.events.StartedEventListener;

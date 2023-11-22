@@ -16,8 +16,8 @@
 
 package io.flamingock.core.pipeline;
 
-import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
-import io.flamingock.core.driver.audit.writer.AuditStageStatus;
+import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
+import io.flamingock.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;

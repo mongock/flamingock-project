@@ -16,10 +16,10 @@
 
 package io.flamingock.core.runner;
 
-import io.flamingock.core.driver.audit.AuditWriter;
-import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.engine.audit.AuditWriter;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.driver.execution.ExecutionPlanner;
+import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;

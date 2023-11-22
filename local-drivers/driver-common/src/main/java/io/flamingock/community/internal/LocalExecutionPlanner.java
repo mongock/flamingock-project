@@ -18,16 +18,16 @@ package io.flamingock.community.internal;
 
 
 import io.flamingock.community.internal.lock.LocalLock;
-import io.flamingock.core.driver.lock.LockRepository;
-import io.flamingock.core.configurator.CoreConfigurable;
-import io.flamingock.core.driver.audit.AuditReader;
-import io.flamingock.core.driver.audit.writer.AuditStageStatus;
-import io.flamingock.core.driver.execution.Execution;
-import io.flamingock.core.driver.execution.ExecutionPlanner;
-import io.flamingock.core.driver.lock.Lock;
-import io.flamingock.core.driver.lock.LockException;
-import io.flamingock.core.driver.lock.LockOptions;
-import io.flamingock.core.driver.lock.LockRefreshDaemon;
+import io.flamingock.core.engine.lock.LockRepository;
+import io.flamingock.core.configurator.core.CoreConfigurable;
+import io.flamingock.core.engine.audit.AuditReader;
+import io.flamingock.core.engine.audit.writer.AuditStageStatus;
+import io.flamingock.core.engine.execution.Execution;
+import io.flamingock.core.engine.execution.ExecutionPlanner;
+import io.flamingock.core.engine.lock.Lock;
+import io.flamingock.core.engine.lock.LockException;
+import io.flamingock.core.engine.lock.LockOptions;
+import io.flamingock.core.engine.lock.LockRefreshDaemon;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.Stage;

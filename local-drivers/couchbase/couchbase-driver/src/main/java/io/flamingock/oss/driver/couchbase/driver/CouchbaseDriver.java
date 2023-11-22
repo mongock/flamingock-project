@@ -18,10 +18,10 @@ package io.flamingock.oss.driver.couchbase.driver;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
-import io.flamingock.core.configurator.CoreConfigurable;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.driver.LocalConnectionEngine;
+import io.flamingock.core.engine.driver.ConnectionDriver;
+import io.flamingock.core.engine.LocalConnectionEngine;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
 import io.flamingock.oss.driver.couchbase.internal.CouchbaseEngine;
 import org.slf4j.Logger;
