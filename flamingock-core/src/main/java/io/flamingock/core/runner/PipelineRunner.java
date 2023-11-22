@@ -45,8 +45,6 @@ public abstract class PipelineRunner implements Runner {
 
     private final ExecutionPlanner executionPlanner;
 
-
-
     private final EventPublisher eventPublisher;
 
     private final boolean throwExceptionIfCannotObtainLock;
@@ -71,31 +69,35 @@ public abstract class PipelineRunner implements Runner {
 
     public void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publish(new PipelineStartedEvent());
-        try {
-            Execution execution = executionPlanner.getNextExecution(pipeline);
-            while (execution.getAction() == EXECUTE) {
-                Lock lock = execution.getLock();
-                execution.getStages().forEach(executableStage -> runStage(lock, executableStage));
-                //It releases the lock per execution and acquires again if needed.
-                //It's fine for the time being because both, local and cloud, will return all the tasks that need to be
-                //executed. But if we improve that behaviour in the cloud, so the workload can be parallelized among
-                //all the clients, the lock can be reused.
-                execution.getLock().release();
-                execution = executionPlanner.getNextExecution(pipeline);
-            }
-        } catch (LockException exception) {
-            eventPublisher.publish(new StageFailedEvent(exception));
-            eventPublisher.publish(new PipelineFailedEvent(exception));
-            if (throwExceptionIfCannotObtainLock) {
-                logger.error("Required process lock not acquired. ABORTED OPERATION", exception);
-                throw exception;
+        boolean keepLooping = true;
+        do {
+            try(Execution execution = executionPlanner.getNextExecution(pipeline)) {
+                if (execution.getAction() == EXECUTE) {
+                    Lock lock = execution.getLock();
+                    execution.getStages().forEach(executableStage -> runStage(lock, executableStage));
+                } else {
+                    keepLooping = false;
+                }
+            } catch (LockException exception) {
+                keepLooping = false;
+                eventPublisher.publish(new StageFailedEvent(exception));
+                eventPublisher.publish(new PipelineFailedEvent(exception));
+                if (throwExceptionIfCannotObtainLock) {
+                    logger.error("Required process lock not acquired. ABORTED OPERATION", exception);
+                    throw exception;
 
-            } else {
-                logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" + "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" + "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
+                } else {
+                    logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" + "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" + "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
+                }
+            } catch (RuntimeException e) {
+              throw e;
+            } catch (Throwable throwable) {
+                processAndThrow(throwable);
             }
-        }
+        } while(keepLooping);
         eventPublisher.publish(new PipelineCompletedEvent());
     }
+
 
     private void runStage(Lock lock, ExecutableStage executableStage) {
         try {
@@ -110,12 +112,8 @@ public abstract class PipelineRunner implements Runner {
             eventPublisher.publish(new StageFailedEvent(exception));
             eventPublisher.publish(new PipelineFailedEvent(exception));
             throw exception;
-        } catch (Exception generalException) {
-            FlamingockException exception = generalException instanceof FlamingockException ? (FlamingockException) generalException : new FlamingockException(generalException);
-            logger.error("Error executing the process. ABORTED OPERATION", exception);
-            eventPublisher.publish(new StageFailedEvent(exception));
-            eventPublisher.publish(new PipelineFailedEvent(exception));
-            throw exception;
+        } catch (Throwable generalException) {
+            processAndThrow(generalException);
         }
     }
 
@@ -133,5 +131,13 @@ public abstract class PipelineRunner implements Runner {
         String stageId = "NEED_TO_ADD_STAGE_NAME";
         logger.info("Skipping stage[{}]. All the tasks are already executed.", stageId);
         eventPublisher.publish(new StageIgnoredEvent());
+    }
+
+    private void processAndThrow(Throwable generalException) throws FlamingockException {
+        FlamingockException exception = generalException instanceof FlamingockException ? (FlamingockException) generalException : new FlamingockException(generalException);
+        logger.error("Error executing the process. ABORTED OPERATION", exception);
+        eventPublisher.publish(new StageFailedEvent(exception));
+        eventPublisher.publish(new PipelineFailedEvent(exception));
+        throw exception;
     }
 }

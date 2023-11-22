@@ -6,8 +6,9 @@ import io.flamingock.core.pipeline.ExecutableStage;
 import java.util.Collection;
 import java.util.Collections;
 
-public class Execution {
+public class Execution implements AutoCloseable{
     private static final Execution CONTINUE = new Execution(Action.CONTINUE, null, Collections.emptyList());
+
     public enum Action {
         EXECUTE, CONTINUE
     }
@@ -44,5 +45,12 @@ public class Execution {
 
     public Collection<ExecutableStage> getStages() {
         return stages;
+    }
+
+    @Override
+    public void close() throws Exception {
+        if(lock != null) {
+            lock.release();
+        }
     }
 }

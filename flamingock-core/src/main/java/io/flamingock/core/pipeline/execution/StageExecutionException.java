@@ -16,9 +16,10 @@
 
 package io.flamingock.core.pipeline.execution;
 
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.task.navigation.summary.StageSummary;
 
-public class StageExecutionException extends RuntimeException {
+public class StageExecutionException extends FlamingockException {
 
     private final StageSummary summary;
 
