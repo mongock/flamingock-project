@@ -24,5 +24,4 @@ public interface CloudConfigurator<HOLDER> {
 
     HOLDER setToken(String token);
 
-    CloudConfiguration getConfiguration();
 }

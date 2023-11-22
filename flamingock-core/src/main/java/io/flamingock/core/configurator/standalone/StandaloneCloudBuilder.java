@@ -36,7 +36,7 @@ public class StandaloneCloudBuilder
 
     private final StandaloneConfiguratorDelegate<StandaloneCloudBuilder> standaloneConfiguratorDelegate;
 
-    private final CloudConfigurator<StandaloneCloudBuilder> cloudConfiguratorDelegate;
+    private final CloudConfiguratorDelegate<StandaloneCloudBuilder> cloudConfiguratorDelegate;
 
 
     StandaloneCloudBuilder(CoreConfiguration coreConfiguration,
@@ -66,26 +66,19 @@ public class StandaloneCloudBuilder
 
     @Override
     public Runner build() {
-        CloudConnectionEngine connectionEngine = getAndInitializeConnectionEngine();
+        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine();
 
         registerTemplates();
         return PipelineRunnerCreator.create(
                 buildPipeline(),
-                null,//connectionEngine.getAuditor(),
-                null,//connectionEngine.getTransactionWrapper().orElse(null),
-                null,//connectionEngine.getLockProvider(),
+                connectionEngine.getAuditWriter(),
+                connectionEngine.getTransactionWrapper().orElse(null),
+                connectionEngine.getExecutionPlanner(),
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
-    }
-    @NotNull
-    private CloudConnectionEngine getAndInitializeConnectionEngine() {
-        CloudConnectionEngine connectionEngine = CloudConnectionEngine.getInstance();
-        connectionEngine.setConfiguration(cloudConfiguratorDelegate.getConfiguration());
-        connectionEngine.initialize();
-        return connectionEngine;
     }
 
     @Override
@@ -96,11 +89,6 @@ public class StandaloneCloudBuilder
     @Override
     public StandaloneCloudBuilder setToken(String token) {
         return cloudConfiguratorDelegate.setToken(token);
-    }
-
-    @Override
-    public CloudConfiguration getConfiguration() {
-        return cloudConfiguratorDelegate.getConfiguration();
     }
 
 }

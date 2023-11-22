@@ -45,10 +45,12 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
         return holderSupplier.get();
     }
 
-    @Override
-    public CloudConfiguration getConfiguration() {
-        return cloudConfiguration;
-    }
 
+    public CloudConnectionEngine getAndInitializeConnectionEngine() {
+        CloudConnectionEngine connectionEngine = CloudConnectionEngine.getInstance();
+        connectionEngine.setConfiguration(cloudConfiguration);
+        connectionEngine.initialize();
+        return connectionEngine;
+    }
 
 }

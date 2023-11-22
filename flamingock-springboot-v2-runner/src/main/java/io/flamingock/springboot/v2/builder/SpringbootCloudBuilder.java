@@ -20,6 +20,7 @@ import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
+import io.flamingock.core.driver.CloudConnectionEngine;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.springboot.v2.SpringDependencyContext;
@@ -62,11 +63,13 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
+        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine();
+
         return PipelineRunnerCreator.create(
                 buildPipeline(activeProfiles),
-                null,//connectionEngine.getAuditor(),
-                null,//connectionEngine.getTransactionWrapper().orElse(null),
-                null,//connectionEngine.getLockProvider(),
+                connectionEngine.getAuditWriter(),
+                connectionEngine.getTransactionWrapper().orElse(null),
+                connectionEngine.getExecutionPlanner(),
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
@@ -87,11 +90,5 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     public SpringbootCloudBuilder setToken(String token) {
         return cloudConfiguratorDelegate.setToken(token);
     }
-
-    @Override
-    public CloudConfiguration getConfiguration() {
-        return cloudConfiguratorDelegate.getConfiguration();
-    }
-
 
 }
