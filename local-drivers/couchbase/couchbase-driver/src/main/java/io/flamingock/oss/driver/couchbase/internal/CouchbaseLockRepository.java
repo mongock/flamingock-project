@@ -23,9 +23,9 @@ import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.kv.RemoveOptions;
 import com.couchbase.client.java.kv.ReplaceOptions;
-import io.flamingock.community.internal.lock.LockEntry;
-import io.flamingock.community.internal.lock.LockPersistenceException;
-import io.flamingock.community.internal.lock.LockRepository;
+import io.flamingock.core.driver.lock.LockEntry;
+import io.flamingock.core.driver.lock.LockRepositoryException;
+import io.flamingock.core.driver.lock.LockRepository;
 import io.flamingock.core.util.TimeUtil;
 import io.flamingock.oss.driver.couchbase.internal.util.CouchBaseUtil;
 import io.flamingock.oss.driver.couchbase.internal.util.LockEntryKeyGenerator;
@@ -74,7 +74,7 @@ public class CouchbaseLockRepository implements LockRepository {
     }
 
     @Override
-    public void upsert(LockEntry newLock) throws LockPersistenceException {
+    public void upsert(LockEntry newLock) throws LockRepositoryException {
         String key = keyGenerator.toKey(newLock);
         try {
             GetResult result = collection.get(key);
@@ -88,7 +88,7 @@ public class CouchbaseLockRepository implements LockRepository {
             } else if (LocalDateTime.now().isBefore(existingLock.getExpiresAt())) {
                 logger.debug("Already locked by {}, will expire at {}", existingLock.getOwner(),
                         existingLock.getExpiresAt());
-                throw new LockPersistenceException("Get By" + key, newLock.toString(),
+                throw new LockRepositoryException("Get By" + key, newLock.toString(),
                         "Still locked by " + existingLock.getOwner() + " until " + existingLock.getExpiresAt());
             }
         } catch (DocumentNotFoundException documentNotFoundException) {
@@ -109,7 +109,7 @@ public class CouchbaseLockRepository implements LockRepository {
     }
 
     @Override
-    public void updateOnlyIfSameOwner(LockEntry newLock) throws LockPersistenceException {
+    public void updateOnlyIfSameOwner(LockEntry newLock) throws LockRepositoryException {
         String key = keyGenerator.toKey(newLock);
         try {
             GetResult result = collection.get(key);
@@ -122,11 +122,11 @@ public class CouchbaseLockRepository implements LockRepository {
             } else {
                 logger.debug("Already locked by {}, will expire at {}", existingLock.getOwner(),
                         existingLock.getExpiresAt());
-                throw new LockPersistenceException("Get By " + key, newLock.toString(),
+                throw new LockRepositoryException("Get By " + key, newLock.toString(),
                         "Lock belongs to " + existingLock.getOwner());
             }
         } catch (DocumentNotFoundException documentNotFoundException) {
-            throw new LockPersistenceException("Get By " + key, newLock.toString(),
+            throw new LockRepositoryException("Get By " + key, newLock.toString(),
                     documentNotFoundException.getMessage());
         }
     }

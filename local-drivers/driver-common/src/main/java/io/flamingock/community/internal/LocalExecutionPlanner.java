@@ -18,7 +18,7 @@ package io.flamingock.community.internal;
 
 
 import io.flamingock.community.internal.lock.LocalLock;
-import io.flamingock.community.internal.lock.LockRepository;
+import io.flamingock.core.driver.lock.LockRepository;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.driver.audit.AuditReader;
 import io.flamingock.core.driver.audit.writer.AuditStageStatus;

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.flamingock.community.internal.lock;
+package io.flamingock.core.driver.lock;
 
 /**
  * @since 04/04/2018
  */
-public class LockPersistenceException extends RuntimeException {
+public class LockRepositoryException extends RuntimeException {
 
   /**
    * Condition to update/insert lock
@@ -36,7 +36,7 @@ public class LockPersistenceException extends RuntimeException {
    */
   private final String dbErrorDetail;
 
-  public LockPersistenceException(String acquireLockQuery, String newLockEntity, String dbErrorDetail) {
+  public LockRepositoryException(String acquireLockQuery, String newLockEntity, String dbErrorDetail) {
     this.acquireLockQuery = acquireLockQuery;
     this.newLockEntity = newLockEntity;
     this.dbErrorDetail = dbErrorDetail;

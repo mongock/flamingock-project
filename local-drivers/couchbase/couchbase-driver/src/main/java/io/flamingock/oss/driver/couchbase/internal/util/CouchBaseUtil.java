@@ -17,7 +17,7 @@
 package io.flamingock.oss.driver.couchbase.internal.util;
 
 import com.couchbase.client.java.json.JsonObject;
-import io.flamingock.community.internal.lock.LockEntry;
+import io.flamingock.core.driver.lock.LockEntry;
 import io.flamingock.core.driver.audit.writer.AuditEntry;
 import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
 import io.flamingock.core.driver.lock.LockStatus;

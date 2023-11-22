@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.community.internal.lock;
+package io.flamingock.core.driver.lock;
 
 /**
  * <p>Repository interface to manage lock in database, which will be used by LockManager</p>
@@ -36,10 +36,10 @@ public interface LockRepository {
      * d) If there isn't any lock with key=newLock.key, newLock is inserted.
      *
      * @param newLock lock to replace the existing one or be inserted.
-     * @throws LockPersistenceException if there is a lock in database with same key, but is expired and belong to
+     * @throws LockRepositoryException if there is a lock in database with same key, but is expired and belong to
      *                                  another owner or cannot insert/update the lock for any other reason
      */
-    void upsert(LockEntry newLock) throws LockPersistenceException;
+    void upsert(LockEntry newLock) throws LockRepositoryException;
 
     /**
      * The only goal of this method is to update(mainly to extend the expiry date) the lock in case is already owned. So
@@ -51,10 +51,10 @@ public interface LockRepository {
      * so we can still extend the expiration time.
      *
      * @param newLock lock to replace the existing one or be inserted.
-     * @throws LockPersistenceException if there is a lock in database with same key, but is expired and belong to
+     * @throws LockRepositoryException if there is a lock in database with same key, but is expired and belong to
      *                                  another owner or cannot insert/update the lock for any other reason
      */
-    void updateOnlyIfSameOwner(LockEntry newLock) throws LockPersistenceException;
+    void updateOnlyIfSameOwner(LockEntry newLock) throws LockRepositoryException;
 
     /**
      * Retrieves a lock by key

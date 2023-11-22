@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.community.internal.lock;
+package io.flamingock.core.driver.lock;
 
 import io.flamingock.core.driver.lock.LockStatus;
 

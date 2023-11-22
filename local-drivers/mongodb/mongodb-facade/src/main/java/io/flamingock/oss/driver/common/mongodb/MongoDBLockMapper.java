@@ -16,7 +16,7 @@
 
 package io.flamingock.oss.driver.common.mongodb;
 
-import io.flamingock.community.internal.lock.LockEntry;
+import io.flamingock.core.driver.lock.LockEntry;
 import io.flamingock.core.driver.lock.LockStatus;
 import io.flamingock.core.util.TimeUtil;
 
