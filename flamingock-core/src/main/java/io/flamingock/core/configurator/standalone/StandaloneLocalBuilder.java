@@ -25,7 +25,7 @@ import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
 import io.flamingock.core.driver.ConnectionDriver;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.core.runner.RunnerCreator;
+import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,7 +69,7 @@ public class StandaloneLocalBuilder
     public Runner build() {
         ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
         registerTemplates();
-        return RunnerCreator.create(
+        return PipelineRunnerCreator.create(
                 buildPipeline(),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),

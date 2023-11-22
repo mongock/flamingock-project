@@ -21,6 +21,7 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
+import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 
@@ -63,19 +64,17 @@ public class StandaloneCloudBuilder
     @Override
     public Runner build() {
 //        ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
-//        registerTemplates();
-//        return RunnerCreator.create(
-//                buildPipeline(),
-//                connectionEngine.getAuditor(),
-//                connectionEngine.getAuditor(),
-//                connectionEngine.getTransactionWrapper().orElse(null),
-//                connectionEngine.getLockProvider(),
-//                coreConfiguratorDelegate.getCoreProperties(),
-//                buildEventPublisher(),
-//                getDependencyContext(),
-//                getCoreProperties().isThrowExceptionIfCannotObtainLock()
-//        );
-        return null;
+        registerTemplates();
+        return PipelineRunnerCreator.create(
+                buildPipeline(),
+                null,//connectionEngine.getAuditor(),
+                null,//connectionEngine.getTransactionWrapper().orElse(null),
+                null,//connectionEngine.getLockProvider(),
+                coreConfiguratorDelegate.getCoreProperties(),
+                buildEventPublisher(),
+                getDependencyContext(),
+                getCoreProperties().isThrowExceptionIfCannotObtainLock()
+        );
     }
 
 

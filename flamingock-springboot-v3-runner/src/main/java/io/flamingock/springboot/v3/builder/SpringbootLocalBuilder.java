@@ -23,7 +23,7 @@ import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
 import io.flamingock.core.driver.ConnectionDriver;
 import io.flamingock.core.driver.ConnectionEngine;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.core.runner.RunnerCreator;
+import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -62,7 +62,7 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
-        return RunnerCreator.create(
+        return PipelineRunnerCreator.create(
                 buildPipeline(activeProfiles),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
