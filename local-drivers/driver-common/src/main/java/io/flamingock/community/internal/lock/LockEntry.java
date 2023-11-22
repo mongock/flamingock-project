@@ -16,7 +16,7 @@
 
 package io.flamingock.community.internal.lock;
 
-import io.flamingock.core.lock.LockStatus;
+import io.flamingock.core.driver.lock.LockStatus;
 
 import java.time.LocalDateTime;
 import java.util.Date;

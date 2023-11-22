@@ -72,9 +72,8 @@ public class StandaloneLocalBuilder
         return RunnerCreator.create(
                 buildPipeline(),
                 connectionEngine.getAuditor(),
-                connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
-                connectionEngine.getLockProvider(),
+                connectionEngine.getExecutionPlanner(),
                 coreConfiguratorDelegate.getCoreProperties(),
                 buildEventPublisher(),
                 getDependencyContext(),

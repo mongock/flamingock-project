@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.lock;
+package io.flamingock.core.driver.lock;
 
-import io.flamingock.core.api.exception.FlamingockException;
-
-public class LockException extends FlamingockException {
-  public LockException(Throwable throwable) {
-    super(throwable);
-  }
-
-  public LockException(String s) {
-    super(s);
-  }
-
-  public LockException() {
-    super();
-  }
+public enum LockStatus {
+    LOCK_HELD
 }

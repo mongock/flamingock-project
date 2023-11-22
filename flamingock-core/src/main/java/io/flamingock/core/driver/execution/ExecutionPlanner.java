@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.audit.writer;
+package io.flamingock.core.driver.execution;
 
-public enum AuditEntryStatus {
-    EXECUTED, FAILED, ROLLED_BACK, ROLLBACK_FAILED;
+import io.flamingock.core.driver.lock.LockAcquisition;
+import io.flamingock.core.driver.lock.LockException;
+import io.flamingock.core.driver.lock.LockOptions;
+import io.flamingock.core.pipeline.LoadedStage;
+import io.flamingock.core.pipeline.Pipeline;
 
-    public static boolean isRequiredExecution(AuditEntryStatus entryStatus) {
-        return entryStatus == null || entryStatus == FAILED || entryStatus == ROLLED_BACK || entryStatus == ROLLBACK_FAILED;
+public interface ExecutionPlanner {
+
+    default Execution getNextExecution(Pipeline pipeline) throws LockException {
+        return getNextExecution(pipeline, LockOptions.builder().build());
     }
 
-
+    Execution getNextExecution(Pipeline pipeline, LockOptions lockOptions) throws LockException;
 }

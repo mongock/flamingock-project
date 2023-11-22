@@ -16,8 +16,8 @@
 
 package io.flamingock.core.pipeline.execution;
 
-import io.flamingock.core.audit.AuditWriter;
-import io.flamingock.core.lock.Lock;
+import io.flamingock.core.driver.audit.AuditWriter;
+import io.flamingock.core.driver.lock.Lock;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.task.executable.ExecutableTask;

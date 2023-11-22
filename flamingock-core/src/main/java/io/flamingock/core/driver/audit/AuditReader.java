@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.executable;
+package io.flamingock.core.driver.audit;
 
-import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
-import io.flamingock.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.driver.audit.writer.AuditStageStatus;
 
-import java.util.List;
-
-public interface ExecutableTaskFactory {
-
-    List<? extends ExecutableTask> extractTasks(TaskDescriptor taskDescriptor, AuditEntryStatus initialState);
+public interface AuditReader {
+    AuditStageStatus getAuditStageStatus();
 }

@@ -65,9 +65,8 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
         return RunnerCreator.create(
                 buildPipeline(activeProfiles),
                 connectionEngine.getAuditor(),
-                connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
-                connectionEngine.getLockProvider(),
+                connectionEngine.getExecutionPlanner(),
                 getCoreProperties(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),

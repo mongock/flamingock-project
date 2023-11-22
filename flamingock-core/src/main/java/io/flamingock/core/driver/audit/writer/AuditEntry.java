@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.audit.writer;
+package io.flamingock.core.driver.audit.writer;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -22,10 +22,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static io.flamingock.core.audit.writer.AuditEntryStatus.EXECUTED;
-import static io.flamingock.core.audit.writer.AuditEntryStatus.FAILED;
-import static io.flamingock.core.audit.writer.AuditEntryStatus.ROLLBACK_FAILED;
-import static io.flamingock.core.audit.writer.AuditEntryStatus.ROLLED_BACK;
+import static io.flamingock.core.driver.audit.writer.AuditEntryStatus.EXECUTED;
+import static io.flamingock.core.driver.audit.writer.AuditEntryStatus.FAILED;
+import static io.flamingock.core.driver.audit.writer.AuditEntryStatus.ROLLBACK_FAILED;
+import static io.flamingock.core.driver.audit.writer.AuditEntryStatus.ROLLED_BACK;
 
 public class AuditEntry {
 

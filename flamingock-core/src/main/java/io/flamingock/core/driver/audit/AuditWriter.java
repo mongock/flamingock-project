@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.audit;
+package io.flamingock.core.driver.audit;
 
-import io.flamingock.core.audit.writer.AuditEntry;
-import io.flamingock.core.audit.writer.AuditEntryMapper;
-import io.flamingock.core.audit.domain.AuditItem;
+import io.flamingock.core.driver.audit.writer.AuditEntry;
+import io.flamingock.core.driver.audit.writer.AuditEntryMapper;
+import io.flamingock.core.driver.audit.domain.AuditItem;
 import io.flamingock.core.util.Result;
 
 /**

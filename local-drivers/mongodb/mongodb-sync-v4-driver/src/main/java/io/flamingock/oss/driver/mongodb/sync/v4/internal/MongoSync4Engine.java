@@ -22,8 +22,8 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.driver.ConnectionEngine;
-import io.flamingock.core.audit.Auditor;
-import io.flamingock.community.internal.lock.LocalLockAcquirer;
+import io.flamingock.core.driver.audit.Auditor;
+import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
@@ -37,7 +37,7 @@ public class MongoSync4Engine implements ConnectionEngine {
     private final LocalConfigurable localConfiguration;
 
     private MongoSync4Auditor auditor;
-    private LocalLockAcquirer lockProvider;
+    private LocalExecutionPlanner executionPlanner;
     private TransactionWrapper transactionWrapper;
     private final MongoDBSync4Configuration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
@@ -66,7 +66,7 @@ public class MongoSync4Engine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         MongoSync4LockRepository lockRepository = new MongoSync4LockRepository(database, driverConfiguration.getLockRepositoryName());
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
+        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
@@ -75,8 +75,8 @@ public class MongoSync4Engine implements ConnectionEngine {
     }
 
     @Override
-    public LocalLockAcquirer getLockProvider() {
-        return lockProvider;
+    public LocalExecutionPlanner getExecutionPlanner() {
+        return executionPlanner;
     }
 
 

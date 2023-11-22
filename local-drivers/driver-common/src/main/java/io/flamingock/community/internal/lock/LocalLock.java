@@ -16,9 +16,9 @@
 
 package io.flamingock.community.internal.lock;
 
-import io.flamingock.core.lock.Lock;
-import io.flamingock.core.lock.LockException;
-import io.flamingock.core.lock.LockStatus;
+import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.driver.lock.LockException;
+import io.flamingock.core.driver.lock.LockStatus;
 import io.flamingock.core.util.TimeService;
 import io.flamingock.core.util.TimeUtil;
 import org.slf4j.Logger;
@@ -33,10 +33,6 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 public class LocalLock implements Lock {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalLock.class);
-
-
-
-
 
     private static final String DEFAULT_KEY = "DEFAULT_KEY";
     public static final String LOG_EXPIRED_TEMPLATE = "Lock[{}] not refreshed at[{}] because the it's canceled/expired[{}]";
@@ -61,7 +57,7 @@ public class LocalLock implements Lock {
     private volatile LocalDateTime expiresAt;
 
 
-    static Lock getLock(long leaseMillis,
+    public static Lock getLock(long leaseMillis,
                         long stopTryingAfterMillis,
                         long retryFrequencyMillis,
                         String owner,
@@ -162,7 +158,7 @@ public class LocalLock implements Lock {
     }
 
     @Override
-    public void close() {
+    public void release() {
         logger.info("Flamingock waiting to release the lock");
         synchronized (this) {
             try {

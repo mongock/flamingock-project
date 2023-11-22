@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.lock;
+package io.flamingock.core.driver.lock;
 
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public abstract class LockAcquisition implements AutoCloseable {
 
         @Override
         public void close() {
-            lock.close();
+            lock.release();
         }
 
 

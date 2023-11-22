@@ -20,7 +20,7 @@ import io.flamingock.template.annotations.TemplateConfigSetter;
 import io.flamingock.template.annotations.TemplateConfigValidator;
 import io.flamingock.template.annotations.TemplateExecution;
 import io.flamingock.template.annotations.TemplateRollbackExecution;
-import io.flamingock.core.audit.writer.AuditEntryStatus;
+import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTaskFactory;

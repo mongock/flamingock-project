@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.lock;
+package io.flamingock.core.driver.lock;
 
 
 import java.time.LocalDateTime;
 
-public interface Lock extends AutoCloseable {
+public interface Lock {
 
     /**
      * Ensures the lock is safely acquired(safely here means its acquired with enough margin to operate),
@@ -48,7 +48,7 @@ public interface Lock extends AutoCloseable {
      * Otherwise, a race condition where a process A ensures the lock, starts a task that takes 2 seconds, but before finishing,
      * the lock is released(closed) and another instances acquire the lock, before process A has finished.
      */
-    void close();
+    void release();
 
     /**
      * Return the lock's expiration time

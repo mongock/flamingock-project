@@ -40,7 +40,7 @@ import static io.flamingock.community.internal.lock.LockEntryField.EXPIRES_AT_FI
 import static io.flamingock.community.internal.lock.LockEntryField.KEY_FIELD;
 import static io.flamingock.community.internal.lock.LockEntryField.OWNER_FIELD;
 import static io.flamingock.community.internal.lock.LockEntryField.STATUS_FIELD;
-import static io.flamingock.core.lock.LockStatus.LOCK_HELD;
+import static io.flamingock.core.driver.lock.LockStatus.LOCK_HELD;
 
 public class MongoSync4LockRepository implements LockRepository {
 

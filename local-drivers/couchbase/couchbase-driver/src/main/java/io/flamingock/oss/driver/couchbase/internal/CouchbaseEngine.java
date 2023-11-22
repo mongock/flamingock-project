@@ -18,7 +18,7 @@ package io.flamingock.oss.driver.couchbase.internal;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
-import io.flamingock.community.internal.lock.LocalLockAcquirer;
+import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.driver.ConnectionEngine;
@@ -34,7 +34,7 @@ public class CouchbaseEngine implements ConnectionEngine {
     private final LocalConfigurable LocalConfiguration;
 
     private CouchbaseAuditor auditor;
-    private LocalLockAcquirer lockProvider;
+    private LocalExecutionPlanner executionPlanner;
     private final CouchbaseConfiguration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
 
@@ -57,7 +57,7 @@ public class CouchbaseEngine implements ConnectionEngine {
         auditor.initialize(driverConfiguration.isIndexCreation());
         CouchbaseLockRepository lockRepository = new CouchbaseLockRepository(cluster, collection);
         lockRepository.initialize(driverConfiguration.isIndexCreation());
-        lockProvider = new LocalLockAcquirer(lockRepository, auditor, coreConfiguration);
+        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
     }
 
     @Override
@@ -66,8 +66,8 @@ public class CouchbaseEngine implements ConnectionEngine {
     }
 
     @Override
-    public LocalLockAcquirer getLockProvider() {
-        return lockProvider;
+    public LocalExecutionPlanner getExecutionPlanner() {
+        return executionPlanner;
     }
 
 

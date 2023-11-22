@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.audit;
+package io.flamingock.core.driver.audit;
 
 
 public interface Auditor extends AuditWriter, AuditReader {
