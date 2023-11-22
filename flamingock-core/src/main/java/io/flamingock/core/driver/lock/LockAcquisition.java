@@ -48,7 +48,7 @@ public abstract class LockAcquisition implements AutoCloseable {
 
         @Override
         public void close() {
-            lock.close();
+            lock.release();
         }
 
 

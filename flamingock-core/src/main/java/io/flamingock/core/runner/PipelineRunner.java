@@ -17,7 +17,6 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.driver.audit.AuditReader;
 import io.flamingock.core.driver.execution.Execution;
 import io.flamingock.core.driver.execution.ExecutionPlanner;
 import io.flamingock.core.driver.lock.Lock;
@@ -70,9 +69,6 @@ public abstract class PipelineRunner implements Runner {
     }
 
 
-    //TODO it's not releasing the lock. Ideally is reuse so we don't need to do it every  time
-    // however initially it will return all the stages that require execution, that it's not urgent to reuse it,
-    // but it is to release it
     public void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publish(new PipelineStartedEvent());
         try {
@@ -80,6 +76,11 @@ public abstract class PipelineRunner implements Runner {
             while (execution.getAction() == EXECUTE) {
                 Lock lock = execution.getLock();
                 execution.getStages().forEach(executableStage -> runStage(lock, executableStage));
+                //It releases the lock per execution and acquires again if needed.
+                //It's fine for the time being because both, local and cloud, will return all the tasks that need to be
+                //executed. But if we improve that behaviour in the cloud, so the workload can be parallelized among
+                //all the clients, the lock can be reused.
+                execution.getLock().release();
                 execution = executionPlanner.getNextExecution(pipeline);
             }
         } catch (LockException exception) {

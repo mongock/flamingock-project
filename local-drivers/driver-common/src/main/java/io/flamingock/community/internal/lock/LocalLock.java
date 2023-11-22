@@ -158,7 +158,7 @@ public class LocalLock implements Lock {
     }
 
     @Override
-    public void close() {
+    public void release() {
         logger.info("Flamingock waiting to release the lock");
         synchronized (this) {
             try {
