@@ -24,9 +24,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
-import io.flamingock.community.internal.lock.LockEntry;
-import io.flamingock.community.internal.lock.LockPersistenceException;
-import io.flamingock.community.internal.lock.LockRepository;
+import io.flamingock.core.engine.lock.LockEntry;
+import io.flamingock.core.engine.lock.LockRepositoryException;
+import io.flamingock.core.engine.lock.LockRepository;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBLockMapper;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.Mongo3CollectionWrapper;
@@ -40,7 +40,7 @@ import static io.flamingock.community.internal.lock.LockEntryField.EXPIRES_AT_FI
 import static io.flamingock.community.internal.lock.LockEntryField.KEY_FIELD;
 import static io.flamingock.community.internal.lock.LockEntryField.OWNER_FIELD;
 import static io.flamingock.community.internal.lock.LockEntryField.STATUS_FIELD;
-import static io.flamingock.core.driver.lock.LockStatus.LOCK_HELD;
+import static io.flamingock.core.engine.lock.LockStatus.LOCK_HELD;
 
 public class Mongo3LockRepository implements LockRepository {
 
@@ -67,12 +67,12 @@ public class Mongo3LockRepository implements LockRepository {
     }
 
     @Override
-    public void upsert(LockEntry newLock) throws LockPersistenceException {
+    public void upsert(LockEntry newLock) throws LockRepositoryException {
         insertUpdate(newLock, false);
     }
 
     @Override
-    public void updateOnlyIfSameOwner(LockEntry newLock) throws LockPersistenceException {
+    public void updateOnlyIfSameOwner(LockEntry newLock) throws LockRepositoryException {
         insertUpdate(newLock, true);
     }
 
@@ -120,7 +120,7 @@ public class Mongo3LockRepository implements LockRepository {
         }
 
         if (lockHeld) {
-            throw new LockPersistenceException(
+            throw new LockRepositoryException(
                     acquireLockQuery.toString(),
                     newLockDocumentSet.toString(),
                     debErrorDetail

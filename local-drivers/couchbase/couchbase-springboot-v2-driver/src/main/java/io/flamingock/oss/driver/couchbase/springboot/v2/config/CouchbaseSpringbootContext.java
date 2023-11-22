@@ -16,7 +16,7 @@
 
 package io.flamingock.oss.driver.couchbase.springboot.v2.config;
 
-import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
 import io.flamingock.oss.driver.couchbase.driver.CouchbaseDriver;
 

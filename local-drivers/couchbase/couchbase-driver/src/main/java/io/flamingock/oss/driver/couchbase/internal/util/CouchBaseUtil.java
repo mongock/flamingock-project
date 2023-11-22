@@ -17,10 +17,10 @@
 package io.flamingock.oss.driver.couchbase.internal.util;
 
 import com.couchbase.client.java.json.JsonObject;
-import io.flamingock.community.internal.lock.LockEntry;
-import io.flamingock.core.driver.audit.writer.AuditEntry;
-import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
-import io.flamingock.core.driver.lock.LockStatus;
+import io.flamingock.core.engine.lock.LockEntry;
+import io.flamingock.core.engine.audit.writer.AuditEntry;
+import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
+import io.flamingock.core.engine.lock.LockStatus;
 import io.flamingock.core.util.TimeUtil;
 
 import static io.flamingock.community.internal.AuditEntryField.KEY_AUTHOR;

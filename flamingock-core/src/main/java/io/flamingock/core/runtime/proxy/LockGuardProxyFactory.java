@@ -17,7 +17,7 @@
 package io.flamingock.core.runtime.proxy;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
-import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.util.Constants;
 import io.flamingock.core.util.JdkUtil;
 import javassist.util.proxy.ProxyFactory;

@@ -16,13 +16,13 @@
 
 package io.flamingock.core.task.navigation.navigator;
 
-import io.flamingock.core.driver.audit.AuditWriter;
-import io.flamingock.core.driver.audit.domain.AuditItem;
+import io.flamingock.core.engine.audit.AuditWriter;
+import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
-import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;

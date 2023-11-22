@@ -16,12 +16,12 @@
 
 package io.flamingock.springboot.v2.builder;
 
-import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
-import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.driver.LocalConnectionEngine;
+import io.flamingock.core.engine.local.driver.ConnectionDriver;
+import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.springboot.v2.SpringDependencyContext;

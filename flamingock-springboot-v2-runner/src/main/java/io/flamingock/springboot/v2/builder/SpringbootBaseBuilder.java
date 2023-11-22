@@ -16,10 +16,10 @@
 
 package io.flamingock.springboot.v2.builder;
 
-import io.flamingock.core.configurator.CoreConfigurable;
-import io.flamingock.core.configurator.CoreConfiguration;
-import io.flamingock.core.configurator.CoreConfigurator;
-import io.flamingock.core.configurator.CoreConfiguratorDelegate;
+import io.flamingock.core.configurator.core.CoreConfigurable;
+import io.flamingock.core.configurator.core.CoreConfiguration;
+import io.flamingock.core.configurator.core.CoreConfigurator;
+import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.event.EventPublisher;

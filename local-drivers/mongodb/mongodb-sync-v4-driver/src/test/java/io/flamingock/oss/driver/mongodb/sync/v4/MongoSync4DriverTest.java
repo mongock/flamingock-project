@@ -22,9 +22,9 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
-import io.flamingock.core.driver.audit.writer.AuditEntry;
+import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
-import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
+import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;

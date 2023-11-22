@@ -17,10 +17,10 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.driver.execution.Execution;
-import io.flamingock.core.driver.execution.ExecutionPlanner;
-import io.flamingock.core.driver.lock.Lock;
-import io.flamingock.core.driver.lock.LockException;
+import io.flamingock.core.engine.execution.Execution;
+import io.flamingock.core.engine.execution.ExecutionPlanner;
+import io.flamingock.core.engine.lock.Lock;
+import io.flamingock.core.engine.lock.LockException;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.impl.PipelineCompletedEvent;
 import io.flamingock.core.event.model.impl.PipelineFailedEvent;
@@ -37,7 +37,7 @@ import io.flamingock.core.pipeline.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.flamingock.core.driver.execution.Execution.Action.EXECUTE;
+import static io.flamingock.core.engine.execution.Execution.Action.EXECUTE;
 
 public abstract class PipelineRunner implements Runner {
 

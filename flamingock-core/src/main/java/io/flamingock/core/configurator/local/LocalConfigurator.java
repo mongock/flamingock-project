@@ -16,7 +16,7 @@
 
 package io.flamingock.core.configurator.local;
 
-import io.flamingock.core.driver.ConnectionDriver;
+import io.flamingock.core.engine.local.driver.ConnectionDriver;
 
 public interface LocalConfigurator<HOLDER> {
     HOLDER setDriver(ConnectionDriver<?> connectionDriver);

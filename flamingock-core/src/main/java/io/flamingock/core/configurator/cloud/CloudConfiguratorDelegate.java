@@ -16,7 +16,7 @@
 
 package io.flamingock.core.configurator.cloud;
 
-import io.flamingock.core.driver.CloudConnectionEngine;
+import io.flamingock.core.engine.CloudConnectionEngine;
 
 import java.util.function.Supplier;
 

@@ -18,7 +18,7 @@ package io.flamingock.core.runtime.proxy;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.changock.migration.api.annotations.NonLockGuardedType;
-import io.flamingock.core.driver.lock.Lock;
+import io.flamingock.core.engine.lock.Lock;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

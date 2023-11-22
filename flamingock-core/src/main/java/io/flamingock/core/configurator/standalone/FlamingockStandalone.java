@@ -17,7 +17,7 @@
 package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.core.configurator.local.LocalConfiguration;
-import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.runtime.dependency.SimpleDependencyInjectableContext;
 

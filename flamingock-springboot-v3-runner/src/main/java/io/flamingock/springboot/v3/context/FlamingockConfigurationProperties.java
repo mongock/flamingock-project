@@ -16,8 +16,8 @@
 
 package io.flamingock.springboot.v3.context;
 
-import io.flamingock.core.configurator.CoreConfigurable;
-import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.core.CoreConfigurable;
+import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;

@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v2.builder;
 
-import io.flamingock.core.configurator.CoreConfiguration;
+import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;

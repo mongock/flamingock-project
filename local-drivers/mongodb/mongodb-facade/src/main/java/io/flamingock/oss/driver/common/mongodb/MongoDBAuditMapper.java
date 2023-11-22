@@ -16,8 +16,8 @@
 
 package io.flamingock.oss.driver.common.mongodb;
 
-import io.flamingock.core.driver.audit.writer.AuditEntry;
-import io.flamingock.core.driver.audit.writer.AuditEntryStatus;
+import io.flamingock.core.engine.audit.writer.AuditEntry;
+import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.util.TimeUtil;
 
 import java.util.function.Supplier;
