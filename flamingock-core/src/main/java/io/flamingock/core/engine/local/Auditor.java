@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.audit;
+package io.flamingock.core.engine.local;
 
+
+import io.flamingock.core.engine.audit.AuditReader;
+import io.flamingock.core.engine.audit.AuditWriter;
 
 public interface Auditor extends AuditWriter, AuditReader {
 

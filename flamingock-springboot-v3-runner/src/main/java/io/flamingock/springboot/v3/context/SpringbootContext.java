@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v3.context;
 
-import io.flamingock.core.engine.driver.ConnectionDriver;
+import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.builder.FlamingockSpringboot;
 import io.flamingock.springboot.v3.builder.SpringbootBaseBuilder;

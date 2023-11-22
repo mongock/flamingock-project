@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.driver;
+package io.flamingock.core.engine.local;
 
-import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.engine.LocalConnectionEngine;
+import io.flamingock.core.engine.ConnectionEngine;
+import io.flamingock.core.engine.local.Auditor;
 
-public interface ConnectionDriver<DRIVER_CONFIGURATION extends DriverConfigurable> {
+public interface LocalConnectionEngine extends ConnectionEngine {
 
-    LocalConnectionEngine getConnectionEngine(CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration);
+  Auditor getAuditor();
 
-    ConnectionDriver<DRIVER_CONFIGURATION> setDriverConfiguration(DRIVER_CONFIGURATION configuration);
 }

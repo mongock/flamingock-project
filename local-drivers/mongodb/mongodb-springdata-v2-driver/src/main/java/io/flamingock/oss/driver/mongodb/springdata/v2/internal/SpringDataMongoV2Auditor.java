@@ -27,7 +27,7 @@ import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.internal.mongodb.SpringDataMongoV2CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.internal.mongodb.SpringDataMongoV2DocumentWrapper;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.core.engine.audit.Auditor;
+import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import org.bson.Document;
 import org.bson.conversions.Bson;

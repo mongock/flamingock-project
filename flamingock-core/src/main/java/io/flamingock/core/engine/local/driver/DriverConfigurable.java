@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine;
+package io.flamingock.core.engine.local.driver;
 
-import io.flamingock.core.engine.audit.Auditor;
-
-public interface LocalConnectionEngine extends ConnectionEngine {
-
-  Auditor getAuditor();
-
+//Marker interface for Driver configuration
+public interface DriverConfigurable {
 }

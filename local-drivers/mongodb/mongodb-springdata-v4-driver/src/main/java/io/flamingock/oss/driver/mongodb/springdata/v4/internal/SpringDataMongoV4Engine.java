@@ -21,8 +21,8 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.core.engine.LocalConnectionEngine;
-import io.flamingock.core.engine.audit.Auditor;
+import io.flamingock.core.engine.local.LocalConnectionEngine;
+import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.community.internal.LocalExecutionPlanner;
 
 import java.util.Optional;

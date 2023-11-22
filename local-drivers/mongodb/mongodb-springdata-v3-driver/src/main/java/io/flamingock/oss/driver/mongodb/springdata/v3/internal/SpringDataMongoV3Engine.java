@@ -18,10 +18,10 @@ package io.flamingock.oss.driver.mongodb.springdata.v3.internal;
 
 import com.mongodb.ReadConcern;
 import io.flamingock.community.internal.LocalExecutionPlanner;
-import io.flamingock.core.engine.audit.Auditor;
+import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.engine.LocalConnectionEngine;
+import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;

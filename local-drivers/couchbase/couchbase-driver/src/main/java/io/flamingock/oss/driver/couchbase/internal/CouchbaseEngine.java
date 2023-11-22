@@ -21,7 +21,7 @@ import com.couchbase.client.java.Collection;
 import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.engine.LocalConnectionEngine;
+import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
 
