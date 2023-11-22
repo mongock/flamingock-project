@@ -17,7 +17,6 @@
 package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.core.configurator.CoreConfigurable;
-import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.CoreConfigurator;
 import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
@@ -86,7 +85,7 @@ abstract class AbstractStandaloneBuilder<HOLDER>
     @NotNull
     protected Pipeline buildPipeline() {
         return Pipeline.builder()
-                .addStages(coreConfiguratorDelegate().getCoreProperties().getStages())
+                .addStages(coreConfiguratorDelegate().getCoreConfiguration().getStages())
                 .build();
     }
 
@@ -94,8 +93,8 @@ abstract class AbstractStandaloneBuilder<HOLDER>
     //  CORE
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
-    public CoreConfigurable getCoreProperties() {
-        return coreConfiguratorDelegate().getCoreProperties();
+    public CoreConfigurable getCoreConfiguration() {
+        return coreConfiguratorDelegate().getCoreConfiguration();
     }
 
     @Override

@@ -27,105 +27,105 @@ import java.util.function.Supplier;
 
 public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER>{
     private final Supplier<HOLDER> holderSupplier;
-    private final CoreConfiguration properties;
+    private final CoreConfiguration configuration;
 
-    public CoreConfiguratorDelegate(CoreConfiguration properties, Supplier<HOLDER> holderSupplier) {
-        this.properties = properties;
+    public CoreConfiguratorDelegate(CoreConfiguration configuration, Supplier<HOLDER> holderSupplier) {
+        this.configuration = configuration;
         this.holderSupplier = holderSupplier;
     }
 
     @Override
-    public CoreConfigurable getCoreProperties() {
-        return properties;
+    public CoreConfigurable getCoreConfiguration() {
+        return configuration;
     }
 
     @Override
     public HOLDER addStage(Stage stage) {
-        properties.getStages().add(stage);
+        configuration.getStages().add(stage);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis) {
-        properties.setLockAcquiredForMillis(lockAcquiredForMillis);
+        configuration.setLockAcquiredForMillis(lockAcquiredForMillis);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
-        properties.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+        configuration.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
-        properties.setLockTryFrequencyMillis(lockTryFrequencyMillis);
+        configuration.setLockTryFrequencyMillis(lockTryFrequencyMillis);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
-        properties.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+        configuration.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setTrackIgnored(boolean trackIgnored) {
-        properties.setTrackIgnored(trackIgnored);
+        configuration.setTrackIgnored(trackIgnored);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setEnabled(boolean enabled) {
-        properties.setEnabled(enabled);
+        configuration.setEnabled(enabled);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setStartSystemVersion(String startSystemVersion) {
-        properties.setStartSystemVersion(startSystemVersion);
+        configuration.setStartSystemVersion(startSystemVersion);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setEndSystemVersion(String endSystemVersion) {
-        properties.setEndSystemVersion(endSystemVersion);
+        configuration.setEndSystemVersion(endSystemVersion);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setServiceIdentifier(String serviceIdentifier) {
-        properties.setServiceIdentifier(serviceIdentifier);
+        configuration.setServiceIdentifier(serviceIdentifier);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setMetadata(Map<String, Object> metadata) {
-        properties.setMetadata(metadata);
+        configuration.setMetadata(metadata);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setLegacyMigration(LegacyMigration legacyMigration) {
-        properties.setLegacyMigration(legacyMigration);
+        configuration.setLegacyMigration(legacyMigration);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setTransactionEnabled(Boolean transactionEnabled) {
-        properties.setTransactionEnabled(transactionEnabled);
+        configuration.setTransactionEnabled(transactionEnabled);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setDefaultAuthor(String publicMigrationAuthor) {
-        properties.setDefaultAuthor(publicMigrationAuthor);
+        configuration.setDefaultAuthor(publicMigrationAuthor);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy) {
-        properties.setTransactionStrategy(transactionStrategy);
+        configuration.setTransactionStrategy(transactionStrategy);
         return holderSupplier.get();
     }
 
@@ -138,72 +138,72 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
 
     @Override
     public long getLockAcquiredForMillis() {
-        return properties.getLockAcquiredForMillis();
+        return configuration.getLockAcquiredForMillis();
     }
 
     @Override
     public Long getLockQuitTryingAfterMillis() {
-        return properties.getLockQuitTryingAfterMillis();
+        return configuration.getLockQuitTryingAfterMillis();
     }
 
     @Override
     public long getLockTryFrequencyMillis() {
-        return properties.getLockTryFrequencyMillis();
+        return configuration.getLockTryFrequencyMillis();
     }
 
     @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
-        return properties.isThrowExceptionIfCannotObtainLock();
+        return configuration.isThrowExceptionIfCannotObtainLock();
     }
 
     @Override
     public boolean isTrackIgnored() {
-        return properties.isTrackIgnored();
+        return configuration.isTrackIgnored();
     }
 
     @Override
     public boolean isEnabled() {
-        return properties.isEnabled();
+        return configuration.isEnabled();
     }
 
     @Override
     public String getStartSystemVersion() {
-        return properties.getStartSystemVersion();
+        return configuration.getStartSystemVersion();
     }
 
     @Override
     public String getEndSystemVersion() {
-        return properties.getEndSystemVersion();
+        return configuration.getEndSystemVersion();
     }
 
     @Override
     public String getServiceIdentifier() {
-        return properties.getServiceIdentifier();
+        return configuration.getServiceIdentifier();
     }
 
     @Override
     public Map<String, Object> getMetadata() {
-        return properties.getMetadata();
+        return configuration.getMetadata();
     }
 
     @Override
     public LegacyMigration getLegacyMigration() {
-        return properties.getLegacyMigration();
+        return configuration.getLegacyMigration();
     }
 
     @Override
     public Boolean getTransactionEnabled() {
-        return properties.getTransactionEnabled();
+        return configuration.getTransactionEnabled();
     }
 
     @Override
     public String getDefaultAuthor() {
-        return properties.getDefaultAuthor();
+        return configuration.getDefaultAuthor();
     }
 
     @Override
     public TransactionStrategy getTransactionStrategy() {
-        return properties.getTransactionStrategy();
+        return configuration.getTransactionStrategy();
     }
 
 }

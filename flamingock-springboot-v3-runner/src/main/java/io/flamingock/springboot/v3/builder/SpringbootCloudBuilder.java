@@ -20,8 +20,9 @@ import io.flamingock.core.configurator.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
+import io.flamingock.core.driver.CloudConnectionEngine;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.core.runner.RunnerCreator;
+import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -62,22 +63,23 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
-        return RunnerCreator.create(
+        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine();
+
+        return PipelineRunnerCreator.create(
                 buildPipeline(activeProfiles),
-                null,//connectionEngine.getAuditor(),
-                null,//connectionEngine.getTransactionWrapper().orElse(null),
-                null,//connectionEngine.getLockProvider(),
-                getCoreProperties(),
+                connectionEngine.getAuditWriter(),
+                connectionEngine.getTransactionWrapper().orElse(null),
+                connectionEngine.getExecutionPlanner(),
+                getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
-                getCoreProperties().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  CLOUD
     ///////////////////////////////////////////////////////////////////////////////////
-
 
     @Override
     public SpringbootCloudBuilder setApiKey(String apiKey) {
@@ -88,17 +90,5 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     public SpringbootCloudBuilder setToken(String token) {
         return cloudConfiguratorDelegate.setToken(token);
     }
-
-    @Override
-    public String getApiKey() {
-        return cloudConfiguratorDelegate.getApiKey();
-    }
-
-    @Override
-    public String getToken() {
-        return cloudConfiguratorDelegate.getToken();
-    }
-
-
 
 }

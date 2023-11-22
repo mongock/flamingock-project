@@ -22,12 +22,8 @@ import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 
-public interface ConnectionEngine {
+public interface LocalConnectionEngine extends ConnectionEngine {
 
-  void initialize();
-
-  ExecutionPlanner getExecutionPlanner();
-
-  Optional<TransactionWrapper> getTransactionWrapper();
+  Auditor getAuditor();
 
 }

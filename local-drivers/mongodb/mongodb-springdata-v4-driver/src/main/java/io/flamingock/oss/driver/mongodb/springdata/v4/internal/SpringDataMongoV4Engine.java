@@ -21,7 +21,7 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
 import io.flamingock.core.driver.audit.Auditor;
 import io.flamingock.community.internal.LocalExecutionPlanner;
 
@@ -31,7 +31,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.mongodb.ReadConcern;
 
-public class SpringDataMongoV4Engine implements ConnectionEngine {
+public class SpringDataMongoV4Engine implements LocalConnectionEngine {
 
     private final MongoTemplate mongoTemplate;
     private final LocalConfigurable localConfiguration;

@@ -21,6 +21,12 @@ public class CloudConfiguration implements CloudConfigurable {
     private String apiKey;
 
     private String token;
+    private String host;
+
+    @Override
+    public void setHost(String host) {
+        this.host = host;
+    }
 
     @Override
     public void setApiKey(String apiKey) {
@@ -40,5 +46,10 @@ public class CloudConfiguration implements CloudConfigurable {
     @Override
     public String getToken() {
         return token;
+    }
+
+    @Override
+    public String getHost() {
+        return host;
     }
 }

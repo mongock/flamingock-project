@@ -21,8 +21,12 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
+import io.flamingock.core.driver.CloudConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
+import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import org.jetbrains.annotations.NotNull;
 
 public class StandaloneCloudBuilder
         extends AbstractStandaloneBuilder<StandaloneCloudBuilder>
@@ -32,7 +36,7 @@ public class StandaloneCloudBuilder
 
     private final StandaloneConfiguratorDelegate<StandaloneCloudBuilder> standaloneConfiguratorDelegate;
 
-    private final CloudConfigurator<StandaloneCloudBuilder> cloudConfiguratorDelegate;
+    private final CloudConfiguratorDelegate<StandaloneCloudBuilder> cloudConfiguratorDelegate;
 
 
     StandaloneCloudBuilder(CoreConfiguration coreConfiguration,
@@ -62,22 +66,20 @@ public class StandaloneCloudBuilder
 
     @Override
     public Runner build() {
-//        ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
-//        registerTemplates();
-//        return RunnerCreator.create(
-//                buildPipeline(),
-//                connectionEngine.getAuditor(),
-//                connectionEngine.getAuditor(),
-//                connectionEngine.getTransactionWrapper().orElse(null),
-//                connectionEngine.getLockProvider(),
-//                coreConfiguratorDelegate.getCoreProperties(),
-//                buildEventPublisher(),
-//                getDependencyContext(),
-//                getCoreProperties().isThrowExceptionIfCannotObtainLock()
-//        );
-        return null;
-    }
+        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine();
 
+        registerTemplates();
+        return PipelineRunnerCreator.create(
+                buildPipeline(),
+                connectionEngine.getAuditWriter(),
+                connectionEngine.getTransactionWrapper().orElse(null),
+                connectionEngine.getExecutionPlanner(),
+                coreConfiguratorDelegate.getCoreConfiguration(),
+                buildEventPublisher(),
+                getDependencyContext(),
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+        );
+    }
 
     @Override
     public StandaloneCloudBuilder setApiKey(String apiKey) {
@@ -89,13 +91,4 @@ public class StandaloneCloudBuilder
         return cloudConfiguratorDelegate.setToken(token);
     }
 
-    @Override
-    public String getApiKey() {
-        return cloudConfiguratorDelegate.getApiKey();
-    }
-
-    @Override
-    public String getToken() {
-        return cloudConfiguratorDelegate.getToken();
-    }
 }

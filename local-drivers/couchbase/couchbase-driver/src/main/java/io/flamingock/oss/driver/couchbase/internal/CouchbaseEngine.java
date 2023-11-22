@@ -21,13 +21,13 @@ import com.couchbase.client.java.Collection;
 import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
 
 import java.util.Optional;
 
-public class CouchbaseEngine implements ConnectionEngine {
+public class CouchbaseEngine implements LocalConnectionEngine {
 
     private final Collection collection;
     private final Cluster cluster;

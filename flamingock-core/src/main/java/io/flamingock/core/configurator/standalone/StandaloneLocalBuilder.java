@@ -23,9 +23,9 @@ import io.flamingock.core.configurator.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
 import io.flamingock.core.driver.ConnectionDriver;
-import io.flamingock.core.driver.ConnectionEngine;
+import io.flamingock.core.driver.LocalConnectionEngine;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.core.runner.RunnerCreator;
+import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,25 +67,25 @@ public class StandaloneLocalBuilder
 
     @Override
     public Runner build() {
-        ConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
+        LocalConnectionEngine connectionEngine = getAndInitializeConnectionEngine();
         registerTemplates();
-        return RunnerCreator.create(
+        return PipelineRunnerCreator.create(
                 buildPipeline(),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
                 connectionEngine.getExecutionPlanner(),
-                coreConfiguratorDelegate.getCoreProperties(),
+                coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
-                getCoreProperties().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }
 
     @NotNull
-    private ConnectionEngine getAndInitilizeConnectionEngine() {
-        ConnectionEngine connectionEngine = localConfiguratorDelegate
+    private LocalConnectionEngine getAndInitializeConnectionEngine() {
+        LocalConnectionEngine connectionEngine = localConfiguratorDelegate
                 .getDriver()
-                .getConnectionEngine(coreConfiguratorDelegate.getCoreProperties(), localConfiguratorDelegate.getLocalProperties());
+                .getConnectionEngine(coreConfiguratorDelegate.getCoreConfiguration(), localConfiguratorDelegate.getLocalConfiguration());
         connectionEngine.initialize();
         return connectionEngine;
     }
@@ -105,8 +105,8 @@ public class StandaloneLocalBuilder
     }
 
     @Override
-    public LocalConfigurable getLocalProperties() {
-        return localConfiguratorDelegate.getLocalProperties();
+    public LocalConfigurable getLocalConfiguration() {
+        return localConfiguratorDelegate.getLocalConfiguration();
     }
 
 

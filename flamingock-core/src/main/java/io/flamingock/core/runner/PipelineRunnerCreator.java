@@ -17,7 +17,6 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.core.driver.audit.AuditWriter;
-import io.flamingock.core.driver.audit.AuditReader;
 import io.flamingock.core.configurator.CoreConfigurable;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.driver.execution.ExecutionPlanner;
@@ -28,9 +27,9 @@ import io.flamingock.core.pipeline.execution.StageExecutor;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.core.util.StringUtil;
 
-public final class RunnerCreator {
+public final class PipelineRunnerCreator {
 
-    private RunnerCreator() {
+    private PipelineRunnerCreator() {
     }
 
     private static StageExecutionContext buildExecutionContext(CoreConfigurable configuration) {
