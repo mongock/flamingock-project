@@ -44,16 +44,15 @@ public final class PipelineRunnerCreator {
                                 Runnable finalizer) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final StageExecutor stageExecutor = new StageExecutor(dependencyContext, auditWriter, transactionWrapper);
-        return new PipelineRunner(runnerId, executionPlanner, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
-            @Override
-            public void run() {
-                try {
-                    this.run(pipeline);
-                } finally {
-                    finalizer.run();
-                }
-            }
-        };
+        return new PipelineRunner(
+                runnerId,
+                pipeline,
+                executionPlanner,
+                stageExecutor,
+                buildExecutionContext(coreConfiguration),
+                eventPublisher,
+                isThrowExceptionIfCannotObtainLock,
+                finalizer);
     }
 
     private static StageExecutionContext buildExecutionContext(CoreConfigurable configuration) {

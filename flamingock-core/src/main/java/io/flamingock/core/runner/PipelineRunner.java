@@ -36,9 +36,13 @@ import io.flamingock.core.pipeline.execution.StageExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class PipelineRunner implements Runner {
+public class PipelineRunner implements Runner {
 
     private static final Logger logger = LoggerFactory.getLogger(PipelineRunner.class);
+
+    private final RunnerId runnerId;
+
+    private final Pipeline pipeline;
 
     private final ExecutionPlanner executionPlanner;
 
@@ -49,24 +53,27 @@ public abstract class PipelineRunner implements Runner {
     private final StageExecutor stageExecutor;
 
     private final StageExecutionContext stageExecutionContext;
-
-    private final RunnerId runnerId;
+    private final Runnable finalizer;
 
     public PipelineRunner(RunnerId runnerId,
+                          Pipeline pipeline,
                           ExecutionPlanner executionPlanner,
                           StageExecutor stageExecutor,
                           StageExecutionContext stageExecutionContext,
                           EventPublisher eventPublisher,
-                          boolean throwExceptionIfCannotObtainLock) {
+                          boolean throwExceptionIfCannotObtainLock,
+                          Runnable finalizer) {
         this.runnerId = runnerId;
+        this.pipeline = pipeline;
         this.executionPlanner = executionPlanner;
         this.stageExecutor = stageExecutor;
         this.stageExecutionContext = stageExecutionContext;
         this.eventPublisher = eventPublisher;
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
+        this.finalizer = finalizer;
     }
 
-    public void run(Pipeline pipeline) throws FlamingockException {
+    private void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publish(new PipelineStartedEvent());
         boolean keepLooping = true;
         do {
@@ -134,5 +141,14 @@ public abstract class PipelineRunner implements Runner {
         eventPublisher.publish(new StageFailedEvent(exception));
         eventPublisher.publish(new PipelineFailedEvent(exception));
         throw exception;
+    }
+
+    @Override
+    public void run() {
+        try {
+            this.run(pipeline);
+        } finally {
+            finalizer.run();
+        }
     }
 }
