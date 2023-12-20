@@ -83,7 +83,8 @@ public class StandaloneLocalBuilder
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
+                connectionEngine::close
         );
     }
 

@@ -33,14 +33,20 @@ import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.core.util.TimeService;
 import io.flamingock.core.util.http.Http;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class CloudConnectionEngine implements ConnectionEngine {
+    private static final Logger logger = LoggerFactory.getLogger(CloudConnectionEngine.class);
+
 
     private final CoreConfigurable coreConfiguration;
 
     private final CloudConfigurable cloudConfiguration;
+
     private final Http.RequestBuilderFactory requestBuilderFactory;
 
     private AuditWriter auditWriter;
@@ -105,5 +111,16 @@ public class CloudConnectionEngine implements ConnectionEngine {
     @Override
     public Optional<TransactionWrapper> getTransactionWrapper() {
         return Optional.empty();
+    }
+
+    @Override
+    public void close() {
+        if (requestBuilderFactory != null) {
+            try {
+                requestBuilderFactory.close();
+            } catch (IOException ex) {
+              logger.warn("Error closing request builder factory", ex);
+            }
+        }
     }
 }

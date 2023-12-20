@@ -74,7 +74,8 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
+                connectionEngine::close
         );
     }
 

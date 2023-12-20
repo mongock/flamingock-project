@@ -22,7 +22,7 @@ import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 
-public interface ConnectionEngine {
+public interface ConnectionEngine  extends AutoCloseable{
 
   void initialize(RunnerId runnerId);
 

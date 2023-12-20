@@ -40,13 +40,18 @@ public final class PipelineRunnerCreator {
                                 CoreConfigurable coreConfiguration,
                                 EventPublisher eventPublisher,
                                 DependencyContext dependencyContext,
-                                boolean isThrowExceptionIfCannotObtainLock) {
+                                boolean isThrowExceptionIfCannotObtainLock,
+                                Runnable finalizer) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final StageExecutor stageExecutor = new StageExecutor(dependencyContext, auditWriter, transactionWrapper);
         return new PipelineRunner(runnerId, executionPlanner, stageExecutor, buildExecutionContext(coreConfiguration), eventPublisher, isThrowExceptionIfCannotObtainLock) {
             @Override
             public void run() {
-                this.run(pipeline);
+                try {
+                    this.run(pipeline);
+                } finally {
+                    finalizer.run();
+                }
             }
         };
     }

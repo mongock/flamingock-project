@@ -69,19 +69,20 @@ public class StandaloneCloudBuilder
     public Runner build() {
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine(runnerId);
+        CloudConnectionEngine cloudEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine(runnerId);
 
         registerTemplates();
         return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(),
-                connectionEngine.getAuditWriter(),
-                connectionEngine.getTransactionWrapper().orElse(null),
-                connectionEngine.getExecutionPlanner(),
+                cloudEngine.getAuditWriter(),
+                cloudEngine.getTransactionWrapper().orElse(null),
+                cloudEngine.getExecutionPlanner(),
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
+                cloudEngine::close
         );
     }
 

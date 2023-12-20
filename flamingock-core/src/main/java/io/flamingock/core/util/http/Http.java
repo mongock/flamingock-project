@@ -63,7 +63,7 @@ public final class Http {
     }
 
 
-    public static class RequestBuilderFactory {
+    public static class RequestBuilderFactory implements AutoCloseable {
 
         private final CloseableHttpClient client;
 
@@ -76,6 +76,13 @@ public final class Http {
 
         public RequestBuilder getRequestBuilder(String host) {
             return new RequestBuilder(host, client, objectMapper);
+        }
+
+        @Override
+        public void close() throws IOException {
+            if(client != null) {
+                client.close();
+            }
         }
     }
 

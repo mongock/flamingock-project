@@ -66,18 +66,19 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
-        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine(runnerId);
+        CloudConnectionEngine cloudEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine(runnerId);
 
         return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(activeProfiles),
-                connectionEngine.getAuditWriter(),
-                connectionEngine.getTransactionWrapper().orElse(null),
-                connectionEngine.getExecutionPlanner(),
+                cloudEngine.getAuditWriter(),
+                cloudEngine.getTransactionWrapper().orElse(null),
+                cloudEngine.getExecutionPlanner(),
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
+                cloudEngine::close
         );
     }
 
