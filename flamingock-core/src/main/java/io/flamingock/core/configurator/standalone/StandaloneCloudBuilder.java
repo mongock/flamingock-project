@@ -16,19 +16,23 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
-import io.flamingock.core.engine.CloudConnectionEngine;
+import io.flamingock.core.configurator.core.CoreConfiguration;
+import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
+import io.flamingock.core.engine.cloud.CloudConnectionEngine;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StandaloneCloudBuilder
         extends AbstractStandaloneBuilder<StandaloneCloudBuilder>
         implements CloudConfigurator<StandaloneCloudBuilder> {
+    private static final Logger logger = LoggerFactory.getLogger(StandaloneCloudBuilder.class);
 
     private final CoreConfiguratorDelegate<StandaloneCloudBuilder> coreConfiguratorDelegate;
 
@@ -42,10 +46,9 @@ public class StandaloneCloudBuilder
                            DependencyInjectableContext dependencyInjectableContext) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
-        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, () -> this);
+        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(coreConfiguration, cloudConfiguration, () -> this);
 
     }
-
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -64,29 +67,43 @@ public class StandaloneCloudBuilder
 
     @Override
     public Runner build() {
-        CloudConnectionEngine connectionEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine();
+        RunnerId runnerId = RunnerId.generate();
+        logger.info("Generated runner id:  {}", runnerId);
+        CloudConnectionEngine cloudEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine(runnerId);
 
         registerTemplates();
         return PipelineRunnerCreator.create(
+                runnerId,
                 buildPipeline(),
-                connectionEngine.getAuditWriter(),
-                connectionEngine.getTransactionWrapper().orElse(null),
-                connectionEngine.getExecutionPlanner(),
+                cloudEngine.getAuditWriter(),
+                cloudEngine.getTransactionWrapper().orElse(null),
+                cloudEngine.getExecutionPlanner(),
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
+                cloudEngine::close
         );
     }
 
     @Override
-    public StandaloneCloudBuilder setApiKey(String apiKey) {
-        return cloudConfiguratorDelegate.setApiKey(apiKey);
+    public StandaloneCloudBuilder setHost(String host) {
+        return cloudConfiguratorDelegate.setHost(host);
     }
 
     @Override
-    public StandaloneCloudBuilder setToken(String token) {
-        return cloudConfiguratorDelegate.setToken(token);
+    public StandaloneCloudBuilder setService(String service) {
+        return cloudConfiguratorDelegate.setService(service);
+    }
+
+    @Override
+    public StandaloneCloudBuilder setClientId(String clientId) {
+        return cloudConfiguratorDelegate.setClientId(clientId);
+    }
+
+    @Override
+    public StandaloneCloudBuilder setClientSecret(String clientSecret) {
+        return cloudConfiguratorDelegate.setClientSecret(clientSecret);
     }
 
 }

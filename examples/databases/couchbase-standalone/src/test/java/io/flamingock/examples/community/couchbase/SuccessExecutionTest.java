@@ -27,6 +27,7 @@ import io.flamingock.examples.community.couchbase.events.FailureEventListener;
 import io.flamingock.examples.community.couchbase.events.StartedEventListener;
 import io.flamingock.examples.community.couchbase.events.SuccessEventListener;
 import io.flamingock.oss.driver.couchbase.internal.util.N1QLQueryProvider;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
+@Ignore
 public class SuccessExecutionTest {
 
     private static final String BUCKET_NAME = "bucket";

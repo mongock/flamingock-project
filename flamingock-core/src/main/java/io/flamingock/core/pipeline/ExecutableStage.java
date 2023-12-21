@@ -22,12 +22,19 @@ import java.util.List;
 import java.util.Objects;
 
 public class ExecutableStage {
+
+    private final String name;
     protected final List<? extends ExecutableTask> tasks;
     private final boolean parallel;
 
-    public ExecutableStage(List<? extends ExecutableTask> tasks, boolean parallel) {
+    public ExecutableStage(String name, List<? extends ExecutableTask> tasks, boolean parallel) {
+        this.name = name;
         this.tasks = tasks;
         this.parallel = parallel;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isParallel() {

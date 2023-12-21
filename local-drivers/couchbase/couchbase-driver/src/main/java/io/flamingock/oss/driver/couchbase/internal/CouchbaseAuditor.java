@@ -130,7 +130,7 @@ public class CouchbaseAuditor implements Auditor {
 
     @Override
     public AuditStageStatus getAuditStageStatus() {
-        AuditStageStatus.Builder builder = AuditStageStatus.builder();
+        AuditStageStatus.EntryBuilder builder = AuditStageStatus.entryBuilder();
         QueryResult result = cluster.query(
                 N1QLQueryProvider.selectAllChangesQuery(collection.bucketName(), collection.scopeName(),
                         collection.name()),

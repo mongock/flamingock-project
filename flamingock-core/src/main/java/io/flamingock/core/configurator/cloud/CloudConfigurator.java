@@ -18,8 +18,12 @@ package io.flamingock.core.configurator.cloud;
 
 public interface CloudConfigurator<HOLDER> {
 
-    HOLDER setApiKey(String apiKey);
+    HOLDER setHost(String host);
 
-    HOLDER setToken(String token);
+    HOLDER setService(String service);
+
+    HOLDER setClientId(String clientId);
+
+    HOLDER setClientSecret(String clientSecret);
 
 }

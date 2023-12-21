@@ -17,11 +17,16 @@
 package io.flamingock.oss.driver.couchbase.internal.util;
 
 import com.couchbase.client.java.json.JsonObject;
-import io.flamingock.core.engine.lock.LockEntry;
+import io.flamingock.core.engine.lock.LockAcquisition;
+import io.flamingock.community.internal.lock.LockEntry;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.engine.lock.LockStatus;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.util.TimeUtil;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static io.flamingock.community.internal.AuditEntryField.KEY_AUTHOR;
 import static io.flamingock.community.internal.AuditEntryField.KEY_CHANGELOG_CLASS;
@@ -66,5 +71,13 @@ public final class CouchBaseUtil {
                 jsonObject.containsKey(STATUS_FIELD) ? LockStatus.valueOf(jsonObject.getString(STATUS_FIELD)) : null,
                 jsonObject.getString(OWNER_FIELD),
                 TimeUtil.toLocalDateTime(jsonObject.getLong(EXPIRES_AT_FIELD)));
+    }
+
+    public static LockAcquisition lockAcquisitionFromEntity(JsonObject jsonObject) {
+
+        long expiration = TimeUtil.toLocalDateTime(jsonObject.getLong(EXPIRES_AT_FIELD)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long diffMillis = expiration - now;
+        return new LockAcquisition(RunnerId.fromString(jsonObject.getString(OWNER_FIELD)), diffMillis);
     }
 }

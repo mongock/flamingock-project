@@ -18,12 +18,12 @@ package io.flamingock.core.pipeline;
 
 import io.flamingock.core.task.filter.TaskFilter;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Pipeline {
@@ -33,12 +33,15 @@ public class Pipeline {
     }
     private final List<Stage> stages;
 
-    private Pipeline(List<Stage> stages) {
+    private Pipeline(List< Stage> stages) {
         this.stages = stages;
     }
 
-    public List<Stage> getStages() {
-        return stages;
+    public List<LoadedStage> getLoadedStages() {
+        return stages
+                .stream()
+                .map(Stage::load)
+                .collect(Collectors.toList());
     }
 
 

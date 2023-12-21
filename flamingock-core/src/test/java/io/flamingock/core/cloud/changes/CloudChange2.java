@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v2.internal;
+package io.flamingock.core.cloud.changes;
 
-import com.mongodb.client.MongoDatabase;
-import io.flamingock.oss.driver.mongodb.v3.internal.Mongo3LockRepository;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
+import io.utils.TaskExecutionChecker;
 
-public class SpringDataMongoV2LockRepository extends Mongo3LockRepository {
+@ChangeUnit(id = "create-persons-table-from-template-2", order = "2")
+public class CloudChange2 {
+    public static final TaskExecutionChecker checker = new TaskExecutionChecker();
 
-    protected SpringDataMongoV2LockRepository(MongoDatabase mongoDatabase, String lockCollectionName) {
-        super(mongoDatabase, lockCollectionName);
+    @Execution
+    public void execution() {
+        checker.markExecution();
     }
+
+
 }

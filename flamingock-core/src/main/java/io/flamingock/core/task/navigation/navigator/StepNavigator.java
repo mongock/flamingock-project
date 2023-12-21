@@ -97,7 +97,7 @@ public class StepNavigator {
             // Main execution
             TaskStep executedStep = transactionWrapper != null && task.getDescriptor().isTransactional()
                     ? executeWithinTransaction(task, stageExecutionContext, runtimeManager)
-                    : auditExecution(executeTask(task), stageExecutionContext, LocalDateTime.now());
+                    : performAuditExecution(executeTask(task), stageExecutionContext, LocalDateTime.now());
 
 
             return executedStep instanceof RollableFailedStep
@@ -112,15 +112,24 @@ public class StepNavigator {
         }
     }
 
-    private TaskStep executeWithinTransaction(ExecutableTask task, StageExecutionContext stageExecutionContext, DependencyInjectable dependencyInjectable) {
+    private TaskStep executeWithinTransaction(ExecutableTask task,
+                                              StageExecutionContext stageExecutionContext,
+                                              DependencyInjectable dependencyInjectable) {
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
             ExecutionStep executed = executeTask(task);
             if (executed instanceof SuccessExecutionStep) {
-                AfterExecutionAuditStep afterExecutionAuditStep = auditExecution(executed, stageExecutionContext, LocalDateTime.now());
-                if (afterExecutionAuditStep instanceof CompletedSuccessStep) {
-                    return afterExecutionAuditStep;
+                AfterExecutionAuditStep executionAuditResult = performAuditExecution(executed, stageExecutionContext, LocalDateTime.now());
+                if (executionAuditResult instanceof CompletedSuccessStep) {
+                    // TODO in cloud with eventual transaction,
+                    //  we must clean the local_transaction_status
+
+                    // TODO in parallel to this, we need to send in the executionPlanner if we left
+                    //  any pending job, so he can introduce it in the plan, in case it's marked as
+                    //  executed
+                    return executionAuditResult;
                 }
             }
+
             //if it goes through here, it's failed, and it will be rolled back
             return new CompleteAutoRolledBackStep(task, true);
         });
@@ -141,7 +150,9 @@ public class StepNavigator {
         return executed;
     }
 
-    private AfterExecutionAuditStep auditExecution(ExecutionStep executionStep, StageExecutionContext stageExecutionContext, LocalDateTime executedAt) {
+    private AfterExecutionAuditStep performAuditExecution(ExecutionStep executionStep,
+                                                          StageExecutionContext stageExecutionContext,
+                                                          LocalDateTime executedAt) {
         RuntimeContext runtimeContext = RuntimeContext.builder().setTaskStep(executionStep).setExecutedAt(executedAt).build();
 
         Result auditResult = auditWriter.writeStep(new AuditItem(AuditItem.Operation.EXECUTION, executionStep.getTaskDescriptor(), stageExecutionContext, runtimeContext));

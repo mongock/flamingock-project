@@ -33,12 +33,15 @@ import java.util.stream.Collectors;
  */
 public class LoadedStage {
 
+    private final String name;
+
     private final Collection<? extends TaskDescriptor> taskDescriptors;
     private final boolean parallel;
 
     private final ParentExecutableTaskFactory factory;
 
-    public LoadedStage(Collection<? extends TaskDescriptor> taskDescriptors, boolean parallel) {
+    public LoadedStage(String name, Collection<? extends TaskDescriptor> taskDescriptors, boolean parallel) {
+        this.name = name;
         this.taskDescriptors = taskDescriptors;
         this.parallel = parallel;
         factory = ParentExecutableTaskFactory.INSTANCE;
@@ -54,7 +57,18 @@ public class LoadedStage {
                 .flatMap(List::stream)
                 .collect(Collectors.toCollection(LinkedList::new));
 
-        return new ExecutableStage(tasks, parallel);
+        return new ExecutableStage(name, tasks, parallel);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Collection<? extends TaskDescriptor> getTaskDescriptors() {
+        return taskDescriptors;
+    }
+
+    public boolean isParallel() {
+        return parallel;
+    }
 }

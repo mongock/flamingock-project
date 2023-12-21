@@ -18,6 +18,7 @@ package io.flamingock.oss.driver.mongodb.springdata.v4.internal;
 
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
@@ -54,18 +55,22 @@ public class SpringDataMongoV4Engine implements LocalConnectionEngine {
     }
 
     @Override
-    public void initialize() {
+    public void initialize(RunnerId runnerId) {
         ReadWriteConfiguration readWriteConfiguration = new ReadWriteConfiguration(driverConfiguration.getBuiltMongoDBWriteConcern(),
                     new ReadConcern(driverConfiguration.getReadConcern()),
                     driverConfiguration.getReadPreference().getValue());
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new SpringDataMongoV4TransactionWrapper(mongoTemplate, readWriteConfiguration) : null;
-        auditor = new SpringDataMongoV4Auditor(mongoTemplate,
+        auditor = new SpringDataMongoV4Auditor(
+                mongoTemplate,
                 driverConfiguration.getMigrationRepositoryName(),
                 readWriteConfiguration);
         auditor.initialize(driverConfiguration.isIndexCreation());
-        SpringDataMongoV4LockRepository lockRepository = new SpringDataMongoV4LockRepository(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
-        lockRepository.initialize(driverConfiguration.isIndexCreation());
-        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
+        SpringDataMongoV4LockService lockService = new SpringDataMongoV4LockService(
+                mongoTemplate.getDb(),
+                driverConfiguration.getLockRepositoryName(),
+                readWriteConfiguration);
+        lockService.initialize(driverConfiguration.isIndexCreation());
+        executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }
 
     @Override

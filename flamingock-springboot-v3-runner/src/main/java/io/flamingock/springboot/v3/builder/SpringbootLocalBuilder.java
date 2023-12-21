@@ -24,6 +24,7 @@ import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.PipelineRunnerCreator;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -57,12 +58,15 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     ///////////////////////////////////////////////////////////////////////////////////
     @Override
     public Runner build() {
-        LocalConnectionEngine connectionEngine = getAndInitilizeConnectionEngine();
+        RunnerId runnerId = RunnerId.generate();
+        logger.info("Generated runner id:  {}", runnerId);
+        LocalConnectionEngine connectionEngine = getAndInitializeConnectionEngine(runnerId);
 
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
         return PipelineRunnerCreator.create(
+                runnerId,
                 buildPipeline(activeProfiles),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
@@ -70,7 +74,8 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
+                connectionEngine::close
         );
     }
 
@@ -80,11 +85,11 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     }
 
     @NotNull
-    private LocalConnectionEngine getAndInitilizeConnectionEngine() {
+    private LocalConnectionEngine getAndInitializeConnectionEngine(RunnerId runnerId) {
         LocalConnectionEngine connectionEngine = localConfiguratorDelegate
                 .getDriver()
                 .getConnectionEngine(getCoreConfiguration(), localConfiguratorDelegate.getLocalConfiguration());
-        connectionEngine.initialize();
+        connectionEngine.initialize(runnerId);
         return connectionEngine;
     }
 

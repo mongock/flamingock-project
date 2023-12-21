@@ -17,9 +17,10 @@
 package io.flamingock.community.internal.lock;
 
 import io.flamingock.core.engine.lock.Lock;
+import io.flamingock.core.engine.lock.LockAcquisition;
 import io.flamingock.core.engine.lock.LockException;
-import io.flamingock.core.engine.lock.LockRepositoryException;
-import io.flamingock.core.engine.lock.LockRepository;
+import io.flamingock.core.engine.lock.LockServiceException;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.util.TimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +33,12 @@ public class LocalLock extends Lock {
 
 
     public static Lock getLock(long leaseMillis,
-                        long stopTryingAfterMillis,
-                        long retryFrequencyMillis,
-                        String owner,
-                        LockRepository lockRepository,
-                        TimeService timeService) {
-        LocalLock lock = new LocalLock(leaseMillis, stopTryingAfterMillis, retryFrequencyMillis, owner, lockRepository, timeService);
+                               long stopTryingAfterMillis,
+                               long retryFrequencyMillis,
+                               RunnerId owner,
+                               LocalLockService lockService,
+                               TimeService timeService) {
+        LocalLock lock = new LocalLock(leaseMillis, stopTryingAfterMillis, retryFrequencyMillis, owner, lockService, timeService);
         lock.acquire();
         return lock;
 
@@ -47,10 +48,14 @@ public class LocalLock extends Lock {
     private LocalLock(long leaseMillis,
                       long stopTryingAfterMillis,
                       long retryFrequencyMillis,
-                      String owner,
-                      LockRepository lockRepository,
+                      RunnerId owner,
+                      LocalLockService lockService,
                       TimeService timeService) {
-        super(leaseMillis, stopTryingAfterMillis, retryFrequencyMillis, owner, lockRepository, timeService);
+        super(owner, new LocalLockKey("DEFAULT_KEY"), leaseMillis, stopTryingAfterMillis, retryFrequencyMillis, lockService, timeService);
+    }
+
+    private LocalLockService getLockService() {
+        return (LocalLockService) lockService;
     }
 
 
@@ -65,11 +70,10 @@ public class LocalLock extends Lock {
         do {
             try {
                 logger.info("Flamingock trying to acquire the lock");
-                synchronized (this) {
-                    extendOrCreateNewLock(true);
-                    keepLooping = false;
-                }
-            } catch (LockRepositoryException ex) {
+                LockAcquisition lockAcquisition = getLockService().upsert(lockKey, owner, leaseMillis);
+                updateLease(lockAcquisition.getAcquiredForMillis());
+                keepLooping = false;
+            } catch (LockServiceException ex) {
                 handleLockException(true, shouldStopTryingAt, ex);
             }
 

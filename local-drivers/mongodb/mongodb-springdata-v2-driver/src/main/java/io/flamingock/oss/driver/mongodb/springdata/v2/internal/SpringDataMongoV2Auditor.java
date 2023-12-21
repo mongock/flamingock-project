@@ -20,15 +20,15 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
+import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
+import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.core.util.Result;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.internal.mongodb.SpringDataMongoV2CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.springdata.v2.internal.mongodb.SpringDataMongoV2DocumentWrapper;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
-import io.flamingock.core.engine.local.Auditor;
-import io.flamingock.core.engine.audit.writer.AuditEntry;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
@@ -43,15 +43,15 @@ import static io.flamingock.community.internal.AuditEntryField.KEY_CHANGE_ID;
 import static io.flamingock.community.internal.AuditEntryField.KEY_EXECUTION_ID;
 
 public class SpringDataMongoV2Auditor implements Auditor {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(SpringDataMongoV2Auditor.class);
 
     private final MongoCollection<Document> collection;
     private final MongoDBAuditMapper<SpringDataMongoV2DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new SpringDataMongoV2DocumentWrapper(new Document()));
 
     SpringDataMongoV2Auditor(MongoTemplate mongoTemplate,
-                      String collectionName,
-                      ReadWriteConfiguration readWriteConfiguration) {
+                             String collectionName,
+                             ReadWriteConfiguration readWriteConfiguration) {
         this.collection = mongoTemplate.getCollection(collectionName)
                 .withReadConcern(readWriteConfiguration.getReadConcern())
                 .withReadPreference(readWriteConfiguration.getReadPreference())
@@ -64,7 +64,7 @@ public class SpringDataMongoV2Auditor implements Auditor {
                 () -> new SpringDataMongoV2DocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_AUTHOR, KEY_CHANGE_ID}
         );
-        if(indexCreation) {
+        if (indexCreation) {
             initializer.initialize();
         } else {
             initializer.justValidateCollection();
@@ -93,7 +93,7 @@ public class SpringDataMongoV2Auditor implements Auditor {
 
     @Override
     public AuditStageStatus getAuditStageStatus() {
-        AuditStageStatus.Builder builder = AuditStageStatus.builder();
+        AuditStageStatus.EntryBuilder builder = AuditStageStatus.entryBuilder();
         collection.find()
                 .into(new LinkedList<>())
                 .stream()

@@ -106,11 +106,6 @@ public class CoreConfiguration implements CoreConfigurable {
     }
 
     @Override
-    public void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
-        lockConfiguration.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
-    }
-
-    @Override
     public void setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
         lockConfiguration.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
@@ -118,6 +113,22 @@ public class CoreConfiguration implements CoreConfigurable {
     @Override
     public void setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
         lockConfiguration.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+    }
+
+    @Override
+    public void setLockQuitTryingAfterMillis(long lockQuitTryingAfterMillis) {
+        lockConfiguration.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+    }
+
+
+    @Override
+    public void setEnableRefreshDaemon(boolean enableRefreshDaemon) {
+        lockConfiguration.setEnableRefreshDaemon(enableRefreshDaemon);
+    }
+
+    @Override
+    public boolean isEnableRefreshDaemon() {
+        return lockConfiguration.isEnableRefreshDaemon();
     }
 
     @Override
@@ -269,17 +280,21 @@ public class CoreConfiguration implements CoreConfigurable {
         private long lockTryFrequencyMillis = DEFAULT_TRY_FREQUENCY_MILLIS;
 
         /**
-         * Mongock will throw MongockException if lock can not be obtained. Default true
+         * Flamingock will throw MongockException if lock can not be obtained. Default true
          */
         private boolean throwExceptionIfCannotObtainLock = true;
 
+        /**
+         * Flamingock will run a daemon thread in charge of refreshing the lock
+         */
+        private boolean enableRefreshDaemon = true;
 
 
         public void setLockAcquiredForMillis(long lockAcquiredForMillis) {
             this.lockAcquiredForMillis = lockAcquiredForMillis;
         }
 
-        public void setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
+        public void setLockQuitTryingAfterMillis(long lockQuitTryingAfterMillis) {
             this.lockQuitTryingAfterMillis = lockQuitTryingAfterMillis;
         }
 
@@ -291,6 +306,9 @@ public class CoreConfiguration implements CoreConfigurable {
             this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
         }
 
+        public void setEnableRefreshDaemon(boolean enableRefreshDaemon) {
+            this.enableRefreshDaemon = enableRefreshDaemon;
+        }
 
         public long getLockAcquiredForMillis() {
             return lockAcquiredForMillis;
@@ -308,6 +326,8 @@ public class CoreConfiguration implements CoreConfigurable {
             return throwExceptionIfCannotObtainLock;
         }
 
-
+        public boolean isEnableRefreshDaemon() {
+            return enableRefreshDaemon;
+        }
     }
 }

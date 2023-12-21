@@ -93,7 +93,7 @@ public class SpringDataMongoV4Auditor implements Auditor {
 
     @Override
     public AuditStageStatus getAuditStageStatus() {
-        AuditStageStatus.Builder builder = AuditStageStatus.builder();
+        AuditStageStatus.EntryBuilder builder = AuditStageStatus.entryBuilder();
         collection.find()
                 .into(new LinkedList<>())
                 .stream()

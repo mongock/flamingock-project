@@ -16,6 +16,8 @@
 
 package io.flamingock.core.util;
 
+import org.jetbrains.annotations.TestOnly;
+
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,6 +28,17 @@ import java.util.Date;
  * Extending `TimeUtil` to avoid hard coding instances(Instant.now, LocalDateTime.now(), etc.)
  */
 public class TimeService {
+
+  private static TimeService defaultInstance = new TimeService();
+
+  public static TimeService getDefault() {
+    return defaultInstance;
+  }
+
+  @TestOnly
+  public static void setDefault(TimeService newDefault) {
+    defaultInstance = newDefault;
+  }
 
   /**
    * @param millis milliseconds to add to the Date
@@ -69,5 +82,9 @@ public class TimeService {
 
   public boolean isPast(LocalDateTime dateTime) {
     return currentDateTime().isAfter(dateTime);
+  }
+
+  public long daysToMills(int days) {
+    return (long) days * 24 * 60 * 60 * 1000 ;
   }
 }

@@ -22,7 +22,9 @@ import io.flamingock.community.internal.LocalExecutionPlanner;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
+import io.flamingock.core.util.TimeService;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
 
 import java.util.Optional;
@@ -52,12 +54,12 @@ public class CouchbaseEngine implements LocalConnectionEngine {
     }
 
     @Override
-    public void initialize() {
+    public void initialize(RunnerId runnerId) {
         auditor = new CouchbaseAuditor(cluster, collection);
         auditor.initialize(driverConfiguration.isIndexCreation());
-        CouchbaseLockRepository lockRepository = new CouchbaseLockRepository(cluster, collection);
-        lockRepository.initialize(driverConfiguration.isIndexCreation());
-        executionPlanner = new LocalExecutionPlanner(lockRepository, auditor, coreConfiguration);
+        CouchbaseLockService lockService = new CouchbaseLockService(cluster, collection, TimeService.getDefault());
+        lockService.initialize(driverConfiguration.isIndexCreation());
+        executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }
 
     @Override

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.lock;
+package io.flamingock.community.internal.lock;
+
+import io.flamingock.core.engine.lock.LockStatus;
 
 import java.time.LocalDateTime;
 import java.util.Date;

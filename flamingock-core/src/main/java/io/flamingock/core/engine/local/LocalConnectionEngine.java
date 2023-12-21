@@ -23,4 +23,7 @@ public interface LocalConnectionEngine extends ConnectionEngine {
 
   Auditor getAuditor();
 
+  @Override
+  default void close() {}
+
 }

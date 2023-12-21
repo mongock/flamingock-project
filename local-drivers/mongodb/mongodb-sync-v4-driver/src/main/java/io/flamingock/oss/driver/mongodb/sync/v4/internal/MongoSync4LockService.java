@@ -19,18 +19,26 @@ package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.ErrorCategory;
 import com.mongodb.MongoWriteException;
+import com.mongodb.ReadConcern;
+import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
-import io.flamingock.core.engine.lock.LockEntry;
-import io.flamingock.core.engine.lock.LockRepositoryException;
-import io.flamingock.core.engine.lock.LockRepository;
+import io.flamingock.community.internal.lock.LocalLockService;
+import io.flamingock.core.engine.lock.LockAcquisition;
+import io.flamingock.community.internal.lock.LockEntry;
+import io.flamingock.core.engine.lock.LockKey;
+import io.flamingock.core.engine.lock.LockServiceException;
+import io.flamingock.core.runner.RunnerId;
+import io.flamingock.core.util.TimeService;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBLockMapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
+import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -42,15 +50,23 @@ import static io.flamingock.community.internal.lock.LockEntryField.OWNER_FIELD;
 import static io.flamingock.community.internal.lock.LockEntryField.STATUS_FIELD;
 import static io.flamingock.core.engine.lock.LockStatus.LOCK_HELD;
 
-public class MongoSync4LockRepository implements LockRepository {
+public class MongoSync4LockService implements LocalLockService {
 
     private final MongoDBLockMapper<MongoSync4DocumentWrapper> mapper = new MongoDBLockMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
 
 
     private final MongoCollection<Document> collection;
+    private final TimeService timeService;
 
-    protected MongoSync4LockRepository(MongoDatabase mongoDatabase, String lockCollectionName) {
-        this.collection = mongoDatabase.getCollection(lockCollectionName);
+    protected MongoSync4LockService(MongoDatabase mongoDatabase,
+                                    String lockCollectionName,
+                                    ReadWriteConfiguration readWriteConfiguration,
+                                    TimeService timeService) {
+        this.collection = mongoDatabase.getCollection(lockCollectionName)
+                .withReadConcern(readWriteConfiguration.getReadConcern())
+                .withReadPreference(readWriteConfiguration.getReadPreference())
+                .withWriteConcern(readWriteConfiguration.getWriteConcern());
+        this.timeService = timeService;
     }
 
     public void initialize(boolean indexCreation) {
@@ -66,19 +82,24 @@ public class MongoSync4LockRepository implements LockRepository {
         }
     }
 
+
     @Override
-    public void upsert(LockEntry newLock) throws LockRepositoryException {
+    public LockAcquisition upsert(LockKey key, RunnerId owner, long leaseMillis) {
+        LockEntry newLock = new LockEntry(key.toString(), LOCK_HELD, owner.toString(), timeService.currentDatePlusMillis(leaseMillis));
         insertUpdate(newLock, false);
+        return new LockAcquisition(owner, leaseMillis);
     }
 
     @Override
-    public void updateOnlyIfSameOwner(LockEntry newLock) throws LockRepositoryException {
+    public LockAcquisition extendLock(LockKey key, RunnerId owner, long leaseMillis) throws LockServiceException {
+        LockEntry newLock = new LockEntry(key.toString(), LOCK_HELD, owner.toString(), timeService.currentDatePlusMillis(leaseMillis));
         insertUpdate(newLock, true);
+        return new LockAcquisition(owner, leaseMillis);
     }
 
     @Override
-    public LockEntry findByKey(String lockKey) {
-        Document result = collection.find(new Document().append(KEY_FIELD, lockKey)).first();
+    public LockAcquisition getLock(LockKey lockKey) {
+        Document result = collection.find(new Document().append(KEY_FIELD, lockKey.toString())).first();
         if (result != null) {
             return mapper.fromDocument(new MongoSync4DocumentWrapper(result));
         }
@@ -86,15 +107,9 @@ public class MongoSync4LockRepository implements LockRepository {
     }
 
     @Override
-    public void removeByKeyAndOwner(String lockKey, String owner) {
-        collection.deleteMany(Filters.and(Filters.eq(KEY_FIELD, lockKey), Filters.eq(OWNER_FIELD, owner)));
+    public void releaseLock(LockKey lockKey, RunnerId owner) {
+        collection.deleteMany(Filters.and(Filters.eq(KEY_FIELD, lockKey.toString()), Filters.eq(OWNER_FIELD, owner.toString())));
     }
-
-    @Override
-    public void deleteAll() {
-        collection.deleteMany(new Document());
-    }
-
 
     protected void insertUpdate(LockEntry newLock, boolean onlyIfSameOwner)  {
         boolean lockHeld;
@@ -120,7 +135,7 @@ public class MongoSync4LockRepository implements LockRepository {
         }
 
         if (lockHeld) {
-            throw new LockRepositoryException(
+            throw new LockServiceException(
                     acquireLockQuery.toString(),
                     newLockDocumentSet.toString(),
                     debErrorDetail

@@ -17,6 +17,7 @@
 package io.flamingock.core.engine.lock;
 
 
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.util.TimeService;
 import io.flamingock.core.util.TimeUtil;
 import org.slf4j.Logger;
@@ -32,16 +33,16 @@ public class Lock {
 
     private static final Logger logger = LoggerFactory.getLogger(Lock.class);
 
-    protected static final String DEFAULT_KEY = "DEFAULT_KEY";
     public static final String LOG_EXPIRED_TEMPLATE = "Lock[{}] not refreshed at[{}] because the it's canceled/expired[{}]";
 
+    protected final LockKey lockKey;
 
     //injections
-    protected final LockRepository lockRepository;
+    protected final LockService lockService;
 
     protected final TimeService timeService;
 
-    protected final String owner;
+    protected final RunnerId owner;
 
     protected final long leaseMillis;
 
@@ -55,20 +56,21 @@ public class Lock {
     protected volatile LocalDateTime expiresAt;
 
 
-    public Lock(long leaseMillis,
-                      long stopTryingAfterMillis,
-                      long retryFrequencyMillis,
-                      String owner,
-                      LockRepository lockRepository,
-                      TimeService timeService) {
+    public Lock(RunnerId owner,
+                LockKey lockKey,
+                long leaseMillis,
+                long stopTryingAfterMillis,
+                long retryFrequencyMillis,
+                LockService lockService,
+                TimeService timeService) {
+        this.lockKey = lockKey;
         this.leaseMillis = leaseMillis;
         this.stopTryingAfterMillis = stopTryingAfterMillis;
         this.retryFrequencyMillis = retryFrequencyMillis;
         this.owner = owner;
-        this.lockRepository = lockRepository;
+        this.lockService = lockService;
         this.timeService = timeService;
     }
-
 
 
     /**
@@ -81,7 +83,7 @@ public class Lock {
      *
      * @throws LockException if it cannot be ensured. Either is expired or, close to be expired and cannot be extended.
      */
-    public void ensure() throws LockException {
+    public final void ensure() throws LockException {
         logger.debug("Ensuring the lock");
         boolean ensured = false;
         Instant shouldStopTryingAt = timeService.nowPlusMillis(stopTryingAfterMillis);
@@ -95,8 +97,8 @@ public class Lock {
             LocalDateTime threshold = expiresAt().minus(margin, MILLIS);
             if (timeService.currentDateTime().isAfter(threshold)) {
                 try {
-                    ensured = refresh();
-                } catch (LockRepositoryException ex) {
+                    ensured = extend();
+                } catch (LockServiceException ex) {
                     handleLockException(false, shouldStopTryingAt, ex);
                 }
             } else {
@@ -113,7 +115,7 @@ public class Lock {
      * of a release process, or it's already released.
      * @throws LockException if there is any problem refreshing the lock or it's not acquired at all.
      */
-    public boolean refresh() throws LockException {
+    public final boolean extend() throws LockException {
         if (isExpired()) {
             logger.info(LOG_EXPIRED_TEMPLATE, owner, timeService.currentDateTime(), expiresAt());
             return false;
@@ -125,7 +127,8 @@ public class Lock {
                     logger.info(LOG_EXPIRED_TEMPLATE, owner, timeService.currentDateTime(), expiresAt());
                     return false;
                 }
-                extendOrCreateNewLock(false);
+                LockAcquisition lockAcquisition = lockService.extendLock(lockKey, owner, leaseMillis);
+                updateLease(lockAcquisition.getAcquiredForMillis());
                 logger.debug("Flamingock refreshed the lock until: {}", expiresAt());
                 return true;
             }
@@ -141,22 +144,21 @@ public class Lock {
      * Otherwise, a race condition where a process A ensures the lock, starts a task that takes 2 seconds, but before finishing,
      * the lock is released(closed) and another instances acquire the lock, before process A has finished.
      */
-    public void release() {
+    public final void release() {
         logger.info("Flamingock waiting to release the lock");
         synchronized (this) {
             try {
                 logger.info("Flamingock releasing the lock");
                 logger.debug("Flamingock expiring the lock");
-                setExpiresAt(LocalDateTime.now().minusDays(1));//forces expiring
+                updateLease(timeService.daysToMills(-1));//forces expiring
                 logger.debug("Flamingock removing the lock from database");
-                lockRepository.removeByKeyAndOwner(DEFAULT_KEY, owner);
+                lockService.releaseLock(lockKey, owner);
                 logger.info("Flamingock released the lock");
             } catch (Exception ex) {
-                logger.warn("Error removing the lock from database", ex);
+                logger.warn("Error removing the lock. Doesn't need manually intervention.", ex);
             }
         }
     }
-
 
 
     public LocalDateTime expiresAt() {
@@ -164,15 +166,12 @@ public class Lock {
     }
 
 
-    private void setExpiresAt(LocalDateTime dateTime) {
-        if (dateTime == null) {
-            throw new IllegalArgumentException("expiresAt cannot be null");
-        }
-        expiresAt = dateTime;
+    protected final void updateLease(long leaseMillis) {
+        expiresAt = timeService.currentDatePlusMillis(leaseMillis);
     }
 
 
-    public boolean isExpired() {
+    public final boolean isExpired() {
         return timeService.isPast(expiresAt());
     }
 
@@ -187,25 +186,8 @@ public class Lock {
                 '}';
     }
 
-
-    protected void extendOrCreateNewLock(boolean createNewLockIfNotExisting) throws LockRepositoryException {
-        LocalDateTime expiresAt1 = timeService.currentDatePlusMillis(leaseMillis);
-        final LockEntry newEntry = new LockEntry(
-                DEFAULT_KEY,
-                LockStatus.LOCK_HELD,
-                owner,
-                expiresAt1);
-
-        if (createNewLockIfNotExisting) {
-            lockRepository.upsert(newEntry);
-        } else {
-            lockRepository.updateOnlyIfSameOwner(newEntry);
-        }
-        setExpiresAt(newEntry.getExpiresAt());
-    }
-
-    protected void handleLockException(boolean acquiringLock, Instant shouldStopTryingAt, LockRepositoryException ex) {
-        LockEntry currentLock = lockRepository.findByKey(DEFAULT_KEY);
+    protected void handleLockException(boolean acquiringLock, Instant shouldStopTryingAt, LockServiceException ex) {
+        LockAcquisition currentLock = lockService.getLock(lockKey);
         if (timeService.isPast(shouldStopTryingAt)) {
             throw new LockException(String.format(
                     "Quit trying lock after %s millis due to LockPersistenceException: \n\tcurrent lock:  %s\n\tnew lock: %s\n\tacquireLockQuery: %s\n\tdb error detail: %s",
@@ -213,12 +195,12 @@ public class Lock {
                     currentLock != null ? currentLock.toString() : "none",
                     ex.getNewLockEntity(),
                     ex.getAcquireLockQuery(),
-                    ex.getDbErrorDetail()));
+                    ex.getErrorDetail()));
         }
 
-        final boolean isLockOwnedByOtherProcess = currentLock != null && !currentLock.isOwner(owner);
+        final boolean isLockOwnedByOtherProcess = currentLock != null && !currentLock.doesBelongTo(owner);
         if (isLockOwnedByOtherProcess) {
-            LocalDateTime currentLockExpiresAt = currentLock.getExpiresAt();
+            LocalDateTime currentLockExpiresAt = LocalDateTime.now().plus(currentLock.getAcquiredForMillis(), MILLIS);
             logger.warn("Lock is taken by other process until: {}", currentLockExpiresAt);
             if (!acquiringLock) {
                 throw new LockException(String.format(
@@ -226,7 +208,7 @@ public class Lock {
                         currentLock,
                         ex.getNewLockEntity(),
                         ex.getAcquireLockQuery(),
-                        ex.getDbErrorDetail()));
+                        ex.getErrorDetail()));
             }
             waitForLock(currentLockExpiresAt);
         }

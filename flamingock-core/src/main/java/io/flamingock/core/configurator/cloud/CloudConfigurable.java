@@ -18,15 +18,23 @@ package io.flamingock.core.configurator.cloud;
 
 public interface CloudConfigurable {
 
+    default String getApiVersion() {
+        return "v1";
+    }
+
     void setHost(String host);
 
-    void setApiKey(String apiKey);
+    void setService(String service);
 
-    void setToken(String token);
+    void setClientId(String clientId);
 
-    String getApiKey();
+    void setClientSecret(String clientSecret);
 
-    String getToken();
+    String getClientId();
+
+    String getClientSecret();
 
     String getHost();
+
+    String getService();
 }

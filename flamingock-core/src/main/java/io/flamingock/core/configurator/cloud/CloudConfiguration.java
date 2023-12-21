@@ -18,10 +18,13 @@ package io.flamingock.core.configurator.cloud;
 
 public class CloudConfiguration implements CloudConfigurable {
 
-    private String apiKey;
+    private String clientId;
 
-    private String token;
+    private String clientSecret;
+
     private String host;
+
+    private String service;
 
     @Override
     public void setHost(String host) {
@@ -29,27 +32,37 @@ public class CloudConfiguration implements CloudConfigurable {
     }
 
     @Override
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
+    public void setService(String service) {
+        this.service = service;
     }
 
     @Override
-    public void setToken(String token) {
-        this.token = token;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     @Override
-    public String getApiKey() {
-        return apiKey;
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 
     @Override
-    public String getToken() {
-        return token;
+    public String getClientId() {
+        return clientId;
+    }
+
+    @Override
+    public String getClientSecret() {
+        return clientSecret;
     }
 
     @Override
     public String getHost() {
         return host;
+    }
+
+    @Override
+    public String getService() {
+        return service;
     }
 }

@@ -16,23 +16,27 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
+import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
-import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
-import io.flamingock.core.runner.Runner;
+import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.runner.PipelineRunnerCreator;
+import io.flamingock.core.runner.Runner;
+import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StandaloneLocalBuilder
         extends AbstractStandaloneBuilder<StandaloneLocalBuilder>
         implements LocalConfigurator<StandaloneLocalBuilder> {
 
+    private static final Logger logger = LoggerFactory.getLogger(StandaloneLocalBuilder.class);
     private final CoreConfiguratorDelegate<StandaloneLocalBuilder> coreConfiguratorDelegate;
 
     private final StandaloneConfiguratorDelegate<StandaloneLocalBuilder> standaloneConfiguratorDelegate;
@@ -48,7 +52,6 @@ public class StandaloneLocalBuilder
         this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
 
     }
-
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -67,9 +70,12 @@ public class StandaloneLocalBuilder
 
     @Override
     public Runner build() {
-        LocalConnectionEngine connectionEngine = getAndInitializeConnectionEngine();
+        RunnerId runnerId = RunnerId.generate();
+        logger.info("Generated runner id:  {}", runnerId);
+        LocalConnectionEngine connectionEngine = getAndInitializeConnectionEngine(runnerId);
         registerTemplates();
         return PipelineRunnerCreator.create(
+                runnerId,
                 buildPipeline(),
                 connectionEngine.getAuditor(),
                 connectionEngine.getTransactionWrapper().orElse(null),
@@ -77,16 +83,17 @@ public class StandaloneLocalBuilder
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
+                connectionEngine::close
         );
     }
 
     @NotNull
-    private LocalConnectionEngine getAndInitializeConnectionEngine() {
+    private LocalConnectionEngine getAndInitializeConnectionEngine(RunnerId runnerId) {
         LocalConnectionEngine connectionEngine = localConfiguratorDelegate
                 .getDriver()
                 .getConnectionEngine(coreConfiguratorDelegate.getCoreConfiguration(), localConfiguratorDelegate.getLocalConfiguration());
-        connectionEngine.initialize();
+        connectionEngine.initialize(runnerId);
         return connectionEngine;
     }
 
