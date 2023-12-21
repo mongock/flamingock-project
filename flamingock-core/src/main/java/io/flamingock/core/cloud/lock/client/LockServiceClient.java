@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.cloud.planner.client;
+package io.flamingock.core.cloud.lock.client;
 
-import io.flamingock.core.configurator.core.ServiceId;
-import io.flamingock.core.engine.cloud.planner.ExecutionPlanRequest;
-import io.flamingock.core.engine.cloud.planner.ExecutionPlanResponse;
+import io.flamingock.core.cloud.lock.LockExtensionRequest;
+import io.flamingock.core.cloud.lock.LockResponse;
+import io.flamingock.core.engine.lock.LockKey;
 import io.flamingock.core.runner.RunnerId;
 
-public interface ExecutionPlannerClient {
+public interface LockServiceClient {
 
+    LockResponse extendLock(LockKey lockKey,
+                            RunnerId runnerId,
+                            LockExtensionRequest lockRequest);
 
-    ExecutionPlanResponse createExecution(ServiceId serviceId,
-                                          RunnerId runnerId,
-                                          ExecutionPlanRequest request,
-                                          String lastAcquisitionId,
-                                          long elapsedMillis);
+    LockResponse getLock(LockKey lockKey);
+
+    void releaseLock(LockKey lockKey, RunnerId runnerId);
 }

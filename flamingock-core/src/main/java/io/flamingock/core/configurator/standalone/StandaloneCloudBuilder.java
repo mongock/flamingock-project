@@ -21,7 +21,7 @@ import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
-import io.flamingock.core.engine.cloud.CloudConnectionEngine;
+import io.flamingock.core.cloud.CloudConnectionEngine;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerId;

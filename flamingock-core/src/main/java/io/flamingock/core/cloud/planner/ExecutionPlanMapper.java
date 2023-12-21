@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.cloud.planner;
+package io.flamingock.core.cloud.planner;
 
+import io.flamingock.core.cloud.lock.CloudLockService;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
-import io.flamingock.core.engine.cloud.lock.CloudLockService;
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.LoadedStage;

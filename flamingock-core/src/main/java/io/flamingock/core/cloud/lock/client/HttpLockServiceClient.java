@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.cloud.lock.client;
+package io.flamingock.core.cloud.lock.client;
 
-import io.flamingock.core.engine.cloud.lock.LockExtensionRequest;
-import io.flamingock.core.engine.cloud.lock.LockResponse;
+import io.flamingock.core.cloud.lock.LockExtensionRequest;
+import io.flamingock.core.cloud.lock.LockResponse;
 import io.flamingock.core.engine.lock.LockKey;
 import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.util.http.Http;

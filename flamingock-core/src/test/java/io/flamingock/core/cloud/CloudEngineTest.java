@@ -18,7 +18,7 @@ package io.flamingock.core.cloud;
 
 import io.flamingock.core.cloud.utils.CloudMockBuilder;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
-import io.flamingock.core.engine.cloud.planner.ExecutionPlanResponse;
+import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.util.ThreadSleeper;

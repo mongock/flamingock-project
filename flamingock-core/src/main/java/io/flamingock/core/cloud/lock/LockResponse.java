@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.cloud.lock;
+package io.flamingock.core.cloud.lock;
 
 public class LockResponse {
 

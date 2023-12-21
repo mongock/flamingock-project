@@ -1,11 +1,11 @@
 /*
- * Copyright 2023 Flamingock (https://oss.flamingock.io)
+ * Copyright 2023 Flamingock ("https://oss.flamingock.io")
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.cloud;
+package io.flamingock.core.cloud;
 
+import io.flamingock.core.cloud.audit.HtttpAuditWriter;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
-import io.flamingock.core.engine.cloud.audit.HtttpAuditWriter;
-import io.flamingock.core.engine.cloud.lock.CloudLockService;
-import io.flamingock.core.engine.cloud.lock.client.HttpLockServiceClient;
-import io.flamingock.core.engine.cloud.lock.client.LockServiceClient;
-import io.flamingock.core.engine.cloud.planner.CloudExecutionPlanner;
-import io.flamingock.core.engine.cloud.planner.client.ExecutionPlannerClient;
-import io.flamingock.core.engine.cloud.planner.client.HttpExecutionPlannerClient;
+import io.flamingock.core.cloud.lock.CloudLockService;
+import io.flamingock.core.cloud.lock.client.HttpLockServiceClient;
+import io.flamingock.core.cloud.lock.client.LockServiceClient;
+import io.flamingock.core.cloud.planner.CloudExecutionPlanner;
+import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
+import io.flamingock.core.cloud.planner.client.HttpExecutionPlannerClient;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;

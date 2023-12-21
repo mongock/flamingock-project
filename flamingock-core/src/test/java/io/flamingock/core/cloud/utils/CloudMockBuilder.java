@@ -16,7 +16,7 @@
 
 package io.flamingock.core.cloud.utils;
 
-import io.flamingock.core.engine.cloud.planner.ExecutionPlanResponse;
+import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
 import io.flamingock.core.util.http.Http;
 import org.mockito.MockedStatic;
 

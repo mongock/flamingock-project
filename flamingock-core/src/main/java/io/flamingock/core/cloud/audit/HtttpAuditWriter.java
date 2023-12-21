@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.cloud.audit;
+package io.flamingock.core.cloud.audit;
 
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.AuditWriter;

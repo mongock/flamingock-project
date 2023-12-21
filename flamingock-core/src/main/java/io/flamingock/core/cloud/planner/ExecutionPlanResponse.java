@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.cloud.planner;
+package io.flamingock.core.cloud.planner;
 
 import java.util.List;
 
