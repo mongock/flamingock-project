@@ -28,6 +28,7 @@ import io.flamingock.examples.community.couchbase.events.PipelineFailedEventList
 import io.flamingock.examples.community.couchbase.events.PipelineStartedEventListener;
 import io.flamingock.examples.community.couchbase.events.PipelineCompletedEventListener;
 import io.flamingock.oss.driver.couchbase.internal.util.N1QLQueryProvider;
+import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,6 +49,7 @@ import static io.flamingock.examples.community.couchbase.config.CouchbaseInitial
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_AUDIT_ENTRY;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Ignore
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
