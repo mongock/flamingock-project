@@ -16,8 +16,26 @@
 
 package io.flamingock.core.cloud.transaction;
 
-import io.flamingock.core.transaction.TransactionWrapper;
+public class LocalStatus {
 
-public interface EventualTransactionWrapper extends LocalStatusChecker, TransactionWrapper {
+    public enum LocalStatusOperation {
+        EXECUTION, ROLLBACK
+    }
 
+    private final String pendingTask;
+
+    private final LocalStatusOperation operation;
+
+    public LocalStatus(String pendingTask, LocalStatusOperation operation) {
+        this.pendingTask = pendingTask;
+        this.operation = operation;
+    }
+
+    public String getPendingTask() {
+        return pendingTask;
+    }
+
+    public LocalStatusOperation getOperation() {
+        return operation;
+    }
 }

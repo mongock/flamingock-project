@@ -18,6 +18,8 @@ package io.flamingock.core.cloud.planner;
 
 import io.flamingock.core.cloud.lock.CloudLockService;
 import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
+import io.flamingock.core.cloud.transaction.LocalStatus;
+import io.flamingock.core.cloud.transaction.LocalStatusChecker;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.execution.ExecutionPlan;
@@ -47,19 +49,24 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
     private final RunnerId runnerId;
 
     private final ExecutionPlannerClient client;
+
     private final ServiceId serviceId;
+
+    private final LocalStatusChecker localStatusChecker;
 
     public CloudExecutionPlanner(ServiceId serviceId,
                                  RunnerId runnerId,
                                  ExecutionPlannerClient client,
                                  CoreConfigurable coreConfiguration,
                                  CloudLockService lockService,
+                                 LocalStatusChecker localStatusChecker,
                                  TimeService timeService) {
         this.client = client;
         this.serviceId = serviceId;
         this.runnerId = runnerId;
         this.coreConfiguration = coreConfiguration;
         this.lockService = lockService;
+        this.localStatusChecker = localStatusChecker;
         this.timeService = timeService;
     }
 
@@ -110,11 +117,20 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
     }
 
     private ExecutionPlanResponse createExecution(List<LoadedStage> loadedStages, String lastAcquisitionId, long elapsedMillis) {
-        ExecutionPlanRequest requestBody = ExecutionPlanMapper.toRequest(loadedStages, coreConfiguration.getLockAcquiredForMillis());
+
+        ExecutionPlanRequest requestBody = ExecutionPlanMapper.toRequest(
+                loadedStages,
+                coreConfiguration.getLockAcquiredForMillis(),
+                getLocalStatus());
+
         ExecutionPlanResponse responsePlan = client.createExecution(
                 serviceId, runnerId, requestBody, lastAcquisitionId, elapsedMillis);
         responsePlan.validate();
         return responsePlan;
+    }
+
+    private LocalStatus getLocalStatus() {
+        return localStatusChecker != null ? localStatusChecker.getLocalStatus().orElse(null) : null;
     }
 
     private ExecutionPlan buildNextExecutionPlan(List<LoadedStage> loadedStages, ExecutionPlanResponse response) {

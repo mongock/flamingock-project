@@ -102,6 +102,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
                 executionPlannerClient,
                 coreConfiguration,
                 new CloudLockService(lockClient),
+                eventualTransactionWrapper,
                 TimeService.getDefault()
         );
         //TODO authenticate
