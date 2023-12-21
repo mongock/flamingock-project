@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.standalone;
 
+import io.flamingock.core.cloud.transaction.EventualTransactionWrapper;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
@@ -28,6 +29,8 @@ import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 public class StandaloneCloudBuilder
         extends AbstractStandaloneBuilder<StandaloneCloudBuilder>
@@ -104,6 +107,16 @@ public class StandaloneCloudBuilder
     @Override
     public StandaloneCloudBuilder setClientSecret(String clientSecret) {
         return cloudConfiguratorDelegate.setClientSecret(clientSecret);
+    }
+
+    @Override
+    public StandaloneCloudBuilder setEventualTransactionWrapper(EventualTransactionWrapper eventualTransactionWrapper) {
+        return cloudConfiguratorDelegate.setEventualTransactionWrapper(eventualTransactionWrapper);
+    }
+
+    @Override
+    public Optional<EventualTransactionWrapper> getEventualTransactionWrapper() {
+        return cloudConfiguratorDelegate.getEventualTransactionWrapper();
     }
 
 }

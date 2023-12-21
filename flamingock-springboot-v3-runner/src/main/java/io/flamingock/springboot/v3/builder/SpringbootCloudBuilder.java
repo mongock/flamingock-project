@@ -16,6 +16,7 @@
 
 package io.flamingock.springboot.v3.builder;
 
+import io.flamingock.core.cloud.transaction.EventualTransactionWrapper;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootCloudBuilder>
         implements
@@ -105,6 +107,16 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     @Override
     public SpringbootCloudBuilder setClientSecret(String clientSecret) {
         return cloudConfiguratorDelegate.setClientSecret(clientSecret);
+    }
+
+    @Override
+    public SpringbootCloudBuilder setEventualTransactionWrapper(EventualTransactionWrapper eventualTransactionWrapper) {
+        return cloudConfiguratorDelegate.setEventualTransactionWrapper(eventualTransactionWrapper);
+    }
+
+    @Override
+    public Optional<EventualTransactionWrapper> getEventualTransactionWrapper() {
+        return cloudConfiguratorDelegate.getEventualTransactionWrapper();
     }
 
 }
