@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v2.builder;
 
-import io.flamingock.core.cloud.transaction.EventualTransactionWrapper;
+import io.flamingock.core.cloud.transaction.EventualTransactioner;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
@@ -109,12 +109,12 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     }
 
     @Override
-    public SpringbootCloudBuilder setEventualTransactionWrapper(EventualTransactionWrapper eventualTransactionWrapper) {
+    public SpringbootCloudBuilder setEventualTransactionWrapper(EventualTransactioner eventualTransactionWrapper) {
         return cloudConfiguratorDelegate.setEventualTransactionWrapper(eventualTransactionWrapper);
     }
 
     @Override
-    public Optional<EventualTransactionWrapper> getEventualTransactionWrapper() {
+    public Optional<EventualTransactioner> getEventualTransactionWrapper() {
         return cloudConfiguratorDelegate.getEventualTransactionWrapper();
     }
 

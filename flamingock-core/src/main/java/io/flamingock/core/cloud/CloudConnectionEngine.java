@@ -17,7 +17,7 @@
 package io.flamingock.core.cloud;
 
 import io.flamingock.core.cloud.audit.HtttpAuditWriter;
-import io.flamingock.core.cloud.transaction.EventualTransactionWrapper;
+import io.flamingock.core.cloud.transaction.EventualTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
@@ -50,7 +50,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     private final Http.RequestBuilderFactory requestBuilderFactory;
 
-    private final EventualTransactionWrapper eventualTransactionWrapper;
+    private final EventualTransactioner eventualTransactioner;
 
     private AuditWriter auditWriter;
 
@@ -60,11 +60,11 @@ public class CloudConnectionEngine implements ConnectionEngine {
     public CloudConnectionEngine(CoreConfigurable coreConfiguration,
                                  CloudConfigurable cloudConfiguration,
                                  Http.RequestBuilderFactory requestBuilderFactory,
-                                 EventualTransactionWrapper eventualTransactionWrapper) {
+                                 EventualTransactioner eventualTransactioner) {
         this.coreConfiguration = coreConfiguration;
         this.cloudConfiguration = cloudConfiguration;
         this.requestBuilderFactory = requestBuilderFactory;
-        this.eventualTransactionWrapper = eventualTransactionWrapper;
+        this.eventualTransactioner = eventualTransactioner;
     }
 
     public AuditWriter getAuditWriter() {
@@ -102,7 +102,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
                 executionPlannerClient,
                 coreConfiguration,
                 new CloudLockService(lockClient),
-                eventualTransactionWrapper,
+                eventualTransactioner.getLocalStater(),
                 TimeService.getDefault()
         );
         //TODO authenticate
@@ -116,7 +116,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     @Override
     public Optional<TransactionWrapper> getTransactionWrapper() {
-        return Optional.ofNullable(eventualTransactionWrapper);
+        return Optional.ofNullable(eventualTransactioner);
     }
 
     @Override

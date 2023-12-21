@@ -16,7 +16,7 @@
 
 package io.flamingock.core.configurator.cloud;
 
-import io.flamingock.core.cloud.transaction.EventualTransactionWrapper;
+import io.flamingock.core.cloud.transaction.EventualTransactioner;
 
 import java.util.Optional;
 
@@ -30,8 +30,8 @@ public interface CloudConfigurator<HOLDER> {
 
     HOLDER setClientSecret(String clientSecret);
 
-    HOLDER setEventualTransactionWrapper(EventualTransactionWrapper eventualTransactionWrapper);
+    HOLDER setEventualTransactionWrapper(EventualTransactioner eventualTransactionWrapper);
 
-    Optional<EventualTransactionWrapper> getEventualTransactionWrapper();
+    Optional<EventualTransactioner> getEventualTransactionWrapper();
 
 }
