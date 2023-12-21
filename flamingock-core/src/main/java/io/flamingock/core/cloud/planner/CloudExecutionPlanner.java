@@ -19,7 +19,7 @@ package io.flamingock.core.cloud.planner;
 import io.flamingock.core.cloud.lock.CloudLockService;
 import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
 import io.flamingock.core.cloud.transaction.LocalStatus;
-import io.flamingock.core.cloud.transaction.LocalStatusChecker;
+import io.flamingock.core.cloud.transaction.LocalStater;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.execution.ExecutionPlan;
@@ -52,14 +52,14 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
 
     private final ServiceId serviceId;
 
-    private final LocalStatusChecker localStatusChecker;
+    private final LocalStater localStatusChecker;
 
     public CloudExecutionPlanner(ServiceId serviceId,
                                  RunnerId runnerId,
                                  ExecutionPlannerClient client,
                                  CoreConfigurable coreConfiguration,
                                  CloudLockService lockService,
-                                 LocalStatusChecker localStatusChecker,
+                                 LocalStater localStatusChecker,
                                  TimeService timeService) {
         this.client = client;
         this.serviceId = serviceId;

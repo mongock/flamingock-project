@@ -18,6 +18,9 @@ package io.flamingock.core.cloud.transaction;
 
 import java.util.Optional;
 
-public interface LocalStatusChecker {
+public interface LocalStater {
+
     Optional<LocalStatus> getLocalStatus();
+
+    void cleanLocalStatus();
 }

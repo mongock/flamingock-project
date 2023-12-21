@@ -18,6 +18,6 @@ package io.flamingock.core.cloud.transaction;
 
 import io.flamingock.core.transaction.TransactionWrapper;
 
-public interface EventualTransactionWrapper extends LocalStatusChecker, TransactionWrapper {
+public interface EventualTransactionWrapper extends LocalStater, TransactionWrapper {
 
 }
