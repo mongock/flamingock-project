@@ -66,7 +66,11 @@ public class Mongo3Engine implements LocalConnectionEngine {
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
         auditor.initialize(driverConfiguration.isIndexCreation());
-        Mongo3LockService lockService = new Mongo3LockService(database, driverConfiguration.getLockRepositoryName(), TimeService.getDefault());
+        Mongo3LockService lockService = new Mongo3LockService(
+                database,
+                driverConfiguration.getLockRepositoryName(),
+                driverConfiguration.getReadWriteConfiguration(),
+                TimeService.getDefault());
         lockService.initialize(driverConfiguration.isIndexCreation());
         executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }

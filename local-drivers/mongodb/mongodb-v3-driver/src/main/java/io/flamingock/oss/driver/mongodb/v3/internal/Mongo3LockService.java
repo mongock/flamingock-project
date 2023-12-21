@@ -35,6 +35,7 @@ import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBLockMapper;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.Mongo3CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.Mongo3DocumentWrapper;
+import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -54,8 +55,14 @@ public class Mongo3LockService implements LocalLockService {
     private final MongoCollection<Document> collection;
     private final TimeService timeService;
 
-    protected Mongo3LockService(MongoDatabase mongoDatabase, String lockCollectionName, TimeService timeService) {
-        this.collection = mongoDatabase.getCollection(lockCollectionName);
+    protected Mongo3LockService(MongoDatabase mongoDatabase,
+                                String lockCollectionName,
+                                ReadWriteConfiguration readWriteConfiguration,
+                                TimeService timeService) {
+        this.collection = mongoDatabase.getCollection(lockCollectionName)
+                .withReadConcern(readWriteConfiguration.getReadConcern())
+                .withReadPreference(readWriteConfiguration.getReadPreference())
+                .withWriteConcern(readWriteConfiguration.getWriteConcern());
         this.timeService = timeService;
     }
 

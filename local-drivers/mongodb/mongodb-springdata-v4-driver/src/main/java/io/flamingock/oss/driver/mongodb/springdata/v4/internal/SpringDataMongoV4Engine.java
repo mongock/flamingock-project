@@ -60,11 +60,15 @@ public class SpringDataMongoV4Engine implements LocalConnectionEngine {
                     new ReadConcern(driverConfiguration.getReadConcern()),
                     driverConfiguration.getReadPreference().getValue());
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new SpringDataMongoV4TransactionWrapper(mongoTemplate, readWriteConfiguration) : null;
-        auditor = new SpringDataMongoV4Auditor(mongoTemplate,
+        auditor = new SpringDataMongoV4Auditor(
+                mongoTemplate,
                 driverConfiguration.getMigrationRepositoryName(),
                 readWriteConfiguration);
         auditor.initialize(driverConfiguration.isIndexCreation());
-        SpringDataMongoV4LockService lockService = new SpringDataMongoV4LockService(mongoTemplate.getDb(), driverConfiguration.getLockRepositoryName());
+        SpringDataMongoV4LockService lockService = new SpringDataMongoV4LockService(
+                mongoTemplate.getDb(),
+                driverConfiguration.getLockRepositoryName(),
+                readWriteConfiguration);
         lockService.initialize(driverConfiguration.isIndexCreation());
         executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }

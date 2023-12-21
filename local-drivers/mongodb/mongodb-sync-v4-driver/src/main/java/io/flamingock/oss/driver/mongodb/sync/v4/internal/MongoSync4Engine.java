@@ -61,12 +61,17 @@ public class MongoSync4Engine implements LocalConnectionEngine {
     public void initialize(RunnerId runnerId) {
         SessionManager<ClientSession> sessionManager = new SessionManager<>(mongoClient::startSession);
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new MongoSync4TransactionWrapper(sessionManager) : null;
-        auditor = new MongoSync4Auditor(database,
+        auditor = new MongoSync4Auditor(
+                database,
                 driverConfiguration.getMigrationRepositoryName(),
                 driverConfiguration.getReadWriteConfiguration(),
                 sessionManager);
         auditor.initialize(driverConfiguration.isIndexCreation());
-        MongoSync4LockService lockService = new MongoSync4LockService(database, driverConfiguration.getLockRepositoryName(), TimeService.getDefault());
+        MongoSync4LockService lockService = new MongoSync4LockService(
+                database,
+                driverConfiguration.getLockRepositoryName(),
+                driverConfiguration.getReadWriteConfiguration(),
+                TimeService.getDefault());
         lockService.initialize(driverConfiguration.isIndexCreation());
         executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }

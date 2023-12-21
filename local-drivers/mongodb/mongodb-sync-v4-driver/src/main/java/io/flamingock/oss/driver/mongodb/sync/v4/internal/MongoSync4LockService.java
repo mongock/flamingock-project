@@ -19,6 +19,9 @@ package io.flamingock.oss.driver.mongodb.sync.v4.internal;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.ErrorCategory;
 import com.mongodb.MongoWriteException;
+import com.mongodb.ReadConcern;
+import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -35,6 +38,7 @@ import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBLockMapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4CollectionWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.MongoSync4DocumentWrapper;
+import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -54,8 +58,14 @@ public class MongoSync4LockService implements LocalLockService {
     private final MongoCollection<Document> collection;
     private final TimeService timeService;
 
-    protected MongoSync4LockService(MongoDatabase mongoDatabase, String lockCollectionName, TimeService timeService) {
-        this.collection = mongoDatabase.getCollection(lockCollectionName);
+    protected MongoSync4LockService(MongoDatabase mongoDatabase,
+                                    String lockCollectionName,
+                                    ReadWriteConfiguration readWriteConfiguration,
+                                    TimeService timeService) {
+        this.collection = mongoDatabase.getCollection(lockCollectionName)
+                .withReadConcern(readWriteConfiguration.getReadConcern())
+                .withReadPreference(readWriteConfiguration.getReadPreference())
+                .withWriteConcern(readWriteConfiguration.getWriteConcern());
         this.timeService = timeService;
     }
 
