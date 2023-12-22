@@ -16,6 +16,10 @@
 
 package io.flamingock.core.configurator.cloud;
 
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
+
+import java.util.Optional;
+
 public interface CloudConfigurator<HOLDER> {
 
     HOLDER setHost(String host);
@@ -25,5 +29,9 @@ public interface CloudConfigurator<HOLDER> {
     HOLDER setClientId(String clientId);
 
     HOLDER setClientSecret(String clientSecret);
+
+    HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner);
+
+    Optional<CloudTransactioner> getCloudTransactioner();
 
 }

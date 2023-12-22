@@ -16,10 +16,15 @@
 
 package io.flamingock.core.task.navigation.navigator;
 
+import io.flamingock.core.cloud.transaction.OngoingStatusRepository;
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.audit.domain.RuntimeContext;
 import io.flamingock.core.pipeline.execution.StageExecutionContext;
+import io.flamingock.core.runtime.RuntimeManager;
+import io.flamingock.core.runtime.dependency.DependencyInjectable;
+import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.navigation.step.ExecutableStep;
 import io.flamingock.core.task.navigation.step.RollableFailedStep;
 import io.flamingock.core.task.navigation.step.TaskStep;
@@ -35,15 +40,13 @@ import io.flamingock.core.task.navigation.step.execution.SuccessExecutionStep;
 import io.flamingock.core.task.navigation.step.rolledback.FailedManualRolledBackStep;
 import io.flamingock.core.task.navigation.step.rolledback.ManualRolledBackStep;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
-import io.flamingock.core.runtime.RuntimeManager;
-import io.flamingock.core.runtime.dependency.DependencyInjectable;
-import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.core.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class StepNavigator {
     private static final Logger logger = LoggerFactory.getLogger(StepNavigator.class);
@@ -115,24 +118,28 @@ public class StepNavigator {
     private TaskStep executeWithinTransaction(ExecutableTask task,
                                               StageExecutionContext stageExecutionContext,
                                               DependencyInjectable dependencyInjectable) {
+        //If it's a cloud transaction, it requires to write the status
+        getOngoingRepositoryIfCloudTransaction().ifPresent(stater -> stater.setOngoingExecution(task));
+
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
             ExecutionStep executed = executeTask(task);
             if (executed instanceof SuccessExecutionStep) {
                 AfterExecutionAuditStep executionAuditResult = performAuditExecution(executed, stageExecutionContext, LocalDateTime.now());
                 if (executionAuditResult instanceof CompletedSuccessStep) {
-                    // TODO in cloud with eventual transaction,
-                    //  we must clean the local_transaction_status
-
-                    // TODO in parallel to this, we need to send in the executionPlanner if we left
-                    //  any pending job, so he can introduce it in the plan, in case it's marked as
-                    //  executed
+                    //If it's a cloud transaction, it requires to clean the status
+                    getOngoingRepositoryIfCloudTransaction().ifPresent(OngoingStatusRepository::cleanOngoingStatus);
                     return executionAuditResult;
                 }
             }
-
             //if it goes through here, it's failed, and it will be rolled back
             return new CompleteAutoRolledBackStep(task, true);
         });
+    }
+
+    private Optional<OngoingStatusRepository> getOngoingRepositoryIfCloudTransaction() {
+        return transactionWrapper != null && CloudTransactioner.class.isAssignableFrom(transactionWrapper.getClass())
+                ? Optional.of(((OngoingStatusRepository) transactionWrapper))
+                : Optional.empty();
     }
 
     private ExecutionStep executeTask(ExecutableTask task) {

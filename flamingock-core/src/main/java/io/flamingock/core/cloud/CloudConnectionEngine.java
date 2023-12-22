@@ -17,6 +17,7 @@
 package io.flamingock.core.cloud;
 
 import io.flamingock.core.cloud.audit.HtttpAuditWriter;
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
@@ -49,6 +50,8 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     private final Http.RequestBuilderFactory requestBuilderFactory;
 
+    private final CloudTransactioner cloudTransactioner;
+
     private AuditWriter auditWriter;
 
     private ExecutionPlanner executionPlanner;
@@ -56,10 +59,12 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     public CloudConnectionEngine(CoreConfigurable coreConfiguration,
                                  CloudConfigurable cloudConfiguration,
-                                 Http.RequestBuilderFactory requestBuilderFactory) {
+                                 Http.RequestBuilderFactory requestBuilderFactory,
+                                 CloudTransactioner cloudTransactioner) {
         this.coreConfiguration = coreConfiguration;
         this.cloudConfiguration = cloudConfiguration;
         this.requestBuilderFactory = requestBuilderFactory;
+        this.cloudTransactioner = cloudTransactioner;
     }
 
     public AuditWriter getAuditWriter() {
@@ -97,6 +102,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
                 executionPlannerClient,
                 coreConfiguration,
                 new CloudLockService(lockClient),
+                cloudTransactioner,
                 TimeService.getDefault()
         );
         //TODO authenticate
@@ -110,7 +116,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     @Override
     public Optional<TransactionWrapper> getTransactionWrapper() {
-        return Optional.empty();
+        return Optional.ofNullable(cloudTransactioner);
     }
 
     @Override

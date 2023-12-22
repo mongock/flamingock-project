@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.cloud.CloudConnectionEngine;
 import io.flamingock.core.runner.RunnerId;
@@ -29,6 +30,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.fasterxml.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS;
@@ -36,12 +38,6 @@ import static com.fasterxml.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITI
 public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLDER> {
 
     private static final Logger logger = LoggerFactory.getLogger(CloudConfiguratorDelegate.class);
-
-    private final Supplier<HOLDER> holderSupplier;
-
-    private final CoreConfigurable coreConfiguration;
-
-    private final CloudConfigurable cloudConfiguration;
 
     private final static ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
             .enable(ACCEPT_CASE_INSENSITIVE_ENUMS)
@@ -53,6 +49,14 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS)
             .build();
+
+    private final Supplier<HOLDER> holderSupplier;
+
+    private final CoreConfigurable coreConfiguration;
+
+    private final CloudConfigurable cloudConfiguration;
+
+    private CloudTransactioner cloudTransactioner;
 
     public CloudConfiguratorDelegate(CoreConfigurable coreConfiguration,
                                      CloudConfigurable cloudConfiguration,
@@ -87,19 +91,26 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
         return holderSupplier.get();
     }
 
+    @Override
+    public HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner) {
+        this.cloudTransactioner = cloudTransactioner;
+        return holderSupplier.get();
+    }
+
+    @Override
+    public Optional<CloudTransactioner> getCloudTransactioner() {
+        return Optional.ofNullable(cloudTransactioner);
+    }
 
     public CloudConnectionEngine getAndInitializeConnectionEngine(RunnerId runnerId) {
         logger.info("Generated runnerId:  {}", runnerId);
-        //TODO HttpClient needs to be closed after finishing
         CloudConnectionEngine connectionEngine = new CloudConnectionEngine(
                 coreConfiguration,
                 cloudConfiguration,
-                Http.builderFactory(HttpClients.createDefault(), OBJECT_MAPPER)
+                Http.builderFactory(HttpClients.createDefault(), OBJECT_MAPPER),
+                cloudTransactioner
         );
         connectionEngine.initialize(runnerId);
         return connectionEngine;
     }
-
-
-
 }
