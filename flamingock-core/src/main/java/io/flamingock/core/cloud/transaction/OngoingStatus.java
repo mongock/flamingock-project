@@ -18,20 +18,20 @@ package io.flamingock.core.cloud.transaction;
 
 import io.flamingock.core.engine.audit.domain.AuditItem;
 
-public class CloudLocalStatus {
+public class OngoingStatus {
 
 
-    private final String ongoingTask;
+    private final String taskId;
 
     private final AuditItem.Operation operation;
 
-    public CloudLocalStatus(String ongoingTask, AuditItem.Operation operation) {
-        this.ongoingTask = ongoingTask;
+    public OngoingStatus(String taskId, AuditItem.Operation operation) {
+        this.taskId = taskId;
         this.operation = operation;
     }
 
-    public String getOngoingTask() {
-        return ongoingTask;
+    public String getTaskId() {
+        return taskId;
     }
 
     public AuditItem.Operation getOperation() {

@@ -21,30 +21,30 @@ import io.flamingock.core.task.executable.ExecutableTask;
 
 import java.util.Optional;
 
-public interface CloudLocalStater {
+public interface OngoingStatusRepository {
 
     /**
      * Retrieves the current status form the database
      * @return current status
      */
-    Optional<CloudLocalStatus> getStatus();
+    Optional<OngoingStatus> getOngoingStatus();
 
     /**
      * Removes any status from the database
      */
-    void cleanStatus();
+    void cleanOngoingStatus();
 
     /**
      * Upsert operation for new status in database. If there is an existing one, it gets overwritten
      * @param status the status to be written
      */
-    void setStatus(CloudLocalStatus status);
+    void setOngoingStatus(OngoingStatus status);
 
     default void setOngoingExecution(ExecutableTask ongoingTask) {
-        setStatus(new CloudLocalStatus(ongoingTask.getDescriptor().getId(), AuditItem.Operation.EXECUTION));
+        setOngoingStatus(new OngoingStatus(ongoingTask.getDescriptor().getId(), AuditItem.Operation.EXECUTION));
     }
 
     default void setOngoingRollback(ExecutableTask ongoingTask) {
-        setStatus(new CloudLocalStatus(ongoingTask.getDescriptor().getId(), AuditItem.Operation.ROLLBACK));
+        setOngoingStatus(new OngoingStatus(ongoingTask.getDescriptor().getId(), AuditItem.Operation.ROLLBACK));
     }
 }

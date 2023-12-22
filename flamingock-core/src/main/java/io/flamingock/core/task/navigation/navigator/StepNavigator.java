@@ -16,8 +16,7 @@
 
 package io.flamingock.core.task.navigation.navigator;
 
-import io.flamingock.core.cloud.transaction.CloudLocalStater;
-import io.flamingock.core.cloud.transaction.CloudLocalStatus;
+import io.flamingock.core.cloud.transaction.OngoingStatusRepository;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
@@ -120,7 +119,7 @@ public class StepNavigator {
                                               StageExecutionContext stageExecutionContext,
                                               DependencyInjectable dependencyInjectable) {
         //If it's a cloud transaction, it requires to write the status
-        getCloudLocalStater().ifPresent(stater -> stater.setOngoingExecution(task));
+        getOngoingRepositoryIfCloudTransaction().ifPresent(stater -> stater.setOngoingExecution(task));
 
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
             ExecutionStep executed = executeTask(task);
@@ -128,7 +127,7 @@ public class StepNavigator {
                 AfterExecutionAuditStep executionAuditResult = performAuditExecution(executed, stageExecutionContext, LocalDateTime.now());
                 if (executionAuditResult instanceof CompletedSuccessStep) {
                     //If it's a cloud transaction, it requires to clean the status
-                    getCloudLocalStater().ifPresent(CloudLocalStater::cleanStatus);
+                    getOngoingRepositoryIfCloudTransaction().ifPresent(OngoingStatusRepository::cleanOngoingStatus);
                     return executionAuditResult;
                 }
             }
@@ -137,9 +136,9 @@ public class StepNavigator {
         });
     }
 
-    private Optional<CloudLocalStater> getCloudLocalStater() {
+    private Optional<OngoingStatusRepository> getOngoingRepositoryIfCloudTransaction() {
         return transactionWrapper != null && CloudTransactioner.class.isAssignableFrom(transactionWrapper.getClass())
-                ? Optional.of(((CloudLocalStater) transactionWrapper))
+                ? Optional.of(((OngoingStatusRepository) transactionWrapper))
                 : Optional.empty();
     }
 

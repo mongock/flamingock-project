@@ -17,7 +17,7 @@
 package io.flamingock.core.cloud.planner;
 
 import io.flamingock.core.cloud.lock.CloudLockService;
-import io.flamingock.core.cloud.transaction.CloudLocalStatus;
+import io.flamingock.core.cloud.transaction.OngoingStatus;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
@@ -42,7 +42,7 @@ public final class ExecutionPlanMapper {
 
     public static  ExecutionPlanRequest toRequest(List<LoadedStage> loadedStages,
                                                   long lockAcquiredForMillis,
-                                                  CloudLocalStatus localStatus) {
+                                                  OngoingStatus localStatus) {
         List<ExecutionPlanRequest.Stage> requestStages = new ArrayList<>(loadedStages.size());
         for (int i = 0; i < loadedStages.size(); i++) {
             LoadedStage currentStage = loadedStages.get(i);

@@ -18,7 +18,7 @@ package io.flamingock.core.cloud.transaction;
 
 import io.flamingock.core.transaction.TransactionWrapper;
 
-public interface CloudTransactioner extends CloudLocalStater, TransactionWrapper {
+public interface CloudTransactioner extends OngoingStatusRepository, TransactionWrapper {
 
 
 }
