@@ -45,14 +45,14 @@ public class AuditStageStatus {
 
         public void addEntry(AuditEntry newEntry) {
             entryMap.compute(
-                    newEntry.getChangeId(),
+                    newEntry.getTaskId(),
                     (changeId, currentEntry) -> AuditEntry.getMostRelevant(currentEntry, newEntry)
             );
         }
 
         public AuditStageStatus build() {
             Map<String, AuditEntryStatus> statesMap = entryMap.values().stream()
-                    .collect(Collectors.toMap(AuditEntry::getChangeId, AuditEntry::getState));
+                    .collect(Collectors.toMap(AuditEntry::getTaskId, AuditEntry::getState));
             return new AuditStageStatus(statesMap);
         }
 

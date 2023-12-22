@@ -112,7 +112,7 @@ public class CouchbaseAuditor implements Auditor {
     private JsonObject toEntity(AuditEntry auditEntry) {
         JsonObject document = JsonObject.create();
         this.couchbaseGenericRepository.addField(document, KEY_EXECUTION_ID, auditEntry.getExecutionId());
-        this.couchbaseGenericRepository.addField(document, KEY_CHANGE_ID, auditEntry.getChangeId());
+        this.couchbaseGenericRepository.addField(document, KEY_CHANGE_ID, auditEntry.getTaskId());
         this.couchbaseGenericRepository.addField(document, KEY_AUTHOR, auditEntry.getAuthor());
         this.couchbaseGenericRepository.addField(document, KEY_TIMESTAMP, TimeUtil.toDate(auditEntry.getCreatedAt()));
         this.couchbaseGenericRepository.addField(document, KEY_STATE, auditEntry.getState().name());

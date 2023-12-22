@@ -23,9 +23,9 @@ public class StageRequest {
 
     private final int order;
 
-    private final List<String> tasks;
+    private final List<Task> tasks;
 
-    public StageRequest(String name, int order, List<String> tasks) {
+    public StageRequest(String name, int order, List<Task> tasks) {
         this.name = name;
         this.order = order;
         this.tasks = tasks;
@@ -39,7 +39,44 @@ public class StageRequest {
         return order;
     }
 
-    public List<String> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
+    }
+
+    public enum TaskOngoingStatus {
+        NONE, EXECUTION, ROLLBACK
+    }
+
+    public static class Task {
+
+
+        private final String id;
+
+        private final TaskOngoingStatus ongoingStatus;
+
+        public static Task task(String id) {
+            return new Task(id, TaskOngoingStatus.NONE);
+        }
+
+        public static Task ongoingExecution(String id) {
+            return new Task(id, TaskOngoingStatus.EXECUTION);
+        }
+
+        public static Task ongoingRollback(String id) {
+            return new Task(id, TaskOngoingStatus.ROLLBACK);
+        }
+
+        private Task(String id, TaskOngoingStatus ongoingStatus) {
+            this.id = id;
+            this.ongoingStatus = ongoingStatus;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public TaskOngoingStatus getOngoingStatus() {
+            return ongoingStatus;
+        }
     }
 }

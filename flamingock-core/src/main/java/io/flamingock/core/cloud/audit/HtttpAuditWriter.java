@@ -61,7 +61,7 @@ public class HtttpAuditWriter implements AuditWriter {
                     .execute();
             return Result.OK();
         } catch (Throwable throwable) {
-            logger.error("Error writing audit [{}]  :\n{}", auditEntry.getChangeId(), throwable.toString());
+            logger.error("Error writing audit [{}]  :\n{}", auditEntry.getTaskId(), throwable.toString());
             return new Result.Error(throwable);
         }
 

@@ -26,12 +26,9 @@ public class ExecutionPlanRequest {
 
     private final List<StageRequest> stages;
 
-    private final OngoingStatus ongoingStatus;
-
-    public ExecutionPlanRequest(long acquiredForMills, List<StageRequest> stages, OngoingStatus ongoingStatus) {
+    public ExecutionPlanRequest(long acquiredForMills, List<StageRequest> stages) {
         this.acquiredForMills = acquiredForMills;
         this.stages = stages;
-        this.ongoingStatus = ongoingStatus;
     }
 
     public long getAcquiredForMills() {
@@ -40,10 +37,6 @@ public class ExecutionPlanRequest {
 
     public List<StageRequest> getStages() {
         return stages;
-    }
-
-    public OngoingStatus getOngoingStatus() {
-        return ongoingStatus;
     }
 
 
