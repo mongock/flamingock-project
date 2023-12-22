@@ -50,7 +50,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     private final Http.RequestBuilderFactory requestBuilderFactory;
 
-    private final CloudTransactioner eventualTransactioner;
+    private final CloudTransactioner cloudTransactioner;
 
     private AuditWriter auditWriter;
 
@@ -64,7 +64,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
         this.coreConfiguration = coreConfiguration;
         this.cloudConfiguration = cloudConfiguration;
         this.requestBuilderFactory = requestBuilderFactory;
-        this.eventualTransactioner = cloudTransactioner;
+        this.cloudTransactioner = cloudTransactioner;
     }
 
     public AuditWriter getAuditWriter() {
@@ -102,7 +102,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
                 executionPlannerClient,
                 coreConfiguration,
                 new CloudLockService(lockClient),
-                eventualTransactioner,
+                cloudTransactioner,
                 TimeService.getDefault()
         );
         //TODO authenticate
@@ -116,7 +116,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     @Override
     public Optional<TransactionWrapper> getTransactionWrapper() {
-        return Optional.ofNullable(eventualTransactioner);
+        return Optional.ofNullable(cloudTransactioner);
     }
 
     @Override
