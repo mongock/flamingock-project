@@ -81,13 +81,13 @@ public class MongoSync4Auditor implements Auditor {
     public Result writeEntry(AuditEntry auditEntry) {
         Bson filter = Filters.and(
                 Filters.eq(KEY_EXECUTION_ID, auditEntry.getExecutionId()),
-                Filters.eq(KEY_CHANGE_ID, auditEntry.getChangeId()),
+                Filters.eq(KEY_CHANGE_ID, auditEntry.getTaskId()),
                 Filters.eq(KEY_AUTHOR, auditEntry.getAuthor())
         );
 
         Document entryDocument = mapper.toDocument(auditEntry).getDocument();
 
-        UpdateResult result = sessionManager.getSession(auditEntry.getChangeId())
+        UpdateResult result = sessionManager.getSession(auditEntry.getTaskId())
                 .map(clientSession -> collection.replaceOne(clientSession, filter, entryDocument, new ReplaceOptions().upsert(true)))
                 .orElseGet(() -> collection.replaceOne(filter, entryDocument, new ReplaceOptions().upsert(true)));
         logger.debug("SaveOrUpdate[{}] with result" +

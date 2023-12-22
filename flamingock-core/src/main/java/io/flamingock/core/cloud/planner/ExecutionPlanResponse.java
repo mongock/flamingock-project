@@ -90,6 +90,8 @@ public class ExecutionPlanResponse {
     public static class Stage {
         private String name;
 
+        private int order;
+
         private List<String> tasks;
 
         public Stage() {
@@ -110,6 +112,14 @@ public class ExecutionPlanResponse {
         public void setTasks(List<String> tasks) {
             this.tasks = tasks;
         }
+
+        public int getOrder() {
+            return order;
+        }
+
+        public void setOrder(int order) {
+            this.order = order;
+        }
     }
 
     public static class Lock {
@@ -121,6 +131,7 @@ public class ExecutionPlanResponse {
         private String acquisitionId;
 
         private long acquiredForMillis;
+
 
         public Lock() {
         }

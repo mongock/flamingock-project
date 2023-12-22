@@ -77,7 +77,7 @@ public class SpringDataMongoV3Auditor implements Auditor {
 
         Bson filter = Filters.and(
                 Filters.eq(KEY_EXECUTION_ID, auditEntry.getExecutionId()),
-                Filters.eq(KEY_CHANGE_ID, auditEntry.getChangeId()),
+                Filters.eq(KEY_CHANGE_ID, auditEntry.getTaskId()),
                 Filters.eq(KEY_AUTHOR, auditEntry.getAuthor())
         );
 

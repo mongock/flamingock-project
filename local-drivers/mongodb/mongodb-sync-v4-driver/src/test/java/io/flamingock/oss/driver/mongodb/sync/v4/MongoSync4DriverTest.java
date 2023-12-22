@@ -151,11 +151,11 @@ class MongoSync4DriverTest {
         //Checking auditLog
         List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
-        assertEquals("create-collection", auditLog.get(0).getChangeId());
+        assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
-        assertEquals("insert-document", auditLog.get(1).getChangeId());
+        assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
-        assertEquals("insert-another-document", auditLog.get(2).getChangeId());
+        assertEquals("insert-another-document", auditLog.get(2).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(2).getState());
 
         //Checking clients collection
@@ -185,11 +185,11 @@ class MongoSync4DriverTest {
         //Checking auditLog
         List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
-        assertEquals("create-collection", auditLog.get(0).getChangeId());
+        assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
-        assertEquals("insert-document", auditLog.get(1).getChangeId());
+        assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
-        assertEquals("insert-another-document", auditLog.get(2).getChangeId());
+        assertEquals("insert-another-document", auditLog.get(2).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(2).getState());
 
         //Checking clients collection
@@ -221,9 +221,9 @@ class MongoSync4DriverTest {
         //Checking auditLog
         List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(2, auditLog.size());
-        assertEquals("create-collection", auditLog.get(0).getChangeId());
+        assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
-        assertEquals("insert-document", auditLog.get(1).getChangeId());
+        assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
 
         //Checking clients collection
@@ -254,11 +254,11 @@ class MongoSync4DriverTest {
         //Checking auditLog
         List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
-        assertEquals("create-collection", auditLog.get(0).getChangeId());
+        assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
-        assertEquals("insert-document", auditLog.get(1).getChangeId());
+        assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
-        assertEquals("execution-with-exception", auditLog.get(2).getChangeId());
+        assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
         assertEquals(AuditEntryStatus.ROLLED_BACK, auditLog.get(2).getState());
 
         //Checking clients collection
@@ -289,11 +289,11 @@ class MongoSync4DriverTest {
         //Checking auditLog
         List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
-        assertEquals("create-collection", auditLog.get(0).getChangeId());
+        assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
-        assertEquals("insert-document", auditLog.get(1).getChangeId());
+        assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
-        assertEquals("execution-with-exception", auditLog.get(2).getChangeId());
+        assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
         assertEquals(AuditEntryStatus.FAILED, auditLog.get(2).getState());
 
         //Checking clients collection

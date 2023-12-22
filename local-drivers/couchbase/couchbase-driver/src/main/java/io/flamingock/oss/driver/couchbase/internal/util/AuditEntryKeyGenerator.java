@@ -29,6 +29,6 @@ public class AuditEntryKeyGenerator {
         .append('-')
         .append(auditEntry.getAuthor())
         .append('-')
-        .append(auditEntry.getChangeId()).toString();
+        .append(auditEntry.getTaskId()).toString();
   }
 }

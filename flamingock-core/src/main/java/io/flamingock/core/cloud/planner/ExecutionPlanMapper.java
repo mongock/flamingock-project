@@ -20,6 +20,7 @@ import io.flamingock.core.cloud.lock.CloudLockService;
 import io.flamingock.core.cloud.transaction.OngoingStatus;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
+import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.pipeline.ExecutableStage;
@@ -40,24 +41,37 @@ import static io.flamingock.core.engine.audit.writer.AuditEntryStatus.EXECUTED;
 
 public final class ExecutionPlanMapper {
 
-    public static  ExecutionPlanRequest toRequest(List<LoadedStage> loadedStages,
-                                                  long lockAcquiredForMillis,
-                                                  OngoingStatus localStatus) {
-        List<ExecutionPlanRequest.Stage> requestStages = new ArrayList<>(loadedStages.size());
+    public static ExecutionPlanRequest toRequest(List<LoadedStage> loadedStages,
+                                                 long lockAcquiredForMillis,
+                                                 OngoingStatus ongoingStatus) {
+
+        List<StageRequest> requestStages = new ArrayList<>(loadedStages.size());
         for (int i = 0; i < loadedStages.size(); i++) {
             LoadedStage currentStage = loadedStages.get(i);
-            List<String> stageTasks = currentStage
+            List<StageRequest.Task> stageTasks = currentStage
                     .getTaskDescriptors()
                     .stream()
-                    .map(TaskDescriptor::getId)
+                    .map(descriptor -> ExecutionPlanMapper.mapToTaskRequest(descriptor, ongoingStatus))
                     .collect(Collectors.toList());
-            requestStages.add(new ExecutionPlanRequest.Stage(currentStage.getName(), i, stageTasks));
+            requestStages.add(new StageRequest(currentStage.getName(), i, stageTasks));
         }
 
-        return new ExecutionPlanRequest(lockAcquiredForMillis, requestStages, localStatus);
+        return new ExecutionPlanRequest(lockAcquiredForMillis, requestStages);
     }
 
-    public static List<ExecutableStage> getExecutableStages(ExecutionPlanResponse response,  List<LoadedStage> loadedStages) {
+    private static StageRequest.Task mapToTaskRequest(TaskDescriptor descriptor, OngoingStatus ongoingStatus) {
+        if (ongoingStatus != null && ongoingStatus.getTaskId().equals(descriptor.getId())) {
+            if (ongoingStatus.getOperation() == AuditItem.Operation.ROLLBACK) {
+                return StageRequest.Task.ongoingRollback(descriptor.getId());
+            } else {
+                return StageRequest.Task.ongoingExecution(descriptor.getId());
+            }
+        } else {
+            return StageRequest.Task.task(descriptor.getId());
+        }
+    }
+
+    public static List<ExecutableStage> getExecutableStages(ExecutionPlanResponse response, List<LoadedStage> loadedStages) {
         //Create a set for the filter in the loop
         Set<String> stageNameSet = response.getStages().stream().map(ExecutionPlanResponse.Stage::getName).collect(Collectors.toSet());
 

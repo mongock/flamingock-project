@@ -87,11 +87,11 @@ class CouchbaseDriverTest {
         //Checking auditLog
         List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
-        assertEquals("create-index", auditLog.get(0).getChangeId());
+        assertEquals("create-index", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
-        assertEquals("insert-document", auditLog.get(1).getChangeId());
+        assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
-        assertEquals("insert-another-document", auditLog.get(2).getChangeId());
+        assertEquals("insert-another-document", auditLog.get(2).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(2).getState());
 
         //Checking created index and documents
@@ -126,11 +126,11 @@ class CouchbaseDriverTest {
         //Checking auditLog
         List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
-        assertEquals("create-index", auditLog.get(0).getChangeId());
+        assertEquals("create-index", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
-        assertEquals("insert-document", auditLog.get(1).getChangeId());
+        assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
-        assertEquals("execution-with-exception", auditLog.get(2).getChangeId());
+        assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
         assertEquals(AuditEntryStatus.ROLLED_BACK, auditLog.get(2).getState());
 
         //Checking created index and documents
@@ -164,11 +164,11 @@ class CouchbaseDriverTest {
         //Checking auditLog
         List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
-        assertEquals("create-index", auditLog.get(0).getChangeId());
+        assertEquals("create-index", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
-        assertEquals("insert-document", auditLog.get(1).getChangeId());
+        assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
-        assertEquals("execution-with-exception", auditLog.get(2).getChangeId());
+        assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
         assertEquals(AuditEntryStatus.FAILED, auditLog.get(2).getState());
 
         //Checking created index and documents

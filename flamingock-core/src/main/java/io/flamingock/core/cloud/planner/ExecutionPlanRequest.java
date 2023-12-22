@@ -24,52 +24,20 @@ public class ExecutionPlanRequest {
 
     private final long acquiredForMills;
 
-    private final List<Stage> stages;
+    private final List<StageRequest> stages;
 
-    private final OngoingStatus ongoingStatus;
-
-    public ExecutionPlanRequest(long acquiredForMills, List<Stage> stages, OngoingStatus ongoingStatus) {
+    public ExecutionPlanRequest(long acquiredForMills, List<StageRequest> stages) {
         this.acquiredForMills = acquiredForMills;
         this.stages = stages;
-        this.ongoingStatus = ongoingStatus;
     }
 
     public long getAcquiredForMills() {
         return acquiredForMills;
     }
 
-    public List<Stage> getStages() {
+    public List<StageRequest> getStages() {
         return stages;
     }
 
-    public OngoingStatus getOngoingStatus() {
-        return ongoingStatus;
-    }
-
-    public static class Stage {
-        private final String name;
-
-        private final int order;
-
-        private final List<String> tasks;
-
-        public Stage(String name, int order, List<String> tasks) {
-            this.name = name;
-            this.order = order;
-            this.tasks = tasks;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getOrder() {
-            return order;
-        }
-
-        public List<String> getTasks() {
-            return tasks;
-        }
-    }
 
 }

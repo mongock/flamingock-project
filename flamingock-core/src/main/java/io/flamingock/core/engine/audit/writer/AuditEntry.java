@@ -41,7 +41,7 @@ public class AuditEntry {
 
     private final String executionId;
 
-    private final String changeId;
+    private final String taskId;
 
     private final String author;
 
@@ -67,7 +67,7 @@ public class AuditEntry {
 
 
     public AuditEntry(String executionId,
-                      String changeId,
+                      String taskId,
                       String author,
                       LocalDateTime timestamp,
                       AuditEntryStatus state,
@@ -80,7 +80,7 @@ public class AuditEntry {
                       boolean systemChange,
                       String errorTrace) {
         this.executionId = executionId;
-        this.changeId = changeId;
+        this.taskId = taskId;
         this.author = author;
         this.createdAt = timestamp;
         this.state = state;
@@ -100,8 +100,8 @@ public class AuditEntry {
         return executionId;
     }
 
-    public String getChangeId() {
-        return changeId;
+    public String getTaskId() {
+        return taskId;
     }
 
     public String getAuthor() {
