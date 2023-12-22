@@ -20,5 +20,7 @@ import io.flamingock.core.transaction.TransactionWrapper;
 
 public interface CloudTransactioner extends OngoingStatusRepository, TransactionWrapper {
 
+    void initialize();
+
 
 }

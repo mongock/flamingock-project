@@ -115,7 +115,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
     }
 
     @Override
-    public Optional<TransactionWrapper> getTransactionWrapper() {
+    public Optional<CloudTransactioner> getTransactionWrapper() {
         return Optional.ofNullable(cloudTransactioner);
     }
 
