@@ -39,7 +39,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CloudExecutionPlanner extends ExecutionPlanner {
@@ -58,21 +57,21 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
 
     private final ServiceId serviceId;
 
-    private final OngoingStatusRepository cloudLocalStater;
+    private final OngoingStatusRepository ongoingStatusRepository;
 
     public CloudExecutionPlanner(ServiceId serviceId,
                                  RunnerId runnerId,
                                  ExecutionPlannerClient client,
                                  CoreConfigurable coreConfiguration,
                                  CloudLockService lockService,
-                                 OngoingStatusRepository cloudLocalStater,
+                                 OngoingStatusRepository ongoingStatusRepository,
                                  TimeService timeService) {
         this.client = client;
         this.serviceId = serviceId;
         this.runnerId = runnerId;
         this.coreConfiguration = coreConfiguration;
         this.lockService = lockService;
-        this.cloudLocalStater = cloudLocalStater;
+        this.ongoingStatusRepository = ongoingStatusRepository;
         this.timeService = timeService;
     }
 
@@ -140,7 +139,7 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
     }
 
     private Collection<OngoingStatus> getOngoingStatuses() {
-        return cloudLocalStater != null ? cloudLocalStater.getOngoingStatuses() : Collections.emptySet();
+        return ongoingStatusRepository != null ? ongoingStatusRepository.getOngoingStatuses() : Collections.emptySet();
     }
 
     private ExecutionPlan buildNextExecutionPlan(List<LoadedStage> loadedStages, ExecutionPlanResponse response) {
