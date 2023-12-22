@@ -30,7 +30,7 @@ public interface CloudConfigurator<HOLDER> {
 
     HOLDER setClientSecret(String clientSecret);
 
-    HOLDER setCloudTransactioner(CloudTransactioner eventualTransactionWrapper);
+    HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner);
 
     Optional<CloudTransactioner> getCloudTransactioner();
 

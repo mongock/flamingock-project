@@ -110,8 +110,8 @@ public class StandaloneCloudBuilder
     }
 
     @Override
-    public StandaloneCloudBuilder setCloudTransactioner(CloudTransactioner eventualTransactionWrapper) {
-        return cloudConfiguratorDelegate.setCloudTransactioner(eventualTransactionWrapper);
+    public StandaloneCloudBuilder setCloudTransactioner(CloudTransactioner cloudTransactioner) {
+        return cloudConfiguratorDelegate.setCloudTransactioner(cloudTransactioner);
     }
 
     @Override
