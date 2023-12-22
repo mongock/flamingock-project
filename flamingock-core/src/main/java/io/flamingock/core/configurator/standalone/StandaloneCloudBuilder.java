@@ -16,7 +16,7 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.cloud.transaction.EventualTransactioner;
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
@@ -110,12 +110,12 @@ public class StandaloneCloudBuilder
     }
 
     @Override
-    public StandaloneCloudBuilder setEventualTransactionWrapper(EventualTransactioner eventualTransactionWrapper) {
+    public StandaloneCloudBuilder setEventualTransactionWrapper(CloudTransactioner eventualTransactionWrapper) {
         return cloudConfiguratorDelegate.setEventualTransactionWrapper(eventualTransactionWrapper);
     }
 
     @Override
-    public Optional<EventualTransactioner> getEventualTransactionWrapper() {
+    public Optional<CloudTransactioner> getEventualTransactionWrapper() {
         return cloudConfiguratorDelegate.getEventualTransactionWrapper();
     }
 

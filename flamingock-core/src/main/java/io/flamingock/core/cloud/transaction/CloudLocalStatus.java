@@ -16,11 +16,25 @@
 
 package io.flamingock.core.cloud.transaction;
 
-import java.util.Optional;
+import io.flamingock.core.engine.audit.domain.AuditItem;
 
-public interface LocalStater {
+public class CloudLocalStatus {
 
-    Optional<LocalStatus> getLocalStatus();
 
-    void cleanLocalStatus();
+    private final String ongoingTask;
+
+    private final AuditItem.Operation operation;
+
+    public CloudLocalStatus(String ongoingTask, AuditItem.Operation operation) {
+        this.ongoingTask = ongoingTask;
+        this.operation = operation;
+    }
+
+    public String getOngoingTask() {
+        return ongoingTask;
+    }
+
+    public AuditItem.Operation getOperation() {
+        return operation;
+    }
 }

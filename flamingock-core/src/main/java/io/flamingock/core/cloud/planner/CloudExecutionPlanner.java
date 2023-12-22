@@ -18,8 +18,8 @@ package io.flamingock.core.cloud.planner;
 
 import io.flamingock.core.cloud.lock.CloudLockService;
 import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
-import io.flamingock.core.cloud.transaction.LocalStatus;
-import io.flamingock.core.cloud.transaction.LocalStater;
+import io.flamingock.core.cloud.transaction.CloudLocalStatus;
+import io.flamingock.core.cloud.transaction.CloudLocalStater;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.execution.ExecutionPlan;
@@ -52,14 +52,14 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
 
     private final ServiceId serviceId;
 
-    private final LocalStater localStater;
+    private final CloudLocalStater localStater;
 
     public CloudExecutionPlanner(ServiceId serviceId,
                                  RunnerId runnerId,
                                  ExecutionPlannerClient client,
                                  CoreConfigurable coreConfiguration,
                                  CloudLockService lockService,
-                                 LocalStater localStater,
+                                 CloudLocalStater localStater,
                                  TimeService timeService) {
         this.client = client;
         this.serviceId = serviceId;
@@ -129,8 +129,8 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
         return responsePlan;
     }
 
-    private LocalStatus getLocalStatus() {
-        return localStater != null ? localStater.getLocalStatus().orElse(null) : null;
+    private CloudLocalStatus getLocalStatus() {
+        return localStater != null ? localStater.getStatus().orElse(null) : null;
     }
 
     private ExecutionPlan buildNextExecutionPlan(List<LoadedStage> loadedStages, ExecutionPlanResponse response) {

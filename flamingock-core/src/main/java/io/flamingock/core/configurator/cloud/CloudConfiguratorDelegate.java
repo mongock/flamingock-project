@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import io.flamingock.core.cloud.transaction.EventualTransactioner;
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.cloud.CloudConnectionEngine;
 import io.flamingock.core.runner.RunnerId;
@@ -56,7 +56,7 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
 
     private final CloudConfigurable cloudConfiguration;
 
-    private EventualTransactioner eventualTransactionWrapper;
+    private CloudTransactioner eventualTransactionWrapper;
 
     public CloudConfiguratorDelegate(CoreConfigurable coreConfiguration,
                                      CloudConfigurable cloudConfiguration,
@@ -92,13 +92,13 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     }
 
     @Override
-    public HOLDER setEventualTransactionWrapper(EventualTransactioner eventualTransactionWrapper) {
+    public HOLDER setEventualTransactionWrapper(CloudTransactioner eventualTransactionWrapper) {
         this.eventualTransactionWrapper = eventualTransactionWrapper;
         return holderSupplier.get();
     }
 
     @Override
-    public Optional<EventualTransactioner> getEventualTransactionWrapper() {
+    public Optional<CloudTransactioner> getEventualTransactionWrapper() {
         return Optional.ofNullable(eventualTransactionWrapper);
     }
 
