@@ -105,6 +105,8 @@ public class CloudConnectionEngine implements ConnectionEngine {
                 cloudTransactioner,
                 TimeService.getDefault()
         );
+
+        getTransactionWrapper().ifPresent(CloudTransactioner::initialize);
         //TODO authenticate
 
     }

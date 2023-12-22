@@ -6,10 +6,10 @@ dependencies {
     api("org.objenesis:objenesis:3.2")
     api("org.yaml:snakeyaml:2.2")
 
-    implementation("org.apache.httpcomponents:httpclient:4.5.14")
-    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
-    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
+    api("org.apache.httpcomponents:httpclient:4.5.14")
+    api("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+    api("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    api("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
 
 
 }

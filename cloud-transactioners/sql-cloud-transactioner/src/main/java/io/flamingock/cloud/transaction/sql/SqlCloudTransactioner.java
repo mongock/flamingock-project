@@ -48,7 +48,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
         try(Statement statement = connection.createStatement()) {
             statement.executeUpdate(SQL_CREATE_TABLE);
             logger.info("table ONGOING_TASKS created successfully");
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
     }
