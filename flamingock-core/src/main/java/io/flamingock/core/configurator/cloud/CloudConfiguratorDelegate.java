@@ -56,7 +56,7 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
 
     private final CloudConfigurable cloudConfiguration;
 
-    private CloudTransactioner eventualTransactionWrapper;
+    private CloudTransactioner cloudTransactioner;
 
     public CloudConfiguratorDelegate(CoreConfigurable coreConfiguration,
                                      CloudConfigurable cloudConfiguration,
@@ -92,16 +92,15 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     }
 
     @Override
-    public HOLDER setEventualTransactionWrapper(CloudTransactioner eventualTransactionWrapper) {
-        this.eventualTransactionWrapper = eventualTransactionWrapper;
+    public HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner) {
+        this.cloudTransactioner = cloudTransactioner;
         return holderSupplier.get();
     }
 
     @Override
-    public Optional<CloudTransactioner> getEventualTransactionWrapper() {
-        return Optional.ofNullable(eventualTransactionWrapper);
+    public Optional<CloudTransactioner> getCloudTransactioner() {
+        return Optional.ofNullable(cloudTransactioner);
     }
-
 
     public CloudConnectionEngine getAndInitializeConnectionEngine(RunnerId runnerId) {
         logger.info("Generated runnerId:  {}", runnerId);
@@ -109,12 +108,9 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
                 coreConfiguration,
                 cloudConfiguration,
                 Http.builderFactory(HttpClients.createDefault(), OBJECT_MAPPER),
-                eventualTransactionWrapper
+                cloudTransactioner
         );
         connectionEngine.initialize(runnerId);
         return connectionEngine;
     }
-
-
-
 }

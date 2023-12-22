@@ -109,13 +109,13 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     }
 
     @Override
-    public SpringbootCloudBuilder setEventualTransactionWrapper(CloudTransactioner eventualTransactionWrapper) {
-        return cloudConfiguratorDelegate.setEventualTransactionWrapper(eventualTransactionWrapper);
+    public SpringbootCloudBuilder setCloudTransactioner(CloudTransactioner eventualTransactionWrapper) {
+        return cloudConfiguratorDelegate.setCloudTransactioner(eventualTransactionWrapper);
     }
 
     @Override
-    public Optional<CloudTransactioner> getEventualTransactionWrapper() {
-        return cloudConfiguratorDelegate.getEventualTransactionWrapper();
+    public Optional<CloudTransactioner> getCloudTransactioner() {
+        return cloudConfiguratorDelegate.getCloudTransactioner();
     }
 
 }

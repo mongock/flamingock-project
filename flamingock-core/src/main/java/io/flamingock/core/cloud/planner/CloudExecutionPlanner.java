@@ -52,21 +52,21 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
 
     private final ServiceId serviceId;
 
-    private final CloudLocalStater localStater;
+    private final CloudLocalStater cloudLocalStater;
 
     public CloudExecutionPlanner(ServiceId serviceId,
                                  RunnerId runnerId,
                                  ExecutionPlannerClient client,
                                  CoreConfigurable coreConfiguration,
                                  CloudLockService lockService,
-                                 CloudLocalStater localStater,
+                                 CloudLocalStater cloudLocalStater,
                                  TimeService timeService) {
         this.client = client;
         this.serviceId = serviceId;
         this.runnerId = runnerId;
         this.coreConfiguration = coreConfiguration;
         this.lockService = lockService;
-        this.localStater = localStater;
+        this.cloudLocalStater = cloudLocalStater;
         this.timeService = timeService;
     }
 
@@ -130,7 +130,7 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
     }
 
     private CloudLocalStatus getLocalStatus() {
-        return localStater != null ? localStater.getStatus().orElse(null) : null;
+        return cloudLocalStater != null ? cloudLocalStater.getStatus().orElse(null) : null;
     }
 
     private ExecutionPlan buildNextExecutionPlan(List<LoadedStage> loadedStages, ExecutionPlanResponse response) {

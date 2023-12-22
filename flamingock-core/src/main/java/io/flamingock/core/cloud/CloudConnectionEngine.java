@@ -60,11 +60,11 @@ public class CloudConnectionEngine implements ConnectionEngine {
     public CloudConnectionEngine(CoreConfigurable coreConfiguration,
                                  CloudConfigurable cloudConfiguration,
                                  Http.RequestBuilderFactory requestBuilderFactory,
-                                 CloudTransactioner eventualTransactioner) {
+                                 CloudTransactioner cloudTransactioner) {
         this.coreConfiguration = coreConfiguration;
         this.cloudConfiguration = cloudConfiguration;
         this.requestBuilderFactory = requestBuilderFactory;
-        this.eventualTransactioner = eventualTransactioner;
+        this.eventualTransactioner = cloudTransactioner;
     }
 
     public AuditWriter getAuditWriter() {
