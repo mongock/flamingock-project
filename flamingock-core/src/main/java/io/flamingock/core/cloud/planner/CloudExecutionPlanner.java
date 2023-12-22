@@ -22,6 +22,7 @@ import io.flamingock.core.cloud.transaction.OngoingStatus;
 import io.flamingock.core.cloud.transaction.OngoingStatusRepository;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.ServiceId;
+import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.execution.ExecutionPlan;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.engine.lock.LockException;
@@ -34,7 +35,12 @@ import io.flamingock.core.util.TimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CloudExecutionPlanner extends ExecutionPlanner {
 
@@ -118,10 +124,14 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
 
     private ExecutionPlanResponse createExecution(List<LoadedStage> loadedStages, String lastAcquisitionId, long elapsedMillis) {
 
+        Map<String, AuditItem.Operation> ongoingStatusesMap = getOngoingStatuses()
+                .stream()
+                .collect(Collectors.toMap(OngoingStatus::getTaskId, OngoingStatus::getOperation));
+
         ExecutionPlanRequest requestBody = ExecutionPlanMapper.toRequest(
                 loadedStages,
                 coreConfiguration.getLockAcquiredForMillis(),
-                getLocalStatus());
+                ongoingStatusesMap);
 
         ExecutionPlanResponse responsePlan = client.createExecution(
                 serviceId, runnerId, requestBody, lastAcquisitionId, elapsedMillis);
@@ -129,8 +139,8 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
         return responsePlan;
     }
 
-    private OngoingStatus getLocalStatus() {
-        return cloudLocalStater != null ? cloudLocalStater.getOngoingStatus().orElse(null) : null;
+    private Collection<OngoingStatus> getOngoingStatuses() {
+        return cloudLocalStater != null ? cloudLocalStater.getOngoingStatuses() : Collections.emptySet();
     }
 
     private ExecutionPlan buildNextExecutionPlan(List<LoadedStage> loadedStages, ExecutionPlanResponse response) {

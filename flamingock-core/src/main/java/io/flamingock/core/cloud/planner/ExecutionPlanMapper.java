@@ -30,6 +30,7 @@ import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.util.TimeService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public final class ExecutionPlanMapper {
 
     public static ExecutionPlanRequest toRequest(List<LoadedStage> loadedStages,
                                                  long lockAcquiredForMillis,
-                                                 OngoingStatus ongoingStatus) {
+                                                 Map<String, AuditItem.Operation> ongoingStatusesMap) {
 
         List<StageRequest> requestStages = new ArrayList<>(loadedStages.size());
         for (int i = 0; i < loadedStages.size(); i++) {
@@ -51,7 +52,7 @@ public final class ExecutionPlanMapper {
             List<StageRequest.Task> stageTasks = currentStage
                     .getTaskDescriptors()
                     .stream()
-                    .map(descriptor -> ExecutionPlanMapper.mapToTaskRequest(descriptor, ongoingStatus))
+                    .map(descriptor -> ExecutionPlanMapper.mapToTaskRequest(descriptor, ongoingStatusesMap))
                     .collect(Collectors.toList());
             requestStages.add(new StageRequest(currentStage.getName(), i, stageTasks));
         }
@@ -59,9 +60,10 @@ public final class ExecutionPlanMapper {
         return new ExecutionPlanRequest(lockAcquiredForMillis, requestStages);
     }
 
-    private static StageRequest.Task mapToTaskRequest(TaskDescriptor descriptor, OngoingStatus ongoingStatus) {
-        if (ongoingStatus != null && ongoingStatus.getTaskId().equals(descriptor.getId())) {
-            if (ongoingStatus.getOperation() == AuditItem.Operation.ROLLBACK) {
+    private static StageRequest.Task mapToTaskRequest(TaskDescriptor descriptor,
+                                                      Map<String, AuditItem.Operation> ongoingStatusesMap) {
+        if(ongoingStatusesMap.containsKey(descriptor.getId())) {
+            if (ongoingStatusesMap.get(descriptor.getId()) == AuditItem.Operation.ROLLBACK) {
                 return StageRequest.Task.ongoingRollback(descriptor.getId());
             } else {
                 return StageRequest.Task.ongoingExecution(descriptor.getId());

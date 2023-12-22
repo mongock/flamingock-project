@@ -18,33 +18,37 @@ package io.flamingock.core.cloud.transaction;
 
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.task.executable.ExecutableTask;
-
-import java.util.Optional;
+import java.util.Set;
 
 public interface OngoingStatusRepository {
 
     /**
      * Retrieves the current status form the database
-     * @return current status
+     *
+     * @return non-null set of ongoing statuses
      */
-    Optional<OngoingStatus> getOngoingStatus();
+    Set<OngoingStatus> getOngoingStatuses();
 
     /**
-     * Removes any status from the database
+     * Removes from the local database any ongoing status for the given taskId
+     * If the operation cannot be performed, throws a RuntimeException
+     *
+     * @param taskId taskId for which the statuses need to be removed
      */
-    void cleanOngoingStatus();
+    void cleanOngoingStatus(String taskId);
 
     /**
      * Upsert operation for new status in database. If there is an existing one, it gets overwritten
+     *
      * @param status the status to be written
      */
-    void setOngoingStatus(OngoingStatus status);
+    void saveOngoingStatus(OngoingStatus status);
 
     default void setOngoingExecution(ExecutableTask ongoingTask) {
-        setOngoingStatus(new OngoingStatus(ongoingTask.getDescriptor().getId(), AuditItem.Operation.EXECUTION));
+        saveOngoingStatus(new OngoingStatus(ongoingTask.getDescriptor().getId(), AuditItem.Operation.EXECUTION));
     }
 
     default void setOngoingRollback(ExecutableTask ongoingTask) {
-        setOngoingStatus(new OngoingStatus(ongoingTask.getDescriptor().getId(), AuditItem.Operation.ROLLBACK));
+        saveOngoingStatus(new OngoingStatus(ongoingTask.getDescriptor().getId(), AuditItem.Operation.ROLLBACK));
     }
 }

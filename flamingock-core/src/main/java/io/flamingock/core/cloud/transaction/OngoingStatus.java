@@ -37,4 +37,19 @@ public class OngoingStatus {
     public AuditItem.Operation getOperation() {
         return operation;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OngoingStatus that = (OngoingStatus) o;
+
+        return taskId.equals(that.taskId);
+    }
+
+    @Override
+    public int hashCode() {
+        return taskId.hashCode();
+    }
 }

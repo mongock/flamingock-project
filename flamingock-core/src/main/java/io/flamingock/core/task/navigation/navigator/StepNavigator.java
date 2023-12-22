@@ -119,7 +119,7 @@ public class StepNavigator {
                                               StageExecutionContext stageExecutionContext,
                                               DependencyInjectable dependencyInjectable) {
         //If it's a cloud transaction, it requires to write the status
-        getOngoingRepositoryIfCloudTransaction().ifPresent(stater -> stater.setOngoingExecution(task));
+        getOngoingRepositoryIfCloudTransaction().ifPresent(ongoingRepo -> ongoingRepo.setOngoingExecution(task));
 
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
             ExecutionStep executed = executeTask(task);
@@ -127,7 +127,8 @@ public class StepNavigator {
                 AfterExecutionAuditStep executionAuditResult = performAuditExecution(executed, stageExecutionContext, LocalDateTime.now());
                 if (executionAuditResult instanceof CompletedSuccessStep) {
                     //If it's a cloud transaction, it requires to clean the status
-                    getOngoingRepositoryIfCloudTransaction().ifPresent(OngoingStatusRepository::cleanOngoingStatus);
+                    getOngoingRepositoryIfCloudTransaction()
+                            .ifPresent(ongoingRepo -> ongoingRepo.cleanOngoingStatus(task.getDescriptor().getId()));
                     return executionAuditResult;
                 }
             }
