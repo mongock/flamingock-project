@@ -16,35 +16,30 @@
 
 package io.flamingock.core.cloud.planner;
 
-import io.flamingock.core.cloud.transaction.OngoingStatus;
-
 import java.util.List;
 
-public class ExecutionPlanRequest {
+public class StageRequest {
+    private final String name;
 
-    private final long acquiredForMills;
+    private final int order;
 
-    private final List<StageRequest> stages;
+    private final List<String> tasks;
 
-    private final OngoingStatus ongoingStatus;
-
-    public ExecutionPlanRequest(long acquiredForMills, List<StageRequest> stages, OngoingStatus ongoingStatus) {
-        this.acquiredForMills = acquiredForMills;
-        this.stages = stages;
-        this.ongoingStatus = ongoingStatus;
+    public StageRequest(String name, int order, List<String> tasks) {
+        this.name = name;
+        this.order = order;
+        this.tasks = tasks;
     }
 
-    public long getAcquiredForMills() {
-        return acquiredForMills;
+    public String getName() {
+        return name;
     }
 
-    public List<StageRequest> getStages() {
-        return stages;
+    public int getOrder() {
+        return order;
     }
 
-    public OngoingStatus getOngoingStatus() {
-        return ongoingStatus;
+    public List<String> getTasks() {
+        return tasks;
     }
-
-
 }

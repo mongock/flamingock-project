@@ -43,7 +43,7 @@ public final class ExecutionPlanMapper {
     public static  ExecutionPlanRequest toRequest(List<LoadedStage> loadedStages,
                                                   long lockAcquiredForMillis,
                                                   OngoingStatus localStatus) {
-        List<ExecutionPlanRequest.Stage> requestStages = new ArrayList<>(loadedStages.size());
+        List<StageRequest> requestStages = new ArrayList<>(loadedStages.size());
         for (int i = 0; i < loadedStages.size(); i++) {
             LoadedStage currentStage = loadedStages.get(i);
             List<String> stageTasks = currentStage
@@ -51,7 +51,7 @@ public final class ExecutionPlanMapper {
                     .stream()
                     .map(TaskDescriptor::getId)
                     .collect(Collectors.toList());
-            requestStages.add(new ExecutionPlanRequest.Stage(currentStage.getName(), i, stageTasks));
+            requestStages.add(new StageRequest(currentStage.getName(), i, stageTasks));
         }
 
         return new ExecutionPlanRequest(lockAcquiredForMillis, requestStages, localStatus);
