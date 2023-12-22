@@ -39,6 +39,8 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     private final Connection connection;
 
+    private Boolean initialAutoCommit = null;
+
     public SqlCloudTransactioner(Connection connection) {
         this.connection = connection;
     }
@@ -46,7 +48,10 @@ public class SqlCloudTransactioner implements CloudTransactioner {
     @Override
     public void initialize() {
         try(Statement statement = connection.createStatement()) {
+            initialAutoCommit = connection.getAutoCommit();
+            disableAutoCommit();
             statement.executeUpdate(SQL_CREATE_TABLE);
+            connection.commit();
             logger.info("table ONGOING_TASKS created successfully");
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -55,6 +60,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public Set<OngoingStatus> getOngoingStatuses() {
+        disableAutoCommit();
         try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT)) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -72,6 +78,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void cleanOngoingStatus(String taskId) {
+        disableAutoCommit();
         try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE)) {
             preparedStatement.setString(1, taskId);
             int rows = preparedStatement.executeUpdate();
@@ -83,24 +90,23 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void saveOngoingStatus(OngoingStatus status) {
-        try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT)) {
+        disableAutoCommit();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT)) {
             preparedStatement.setString(1, status.getTaskId());
             preparedStatement.setString(2, status.getOperation().toString());
             int rows = preparedStatement.executeUpdate();
+            connection.commit();
             logger.info("saved ongoing task[{}]: [{}] rows affected", status.getTaskId(), rows);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
     @Override
     public <T> T wrapInTransaction(TaskDescriptor taskDescriptor,
                                    DependencyInjectable dependencyInjectable,
                                    Supplier<T> operation) {
-        Boolean currentAutoCommit = null;
+        disableAutoCommit();
         try {
-            currentAutoCommit = connection.getAutoCommit();
-            connection.setAutoCommit(false);
             dependencyInjectable.addDependency(connection);
             T result = operation.get();
             if (result instanceof FailedStep) {
@@ -111,15 +117,25 @@ public class SqlCloudTransactioner implements CloudTransactioner {
             return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
 
-        } finally {
-            if(currentAutoCommit != null) {
-                try {
-                    connection.setAutoCommit(currentAutoCommit);
-                } catch (SQLException e) {
-                    logger.warn(e.getSQLState(), e);
-                }
+    @Override
+    public void close() {
+        if(initialAutoCommit != null) {
+            try {
+                connection.setAutoCommit(initialAutoCommit);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
+        }
+    }
+
+    private void disableAutoCommit() {
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
