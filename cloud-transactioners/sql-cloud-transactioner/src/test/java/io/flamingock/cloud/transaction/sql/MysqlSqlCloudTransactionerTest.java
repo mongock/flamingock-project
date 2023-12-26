@@ -78,9 +78,11 @@ public class MysqlSqlCloudTransactionerTest {
                     .setHttp(http)
                     .mockServer();
 
-            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword())
-                    .setDialect(SqlDialect.MYSQL);
-            SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(object);
+            SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(new SqlCloudTransactioner()
+                    .setUrl(mysql.getJdbcUrl())
+                    .setUser(mysql.getUsername())
+                    .setPassword(mysql.getPassword())
+                    .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
@@ -142,9 +144,11 @@ public class MysqlSqlCloudTransactionerTest {
                     .setHttp(http)
                     .mockServer();
 
-            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword())
-                    .setDialect(SqlDialect.MYSQL);
-            SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(object);
+            SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(new SqlCloudTransactioner()
+                    .setUrl(mysql.getJdbcUrl())
+                    .setUser(mysql.getUsername())
+                    .setPassword(mysql.getPassword())
+                    .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
@@ -191,9 +195,11 @@ public class MysqlSqlCloudTransactionerTest {
                     .setHttp(http)
                     .mockServer();
 
-            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword())
-                    .setDialect(SqlDialect.MYSQL);
-            SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(object);
+            SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(new SqlCloudTransactioner()
+                    .setUrl(mysql.getJdbcUrl())
+                    .setUser(mysql.getUsername())
+                    .setPassword(mysql.getPassword())
+                    .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
@@ -213,7 +219,7 @@ public class MysqlSqlCloudTransactionerTest {
             ArgumentCaptor<Object> bodyCaptor = ArgumentCaptor.forClass(Object.class);
             verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).setBody(bodyCaptor.capture());
 
-            ExecutionPlanRequest planRequest = (ExecutionPlanRequest)bodyCaptor.getAllValues().get(0);
+            ExecutionPlanRequest planRequest = (ExecutionPlanRequest) bodyCaptor.getAllValues().get(0);
             List<StageRequest.Task> tasks = planRequest.getStages().get(0).getTasks();
             assertEquals("create-table-clients", tasks.get(0).getId());
             assertEquals(StageRequest.TaskOngoingStatus.NONE, tasks.get(0).getOngoingStatus());

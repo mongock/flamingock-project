@@ -42,18 +42,27 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     private Connection connection;
 
-    private final String url;
+    private String url;
 
-    private final String user;
+    private String user;
 
-    private final String password;
+    private String password;
 
     private SqlDialect dialect;
 
-    public SqlCloudTransactioner(String url, String user, String password) {
+    public SqlCloudTransactioner setUrl(String url) {
         this.url = url;
+        return this;
+    }
+
+    public SqlCloudTransactioner setUser(String user) {
         this.user = user;
+        return this;
+    }
+
+    public SqlCloudTransactioner setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public SqlCloudTransactioner setDialect(SqlDialect dialect) {
