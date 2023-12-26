@@ -105,8 +105,8 @@ public class CloudConnectionEngine implements ConnectionEngine {
                 cloudTransactioner,
                 TimeService.getDefault()
         );
+        getTransactionWrapper().ifPresent(CloudTransactioner::initialize);
         //TODO authenticate
-
     }
 
     @Override
@@ -115,7 +115,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
     }
 
     @Override
-    public Optional<TransactionWrapper> getTransactionWrapper() {
+    public Optional<CloudTransactioner> getTransactionWrapper() {
         return Optional.ofNullable(cloudTransactioner);
     }
 
@@ -128,5 +128,6 @@ public class CloudConnectionEngine implements ConnectionEngine {
               logger.warn("Error closing request builder factory", ex);
             }
         }
+        getTransactionWrapper().ifPresent(CloudTransactioner::close);
     }
 }

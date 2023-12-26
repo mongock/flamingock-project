@@ -53,4 +53,14 @@ public class TestCloudTransactioner implements CloudTransactioner {
     public <T> T wrapInTransaction(TaskDescriptor taskDescriptor, DependencyInjectable dependencyInjectable, Supplier<T> operation) {
         return operation.get();
     }
+
+    @Override
+    public void initialize() {
+
+    }
+
+    @Override
+    public void close() {
+
+    }
 }

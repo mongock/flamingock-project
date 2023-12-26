@@ -10,6 +10,10 @@ project(":flamingock-template").projectDir = file("flamingock-template")
 project(":flamingock-template").name = "flamingock-template"
 
 
+include("cloud-transactioners:sql-cloud-transactioner")
+project(":cloud-transactioners:sql-cloud-transactioner").projectDir = file("cloud-transactioners/sql-cloud-transactioner")
+project(":cloud-transactioners:sql-cloud-transactioner").name = "sql-cloud-transactioner"
+
 include("flamingock-core")
 project(":flamingock-core").projectDir = file("flamingock-core")
 project(":flamingock-core").name = "flamingock-core"
@@ -110,3 +114,4 @@ project(":examples:databases:couchbase-springboot-v2").name = "couchbase-springb
 project(":examples:databases:couchbase-springboot-v2").projectDir = file("examples/databases/couchbase-springboot-v2")
 include("examples:databases:mysql-standalone")
 findProject(":examples:databases:mysql-standalone")?.name = "mysql-standalone"
+

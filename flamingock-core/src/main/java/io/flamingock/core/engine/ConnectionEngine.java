@@ -28,6 +28,6 @@ public interface ConnectionEngine  extends AutoCloseable{
 
   ExecutionPlanner getExecutionPlanner();
 
-  Optional<TransactionWrapper> getTransactionWrapper();
+  Optional<?  extends TransactionWrapper> getTransactionWrapper();
 
 }
