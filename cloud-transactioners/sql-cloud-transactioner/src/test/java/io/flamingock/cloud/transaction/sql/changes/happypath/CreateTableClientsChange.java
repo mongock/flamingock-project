@@ -1,11 +1,11 @@
 /*
- * Copyright 2023 Flamingock (https://oss.flamingock.io)
+ * Copyright 2023 Flamingock ("https://oss.flamingock.io")
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,25 +14,31 @@
  * limitations under the License.
  */
 
-package io.flamingock.cloud.transaction.sql.changes;
+package io.flamingock.cloud.transaction.sql.changes.happypath;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-@ChangeUnit(id = "insert-clients", order = "2")
-public class InsertClientsChange {
+@ChangeUnit(id = "create-table-clients", order = "1")
+public class CreateTableClientsChange {
 
     @Execution
     public void execution(@NonLockGuarded Connection connection) throws SQLException {
-        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTS(id, name) values(?, ?)")) {
-            preparedStatement.setInt(1, 1);
-            preparedStatement.setString(2, "Robert Mccoy");
-            int rows = preparedStatement.executeUpdate();
+
+        try(Statement statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE TABLE CLIENTS (" +
+                    "id INTEGER not NULL, " +
+                    " name VARCHAR(255), " +
+                    " PRIMARY KEY ( id )" +
+                    ")");
         }
     }
+
+
+
 }

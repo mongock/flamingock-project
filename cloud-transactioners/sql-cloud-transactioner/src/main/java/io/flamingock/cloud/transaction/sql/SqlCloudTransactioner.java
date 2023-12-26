@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,22 +39,41 @@ import java.util.function.Supplier;
 public class SqlCloudTransactioner implements CloudTransactioner {
     private static final Logger logger = LoggerFactory.getLogger(SqlCloudTransactioner.class);
 
-    private final Connection connection;
+    private Connection connection;
 
-    private Boolean initialAutoCommit = null;
+    private final String url;
 
-    public SqlCloudTransactioner(Connection connection) {
-        this.connection = connection;
+    private final String user;
+
+    private final String password;
+
+    private Dialect dialect = Dialect.MYSQL;
+
+    public SqlCloudTransactioner(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
     }
 
     @Override
     public void initialize() {
-        try(Statement statement = connection.createStatement()) {
-            initialAutoCommit = connection.getAutoCommit();
-            disableAutoCommit();
-            statement.executeUpdate(SQL_CREATE_TABLE);
-            connection.commit();
-            logger.info("table ONGOING_TASKS created successfully");
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try (Statement statement = connection.createStatement()) {
+            DatabaseMetaData meta = connection.getMetaData();
+            ResultSet resultSet = meta.getTables(null, null, TABLE_NAME, new String[]{"TABLE"});
+            if (!resultSet.next()) {
+                statement.executeUpdate(SQL_CREATE_TABLE);
+                connection.commit();
+                logger.info("table {} created successfully", TABLE_NAME);
+            } else {
+                logger.debug("Table {} already created", TABLE_NAME);
+            }
+
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -60,12 +81,11 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public Set<OngoingStatus> getOngoingStatuses() {
-        disableAutoCommit();
-        try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT)) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             Set<OngoingStatus> ongoingStatuses = new HashSet<>();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 String taskId = resultSet.getString("task_id");
                 AuditItem.Operation operation = AuditItem.Operation.valueOf(resultSet.getString("operation"));
                 ongoingStatuses.add(new OngoingStatus(taskId, operation));
@@ -78,8 +98,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void cleanOngoingStatus(String taskId) {
-        disableAutoCommit();
-        try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE)) {
             preparedStatement.setString(1, taskId);
             int rows = preparedStatement.executeUpdate();
             logger.info("removed ongoing task[{}]: [{}] rows affected", taskId, rows);
@@ -90,7 +109,6 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void saveOngoingStatus(OngoingStatus status) {
-        disableAutoCommit();
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT)) {
             preparedStatement.setString(1, status.getTaskId());
             preparedStatement.setString(2, status.getOperation().toString());
@@ -101,11 +119,11 @@ public class SqlCloudTransactioner implements CloudTransactioner {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public <T> T wrapInTransaction(TaskDescriptor taskDescriptor,
                                    DependencyInjectable dependencyInjectable,
                                    Supplier<T> operation) {
-        disableAutoCommit();
         try {
             dependencyInjectable.addDependency(connection);
             T result = operation.get();
@@ -122,32 +140,26 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void close() {
-        if(initialAutoCommit != null) {
-            try {
-                connection.setAutoCommit(initialAutoCommit);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void disableAutoCommit() {
         try {
-            connection.setAutoCommit(false);
+            connection.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.warn("Flamingock SQL Cloud trasactioner connection cannot be closed", e);
         }
     }
 
-    private final static String SQL_CREATE_TABLE = "CREATE TABLE ONGOING_TASKS (" +
+
+    private final static String TABLE_NAME = "ONGOING_TASKS";
+
+    private final static String SQL_CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
             "task_id VARCHAR(255) not NULL, " +
             " operation VARCHAR(10), " +
             " PRIMARY KEY ( task_id )" +
             ")";
 
-    private final static String SQL_SELECT = "SELECT task_id, operation FROM ONGOING_TASKS";
 
-    private final static String SQL_INSERT = "INSERT INTO ONGOING_TASKS(task_id, operation) values(?, ?)";
+    private final static String SQL_SELECT = "SELECT task_id, operation FROM " + TABLE_NAME;
 
-    private final static String SQL_DELETE = "DELETE FROM ONGOING_TASKS WHERE task_id=?";
+    private final static String SQL_INSERT = "INSERT INTO " + TABLE_NAME + "(task_id, operation) values(?, ?)";
+
+    private final static String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE task_id=?";
 }

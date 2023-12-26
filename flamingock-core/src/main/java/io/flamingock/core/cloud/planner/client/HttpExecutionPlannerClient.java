@@ -40,7 +40,6 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
                 .getRequestBuilder(host);
     }
 
-
     @Override
     public ExecutionPlanResponse createExecution(ServiceId serviceId,
                                                  RunnerId runnerId,

@@ -58,4 +58,9 @@ public class TestCloudTransactioner implements CloudTransactioner {
     public void initialize() {
 
     }
+
+    @Override
+    public void close() {
+
+    }
 }
