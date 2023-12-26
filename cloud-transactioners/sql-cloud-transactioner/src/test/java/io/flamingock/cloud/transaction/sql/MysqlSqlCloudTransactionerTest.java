@@ -46,7 +46,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 
-public class SqlCloudTransactionerTest {
+public class MysqlSqlCloudTransactionerTest {
 
     private static final MySQLContainer<?> mysql = SqlTestUtil.getMysqlContainer();
 
@@ -78,7 +78,8 @@ public class SqlCloudTransactionerTest {
                     .setHttp(http)
                     .mockServer();
 
-            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword());
+            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword())
+                    .setDialect(SqlDialect.MYSQL);
             SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(object);
 
             Runner runner = FlamingockStandalone.cloud()
@@ -141,7 +142,8 @@ public class SqlCloudTransactionerTest {
                     .setHttp(http)
                     .mockServer();
 
-            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword());
+            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword())
+                    .setDialect(SqlDialect.MYSQL);
             SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(object);
 
             Runner runner = FlamingockStandalone.cloud()
@@ -189,7 +191,8 @@ public class SqlCloudTransactionerTest {
                     .setHttp(http)
                     .mockServer();
 
-            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword());
+            SqlCloudTransactioner object = new SqlCloudTransactioner(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword())
+                    .setDialect(SqlDialect.MYSQL);
             SqlCloudTransactioner sqlCloudTransactioner = Mockito.spy(object);
 
             Runner runner = FlamingockStandalone.cloud()

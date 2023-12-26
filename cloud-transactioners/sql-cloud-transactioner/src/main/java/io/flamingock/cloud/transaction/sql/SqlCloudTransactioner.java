@@ -16,6 +16,7 @@
 
 package io.flamingock.cloud.transaction.sql;
 
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.cloud.transaction.OngoingStatus;
 import io.flamingock.core.engine.audit.domain.AuditItem;
@@ -47,7 +48,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     private final String password;
 
-    private Dialect dialect = Dialect.MYSQL;
+    private SqlDialect dialect;
 
     public SqlCloudTransactioner(String url, String user, String password) {
         this.url = url;
@@ -55,8 +56,17 @@ public class SqlCloudTransactioner implements CloudTransactioner {
         this.password = password;
     }
 
+    public SqlCloudTransactioner setDialect(SqlDialect dialect) {
+        this.dialect = dialect;
+        return this;
+    }
+
     @Override
     public void initialize() {
+
+        if(dialect == null) {
+            throw new FlamingockException("Sql dialect is mandatory. Please set the dialect with method `SqlCloudTransactioner.setDialect(...)`");
+        }
         try {
             connection = DriverManager.getConnection(url, user, password);
             connection.setAutoCommit(false);
@@ -65,13 +75,13 @@ public class SqlCloudTransactioner implements CloudTransactioner {
         }
         try (Statement statement = connection.createStatement()) {
             DatabaseMetaData meta = connection.getMetaData();
-            ResultSet resultSet = meta.getTables(null, null, TABLE_NAME, new String[]{"TABLE"});
+            ResultSet resultSet = meta.getTables(null, null, dialect.getTableName(), new String[]{"TABLE"});
             if (!resultSet.next()) {
-                statement.executeUpdate(SQL_CREATE_TABLE);
+                statement.executeUpdate(dialect.getCreateTable());
                 connection.commit();
-                logger.info("table {} created successfully", TABLE_NAME);
+                logger.info("table {} created successfully", dialect.getTableName());
             } else {
-                logger.debug("Table {} already created", TABLE_NAME);
+                logger.debug("Table {} already created", dialect.getTableName());
             }
 
         } catch (SQLException ex) {
@@ -81,7 +91,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public Set<OngoingStatus> getOngoingStatuses() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getQuery())) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             Set<OngoingStatus> ongoingStatuses = new HashSet<>();
@@ -98,7 +108,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void cleanOngoingStatus(String taskId) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getDeleteTemplate())) {
             preparedStatement.setString(1, taskId);
             int rows = preparedStatement.executeUpdate();
             logger.info("removed ongoing task[{}]: [{}] rows affected", taskId, rows);
@@ -109,7 +119,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void saveOngoingStatus(OngoingStatus status) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getInsertTemplate())) {
             preparedStatement.setString(1, status.getTaskId());
             preparedStatement.setString(2, status.getOperation().toString());
             int rows = preparedStatement.executeUpdate();
@@ -147,19 +157,4 @@ public class SqlCloudTransactioner implements CloudTransactioner {
         }
     }
 
-
-    private final static String TABLE_NAME = "ONGOING_TASKS";
-
-    private final static String SQL_CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
-            "task_id VARCHAR(255) not NULL, " +
-            " operation VARCHAR(10), " +
-            " PRIMARY KEY ( task_id )" +
-            ")";
-
-
-    private final static String SQL_SELECT = "SELECT task_id, operation FROM " + TABLE_NAME;
-
-    private final static String SQL_INSERT = "INSERT INTO " + TABLE_NAME + "(task_id, operation) values(?, ?)";
-
-    private final static String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE task_id=?";
 }

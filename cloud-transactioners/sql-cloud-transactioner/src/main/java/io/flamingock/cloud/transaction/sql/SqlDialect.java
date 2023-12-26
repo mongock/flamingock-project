@@ -16,7 +16,7 @@
 
 package io.flamingock.cloud.transaction.sql;
 
-public enum Dialect {
+public enum SqlDialect {
 
     MYSQL("ONGOING_TASKS",
             "CREATE TABLE ONGOING_TASKS (" +
@@ -35,11 +35,11 @@ public enum Dialect {
     private final String insertTemplate;
     private final String deleteTemplate;
 
-    Dialect(String tableName,
-            String createTable,
-            String query,
-            String insertTemplate,
-            String deleteTemplate) {
+    SqlDialect(String tableName,
+               String createTable,
+               String query,
+               String insertTemplate,
+               String deleteTemplate) {
         this.tableName = tableName;
         this.createTable = createTable;
         this.query = query;
