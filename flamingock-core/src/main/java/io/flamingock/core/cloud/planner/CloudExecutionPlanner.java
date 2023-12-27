@@ -90,9 +90,9 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
         StopWatch counterPerGuid = StopWatch.getNoStarted();
         do {
             try {
-
+                logger.info("Requesting cloud execution plan - elapsed[{}ms]", counterPerGuid.getElapsed());
                 ExecutionPlanResponse response = createExecution(loadedStages, lastOwnerGuid, counterPerGuid.getElapsed());
-
+                logger.info("Obtained cloud execution plan: {}", response.getAction());
                 if (response.isContinue()) {
                     return ExecutionPlan.CONTINUE();
 
@@ -102,10 +102,16 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
                 } else if (response.isAwait()) {
                     if (lastOwnerGuid == null || !lastOwnerGuid.equals(response.getLock().getAcquisitionId())) {
                         //if the lock's guid has been changed, the stopwatch needs to be reset
+                        logger.info(
+                                "counter per lock GUID re-started: lastOwnerGuid[{}] and response guid[{}] - elapsed[{}ms]",
+                                lastOwnerGuid,
+                                response.getLock().getAcquisitionId(),
+                                counterPerGuid.getElapsed());
                         counterPerGuid.reset();
                     }
                     lastOwnerGuid = response.getLock().getAcquisitionId();
                     long remainingTimeForSameGuid = response.getLock().getAcquiredForMillis() - counterPerGuid.getElapsed();
+                    logger.info("AWAIT response from server - elapsed[{}ms]", counterPerGuid.getElapsed());
                     lockThreadSleeper.checkThresholdAndWait(
                             Math.min(remainingTimeForSameGuid, coreConfiguration.getLockTryFrequencyMillis())
                     );
@@ -114,6 +120,9 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
                     throw new RuntimeException("Unrecognized action from response. Not within(CONTINUE, EXECUTE, AWAIT)");
                 }
 
+            } catch (FlamingockException ex) {
+                logger.warn("Error after elapsed[{}ms]", counterPerGuid.getElapsed());
+                throw ex;
             } catch (Throwable exception) {
                 throw new FlamingockException(exception);
             }

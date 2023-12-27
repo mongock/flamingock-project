@@ -69,6 +69,10 @@ public class ExecutionPlanResponse {
         return action == Action.CONTINUE;
     }
 
+    Action getAction() {
+        return action;
+    }
+
     public boolean isExecute() {
         return action == Action.EXECUTE;
     }

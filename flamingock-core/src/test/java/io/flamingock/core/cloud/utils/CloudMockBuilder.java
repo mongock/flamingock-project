@@ -72,10 +72,14 @@ public final class CloudMockBuilder {
     }
 
     public CloudMockBuilder addAwaitExecutionPlanResponse(long acquiredForMillis) {
+        return addAwaitExecutionPlanResponse(acquiredForMillis, UUID.randomUUID().toString());
+    }
+
+    public CloudMockBuilder addAwaitExecutionPlanResponse(long acquiredForMillis, String guid) {
         ExecutionPlanResponse executionPlanResponse = new ExecutionPlanResponse();
         executionPlanResponse.setAction(ExecutionPlanResponse.Action.AWAIT);
         ExecutionPlanResponse.Lock lock = new ExecutionPlanResponse.Lock();
-        lock.setAcquisitionId(UUID.randomUUID().toString());
+        lock.setAcquisitionId(guid);
         lock.setKey(serviceName);
         lock.setOwner(runnerId);
         lock.setAcquiredForMillis(acquiredForMillis);

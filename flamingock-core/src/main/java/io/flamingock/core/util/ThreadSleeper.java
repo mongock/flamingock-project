@@ -31,9 +31,11 @@ public class ThreadSleeper {
             throwException("Maximum waiting millis reached: " + totalMaxTimeWaitingMillis);
         }
         if (maxTimeToWait > 0) {
+            logger.info("Trying going to sleep for maximum {}ms", maxTimeToWait);
             waitForMillis(maxTimeToWait);
+        } else {
+            logger.info("Not going to sleep. Because max time to wait[{}] is less than zero", maxTimeToWait);
         }
-
     }
 
     private void waitForMillis(long maxAllowedTimeToWait) {
@@ -49,8 +51,9 @@ public class ThreadSleeper {
             if (timeToSleep > remainingTime) {
                 timeToSleep = remainingTime;
             }
-
+            logger.info("Going to sleep finally for {}ms", timeToSleep);
             Thread.sleep(timeToSleep);
+            logger.info("Woke up");
         } catch (InterruptedException ex) {
             logger.error(ex.getMessage(), ex);
             Thread.currentThread().interrupt();
