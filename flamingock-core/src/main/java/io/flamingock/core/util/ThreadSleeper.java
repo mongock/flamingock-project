@@ -27,13 +27,18 @@ public class ThreadSleeper {
 
     public void checkThresholdAndWait() {
         //remaining time
-        checkThresholdAndWait(totalMaxTimeWaitingMillis - stopWatch.getLap());
+        checkThresholdAndWait(totalMaxTimeWaitingMillis - stopWatch.getElapsed());
     }
 
-    public void checkThresholdAndWait(long maxTimeWaitingMillis) {
-        if (maxTimeWaitingMillis > 0) {
+    /**
+     * It checks if the threshold hasn't been reached. In that case it will decide if it waits the maximum allowed
+     * (maxTimeAllowedToWait) or less, which it's restricted by totalMaxTimeWaitingMillis
+     * @param maxTimeAllowedToWait Max time allowed to wait in this iteration.
+     */
+    public void checkThresholdAndWait(long maxTimeAllowedToWait) {
+        if (maxTimeAllowedToWait > 0) {
             checkThreshold();
-            waitForMillis(maxTimeWaitingMillis);
+            waitForMillis(maxTimeAllowedToWait);
         }
 
     }
@@ -44,9 +49,9 @@ public class ThreadSleeper {
         }
     }
 
-    private void waitForMillis(long resourceBlockedFor) {
+    private void waitForMillis(long maxAllowedTimeToWait) {
         try {
-            long timeToSleep = resourceBlockedFor;
+            long timeToSleep = maxAllowedTimeToWait;
 
             //How log until max Time waiting reached
             long remainingTime = totalMaxTimeWaitingMillis - stopWatch.getLap();

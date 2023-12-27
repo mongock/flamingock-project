@@ -102,12 +102,12 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
                 } else if (response.isAwait()) {
                     if (lastOwnerGuid == null || !lastOwnerGuid.equals(response.getLock().getAcquisitionId())) {
                         //if the lock's guid has been changed, the stopwatch needs to be reset
-                        stopWatch.reset();
+                        stopWatch.resetLap();
                     }
                     stopWatch.run();
                     lastOwnerGuid = response.getLock().getAcquisitionId();
                     lockThreadSleeper.checkThresholdAndWait(
-                            response.getLock().getAcquiredForMillis() - stopWatch.getElapsed()
+                            response.getLock().getAcquiredForMillis() - stopWatch.getLap()
                     );
 
                 } else {

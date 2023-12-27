@@ -39,7 +39,7 @@ public class StopWatch {
      * Idempotent operation. If it's already started, it doesn't have effect
      */
     public void run() {
-        if (!isStarted()) {
+        if (isNotStarted()) {
             startedAt = System.currentTimeMillis();
         }
     }
@@ -48,7 +48,7 @@ public class StopWatch {
      * Performs a snapshot of the current elapse
      */
     public void lap() {
-        lap = isStarted() ? System.currentTimeMillis() - startedAt : 0L;
+        lap = getElapsed();
     }
 
     /**
@@ -62,7 +62,7 @@ public class StopWatch {
      * @return the current stopwatch's elapse
      */
     public long getElapsed() {
-        if (!isStarted()) {
+        if (isNotStarted()) {
             return 0L;
         }
         return System.currentTimeMillis() - startedAt;
@@ -73,13 +73,12 @@ public class StopWatch {
         return elapsed >= limitMillis;
     }
 
-    public void reset() {
-        startedAt = -1L;
+    public void resetLap() {
         lap = -1L;
     }
 
-    public boolean isStarted() {
-        return startedAt > -1L;
+    public boolean isNotStarted() {
+        return startedAt <= -1L;
     }
 
 }
