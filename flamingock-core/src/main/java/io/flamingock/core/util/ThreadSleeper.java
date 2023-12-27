@@ -11,34 +11,25 @@ public class ThreadSleeper {
 
 
     private final long totalMaxTimeWaitingMillis;
-    private final long tryFrequencyMillis;
     private final StopWatch stopWatch;
     private final Function<String, RuntimeException> exceptionThrower;
 
     public ThreadSleeper(long totalMaxTimeWaitingMillis,
-                         long tryFrequencyMillis,
-                         StopWatch stopWatch,
                          Function<String, RuntimeException> exceptionThrower) {
         this.totalMaxTimeWaitingMillis = totalMaxTimeWaitingMillis;
-        this.tryFrequencyMillis = tryFrequencyMillis;
-        this.stopWatch = stopWatch;
+        this.stopWatch = StopWatch.getNoStarted();
         this.exceptionThrower = exceptionThrower;
-    }
-
-    public void checkThresholdAndWait() {
-        //remaining time
-        checkThresholdAndWait(totalMaxTimeWaitingMillis - stopWatch.getElapsed());
     }
 
     /**
      * It checks if the threshold hasn't been reached. In that case it will decide if it waits the maximum allowed
      * (maxTimeAllowedToWait) or less, which it's restricted by totalMaxTimeWaitingMillis
-     * @param maxTimeAllowedToWait Max time allowed to wait in this iteration.
+     * @param maxTimeToWait Max time allowed to wait in this iteration.
      */
-    public void checkThresholdAndWait(long maxTimeAllowedToWait) {
-        if (maxTimeAllowedToWait > 0) {
-            checkThreshold();
-            waitForMillis(maxTimeAllowedToWait);
+    public void checkThresholdAndWait(long maxTimeToWait) {
+        checkThreshold();
+        if (maxTimeToWait > 0) {
+            waitForMillis(maxTimeToWait);
         }
 
     }
@@ -54,17 +45,13 @@ public class ThreadSleeper {
             long timeToSleep = maxAllowedTimeToWait;
 
             //How log until max Time waiting reached
-            long remainingTime = totalMaxTimeWaitingMillis - stopWatch.getLap();
+            long remainingTime = getRemainingMillis();
             if (remainingTime <= 0) {
                 throwException("Maximum waiting millis reached: " + totalMaxTimeWaitingMillis);
             }
 
             if (timeToSleep > remainingTime) {
                 timeToSleep = remainingTime;
-            }
-
-            if (timeToSleep > tryFrequencyMillis) {
-                timeToSleep = tryFrequencyMillis;
             }
 
             Thread.sleep(timeToSleep);
@@ -75,10 +62,14 @@ public class ThreadSleeper {
     }
 
     private void throwException(String cause) {
-        stopWatch.lap();
         throw exceptionThrower.apply(String.format(
                 "Quit trying to acquire the lock after %d millis[ %s ]",
-                stopWatch.getLap(),
+                stopWatch.getElapsed(),
                 cause));
     }
+
+    private long getRemainingMillis() {
+        return totalMaxTimeWaitingMillis - stopWatch.getElapsed();
+    }
+
 }

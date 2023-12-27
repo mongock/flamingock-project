@@ -81,17 +81,15 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
         List<LoadedStage> loadedStages = pipeline.getLoadedStages();
 
         //In every execution, as it start a stopwatch
-        StopWatch stopWatch = StopWatch.getNoStarted();
         ThreadSleeper lockThreadSleeper = new ThreadSleeper(
                 coreConfiguration.getLockQuitTryingAfterMillis(),
-                coreConfiguration.getLockTryFrequencyMillis(),
-                stopWatch,
                 LockException::new
         );
         String lastOwnerGuid = null;
+        StopWatch counterPerGuid = StopWatch.getNoStarted();
         do {
             try {
-                ExecutionPlanResponse response = createExecution(loadedStages, lastOwnerGuid, stopWatch.getElapsed());
+                ExecutionPlanResponse response = createExecution(loadedStages, lastOwnerGuid, counterPerGuid.getElapsed());
 
                 if (response.isContinue()) {
                     return ExecutionPlan.CONTINUE();
@@ -102,12 +100,12 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
                 } else if (response.isAwait()) {
                     if (lastOwnerGuid == null || !lastOwnerGuid.equals(response.getLock().getAcquisitionId())) {
                         //if the lock's guid has been changed, the stopwatch needs to be reset
-                        stopWatch.resetLap();
+                        counterPerGuid.reset();
                     }
-                    stopWatch.run();
                     lastOwnerGuid = response.getLock().getAcquisitionId();
+                    long remainingTimeForSameGuid = response.getLock().getAcquiredForMillis() - counterPerGuid.getElapsed();
                     lockThreadSleeper.checkThresholdAndWait(
-                            response.getLock().getAcquiredForMillis() - stopWatch.getLap()
+                            Math.min(remainingTimeForSameGuid, coreConfiguration.getLockTryFrequencyMillis())
                     );
 
                 } else {
@@ -115,10 +113,9 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
                 }
 
             } catch (Throwable exception) {
+                counterPerGuid.run();//idempotent, it doesn't start again if already started
                 logger.warn(exception.getMessage());
-                stopWatch.run();
-                //todo check exception type. If we can recover from it
-                lockThreadSleeper.checkThresholdAndWait();
+                lockThreadSleeper.checkThresholdAndWait(coreConfiguration.getLockTryFrequencyMillis());
             }
         } while (true);
     }

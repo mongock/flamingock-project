@@ -43,7 +43,9 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
     @Override
     public ExecutionPlanResponse createExecution(ServiceId serviceId,
                                                  RunnerId runnerId,
-                                                 ExecutionPlanRequest request, String lastAcquisitionId, long elapsedMillis) {
+                                                 ExecutionPlanRequest request,
+                                                 String lastAcquisitionId,
+                                                 long elapsedMillis) {
         return requestBuilder
                 .POST(pathTemplate)
                 .withRunnerId(runnerId)

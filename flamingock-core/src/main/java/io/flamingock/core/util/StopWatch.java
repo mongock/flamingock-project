@@ -20,8 +20,6 @@ public class StopWatch {
 
     private long startedAt = -1L;
 
-    private long lap = -1L;
-
     public static StopWatch getNoStarted() {
         return new StopWatch();
     }
@@ -44,18 +42,8 @@ public class StopWatch {
         }
     }
 
-    /**
-     * Performs a snapshot of the current elapse
-     */
-    public void lap() {
-        lap = getElapsed();
-    }
-
-    /**
-     * @return The latest lap, if the stopwatch has been lapped. 0L otherwise
-     */
-    public long getLap() {
-        return Math.max(lap, 0L);
+    public void reset() {
+        startedAt = System.currentTimeMillis();
     }
 
     /**
@@ -69,16 +57,12 @@ public class StopWatch {
     }
 
     public boolean hasReached(long limitMillis) {
-        long elapsed = System.currentTimeMillis() - startedAt;
-        return elapsed >= limitMillis;
-    }
-
-    public void resetLap() {
-        lap = -1L;
+        return getElapsed() >= limitMillis;
     }
 
     public boolean isNotStarted() {
         return startedAt <= -1L;
     }
+
 
 }
