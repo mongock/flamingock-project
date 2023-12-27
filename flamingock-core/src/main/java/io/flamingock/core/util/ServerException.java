@@ -16,7 +16,7 @@
 
 package io.flamingock.core.util;
 
-public class ConnectionException extends RuntimeException {
+public class ServerException extends RuntimeException {
 
     private final String request;
 
@@ -24,9 +24,9 @@ public class ConnectionException extends RuntimeException {
 
     private final FlamingockError error;
 
-    public ConnectionException(String request,
-                               String body,
-                               FlamingockError error) {
+    public ServerException(String request,
+                           String body,
+                           FlamingockError error) {
         super(error.toString());
         this.request = request;
         this.body = body;

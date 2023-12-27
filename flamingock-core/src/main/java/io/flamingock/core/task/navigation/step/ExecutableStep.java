@@ -33,11 +33,9 @@ public class ExecutableStep extends AbstractTaskStep {
         StopWatch stopWatch = StopWatch.startAndGet();
         try {
             task.execute(runtimeHelper);
-            stopWatch.lap();
-            return SuccessExecutionStep.instance(this, stopWatch.getLap());
+            return SuccessExecutionStep.instance(this, stopWatch.getElapsed());
         } catch (Throwable throwable) {
-            stopWatch.lap();
-            return FailedExecutionStep.instance(this, stopWatch.getLap(), throwable);
+            return FailedExecutionStep.instance(this, stopWatch.getElapsed(), throwable);
         }
 
     }

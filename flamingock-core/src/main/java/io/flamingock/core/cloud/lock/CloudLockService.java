@@ -22,7 +22,7 @@ import io.flamingock.core.engine.lock.LockKey;
 import io.flamingock.core.engine.lock.LockService;
 import io.flamingock.core.engine.lock.LockServiceException;
 import io.flamingock.core.runner.RunnerId;
-import io.flamingock.core.util.ConnectionException;
+import io.flamingock.core.util.ServerException;
 
 public class CloudLockService implements LockService {
 
@@ -39,7 +39,7 @@ public class CloudLockService implements LockService {
             LockResponse lockExtension = client.extendLock(key, owner, new LockExtensionRequest(leaseMillis));
             return new LockAcquisition(RunnerId.fromString(lockExtension.getOwner()), lockExtension.getLockAcquiredForMillis());
 
-        } catch (ConnectionException ex) {
+        } catch (ServerException ex) {
             throw new LockServiceException(
                     ex.getRequestString(),
                     ex.getBodyString(),
@@ -60,7 +60,7 @@ public class CloudLockService implements LockService {
             LockResponse response = client.getLock(lockKey);
             return new LockAcquisition(RunnerId.fromString(response.getOwner()), response.getLockAcquiredForMillis());
 
-        } catch (ConnectionException ex) {
+        } catch (ServerException ex) {
             throw new LockServiceException(
                     ex.getRequestString(),
                     ex.getBodyString(),
@@ -80,7 +80,7 @@ public class CloudLockService implements LockService {
         try {
             client.releaseLock(lockKey, owner);
 
-        } catch (ConnectionException ex) {
+        } catch (ServerException ex) {
             throw new LockServiceException(
                     ex.getRequestString(),
                     ex.getBodyString(),

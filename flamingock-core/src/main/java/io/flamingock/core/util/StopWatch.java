@@ -20,8 +20,6 @@ public class StopWatch {
 
     private long startedAt = -1L;
 
-    private long lap = -1L;
-
     public static StopWatch getNoStarted() {
         return new StopWatch();
     }
@@ -39,47 +37,32 @@ public class StopWatch {
      * Idempotent operation. If it's already started, it doesn't have effect
      */
     public void run() {
-        if (!isStarted()) {
+        if (isNotStarted()) {
             startedAt = System.currentTimeMillis();
         }
     }
 
-    /**
-     * Performs a snapshot of the current elapse
-     */
-    public void lap() {
-        lap = isStarted() ? System.currentTimeMillis() - startedAt : 0L;
-    }
-
-    /**
-     * @return The latest lap, if the stopwatch has been lapped. 0L otherwise
-     */
-    public long getLap() {
-        return Math.max(lap, 0L);
+    public void reset() {
+        startedAt = System.currentTimeMillis();
     }
 
     /**
      * @return the current stopwatch's elapse
      */
     public long getElapsed() {
-        if (!isStarted()) {
+        if (isNotStarted()) {
             return 0L;
         }
         return System.currentTimeMillis() - startedAt;
     }
 
     public boolean hasReached(long limitMillis) {
-        long elapsed = System.currentTimeMillis() - startedAt;
-        return elapsed >= limitMillis;
+        return getElapsed() >= limitMillis;
     }
 
-    public void reset() {
-        startedAt = -1L;
-        lap = -1L;
+    public boolean isNotStarted() {
+        return startedAt <= -1L;
     }
 
-    public boolean isStarted() {
-        return startedAt > -1L;
-    }
 
 }

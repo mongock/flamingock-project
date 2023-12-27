@@ -16,6 +16,7 @@
 
 package io.flamingock.core.cloud.planner;
 
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.lock.CloudLockService;
 import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
 import io.flamingock.core.cloud.transaction.OngoingStatus;
@@ -81,18 +82,17 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
         List<LoadedStage> loadedStages = pipeline.getLoadedStages();
 
         //In every execution, as it start a stopwatch
-        StopWatch stopWatch = StopWatch.getNoStarted();
         ThreadSleeper lockThreadSleeper = new ThreadSleeper(
                 coreConfiguration.getLockQuitTryingAfterMillis(),
-                coreConfiguration.getLockTryFrequencyMillis(),
-                stopWatch,
                 LockException::new
         );
         String lastOwnerGuid = null;
+        StopWatch counterPerGuid = StopWatch.getNoStarted();
         do {
             try {
-                ExecutionPlanResponse response = createExecution(loadedStages, lastOwnerGuid, stopWatch.getElapsed());
-
+                logger.info("Requesting cloud execution plan - elapsed[{}ms]", counterPerGuid.getElapsed());
+                ExecutionPlanResponse response = createExecution(loadedStages, lastOwnerGuid, counterPerGuid.getElapsed());
+                logger.info("Obtained cloud execution plan: {}", response.getAction());
                 if (response.isContinue()) {
                     return ExecutionPlan.CONTINUE();
 
@@ -102,21 +102,29 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
                 } else if (response.isAwait()) {
                     if (lastOwnerGuid == null || !lastOwnerGuid.equals(response.getLock().getAcquisitionId())) {
                         //if the lock's guid has been changed, the stopwatch needs to be reset
-                        stopWatch.reset();
+                        logger.info(
+                                "counter per lock GUID re-started: lastOwnerGuid[{}] and response guid[{}] - elapsed[{}ms]",
+                                lastOwnerGuid,
+                                response.getLock().getAcquisitionId(),
+                                counterPerGuid.getElapsed());
+                        counterPerGuid.reset();
                     }
-                    stopWatch.run();
                     lastOwnerGuid = response.getLock().getAcquisitionId();
+                    long remainingTimeForSameGuid = response.getLock().getAcquiredForMillis() - counterPerGuid.getElapsed();
+                    logger.info("AWAIT response from server - elapsed[{}ms]", counterPerGuid.getElapsed());
                     lockThreadSleeper.checkThresholdAndWait(
-                            response.getLock().getAcquiredForMillis() - stopWatch.getElapsed()
+                            Math.min(remainingTimeForSameGuid, coreConfiguration.getLockTryFrequencyMillis())
                     );
 
                 } else {
                     throw new RuntimeException("Unrecognized action from response. Not within(CONTINUE, EXECUTE, AWAIT)");
                 }
 
+            } catch (FlamingockException ex) {
+                logger.warn("Error after elapsed[{}ms]", counterPerGuid.getElapsed());
+                throw ex;
             } catch (Throwable exception) {
-                logger.warn(exception.getMessage());
-                lockThreadSleeper.checkThresholdAndWait();
+                throw new FlamingockException(exception);
             }
         } while (true);
     }
