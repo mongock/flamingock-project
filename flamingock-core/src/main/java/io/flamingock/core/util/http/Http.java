@@ -19,7 +19,7 @@ package io.flamingock.core.util.http;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flamingock.core.runner.RunnerId;
-import io.flamingock.core.util.ConnectionException;
+import io.flamingock.core.util.ServerException;
 import io.flamingock.core.util.FlamingockError;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -223,7 +223,7 @@ public final class Http {
                             return mapResult(response.getEntity(), type);
 
                         } catch (IOException ex) {
-                            throw new ConnectionException(
+                            throw new ServerException(
                                     request.toString(),
                                     getBodyIfPresent(),
                                     new HttpFlamingockError(statusCode,
@@ -247,16 +247,16 @@ public final class Http {
                             error = new FlamingockError(GENERIC_ERROR, response.getEntity().toString());
                         }
 
-                        throw new ConnectionException(request.toString(), getBodyIfPresent(), new HttpFlamingockError(statusCode, error));
+                        throw new ServerException(request.toString(), getBodyIfPresent(), new HttpFlamingockError(statusCode, error));
                     } else {
-                        throw new ConnectionException(request.toString(), getBodyIfPresent(), new HttpFlamingockError(statusCode, GENERIC_ERROR, "No error info returned"));
+                        throw new ServerException(request.toString(), getBodyIfPresent(), new HttpFlamingockError(statusCode, GENERIC_ERROR, "No error info returned"));
                     }
                 }
 
             } catch (IOException e) {
-                throw new ConnectionException(request.toString(), getBodyIfPresent(), new FlamingockError(HTTP_CONNECTION_ERROR, e.getMessage()));
+                throw new ServerException(request.toString(), getBodyIfPresent(), new FlamingockError(HTTP_CONNECTION_ERROR, e.getMessage()));
             } catch (Throwable e) {
-                throw new ConnectionException(request.toString(), getBodyIfPresent(), new FlamingockError(GENERIC_ERROR, e.getMessage()));
+                throw new ServerException(request.toString(), getBodyIfPresent(), new FlamingockError(GENERIC_ERROR, e.getMessage()));
             }
         }
 

@@ -17,7 +17,7 @@ public class ThreadSleeper {
     public ThreadSleeper(long totalMaxTimeWaitingMillis,
                          Function<String, RuntimeException> exceptionThrower) {
         this.totalMaxTimeWaitingMillis = totalMaxTimeWaitingMillis;
-        this.stopWatch = StopWatch.getNoStarted();
+        this.stopWatch = StopWatch.startAndGet();
         this.exceptionThrower = exceptionThrower;
     }
 
@@ -27,17 +27,13 @@ public class ThreadSleeper {
      * @param maxTimeToWait Max time allowed to wait in this iteration.
      */
     public void checkThresholdAndWait(long maxTimeToWait) {
-        checkThreshold();
+        if (stopWatch.hasReached(totalMaxTimeWaitingMillis)) {
+            throwException("Maximum waiting millis reached: " + totalMaxTimeWaitingMillis);
+        }
         if (maxTimeToWait > 0) {
             waitForMillis(maxTimeToWait);
         }
 
-    }
-
-    private void checkThreshold() {
-        if (stopWatch.hasReached(totalMaxTimeWaitingMillis)) {
-            throwException("Maximum waiting millis reached: " + totalMaxTimeWaitingMillis);
-        }
     }
 
     private void waitForMillis(long maxAllowedTimeToWait) {

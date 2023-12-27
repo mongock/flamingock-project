@@ -16,6 +16,7 @@
 
 package io.flamingock.core.cloud.planner;
 
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.lock.CloudLockService;
 import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
 import io.flamingock.core.cloud.transaction.OngoingStatus;
@@ -89,6 +90,7 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
         StopWatch counterPerGuid = StopWatch.getNoStarted();
         do {
             try {
+
                 ExecutionPlanResponse response = createExecution(loadedStages, lastOwnerGuid, counterPerGuid.getElapsed());
 
                 if (response.isContinue()) {
@@ -113,9 +115,7 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
                 }
 
             } catch (Throwable exception) {
-                counterPerGuid.run();//idempotent, it doesn't start again if already started
-                logger.warn(exception.getMessage());
-                lockThreadSleeper.checkThresholdAndWait(coreConfiguration.getLockTryFrequencyMillis());
+                throw new FlamingockException(exception);
             }
         } while (true);
     }
