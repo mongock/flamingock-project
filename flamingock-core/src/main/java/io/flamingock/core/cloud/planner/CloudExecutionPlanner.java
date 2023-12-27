@@ -116,6 +116,8 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
 
             } catch (Throwable exception) {
                 logger.warn(exception.getMessage());
+                stopWatch.run();
+                //todo check exception type. If we can recover from it
                 lockThreadSleeper.checkThresholdAndWait();
             }
         } while (true);
