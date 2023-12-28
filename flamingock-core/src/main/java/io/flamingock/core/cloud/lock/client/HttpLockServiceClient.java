@@ -16,6 +16,7 @@
 
 package io.flamingock.core.cloud.lock.client;
 
+import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.cloud.lock.LockExtensionRequest;
 import io.flamingock.core.cloud.lock.LockResponse;
 import io.flamingock.core.engine.lock.LockKey;
@@ -29,13 +30,16 @@ public class HttpLockServiceClient implements LockServiceClient {
     private final Http.RequestBuilder httpFactory;
 
     private final String pathTemplate;
+    private final AuthManager authManager;
 
     public HttpLockServiceClient(String host,
                                  String apiVersion,
-                                 Http.RequestBuilderFactory httpFactoryBuilder) {
+                                 Http.RequestBuilderFactory httpFactoryBuilder,
+                                 AuthManager authManager) {
         this.pathTemplate = String.format("/%s/{%s}/lock", apiVersion, SERVICE_PARAM);
         this.httpFactory = httpFactoryBuilder
                 .getRequestBuilder(host);
+        this.authManager = authManager;
     }
 
     @Override
