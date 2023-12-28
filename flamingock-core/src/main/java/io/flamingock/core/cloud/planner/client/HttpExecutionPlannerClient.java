@@ -54,6 +54,7 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
         return requestBuilder
                 .POST(pathTemplate)
                 .withRunnerId(runnerId)
+                .withBearerToken(authManager.getJwtToken())
                 .addPathParameter(SERVICE_PARAM, serviceId.toString())
                 .addQueryParameter("lastAcquisitionId", lastAcquisitionId)
                 .addQueryParameter("elapsedMillis", elapsedMillis)

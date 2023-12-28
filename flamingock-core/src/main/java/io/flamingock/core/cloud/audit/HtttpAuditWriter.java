@@ -59,8 +59,9 @@ public class HtttpAuditWriter implements AuditWriter {
         try {
             requestBuilder
                     .POST(pathTemplate)
-                    .addPathParameter(SERVICE_PARAM, serviceId.toString())
                     .withRunnerId(runnerId)
+                    .withBearerToken(authManager.getJwtToken())
+                    .addPathParameter(SERVICE_PARAM, serviceId.toString())
                     .setBody(auditEntry)
                     .execute();
             return Result.OK();

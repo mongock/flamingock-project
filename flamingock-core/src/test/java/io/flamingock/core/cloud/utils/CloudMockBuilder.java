@@ -128,6 +128,7 @@ public final class CloudMockBuilder {
         //POST
         requestWithBody = mock(Http.RequestWithBody.class);
         when(requestWithBody.withRunnerId(any())).thenReturn(requestWithBody);
+        when(requestWithBody.withBearerToken(any())).thenReturn(requestWithBody);
         when(requestWithBody.addPathParameter(anyString(), any())).thenReturn(requestWithBody);
         when(requestWithBody.addQueryParameter(anyString(), any())).thenReturn(requestWithBody);
         when(requestWithBody.setBody(any())).thenReturn(requestWithBody);
@@ -135,6 +136,7 @@ public final class CloudMockBuilder {
         //DELETE
         basicRequest = mock(Http.Request.class);
         when(basicRequest.withRunnerId(any())).thenReturn(basicRequest);
+        when(basicRequest.withBearerToken(any())).thenReturn(basicRequest);
         when(basicRequest.addPathParameter(anyString(), any())).thenReturn(basicRequest);
         when(basicRequest.addQueryParameter(anyString(), any())).thenReturn(basicRequest);
 

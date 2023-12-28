@@ -48,6 +48,7 @@ public class HttpLockServiceClient implements LockServiceClient {
                                    LockExtensionRequest extensionRequest) {
         return httpFactory
                 .POST(pathTemplate + "/extension")
+                .withBearerToken(authManager.getJwtToken())
                 .addPathParameter(SERVICE_PARAM, lockKey.toString())
                 .withRunnerId(runnerId)
                 .setBody(extensionRequest)
@@ -56,14 +57,18 @@ public class HttpLockServiceClient implements LockServiceClient {
 
     @Override
     public LockResponse getLock(LockKey lockKey) {
-        return httpFactory.GET(pathTemplate)
+        return httpFactory
+                .GET(pathTemplate)
+                .withBearerToken(authManager.getJwtToken())
                 .addPathParameter(SERVICE_PARAM, lockKey.toString())
                 .execute(LockResponse.class);
     }
 
     @Override
     public void releaseLock(LockKey lockKey, RunnerId runnerId) {
-        httpFactory.DELETE(pathTemplate)
+        httpFactory
+                .DELETE(pathTemplate)
+                .withBearerToken(authManager.getJwtToken())
                 .addPathParameter(SERVICE_PARAM, lockKey.toString())
                 .withRunnerId(runnerId)
                 .execute();
