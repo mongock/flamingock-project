@@ -215,11 +215,12 @@ public class MysqlSqlCloudTransactionerTest {
             //WHEN
             Assertions.assertThrows(RuntimeException.class, runner::run);
 
-            //1 execution plans: First to execute and second(to continue) is not performed because the first execution failed in second task
+            //1 execution plans: First is tokenRequest, second to execute and third(to continue) is not performed because
+            // the first execution failed in second task
             ArgumentCaptor<Object> bodyCaptor = ArgumentCaptor.forClass(Object.class);
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).setBody(bodyCaptor.capture());
+            verify(cloudMockBuilder.getRequestWithBody(), new Times(3)).setBody(bodyCaptor.capture());
 
-            ExecutionPlanRequest planRequest = (ExecutionPlanRequest) bodyCaptor.getAllValues().get(0);
+            ExecutionPlanRequest planRequest = (ExecutionPlanRequest) bodyCaptor.getAllValues().get(1);
             List<StageRequest.Task> tasks = planRequest.getStages().get(0).getTasks();
             assertEquals("create-table-clients", tasks.get(0).getId());
             assertEquals(StageRequest.TaskOngoingStatus.NONE, tasks.get(0).getOngoingStatus());
