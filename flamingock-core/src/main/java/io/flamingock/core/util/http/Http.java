@@ -49,6 +49,7 @@ import static io.flamingock.core.util.FlamingockError.OBJECT_MAPPING_ERROR;
 public final class Http {
 
     private static final String RUNNER_ID_HEADER_NAME = "flamingock-runner-id";
+    private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
 
     private enum Method {
         GET, POST, PUT, DELETE
@@ -185,6 +186,11 @@ public final class Http {
 
         public SELF addHeader(String headerName, String value) {
             headers.put(headerName, value);
+            return getInstance();
+        }
+
+        public SELF withBearerToken(String token) {
+            headers.put(AUTHORIZATION_HEADER_NAME, "Bearer "+ token);
             return getInstance();
         }
 

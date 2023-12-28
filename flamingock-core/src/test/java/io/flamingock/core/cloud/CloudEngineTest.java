@@ -55,9 +55,11 @@ public class CloudEngineTest {
         //GIVEN
         try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
             CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
+            String jwt = "fake_jwt";
             cloudMockBuilder
                     .addSingleExecutionPlanResponse("stage1", "create-persons-table-from-template", "create-persons-table-from-template-2")
                     .addContinueExecutionPlanResponse()
+                    .setJwtToken(jwt)
                     .setHttp(http)
                     .mockServer();
 
@@ -76,10 +78,24 @@ public class CloudEngineTest {
             //THEN
             //2 execution plans: First to execute and second to continue
             verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute(ExecutionPlanResponse.class);
+
             //2 audit writes
             verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute();
+
             //DELETE LOCK
             verify(cloudMockBuilder.getBasicRequest(), new Times(1)).execute();
+
+            //AUTH
+            ArgumentCaptor<String> jwtCaptorWithBody = ArgumentCaptor.forClass(String.class);
+            verify(cloudMockBuilder.getRequestWithBody(), new Times(4)).withBearerToken(jwtCaptorWithBody.capture());
+
+            assertEquals(4, jwtCaptorWithBody.getAllValues().size());
+            jwtCaptorWithBody.getAllValues().forEach(actualJwt -> assertEquals(jwt, actualJwt));
+
+            ArgumentCaptor<String> jwtCaptorBasic = ArgumentCaptor.forClass(String.class);
+            verify(cloudMockBuilder.getBasicRequest(), new Times(1)).withBearerToken(jwtCaptorBasic.capture());
+
+            assertEquals(jwt, jwtCaptorWithBody.getAllValues().get(0));
         }
     }
 

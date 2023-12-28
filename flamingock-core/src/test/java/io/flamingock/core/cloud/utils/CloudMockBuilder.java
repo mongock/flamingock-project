@@ -16,6 +16,7 @@
 
 package io.flamingock.core.cloud.utils;
 
+import io.flamingock.core.cloud.auth.TokenResponse;
 import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
 import io.flamingock.core.util.http.Http;
 import org.mockito.MockedStatic;
@@ -47,6 +48,8 @@ public final class CloudMockBuilder {
     private Http.RequestWithBody requestWithBody;
 
     private Http.Request basicRequest;
+
+    private String jwtToken = "jwt";
 
 
     public CloudMockBuilder setServiceName(String serviceName) {
@@ -108,7 +111,11 @@ public final class CloudMockBuilder {
         List<ExecutionPlanResponse.Stage> stages = Collections.singletonList(stage1);
         executionPlanResponse.setStages(stages);
         executionPlanResponses.add(executionPlanResponse);
+        return this;
+    }
 
+    public CloudMockBuilder setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
         return this;
     }
 
@@ -121,6 +128,7 @@ public final class CloudMockBuilder {
         //POST
         requestWithBody = mock(Http.RequestWithBody.class);
         when(requestWithBody.withRunnerId(any())).thenReturn(requestWithBody);
+        when(requestWithBody.withBearerToken(any())).thenReturn(requestWithBody);
         when(requestWithBody.addPathParameter(anyString(), any())).thenReturn(requestWithBody);
         when(requestWithBody.addQueryParameter(anyString(), any())).thenReturn(requestWithBody);
         when(requestWithBody.setBody(any())).thenReturn(requestWithBody);
@@ -128,6 +136,7 @@ public final class CloudMockBuilder {
         //DELETE
         basicRequest = mock(Http.Request.class);
         when(basicRequest.withRunnerId(any())).thenReturn(basicRequest);
+        when(basicRequest.withBearerToken(any())).thenReturn(basicRequest);
         when(basicRequest.addPathParameter(anyString(), any())).thenReturn(basicRequest);
         when(basicRequest.addQueryParameter(anyString(), any())).thenReturn(basicRequest);
 
@@ -143,6 +152,10 @@ public final class CloudMockBuilder {
             when(requestWithBody.execute(ExecutionPlanResponse.class)).thenReturn(firstItem, restOfParameters);
 
         }
+
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setJwt(jwtToken);
+        when(requestWithBody.execute(TokenResponse.class)).thenReturn(tokenResponse);
 
         when(requestBuilder.POST(anyString())).thenReturn(requestWithBody);
         when(requestBuilder.DELETE(anyString())).thenReturn(basicRequest);

@@ -16,6 +16,7 @@
 
 package io.flamingock.core.cloud.lock.client;
 
+import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.cloud.lock.LockExtensionRequest;
 import io.flamingock.core.cloud.lock.LockResponse;
 import io.flamingock.core.engine.lock.LockKey;
@@ -29,13 +30,16 @@ public class HttpLockServiceClient implements LockServiceClient {
     private final Http.RequestBuilder httpFactory;
 
     private final String pathTemplate;
+    private final AuthManager authManager;
 
     public HttpLockServiceClient(String host,
                                  String apiVersion,
-                                 Http.RequestBuilderFactory httpFactoryBuilder) {
+                                 Http.RequestBuilderFactory httpFactoryBuilder,
+                                 AuthManager authManager) {
         this.pathTemplate = String.format("/%s/{%s}/lock", apiVersion, SERVICE_PARAM);
         this.httpFactory = httpFactoryBuilder
                 .getRequestBuilder(host);
+        this.authManager = authManager;
     }
 
     @Override
@@ -44,6 +48,7 @@ public class HttpLockServiceClient implements LockServiceClient {
                                    LockExtensionRequest extensionRequest) {
         return httpFactory
                 .POST(pathTemplate + "/extension")
+                .withBearerToken(authManager.getJwtToken())
                 .addPathParameter(SERVICE_PARAM, lockKey.toString())
                 .withRunnerId(runnerId)
                 .setBody(extensionRequest)
@@ -52,14 +57,18 @@ public class HttpLockServiceClient implements LockServiceClient {
 
     @Override
     public LockResponse getLock(LockKey lockKey) {
-        return httpFactory.GET(pathTemplate)
+        return httpFactory
+                .GET(pathTemplate)
+                .withBearerToken(authManager.getJwtToken())
                 .addPathParameter(SERVICE_PARAM, lockKey.toString())
                 .execute(LockResponse.class);
     }
 
     @Override
     public void releaseLock(LockKey lockKey, RunnerId runnerId) {
-        httpFactory.DELETE(pathTemplate)
+        httpFactory
+                .DELETE(pathTemplate)
+                .withBearerToken(authManager.getJwtToken())
                 .addPathParameter(SERVICE_PARAM, lockKey.toString())
                 .withRunnerId(runnerId)
                 .execute();

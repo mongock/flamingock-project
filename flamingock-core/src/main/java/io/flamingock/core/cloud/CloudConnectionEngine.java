@@ -17,6 +17,9 @@
 package io.flamingock.core.cloud;
 
 import io.flamingock.core.cloud.audit.HtttpAuditWriter;
+import io.flamingock.core.cloud.auth.AuthClient;
+import io.flamingock.core.cloud.auth.AuthManager;
+import io.flamingock.core.cloud.auth.HttpAuthClient;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurable;
@@ -76,24 +79,38 @@ public class CloudConnectionEngine implements ConnectionEngine {
     public void initialize(RunnerId runnerId) {
         ServiceId serviceId = ServiceId.fromString(cloudConfiguration.getService());
 
+        AuthClient authClient = new HttpAuthClient(
+                cloudConfiguration.getHost(),
+                cloudConfiguration.getApiVersion(),
+                requestBuilderFactory);
+
+        AuthManager authManager = new AuthManager(
+                cloudConfiguration.getClientId(),
+                cloudConfiguration.getClientSecret(),
+                authClient);
+
+
         auditWriter = new HtttpAuditWriter(
                 cloudConfiguration.getHost(),
                 serviceId,
                 runnerId,
                 cloudConfiguration.getApiVersion(),
-                requestBuilderFactory
+                requestBuilderFactory,
+                authManager
         );
 
         LockServiceClient lockClient = new HttpLockServiceClient(
                 cloudConfiguration.getHost(),
                 cloudConfiguration.getApiVersion(),
-                requestBuilderFactory
+                requestBuilderFactory,
+                authManager
         );
 
         ExecutionPlannerClient executionPlannerClient = new HttpExecutionPlannerClient(
                 cloudConfiguration.getHost(),
                 cloudConfiguration.getApiVersion(),
-                requestBuilderFactory
+                requestBuilderFactory,
+                authManager
         );
 
         executionPlanner = new CloudExecutionPlanner(
@@ -106,7 +123,8 @@ public class CloudConnectionEngine implements ConnectionEngine {
                 TimeService.getDefault()
         );
         getTransactionWrapper().ifPresent(CloudTransactioner::initialize);
-        //TODO authenticate
+
+        authManager.authenticate();
     }
 
     @Override

@@ -16,6 +16,7 @@
 
 package io.flamingock.core.cloud.audit;
 
+import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
@@ -38,16 +39,19 @@ public class HtttpAuditWriter implements AuditWriter {
     private final RunnerId runnerId;
 
     private final ServiceId serviceId;
+    private final AuthManager authManager;
 
     public HtttpAuditWriter(String host,
                             ServiceId serviceId,
                             RunnerId runnerId,
                             String apiVersion,
-                            Http.RequestBuilderFactory requestBuilderFactory) {
+                            Http.RequestBuilderFactory requestBuilderFactory,
+                            AuthManager authManager) {
         this.serviceId = serviceId;
         this.runnerId = runnerId;
         this.pathTemplate = String.format("/%s/{%s}/audit", apiVersion, SERVICE_PARAM);
         this.requestBuilder = requestBuilderFactory.getRequestBuilder(host);
+        this.authManager  = authManager;
     }
 
     @Override
@@ -55,8 +59,9 @@ public class HtttpAuditWriter implements AuditWriter {
         try {
             requestBuilder
                     .POST(pathTemplate)
-                    .addPathParameter(SERVICE_PARAM, serviceId.toString())
                     .withRunnerId(runnerId)
+                    .withBearerToken(authManager.getJwtToken())
+                    .addPathParameter(SERVICE_PARAM, serviceId.toString())
                     .setBody(auditEntry)
                     .execute();
             return Result.OK();

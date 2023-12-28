@@ -16,6 +16,7 @@
 
 package io.flamingock.core.cloud.planner.client;
 
+import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.cloud.planner.ExecutionPlanRequest;
@@ -31,13 +32,17 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
 
     private final String pathTemplate;
 
+    private final AuthManager authManager;
+
 
     public HttpExecutionPlannerClient(String host,
                                       String apiVersion,
-                                      Http.RequestBuilderFactory httpFactoryBuilder) {
+                                      Http.RequestBuilderFactory httpFactoryBuilder,
+                                      AuthManager authManager) {
         this.pathTemplate = String.format("/%s/{%s}/execution", apiVersion, SERVICE_PARAM);
         this.requestBuilder = httpFactoryBuilder
                 .getRequestBuilder(host);
+        this.authManager = authManager;
     }
 
     @Override
@@ -49,6 +54,7 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
         return requestBuilder
                 .POST(pathTemplate)
                 .withRunnerId(runnerId)
+                .withBearerToken(authManager.getJwtToken())
                 .addPathParameter(SERVICE_PARAM, serviceId.toString())
                 .addQueryParameter("lastAcquisitionId", lastAcquisitionId)
                 .addQueryParameter("elapsedMillis", elapsedMillis)
