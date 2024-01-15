@@ -48,12 +48,13 @@ public class CommunityStandaloneMongodbSyncApp {
 
 
     public  void run(MongoClient mongoClient, String databaseName) {
-        FlamingockStandalone.local()
+        FlamingockStandalone
+                .local()
                 .setDriver(new MongoSync4Driver(mongoClient, databaseName))
+                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.examples.community.changes"))
                 .setLockAcquiredForMillis(60 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                 .setLockQuitTryingAfterMillis(3 * 60 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
                 .setLockTryFrequencyMillis(1000L)//this is just to show how is set. Default value is still 1000L
-                .addStage(new Stage().addCodePackage("io.flamingock.examples.community.changes"))
                 .addDependency(mongoClient.getDatabase(databaseName))
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)

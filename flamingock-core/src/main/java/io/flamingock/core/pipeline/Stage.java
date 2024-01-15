@@ -40,9 +40,9 @@ import java.util.stream.Collectors;
  * It doesn't necessary contain directly the tasks, it can contain the code packages, etc.
  */
 public class Stage {
-    private static final Logger logger = LoggerFactory.getLogger(StepNavigator.class);
-
+    //TODO should we make this i
     private String name;
+
     private Collection<String> codePackages;
 
     private Collection<String> fileDirectories;
@@ -51,6 +51,9 @@ public class Stage {
     private boolean parallel = false;
 
     public Stage() {
+    }
+    public Stage(String name) {
+        this.name  = name;
     }
 
     public Stage(Stage prototype) {

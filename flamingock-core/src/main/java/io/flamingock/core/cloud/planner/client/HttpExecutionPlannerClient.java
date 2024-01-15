@@ -39,7 +39,7 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
                                       String apiVersion,
                                       Http.RequestBuilderFactory httpFactoryBuilder,
                                       AuthManager authManager) {
-        this.pathTemplate = String.format("/%s/{%s}/execution", apiVersion, SERVICE_PARAM);
+        this.pathTemplate = String.format("/api/%s/{%s}/execution", apiVersion, SERVICE_PARAM);
         this.requestBuilder = httpFactoryBuilder
                 .getRequestBuilder(host);
         this.authManager = authManager;

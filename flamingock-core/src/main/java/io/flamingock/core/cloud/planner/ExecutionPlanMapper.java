@@ -90,7 +90,7 @@ public final class ExecutionPlanMapper {
     }
 
     private static ExecutableStage mapToExecutable(LoadedStage loadedStage, ExecutionPlanResponse.Stage stageResponse) {
-        Set<String> taskPresentInResponse = new HashSet<>(stageResponse.getTasks());
+        Set<String> taskPresentInResponse = new HashSet<>(stageResponse.getTasks()).stream().map(ExecutionPlanResponse.Task::getId).collect(Collectors.toSet());
 
         AuditStageStatus.StatusBuilder builder = AuditStageStatus.statusBuilder();
 

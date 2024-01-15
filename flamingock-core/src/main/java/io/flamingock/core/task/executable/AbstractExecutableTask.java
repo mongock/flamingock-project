@@ -22,18 +22,25 @@ import java.util.Objects;
 
 public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> implements ExecutableTask {
 
+    private final String stageName;
+
     protected final DESCRIPTOR descriptor;
 
     protected final boolean initialExecutionRequired;
 
-    public AbstractExecutableTask(DESCRIPTOR descriptor, boolean initialExecutionRequired) {
+    public AbstractExecutableTask(String stageName, DESCRIPTOR descriptor, boolean initialExecutionRequired) {
         if (descriptor == null) {
             throw new IllegalArgumentException("task descriptor cannot be null");
         }
+        this.stageName = stageName;
         this.descriptor = descriptor;
         this.initialExecutionRequired = initialExecutionRequired;
     }
 
+    @Override
+    public String getStageName() {
+        return stageName;
+    }
 
     @Override
     public DESCRIPTOR getDescriptor() {
@@ -44,7 +51,6 @@ public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> 
     public boolean isInitialExecutionRequired() {
         return initialExecutionRequired;
     }
-
 
     @Override
     public boolean equals(Object o) {

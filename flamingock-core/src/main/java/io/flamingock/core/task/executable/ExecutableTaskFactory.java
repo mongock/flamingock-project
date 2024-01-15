@@ -23,5 +23,5 @@ import java.util.List;
 
 public interface ExecutableTaskFactory {
 
-    List<? extends ExecutableTask> extractTasks(TaskDescriptor taskDescriptor, AuditEntryStatus initialState);
+    List<? extends ExecutableTask> extractTasks(String stageName, TaskDescriptor taskDescriptor, AuditEntryStatus initialState);
 }

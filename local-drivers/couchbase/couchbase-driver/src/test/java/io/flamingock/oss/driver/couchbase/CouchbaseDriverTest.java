@@ -75,7 +75,7 @@ class CouchbaseDriverTest {
         Collection collection = cluster.bucket(BUCKET_NAME).defaultCollection();
         FlamingockStandalone.local()
                 .setDriver(new CouchbaseDriver(cluster, collection))
-                .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.couchbase.changes.happyPath"))
+                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.couchbase.changes.happyPath"))
                 .addDependency(cluster)
                 .addDependency(collection)
                 .setTrackIgnored(true)
@@ -113,7 +113,7 @@ class CouchbaseDriverTest {
         assertThrows(StageExecutionException.class, () -> {
             FlamingockStandalone.local()
                     .setDriver(new CouchbaseDriver(cluster, collection))
-                    .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.couchbase.changes.failedWithRollback"))
+                    .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.couchbase.changes.failedWithRollback"))
                     .addDependency(cluster)
                     .addDependency(collection)
                     .setTrackIgnored(true)
@@ -150,7 +150,7 @@ class CouchbaseDriverTest {
         assertThrows(StageExecutionException.class, () -> {
             Runner build = FlamingockStandalone.local()
                     .setDriver(new CouchbaseDriver(cluster, collection))
-                    .addStage(new Stage().addCodePackage("io.flamingock.oss.driver.couchbase.changes.failedWithoutRollback"))
+                    .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.couchbase.changes.failedWithoutRollback"))
                     .addDependency(cluster)
                     .addDependency(collection)
                     .setTrackIgnored(true)

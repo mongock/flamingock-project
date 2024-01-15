@@ -48,9 +48,9 @@ public class ParentExecutableTaskFactory implements ExecutableTaskFactory {
 
 
     @Override
-    public List<? extends ExecutableTask> extractTasks(TaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
+    public List<? extends ExecutableTask> extractTasks(String stageName, TaskDescriptor taskDescriptor, AuditEntryStatus initialState) {
         return findFactory(taskDescriptor)
-                .map(executableTaskFactory -> executableTaskFactory.extractTasks(taskDescriptor, initialState))
+                .map(executableTaskFactory -> executableTaskFactory.extractTasks(stageName, taskDescriptor, initialState))
                 .orElseThrow(() -> new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", taskDescriptor.getClass().getName())));
     }
 

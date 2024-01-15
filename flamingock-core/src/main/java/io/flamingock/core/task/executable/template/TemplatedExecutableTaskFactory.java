@@ -43,16 +43,17 @@ public class TemplatedExecutableTaskFactory implements ExecutableTaskFactory {
     private static final Logger logger = LoggerFactory.getLogger(StepNavigator.class);
 
     @Override
-    public List<TemplatedExecutableTask> extractTasks(TaskDescriptor descriptor, AuditEntryStatus initialState) {
+    public List<TemplatedExecutableTask> extractTasks(String stageName, TaskDescriptor descriptor, AuditEntryStatus initialState) {
         if (TemplatedTaskDescriptor.class.equals(descriptor.getClass())) {
-            return Collections.singletonList(getTasksFromReflection((TemplatedTaskDescriptor) descriptor, initialState));
+            return Collections.singletonList(getTasksFromReflection(stageName, (TemplatedTaskDescriptor) descriptor, initialState));
         }
 
         throw new IllegalArgumentException(String.format("%s not able to process: %s", this.getClass().getSimpleName(), descriptor.getClass().getSimpleName()));
 
     }
 
-    private TemplatedExecutableTask getTasksFromReflection(TemplatedTaskDescriptor taskDescriptor,
+    private TemplatedExecutableTask getTasksFromReflection(String stageName,
+                                                           TemplatedTaskDescriptor taskDescriptor,
                                                            AuditEntryStatus initialState) {
 
         Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), TemplateExecution.class)
@@ -72,6 +73,7 @@ public class TemplatedExecutableTaskFactory implements ExecutableTaskFactory {
 
 
         return new TemplatedExecutableTask(
+                stageName,
                 taskDescriptor,
                 AuditEntryStatus.isRequiredExecution(initialState),
                 executionMethod,

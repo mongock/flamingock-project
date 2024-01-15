@@ -20,6 +20,7 @@ import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.cloud.transaction.OngoingStatus;
 import io.flamingock.core.engine.audit.domain.AuditItem;
+import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.navigation.step.FailedStep;
@@ -144,7 +145,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
                                    DependencyInjectable dependencyInjectable,
                                    Supplier<T> operation) {
         try {
-            dependencyInjectable.addDependency(connection);
+            dependencyInjectable.addDependency(new Dependency(Connection.class, connection));
             T result = operation.get();
             if (result instanceof FailedStep) {
                 connection.rollback();

@@ -18,7 +18,7 @@ package io.flamingock.core.pipeline.execution;
 
 import java.util.Map;
 
-public class StageExecutionContext {
+public class ExecutionContext {
     private final String executionId;
 
     private final String hostname;
@@ -28,7 +28,7 @@ public class StageExecutionContext {
     private final Map<String, Object> metadata;
 
 
-    public StageExecutionContext(String executionId, String hostname, String author, Map<String, Object> metadata) {
+    public ExecutionContext(String executionId, String hostname, String author, Map<String, Object> metadata) {
         this.executionId = executionId;
         this.hostname = hostname;
         this.author = author;

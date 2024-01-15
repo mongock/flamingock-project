@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -91,7 +92,7 @@ public final class CloudMockBuilder {
         return this;
     }
 
-    public CloudMockBuilder addSingleExecutionPlanResponse(String stageName, String... tasks) {
+    public CloudMockBuilder addSingleExecutionPlanResponse(String stageName, String... taskIds) {
         ExecutionPlanResponse executionPlanResponse = new ExecutionPlanResponse();
         executionPlanResponse.setAction(ExecutionPlanResponse.Action.EXECUTE);
 
@@ -107,7 +108,7 @@ public final class CloudMockBuilder {
 
         ExecutionPlanResponse.Stage stage1 = new ExecutionPlanResponse.Stage();
         stage1.setName(stageName);
-        stage1.setTasks(Arrays.asList(tasks));
+        stage1.setTasks(Arrays.stream(taskIds).map(ExecutionPlanResponse.Task::new).collect(Collectors.toList()));
         List<ExecutionPlanResponse.Stage> stages = Collections.singletonList(stage1);
         executionPlanResponse.setStages(stages);
         executionPlanResponses.add(executionPlanResponse);

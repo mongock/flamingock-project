@@ -81,7 +81,7 @@ public class Mongo3Auditor implements Auditor {
     @Override
     public Result writeEntry(AuditEntry auditEntry) {
         Bson filter = Filters.and(
-                Filters.eq(KEY_EXECUTION_ID, auditEntry.getExecutionId()),
+                Filters.eq(KEY_EXECUTION_ID, auditEntry.getExecutionPlanId()),
                 Filters.eq(KEY_CHANGE_ID, auditEntry.getTaskId()),
                 Filters.eq(KEY_AUTHOR, auditEntry.getAuthor())
         );

@@ -23,6 +23,8 @@ import java.util.List;
 
 public interface ExecutableTask extends Task {
 
+    String getStageName();
+
     void execute(RuntimeManager runtimeHelper);
 
     String getExecutionMethodName();

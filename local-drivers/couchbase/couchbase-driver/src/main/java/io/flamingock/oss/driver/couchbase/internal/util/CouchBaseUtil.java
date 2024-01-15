@@ -52,6 +52,7 @@ public final class CouchBaseUtil {
 
     public static AuditEntry auditEntryFromEntity(JsonObject jsonObject) {
         return new AuditEntry(jsonObject.getString(KEY_EXECUTION_ID),
+                null,//TODO: add stage name
                 jsonObject.getString(KEY_CHANGE_ID),
                 jsonObject.getString(KEY_AUTHOR),
                 jsonObject.get(KEY_TIMESTAMP) != null ? TimeUtil.toLocalDateTime(jsonObject.getLong(KEY_TIMESTAMP)) : null,

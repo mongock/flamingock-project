@@ -63,7 +63,7 @@ public class CloudEngineTransactionTest {
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(cloudTransactioner)
-                    .addStage(new Stage()
+                    .addStage(new Stage("stage-name")
                             .setName("stage1")
                             .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
                     .build();
