@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public final class TemplateFactory {
 
-    private static final Map<String, Class<?>> templates = new HashMap<>();
+    private static final Map<String, TemplateSpec> templateSpecs = new HashMap<>();
 
     private TemplateFactory() {
     }
@@ -31,17 +31,13 @@ public final class TemplateFactory {
         templateModule.getTemplates().forEach(TemplateFactory::registerTemplate);
     }
 
-    public static void registerTemplate(String templateName, Class<?> templateClass) {
-        templates.put(templateName, templateClass);
-    }
-
     public static void registerTemplate(TemplateSpec templateSpec) {
-        registerTemplate(templateSpec.getName(), templateSpec.getTemplateClass());
+        templateSpecs.put(templateSpec.getName(), templateSpec);
     }
 
 
-    public static Optional<Class<?>> getTemplate(String templateName) {
-        return Optional.ofNullable(templates.get(templateName));
+    public static Optional<TemplateSpec> getTemplate(String templateName) {
+        return Optional.ofNullable(templateSpecs.get(templateName));
     }
 
 }

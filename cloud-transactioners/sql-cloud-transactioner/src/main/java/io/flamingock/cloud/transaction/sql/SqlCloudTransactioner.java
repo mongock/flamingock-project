@@ -33,6 +33,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
@@ -85,13 +86,13 @@ public class SqlCloudTransactioner implements CloudTransactioner {
         }
         try (Statement statement = connection.createStatement()) {
             DatabaseMetaData meta = connection.getMetaData();
-            ResultSet resultSet = meta.getTables(null, null, dialect.getTableName(), new String[]{"TABLE"});
+            ResultSet resultSet = meta.getTables(null, null, dialect.getOngoingTasksTableName(), new String[]{"TABLE"});
             if (!resultSet.next()) {
-                statement.executeUpdate(dialect.getCreateTable());
+                statement.executeUpdate(dialect.getCreateOngoingTasksTable());
                 connection.commit();
-                logger.info("table {} created successfully", dialect.getTableName());
+                logger.info("table {} created successfully", dialect.getOngoingTasksTableName());
             } else {
-                logger.debug("Table {} already created", dialect.getTableName());
+                logger.debug("Table {} already created", dialect.getOngoingTasksTableName());
             }
 
         } catch (SQLException ex) {
@@ -101,7 +102,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public Set<OngoingStatus> getOngoingStatuses() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getQuery())) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getSelectIdOngoingTask())) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             Set<OngoingStatus> ongoingStatuses = new HashSet<>();
@@ -118,7 +119,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void cleanOngoingStatus(String taskId) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getDeleteTemplate())) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getDeleteOngoingTask())) {
             preparedStatement.setString(1, taskId);
             int rows = preparedStatement.executeUpdate();
             logger.info("removed ongoing task[{}]: [{}] rows affected", taskId, rows);
@@ -129,12 +130,14 @@ public class SqlCloudTransactioner implements CloudTransactioner {
 
     @Override
     public void saveOngoingStatus(OngoingStatus status) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getInsertTemplate())) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(dialect.getUpsertOngoingTask())) {
             preparedStatement.setString(1, status.getTaskId());
             preparedStatement.setString(2, status.getOperation().toString());
             int rows = preparedStatement.executeUpdate();
             connection.commit();
             logger.info("saved ongoing task[{}]: [{}] rows affected", status.getTaskId(), rows);
+        } catch (SQLIntegrityConstraintViolationException e) {
+            //TODO change this for an upsert operation in the Dialect
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

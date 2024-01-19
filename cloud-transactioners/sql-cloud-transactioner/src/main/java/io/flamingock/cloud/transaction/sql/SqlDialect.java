@@ -18,6 +18,7 @@ package io.flamingock.cloud.transaction.sql;
 
 public enum SqlDialect {
 
+    //TODO upsert operation(currently handling SQLIntegrityConstraintViolationException)
     MYSQL("ONGOING_TASKS",
             "CREATE TABLE ONGOING_TASKS (task_id VARCHAR(255) not NULL, operation VARCHAR(10), PRIMARY KEY ( task_id ))",
             "SELECT task_id, operation FROM ONGOING_TASKS",
@@ -25,41 +26,41 @@ public enum SqlDialect {
             "DELETE FROM ONGOING_TASKS WHERE task_id=?"
     );
 
-    private final String tableName;
-    private final String createTable;
-    private final String query;
-    private final String insertTemplate;
-    private final String deleteTemplate;
+    private final String ongoingTasksTableName;
+    private final String createOngoingTasksTable;
+    private final String selectIdOngoingTask;
+    private final String upsertOngoingTask;
+    private final String deleteOngoingTask;
 
-    SqlDialect(String tableName,
-               String createTable,
-               String query,
-               String insertTemplate,
-               String deleteTemplate) {
-        this.tableName = tableName;
-        this.createTable = createTable;
-        this.query = query;
-        this.insertTemplate = insertTemplate;
-        this.deleteTemplate = deleteTemplate;
+    SqlDialect(String ongoingTasksTableName,
+               String createOngoingTasksTable,
+               String selectIdOngoingTask,
+               String upsertOngoingTask,
+               String deleteOngoingTask) {
+        this.ongoingTasksTableName = ongoingTasksTableName;
+        this.createOngoingTasksTable = createOngoingTasksTable;
+        this.selectIdOngoingTask = selectIdOngoingTask;
+        this.upsertOngoingTask = upsertOngoingTask;
+        this.deleteOngoingTask = deleteOngoingTask;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getOngoingTasksTableName() {
+        return ongoingTasksTableName;
     }
 
-    public String getCreateTable() {
-        return createTable;
+    public String getCreateOngoingTasksTable() {
+        return createOngoingTasksTable;
     }
 
-    public String getQuery() {
-        return query;
+    public String getSelectIdOngoingTask() {
+        return selectIdOngoingTask;
     }
 
-    public String getInsertTemplate() {
-        return insertTemplate;
+    public String getUpsertOngoingTask() {
+        return upsertOngoingTask;
     }
 
-    public String getDeleteTemplate() {
-        return deleteTemplate;
+    public String getDeleteOngoingTask() {
+        return deleteOngoingTask;
     }
 }

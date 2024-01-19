@@ -25,6 +25,8 @@ public class TemplatedTaskDefinition {
 
     private String templateName;
 
+    private Boolean transactional;
+
     private Map<String, Object> templateConfiguration;
 
     public String getId() {
@@ -53,6 +55,14 @@ public class TemplatedTaskDefinition {
 
     public Map<String, Object> getTemplateConfiguration() {
         return templateConfiguration;
+    }
+
+    public Boolean getTransactional() {
+        return transactional;
+    }
+
+    public void setTransactional(Boolean transactional) {
+        this.transactional = transactional;
     }
 
     public void setTemplateConfiguration(Map<String, Object> templateConfiguration) {

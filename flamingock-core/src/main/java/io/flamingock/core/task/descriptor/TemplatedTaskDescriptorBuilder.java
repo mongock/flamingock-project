@@ -17,8 +17,10 @@
 package io.flamingock.core.task.descriptor;
 
 import io.flamingock.core.api.exception.FlamingockException;
+import io.flamingock.template.TemplateSpec;
 import io.flamingock.template.TemplatedTaskDefinition;
 import io.flamingock.template.TemplateFactory;
+import io.flamingock.template.TransactionalTemplateSpec;
 
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class TemplatedTaskDescriptorBuilder {
 
     private boolean runAlways;
 
-    private boolean transactional;
+    private Boolean transactional;
 
     private String templateName;
 
@@ -61,7 +63,7 @@ public class TemplatedTaskDescriptorBuilder {
         return this;
     }
 
-    public TemplatedTaskDescriptorBuilder setTransactional(boolean transactional) {
+    public TemplatedTaskDescriptorBuilder setTransactional(Boolean transactional) {
         this.transactional = transactional;
         return this;
     }
@@ -78,11 +80,11 @@ public class TemplatedTaskDescriptorBuilder {
 
     public TemplatedTaskDescriptor build() {
 
-        Class<?> templateClass = TemplateFactory.getTemplate(templateName)
+        TemplateSpec templateSpec = TemplateFactory.getTemplate(templateName)
                 .orElseThrow(() -> new FlamingockException("Template not found: " + templateName));
 
-        return new TemplatedTaskDescriptor(id, order, templateClass, transactional, runAlways, templateConfiguration);
-
+        boolean isTaskTransactional = isTaskTransactionalAccordingTemplate(templateSpec);
+        return new TemplatedTaskDescriptor(id, order, templateSpec.getTemplateClass(), isTaskTransactional, runAlways, templateConfiguration);
     }
 
     public TemplatedTaskDescriptorBuilder setFromDefinition(TemplatedTaskDefinition templatedTaskDefinition) {
@@ -90,8 +92,17 @@ public class TemplatedTaskDescriptorBuilder {
         setOrder(templatedTaskDefinition.getOrder());
         setTemplateName(templatedTaskDefinition.getTemplateName());
         setTemplateConfiguration(templatedTaskDefinition.getTemplateConfiguration());
-//        setTransactional(templateYaml.getTransactional());
+        setTransactional(templatedTaskDefinition.getTransactional());
 //        setRunAlways(templateYaml.getRunAlways());
         return this;
+    }
+
+    private boolean isTaskTransactionalAccordingTemplate(TemplateSpec templateSpec) {
+        boolean isTemplateTransactional = TransactionalTemplateSpec.class.isAssignableFrom(templateSpec.getClass());
+        if(!isTemplateTransactional) {
+            return false;
+        } else {
+            return transactional != null ? transactional : true;
+        }
     }
 }
