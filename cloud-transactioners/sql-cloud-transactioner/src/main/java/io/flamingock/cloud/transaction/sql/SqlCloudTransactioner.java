@@ -136,8 +136,6 @@ public class SqlCloudTransactioner implements CloudTransactioner {
             int rows = preparedStatement.executeUpdate();
             connection.commit();
             logger.info("saved ongoing task[{}]: [{}] rows affected", status.getTaskId(), rows);
-        } catch (SQLIntegrityConstraintViolationException e) {
-            //TODO change this for an upsert operation in the Dialect
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
