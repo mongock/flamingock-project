@@ -20,9 +20,9 @@ public enum SqlDialect {
 
     //TODO upsert operation(currently handling SQLIntegrityConstraintViolationException)
     MYSQL("ONGOING_TASKS",
-            "CREATE TABLE ONGOING_TASKS (task_id VARCHAR(255) not NULL, operation VARCHAR(10), PRIMARY KEY ( task_id ))",
+            "CREATE TABLE ONGOING_TASKS (task_id VARCHAR(255) not NULL, operation VARCHAR(20), PRIMARY KEY ( task_id ))",
             "SELECT task_id, operation FROM ONGOING_TASKS",
-            "INSERT INTO ONGOING_TASKS (task_id, operation) values(?, ?)",
+            "REPLACE INTO ONGOING_TASKS (task_id, operation) values(?, ?)",
             "DELETE FROM ONGOING_TASKS WHERE task_id=?"
     );
 
