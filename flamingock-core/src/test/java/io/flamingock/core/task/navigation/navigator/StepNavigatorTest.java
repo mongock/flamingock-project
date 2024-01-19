@@ -18,7 +18,7 @@ package io.flamingock.core.task.navigation.navigator;
 
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
-import io.flamingock.core.pipeline.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.when;
 
 class StepNavigatorTest {
 
-    public static final StageExecutionContext EXECUTION_CONTEXT = new StageExecutionContext(
+    public static final ExecutionContext EXECUTION_CONTEXT = new ExecutionContext(
             "executionId", "hsotname", "author", new HashMap<>()
     );
 
@@ -87,9 +87,9 @@ class StepNavigatorTest {
                 false
         );
         List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
-                .extractTasks(taskDescriptor, null);
+                .extractTasks("stage_name", taskDescriptor, null);
 
-        StageExecutionContext stageExecutionContext = new StageExecutionContext(
+        ExecutionContext stageExecutionContext = new ExecutionContext(
                 "executionId", "hsotname", "author", new HashMap<>()
         );
 
@@ -134,7 +134,7 @@ class StepNavigatorTest {
                 true
         );
         List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
-                .extractTasks(taskDescriptor, null);
+                .extractTasks("stage-name", taskDescriptor, null);
 
         EmptyTransactionWrapper transactionWrapper = new EmptyTransactionWrapper();
         StepNavigator stepNavigator = new StepNavigator(auditWriterMock, stepSummarizerMock, runtimeManagerMock, transactionWrapper);

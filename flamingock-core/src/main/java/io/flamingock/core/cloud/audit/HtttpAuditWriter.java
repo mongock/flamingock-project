@@ -16,6 +16,11 @@
 
 package io.flamingock.core.cloud.audit;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.AuditWriter;
@@ -25,6 +30,12 @@ import io.flamingock.core.util.Result;
 import io.flamingock.core.util.http.Http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Map;
+
+import static com.fasterxml.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS;
 
 public class HtttpAuditWriter implements AuditWriter {
 
@@ -49,7 +60,7 @@ public class HtttpAuditWriter implements AuditWriter {
                             AuthManager authManager) {
         this.serviceId = serviceId;
         this.runnerId = runnerId;
-        this.pathTemplate = String.format("/%s/{%s}/audit", apiVersion, SERVICE_PARAM);
+        this.pathTemplate = String.format("/api/%s/{%s}/audit", apiVersion, SERVICE_PARAM);
         this.requestBuilder = requestBuilderFactory.getRequestBuilder(host);
         this.authManager  = authManager;
     }
@@ -57,12 +68,13 @@ public class HtttpAuditWriter implements AuditWriter {
     @Override
     public Result writeEntry(AuditEntry auditEntry) {
         try {
+            AuditEntryRequest auditEntryRequest = buildRequest(auditEntry);
             requestBuilder
                     .POST(pathTemplate)
                     .withRunnerId(runnerId)
                     .withBearerToken(authManager.getJwtToken())
                     .addPathParameter(SERVICE_PARAM, serviceId.toString())
-                    .setBody(auditEntry)
+                    .setBody(auditEntryRequest)
                     .execute();
             return Result.OK();
         } catch (Throwable throwable) {
@@ -70,6 +82,25 @@ public class HtttpAuditWriter implements AuditWriter {
             return new Result.Error(throwable);
         }
 
+    }
+
+    private AuditEntryRequest buildRequest(AuditEntry auditEntry) {
+        return new AuditEntryRequest(
+                auditEntry.getExecutionPlanId(),
+                auditEntry.getStageId(),
+                auditEntry.getTaskId(),
+                auditEntry.getAuthor(),
+                ZonedDateTime.of(auditEntry.getCreatedAt(), ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                auditEntry.getState(),
+                auditEntry.getType(),
+                auditEntry.getClassName(),
+                auditEntry.getMethodName(),
+                auditEntry.getExecutionMillis(),
+                auditEntry.getExecutionHostname(),
+                auditEntry.getMetadata(),
+                auditEntry.getSystemChange(),
+                auditEntry.getErrorTrace()
+        );
     }
 
 

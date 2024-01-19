@@ -90,7 +90,7 @@ public class MysqlSqlCloudTransactionerTest {
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)
-                    .addStage(new Stage()
+                    .addStage(new Stage("stage-name")
                             .setName("stage1")
                             .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.happypath")))
                     .build();
@@ -156,7 +156,7 @@ public class MysqlSqlCloudTransactionerTest {
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)
-                    .addStage(new Stage()
+                    .addStage(new Stage("stage-name")
                             .setName("stage1")
                             .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.failed")))
                     .build();
@@ -207,7 +207,7 @@ public class MysqlSqlCloudTransactionerTest {
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)
-                    .addStage(new Stage()
+                    .addStage(new Stage("stage-name")
                             .setName("stage1")
                             .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.failed")))
                     .build();

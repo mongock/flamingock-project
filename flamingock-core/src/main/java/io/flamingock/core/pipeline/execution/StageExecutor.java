@@ -49,9 +49,9 @@ public class StageExecutor {
         this.transactionWrapper = transactionWrapper;
     }
 
-    public Output execute(ExecutableStage executableStage,
-                          StageExecutionContext stageExecutionContext,
-                          Lock lock) throws StageExecutionException {
+    public Output executeStage(ExecutableStage executableStage,
+                               ExecutionContext executionContext,
+                               Lock lock) throws StageExecutionException {
 
         StageSummary summary = new StageSummary();
 
@@ -61,7 +61,7 @@ public class StageExecutor {
         // this would save memory footprint
 
         try {
-            getTaskStream(executableStage)
+            getTasksStream(executableStage)
                     .map(task -> stepNavigatorBuilder
                             .setAuditWriter(auditWriter)
                             .setStaticContext(dependencyContext)
@@ -69,7 +69,7 @@ public class StageExecutor {
                             .setTransactionWrapper(transactionWrapper)
                             .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer
                             .build()
-                            .executeTask(task, stageExecutionContext)
+                            .executeTask(task, executionContext)
                     ).peek(summary::addSummary)
                     .filter(StepNavigationOutput::isFailed)
                     .findFirst()
@@ -84,7 +84,7 @@ public class StageExecutor {
         return new Output(summary);
     }
 
-    protected Stream<? extends ExecutableTask> getTaskStream(ExecutableStage executableStage) {
+    protected Stream<? extends ExecutableTask> getTasksStream(ExecutableStage executableStage) {
         return executableStage.isParallel()
                 ? executableStage.getTasks().parallelStream()
                 : executableStage.getTasks().stream();

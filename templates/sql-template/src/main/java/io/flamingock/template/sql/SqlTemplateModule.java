@@ -19,6 +19,7 @@ package io.flamingock.template.sql;
 
 import io.flamingock.template.TemplateModule;
 import io.flamingock.template.TemplateSpec;
+import io.flamingock.template.TransactionalTemplateSpec;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,16 +27,16 @@ import java.util.Set;
 
 public class SqlTemplateModule implements TemplateModule {
 
-    private static final Set<TemplateSpec> templates;
+    private static final Set<TransactionalTemplateSpec> templates;
 
     static {
-        HashSet<TemplateSpec> templatesSet = new HashSet<>();
-        templatesSet.add(new TemplateSpec("sql-template", SqlTemplate.class));
+        HashSet<TransactionalTemplateSpec> templatesSet = new HashSet<>();
+        templatesSet.add(new TransactionalTemplateSpec("sql-template", SqlTemplate.class));
         templates = Collections.unmodifiableSet(templatesSet);
     }
 
     @Override
-    public Set<TemplateSpec> getTemplates() {
+    public Set<TransactionalTemplateSpec> getTemplates() {
         return templates;
     }
 

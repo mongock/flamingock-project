@@ -36,6 +36,7 @@ public class LoadedStage {
     private final String name;
 
     private final Collection<? extends TaskDescriptor> taskDescriptors;
+
     private final boolean parallel;
 
     private final ParentExecutableTaskFactory factory;
@@ -44,7 +45,7 @@ public class LoadedStage {
         this.name = name;
         this.taskDescriptors = taskDescriptors;
         this.parallel = parallel;
-        factory = ParentExecutableTaskFactory.INSTANCE;
+        this.factory = ParentExecutableTaskFactory.INSTANCE;
     }
 
     public ExecutableStage applyState(AuditStageStatus state) {
@@ -53,7 +54,7 @@ public class LoadedStage {
 
         List<ExecutableTask> tasks = taskDescriptors
                 .stream()
-                .map(taskDescriptor -> factory.extractTasks(taskDescriptor, statesMap.get(taskDescriptor.getId())))
+                .map(taskDescriptor -> factory.extractTasks(name, taskDescriptor, statesMap.get(taskDescriptor.getId())))
                 .flatMap(List::stream)
                 .collect(Collectors.toCollection(LinkedList::new));
 

@@ -26,11 +26,14 @@ import java.util.Optional;
 
 public final class RuntimeContext {
 
+
     public static Builder builder() {
         return new Builder();
     }
 
     private enum ExecutionResult {SUCCESS, FAILED}
+
+    private final String stageName;
 
     private final ExecutionResult executionResult;
     private final long duration;
@@ -41,11 +44,13 @@ public final class RuntimeContext {
 
     private final Throwable error;
 
-    private RuntimeContext(ExecutionResult executionResult,
+    private RuntimeContext(String stageName,
+                           ExecutionResult executionResult,
                            long duration,
                            LocalDateTime executedAt,
                            String methodExecutor,
                            Throwable error) {
+        this.stageName = stageName;
         this.executionResult = executionResult;
         this.duration = duration;
         this.executedAt = executedAt;
@@ -53,6 +58,9 @@ public final class RuntimeContext {
         this.error = error;
     }
 
+    public String getStageName() {
+        return stageName;
+    }
     public long getDuration() {
         return duration;
     }
@@ -81,6 +89,8 @@ public final class RuntimeContext {
     public static class Builder {
 
         private ExecutionResult executionResult = ExecutionResult.SUCCESS;
+        private String stageName;
+
         private long duration = -1L;
 
         private LocalDateTime executedAt;
@@ -95,6 +105,7 @@ public final class RuntimeContext {
         public Builder setTaskStep(ExecutionStep taskStep) {
             duration = taskStep.getDuration();
             methodExecutor = taskStep.getTask().getExecutionMethodName();
+            stageName = taskStep.getTask().getStageName();
             setFailure(taskStep);
             return this;
         }
@@ -129,7 +140,7 @@ public final class RuntimeContext {
             if (executedAt == null) {
                 throw new IllegalArgumentException("[executedAt] cannot be null when building RuntimeContext");
             }
-            return new RuntimeContext(executionResult, duration, executedAt, methodExecutor, error);
+            return new RuntimeContext(stageName, executionResult, duration, executedAt, methodExecutor, error);
 
         }
     }

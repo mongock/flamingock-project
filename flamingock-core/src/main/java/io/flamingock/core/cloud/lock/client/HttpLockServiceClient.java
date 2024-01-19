@@ -36,7 +36,7 @@ public class HttpLockServiceClient implements LockServiceClient {
                                  String apiVersion,
                                  Http.RequestBuilderFactory httpFactoryBuilder,
                                  AuthManager authManager) {
-        this.pathTemplate = String.format("/%s/{%s}/lock", apiVersion, SERVICE_PARAM);
+        this.pathTemplate = String.format("/api/%s/{%s}/lock", apiVersion, SERVICE_PARAM);
         this.httpFactory = httpFactoryBuilder
                 .getRequestBuilder(host);
         this.authManager = authManager;

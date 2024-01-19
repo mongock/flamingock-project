@@ -37,9 +37,11 @@ public class AuditEntry {
             FAILED,
             ROLLBACK_FAILED)));
 
-    public enum ExecutionType {EXECUTION, BEFORE_EXECUTION}
+    public enum ExecutionType {EXECUTION, BEFORE_EXECUTION;}
 
-    private final String executionId;
+    private final String executionPlanId;
+
+    private final String stageId;
 
     private final String taskId;
 
@@ -65,8 +67,8 @@ public class AuditEntry {
 
     protected Boolean systemChange;
 
-
-    public AuditEntry(String executionId,
+    public AuditEntry(String executionPlanId,
+                      String stageId,
                       String taskId,
                       String author,
                       LocalDateTime timestamp,
@@ -79,7 +81,8 @@ public class AuditEntry {
                       Object metadata,
                       boolean systemChange,
                       String errorTrace) {
-        this.executionId = executionId;
+        this.executionPlanId = executionPlanId;
+        this.stageId = stageId;
         this.taskId = taskId;
         this.author = author;
         this.createdAt = timestamp;
@@ -96,8 +99,12 @@ public class AuditEntry {
     }
 
 
-    public String getExecutionId() {
-        return executionId;
+    public String getExecutionPlanId() {
+        return executionPlanId;
+    }
+
+    public String getStageId() {
+        return stageId;
     }
 
     public String getTaskId() {

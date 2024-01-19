@@ -30,7 +30,7 @@ import io.flamingock.core.event.model.impl.StageIgnoredEvent;
 import io.flamingock.core.event.model.impl.StageStartedEvent;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.Pipeline;
-import io.flamingock.core.pipeline.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import org.slf4j.Logger;
@@ -52,14 +52,14 @@ public class PipelineRunner implements Runner {
 
     private final StageExecutor stageExecutor;
 
-    private final StageExecutionContext stageExecutionContext;
+    private final ExecutionContext stageExecutionContext;
     private final Runnable finalizer;
 
     public PipelineRunner(RunnerId runnerId,
                           Pipeline pipeline,
                           ExecutionPlanner executionPlanner,
                           StageExecutor stageExecutor,
-                          StageExecutionContext stageExecutionContext,
+                          ExecutionContext stageExecutionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock,
                           Runnable finalizer) {
@@ -125,7 +125,7 @@ public class PipelineRunner implements Runner {
 
         logger.debug("Applied state to process:\n{}", executableStage);
 
-        StageExecutor.Output executionOutput = stageExecutor.execute(executableStage, stageExecutionContext, lock);
+        StageExecutor.Output executionOutput = stageExecutor.executeStage(executableStage, stageExecutionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publish(new StageCompletedEvent(executionOutput));
     }

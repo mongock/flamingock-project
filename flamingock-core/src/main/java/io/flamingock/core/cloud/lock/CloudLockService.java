@@ -23,8 +23,11 @@ import io.flamingock.core.engine.lock.LockService;
 import io.flamingock.core.engine.lock.LockServiceException;
 import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.util.ServerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CloudLockService implements LockService {
+    private static final Logger logger = LoggerFactory.getLogger(CloudLockService.class);
 
 
     private final LockServiceClient client;
@@ -81,17 +84,9 @@ public class CloudLockService implements LockService {
             client.releaseLock(lockKey, owner);
 
         } catch (ServerException ex) {
-            throw new LockServiceException(
-                    ex.getRequestString(),
-                    ex.getBodyString(),
-                    String.format("Error releasing lock[%s]: %s", lockKey.toString(), ex.getMessage())
-            );
+//            logger.warn(String.format("Error while connecting to server to release the lock[%s]: %s", lockKey.toString(), ex.getMessage()), ex);
         } catch (Throwable ex) {
-            throw new LockServiceException(
-                    "n/a",
-                    "n/a",
-                    String.format("Unexpected error releasing lock[%s]: %s", lockKey.toString(), ex.getMessage())
-            );
+//            logger.warn(String.format("Error releasing lock[%s]: %s", lockKey.toString(), ex.getMessage()), ex);
         }
 
     }

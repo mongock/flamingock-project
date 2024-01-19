@@ -16,7 +16,7 @@
 
 package io.flamingock.core.engine.audit.domain;
 
-import io.flamingock.core.pipeline.execution.StageExecutionContext;
+import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 
 public class AuditItem {
@@ -26,12 +26,12 @@ public class AuditItem {
 
     private final Operation operation;
     private final TaskDescriptor taskDescriptor;
-    private final StageExecutionContext stageExecutionContext;
+    private final ExecutionContext stageExecutionContext;
     private final RuntimeContext runtimeContext;
 
     public AuditItem(Operation operation,
                      TaskDescriptor taskDescriptor,
-                     StageExecutionContext stageExecutionContext,
+                     ExecutionContext stageExecutionContext,
                      RuntimeContext runtimeContext) {
         this.operation = operation;
         this.taskDescriptor = taskDescriptor;
@@ -47,7 +47,7 @@ public class AuditItem {
         return taskDescriptor;
     }
 
-    public StageExecutionContext getExecutionContext() {
+    public ExecutionContext getExecutionContext() {
         return stageExecutionContext;
     }
 

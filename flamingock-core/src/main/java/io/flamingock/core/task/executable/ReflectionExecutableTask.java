@@ -43,11 +43,12 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Reflect
     protected final List<Rollback> rollbackChain;
 
 
-    public ReflectionExecutableTask(REFLECTION_TASK_DESCRIPTOR descriptor,
+    public ReflectionExecutableTask(String stageName,
+                                    REFLECTION_TASK_DESCRIPTOR descriptor,
                                     boolean requiredExecution,
                                     Method executionMethod,
                                     Method rollbackMethod) {
-        super(descriptor, requiredExecution);
+        super(stageName, descriptor, requiredExecution);
         this.executionMethod = executionMethod;
         rollbackChain = new LinkedList<>();
         if(rollbackMethod != null) {

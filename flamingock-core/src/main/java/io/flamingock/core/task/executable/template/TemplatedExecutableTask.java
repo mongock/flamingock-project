@@ -34,13 +34,14 @@ public class TemplatedExecutableTask extends ReflectionExecutableTask<TemplatedT
     private final Method configSetterMethod;
 
 
-    public TemplatedExecutableTask(TemplatedTaskDescriptor descriptor,
+    public TemplatedExecutableTask(String stageName,
+                                   TemplatedTaskDescriptor descriptor,
                                    boolean requiredExecution,
                                    Method executionMethod,
                                    Method rollbackMethod,
                                    Method configSetterMethod,
                                    Method configValidatorMethod) {
-        super(descriptor, requiredExecution, executionMethod, rollbackMethod);
+        super(stageName, descriptor, requiredExecution, executionMethod, rollbackMethod);
         this.configSetterMethod = configSetterMethod;
         this.configValidatorMethod = configValidatorMethod;
     }

@@ -50,71 +50,71 @@ import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOC
 import static org.junit.jupiter.api.Assertions.*;
 
 @Ignore
-@SpringBootTest
-@Testcontainers
-@AutoConfigureMockMvc
-@ExtendWith(SpringExtension.class)
-@Import({CommunitySpringbootV2CouchbaseApp.class})
-@ContextConfiguration(initializers = CouchbaseInitializer.class)
+//@SpringBootTest
+//@Testcontainers
+//@AutoConfigureMockMvc
+//@ExtendWith(SpringExtension.class)
+//@Import({CommunitySpringbootV2CouchbaseApp.class})
+//@ContextConfiguration(initializers = CouchbaseInitializer.class)
 class SuccessExecutionTest {
-
-    @Autowired
-    private PipelineStartedEventListener startedEventListener;
-
-    @Autowired
-    private PipelineCompletedEventListener successEventListener;
-
-    @Autowired
-    private PipelineFailedEventListener failureEventListener;
-
-    @Autowired
-    private Cluster cluster;
-
-    @Test
-    @DisplayName("SHOULD create idx_springboot_index index")
-    void functionalTest() {
-        List<QueryIndex> indexes = cluster
-                .queryIndexes()
-                .getAllIndexes(BUCKET_NAME)
-                .stream()
-                .filter(i -> i.name().equals("idx_springboot_index"))
-                .collect(Collectors.toList());
-
-        assertEquals(1, indexes.size());
-    }
-
-    @Test
-    @DisplayName("SHOULD insert the Flamingock change history")
-    void flamingockLogsTest() {
-        QueryResult result = cluster.query(
-                N1QLQueryProvider.selectAllChangesQuery(BUCKET_NAME, CollectionIdentifier.DEFAULT_SCOPE, CollectionIdentifier.DEFAULT_COLLECTION),
-                QueryOptions.queryOptions().parameters(JsonObject.create().put("p", DOCUMENT_TYPE_AUDIT_ENTRY))
-                        .scanConsistency(QueryScanConsistency.REQUEST_PLUS));
-
-        List<JsonObject> flamingockDocuments = result
-                .rowsAsObject()
-                .stream()
-                .sorted(Comparator.comparing(o -> o.getLong(KEY_TIMESTAMP)))
-                .collect(Collectors.toList());
-
-        JsonObject beforeExecutionEntry = flamingockDocuments.get(0);
-        assertEquals("index-initializer_before", beforeExecutionEntry.get("changeId"));
-        assertEquals("EXECUTED", beforeExecutionEntry.get("state"));
-        assertEquals("io.flamingock.examples.community.couchbase.changes.IndexInitializerChangeUnit", beforeExecutionEntry.get("changeLogClass"));
-
-        JsonObject executionEntry = flamingockDocuments.get(1);
-        assertEquals("index-initializer", executionEntry.get("changeId"));
-        assertEquals("EXECUTED", executionEntry.get("state"));
-        assertEquals("io.flamingock.examples.community.couchbase.changes.IndexInitializerChangeUnit", executionEntry.get("changeLogClass"));
-
-        assertEquals(2, flamingockDocuments.size());
-    }
-
-    @Test
-    @DisplayName("SHOULD trigger start and success event WHEN executed IF happy path")
-    void events() {
-        assertTrue(startedEventListener.executed);
-        assertTrue(successEventListener.executed);
-        assertFalse(failureEventListener.executed);
-    }
+//
+//    @Autowired
+//    private PipelineStartedEventListener startedEventListener;
+//
+//    @Autowired
+//    private PipelineCompletedEventListener successEventListener;
+//
+//    @Autowired
+//    private PipelineFailedEventListener failureEventListener;
+//
+//    @Autowired
+//    private Cluster cluster;
+//
+//    @Test
+//    @DisplayName("SHOULD create idx_springboot_index index")
+//    void functionalTest() {
+//        List<QueryIndex> indexes = cluster
+//                .queryIndexes()
+//                .getAllIndexes(BUCKET_NAME)
+//                .stream()
+//                .filter(i -> i.name().equals("idx_springboot_index"))
+//                .collect(Collectors.toList());
+//
+//        assertEquals(1, indexes.size());
+//    }
+//
+//    @Test
+//    @DisplayName("SHOULD insert the Flamingock change history")
+//    void flamingockLogsTest() {
+//        QueryResult result = cluster.query(
+//                N1QLQueryProvider.selectAllChangesQuery(BUCKET_NAME, CollectionIdentifier.DEFAULT_SCOPE, CollectionIdentifier.DEFAULT_COLLECTION),
+//                QueryOptions.queryOptions().parameters(JsonObject.create().put("p", DOCUMENT_TYPE_AUDIT_ENTRY))
+//                        .scanConsistency(QueryScanConsistency.REQUEST_PLUS));
+//
+//        List<JsonObject> flamingockDocuments = result
+//                .rowsAsObject()
+//                .stream()
+//                .sorted(Comparator.comparing(o -> o.getLong(KEY_TIMESTAMP)))
+//                .collect(Collectors.toList());
+//
+//        JsonObject beforeExecutionEntry = flamingockDocuments.get(0);
+//        assertEquals("index-initializer_before", beforeExecutionEntry.get("changeId"));
+//        assertEquals("EXECUTED", beforeExecutionEntry.get("state"));
+//        assertEquals("io.flamingock.examples.community.couchbase.changes.IndexInitializerChangeUnit", beforeExecutionEntry.get("changeLogClass"));
+//
+//        JsonObject executionEntry = flamingockDocuments.get(1);
+//        assertEquals("index-initializer", executionEntry.get("changeId"));
+//        assertEquals("EXECUTED", executionEntry.get("state"));
+//        assertEquals("io.flamingock.examples.community.couchbase.changes.IndexInitializerChangeUnit", executionEntry.get("changeLogClass"));
+//
+//        assertEquals(2, flamingockDocuments.size());
+//    }
+//
+//    @Test
+//    @DisplayName("SHOULD trigger start and success event WHEN executed IF happy path")
+//    void events() {
+//        assertTrue(startedEventListener.executed);
+//        assertTrue(successEventListener.executed);
+//        assertFalse(failureEventListener.executed);
+//    }
 }

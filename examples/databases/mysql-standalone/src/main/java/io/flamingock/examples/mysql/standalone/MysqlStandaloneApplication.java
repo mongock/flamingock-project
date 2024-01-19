@@ -23,6 +23,10 @@ import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.template.sql.SqlTemplateModule;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 public class MysqlStandaloneApplication {
 
     public static void main(String[] args) throws ClassNotFoundException {
@@ -37,15 +41,16 @@ public class MysqlStandaloneApplication {
             FlamingockStandalone
                     .cloud()
                     .setHost("http://localhost:8080")
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setClientId("fake-client-id")
+                    .setClientSecret("fake-client-secret")
                     .setService("some_service")
                     .setCloudTransactioner(cloudTransactioner)//for cloud transactions with Sql
                     .setLockAcquiredForMillis(60 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                     .setLockQuitTryingAfterMillis(10 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
                     .setLockTryFrequencyMillis(3000L)//this is just to show how is set. Default value is still 1000L
-                    .addStage(new Stage().addFileDirectory("flamingock/stage1"))
+                    .addStage(new Stage("database_stage").addFileDirectory("flamingock/stage1"))
                     .addTemplateModule(new SqlTemplateModule())
+                    .addDependency(Connection.class, getConnection())
                     .build()
                     .run();
         }
@@ -58,6 +63,16 @@ public class MysqlStandaloneApplication {
                 .setUrl("jdbc:mysql://localhost/flamingock")
                 .setUser("flamingock_user")
                 .setPassword("password");
+    }
+
+    //Temporally because we haven't injected transactional = true
+    private static Connection getConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection("jdbc:mysql://localhost/flamingock", "flamingock_user", "password");
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

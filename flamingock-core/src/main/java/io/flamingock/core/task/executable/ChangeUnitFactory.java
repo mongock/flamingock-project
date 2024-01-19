@@ -38,17 +38,18 @@ import java.util.Optional;
 public class ChangeUnitFactory implements ExecutableTaskFactory {
 
     @Override
-    public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(TaskDescriptor descriptor, AuditEntryStatus initialState) {
+    public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(String stageName, TaskDescriptor descriptor, AuditEntryStatus initialState) {
         //It assumes "matchesDescriptor" was previously called for this descriptor.
         if (ReflectionTaskDescriptor.class.equals(descriptor.getClass())) {
-            return getTasksFromReflection((ReflectionTaskDescriptor) descriptor, initialState);
+            return getTasksFromReflection(stageName, (ReflectionTaskDescriptor) descriptor, initialState);
         }
 
         throw new IllegalArgumentException(String.format("%s not able to process: %s", this.getClass().getSimpleName(), descriptor.getClass().getSimpleName()));
 
     }
 
-    private List<ReflectionExecutableTask<ReflectionTaskDescriptor>> getTasksFromReflection(ReflectionTaskDescriptor taskDescriptor,
+    private List<ReflectionExecutableTask<ReflectionTaskDescriptor>> getTasksFromReflection(String stageName,
+                                                                                            ReflectionTaskDescriptor taskDescriptor,
                                                                                             AuditEntryStatus initialState) {
 
         Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), Execution.class)
@@ -59,6 +60,7 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
 
         Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), RollbackExecution.class);
         ReflectionExecutableTask<ReflectionTaskDescriptor> task = new ReflectionExecutableTask<>(
+                stageName,
                 taskDescriptor,
                 AuditEntryStatus.isRequiredExecution(initialState),
                 executionMethod,
@@ -71,7 +73,7 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
             so they  are rolled back in case the main task fails.
              */
         List<ReflectionExecutableTask<ReflectionTaskDescriptor>> tasks = new LinkedList<>();
-        getBeforeExecutionOptional(task, initialState).ifPresent(beforeExecutionTask -> {
+        getBeforeExecutionOptional(stageName, task, initialState).ifPresent(beforeExecutionTask -> {
             tasks.add(beforeExecutionTask);
             beforeExecutionTask.getRollbackChain().forEach(task::addRollback);
         });
@@ -80,7 +82,8 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
     }
 
 
-    private Optional<ReflectionExecutableTask<ReflectionTaskDescriptor>> getBeforeExecutionOptional(ReflectionExecutableTask<ReflectionTaskDescriptor> baseTask,
+    private Optional<ReflectionExecutableTask<ReflectionTaskDescriptor>> getBeforeExecutionOptional(String stageName,
+                                                                                                    ReflectionExecutableTask<ReflectionTaskDescriptor> baseTask,
                                                                                                     AuditEntryStatus initialState) {
         //Creates a new TaskDescriptor, based on the main one, but with the "beforeExecution id, also based on the main one"
         ReflectionTaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
@@ -100,6 +103,7 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
 
 
         return Optional.of(new ReflectionExecutableTask<>(
+                stageName,
                 taskDescriptor,
                 AuditEntryStatus.isRequiredExecution(initialState),
                 beforeExecutionMethod,

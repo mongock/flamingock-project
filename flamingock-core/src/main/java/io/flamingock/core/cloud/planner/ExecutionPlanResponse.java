@@ -96,7 +96,7 @@ public class ExecutionPlanResponse {
 
         private int order;
 
-        private List<String> tasks;
+        private List<Task> tasks;
 
         public Stage() {
         }
@@ -109,11 +109,11 @@ public class ExecutionPlanResponse {
             this.name = name;
         }
 
-        public List<String> getTasks() {
+        public List<Task> getTasks() {
             return tasks;
         }
 
-        public void setTasks(List<String> tasks) {
+        public void setTasks(List<Task> tasks) {
             this.tasks = tasks;
         }
 
@@ -123,6 +123,34 @@ public class ExecutionPlanResponse {
 
         public void setOrder(int order) {
             this.order = order;
+        }
+    }
+
+    public static class Task {
+        private String id;
+        private String ongoingStatus;
+
+        public Task() {
+        }
+
+        public Task(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getOngoingStatus() {
+            return ongoingStatus;
+        }
+
+        public void setOngoingStatus(String ongoingStatus) {
+            this.ongoingStatus = ongoingStatus;
         }
     }
 
