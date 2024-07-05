@@ -105,8 +105,8 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     }
 
     @Override
-    public SpringbootCloudBuilder setClientSecret(String clientSecret) {
-        return cloudConfiguratorDelegate.setClientSecret(clientSecret);
+    public SpringbootCloudBuilder setApiToken(String clientSecret) {
+        return cloudConfiguratorDelegate.setApiToken(clientSecret);
     }
 
     @Override

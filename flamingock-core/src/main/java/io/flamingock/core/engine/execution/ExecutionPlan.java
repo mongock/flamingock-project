@@ -18,6 +18,7 @@ package io.flamingock.core.engine.execution;
 
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.pipeline.ExecutableStage;
+import io.flamingock.core.util.TriConsumer;
 
 import java.util.Collection;
 import java.util.function.BiConsumer;
@@ -27,13 +28,15 @@ public class ExecutionPlan implements AutoCloseable {
 
     private static final ExecutionPlan CONTINUE = new ExecutionPlan();
 
-    public static ExecutionPlan newExecution(Lock lock, Collection<ExecutableStage> stages) {
-        return new ExecutionPlan(lock, stages);
+    public static ExecutionPlan newExecution(String executionId, Lock lock, Collection<ExecutableStage> stages) {
+        return new ExecutionPlan(executionId, lock, stages);
     }
 
     public static ExecutionPlan CONTINUE() {
         return CONTINUE;
     }
+
+    private final String executionId;
 
     private final boolean executable;
 
@@ -41,13 +44,15 @@ public class ExecutionPlan implements AutoCloseable {
 
     private final Collection<ExecutableStage> stages;
 
-    private ExecutionPlan(Lock lock, Collection<ExecutableStage> stages) {
+    private ExecutionPlan(String executionId, Lock lock, Collection<ExecutableStage> stages) {
+        this.executionId = executionId;
         this.executable = true;
         this.lock = lock;
         this.stages = stages;
     }
 
     private ExecutionPlan() {
+        executionId = null;
         executable = false;
         this.lock = null;
         this.stages = null;
@@ -57,9 +62,9 @@ public class ExecutionPlan implements AutoCloseable {
         return executable;
     }
 
-    public void applyOnEach(BiConsumer<Lock, ExecutableStage> consumer) {
+    public void applyOnEach(TriConsumer<String, Lock, ExecutableStage> consumer) {
         if (executable && stages != null) {
-            stages.forEach(executableStage -> consumer.accept(lock, executableStage));
+            stages.forEach(executableStage -> consumer.accept(executionId, lock, executableStage));
         }
     }
 

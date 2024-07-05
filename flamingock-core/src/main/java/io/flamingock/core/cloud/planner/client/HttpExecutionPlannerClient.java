@@ -35,16 +35,18 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
     private final AuthManager authManager;
 
 
+
     public HttpExecutionPlannerClient(String host,
                                       String apiVersion,
                                       Http.RequestBuilderFactory httpFactoryBuilder,
                                       AuthManager authManager) {
-        this.pathTemplate = String.format("/api/%s/{%s}/execution", apiVersion, SERVICE_PARAM);
+        this.pathTemplate = "/api/v1/environment/qa/service/invoices/execution";//String.format("/api/%s/{%s}/execution", apiVersion, SERVICE_PARAM);
         this.requestBuilder = httpFactoryBuilder
                 .getRequestBuilder(host);
         this.authManager = authManager;
     }
 
+    //TODO add environment
     @Override
     public ExecutionPlanResponse createExecution(ServiceId serviceId,
                                                  RunnerId runnerId,

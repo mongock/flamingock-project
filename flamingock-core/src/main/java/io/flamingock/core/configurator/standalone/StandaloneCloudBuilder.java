@@ -105,8 +105,8 @@ public class StandaloneCloudBuilder
     }
 
     @Override
-    public StandaloneCloudBuilder setClientSecret(String clientSecret) {
-        return cloudConfiguratorDelegate.setClientSecret(clientSecret);
+    public StandaloneCloudBuilder setApiToken(String clientSecret) {
+        return cloudConfiguratorDelegate.setApiToken(clientSecret);
     }
 
     @Override

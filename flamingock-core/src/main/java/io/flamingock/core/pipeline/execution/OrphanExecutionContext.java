@@ -14,25 +14,34 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.cloud;
+package io.flamingock.core.pipeline.execution;
 
-import io.flamingock.core.cloud.transaction.CloudTransactioner;
+import java.util.Map;
 
-import java.util.Optional;
+public class OrphanExecutionContext {
 
-public interface CloudConfigurator<HOLDER> {
+    private final String hostname;
 
-    HOLDER setHost(String host);
+    private final String author;
 
-    HOLDER setService(String service);
+    private final Map<String, Object> metadata;
 
-    //TODO remove
-    HOLDER setClientId(String clientId);
 
-    HOLDER setApiToken(String clientSecret);
+    public OrphanExecutionContext(String hostname, String author, Map<String, Object> metadata) {
+        this.hostname = hostname;
+        this.author = author;
+        this.metadata = metadata;
+    }
 
-    HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner);
+    public String getHostname() {
+        return hostname;
+    }
 
-    Optional<CloudTransactioner> getCloudTransactioner();
+    public String getAuthor() {
+        return author;
+    }
 
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
 }

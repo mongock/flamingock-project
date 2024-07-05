@@ -25,7 +25,7 @@ public class AuditEntryKeyGenerator {
     return new StringBuilder()
         .append(CouchbaseConstants.DOCUMENT_TYPE_AUDIT_ENTRY)
         .append('-')
-        .append(auditEntry.getExecutionPlanId())
+        .append(auditEntry.getExecutionId())
         .append('-')
         .append(auditEntry.getAuthor())
         .append('-')

@@ -24,20 +24,33 @@ public class ExecutionPlanRequest {
 
     private final long acquiredForMills;
 
-    private final List<StageRequest> stages;
+    private final ClientSubmission clientSubmission;
 
     public ExecutionPlanRequest(long acquiredForMills, List<StageRequest> stages) {
         this.acquiredForMills = acquiredForMills;
-        this.stages = stages;
+        this.clientSubmission = new ClientSubmission(stages);
     }
 
     public long getAcquiredForMills() {
         return acquiredForMills;
     }
 
-    public List<StageRequest> getStages() {
-        return stages;
+    public ClientSubmission getClientSubmission() {
+        return clientSubmission;
     }
 
 
+
+    public static class ClientSubmission{
+        private final List<StageRequest> stages;
+
+        public ClientSubmission(List<StageRequest> stages) {
+            this.stages = stages;
+        }
+
+        public List<StageRequest> getStages() {
+            return stages;
+        }
+    }
 }
+

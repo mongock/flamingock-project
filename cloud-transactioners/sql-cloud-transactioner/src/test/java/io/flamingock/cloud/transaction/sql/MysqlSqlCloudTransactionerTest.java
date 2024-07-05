@@ -86,7 +86,7 @@ public class MysqlSqlCloudTransactionerTest {
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_CLIENT_SECRET")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)
@@ -152,7 +152,7 @@ public class MysqlSqlCloudTransactionerTest {
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_CLIENT_SECRET")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)
@@ -203,7 +203,7 @@ public class MysqlSqlCloudTransactionerTest {
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_CLIENT_SECRET")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)
@@ -221,7 +221,7 @@ public class MysqlSqlCloudTransactionerTest {
             verify(cloudMockBuilder.getRequestWithBody(), new Times(3)).setBody(bodyCaptor.capture());
 
             ExecutionPlanRequest planRequest = (ExecutionPlanRequest) bodyCaptor.getAllValues().get(1);
-            List<StageRequest.Task> tasks = planRequest.getStages().get(0).getTasks();
+            List<StageRequest.Task> tasks = planRequest.getClientSubmission().getStages().get(0).getTasks();
             assertEquals("create-table-clients", tasks.get(0).getId());
             assertEquals(StageRequest.TaskOngoingStatus.NONE, tasks.get(0).getOngoingStatus());
             assertEquals("failed-insert-clients", tasks.get(1).getId());

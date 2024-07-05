@@ -24,9 +24,10 @@ public class AuthManager {
 
     private String jwtToken;
 
+    //TODO remove clientId
     public AuthManager(String clientId, String clientSecret, AuthClient authClient) {
         this.authClient = authClient;
-        this.tokenRequest = new TokenRequest(clientId, clientSecret);
+        this.tokenRequest = new TokenRequest(clientSecret);
     }
 
     public void authenticate() {

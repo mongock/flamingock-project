@@ -152,6 +152,7 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
 
     private ExecutionPlan buildNextExecutionPlan(List<LoadedStage> loadedStages, ExecutionPlanResponse response) {
         return ExecutionPlan.newExecution(
+                response.getExecutionId(),
                 ExecutionPlanMapper.extractLockFromResponse(response, coreConfiguration, runnerId, lockService, timeService),
                 ExecutionPlanMapper.getExecutableStages(response, loadedStages)
         );

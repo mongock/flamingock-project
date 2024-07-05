@@ -20,6 +20,7 @@ import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.engine.lock.LockException;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.Pipeline;
+import io.flamingock.core.util.TriConsumer;
 
 import java.util.function.BiConsumer;
 
@@ -27,7 +28,7 @@ public abstract class ExecutionPlanner {
 
     abstract protected ExecutionPlan getNextExecution(Pipeline pipeline) throws LockException;
 
-    public final boolean executeIfRequired(Pipeline pipeline, BiConsumer<Lock, ExecutableStage> consumer) {
+    public final boolean executeIfRequired(Pipeline pipeline, TriConsumer<String, Lock, ExecutableStage> consumer) {
         try(ExecutionPlan execution = getNextExecution(pipeline)) {
             if (execution.isExecutable()) {
                 execution.applyOnEach(consumer);

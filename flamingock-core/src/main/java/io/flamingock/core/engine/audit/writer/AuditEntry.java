@@ -39,7 +39,7 @@ public class AuditEntry {
 
     public enum ExecutionType {EXECUTION, BEFORE_EXECUTION;}
 
-    private final String executionPlanId;
+    private final String executionId;
 
     private final String stageId;
 
@@ -67,7 +67,7 @@ public class AuditEntry {
 
     protected Boolean systemChange;
 
-    public AuditEntry(String executionPlanId,
+    public AuditEntry(String executionId,
                       String stageId,
                       String taskId,
                       String author,
@@ -81,7 +81,7 @@ public class AuditEntry {
                       Object metadata,
                       boolean systemChange,
                       String errorTrace) {
-        this.executionPlanId = executionPlanId;
+        this.executionId = executionId;
         this.stageId = stageId;
         this.taskId = taskId;
         this.author = author;
@@ -99,8 +99,8 @@ public class AuditEntry {
     }
 
 
-    public String getExecutionPlanId() {
-        return executionPlanId;
+    public String getExecutionId() {
+        return executionId;
     }
 
     public String getStageId() {

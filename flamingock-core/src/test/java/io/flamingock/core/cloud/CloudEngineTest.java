@@ -34,17 +34,13 @@ import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class CloudEngineTest {
 
@@ -65,7 +61,7 @@ public class CloudEngineTest {
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_CLIENT_SECRET")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .addStage(new Stage("stage-name")
@@ -115,7 +111,7 @@ public class CloudEngineTest {
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_CLIENT_SECRET")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .addStage(new Stage("stage-name")
@@ -157,7 +153,7 @@ public class CloudEngineTest {
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_CLIENT_SECRET")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .addStage(new Stage("stage-name")
@@ -200,7 +196,7 @@ public class CloudEngineTest {
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_CLIENT_SECRET")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .addStage(new Stage("stage-name")
@@ -237,7 +233,7 @@ public class CloudEngineTest {
 
             Runner runner = FlamingockStandalone.cloud()
                     .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_CLIENT_SECRET")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .addStage(new Stage("stage-name")

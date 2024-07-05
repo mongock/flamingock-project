@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class LocalExecutionPlanner extends ExecutionPlanner {
@@ -78,7 +79,8 @@ public class LocalExecutionPlanner extends ExecutionPlanner {
             if (configuration.isEnableRefreshDaemon()) {
                 new LockRefreshDaemon(lock, TimeService.getDefault()).start();
             }
-            return ExecutionPlan.newExecution(lock, executableStages);
+            String executionId = UUID.randomUUID().toString();
+            return ExecutionPlan.newExecution(executionId, lock, executableStages);
 
         } else {
             return ExecutionPlan.CONTINUE();

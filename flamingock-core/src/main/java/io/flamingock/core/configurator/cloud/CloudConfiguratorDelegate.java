@@ -86,7 +86,7 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     }
 
     @Override
-    public HOLDER setClientSecret(String clientSecret) {
+    public HOLDER setApiToken(String clientSecret) {
         cloudConfiguration.setClientSecret(clientSecret);
         return holderSupplier.get();
     }
