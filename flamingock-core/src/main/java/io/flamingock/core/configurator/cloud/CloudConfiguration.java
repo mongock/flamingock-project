@@ -26,6 +26,8 @@ public class CloudConfiguration implements CloudConfigurable {
 
     private String service;
 
+    private String environment;
+
     @Override
     public void setHost(String host) {
         this.host = host;
@@ -34,6 +36,11 @@ public class CloudConfiguration implements CloudConfigurable {
     @Override
     public void setService(String service) {
         this.service = service;
+    }
+
+    @Override
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
     @Override
@@ -64,5 +71,10 @@ public class CloudConfiguration implements CloudConfigurable {
     @Override
     public String getService() {
         return service;
+    }
+
+    @Override
+    public String getEnvironment() {
+        return environment;
     }
 }

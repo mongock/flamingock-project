@@ -26,6 +26,8 @@ public interface CloudConfigurable {
 
     void setService(String service);
 
+    void setEnvironment(String environment);
+
     void setClientId(String clientId);
 
     void setClientSecret(String clientSecret);
@@ -37,4 +39,6 @@ public interface CloudConfigurable {
     String getHost();
 
     String getService();
+
+    String getEnvironment();
 }

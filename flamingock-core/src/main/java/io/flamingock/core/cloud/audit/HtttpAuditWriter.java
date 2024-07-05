@@ -33,8 +33,11 @@ public class HtttpAuditWriter implements AuditWriter {
 
     private static final Logger logger = LoggerFactory.getLogger(HtttpAuditWriter.class);
 
-    private final String SERVICE_PARAM = "service";
-    private final String EXECUTION_ID_PARAM = "executionId";
+    private final String SERVICE_PARAM = "{service}";
+
+    private final String ENV_PARAM = "{service}";
+
+    private final String EXECUTION_ID_PARAM = "{executionId}";
 
     private final Http.RequestBuilder requestBuilder;
 
@@ -53,7 +56,8 @@ public class HtttpAuditWriter implements AuditWriter {
                             AuthManager authManager) {
         this.serviceId = serviceId;
         this.runnerId = runnerId;
-        this.pathTemplate = "/api/v1/environment/qa/service/invoices/execution/{executionId}/audit";//String.format("/api/%s/{%s}/audit", apiVersion, SERVICE_PARAM);
+        String.format("/api/%s/environment/%s/service/%s/execution/%s/audit", apiVersion, ENV_PARAM, serviceId, EXECUTION_ID_PARAM);
+        this.pathTemplate = String.format("/api/%s/{%s}/audit", apiVersion, SERVICE_PARAM);
         this.requestBuilder = requestBuilderFactory.getRequestBuilder(host);
         this.authManager  = authManager;
     }
@@ -66,7 +70,6 @@ public class HtttpAuditWriter implements AuditWriter {
                     .POST(pathTemplate)
                     .withRunnerId(runnerId)
                     .withBearerToken(authManager.getJwtToken())
-                    .addPathParameter(SERVICE_PARAM, serviceId.toString())
                     .addPathParameter(EXECUTION_ID_PARAM, auditEntry.getExecutionId())
                     .setBody(auditEntryRequest)
                     .execute();

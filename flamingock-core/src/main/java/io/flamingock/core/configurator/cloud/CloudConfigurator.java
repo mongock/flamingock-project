@@ -26,6 +26,8 @@ public interface CloudConfigurator<HOLDER> {
 
     HOLDER setService(String service);
 
+    HOLDER setEnvironment(String environment);
+
     //TODO remove
     HOLDER setClientId(String clientId);
 

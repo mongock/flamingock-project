@@ -250,6 +250,11 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
+    public void setEnvironment(String environment) {
+        cloudConfiguration.setEnvironment(environment);
+    }
+
+    @Override
     public void setClientId(String clientId) {
         cloudConfiguration.setClientId(clientId);
     }
@@ -277,6 +282,11 @@ public class FlamingockConfigurationProperties
     @Override
     public String getService() {
         return cloudConfiguration.getService();
+    }
+
+    @Override
+    public String getEnvironment() {
+        return cloudConfiguration.getEnvironment();
     }
 
     public boolean isCloudConfigurationEmpty() {

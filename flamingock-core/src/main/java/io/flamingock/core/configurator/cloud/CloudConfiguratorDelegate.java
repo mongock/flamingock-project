@@ -80,6 +80,12 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     }
 
     @Override
+    public HOLDER setEnvironment(String environment) {
+        cloudConfiguration.setEnvironment(environment);
+        return holderSupplier.get();
+    }
+
+    @Override
     public HOLDER setClientId(String clientId) {
         cloudConfiguration.setClientId(clientId);
         return holderSupplier.get();

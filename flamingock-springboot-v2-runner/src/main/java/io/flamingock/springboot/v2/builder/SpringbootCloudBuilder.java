@@ -95,7 +95,12 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
 
     @Override
     public SpringbootCloudBuilder setService(String service) {
-        return cloudConfiguratorDelegate.setHost(service);
+        return cloudConfiguratorDelegate.setService(service);
+    }
+
+    @Override
+    public SpringbootCloudBuilder setEnvironment(String environment) {
+        return cloudConfiguratorDelegate.setEnvironment(environment);
     }
 
     @Override
