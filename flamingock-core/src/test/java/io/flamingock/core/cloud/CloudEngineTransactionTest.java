@@ -57,6 +57,7 @@ public class CloudEngineTransactionTest {
                     .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
+                    .setEnvironment("test-environment")
                     .setCloudTransactioner(cloudTransactioner)
                     .addStage(new Stage("stage-name")
                             .setName("stage1")

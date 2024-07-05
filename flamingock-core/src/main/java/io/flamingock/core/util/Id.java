@@ -22,7 +22,8 @@ public abstract class Id {
 
     protected Id(String value) {
         if(value == null || value.isEmpty()) {
-            throw new RuntimeException("Instance id cannot be null or empty");
+            String name = this.getClass().getSimpleName();
+            throw new RuntimeException(name + " cannot be null or empty");
         }
         this.value = value;
     }
