@@ -17,16 +17,15 @@
 package io.flamingock.core.cloud.planner.client;
 
 import io.flamingock.core.cloud.auth.AuthManager;
-import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
-import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.cloud.planner.ExecutionPlanRequest;
+import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
+import io.flamingock.core.configurator.core.EnvironmentId;
+import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.runner.RunnerId;
 import io.flamingock.core.util.http.Http;
 
 public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
 
-
-    private final String SERVICE_PARAM = "service";
 
     private final Http.RequestBuilder requestBuilder;
 
@@ -34,13 +33,22 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
 
     private final AuthManager authManager;
 
+    private final RunnerId runnerId;
 
 
     public HttpExecutionPlannerClient(String host,
+                                      EnvironmentId environmentId,
+                                      ServiceId serviceId,
+                                      RunnerId runnerId,
                                       String apiVersion,
                                       Http.RequestBuilderFactory httpFactoryBuilder,
                                       AuthManager authManager) {
-        this.pathTemplate = "/api/v1/environment/qa/service/invoices/execution";//String.format("/api/%s/{%s}/execution", apiVersion, SERVICE_PARAM);
+        this.runnerId = runnerId;
+        this.pathTemplate = String.format("/api/%s/environment/%s/service/%s/execution",
+                apiVersion,
+                environmentId.toString(),
+                serviceId.toString());
+
         this.requestBuilder = httpFactoryBuilder
                 .getRequestBuilder(host);
         this.authManager = authManager;
@@ -48,16 +56,11 @@ public class HttpExecutionPlannerClient implements ExecutionPlannerClient {
 
     //TODO add environment
     @Override
-    public ExecutionPlanResponse createExecution(ServiceId serviceId,
-                                                 RunnerId runnerId,
-                                                 ExecutionPlanRequest request,
-                                                 String lastAcquisitionId,
-                                                 long elapsedMillis) {
+    public ExecutionPlanResponse createExecution(ExecutionPlanRequest request, String lastAcquisitionId, long elapsedMillis) {
         return requestBuilder
                 .POST(pathTemplate)
                 .withRunnerId(runnerId)
                 .withBearerToken(authManager.getJwtToken())
-                .addPathParameter(SERVICE_PARAM, serviceId.toString())
                 .addQueryParameter("lastAcquisitionId", lastAcquisitionId)
                 .addQueryParameter("elapsedMillis", elapsedMillis)
                 .setBody(request)

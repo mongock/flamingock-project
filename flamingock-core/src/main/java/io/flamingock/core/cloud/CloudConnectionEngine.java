@@ -23,6 +23,7 @@ import io.flamingock.core.cloud.auth.HttpAuthClient;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurable;
+import io.flamingock.core.configurator.core.EnvironmentId;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
@@ -45,7 +46,6 @@ import java.util.Optional;
 
 public class CloudConnectionEngine implements ConnectionEngine {
     private static final Logger logger = LoggerFactory.getLogger(CloudConnectionEngine.class);
-
 
     private final CoreConfigurable coreConfiguration;
 
@@ -77,7 +77,8 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     @Override
     public void initialize(RunnerId runnerId) {
-        ServiceId serviceId = ServiceId.fromString(cloudConfiguration.getService());
+        ServiceId serviceId = cloudConfiguration.getServiceId();
+        EnvironmentId environmentId = cloudConfiguration.getEnvironmentId();
 
         AuthClient authClient = new HttpAuthClient(
                 cloudConfiguration.getHost(),
@@ -92,6 +93,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
         auditWriter = new HtttpAuditWriter(
                 cloudConfiguration.getHost(),
+                environmentId,
                 serviceId,
                 runnerId,
                 cloudConfiguration.getApiVersion(),
@@ -108,13 +110,15 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
         ExecutionPlannerClient executionPlannerClient = new HttpExecutionPlannerClient(
                 cloudConfiguration.getHost(),
+                environmentId,
+                serviceId,
+                runnerId,
                 cloudConfiguration.getApiVersion(),
                 requestBuilderFactory,
                 authManager
         );
 
         executionPlanner = new CloudExecutionPlanner(
-                serviceId,
                 runnerId,
                 executionPlannerClient,
                 coreConfiguration,

@@ -17,6 +17,7 @@
 package io.flamingock.core.cloud.audit;
 
 import io.flamingock.core.cloud.auth.AuthManager;
+import io.flamingock.core.configurator.core.EnvironmentId;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
@@ -45,21 +46,26 @@ public class HtttpAuditWriter implements AuditWriter {
 
     private final RunnerId runnerId;
 
-    private final ServiceId serviceId;
+
     private final AuthManager authManager;
 
     public HtttpAuditWriter(String host,
+                            EnvironmentId environmentId,
                             ServiceId serviceId,
                             RunnerId runnerId,
                             String apiVersion,
                             Http.RequestBuilderFactory requestBuilderFactory,
                             AuthManager authManager) {
-        this.serviceId = serviceId;
         this.runnerId = runnerId;
-        String.format("/api/%s/environment/%s/service/%s/execution/%s/audit", apiVersion, ENV_PARAM, serviceId, EXECUTION_ID_PARAM);
-        this.pathTemplate = String.format("/api/%s/{%s}/audit", apiVersion, SERVICE_PARAM);
+
+        this.pathTemplate = String.format(
+                "/api/%s/environment/%s/service/%s/execution/%s/audit",
+                apiVersion,
+                environmentId.toString(),
+                serviceId.toString(),
+                EXECUTION_ID_PARAM);
         this.requestBuilder = requestBuilderFactory.getRequestBuilder(host);
-        this.authManager  = authManager;
+        this.authManager = authManager;
     }
 
     @Override

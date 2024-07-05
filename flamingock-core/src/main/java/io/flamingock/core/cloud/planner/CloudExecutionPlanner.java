@@ -22,7 +22,6 @@ import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
 import io.flamingock.core.cloud.transaction.OngoingStatus;
 import io.flamingock.core.cloud.transaction.OngoingStatusRepository;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.execution.ExecutionPlan;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
@@ -56,19 +55,15 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
 
     private final ExecutionPlannerClient client;
 
-    private final ServiceId serviceId;
-
     private final OngoingStatusRepository ongoingStatusRepository;
 
-    public CloudExecutionPlanner(ServiceId serviceId,
-                                 RunnerId runnerId,
+    public CloudExecutionPlanner(RunnerId runnerId,
                                  ExecutionPlannerClient client,
                                  CoreConfigurable coreConfiguration,
                                  CloudLockService lockService,
                                  OngoingStatusRepository ongoingStatusRepository,
                                  TimeService timeService) {
         this.client = client;
-        this.serviceId = serviceId;
         this.runnerId = runnerId;
         this.coreConfiguration = coreConfiguration;
         this.lockService = lockService;
@@ -140,8 +135,7 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
                 coreConfiguration.getLockAcquiredForMillis(),
                 ongoingStatusesMap);
 
-        ExecutionPlanResponse responsePlan = client.createExecution(
-                serviceId, runnerId, requestBody, lastAcquisitionId, elapsedMillis);
+        ExecutionPlanResponse responsePlan = client.createExecution(requestBody, lastAcquisitionId, elapsedMillis);
         responsePlan.validate();
         return responsePlan;
     }

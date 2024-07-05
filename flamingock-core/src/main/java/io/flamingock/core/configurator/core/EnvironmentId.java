@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.planner.client;
+package io.flamingock.core.configurator.core;
 
-import io.flamingock.core.cloud.planner.ExecutionPlanRequest;
-import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
+import io.flamingock.core.engine.lock.LockKey;
+import io.flamingock.core.util.Id;
 
-public interface ExecutionPlannerClient {
+public class EnvironmentId extends Id implements LockKey {
+
+    public static EnvironmentId fromString(String value) {
+        return new EnvironmentId(value);
+    }
+
+    private EnvironmentId(String value) {
+        super(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && o instanceof EnvironmentId;
+    }
 
 
-    ExecutionPlanResponse createExecution(ExecutionPlanRequest request, String lastAcquisitionId, long elapsedMillis);
 }
