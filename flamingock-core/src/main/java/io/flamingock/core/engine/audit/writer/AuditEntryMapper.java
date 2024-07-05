@@ -24,10 +24,10 @@ import io.flamingock.core.util.ThrowableUtil;
 
 public final class AuditEntryMapper {
 
-    private AuditEntryMapper(){
+    private AuditEntryMapper() {
     }
 
-    public static  AuditEntry map(AuditItem auditItem) {
+    public static AuditEntry map(AuditItem auditItem) {
         TaskDescriptor taskDescriptor = auditItem.getTaskDescriptor();
         ExecutionContext stageExecutionContext = auditItem.getExecutionContext();
         RuntimeContext runtimeContext = auditItem.getRuntimeContext();

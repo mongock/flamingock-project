@@ -19,6 +19,7 @@ package io.flamingock.core.task.navigation.navigator;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
+import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;

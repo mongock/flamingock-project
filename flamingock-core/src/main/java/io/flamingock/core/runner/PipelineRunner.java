@@ -31,6 +31,7 @@ import io.flamingock.core.event.model.impl.StageStartedEvent;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
+import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import org.slf4j.Logger;
@@ -52,14 +53,15 @@ public class PipelineRunner implements Runner {
 
     private final StageExecutor stageExecutor;
 
-    private final ExecutionContext stageExecutionContext;
+    private final OrphanExecutionContext orphanExecutionContext;
+
     private final Runnable finalizer;
 
     public PipelineRunner(RunnerId runnerId,
                           Pipeline pipeline,
                           ExecutionPlanner executionPlanner,
                           StageExecutor stageExecutor,
-                          ExecutionContext stageExecutionContext,
+                          OrphanExecutionContext orphanExecutionContext,
                           EventPublisher eventPublisher,
                           boolean throwExceptionIfCannotObtainLock,
                           Runnable finalizer) {
@@ -67,7 +69,7 @@ public class PipelineRunner implements Runner {
         this.pipeline = pipeline;
         this.executionPlanner = executionPlanner;
         this.stageExecutor = stageExecutor;
-        this.stageExecutionContext = stageExecutionContext;
+        this.orphanExecutionContext = orphanExecutionContext;
         this.eventPublisher = eventPublisher;
         this.throwExceptionIfCannotObtainLock = throwExceptionIfCannotObtainLock;
         this.finalizer = finalizer;
@@ -102,10 +104,10 @@ public class PipelineRunner implements Runner {
         eventPublisher.publish(new PipelineCompletedEvent());
     }
 
-    private void runStage(Lock lock, ExecutableStage executableStage) {
+    private void runStage(String executionId, Lock lock, ExecutableStage executableStage) {
         try {
             if (executableStage.doesRequireExecution()) {
-                startStage(lock, executableStage);
+                startStage(executionId, lock, executableStage);
             } else {
                 skipStage(executableStage);
             }
@@ -120,12 +122,17 @@ public class PipelineRunner implements Runner {
         }
     }
 
-    private void startStage(Lock lock, ExecutableStage executableStage) throws StageExecutionException {
+    private void startStage(String executionId, Lock lock, ExecutableStage executableStage) throws StageExecutionException {
         eventPublisher.publish(new StageStartedEvent());
 
         logger.debug("Applied state to process:\n{}", executableStage);
 
-        StageExecutor.Output executionOutput = stageExecutor.executeStage(executableStage, stageExecutionContext, lock);
+        ExecutionContext executionContext = new ExecutionContext(
+                executionId,
+                orphanExecutionContext.getHostname(),
+                orphanExecutionContext.getAuthor(),
+                orphanExecutionContext.getMetadata());
+        StageExecutor.Output executionOutput = stageExecutor.executeStage(executableStage, executionContext, lock);
         logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publish(new StageCompletedEvent(executionOutput));
     }

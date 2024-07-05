@@ -18,19 +18,13 @@ package io.flamingock.core.cloud.auth;
 
 public class TokenRequest {
 
-    private final String clientId;
-    private final String clientSecret;
+    private final String apiToken;
 
-    public TokenRequest(String clientId, String clientSecret) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+    public TokenRequest(String apiToken) {
+        this.apiToken = apiToken;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getClientSecret() {
-        return clientSecret;
+    public String getApiToken() {
+        return apiToken;
     }
 }

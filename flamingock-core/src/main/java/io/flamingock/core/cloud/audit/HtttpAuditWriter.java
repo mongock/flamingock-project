@@ -16,12 +16,8 @@
 
 package io.flamingock.core.cloud.audit;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.flamingock.core.cloud.auth.AuthManager;
+import io.flamingock.core.configurator.core.EnvironmentId;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
@@ -33,15 +29,12 @@ import org.slf4j.LoggerFactory;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Map;
-
-import static com.fasterxml.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS;
 
 public class HtttpAuditWriter implements AuditWriter {
 
     private static final Logger logger = LoggerFactory.getLogger(HtttpAuditWriter.class);
 
-    private final String SERVICE_PARAM = "service";
+    private final String EXECUTION_ID_PARAM = "executionId";
 
     private final Http.RequestBuilder requestBuilder;
 
@@ -49,20 +42,26 @@ public class HtttpAuditWriter implements AuditWriter {
 
     private final RunnerId runnerId;
 
-    private final ServiceId serviceId;
+
     private final AuthManager authManager;
 
     public HtttpAuditWriter(String host,
+                            EnvironmentId environmentId,
                             ServiceId serviceId,
                             RunnerId runnerId,
                             String apiVersion,
                             Http.RequestBuilderFactory requestBuilderFactory,
                             AuthManager authManager) {
-        this.serviceId = serviceId;
         this.runnerId = runnerId;
-        this.pathTemplate = String.format("/api/%s/{%s}/audit", apiVersion, SERVICE_PARAM);
+
+        this.pathTemplate = String.format(
+                "/api/%s/environment/%s/service/%s/execution/{%s}/audit",
+                apiVersion,
+                environmentId.toString(),
+                serviceId.toString(),
+                EXECUTION_ID_PARAM);
         this.requestBuilder = requestBuilderFactory.getRequestBuilder(host);
-        this.authManager  = authManager;
+        this.authManager = authManager;
     }
 
     @Override
@@ -73,7 +72,7 @@ public class HtttpAuditWriter implements AuditWriter {
                     .POST(pathTemplate)
                     .withRunnerId(runnerId)
                     .withBearerToken(authManager.getJwtToken())
-                    .addPathParameter(SERVICE_PARAM, serviceId.toString())
+                    .addPathParameter(EXECUTION_ID_PARAM, auditEntry.getExecutionId())
                     .setBody(auditEntryRequest)
                     .execute();
             return Result.OK();
@@ -85,12 +84,12 @@ public class HtttpAuditWriter implements AuditWriter {
     }
 
     private AuditEntryRequest buildRequest(AuditEntry auditEntry) {
+        long executedAtEpochMillis = ZonedDateTime.of(auditEntry.getCreatedAt(), ZoneId.systemDefault()).toInstant().toEpochMilli();
         return new AuditEntryRequest(
-                auditEntry.getExecutionPlanId(),
                 auditEntry.getStageId(),
                 auditEntry.getTaskId(),
                 auditEntry.getAuthor(),
-                ZonedDateTime.of(auditEntry.getCreatedAt(), ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                executedAtEpochMillis,
                 auditEntry.getState(),
                 auditEntry.getType(),
                 auditEntry.getClassName(),

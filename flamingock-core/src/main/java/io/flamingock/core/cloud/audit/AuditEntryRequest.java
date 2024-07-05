@@ -5,16 +5,13 @@ import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 
 public class AuditEntryRequest {
 
-
-    private final String executionPlanId;
-
     private final String stageId;
 
     private final String taskId;
 
     private final String author;
 
-    private final long createdAt;
+    private final long executedAtEpochMillis;
 
     private final AuditEntryStatus state;
 
@@ -32,13 +29,12 @@ public class AuditEntryRequest {
 
     private final AuditEntry.ExecutionType type;
 
-    protected Boolean systemChange;
+    protected Boolean systemChange;//TODO not in server
 
-    public AuditEntryRequest(String executionPlanId,
-                             String stageId,
+    public AuditEntryRequest(String stageId,
                              String taskId,
                              String author,
-                             long createdAt,
+                             long executedAtEpochMillis,
                              AuditEntryStatus state,
                              AuditEntry.ExecutionType type,
                              String className,
@@ -48,11 +44,10 @@ public class AuditEntryRequest {
                              Object metadata,
                              boolean systemChange,
                              String errorTrace) {
-        this.executionPlanId = executionPlanId;
         this.stageId = stageId;
         this.taskId = taskId;
         this.author = author;
-        this.createdAt = createdAt;
+        this.executedAtEpochMillis = executedAtEpochMillis;
         this.state = state;
         this.className = className;
         this.methodName = methodName;
@@ -63,11 +58,6 @@ public class AuditEntryRequest {
         this.type = type;
 
         this.systemChange = systemChange;
-    }
-
-
-    public String getExecutionPlanId() {
-        return executionPlanId;
     }
 
     public String getStageId() {
@@ -82,8 +72,8 @@ public class AuditEntryRequest {
         return author;
     }
 
-    public long getCreatedAt() {
-        return createdAt;
+    public long getExecutedAtEpochMillis() {
+        return executedAtEpochMillis;
     }
 
     public AuditEntryStatus getState() {

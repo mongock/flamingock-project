@@ -28,7 +28,7 @@ public class HttpAuthClient implements AuthClient {
     public HttpAuthClient(String host,
                           String apiVersion,
                           Http.RequestBuilderFactory httpFactoryBuilder) {
-        this.pathTemplate = String.format("/%s/auth/service-token", apiVersion);
+        this.pathTemplate = String.format("/api/%s/auth/exchange-token", apiVersion);
         this.requestBuilder = httpFactoryBuilder.getRequestBuilder(host);
     }
 

@@ -104,7 +104,7 @@ public final class CloudMockBuilder {
 
         executionPlanResponse.setLock(lockMock);
 
-        executionPlanResponse.setExecutionPlanId(UUID.randomUUID().toString());
+        executionPlanResponse.setExecutionId(UUID.randomUUID().toString());
 
         ExecutionPlanResponse.Stage stage1 = new ExecutionPlanResponse.Stage();
         stage1.setName(stageName);

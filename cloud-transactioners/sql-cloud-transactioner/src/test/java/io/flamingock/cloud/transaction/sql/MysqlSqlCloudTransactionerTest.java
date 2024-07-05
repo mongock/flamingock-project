@@ -85,10 +85,10 @@ public class MysqlSqlCloudTransactionerTest {
                     .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
+                    .setEnvironment("test-environment")
                     .setCloudTransactioner(sqlCloudTransactioner)
                     .addStage(new Stage("stage-name")
                             .setName("stage1")
@@ -151,10 +151,10 @@ public class MysqlSqlCloudTransactionerTest {
                     .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
+                    .setEnvironment("test-environment")
                     .setCloudTransactioner(sqlCloudTransactioner)
                     .addStage(new Stage("stage-name")
                             .setName("stage1")
@@ -202,10 +202,10 @@ public class MysqlSqlCloudTransactionerTest {
                     .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
+                    .setEnvironment("test-environment")
                     .setCloudTransactioner(sqlCloudTransactioner)
                     .addStage(new Stage("stage-name")
                             .setName("stage1")
@@ -221,7 +221,7 @@ public class MysqlSqlCloudTransactionerTest {
             verify(cloudMockBuilder.getRequestWithBody(), new Times(3)).setBody(bodyCaptor.capture());
 
             ExecutionPlanRequest planRequest = (ExecutionPlanRequest) bodyCaptor.getAllValues().get(1);
-            List<StageRequest.Task> tasks = planRequest.getStages().get(0).getTasks();
+            List<StageRequest.Task> tasks = planRequest.getClientSubmission().getStages().get(0).getTasks();
             assertEquals("create-table-clients", tasks.get(0).getId());
             assertEquals(StageRequest.TaskOngoingStatus.NONE, tasks.get(0).getOngoingStatus());
             assertEquals("failed-insert-clients", tasks.get(1).getId());

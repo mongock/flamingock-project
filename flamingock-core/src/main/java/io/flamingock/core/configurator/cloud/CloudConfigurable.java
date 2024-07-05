@@ -16,6 +16,9 @@
 
 package io.flamingock.core.configurator.cloud;
 
+import io.flamingock.core.configurator.core.EnvironmentId;
+import io.flamingock.core.configurator.core.ServiceId;
+
 public interface CloudConfigurable {
 
     default String getApiVersion() {
@@ -26,15 +29,23 @@ public interface CloudConfigurable {
 
     void setService(String service);
 
-    void setClientId(String clientId);
+    void setEnvironment(String environment);
 
-    void setClientSecret(String clientSecret);
+    void setApiToken(String apiToken);
 
-    String getClientId();
-
-    String getClientSecret();
+    String getApiToken();
 
     String getHost();
 
     String getService();
+
+    String getEnvironment();
+
+    default ServiceId getServiceId() {
+        return ServiceId.fromString(getService());
+    }
+
+    default EnvironmentId getEnvironmentId() {
+        return EnvironmentId.fromString(getEnvironment());
+    }
 }

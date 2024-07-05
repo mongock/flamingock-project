@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.auth;
+package io.flamingock.core.configurator.core;
 
-public class AuthManager {
+import io.flamingock.core.engine.lock.LockKey;
+import io.flamingock.core.util.Id;
 
-    private final AuthClient authClient;
+public class EnvironmentId extends Id implements LockKey {
 
-    private final TokenRequest tokenRequest;
-
-    private String jwtToken;
-
-    public AuthManager(String clientSecret, AuthClient authClient) {
-        this.authClient = authClient;
-        this.tokenRequest = new TokenRequest(clientSecret);
+    public static EnvironmentId fromString(String value) {
+        return new EnvironmentId(value);
     }
 
-    public void authenticate() {
-        jwtToken = authClient.getToken(tokenRequest).getJwt();
+    private EnvironmentId(String value) {
+        super(value);
     }
 
-    public String getJwtToken() {
-        return jwtToken;
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && o instanceof EnvironmentId;
     }
+
+
 }

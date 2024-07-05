@@ -27,7 +27,7 @@ public class ExecutionPlanResponse {
 
     private Action action;
 
-    private String executionPlanId;
+    private String executionId;
 
     private Lock lock;
 
@@ -40,12 +40,12 @@ public class ExecutionPlanResponse {
         this.action = action;
     }
 
-    public String getExecutionPlanId() {
-        return executionPlanId;
+    public String getExecutionId() {
+        return executionId;
     }
 
-    public void setExecutionPlanId(String executionPlanId) {
-        this.executionPlanId = executionPlanId;
+    public void setExecutionId(String executionId) {
+        this.executionId = executionId;
     }
 
     public Lock getLock() {
@@ -82,6 +82,9 @@ public class ExecutionPlanResponse {
     }
 
     public void validate() {
+        if (isExecute() && executionId == null) {
+            throw new RuntimeException("ExecutionPlan must contain a valid executionId");
+        }
         if (isExecute() && getStages() == null) {
             throw new RuntimeException("ExecutionPlan is execute, but not body returned");
         }
@@ -156,6 +159,10 @@ public class ExecutionPlanResponse {
 
     public static class Lock {
 
+        private String organizationId;
+        private String projectId;
+        private String environment;
+
         private String key;
 
         private String owner;
@@ -166,6 +173,30 @@ public class ExecutionPlanResponse {
 
 
         public Lock() {
+        }
+
+        public String getOrganizationId() {
+            return organizationId;
+        }
+
+        public void setOrganizationId(String organizationId) {
+            this.organizationId = organizationId;
+        }
+
+        public String getProjectId() {
+            return projectId;
+        }
+
+        public void setProjectId(String projectId) {
+            this.projectId = projectId;
+        }
+
+        public String getEnvironment() {
+            return environment;
+        }
+
+        public void setEnvironment(String environment) {
+            this.environment = environment;
         }
 
         public String getKey() {

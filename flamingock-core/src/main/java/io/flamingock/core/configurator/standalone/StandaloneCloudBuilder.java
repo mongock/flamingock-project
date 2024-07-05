@@ -100,13 +100,13 @@ public class StandaloneCloudBuilder
     }
 
     @Override
-    public StandaloneCloudBuilder setClientId(String clientId) {
-        return cloudConfiguratorDelegate.setClientId(clientId);
+    public StandaloneCloudBuilder setEnvironment(String environment) {
+        return cloudConfiguratorDelegate.setEnvironment(environment);
     }
 
     @Override
-    public StandaloneCloudBuilder setClientSecret(String clientSecret) {
-        return cloudConfiguratorDelegate.setClientSecret(clientSecret);
+    public StandaloneCloudBuilder setApiToken(String clientSecret) {
+        return cloudConfiguratorDelegate.setApiToken(clientSecret);
     }
 
     @Override

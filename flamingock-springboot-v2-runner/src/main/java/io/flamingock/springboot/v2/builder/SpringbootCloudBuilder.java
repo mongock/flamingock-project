@@ -95,17 +95,17 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
 
     @Override
     public SpringbootCloudBuilder setService(String service) {
-        return cloudConfiguratorDelegate.setHost(service);
+        return cloudConfiguratorDelegate.setService(service);
     }
 
     @Override
-    public SpringbootCloudBuilder setClientId(String clientId) {
-        return cloudConfiguratorDelegate.setClientId(clientId);
+    public SpringbootCloudBuilder setEnvironment(String environment) {
+        return cloudConfiguratorDelegate.setEnvironment(environment);
     }
 
     @Override
-    public SpringbootCloudBuilder setClientSecret(String clientSecret) {
-        return cloudConfiguratorDelegate.setClientSecret(clientSecret);
+    public SpringbootCloudBuilder setApiToken(String clientSecret) {
+        return cloudConfiguratorDelegate.setApiToken(clientSecret);
     }
 
     @Override

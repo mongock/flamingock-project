@@ -24,12 +24,9 @@ import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.core.util.ThreadSleeper;
 import io.flamingock.core.util.http.Http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
@@ -38,7 +35,6 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 
 public class CloudEngineTransactionTest {
@@ -58,10 +54,10 @@ public class CloudEngineTransactionTest {
             TestCloudTransactioner cloudTransactioner = Mockito.spy(new TestCloudTransactioner());
 
             Runner runner = FlamingockStandalone.cloud()
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setClientSecret("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
+                    .setEnvironment("test-environment")
                     .setCloudTransactioner(cloudTransactioner)
                     .addStage(new Stage("stage-name")
                             .setName("stage1")

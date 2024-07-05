@@ -16,17 +16,11 @@
 
 package io.flamingock.core.cloud.planner.client;
 
-import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
-import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.cloud.planner.ExecutionPlanRequest;
-import io.flamingock.core.runner.RunnerId;
+import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
 
 public interface ExecutionPlannerClient {
 
 
-    ExecutionPlanResponse createExecution(ServiceId serviceId,
-                                          RunnerId runnerId,
-                                          ExecutionPlanRequest request,
-                                          String lastAcquisitionId,
-                                          long elapsedMillis);
+    ExecutionPlanResponse createExecution(ExecutionPlanRequest request, String lastAcquisitionId, long elapsedMillis);
 }

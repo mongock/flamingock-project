@@ -50,6 +50,14 @@ public final class TimeUtil {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    public static Date toDate(long epochMillis) {
+        LocalDateTime localDateTime = Instant.
+                ofEpochMilli(epochMillis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        return toDate(localDateTime);
+    }
+
     public static LocalDateTime toLocalDateTime(Date date) {
         return date.toInstant()
                 .atZone(ZoneId.systemDefault())

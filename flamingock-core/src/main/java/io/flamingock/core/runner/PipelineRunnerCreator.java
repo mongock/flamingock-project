@@ -22,7 +22,7 @@ import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.pipeline.execution.ExecutionContext;
+import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.core.util.StringUtil;
@@ -55,8 +55,8 @@ public final class PipelineRunnerCreator {
                 finalizer);
     }
 
-    private static ExecutionContext buildExecutionContext(CoreConfigurable configuration) {
-        return new ExecutionContext(StringUtil.executionId(), StringUtil.hostname(), configuration.getDefaultAuthor(), configuration.getMetadata());
+    private static OrphanExecutionContext buildExecutionContext(CoreConfigurable configuration) {
+        return new OrphanExecutionContext(StringUtil.hostname(), configuration.getDefaultAuthor(), configuration.getMetadata());
     }
 
 }
