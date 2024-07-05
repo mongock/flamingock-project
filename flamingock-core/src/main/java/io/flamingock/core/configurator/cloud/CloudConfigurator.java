@@ -28,9 +28,6 @@ public interface CloudConfigurator<HOLDER> {
 
     HOLDER setEnvironment(String environment);
 
-    //TODO remove
-    HOLDER setClientId(String clientId);
-
     HOLDER setApiToken(String clientSecret);
 
     HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner);

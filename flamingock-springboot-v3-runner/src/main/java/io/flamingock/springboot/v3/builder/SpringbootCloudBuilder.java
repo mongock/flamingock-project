@@ -105,11 +105,6 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     }
 
     @Override
-    public SpringbootCloudBuilder setClientId(String clientId) {
-        return cloudConfiguratorDelegate.setClientId(clientId);
-    }
-
-    @Override
     public SpringbootCloudBuilder setApiToken(String clientSecret) {
         return cloudConfiguratorDelegate.setApiToken(clientSecret);
     }

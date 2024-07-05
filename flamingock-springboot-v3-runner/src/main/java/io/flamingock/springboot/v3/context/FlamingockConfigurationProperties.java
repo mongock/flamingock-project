@@ -255,23 +255,13 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
-    public void setClientId(String clientId) {
-        cloudConfiguration.setClientId(clientId);
+    public void setApiToken(String apiToken) {
+        cloudConfiguration.setApiToken(apiToken);
     }
 
     @Override
-    public void setClientSecret(String clientSecret) {
-        cloudConfiguration.setClientSecret(clientSecret);
-    }
-
-    @Override
-    public String getClientId() {
-        return cloudConfiguration.getClientId();
-    }
-
-    @Override
-    public String getClientSecret() {
-        return cloudConfiguration.getClientSecret();
+    public String getApiToken() {
+        return cloudConfiguration.getApiToken();
     }
 
     @Override
@@ -290,7 +280,6 @@ public class FlamingockConfigurationProperties
     }
 
     public boolean isCloudConfigurationEmpty() {
-        return cloudConfiguration.getClientId() == null
-        && cloudConfiguration.getClientSecret() == null;
+        return cloudConfiguration.getApiToken() == null;
     }
 }

@@ -35,7 +35,6 @@ import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
 import io.flamingock.core.cloud.planner.client.HttpExecutionPlannerClient;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.runner.RunnerId;
-import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.core.util.TimeService;
 import io.flamingock.core.util.http.Http;
 import org.slf4j.Logger;
@@ -86,8 +85,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
                 requestBuilderFactory);
 
         AuthManager authManager = new AuthManager(
-                cloudConfiguration.getClientId(),
-                cloudConfiguration.getClientSecret(),
+                cloudConfiguration.getApiToken(),
                 authClient);
 
 

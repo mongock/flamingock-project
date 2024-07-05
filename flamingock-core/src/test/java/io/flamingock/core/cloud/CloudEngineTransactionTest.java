@@ -54,8 +54,7 @@ public class CloudEngineTransactionTest {
             TestCloudTransactioner cloudTransactioner = Mockito.spy(new TestCloudTransactioner());
 
             Runner runner = FlamingockStandalone.cloud()
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setApiToken("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(cloudTransactioner)

@@ -34,11 +34,7 @@ public class HtttpAuditWriter implements AuditWriter {
 
     private static final Logger logger = LoggerFactory.getLogger(HtttpAuditWriter.class);
 
-    private final String SERVICE_PARAM = "{service}";
-
-    private final String ENV_PARAM = "{service}";
-
-    private final String EXECUTION_ID_PARAM = "{executionId}";
+    private final String EXECUTION_ID_PARAM = "executionId";
 
     private final Http.RequestBuilder requestBuilder;
 
@@ -59,7 +55,7 @@ public class HtttpAuditWriter implements AuditWriter {
         this.runnerId = runnerId;
 
         this.pathTemplate = String.format(
-                "/api/%s/environment/%s/service/%s/execution/%s/audit",
+                "/api/%s/environment/%s/service/%s/execution/{%s}/audit",
                 apiVersion,
                 environmentId.toString(),
                 serviceId.toString(),

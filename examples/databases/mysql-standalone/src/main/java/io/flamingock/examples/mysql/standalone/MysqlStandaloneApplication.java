@@ -41,7 +41,6 @@ public class MysqlStandaloneApplication {
             FlamingockStandalone
                     .cloud()
                     .setHost("http://localhost:8080")
-                    .setClientId("fake-client-id")
                     .setApiToken("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcxOTg0MjM0MiwiZXhwIjoxNzUxMzc4MzQyLCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoib3JnMSIsInByb2plY3QiOiJwcm9qZWN0MSIsImVudmlyb25tZW50IjoicWEiLCJzZXJ2aWNlIjoiaW52b2ljZXMifQ.bniEhiPVM3nVR0FyntF6DKMIcbzhH4TaNn1liIsJxTReImCg7yOfYEKjNslGHeXg0NCypN1MeSQIpHm564xE0iR1Zn8hPaEJWNARmFTYD293QVelkjX_SPSfvxLs22CD-EgF2OvH3gIj40V5D4GmMn1LGGVdkq2vvxWHcwNU2dcSvHsA-5t8J7UWpyTnPQQOuUE2hyuSLR3sMlk8Z9O7Mdr09DEbFkQzP350xeXMwyHr6BYclB-R_9-JB80fd40M8tbR8545gHgD8UJaAILDi1Q4daItttE39LZQpHm-Xn7EFf90V5b7kDdwsnDN7h4T91vwsSBix8IkPGVosA")
                     .setEnvironment("qa")
                     .setService("invoices")

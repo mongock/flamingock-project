@@ -85,8 +85,7 @@ public class MysqlSqlCloudTransactionerTest {
                     .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setApiToken("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)
@@ -151,8 +150,7 @@ public class MysqlSqlCloudTransactionerTest {
                     .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setApiToken("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)
@@ -202,8 +200,7 @@ public class MysqlSqlCloudTransactionerTest {
                     .setDialect(SqlDialect.MYSQL));
 
             Runner runner = FlamingockStandalone.cloud()
-                    .setClientId("FAKE_CLIENT_ID")
-                    .setApiToken("FAKE_CLIENT_SECRET")
+                    .setApiToken("FAKE_API_TOKEN")
                     .setHost("https://fake-cloud-server.io")
                     .setService("test-service")
                     .setCloudTransactioner(sqlCloudTransactioner)

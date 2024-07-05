@@ -31,13 +31,9 @@ public interface CloudConfigurable {
 
     void setEnvironment(String environment);
 
-    void setClientId(String clientId);
+    void setApiToken(String apiToken);
 
-    void setClientSecret(String clientSecret);
-
-    String getClientId();
-
-    String getClientSecret();
+    String getApiToken();
 
     String getHost();
 
