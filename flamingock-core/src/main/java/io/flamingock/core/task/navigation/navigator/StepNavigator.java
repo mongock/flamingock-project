@@ -112,7 +112,8 @@ public class StepNavigator {
                 executedStep = executeWithinTransaction(task, executionContext, runtimeManager);
             } else {
                 logger.info("Executing(non-transactional) task[{}]", task.getDescriptor().getId());
-                executedStep = performAuditExecution(executeTask(task), executionContext, LocalDateTime.now());
+                ExecutionStep executionStep = executeTask(task);
+                executedStep = performAuditExecution(executionStep, executionContext, LocalDateTime.now());
             }
 
 

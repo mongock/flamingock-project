@@ -10,3 +10,5 @@ templateConfiguration:
             Address varchar(255),
             City varchar(255)
         )
+    rollbackSql: |
+        DROP TABLE IF EXISTS Persons;

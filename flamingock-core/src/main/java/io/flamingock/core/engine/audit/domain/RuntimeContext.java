@@ -113,6 +113,7 @@ public final class RuntimeContext {
         public Builder setTaskStep(ManualRolledBackStep rolledBackStep) {
             duration = rolledBackStep.getDuration();
             methodExecutor = rolledBackStep.getRollback().getRollbackMethodName();
+            stageName = rolledBackStep.getTask().getStageName();
             setFailure(rolledBackStep);
             return this;
         }
