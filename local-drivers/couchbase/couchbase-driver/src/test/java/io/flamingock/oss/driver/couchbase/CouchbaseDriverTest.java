@@ -169,7 +169,7 @@ class CouchbaseDriverTest {
         assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
         assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
-        assertEquals(AuditEntryStatus.FAILED, auditLog.get(2).getState());
+        assertEquals(AuditEntryStatus.EXECUTION_FAILED, auditLog.get(2).getState());
 
         //Checking created index and documents
         assertTrue(couchbaseTestHelper.indexExists(collection.bucketName(), "idx_standalone_index"));

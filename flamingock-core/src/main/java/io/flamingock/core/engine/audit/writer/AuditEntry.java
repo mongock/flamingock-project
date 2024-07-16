@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static io.flamingock.core.engine.audit.writer.AuditEntryStatus.EXECUTED;
-import static io.flamingock.core.engine.audit.writer.AuditEntryStatus.FAILED;
+import static io.flamingock.core.engine.audit.writer.AuditEntryStatus.EXECUTION_FAILED;
 import static io.flamingock.core.engine.audit.writer.AuditEntryStatus.ROLLBACK_FAILED;
 import static io.flamingock.core.engine.audit.writer.AuditEntryStatus.ROLLED_BACK;
 
@@ -34,7 +34,7 @@ public class AuditEntry {
     public static final Set<AuditEntryStatus> RELEVANT_STATES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             EXECUTED,
             ROLLED_BACK,
-            FAILED,
+            EXECUTION_FAILED,
             ROLLBACK_FAILED)));
 
     public enum ExecutionType {EXECUTION, BEFORE_EXECUTION;}

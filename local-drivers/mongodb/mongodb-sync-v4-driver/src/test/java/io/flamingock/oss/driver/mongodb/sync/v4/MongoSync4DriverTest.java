@@ -294,7 +294,7 @@ class MongoSync4DriverTest {
         assertEquals("insert-document", auditLog.get(1).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
         assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
-        assertEquals(AuditEntryStatus.FAILED, auditLog.get(2).getState());
+        assertEquals(AuditEntryStatus.EXECUTION_FAILED, auditLog.get(2).getState());
 
         //Checking clients collection
         Set<String> clients = mongoDatabase.getCollection(CLIENTS_COLLECTION)
