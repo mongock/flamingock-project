@@ -167,7 +167,7 @@ public class MysqlSqlCloudTransactionerTest {
             //1 execution plans: First to execute and second(to continue) is not performed because the first execution failed in second task
             verify(cloudMockBuilder.getRequestWithBody(), new Times(1)).execute(ExecutionPlanResponse.class);
             //1 audit writes: Only one because second task failed
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(1)).execute();
+            verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute();
             //DELETE LOCK
             verify(cloudMockBuilder.getBasicRequest(), new Times(1)).execute();
 
@@ -218,7 +218,7 @@ public class MysqlSqlCloudTransactionerTest {
             //1 execution plans: First is tokenRequest, second to execute and third(to continue) is not performed because
             // the first execution failed in second task
             ArgumentCaptor<Object> bodyCaptor = ArgumentCaptor.forClass(Object.class);
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(3)).setBody(bodyCaptor.capture());
+            verify(cloudMockBuilder.getRequestWithBody(), new Times(4)).setBody(bodyCaptor.capture());
 
             ExecutionPlanRequest planRequest = (ExecutionPlanRequest) bodyCaptor.getAllValues().get(1);
             List<StageRequest.Task> tasks = planRequest.getClientSubmission().getStages().get(0).getTasks();

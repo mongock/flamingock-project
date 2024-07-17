@@ -41,7 +41,7 @@ public class MysqlStandaloneApplication {
             FlamingockStandalone
                     .cloud()
                     .setHost("http://localhost:8080")
-                    .setApiToken("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcxOTg0MjM0MiwiZXhwIjoxNzUxMzc4MzQyLCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoib3JnMSIsInByb2plY3QiOiJwcm9qZWN0MSIsImVudmlyb25tZW50IjoicWEiLCJzZXJ2aWNlIjoiaW52b2ljZXMifQ.bniEhiPVM3nVR0FyntF6DKMIcbzhH4TaNn1liIsJxTReImCg7yOfYEKjNslGHeXg0NCypN1MeSQIpHm564xE0iR1Zn8hPaEJWNARmFTYD293QVelkjX_SPSfvxLs22CD-EgF2OvH3gIj40V5D4GmMn1LGGVdkq2vvxWHcwNU2dcSvHsA-5t8J7UWpyTnPQQOuUE2hyuSLR3sMlk8Z9O7Mdr09DEbFkQzP350xeXMwyHr6BYclB-R_9-JB80fd40M8tbR8545gHgD8UJaAILDi1Q4daItttE39LZQpHm-Xn7EFf90V5b7kDdwsnDN7h4T91vwsSBix8IkPGVosA")
+                    .setApiToken("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcyMDUyNDcyOCwiZXhwIjoxNzUyMDYwNzI4LCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoib3JnMSIsInByb2plY3QiOiJwcm9qZWN0MSIsImVudmlyb25tZW50IjoicWEiLCJzZXJ2aWNlIjoiaW52b2ljZXMifQ.OXzW94CV5LxRFqTkXkxtIlP_Q29tbLzJkIQSMHpewAEyPBMmlMfuFyCX7hO-soZs21gtToTY4N4ONNzRMmNXax433JbcffheogQlAur1NosYkJT82MSqnRX7NVfRrlrE9JDopnG35uQ6_rLZlWzNrqZp-U14NbSit8J9pJ6I-R8l8VGl05PZqTy08rbeWcGFwa_O55HQW3pcC_e6YILM9JaCR_is7k46NcujD4V4LAZGmPjGNDSXCx4ZdLnr2Hn2jhZ2gHzNJxKLERTCWmvvQgEIf8SRzIE-DLrCSrODIT4cXwb2pofi7Iw8SBI1SpjEuQ_MtXk6P_hudXIRYA")
                     .setEnvironment("qa")
                     .setService("invoices")
                     .setCloudTransactioner(cloudTransactioner)//for cloud transactions with Sql
@@ -60,16 +60,16 @@ public class MysqlStandaloneApplication {
         Class.forName("com.mysql.cj.jdbc.Driver");
         return new SqlCloudTransactioner()
                 .setDialect(SqlDialect.MYSQL)
-                .setUrl("jdbc:mysql://localhost/flamingock")
-                .setUser("flamingock_user")
-                .setPassword("password");
+                .setUrl("jdbc:mysql://localhost:3307/flamingock")
+                .setUser("root")
+                .setPassword("strong_password");
     }
 
     //Temporally because we haven't injected transactional = true
     private static Connection getConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection("jdbc:mysql://localhost/flamingock", "flamingock_user", "password");
+            return DriverManager.getConnection("jdbc:mysql://localhost:3307/flamingock", "root", "strong_password");
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

@@ -22,7 +22,6 @@ import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.audit.domain.RuntimeContext;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
-import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.task.executable.ExecutableTask;
@@ -112,7 +111,8 @@ public class StepNavigator {
                 executedStep = executeWithinTransaction(task, executionContext, runtimeManager);
             } else {
                 logger.info("Executing(non-transactional) task[{}]", task.getDescriptor().getId());
-                executedStep = performAuditExecution(executeTask(task), executionContext, LocalDateTime.now());
+                ExecutionStep executionStep = executeTask(task);
+                executedStep = auditExecution(executionStep, executionContext, LocalDateTime.now());
             }
 
 
@@ -140,7 +140,7 @@ public class StepNavigator {
         return transactionWrapper.wrapInTransaction(task.getDescriptor(), dependencyInjectable, () -> {
             ExecutionStep executed = executeTask(task);
             if (executed instanceof SuccessExecutionStep) {
-                AfterExecutionAuditStep executionAuditResult = performAuditExecution(executed, executionContext, LocalDateTime.now());
+                AfterExecutionAuditStep executionAuditResult = auditExecution(executed, executionContext, LocalDateTime.now());
                 if (executionAuditResult instanceof CompletedSuccessStep) {
                     //If it's a cloud transaction, it requires to clean the status
                     if(ongoingTasksRepository != null) {
@@ -148,6 +148,10 @@ public class StepNavigator {
                     }
                     return executionAuditResult;
                 }
+            } else {
+                //it logs the EXECUTION_FAILED audit entry anyway
+                AfterExecutionAuditStep executionAuditResult = auditExecution(executed, executionContext, LocalDateTime.now());
+
             }
             //if it goes through here, it's failed, and it will be rolled back
             return new CompleteAutoRolledBackStep(task, true);
@@ -169,9 +173,9 @@ public class StepNavigator {
         return executed;
     }
 
-    private AfterExecutionAuditStep performAuditExecution(ExecutionStep executionStep,
-                                                          ExecutionContext executionContext,
-                                                          LocalDateTime executedAt) {
+    private AfterExecutionAuditStep auditExecution(ExecutionStep executionStep,
+                                                   ExecutionContext executionContext,
+                                                   LocalDateTime executedAt) {
         RuntimeContext runtimeContext = RuntimeContext.builder().setTaskStep(executionStep).setExecutedAt(executedAt).build();
 
         Result auditResult = auditWriter.writeStep(new AuditItem(AuditItem.Operation.EXECUTION, executionStep.getTaskDescriptor(), executionContext, runtimeContext));

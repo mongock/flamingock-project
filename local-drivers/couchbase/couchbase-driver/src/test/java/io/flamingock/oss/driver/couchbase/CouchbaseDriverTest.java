@@ -29,6 +29,7 @@ import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.oss.driver.couchbase.driver.CouchbaseDriver;
+import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.testcontainers.couchbase.BucketDefinition;
 import org.testcontainers.couchbase.CouchbaseContainer;
@@ -40,6 +41,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
+
 class CouchbaseDriverTest {
 
     private static final String BUCKET_NAME = "bucket";
@@ -68,6 +70,7 @@ class CouchbaseDriverTest {
         cluster.queryIndexes().dropIndex(BUCKET_NAME, "idx_standalone_index", DropQueryIndexOptions.dropQueryIndexOptions().ignoreIfNotExists(true));
     }
 
+    
     @Test
     @DisplayName("When standalone runs the driver should persist the audit logs and the test data")
     void happyPath() {
@@ -105,6 +108,8 @@ class CouchbaseDriverTest {
         assertEquals(jsonObject.get("name"), "Jorge");
     }
 
+
+    
     @Test
     @DisplayName("When standalone runs the driver and execution fails (with rollback method) should persist all the audit logs up to the failed one (ROLLED_BACK)")
     void failedWithRollback() {
@@ -142,6 +147,7 @@ class CouchbaseDriverTest {
         assertFalse(collection.exists("test-client-Jorge").exists());
     }
 
+    
     @Test
     @DisplayName("When standalone runs the driver and execution fails (without rollback method) should persist all the audit logs up to the failed one (FAILED)")
     void failedWithoutRollback() {
