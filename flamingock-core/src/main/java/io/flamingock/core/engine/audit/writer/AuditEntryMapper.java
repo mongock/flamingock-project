@@ -52,7 +52,7 @@ public final class AuditEntryMapper {
     private static AuditEntryStatus getAuditStatus(AuditItem auditable) {
         switch (auditable.getOperation()) {
             case EXECUTION:
-                return auditable.getRuntimeContext().isSuccess() ? AuditEntryStatus.EXECUTED : AuditEntryStatus.FAILED;
+                return auditable.getRuntimeContext().isSuccess() ? AuditEntryStatus.EXECUTED : AuditEntryStatus.EXECUTION_FAILED;
             case ROLLBACK:
             default:
                 return auditable.getRuntimeContext().isSuccess() ? AuditEntryStatus.ROLLED_BACK : AuditEntryStatus.ROLLBACK_FAILED;
