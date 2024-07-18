@@ -106,7 +106,7 @@ public class StepNavigator {
 
             // Main execution
             TaskStep executedStep;
-            if( transactionWrapper != null && task.getDescriptor().isTransactional()) {
+            if (transactionWrapper != null && task.getDescriptor().isTransactional()) {
                 logger.info("Executing(transactional, cloud={}) task[{}]", ongoingTasksRepository != null, task.getDescriptor().getId());
                 executedStep = executeWithinTransaction(task, executionContext, runtimeManager);
             } else {
@@ -133,7 +133,7 @@ public class StepNavigator {
                                               DependencyInjectable dependencyInjectable) {
 
         //If it's a cloud transaction, it requires to write the status
-        if(ongoingTasksRepository != null) {
+        if (ongoingTasksRepository != null) {
             ongoingTasksRepository.setOngoingExecution(task);
         }
 
@@ -143,14 +143,14 @@ public class StepNavigator {
                 AfterExecutionAuditStep executionAuditResult = auditExecution(executed, executionContext, LocalDateTime.now());
                 if (executionAuditResult instanceof CompletedSuccessStep) {
                     //If it's a cloud transaction, it requires to clean the status
-                    if(ongoingTasksRepository != null) {
+                    if (ongoingTasksRepository != null) {
                         ongoingTasksRepository.cleanOngoingStatus(task.getDescriptor().getId());
                     }
                     return executionAuditResult;
                 }
             } else {
                 //it logs the EXECUTION_FAILED audit entry anyway
-                AfterExecutionAuditStep executionAuditResult = auditExecution(executed, executionContext, LocalDateTime.now());
+                auditExecution(executed, executionContext, LocalDateTime.now());
 
             }
             //if it goes through here, it's failed, and it will be rolled back
@@ -188,7 +188,8 @@ public class StepNavigator {
     private StepNavigationOutput rollback(RollableFailedStep rollableFailedStep, ExecutionContext executionContext) {
         if (rollableFailedStep instanceof CompleteAutoRolledBackStep) {
             //It's autoRollable(handled by the database engine or similar)
-            summarizer.add((CompleteAutoRolledBackStep) rollableFailedStep);
+            auditAutoRollback((CompleteAutoRolledBackStep) rollableFailedStep, executionContext, LocalDateTime.now());
+
         }
         rollableFailedStep.getRollbackSteps().forEach(rollableStep -> {
             ManualRolledBackStep rolledBack = manualRollback(rollableStep);
@@ -219,5 +220,13 @@ public class StepNavigator {
         logAuditResult(auditResult, rolledBackStep.getTaskDescriptor().getId(), "ROLLBACK");
         CompletedFailedManualRollback failedStep = rolledBackStep.applyAuditResult(auditResult);
         summarizer.add(failedStep);
+    }
+
+    private void auditAutoRollback(CompleteAutoRolledBackStep rolledBackStep, ExecutionContext executionContext, LocalDateTime executedAt) {
+        RuntimeContext runtimeContext = RuntimeContext.builder().setTaskStep(rolledBackStep).setExecutedAt(executedAt).build();
+        Result auditResult = auditWriter.writeStep(new AuditItem(AuditItem.Operation.ROLLBACK, rolledBackStep.getTaskDescriptor(), executionContext, runtimeContext));
+        logAuditResult(auditResult, rolledBackStep.getTaskDescriptor().getId(), "ROLLBACK");
+        summarizer.add(rolledBackStep);
+
     }
 }

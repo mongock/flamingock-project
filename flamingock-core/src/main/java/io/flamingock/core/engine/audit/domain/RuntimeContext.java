@@ -18,6 +18,7 @@ package io.flamingock.core.engine.audit.domain;
 
 import io.flamingock.core.task.navigation.step.FailedWithErrorStep;
 import io.flamingock.core.task.navigation.step.TaskStep;
+import io.flamingock.core.task.navigation.step.complete.failed.CompleteAutoRolledBackStep;
 import io.flamingock.core.task.navigation.step.execution.ExecutionStep;
 import io.flamingock.core.task.navigation.step.rolledback.ManualRolledBackStep;
 
@@ -113,6 +114,15 @@ public final class RuntimeContext {
         public Builder setTaskStep(ManualRolledBackStep rolledBackStep) {
             duration = rolledBackStep.getDuration();
             methodExecutor = rolledBackStep.getRollback().getRollbackMethodName();
+            stageName = rolledBackStep.getTask().getStageName();
+            setFailure(rolledBackStep);
+            return this;
+        }
+
+        public Builder setTaskStep(CompleteAutoRolledBackStep rolledBackStep) {
+            duration = 0L;
+            methodExecutor = "native_db_engine";
+            stageName = rolledBackStep.getTask().getStageName();
             setFailure(rolledBackStep);
             return this;
         }
