@@ -220,7 +220,7 @@ class MongoSync4DriverTest {
         //Then
         //Checking auditLog
         List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
-        assertEquals(2, auditLog.size());
+        assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
         assertEquals("insert-document", auditLog.get(1).getTaskId());
