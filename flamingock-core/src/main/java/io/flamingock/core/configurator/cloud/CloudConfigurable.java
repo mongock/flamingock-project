@@ -27,9 +27,9 @@ public interface CloudConfigurable {
 
     void setHost(String host);
 
-    void setService(String service);
+    void setServiceName(String serviceName);
 
-    void setEnvironment(String environment);
+    void setEnvironmentName(String environmentName);
 
     void setApiToken(String apiToken);
 
@@ -37,15 +37,8 @@ public interface CloudConfigurable {
 
     String getHost();
 
-    String getService();
+    String getServiceName();
 
-    String getEnvironment();
+    String getEnvironmentName();
 
-    default ServiceId getServiceId() {
-        return ServiceId.fromString(getService());
-    }
-
-    default EnvironmentId getEnvironmentId() {
-        return EnvironmentId.fromString(getEnvironment());
-    }
 }

@@ -16,7 +16,7 @@
 
 package io.flamingock.cloud.transaction.sql.utils;
 
-import io.flamingock.core.cloud.auth.TokenResponse;
+import io.flamingock.core.cloud.auth.AuthResponse;
 import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
 import io.flamingock.core.util.http.Http;
 import org.mockito.MockedStatic;
@@ -151,9 +151,9 @@ public final class CloudMockBuilder {
 
         }
 
-        TokenResponse tokenResponse = new TokenResponse();
+        AuthResponse tokenResponse = new AuthResponse();
         tokenResponse.setJwt(jwtToken);
-        when(requestWithBody.execute(TokenResponse.class)).thenReturn(tokenResponse);
+        when(requestWithBody.execute(AuthResponse.class)).thenReturn(tokenResponse);
 
         when(requestBuilder.POST(anyString())).thenReturn(requestWithBody);
         when(requestBuilder.DELETE(anyString())).thenReturn(basicRequest);

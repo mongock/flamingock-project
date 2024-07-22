@@ -24,13 +24,21 @@ public class AuthManager {
 
     private String jwtToken;
 
-    public AuthManager(String clientSecret, AuthClient authClient) {
+    public AuthManager(String apiToken,
+                       String serviceName,
+                       String environmentName,
+                       AuthClient authClient) {
         this.authClient = authClient;
-        this.tokenRequest = new TokenRequest(clientSecret);
+        this.tokenRequest = new TokenRequest(
+                apiToken,
+                serviceName,
+                environmentName);
     }
 
-    public void authenticate() {
-        jwtToken = authClient.getToken(tokenRequest).getJwt();
+    public AuthResponse authenticate() {
+        AuthResponse token = authClient.getToken(tokenRequest);
+        jwtToken = token.getJwt();
+        return token;
     }
 
     public String getJwtToken() {

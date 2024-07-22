@@ -19,12 +19,24 @@ package io.flamingock.core.cloud.auth;
 public class TokenRequest {
 
     private final String apiToken;
+    private final String serviceName;
+    private final String environmentName;
 
-    public TokenRequest(String apiToken) {
+    public TokenRequest(String apiToken, String serviceName, String environmentName) {
         this.apiToken = apiToken;
+        this.serviceName = serviceName;
+        this.environmentName = environmentName;
     }
 
     public String getApiToken() {
         return apiToken;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public String getEnvironmentName() {
+        return environmentName;
     }
 }

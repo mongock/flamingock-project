@@ -32,13 +32,13 @@ public class CloudConfiguration implements CloudConfigurable {
     }
 
     @Override
-    public void setService(String service) {
-        this.service = service;
+    public void setServiceName(String serviceName) {
+        this.service = serviceName;
     }
 
     @Override
-    public void setEnvironment(String environment) {
-        this.environment = environment;
+    public void setEnvironmentName(String environmentName) {
+        this.environment = environmentName;
     }
 
     @Override
@@ -57,12 +57,12 @@ public class CloudConfiguration implements CloudConfigurable {
     }
 
     @Override
-    public String getService() {
+    public String getServiceName() {
         return service;
     }
 
     @Override
-    public String getEnvironment() {
+    public String getEnvironmentName() {
         return environment;
     }
 }
