@@ -16,7 +16,7 @@
 
 package io.flamingock.core.cloud.utils;
 
-import io.flamingock.core.cloud.auth.TokenResponse;
+import io.flamingock.core.cloud.auth.AuthResponse;
 import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
 import io.flamingock.core.util.http.Http;
 import org.mockito.MockedStatic;
@@ -38,6 +38,12 @@ public final class CloudMockBuilder {
 
     private String serviceName = "test-service";
 
+    private String environmentName = "development";
+
+    private String serviceId = "test-service-id";
+
+    private String environmentId = "development-env-id";
+
     private String runnerId = "owner-it's-not-checked";
 
 
@@ -55,6 +61,21 @@ public final class CloudMockBuilder {
 
     public CloudMockBuilder setServiceName(String serviceName) {
         this.serviceName = serviceName;
+        return this;
+    }
+
+    public CloudMockBuilder setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
+        return this;
+    }
+
+    public CloudMockBuilder setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+        return this;
+    }
+
+    public CloudMockBuilder setEnvironmentId(String environmentId) {
+        this.environmentId = environmentId;
         return this;
     }
 
@@ -121,6 +142,8 @@ public final class CloudMockBuilder {
     }
 
 
+
+
     public void mockServer() {
 
         Http.RequestBuilderFactory requestBuilderFactory = mock(Http.RequestBuilderFactory.class);
@@ -154,9 +177,13 @@ public final class CloudMockBuilder {
 
         }
 
-        TokenResponse tokenResponse = new TokenResponse();
+        AuthResponse tokenResponse = new AuthResponse();
         tokenResponse.setJwt(jwtToken);
-        when(requestWithBody.execute(TokenResponse.class)).thenReturn(tokenResponse);
+        tokenResponse.setServiceName(serviceName);
+        tokenResponse.setServiceId(serviceId);
+        tokenResponse.setEnvironmentName(environmentName);
+        tokenResponse.setEnvironmentId(environmentId);
+        when(requestWithBody.execute(AuthResponse.class)).thenReturn(tokenResponse);
 
         when(requestBuilder.POST(anyString())).thenReturn(requestWithBody);
         when(requestBuilder.DELETE(anyString())).thenReturn(basicRequest);

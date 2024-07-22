@@ -244,13 +244,13 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
-    public void setService(String service) {
-        cloudConfiguration.setService(service);
+    public void setServiceName(String serviceName) {
+        cloudConfiguration.setServiceName(serviceName);
     }
 
     @Override
-    public void setEnvironment(String environment) {
-        cloudConfiguration.setEnvironment(environment);
+    public void setEnvironmentName(String environmentName) {
+        cloudConfiguration.setEnvironmentName(environmentName);
     }
 
     @Override
@@ -269,13 +269,13 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
-    public String getService() {
-        return cloudConfiguration.getService();
+    public String getServiceName() {
+        return cloudConfiguration.getServiceName();
     }
 
     @Override
-    public String getEnvironment() {
-        return cloudConfiguration.getEnvironment();
+    public String getEnvironmentName() {
+        return cloudConfiguration.getEnvironmentName();
     }
 
     public boolean isCloudConfigurationEmpty() {

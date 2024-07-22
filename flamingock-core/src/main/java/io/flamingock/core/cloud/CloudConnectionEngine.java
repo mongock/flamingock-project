@@ -20,6 +20,7 @@ import io.flamingock.core.cloud.audit.HtttpAuditWriter;
 import io.flamingock.core.cloud.auth.AuthClient;
 import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.cloud.auth.HttpAuthClient;
+import io.flamingock.core.cloud.auth.AuthResponse;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurable;
@@ -76,8 +77,6 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     @Override
     public void initialize(RunnerId runnerId) {
-        ServiceId serviceId = cloudConfiguration.getServiceId();
-        EnvironmentId environmentId = cloudConfiguration.getEnvironmentId();
 
         AuthClient authClient = new HttpAuthClient(
                 cloudConfiguration.getHost(),
@@ -86,9 +85,13 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
         AuthManager authManager = new AuthManager(
                 cloudConfiguration.getApiToken(),
+                cloudConfiguration.getServiceName(),
+                cloudConfiguration.getEnvironmentName(),
                 authClient);
+        AuthResponse authResponse = authManager.authenticate();
 
-
+        EnvironmentId environmentId = EnvironmentId.fromString(authResponse.getEnvironmentId());
+        ServiceId serviceId = ServiceId.fromString(authResponse.getServiceId());
         auditWriter = new HtttpAuditWriter(
                 cloudConfiguration.getHost(),
                 environmentId,
@@ -126,7 +129,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
         );
         getTransactionWrapper().ifPresent(CloudTransactioner::initialize);
 
-        authManager.authenticate();
+
     }
 
     @Override

@@ -29,6 +29,10 @@ import java.sql.SQLException;
 
 public class MysqlStandaloneApplication {
 
+    private static final String SERVICE_NAME = "clients-service";
+    private static final String ENVIRONMENT = "development";
+    private static final String API_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcyMTYzNjAwMSwiZXhwIjoxNzUzMTcyMDAxLCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoiMmFjYjEzOTUtYjYyYi00ZDJmLWE4ZTktMjNmMzMxZTE0NzY1IiwicHJvamVjdCI6IjQ2Y2NlYTM4LTRjYjYtNDg3Yi05MmFkLWI4YjA1MTBmYzQ1MiIsImVudmlyb25tZW50IjoiZDczMzY3ZDQtNzIwMi00ZDM5LWJlOGEtZTlmMmFlMTFkMTkzIiwic2VydmljZSI6IjZiYjI1M2NiLWE3MmUtNDUyMy04YjgxLWYwY2Q2ODE3NmUxMSJ9.gzsC8H04Ba1swfONdOIuOeOKLvt-ha4jVvEhjrYwXldw9LmEvo4L4TfLDbAYN-ixSbg_oDqmXL15ftU4uDoZXi8L69uLh0GwFkidC1nBN_42KaghC4wHKkiU3rCR1fHLWE9bc0hxuef-Xk55GQP7v4GI1LeL0SY_RIWYtvR4o6-ZqQirih9b0jskxtBmvK5pKyGEgVBQ0HwxVHhwrBhPHVm3Xy3Li6auY8SFXrr_DLmdmxygpE1H6U8oPG98qRBx9Pt-_3Izt_r7_MQkcZseqkdPmrMfPOCHa5brRanAevDnYvaL2_Mk_ky8Im4m7jgYQOhCYvUHI5PNY2umZg";
+
     public static void main(String[] args) throws ClassNotFoundException {
         new MysqlStandaloneApplication()
                 .run();
@@ -41,9 +45,9 @@ public class MysqlStandaloneApplication {
             FlamingockStandalone
                     .cloud()
                     .setHost("http://localhost:8080")
-                    .setApiToken("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcyMDUyNDcyOCwiZXhwIjoxNzUyMDYwNzI4LCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoib3JnMSIsInByb2plY3QiOiJwcm9qZWN0MSIsImVudmlyb25tZW50IjoicWEiLCJzZXJ2aWNlIjoiaW52b2ljZXMifQ.OXzW94CV5LxRFqTkXkxtIlP_Q29tbLzJkIQSMHpewAEyPBMmlMfuFyCX7hO-soZs21gtToTY4N4ONNzRMmNXax433JbcffheogQlAur1NosYkJT82MSqnRX7NVfRrlrE9JDopnG35uQ6_rLZlWzNrqZp-U14NbSit8J9pJ6I-R8l8VGl05PZqTy08rbeWcGFwa_O55HQW3pcC_e6YILM9JaCR_is7k46NcujD4V4LAZGmPjGNDSXCx4ZdLnr2Hn2jhZ2gHzNJxKLERTCWmvvQgEIf8SRzIE-DLrCSrODIT4cXwb2pofi7Iw8SBI1SpjEuQ_MtXk6P_hudXIRYA")
-                    .setEnvironment("qa")
-                    .setService("invoices")
+                    .setApiToken(API_TOKEN)
+                    .setEnvironment(ENVIRONMENT)
+                    .setService(SERVICE_NAME)
                     .setCloudTransactioner(cloudTransactioner)//for cloud transactions with Sql
                     .setLockAcquiredForMillis(60 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                     .setLockQuitTryingAfterMillis(10 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L

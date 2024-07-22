@@ -75,13 +75,13 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
 
     @Override
     public HOLDER setService(String service) {
-        cloudConfiguration.setService(service);
+        cloudConfiguration.setServiceName(service);
         return holderSupplier.get();
     }
 
     @Override
     public HOLDER setEnvironment(String environment) {
-        cloudConfiguration.setEnvironment(environment);
+        cloudConfiguration.setEnvironmentName(environment);
         return holderSupplier.get();
     }
 

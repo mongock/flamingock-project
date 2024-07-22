@@ -33,10 +33,10 @@ public class HttpAuthClient implements AuthClient {
     }
 
     @Override
-    public TokenResponse getToken(TokenRequest request) {
+    public AuthResponse getToken(TokenRequest request) {
         return requestBuilder
                 .POST(pathTemplate)
                 .setBody(request)
-                .execute(TokenResponse.class);
+                .execute(AuthResponse.class);
     }
 }
