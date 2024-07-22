@@ -35,8 +35,13 @@ import static org.mockito.Mockito.when;
 
 public final class CloudMockBuilder {
 
-
     private String serviceName = "test-service";
+
+    private String environmentName = "development";
+
+    private String serviceId = "test-service-id";
+
+    private String environmentId = "development-env-id";
 
     private String runnerId = "owner-it's-not-checked";
 
@@ -53,11 +58,26 @@ public final class CloudMockBuilder {
     private String jwtToken = "jwt";
 
 
+
     public CloudMockBuilder setServiceName(String serviceName) {
         this.serviceName = serviceName;
         return this;
     }
 
+    public CloudMockBuilder setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
+        return this;
+    }
+
+    public CloudMockBuilder setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+        return this;
+    }
+
+    public CloudMockBuilder setEnvironmentId(String environmentId) {
+        this.environmentId = environmentId;
+        return this;
+    }
     public CloudMockBuilder setRunnerId(String runnerId) {
         this.runnerId = runnerId;
         return this;
@@ -153,6 +173,10 @@ public final class CloudMockBuilder {
 
         AuthResponse tokenResponse = new AuthResponse();
         tokenResponse.setJwt(jwtToken);
+        tokenResponse.setServiceName(serviceName);
+        tokenResponse.setServiceId(serviceId);
+        tokenResponse.setEnvironmentName(environmentName);
+        tokenResponse.setEnvironmentId(environmentId);
         when(requestWithBody.execute(AuthResponse.class)).thenReturn(tokenResponse);
 
         when(requestBuilder.POST(anyString())).thenReturn(requestWithBody);

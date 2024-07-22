@@ -52,10 +52,18 @@ public class CloudEngineTest {
         try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
             CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
             String jwt = "fake_jwt";
+            String serviceName = "clients-service";
+            String environmentName = "development";
+            String serviceId = "clients-service-id";
+            String environmentId = "development-env-id";
             cloudMockBuilder
                     .addSingleExecutionPlanResponse("stage1", "create-persons-table-from-template", "create-persons-table-from-template-2")
                     .addContinueExecutionPlanResponse()
                     .setJwtToken(jwt)
+                    .setServiceName(serviceName)
+                    .setServiceId(serviceId)
+                    .setEnvironmentName(environmentName)
+                    .setEnvironmentId(environmentId)
                     .setHttp(http)
                     .mockServer();
 
