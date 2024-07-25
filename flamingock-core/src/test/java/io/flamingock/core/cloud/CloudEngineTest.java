@@ -17,9 +17,14 @@
 package io.flamingock.core.cloud;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.cloud.utils.CloudMockBuilder;
-import io.flamingock.core.configurator.standalone.FlamingockStandalone;
+import io.flamingock.core.cloud.changes.CloudChange1;
+import io.flamingock.core.cloud.changes.CloudChange2;
 import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
+import io.flamingock.core.cloud.utils.AuditEntryExpectation;
+import io.flamingock.core.cloud.utils.CloudMockBuilderOld;
+import io.flamingock.core.cloud.utils.MockFlamingockRunnerServer;
+import io.flamingock.core.configurator.standalone.FlamingockStandalone;
+import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.util.ThreadSleeper;
@@ -27,80 +32,89 @@ import io.flamingock.core.util.http.Http;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
 
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 
 public class CloudEngineTest {
 
-
     @Test
     @DisplayName("Should run successfully happy path")
     void happyPath() {
         //GIVEN
-        try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
-            String jwt = "fake_jwt";
-            String serviceName = "clients-service";
-            String environmentName = "development";
-            String serviceId = "clients-service-id";
-            String environmentId = "development-env-id";
-            cloudMockBuilder
-                    .addSingleExecutionPlanResponse("stage1", "create-persons-table-from-template", "create-persons-table-from-template-2")
-                    .addContinueExecutionPlanResponse()
-                    .setJwtToken(jwt)
-                    .setServiceName(serviceName)
-                    .setServiceId(serviceId)
-                    .setEnvironmentName(environmentName)
-                    .setEnvironmentId(environmentId)
-                    .setHttp(http)
-                    .mockServer();
+        String jwt = "fake_jwt";
+        String apiToken = "FAKE_API_TOKEN";
+        String organisationId = UUID.randomUUID().toString();
+        String organisationName = "MyOrganisation";
 
-            Runner runner = FlamingockStandalone.cloud()
-                    .setApiToken("FAKE_API_TOKEN")
-                    .setHost("https://fake-cloud-server.io")
-                    .setService("test-service")
-                    .setEnvironment("test-environment")
-                    .addStage(new Stage("stage-name")
-                            .setName("stage1")
-                            .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
-                    .build();
-            //WHEN
-            runner.execute();
+        String projectId = UUID.randomUUID().toString();
+        String projectName = "MyOrganisation";
 
-            //THEN
-            //2 execution plans: First to execute and second to continue
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute(ExecutionPlanResponse.class);
+        String serviceName = "clients-service";
+        String environmentName = "development";
+        String serviceId = "clients-service-id";
+        String environmentId = "development-env-id";
+        String credentialId = UUID.randomUUID().toString();
 
-            //2 audit writes
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute();
 
-            //DELETE LOCK
-            verify(cloudMockBuilder.getBasicRequest(), new Times(1)).execute();
 
-            //AUTH
-            ArgumentCaptor<String> jwtCaptorWithBody = ArgumentCaptor.forClass(String.class);
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(4)).withBearerToken(jwtCaptorWithBody.capture());
+        List<AuditEntryExpectation> auditEntries = new LinkedList<>();
+        auditEntries.add(new AuditEntryExpectation(
+                "create-persons-table-from-template",
+                AuditEntryStatus.EXECUTED,
+                CloudChange1.class.getName(),
+                "execution"
+        ));
+        auditEntries.add(new AuditEntryExpectation(
+                "create-persons-table-from-template-2",
+                AuditEntryStatus.EXECUTED,
+                CloudChange2.class.getName(),
+                "execution"
+        ));
 
-            assertEquals(4, jwtCaptorWithBody.getAllValues().size());
-            jwtCaptorWithBody.getAllValues().forEach(actualJwt -> assertEquals(jwt, actualJwt));
+        int runnerServerPort = 8888;
+        MockFlamingockRunnerServer mockFlamingockRunnerServer = new MockFlamingockRunnerServer()
+                .setServerPort(runnerServerPort)
+                .addSimpleStageExecutionPlanRequest("execution-1", "stage-1", auditEntries)
+                .addExecutionResponseForAll()
+                .addContinueExecutionPlanResponse()
+                .setJwt(jwt)
+                .setOrganisationId(organisationId)
+                .setOrganisationName(organisationName)
+                .setProjectId(projectId)
+                .setProjectName(projectName)
+                .setServiceId(serviceId)
+                .setServiceName(serviceName)
+                .setEnvironmentId(environmentId)
+                .setEnvironmentName(environmentName)
+                .setCredentialId(credentialId)
+                .setApiToken(apiToken);
+        mockFlamingockRunnerServer.start();
 
-            ArgumentCaptor<String> jwtCaptorBasic = ArgumentCaptor.forClass(String.class);
-            verify(cloudMockBuilder.getBasicRequest(), new Times(1)).withBearerToken(jwtCaptorBasic.capture());
 
-            assertEquals(jwt, jwtCaptorWithBody.getAllValues().get(0));
-        }
+        Runner runner = FlamingockStandalone.cloud()
+                .setApiToken(apiToken)
+                .setHost("http://localhost:" + runnerServerPort)
+                .setService(serviceName)
+                .setEnvironment(environmentName)
+                .addStage(new Stage("stage-1")
+                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
+                .build();
+        //WHEN
+        //THEN
+        runner.execute();
+
+        //tear down
+        mockFlamingockRunnerServer.stop();
     }
 
     @Test
@@ -109,7 +123,7 @@ public class CloudEngineTest {
         //GIVEN
         try (MockedStatic<Http> http = Mockito.mockStatic(Http.class);
              MockedConstruction<ThreadSleeper> lockThreadSleeperConstructors = Mockito.mockConstruction(ThreadSleeper.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
+            CloudMockBuilderOld cloudMockBuilder = new CloudMockBuilderOld();
             cloudMockBuilder
                     .addAwaitExecutionPlanResponse(3000L)
                     .addSingleExecutionPlanResponse("stage1", "create-persons-table-from-template", "create-persons-table-from-template-2")
@@ -151,7 +165,7 @@ public class CloudEngineTest {
     void shouldWaitAndEventuallyAbort() {
         ///GIVEN
         try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
+            CloudMockBuilderOld cloudMockBuilder = new CloudMockBuilderOld();
             cloudMockBuilder
                     .addAwaitExecutionPlanResponse(5000L)
                     .addAwaitExecutionPlanResponse(5000L)
@@ -193,7 +207,7 @@ public class CloudEngineTest {
         //GIVEN
         try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
             String guid = UUID.randomUUID().toString();
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
+            CloudMockBuilderOld cloudMockBuilder = new CloudMockBuilderOld();
             cloudMockBuilder
                     .addAwaitExecutionPlanResponse(5000L, guid)
                     .addAwaitExecutionPlanResponse(5000L, guid)
@@ -233,7 +247,7 @@ public class CloudEngineTest {
     @DisplayName("Should continue and not run anything if server returns CONTINUE at first")
     void shouldContinue() {
         try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
+            CloudMockBuilderOld cloudMockBuilder = new CloudMockBuilderOld();
             cloudMockBuilder
                     .addContinueExecutionPlanResponse()
                     .setHttp(http)
@@ -258,6 +272,7 @@ public class CloudEngineTest {
             verify(cloudMockBuilder.getBasicRequest(), new Times(0)).execute();
         }
     }
+
 
 
 }

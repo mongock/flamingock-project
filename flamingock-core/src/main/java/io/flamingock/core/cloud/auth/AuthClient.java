@@ -18,5 +18,5 @@ package io.flamingock.core.cloud.auth;
 
 
 public interface AuthClient {
-    AuthResponse getToken(TokenRequest request);
+    AuthResponse getToken(AuthRequest request);
 }

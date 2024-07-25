@@ -16,13 +16,13 @@
 
 package io.flamingock.core.cloud.auth;
 
-public class TokenRequest {
+public class AuthRequest {
 
     private final String apiToken;
     private final String serviceName;
     private final String environmentName;
 
-    public TokenRequest(String apiToken, String serviceName, String environmentName) {
+    public AuthRequest(String apiToken, String serviceName, String environmentName) {
         this.apiToken = apiToken;
         this.serviceName = serviceName;
         this.environmentName = environmentName;

@@ -20,7 +20,7 @@ public class AuthManager {
 
     private final AuthClient authClient;
 
-    private final TokenRequest tokenRequest;
+    private final AuthRequest tokenRequest;
 
     private String jwtToken;
 
@@ -29,7 +29,7 @@ public class AuthManager {
                        String environmentName,
                        AuthClient authClient) {
         this.authClient = authClient;
-        this.tokenRequest = new TokenRequest(
+        this.tokenRequest = new AuthRequest(
                 apiToken,
                 serviceName,
                 environmentName);

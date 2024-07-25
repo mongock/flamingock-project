@@ -18,7 +18,7 @@ package io.flamingock.core.cloud;
 
 import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
 import io.flamingock.core.cloud.transaction.OngoingStatus;
-import io.flamingock.core.cloud.utils.CloudMockBuilder;
+import io.flamingock.core.cloud.utils.CloudMockBuilderOld;
 import io.flamingock.core.cloud.utils.TestCloudTransactioner;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.domain.AuditItem;
@@ -44,7 +44,7 @@ public class CloudEngineTransactionTest {
     @DisplayName("Should follow the transactioner lifecycle")
     void happyPath() {
         try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
+            CloudMockBuilderOld cloudMockBuilder = new CloudMockBuilderOld();
             cloudMockBuilder
                     .addSingleExecutionPlanResponse("stage1", "create-persons-table-from-template", "create-persons-table-from-template-2")
                     .addContinueExecutionPlanResponse()

@@ -33,7 +33,7 @@ public class HttpAuthClient implements AuthClient {
     }
 
     @Override
-    public AuthResponse getToken(TokenRequest request) {
+    public AuthResponse getToken(AuthRequest request) {
         return requestBuilder
                 .POST(pathTemplate)
                 .setBody(request)
