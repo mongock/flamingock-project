@@ -24,12 +24,15 @@ import io.flamingock.core.cloud.utils.AuditEntryExpectation;
 import io.flamingock.core.cloud.utils.CloudMockBuilderOld;
 import io.flamingock.core.cloud.utils.MockFlamingockRunnerServer;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
+import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
 import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.util.ThreadSleeper;
 import io.flamingock.core.util.http.Http;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -47,47 +50,50 @@ import static org.mockito.Mockito.verify;
 
 public class CloudEngineTest {
 
-    @Test
-    @DisplayName("Should run successfully happy path")
-    void happyPath() {
-        //GIVEN
-        String jwt = "fake_jwt";
-        String apiToken = "FAKE_API_TOKEN";
-        String organisationId = UUID.randomUUID().toString();
-        String organisationName = "MyOrganisation";
+    private final String apiToken = "FAKE_API_TOKEN";
+    private final String organisationId = UUID.randomUUID().toString();
+    private final String organisationName = "MyOrganisation";
 
-        String projectId = UUID.randomUUID().toString();
-        String projectName = "MyOrganisation";
+    private final String projectId = UUID.randomUUID().toString();
+    private final String projectName = "MyOrganisation";
 
-        String serviceName = "clients-service";
-        String environmentName = "development";
-        String serviceId = "clients-service-id";
-        String environmentId = "development-env-id";
-        String credentialId = UUID.randomUUID().toString();
+    private final String serviceName = "clients-service";
+    private final String environmentName = "development";
+    private final String serviceId = "clients-service-id";
+    private final String environmentId = "development-env-id";
+    private final String credentialId = UUID.randomUUID().toString();
+    private final int runnerServerPort = 8888;
+    private final String jwt = "fake_jwt";
 
+    private MockFlamingockRunnerServer mockFlamingockRunnerServer;
+    private StandaloneCloudBuilder standaloneCloudBuilder;
 
+    private static final List<AuditEntryExpectation> auditEntries = new LinkedList<>();
 
-        List<AuditEntryExpectation> auditEntries = new LinkedList<>();
-        auditEntries.add(new AuditEntryExpectation(
+    @BeforeAll
+    static void beforeAll() {
+        auditEntries.add(new
+
+                AuditEntryExpectation(
                 "create-persons-table-from-template",
                 AuditEntryStatus.EXECUTED,
                 CloudChange1.class.getName(),
                 "execution"
         ));
-        auditEntries.add(new AuditEntryExpectation(
+        auditEntries.add(new
+
+                AuditEntryExpectation(
                 "create-persons-table-from-template-2",
                 AuditEntryStatus.EXECUTED,
                 CloudChange2.class.getName(),
                 "execution"
         ));
+    }
 
-        int runnerServerPort = 8888;
-        MockFlamingockRunnerServer mockFlamingockRunnerServer = new MockFlamingockRunnerServer()
+    @BeforeEach
+    void beforeEach() {
+        mockFlamingockRunnerServer = new MockFlamingockRunnerServer()
                 .setServerPort(runnerServerPort)
-                .addSimpleStageExecutionPlanRequest("execution-1", "stage-1", auditEntries)
-                .addExecutionResponseForAll()
-                .addContinueExecutionPlanResponse()
-                .setJwt(jwt)
                 .setOrganisationId(organisationId)
                 .setOrganisationName(organisationName)
                 .setProjectId(projectId)
@@ -98,19 +104,32 @@ public class CloudEngineTest {
                 .setEnvironmentName(environmentName)
                 .setCredentialId(credentialId)
                 .setApiToken(apiToken);
-        mockFlamingockRunnerServer.start();
 
-
-        Runner runner = FlamingockStandalone.cloud()
+        standaloneCloudBuilder = FlamingockStandalone.cloud()
                 .setApiToken(apiToken)
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
                 .setEnvironment(environmentName)
                 .addStage(new Stage("stage-1")
-                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
-                .build();
+                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")));
+    }
+
+
+    @Test
+    @DisplayName("Should run successfully happy path")
+    void happyPath() {
+        //GIVEN
+        mockFlamingockRunnerServer
+                .addSimpleStageExecutionPlanRequest("execution-1", "stage-1", auditEntries)
+                .addExecutionResponseForAll()
+                .addContinueExecutionPlanResponse()
+                .setJwt(jwt);
+        mockFlamingockRunnerServer.start();
+
         //WHEN
         //THEN
+        Runner runner = standaloneCloudBuilder
+                .build();
         runner.execute();
 
         //tear down
@@ -272,7 +291,6 @@ public class CloudEngineTest {
             verify(cloudMockBuilder.getBasicRequest(), new Times(0)).execute();
         }
     }
-
 
 
 }
