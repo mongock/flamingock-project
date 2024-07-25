@@ -20,7 +20,7 @@ import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.changes.CloudChange1;
 import io.flamingock.core.cloud.changes.CloudChange2;
 import io.flamingock.core.cloud.utils.AuditEntryExpectation;
-import io.flamingock.core.cloud.utils.MockFlamingockRunnerServer;
+import io.flamingock.core.cloud.utils.MockRunnerServer;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
 import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
@@ -66,8 +66,8 @@ public class CloudEngineTest {
     private final int runnerServerPort = 8888;
     private final String jwt = "fake_jwt";
 
-    private MockFlamingockRunnerServer mockFlamingockRunnerServer;
-    private StandaloneCloudBuilder standaloneCloudBuilder;
+    private MockRunnerServer mockRunnerServer;
+    private StandaloneCloudBuilder flamingockBuilder;
 
     private static final List<AuditEntryExpectation> auditEntries = new LinkedList<>();
 
@@ -93,7 +93,7 @@ public class CloudEngineTest {
 
     @BeforeEach
     void beforeEach() {
-        mockFlamingockRunnerServer = new MockFlamingockRunnerServer()
+        mockRunnerServer = new MockRunnerServer()
                 .setServerPort(runnerServerPort)
                 .setOrganisationId(organisationId)
                 .setOrganisationName(organisationName)
@@ -107,7 +107,7 @@ public class CloudEngineTest {
                 .setApiToken(apiToken)
                 .setJwt(jwt);
 
-        standaloneCloudBuilder = FlamingockStandalone.cloud()
+        flamingockBuilder = FlamingockStandalone.cloud()
                 .setApiToken(apiToken)
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
@@ -120,7 +120,7 @@ public class CloudEngineTest {
     void afterEach() {
 
         //tear down
-        mockFlamingockRunnerServer.stop();
+        mockRunnerServer.stop();
     }
 
 
@@ -130,16 +130,16 @@ public class CloudEngineTest {
     void happyPath() {
         //GIVEN
         String executionId = "execution-1";
-        mockFlamingockRunnerServer
+        mockRunnerServer
                 .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
                 .addExecutionWithAllTasksRequestResponse(executionId)
                 .addExecutionContinueRequestResponse();
 
-        mockFlamingockRunnerServer.start();
+        mockRunnerServer.start();
 
         //WHEN
         //THEN
-        Runner runner = standaloneCloudBuilder
+        Runner runner = flamingockBuilder
                 .build();
         runner.execute();
 
@@ -153,7 +153,7 @@ public class CloudEngineTest {
 
 
             String executionId = "execution-1";
-            mockFlamingockRunnerServer
+            mockRunnerServer
                     .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
                     .addExecutionAwaitRequestResponse(executionId)
                     .addExecutionWithAllTasksRequestResponse(executionId)
@@ -161,7 +161,7 @@ public class CloudEngineTest {
                     .start();
 
             //WHEN
-            Runner runner = standaloneCloudBuilder
+            Runner runner = flamingockBuilder
                     .build();
             runner.execute();
 
@@ -181,7 +181,7 @@ public class CloudEngineTest {
         ///GIVEN
         String acquisitionId = UUID.randomUUID().toString();
         String executionId = "execution-1";
-        mockFlamingockRunnerServer
+        mockRunnerServer
                 .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
@@ -189,7 +189,7 @@ public class CloudEngineTest {
                 .start();
 
         //WHEN
-        Runner runner = standaloneCloudBuilder
+        Runner runner = flamingockBuilder
                 .setLockAcquiredForMillis(5000L)
                 .setLockTryFrequencyMillis(175L)
                 .setLockQuitTryingAfterMillis(375L)
@@ -211,7 +211,7 @@ public class CloudEngineTest {
         //GIVEN
         String executionId = "execution-1";
         String acquisitionId = UUID.randomUUID().toString();
-        mockFlamingockRunnerServer
+        mockRunnerServer
                 .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
@@ -219,7 +219,7 @@ public class CloudEngineTest {
                 .start();
 
         //WHEN
-        Runner runner = standaloneCloudBuilder
+        Runner runner = flamingockBuilder
                 .setLockAcquiredForMillis(5000L)
                 .setLockTryFrequencyMillis(3000L)
                 .setLockQuitTryingAfterMillis(9000L)
@@ -233,13 +233,13 @@ public class CloudEngineTest {
     @Test
     @DisplayName("Should continue and not run anything if server returns CONTINUE at first")
     void shouldContinue() {
-        mockFlamingockRunnerServer
+        mockRunnerServer
                 .addSimpleStageExecutionPlan("execution-1", "stage-1", auditEntries)
                 .addExecutionContinueRequestResponse()
                 .start();
 
         //WHEN
-        Runner runner = standaloneCloudBuilder
+        Runner runner = flamingockBuilder
                 .build();
 
         runner.execute();

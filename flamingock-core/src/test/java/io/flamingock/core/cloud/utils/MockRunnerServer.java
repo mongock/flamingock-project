@@ -39,7 +39,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static io.flamingock.core.cloud.utils.JsonMapper.toJson;
 
-public final class MockFlamingockRunnerServer {
+public final class MockRunnerServer {
 
     public static final String DEFAULT_LOCK_ACQUISITION_ID = UUID.randomUUID().toString();
 
@@ -72,98 +72,98 @@ public final class MockFlamingockRunnerServer {
 
     private String credentialId = "default-credential-id";
 
-    public MockFlamingockRunnerServer setServerPort(int serverPort) {
+    public MockRunnerServer setServerPort(int serverPort) {
         this.serverPort = serverPort;
         return this;
     }
 
-    public MockFlamingockRunnerServer setApiToken(String apiToken) {
+    public MockRunnerServer setApiToken(String apiToken) {
         this.apiToken = apiToken;
         return this;
     }
 
-    public MockFlamingockRunnerServer setOrganisationId(String organisationId) {
+    public MockRunnerServer setOrganisationId(String organisationId) {
         this.organisationId = organisationId;
         return this;
     }
 
-    public MockFlamingockRunnerServer setOrganisationName(String organisationName) {
+    public MockRunnerServer setOrganisationName(String organisationName) {
         this.organisationName = organisationName;
         return this;
     }
 
-    public MockFlamingockRunnerServer setProjectId(String projectId) {
+    public MockRunnerServer setProjectId(String projectId) {
         this.projectId = projectId;
         return this;
     }
 
-    public MockFlamingockRunnerServer setProjectName(String projectName) {
+    public MockRunnerServer setProjectName(String projectName) {
         this.projectName = projectName;
         return this;
     }
 
-    public MockFlamingockRunnerServer setCredentialId(String credentialId) {
+    public MockRunnerServer setCredentialId(String credentialId) {
         this.credentialId = credentialId;
         return this;
     }
 
-    public MockFlamingockRunnerServer setServiceId(String serviceId) {
+    public MockRunnerServer setServiceId(String serviceId) {
         this.serviceId = serviceId;
         return this;
     }
 
-    public MockFlamingockRunnerServer setServiceName(String serviceName) {
+    public MockRunnerServer setServiceName(String serviceName) {
         this.serviceName = serviceName;
         return this;
     }
 
-    public MockFlamingockRunnerServer setEnvironmentId(String environmentId) {
+    public MockRunnerServer setEnvironmentId(String environmentId) {
         this.environmentId = environmentId;
         return this;
     }
 
-    public MockFlamingockRunnerServer setEnvironmentName(String environmentName) {
+    public MockRunnerServer setEnvironmentName(String environmentName) {
         this.environmentName = environmentName;
         return this;
     }
 
-    public MockFlamingockRunnerServer setRunnerId(String runnerId) {
+    public MockRunnerServer setRunnerId(String runnerId) {
         this.runnerId = runnerId;
         return this;
     }
 
-    public MockFlamingockRunnerServer addExecutionContinueRequestResponse() {
+    public MockRunnerServer addExecutionContinueRequestResponse() {
         return addExecutionContinueRequestResponse(DEFAULT_ACQUIRED_FOR_MILLIS);
     }
 
-    public MockFlamingockRunnerServer addExecutionContinueRequestResponse(long acquiredForMillis) {
+    public MockRunnerServer addExecutionContinueRequestResponse(long acquiredForMillis) {
         executionRequestResponses.add(new ContinuePlanRequestResponse(acquiredForMillis));
         return this;
     }
 
 
-    public MockFlamingockRunnerServer addExecutionAwaitRequestResponse(String executionId) {
+    public MockRunnerServer addExecutionAwaitRequestResponse(String executionId) {
         return addExecutionAwaitRequestResponse(executionId, DEFAULT_ACQUIRED_FOR_MILLIS, DEFAULT_LOCK_ACQUISITION_ID);
     }
 
-    public MockFlamingockRunnerServer addExecutionAwaitRequestResponse(String executionId, long acquiredForMillis, String acquisitionId) {
+    public MockRunnerServer addExecutionAwaitRequestResponse(String executionId, long acquiredForMillis, String acquisitionId) {
         executionRequestResponses.add(new AwaitPlanRequestResponse(executionId, acquiredForMillis, acquisitionId));
         return this;
     }
 
 
-    public MockFlamingockRunnerServer addExecutionWithAllTasksRequestResponse(String executionId) {
+    public MockRunnerServer addExecutionWithAllTasksRequestResponse(String executionId) {
         executionRequestResponses.add(new ExecutePlanRequestResponse(executionId, DEFAULT_ACQUIRED_FOR_MILLIS, DEFAULT_LOCK_ACQUISITION_ID));
         return this;
     }
 
 
-    public MockFlamingockRunnerServer addExecutionWithAllTasksRequestResponse(String executionId, long acquiredForMillis, String acquisitionId) {
+    public MockRunnerServer addExecutionWithAllTasksRequestResponse(String executionId, long acquiredForMillis, String acquisitionId) {
         executionRequestResponses.add(new ExecutePlanRequestResponse(executionId, acquiredForMillis, acquisitionId));
         return this;
     }
 
-    public MockFlamingockRunnerServer addSimpleStageExecutionPlan(String executionId, String stageName, List<AuditEntryExpectation> auditEntries) {
+    public MockRunnerServer addSimpleStageExecutionPlan(String executionId, String stageName, List<AuditEntryExpectation> auditEntries) {
 
         List<StageRequest.Task> tasks = auditEntries.stream().map(auditEntryExpectation -> StageRequest.Task.task(auditEntryExpectation.getTaskId())).collect(Collectors.toList());
 
@@ -174,7 +174,7 @@ public final class MockFlamingockRunnerServer {
     }
 
 
-    public MockFlamingockRunnerServer setJwt(String jwt) {
+    public MockRunnerServer setJwt(String jwt) {
         this.jwt = jwt;
         return this;
     }
