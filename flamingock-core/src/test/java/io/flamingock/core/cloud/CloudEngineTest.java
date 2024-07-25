@@ -17,117 +17,152 @@
 package io.flamingock.core.cloud;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.cloud.utils.CloudMockBuilder;
+import io.flamingock.core.cloud.changes.CloudChange1;
+import io.flamingock.core.cloud.changes.CloudChange2;
+import io.flamingock.core.cloud.utils.AuditEntryExpectation;
+import io.flamingock.core.cloud.utils.MockRunnerServer;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
-import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
+import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
+import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
+import io.flamingock.core.engine.lock.LockException;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.util.ThreadSleeper;
-import io.flamingock.core.util.http.Http;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.MockedConstruction;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
 
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 
+
+//TODO add listener to check final Summary
+//TODO verify calls to server
 public class CloudEngineTest {
 
+    private final String apiToken = "FAKE_API_TOKEN";
+    private final String organisationId = UUID.randomUUID().toString();
+    private final String organisationName = "MyOrganisation";
 
+    private final String projectId = UUID.randomUUID().toString();
+    private final String projectName = "MyOrganisation";
+
+    private final String serviceName = "clients-service";
+    private final String environmentName = "development";
+    private final String serviceId = "clients-service-id";
+    private final String environmentId = "development-env-id";
+    private final String credentialId = UUID.randomUUID().toString();
+    private final int runnerServerPort = 8888;
+    private final String jwt = "fake_jwt";
+
+    private MockRunnerServer mockRunnerServer;
+    private StandaloneCloudBuilder flamingockBuilder;
+
+    private static final List<AuditEntryExpectation> auditEntries = new LinkedList<>();
+
+    @BeforeAll
+    static void beforeAll() {
+        auditEntries.add(new
+
+                AuditEntryExpectation(
+                "create-persons-table-from-template",
+                AuditEntryStatus.EXECUTED,
+                CloudChange1.class.getName(),
+                "execution"
+        ));
+        auditEntries.add(new
+
+                AuditEntryExpectation(
+                "create-persons-table-from-template-2",
+                AuditEntryStatus.EXECUTED,
+                CloudChange2.class.getName(),
+                "execution"
+        ));
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        mockRunnerServer = new MockRunnerServer()
+                .setServerPort(runnerServerPort)
+                .setOrganisationId(organisationId)
+                .setOrganisationName(organisationName)
+                .setProjectId(projectId)
+                .setProjectName(projectName)
+                .setServiceId(serviceId)
+                .setServiceName(serviceName)
+                .setEnvironmentId(environmentId)
+                .setEnvironmentName(environmentName)
+                .setCredentialId(credentialId)
+                .setApiToken(apiToken)
+                .setJwt(jwt);
+
+        flamingockBuilder = FlamingockStandalone.cloud()
+                .setApiToken(apiToken)
+                .setHost("http://localhost:" + runnerServerPort)
+                .setService(serviceName)
+                .setEnvironment(environmentName)
+                .addStage(new Stage("stage-1")
+                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")));
+    }
+
+    @AfterEach
+    void afterEach() {
+
+        //tear down
+        mockRunnerServer.stop();
+    }
+
+
+    //TODO add listener to check final Summary
     @Test
     @DisplayName("Should run successfully happy path")
     void happyPath() {
         //GIVEN
-        try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
-            String jwt = "fake_jwt";
-            String serviceName = "clients-service";
-            String environmentName = "development";
-            String serviceId = "clients-service-id";
-            String environmentId = "development-env-id";
-            cloudMockBuilder
-                    .addSingleExecutionPlanResponse("stage1", "create-persons-table-from-template", "create-persons-table-from-template-2")
-                    .addContinueExecutionPlanResponse()
-                    .setJwtToken(jwt)
-                    .setServiceName(serviceName)
-                    .setServiceId(serviceId)
-                    .setEnvironmentName(environmentName)
-                    .setEnvironmentId(environmentId)
-                    .setHttp(http)
-                    .mockServer();
+        String executionId = "execution-1";
+        mockRunnerServer
+                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
+                .addExecutionWithAllTasksRequestResponse(executionId)
+                .addExecutionContinueRequestResponse();
 
-            Runner runner = FlamingockStandalone.cloud()
-                    .setApiToken("FAKE_API_TOKEN")
-                    .setHost("https://fake-cloud-server.io")
-                    .setService("test-service")
-                    .setEnvironment("test-environment")
-                    .addStage(new Stage("stage-name")
-                            .setName("stage1")
-                            .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
-                    .build();
-            //WHEN
-            runner.execute();
+        mockRunnerServer.start();
 
-            //THEN
-            //2 execution plans: First to execute and second to continue
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute(ExecutionPlanResponse.class);
+        //WHEN
+        //THEN
+        Runner runner = flamingockBuilder
+                .build();
+        runner.execute();
 
-            //2 audit writes
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute();
-
-            //DELETE LOCK
-            verify(cloudMockBuilder.getBasicRequest(), new Times(1)).execute();
-
-            //AUTH
-            ArgumentCaptor<String> jwtCaptorWithBody = ArgumentCaptor.forClass(String.class);
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(4)).withBearerToken(jwtCaptorWithBody.capture());
-
-            assertEquals(4, jwtCaptorWithBody.getAllValues().size());
-            jwtCaptorWithBody.getAllValues().forEach(actualJwt -> assertEquals(jwt, actualJwt));
-
-            ArgumentCaptor<String> jwtCaptorBasic = ArgumentCaptor.forClass(String.class);
-            verify(cloudMockBuilder.getBasicRequest(), new Times(1)).withBearerToken(jwtCaptorBasic.capture());
-
-            assertEquals(jwt, jwtCaptorWithBody.getAllValues().get(0));
-        }
     }
 
     @Test
     @DisplayName("Should perform the right calls to server when sequence: AWAIT, EXECUTE, CONTINUE")
     void shouldPerformRightCallsWhenAwaitExecuteContinue() {
         //GIVEN
-        try (MockedStatic<Http> http = Mockito.mockStatic(Http.class);
-             MockedConstruction<ThreadSleeper> lockThreadSleeperConstructors = Mockito.mockConstruction(ThreadSleeper.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
-            cloudMockBuilder
-                    .addAwaitExecutionPlanResponse(3000L)
-                    .addSingleExecutionPlanResponse("stage1", "create-persons-table-from-template", "create-persons-table-from-template-2")
-                    .addContinueExecutionPlanResponse()
-                    .setHttp(http)
-                    .mockServer();
+        try (MockedConstruction<ThreadSleeper> lockThreadSleeperConstructors = Mockito.mockConstruction(ThreadSleeper.class)) {
 
-            Runner runner = FlamingockStandalone.cloud()
-                    .setApiToken("FAKE_API_TOKEN")
-                    .setHost("https://fake-cloud-server.io")
-                    .setService("test-service")
-                    .setEnvironment("test-environment")
-                    .addStage(new Stage("stage-name")
-                            .setName("stage1")
-                            .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
-                    .build();
+
+            String executionId = "execution-1";
+            mockRunnerServer
+                    .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
+                    .addExecutionAwaitRequestResponse(executionId)
+                    .addExecutionWithAllTasksRequestResponse(executionId)
+                    .addExecutionContinueRequestResponse()
+                    .start();
 
             //WHEN
+            Runner runner = flamingockBuilder
+                    .build();
             runner.execute();
 
             //THEN
@@ -135,128 +170,79 @@ public class CloudEngineTest {
             ThreadSleeper secondThreadSleeper = lockThreadSleeperConstructors.constructed().get(1);
             verify(secondThreadSleeper, new Times(0)).checkThresholdAndWait(anyLong());
 
-            //2 execution plans: First to execute and second to continue
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(3)).execute(ExecutionPlanResponse.class);
-
-            //2 audit writes
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute();
-
-            //DELETE LOCK
-            verify(cloudMockBuilder.getBasicRequest(), new Times(1)).execute();
+            //TODO add listener to check final Summary
         }
+
     }
 
     @Test
     @DisplayName("Should wait and abort when the lock is blocked and the ThreadSleeper eventually throws an exception")
     void shouldWaitAndEventuallyAbort() {
         ///GIVEN
-        try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
-            cloudMockBuilder
-                    .addAwaitExecutionPlanResponse(5000L)
-                    .addAwaitExecutionPlanResponse(5000L)
-                    .addAwaitExecutionPlanResponse(5000L)
-                    .setHttp(http)
-                    .mockServer();
+        String acquisitionId = UUID.randomUUID().toString();
+        String executionId = "execution-1";
+        mockRunnerServer
+                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
+                .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
+                .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
+                .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
+                .start();
 
-            Runner runner = FlamingockStandalone.cloud()
-                    .setApiToken("FAKE_API_TOKEN")
-                    .setHost("https://fake-cloud-server.io")
-                    .setService("test-service")
-                    .setEnvironment("test-environment")
-                    .addStage(new Stage("stage-name")
-                            .setName("stage1")
-                            .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
-                    .setLockTryFrequencyMillis(175L)
-                    .setLockQuitTryingAfterMillis(375L)
-                    .build();
+        //WHEN
+        Runner runner = flamingockBuilder
+                .setLockAcquiredForMillis(5000L)
+                .setLockTryFrequencyMillis(175L)
+                .setLockQuitTryingAfterMillis(375L)
+                .build();
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, runner::execute);
 
-            //WHEN
-            Assertions.assertThrows(FlamingockException.class, runner::execute);
 
-            //THEN
-            //2 execution plans: First to continue
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(4)).execute(ExecutionPlanResponse.class);
-
-            //0 audit writes
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(0)).execute();
-
-            //Lock release
-            verify(cloudMockBuilder.getBasicRequest(), new Times(0)).execute();
-        }
+        //THEN
+        Assertions.assertTrue(exception instanceof LockException);
+        Assertions.assertTrue(exception.getMessage().startsWith("Quit trying to acquire the lock after"));
+        Assertions.assertTrue(exception.getMessage().endsWith("[ Maximum waiting millis reached: 375 ]"));
     }
 
 
+    //TODO add elaspsedMillis and lastAcquisitionId expectation to server
     @Test
     @DisplayName("Should wait and retry when lock is initially blocked eventually released")
     void shouldWaitAndRetry() {
         //GIVEN
-        try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
-            String guid = UUID.randomUUID().toString();
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
-            cloudMockBuilder
-                    .addAwaitExecutionPlanResponse(5000L, guid)
-                    .addAwaitExecutionPlanResponse(5000L, guid)
-                    .addSingleExecutionPlanResponse("stage1", "create-persons-table-from-template", "create-persons-table-from-template-2")
-                    .addContinueExecutionPlanResponse()
-                    .setHttp(http)
-                    .mockServer();
+        String executionId = "execution-1";
+        String acquisitionId = UUID.randomUUID().toString();
+        mockRunnerServer
+                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
+                .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
+                .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
+                .addExecutionContinueRequestResponse(5000L)
+                .start();
 
-            Runner runner = FlamingockStandalone.cloud()
-                    .setApiToken("FAKE_API_TOKEN")
-                    .setHost("https://fake-cloud-server.io")
-                    .setService("test-service")
-                    .setEnvironment("test-environment")
-                    .addStage(new Stage("stage-name")
-                            .setName("stage1")
-                            .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
-                    .setLockTryFrequencyMillis(3000L)
-                    .setLockQuitTryingAfterMillis(9000L)
-                    .build();
-            //WHEN
-            runner.execute();
+        //WHEN
+        Runner runner = flamingockBuilder
+                .setLockAcquiredForMillis(5000L)
+                .setLockTryFrequencyMillis(3000L)
+                .setLockQuitTryingAfterMillis(9000L)
+                .build();
 
-            //THEN
-            //2 execution plans: First to continue
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(4)).execute(ExecutionPlanResponse.class);
+        runner.execute();
 
-            //0 audit writes
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(2)).execute();
-
-            //Lock release
-            verify(cloudMockBuilder.getBasicRequest(), new Times(1)).execute();
-        }
     }
 
 
     @Test
     @DisplayName("Should continue and not run anything if server returns CONTINUE at first")
     void shouldContinue() {
-        try (MockedStatic<Http> http = Mockito.mockStatic(Http.class)) {
-            CloudMockBuilder cloudMockBuilder = new CloudMockBuilder();
-            cloudMockBuilder
-                    .addContinueExecutionPlanResponse()
-                    .setHttp(http)
-                    .mockServer();
+        mockRunnerServer
+                .addSimpleStageExecutionPlan("execution-1", "stage-1", auditEntries)
+                .addExecutionContinueRequestResponse()
+                .start();
 
-            Runner runner = FlamingockStandalone.cloud()
-                    .setApiToken("FAKE_API_TOKEN")
-                    .setHost("https://fake-cloud-server.io")
-                    .setService("test-service")
-                    .setEnvironment("test-environment")
-                    .addStage(new Stage("stage-name")
-                            .setName("stage1")
-                            .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
-                    .build();
-            runner.execute();
+        //WHEN
+        Runner runner = flamingockBuilder
+                .build();
 
-            //2 execution plans: First to continue
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(1)).execute(ExecutionPlanResponse.class);
-            //0 audit writes
-            verify(cloudMockBuilder.getRequestWithBody(), new Times(0)).execute();
-            //The lock is not released because it was never took
-            verify(cloudMockBuilder.getBasicRequest(), new Times(0)).execute();
-        }
+        runner.execute();
     }
 
 

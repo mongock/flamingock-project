@@ -33,7 +33,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class CloudMockBuilder {
+public final class CloudMockBuilderOld {
 
 
     private String serviceName = "test-service";
@@ -59,48 +59,48 @@ public final class CloudMockBuilder {
     private String jwtToken = "jwt";
 
 
-    public CloudMockBuilder setServiceName(String serviceName) {
+    public CloudMockBuilderOld setServiceName(String serviceName) {
         this.serviceName = serviceName;
         return this;
     }
 
-    public CloudMockBuilder setEnvironmentName(String environmentName) {
+    public CloudMockBuilderOld setEnvironmentName(String environmentName) {
         this.environmentName = environmentName;
         return this;
     }
 
-    public CloudMockBuilder setServiceId(String serviceId) {
+    public CloudMockBuilderOld setServiceId(String serviceId) {
         this.serviceId = serviceId;
         return this;
     }
 
-    public CloudMockBuilder setEnvironmentId(String environmentId) {
+    public CloudMockBuilderOld setEnvironmentId(String environmentId) {
         this.environmentId = environmentId;
         return this;
     }
 
-    public CloudMockBuilder setRunnerId(String runnerId) {
+    public CloudMockBuilderOld setRunnerId(String runnerId) {
         this.runnerId = runnerId;
         return this;
     }
 
-    public CloudMockBuilder setHttp(MockedStatic<Http> http) {
+    public CloudMockBuilderOld setHttp(MockedStatic<Http> http) {
         this.http = http;
         return this;
     }
 
-    public CloudMockBuilder addContinueExecutionPlanResponse() {
+    public CloudMockBuilderOld addContinueExecutionPlanResponse() {
         ExecutionPlanResponse executionPlanResponse = new ExecutionPlanResponse();
         executionPlanResponse.setAction(ExecutionPlanResponse.Action.CONTINUE);
         executionPlanResponses.add(executionPlanResponse);
         return this;
     }
 
-    public CloudMockBuilder addAwaitExecutionPlanResponse(long acquiredForMillis) {
+    public CloudMockBuilderOld addAwaitExecutionPlanResponse(long acquiredForMillis) {
         return addAwaitExecutionPlanResponse(acquiredForMillis, UUID.randomUUID().toString());
     }
 
-    public CloudMockBuilder addAwaitExecutionPlanResponse(long acquiredForMillis, String guid) {
+    public CloudMockBuilderOld addAwaitExecutionPlanResponse(long acquiredForMillis, String guid) {
         ExecutionPlanResponse executionPlanResponse = new ExecutionPlanResponse();
         executionPlanResponse.setAction(ExecutionPlanResponse.Action.AWAIT);
         ExecutionPlanResponse.Lock lock = new ExecutionPlanResponse.Lock();
@@ -113,7 +113,7 @@ public final class CloudMockBuilder {
         return this;
     }
 
-    public CloudMockBuilder addSingleExecutionPlanResponse(String stageName, String... taskIds) {
+    public CloudMockBuilderOld addSingleExecutionPlanResponse(String stageName, String... taskIds) {
         ExecutionPlanResponse executionPlanResponse = new ExecutionPlanResponse();
         executionPlanResponse.setAction(ExecutionPlanResponse.Action.EXECUTE);
 
@@ -136,12 +136,10 @@ public final class CloudMockBuilder {
         return this;
     }
 
-    public CloudMockBuilder setJwtToken(String jwtToken) {
+    public CloudMockBuilderOld setJwt(String jwtToken) {
         this.jwtToken = jwtToken;
         return this;
     }
-
-
 
 
     public void mockServer() {
@@ -170,8 +168,8 @@ public final class CloudMockBuilder {
             when(requestWithBody.execute(ExecutionPlanResponse.class)).thenReturn(firstItem);
         } else {
             ExecutionPlanResponse[] restOfParameters = new ExecutionPlanResponse[executionPlanResponses.size() - 1];
-            for(int i = 1 ; i < executionPlanResponses.size() ; i++) {
-                restOfParameters[i-1] = executionPlanResponses.get(i);
+            for (int i = 1; i < executionPlanResponses.size(); i++) {
+                restOfParameters[i - 1] = executionPlanResponses.get(i);
             }
             when(requestWithBody.execute(ExecutionPlanResponse.class)).thenReturn(firstItem, restOfParameters);
 

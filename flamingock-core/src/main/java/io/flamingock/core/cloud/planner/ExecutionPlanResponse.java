@@ -69,7 +69,7 @@ public class ExecutionPlanResponse {
         return action == Action.CONTINUE;
     }
 
-    Action getAction() {
+    public Action getAction() {
         return action;
     }
 
