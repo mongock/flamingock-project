@@ -11,6 +11,6 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     api("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
 
+    api("com.github.tomakehurst:wiremock-jre8:2.35.2")
 
-    testImplementation(project(":test-common"))
 }
