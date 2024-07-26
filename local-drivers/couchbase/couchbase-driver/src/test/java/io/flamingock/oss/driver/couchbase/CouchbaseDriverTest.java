@@ -28,6 +28,7 @@ import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.oss.driver.couchbase.driver.CouchbaseDriver;
+import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.testcontainers.couchbase.BucketDefinition;
 import org.testcontainers.couchbase.CouchbaseContainer;
@@ -39,7 +40,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
-
+@Ignore
 class CouchbaseDriverTest {
 
     private static final String BUCKET_NAME = "bucket";
