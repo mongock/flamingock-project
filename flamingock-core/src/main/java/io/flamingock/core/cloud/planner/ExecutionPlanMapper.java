@@ -39,7 +39,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static io.flamingock.core.engine.audit.writer.AuditEntryStatus.EXECUTED;
+import static io.flamingock.core.engine.audit.writer.AuditEntry.Status.EXECUTED;
 
 public final class ExecutionPlanMapper {
 

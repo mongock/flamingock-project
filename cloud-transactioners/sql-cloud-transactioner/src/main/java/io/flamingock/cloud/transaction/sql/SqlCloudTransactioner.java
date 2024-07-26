@@ -108,7 +108,7 @@ public class SqlCloudTransactioner implements CloudTransactioner {
             while (resultSet.next()) {
                 String taskId = resultSet.getString("task_id");
                 AuditItem.Operation operation = AuditItem.Operation.valueOf(resultSet.getString("operation"));
-                ongoingStatuses.add(new OngoingStatus(taskId, OngoingStatus.Operation.valueOf(operation.name())));
+                ongoingStatuses.add(new OngoingStatus(taskId, operation.toOngoingStatusOperation()));
             }
             return ongoingStatuses;
         } catch (SQLException e) {

@@ -18,7 +18,7 @@ package io.flamingock.core.cloud;
 
 import io.flamingock.common.test.cloud.AuditEntryExpectation;
 import io.flamingock.common.test.cloud.MockRunnerServer;
-import io.flamingock.core.cloud.api.audit.AuditEntryRequestStatus;
+import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
 import io.flamingock.core.cloud.changes.CloudChange1;
 import io.flamingock.core.cloud.changes.CloudChange2;
 import io.flamingock.core.cloud.api.transaction.OngoingStatus;
@@ -70,7 +70,7 @@ public class CloudEngineTransactionTest {
 
                 AuditEntryExpectation(
                 "create-persons-table-from-template",
-                AuditEntryRequestStatus.EXECUTED,
+                AuditEntryRequest.Status.EXECUTED,
                 CloudChange1.class.getName(),
                 "execution"
         ));
@@ -78,7 +78,7 @@ public class CloudEngineTransactionTest {
 
                 AuditEntryExpectation(
                 "create-persons-table-from-template-2",
-                AuditEntryRequestStatus.EXECUTED,
+                AuditEntryRequest.Status.EXECUTED,
                 CloudChange2.class.getName(),
                 "execution"
         ));

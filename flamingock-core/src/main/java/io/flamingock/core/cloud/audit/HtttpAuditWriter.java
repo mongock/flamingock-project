@@ -17,7 +17,6 @@
 package io.flamingock.core.cloud.audit;
 
 import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
-import io.flamingock.core.cloud.api.audit.AuditEntryRequestStatus;
 import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.configurator.core.EnvironmentId;
 import io.flamingock.core.configurator.core.ServiceId;
@@ -92,8 +91,8 @@ public class HtttpAuditWriter implements AuditWriter {
                 auditEntry.getTaskId(),
                 auditEntry.getAuthor(),
                 executedAtEpochMillis,
-                AuditEntryRequestStatus.valueOf(auditEntry.getState().name()),
-                AuditEntryRequest.ExecutionType.valueOf(auditEntry.getType().name()),
+                auditEntry.getState().toRequestStatus(),
+                auditEntry.getType().toRequestExecutionType(),
                 auditEntry.getClassName(),
                 auditEntry.getMethodName(),
                 auditEntry.getExecutionMillis(),

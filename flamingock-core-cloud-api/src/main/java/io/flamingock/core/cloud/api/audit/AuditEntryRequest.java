@@ -4,6 +4,9 @@ public class AuditEntryRequest {
 
     public enum ExecutionType {EXECUTION, BEFORE_EXECUTION}
 
+    public enum Status {
+        EXECUTED, EXECUTION_FAILED, ROLLED_BACK, ROLLBACK_FAILED;
+    }
 
     private final String stageId;
 
@@ -13,7 +16,7 @@ public class AuditEntryRequest {
 
     private final long executedAtEpochMillis;
 
-    private final AuditEntryRequestStatus state;
+    private final Status state;
 
     private final String className;
 
@@ -35,7 +38,7 @@ public class AuditEntryRequest {
                              String taskId,
                              String author,
                              long executedAtEpochMillis,
-                             AuditEntryRequestStatus state,
+                             Status state,
                              ExecutionType type,
                              String className,
                              String methodName,
@@ -76,7 +79,7 @@ public class AuditEntryRequest {
         return executedAtEpochMillis;
     }
 
-    public AuditEntryRequestStatus getState() {
+    public Status getState() {
         return state;
     }
 

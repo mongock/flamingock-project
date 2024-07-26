@@ -24,12 +24,10 @@ import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryScanConsistency;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
-import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.oss.driver.couchbase.driver.CouchbaseDriver;
-import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.testcontainers.couchbase.BucketDefinition;
 import org.testcontainers.couchbase.CouchbaseContainer;
@@ -91,11 +89,11 @@ class CouchbaseDriverTest {
         List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
         assertEquals("create-index", auditLog.get(0).getTaskId());
-        assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
+        assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
         assertEquals("insert-document", auditLog.get(1).getTaskId());
-        assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
+        assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(1).getState());
         assertEquals("insert-another-document", auditLog.get(2).getTaskId());
-        assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(2).getState());
+        assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(2).getState());
 
         //Checking created index and documents
         assertTrue(couchbaseTestHelper.indexExists(collection.bucketName(), "idx_standalone_index"));
@@ -132,11 +130,11 @@ class CouchbaseDriverTest {
         List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
         assertEquals("create-index", auditLog.get(0).getTaskId());
-        assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
+        assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
         assertEquals("insert-document", auditLog.get(1).getTaskId());
-        assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
+        assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(1).getState());
         assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
-        assertEquals(AuditEntryStatus.ROLLED_BACK, auditLog.get(2).getState());
+        assertEquals(AuditEntry.Status.ROLLED_BACK, auditLog.get(2).getState());
 
         //Checking created index and documents
         assertTrue(couchbaseTestHelper.indexExists(collection.bucketName(), "idx_standalone_index"));
@@ -171,11 +169,11 @@ class CouchbaseDriverTest {
         List<AuditEntry> auditLog = couchbaseTestHelper.getAuditEntriesSorted(collection);
         assertEquals(3, auditLog.size());
         assertEquals("create-index", auditLog.get(0).getTaskId());
-        assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(0).getState());
+        assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
         assertEquals("insert-document", auditLog.get(1).getTaskId());
-        assertEquals(AuditEntryStatus.EXECUTED, auditLog.get(1).getState());
+        assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(1).getState());
         assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
-        assertEquals(AuditEntryStatus.EXECUTION_FAILED, auditLog.get(2).getState());
+        assertEquals(AuditEntry.Status.EXECUTION_FAILED, auditLog.get(2).getState());
 
         //Checking created index and documents
         assertTrue(couchbaseTestHelper.indexExists(collection.bucketName(), "idx_standalone_index"));

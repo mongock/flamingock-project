@@ -1,16 +1,16 @@
 package io.flamingock.common.test.cloud;
 
 
-import io.flamingock.core.cloud.api.audit.AuditEntryRequestStatus;
+import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
 
 public class AuditEntryExpectation {
     private final String taskId;
-    private final AuditEntryRequestStatus state;
+    private final AuditEntryRequest.Status state;
     private final String className;
     private final String methodName;
 
 
-    public AuditEntryExpectation(String taskId, AuditEntryRequestStatus state, String className, String methodName) {
+    public AuditEntryExpectation(String taskId, AuditEntryRequest.Status state, String className, String methodName) {
         this.taskId = taskId;
         this.state = state;
         this.className = className;
@@ -21,7 +21,7 @@ public class AuditEntryExpectation {
         return taskId;
     }
 
-    public AuditEntryRequestStatus getState() {
+    public AuditEntryRequest.Status getState() {
         return state;
     }
 
