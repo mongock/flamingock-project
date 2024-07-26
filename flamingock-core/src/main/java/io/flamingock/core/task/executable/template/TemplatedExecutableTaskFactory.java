@@ -25,7 +25,7 @@ import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.StepNavigator;
-import io.flamingock.core.util.ReflectionUtil;
+import io.flamingock.commons.utils.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

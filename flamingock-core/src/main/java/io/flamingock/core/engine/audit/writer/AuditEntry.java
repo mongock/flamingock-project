@@ -37,7 +37,7 @@ public class AuditEntry {
             EXECUTION_FAILED,
             ROLLBACK_FAILED)));
 
-    public enum ExecutionType {EXECUTION, BEFORE_EXECUTION;}
+    public enum ExecutionType {EXECUTION, BEFORE_EXECUTION}
 
     private final String executionId;
 

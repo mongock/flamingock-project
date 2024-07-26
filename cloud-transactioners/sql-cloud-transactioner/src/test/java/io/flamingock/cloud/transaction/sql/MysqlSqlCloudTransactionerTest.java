@@ -18,13 +18,13 @@ package io.flamingock.cloud.transaction.sql;
 
 import io.flamingock.cloud.transaction.sql.utils.CloudMockBuilder;
 import io.flamingock.cloud.transaction.sql.utils.SqlTestUtil;
-import io.flamingock.core.cloud.planner.ExecutionPlanRequest;
-import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
-import io.flamingock.core.cloud.planner.StageRequest;
+import io.flamingock.core.cloud.api.planner.ExecutionPlanRequest;
+import io.flamingock.core.cloud.api.planner.ExecutionPlanResponse;
+import io.flamingock.core.cloud.api.planner.StageRequest;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.core.util.http.Http;
+import io.flamingock.commons.utils.http.Http;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

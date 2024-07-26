@@ -20,7 +20,7 @@ import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.audit.domain.RuntimeContext;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.util.ThrowableUtil;
+import io.flamingock.commons.utils.ThrowableUtil;
 
 public final class AuditEntryMapper {
 

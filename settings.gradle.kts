@@ -14,6 +14,11 @@ include("cloud-transactioners:sql-cloud-transactioner")
 project(":cloud-transactioners:sql-cloud-transactioner").projectDir = file("cloud-transactioners/sql-cloud-transactioner")
 project(":cloud-transactioners:sql-cloud-transactioner").name = "sql-cloud-transactioner"
 
+
+include("flamingock-core-cloud-api")
+project(":flamingock-core-cloud-api").projectDir = file("flamingock-core-cloud-api")
+project(":flamingock-core-cloud-api").name = "flamingock-core-cloud-api"
+
 include("flamingock-core")
 project(":flamingock-core").projectDir = file("flamingock-core")
 project(":flamingock-core").name = "flamingock-core"
@@ -119,6 +124,11 @@ project(":examples:databases:mysql-standalone").name = "mysql-standalone"
 project(":examples:databases:mysql-standalone").projectDir = file("examples/databases/mysql-standalone")
 
 
-include("test-common")
-project(":test-common").name = "test-common"
-project(":test-common").projectDir = file("test-common")
+include("utils-test")
+project(":utils-test").name = "utils-test"
+project(":utils-test").projectDir = file("utils-test")
+
+
+include("utils")
+project(":utils").name = "utils"
+project(":utils").projectDir = file("utils")

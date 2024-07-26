@@ -23,8 +23,8 @@ import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.util.ReflectionUtil;
-import io.flamingock.core.util.StringUtil;
+import io.flamingock.commons.utils.ReflectionUtil;
+import io.flamingock.commons.utils.StringUtil;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
