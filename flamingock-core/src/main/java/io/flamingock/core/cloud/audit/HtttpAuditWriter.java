@@ -16,14 +16,15 @@
 
 package io.flamingock.core.cloud.audit;
 
+import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
 import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.configurator.core.EnvironmentId;
 import io.flamingock.core.configurator.core.ServiceId;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.core.runner.RunnerId;
-import io.flamingock.core.util.Result;
-import io.flamingock.core.util.http.Http;
+import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.Result;
+import io.flamingock.commons.utils.http.Http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,8 +91,8 @@ public class HtttpAuditWriter implements AuditWriter {
                 auditEntry.getTaskId(),
                 auditEntry.getAuthor(),
                 executedAtEpochMillis,
-                auditEntry.getState(),
-                auditEntry.getType(),
+                auditEntry.getState().toRequestStatus(),
+                auditEntry.getType().toRequestExecutionType(),
                 auditEntry.getClassName(),
                 auditEntry.getMethodName(),
                 auditEntry.getExecutionMillis(),

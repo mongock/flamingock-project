@@ -16,9 +16,9 @@
 
 package io.flamingock.cloud.transaction.sql.utils;
 
-import io.flamingock.core.cloud.auth.AuthResponse;
-import io.flamingock.core.cloud.planner.ExecutionPlanResponse;
-import io.flamingock.core.util.http.Http;
+import io.flamingock.core.cloud.api.auth.AuthResponse;
+import io.flamingock.core.cloud.api.planner.ExecutionPlanResponse;
+import io.flamingock.commons.utils.http.Http;
 import org.mockito.MockedStatic;
 
 import java.util.ArrayList;

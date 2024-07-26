@@ -16,18 +16,18 @@
 
 package io.flamingock.core.cloud;
 
+import io.flamingock.commons.utils.ThreadSleeper;
 import io.flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
 import io.flamingock.core.cloud.changes.CloudChange1;
 import io.flamingock.core.cloud.changes.CloudChange2;
-import io.flamingock.core.cloud.utils.AuditEntryExpectation;
-import io.flamingock.core.cloud.utils.MockRunnerServer;
+import io.flamingock.common.test.cloud.AuditEntryExpectation;
+import io.flamingock.common.test.cloud.MockRunnerServer;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
-import io.flamingock.core.engine.audit.writer.AuditEntryStatus;
 import io.flamingock.core.engine.lock.LockException;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.core.util.ThreadSleeper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -77,7 +77,7 @@ public class CloudEngineTest {
 
                 AuditEntryExpectation(
                 "create-persons-table-from-template",
-                AuditEntryStatus.EXECUTED,
+                AuditEntryRequest.Status.EXECUTED,
                 CloudChange1.class.getName(),
                 "execution"
         ));
@@ -85,7 +85,7 @@ public class CloudEngineTest {
 
                 AuditEntryExpectation(
                 "create-persons-table-from-template-2",
-                AuditEntryStatus.EXECUTED,
+                AuditEntryRequest.Status.EXECUTED,
                 CloudChange2.class.getName(),
                 "execution"
         ));
