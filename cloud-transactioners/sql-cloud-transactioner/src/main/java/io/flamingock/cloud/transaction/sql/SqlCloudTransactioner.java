@@ -161,7 +161,9 @@ public class SqlCloudTransactioner implements CloudTransactioner {
     @Override
     public void close() {
         try {
-            connection.close();
+            if(connection != null) {
+                connection.close();
+            }
         } catch (SQLException e) {
             logger.warn("Flamingock SQL Cloud trasactioner connection cannot be closed", e);
         }

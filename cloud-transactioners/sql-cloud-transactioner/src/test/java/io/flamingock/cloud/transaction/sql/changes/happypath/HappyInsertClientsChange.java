@@ -21,24 +21,18 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-@ChangeUnit(id = "create-table-clients", order = "1")
-public class CreateTableClientsChange {
+@ChangeUnit(id = "insert-clients", order = "2")
+public class HappyInsertClientsChange {
 
     @Execution
     public void execution(@NonLockGuarded Connection connection) throws SQLException {
-
-        try(Statement statement = connection.createStatement()) {
-            statement.executeUpdate("CREATE TABLE CLIENTS (" +
-                    "id INTEGER not NULL, " +
-                    " name VARCHAR(255), " +
-                    " PRIMARY KEY ( id )" +
-                    ")");
+        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTS(id, name) values(?, ?)")) {
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, "Robert Mccoy");
+            int rows = preparedStatement.executeUpdate();
         }
     }
-
-
-
 }

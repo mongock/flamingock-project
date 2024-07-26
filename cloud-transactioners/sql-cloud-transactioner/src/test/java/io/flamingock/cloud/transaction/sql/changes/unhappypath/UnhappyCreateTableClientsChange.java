@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.cloud.transaction.sql.changes.failed;
+package io.flamingock.cloud.transaction.sql.changes.unhappypath;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.ChangeUnit;
@@ -24,8 +24,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-@ChangeUnit(id = "create-table-clients", order = "1")
-public class CreateTableClientsChange {
+@ChangeUnit(id = "unhappy-create-table-clients", order = "1")
+public class UnhappyCreateTableClientsChange {
 
     @Execution
     public void execution(@NonLockGuarded Connection connection) throws SQLException {

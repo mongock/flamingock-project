@@ -69,11 +69,11 @@ public class CloudEngineTest {
     private MockRunnerServer mockRunnerServer;
     private StandaloneCloudBuilder flamingockBuilder;
 
-    private static final List<AuditEntryExpectation> auditEntries = new LinkedList<>();
+    private static final List<AuditEntryExpectation> auditEntryExpectations = new LinkedList<>();
 
     @BeforeAll
     static void beforeAll() {
-        auditEntries.add(new
+        auditEntryExpectations.add(new
 
                 AuditEntryExpectation(
                 "create-persons-table-from-template",
@@ -81,7 +81,7 @@ public class CloudEngineTest {
                 CloudChange1.class.getName(),
                 "execution"
         ));
-        auditEntries.add(new
+        auditEntryExpectations.add(new
 
                 AuditEntryExpectation(
                 "create-persons-table-from-template-2",
@@ -118,7 +118,6 @@ public class CloudEngineTest {
 
     @AfterEach
     void afterEach() {
-
         //tear down
         mockRunnerServer.stop();
     }
@@ -131,7 +130,7 @@ public class CloudEngineTest {
         //GIVEN
         String executionId = "execution-1";
         mockRunnerServer
-                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
+                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntryExpectations)
                 .addExecutionWithAllTasksRequestResponse(executionId)
                 .addExecutionContinueRequestResponse();
 
@@ -154,7 +153,7 @@ public class CloudEngineTest {
 
             String executionId = "execution-1";
             mockRunnerServer
-                    .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
+                    .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntryExpectations)
                     .addExecutionAwaitRequestResponse(executionId)
                     .addExecutionWithAllTasksRequestResponse(executionId)
                     .addExecutionContinueRequestResponse()
@@ -182,7 +181,7 @@ public class CloudEngineTest {
         String acquisitionId = UUID.randomUUID().toString();
         String executionId = "execution-1";
         mockRunnerServer
-                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
+                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntryExpectations)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
@@ -212,7 +211,7 @@ public class CloudEngineTest {
         String executionId = "execution-1";
         String acquisitionId = UUID.randomUUID().toString();
         mockRunnerServer
-                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntries)
+                .addSimpleStageExecutionPlan(executionId, "stage-1", auditEntryExpectations)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
                 .addExecutionAwaitRequestResponse(executionId, 5000L, acquisitionId)
                 .addExecutionContinueRequestResponse(5000L)
@@ -234,7 +233,7 @@ public class CloudEngineTest {
     @DisplayName("Should continue and not run anything if server returns CONTINUE at first")
     void shouldContinue() {
         mockRunnerServer
-                .addSimpleStageExecutionPlan("execution-1", "stage-1", auditEntries)
+                .addSimpleStageExecutionPlan("execution-1", "stage-1", auditEntryExpectations)
                 .addExecutionContinueRequestResponse()
                 .start();
 

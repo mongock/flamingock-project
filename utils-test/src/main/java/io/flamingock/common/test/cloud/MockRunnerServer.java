@@ -20,21 +20,27 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.ScenarioMappingBuilder;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import io.flamingock.core.cloud.api.auth.AuthRequest;
 import io.flamingock.core.cloud.api.auth.AuthResponse;
 import io.flamingock.core.cloud.api.planner.ExecutionPlanRequest;
 import io.flamingock.core.cloud.api.planner.ExecutionPlanResponse;
 import io.flamingock.core.cloud.api.planner.StageRequest;
+import io.flamingock.core.cloud.api.transaction.OngoingStatus;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static io.flamingock.common.test.cloud.JsonMapper.toJson;
@@ -164,8 +170,29 @@ public final class MockRunnerServer {
     }
 
     public MockRunnerServer addSimpleStageExecutionPlan(String executionId, String stageName, List<AuditEntryExpectation> auditEntries) {
+        return addSimpleStageExecutionPlan(executionId, stageName, auditEntries, Collections.emptyList());
+    }
 
-        List<StageRequest.Task> tasks = auditEntries.stream().map(auditEntryExpectation -> StageRequest.Task.task(auditEntryExpectation.getTaskId())).collect(Collectors.toList());
+    public MockRunnerServer addSimpleStageExecutionPlan(String executionId, String stageName, List<AuditEntryExpectation> auditEntries, List<OngoingStatus> ongoingStatuses) {
+
+        Map<String, OngoingStatus.Operation> ongoingOperationByTask = ongoingStatuses.stream()
+                .collect(Collectors.toMap(OngoingStatus::getTaskId, OngoingStatus::getOperation));
+
+        List<StageRequest.Task> tasks = auditEntries.stream()
+                .map(AuditEntryExpectation::getTaskId)
+                .collect(Collectors.toSet())
+                .stream()
+                .map(taskId -> {
+                    OngoingStatus.Operation operation = ongoingOperationByTask.get(taskId);
+                    if(operation == null) {
+                        return StageRequest.Task.task(taskId);
+                    } else if (operation == OngoingStatus.Operation.ROLLBACK){
+                        return StageRequest.Task.ongoingRollback(taskId);
+                    } else {
+                        return StageRequest.Task.ongoingExecution(taskId);
+                    }
+                })
+                .collect(Collectors.toList());
 
         StageRequest stageRequest = new StageRequest(stageName, 0, tasks);
 
@@ -276,6 +303,7 @@ public final class MockRunnerServer {
                 String json = toJson(request);
                 wireMockServer.stubFor(
                         post(urlPathEqualTo(executionUrl))
+                                .withName("audit-stub" + i)
                                 .inScenario(scenarioName)
                                 .whenScenarioStateIs(scenarioState)
                                 .willSetStateTo("audit-log-state-" + (i + 1))
@@ -287,6 +315,7 @@ public final class MockRunnerServer {
                 );
             }
         }
+
     }
 
     private void mockReleaseLockEndpoint() {
