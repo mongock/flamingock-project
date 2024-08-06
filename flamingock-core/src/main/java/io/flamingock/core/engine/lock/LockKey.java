@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.lock;
+package io.flamingock.community.internal.lock;
 
-public interface LockKey {
+import io.flamingock.core.engine.lock.LockKey;
 
+public class LocalLockKey implements LockKey {
+
+    private final String key;
+
+    public LocalLockKey(String key) {
+        this.key = key;
+    }
+
+    @Override
+    public String toString(){
+        return key;
+    }
 }
