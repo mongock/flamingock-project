@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.api.annotations;
+package flamingock.core.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,6 +23,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Execution {
+public @interface BeforeExecution {
 
 }

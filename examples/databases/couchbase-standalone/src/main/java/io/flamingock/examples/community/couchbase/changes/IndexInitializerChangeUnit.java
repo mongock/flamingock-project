@@ -20,11 +20,11 @@ import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
 import com.couchbase.client.java.manager.query.DropQueryIndexOptions;
 
-import io.flamingock.core.api.annotations.BeforeExecution;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.api.annotations.RollbackBeforeExecution;
-import io.flamingock.core.api.annotations.RollbackExecution;
+import flamingock.core.api.annotations.BeforeExecution;
+import flamingock.core.api.annotations.ChangeUnit;
+import flamingock.core.api.annotations.Execution;
+import flamingock.core.api.annotations.RollbackBeforeExecution;
+import flamingock.core.api.annotations.RollbackExecution;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

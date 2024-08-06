@@ -17,8 +17,8 @@
 package io.flamingock.oss.driver.couchbase.changes.happyPath;
 
 import com.couchbase.client.java.Cluster;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
+import flamingock.core.api.annotations.ChangeUnit;
+import flamingock.core.api.annotations.Execution;
 
 import java.util.Arrays;
 

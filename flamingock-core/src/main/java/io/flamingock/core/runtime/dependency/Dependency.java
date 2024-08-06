@@ -17,7 +17,7 @@
 package io.flamingock.core.runtime.dependency;
 
 
-import io.flamingock.core.api.exception.FlamingockException;
+import flamingock.core.api.exception.FlamingockException;
 
 import java.util.Objects;
 

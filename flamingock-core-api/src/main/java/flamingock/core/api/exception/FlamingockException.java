@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.api.exception;
+package flamingock.core.api.exception;
 
 /**
  *

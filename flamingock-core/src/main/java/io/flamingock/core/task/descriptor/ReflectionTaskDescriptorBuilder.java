@@ -16,7 +16,7 @@
 
 package io.flamingock.core.task.descriptor;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import flamingock.core.api.annotations.ChangeUnit;
 
 public class ReflectionTaskDescriptorBuilder {
     private static final ReflectionTaskDescriptorBuilder instance = new ReflectionTaskDescriptorBuilder();

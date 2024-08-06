@@ -16,7 +16,7 @@
 
 package io.flamingock.core.pipeline;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptorBuilder;

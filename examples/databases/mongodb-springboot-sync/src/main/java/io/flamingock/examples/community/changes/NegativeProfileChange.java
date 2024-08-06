@@ -16,8 +16,8 @@
 
 package io.flamingock.examples.community.changes;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
+import flamingock.core.api.annotations.ChangeUnit;
+import flamingock.core.api.annotations.Execution;
 import org.springframework.context.annotation.Profile;
 
 @Profile("!accepted-profile-1")
