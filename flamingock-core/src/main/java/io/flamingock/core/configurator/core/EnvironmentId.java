@@ -16,10 +16,9 @@
 
 package io.flamingock.core.configurator.core;
 
-import io.flamingock.core.engine.lock.LockKey;
-import io.flamingock.commons.utils.Id;
+import io.flamingock.commons.utils.id.Id;
 
-public class EnvironmentId extends Id implements LockKey {
+public class EnvironmentId extends Id {
 
     public static EnvironmentId fromString(String value) {
         return new EnvironmentId(value);

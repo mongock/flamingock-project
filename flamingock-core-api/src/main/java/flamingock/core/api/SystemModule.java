@@ -1,2 +1,4 @@
-package flamingock.core.api;public class SystemModule {
+package flamingock.core.api;
+
+public class SystemModule {
 }

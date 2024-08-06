@@ -16,10 +16,9 @@
 
 package io.flamingock.core.configurator.core;
 
-import io.flamingock.core.engine.lock.LockKey;
-import io.flamingock.commons.utils.Id;
+import io.flamingock.commons.utils.id.Id;
 
-public class ServiceId extends Id implements LockKey {
+public class ServiceId extends Id {
 
     public static ServiceId fromString(String value) {
         return new ServiceId(value);
