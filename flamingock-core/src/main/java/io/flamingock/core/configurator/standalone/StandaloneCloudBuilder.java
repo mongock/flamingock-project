@@ -17,17 +17,17 @@
 package io.flamingock.core.configurator.standalone;
 
 import flamingock.core.api.CloudSystemModule;
-import flamingock.core.api.SystemModule;
+import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.cloud.CloudConnectionEngine;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
-import io.flamingock.core.cloud.CloudConnectionEngine;
+import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class StandaloneCloudBuilder
                            DependencyInjectableContext dependencyInjectableContext) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
-        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(coreConfiguration, cloudConfiguration, () -> this);
+        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, () -> this);
 
     }
 
@@ -74,7 +74,13 @@ public class StandaloneCloudBuilder
     public Runner build() {
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        CloudConnectionEngine cloudEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine(runnerId);
+
+        CloudConnectionEngine cloudEngine = ConnectionEngine.initializeAndGetCloud(
+                runnerId,
+                coreConfiguratorDelegate.getCoreConfiguration(),
+                cloudConfiguratorDelegate.getCloudConfiguration(),
+                getCloudTransactioner().orElse(null)
+        );
 
         registerTemplates();
         return PipelineRunnerCreator.create(
@@ -90,6 +96,7 @@ public class StandaloneCloudBuilder
                 cloudEngine::close
         );
     }
+
 
     @Override
     public StandaloneCloudBuilder setHost(String host) {

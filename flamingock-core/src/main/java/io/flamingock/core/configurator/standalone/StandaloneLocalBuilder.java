@@ -18,12 +18,14 @@ package io.flamingock.core.configurator.standalone;
 
 import flamingock.core.api.LocalSystemModule;
 import flamingock.core.api.SystemModule;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
+import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.runner.PipelineRunnerCreator;
@@ -74,7 +76,12 @@ public class StandaloneLocalBuilder
     public Runner build() {
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        LocalConnectionEngine connectionEngine = getAndInitializeConnectionEngine(runnerId);
+        LocalConnectionEngine connectionEngine = ConnectionEngine.initializeAndGetLocal(
+                runnerId,
+                localConfiguratorDelegate.getDriver(),
+                coreConfiguratorDelegate.getCoreConfiguration(),
+                localConfiguratorDelegate.getLocalConfiguration()
+        );
         registerTemplates();
         return PipelineRunnerCreator.create(
                 runnerId,
@@ -90,14 +97,6 @@ public class StandaloneLocalBuilder
         );
     }
 
-    @NotNull
-    private LocalConnectionEngine getAndInitializeConnectionEngine(RunnerId runnerId) {
-        LocalConnectionEngine connectionEngine = localConfiguratorDelegate
-                .getDriver()
-                .getConnectionEngine(coreConfiguratorDelegate.getCoreConfiguration(), localConfiguratorDelegate.getLocalConfiguration());
-        connectionEngine.initialize(runnerId);
-        return connectionEngine;
-    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  LOCAL

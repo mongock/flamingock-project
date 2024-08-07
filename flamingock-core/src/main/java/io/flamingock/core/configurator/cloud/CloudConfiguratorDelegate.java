@@ -34,11 +34,7 @@ import java.util.function.Supplier;
 
 public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLDER> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CloudConfiguratorDelegate.class);
-
     private final Supplier<HOLDER> holderSupplier;
-
-    private final CoreConfigurable coreConfiguration;
 
     private final CloudConfigurable cloudConfiguration;
 
@@ -46,11 +42,9 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
 
     private List<CloudSystemModule> systemModules = new LinkedList<>();
 
-    public CloudConfiguratorDelegate(CoreConfigurable coreConfiguration,
-                                     CloudConfigurable cloudConfiguration,
+    public CloudConfiguratorDelegate(CloudConfigurable cloudConfiguration,
                                      Supplier<HOLDER> holderSupplier) {
         this.holderSupplier = holderSupplier;
-        this.coreConfiguration = coreConfiguration;
         this.cloudConfiguration = cloudConfiguration;
 
     }
@@ -101,15 +95,8 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
         return Optional.ofNullable(cloudTransactioner);
     }
 
-    public CloudConnectionEngine getAndInitializeConnectionEngine(RunnerId runnerId) {
-        logger.info("Generated runnerId:  {}", runnerId);
-        CloudConnectionEngine connectionEngine = new CloudConnectionEngine(
-                coreConfiguration,
-                cloudConfiguration,
-                Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE),
-                cloudTransactioner
-        );
-        connectionEngine.initialize(runnerId);
-        return connectionEngine;
+    public CloudConfigurable getCloudConfiguration() {
+        return cloudConfiguration;
     }
+
 }

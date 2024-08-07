@@ -24,6 +24,7 @@ import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.cloud.CloudConnectionEngine;
+import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.commons.utils.RunnerId;
@@ -52,7 +53,7 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
                            SpringbootConfiguration springbootConfiguration,
                            CloudConfiguration cloudConfiguration) {
         super(coreConfiguration, springbootConfiguration);
-        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(coreConfiguration, cloudConfiguration, this::getSelf);
+        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, this::getSelf);
     }
 
     @Override
@@ -69,8 +70,12 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
 
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
-
-        CloudConnectionEngine cloudEngine = cloudConfiguratorDelegate.getAndInitializeConnectionEngine(runnerId);
+        CloudConnectionEngine cloudEngine = ConnectionEngine.initializeAndGetCloud(
+                runnerId,
+                getCoreConfiguration(),
+                cloudConfiguratorDelegate.getCloudConfiguration(),
+                getCloudTransactioner().orElse(null)
+        );
 
         return PipelineRunnerCreator.create(
                 runnerId,

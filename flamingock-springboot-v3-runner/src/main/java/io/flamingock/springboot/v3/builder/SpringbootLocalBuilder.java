@@ -22,6 +22,7 @@ import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
+import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.runner.PipelineRunnerCreator;
@@ -61,8 +62,12 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     public Runner build() {
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        LocalConnectionEngine connectionEngine = getAndInitializeConnectionEngine(runnerId);
-
+        LocalConnectionEngine connectionEngine = ConnectionEngine.initializeAndGetLocal(
+                runnerId,
+                localConfiguratorDelegate.getDriver(),
+                getCoreConfiguration(),
+                localConfiguratorDelegate.getLocalConfiguration()
+        );
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
@@ -84,16 +89,6 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     protected SpringbootLocalBuilder getSelf() {
         return this;
     }
-
-    @NotNull
-    private LocalConnectionEngine getAndInitializeConnectionEngine(RunnerId runnerId) {
-        LocalConnectionEngine connectionEngine = localConfiguratorDelegate
-                .getDriver()
-                .getConnectionEngine(getCoreConfiguration(), localConfiguratorDelegate.getLocalConfiguration());
-        connectionEngine.initialize(runnerId);
-        return connectionEngine;
-    }
-
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  LOCAL
