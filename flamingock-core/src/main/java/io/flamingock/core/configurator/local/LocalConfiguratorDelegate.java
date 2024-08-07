@@ -16,15 +16,24 @@
 
 package io.flamingock.core.configurator.local;
 
+import flamingock.core.api.CloudSystemModule;
+import flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLDER> {
 
     private final LocalConfigurable LocalConfiguration;
+
     private final Supplier<HOLDER> holderSupplier;
+
     private ConnectionDriver<?> connectionDriver;
+
+    private List<LocalSystemModule> systemModules = new LinkedList<>();
+
 
     public LocalConfiguratorDelegate(LocalConfigurable communityConfiguration, Supplier<HOLDER> holderSupplier) {
         this.LocalConfiguration = communityConfiguration;
@@ -46,5 +55,16 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
     @Override
     public LocalConfigurable getLocalConfiguration() {
         return LocalConfiguration;
+    }
+
+    @Override
+    public HOLDER addSystemModule(LocalSystemModule systemModule) {
+        systemModules.add(systemModule);
+        return holderSupplier.get();
+    }
+
+    @Override
+    public Iterable<LocalSystemModule> getSystemModules() {
+        return systemModules;
     }
 }

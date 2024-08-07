@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.standalone;
 
+import flamingock.core.api.LocalSystemModule;
 import flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
@@ -117,4 +118,14 @@ public class StandaloneLocalBuilder
         return localConfiguratorDelegate.getLocalConfiguration();
     }
 
+
+    @Override
+    public StandaloneLocalBuilder addSystemModule(LocalSystemModule systemModule) {
+        return localConfiguratorDelegate.addSystemModule(systemModule);
+    }
+
+    @Override
+    public Iterable<LocalSystemModule> getSystemModules() {
+        return localConfiguratorDelegate.getSystemModules();
+    }
 }

@@ -16,16 +16,16 @@
 
 package io.flamingock.springboot.v3.builder;
 
-import flamingock.core.api.SystemModule;
+import flamingock.core.api.LocalSystemModule;
+import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
-import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
-import io.flamingock.core.runner.Runner;
+import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.runner.PipelineRunnerCreator;
-import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.runner.Runner;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -114,4 +114,13 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
         return localConfiguratorDelegate.getLocalConfiguration();
     }
 
+    @Override
+    public SpringbootLocalBuilder addSystemModule(LocalSystemModule systemModule) {
+        return localConfiguratorDelegate.addSystemModule(systemModule);
+    }
+
+    @Override
+    public Iterable<LocalSystemModule> getSystemModules() {
+        return localConfiguratorDelegate.getSystemModules();
+    }
 }

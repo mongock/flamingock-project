@@ -16,6 +16,7 @@
 
 package io.flamingock.springboot.v2.builder;
 
+import flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
@@ -113,4 +114,13 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
         return localConfiguratorDelegate.getLocalConfiguration();
     }
 
+    @Override
+    public SpringbootLocalBuilder addSystemModule(LocalSystemModule systemModule) {
+        return localConfiguratorDelegate.addSystemModule(systemModule);
+    }
+
+    @Override
+    public Iterable<LocalSystemModule> getSystemModules() {
+        return localConfiguratorDelegate.getSystemModules();
+    }
 }

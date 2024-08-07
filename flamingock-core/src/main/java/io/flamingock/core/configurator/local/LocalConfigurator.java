@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.local;
 
+import flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
 
 public interface LocalConfigurator<HOLDER> {
@@ -24,4 +25,8 @@ public interface LocalConfigurator<HOLDER> {
     ConnectionDriver<?> getDriver();
 
     LocalConfigurable getLocalConfiguration();
+
+    HOLDER addSystemModule(LocalSystemModule systemModule);
+
+    Iterable<LocalSystemModule> getSystemModules();
 }
