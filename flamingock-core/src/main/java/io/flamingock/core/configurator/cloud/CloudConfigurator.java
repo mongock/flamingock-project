@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.cloud;
 
+import flamingock.core.api.CloudSystemModule;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 
 import java.util.Optional;
@@ -31,7 +32,9 @@ public interface CloudConfigurator<HOLDER> {
     HOLDER setApiToken(String clientSecret);
 
     HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner);
-
     Optional<CloudTransactioner> getCloudTransactioner();
+
+    HOLDER addSystemModule(CloudSystemModule systemModule);
+    Iterable<CloudSystemModule> getSystemModules();
 
 }

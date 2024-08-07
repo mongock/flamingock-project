@@ -16,6 +16,7 @@
 
 package io.flamingock.springboot.v2.builder;
 
+import flamingock.core.api.CloudSystemModule;
 import flamingock.core.api.SystemModule;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.core.CoreConfiguration;
@@ -117,6 +118,16 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     @Override
     public Optional<CloudTransactioner> getCloudTransactioner() {
         return cloudConfiguratorDelegate.getCloudTransactioner();
+    }
+
+    @Override
+    public SpringbootCloudBuilder addSystemModule(CloudSystemModule systemModule) {
+        return cloudConfiguratorDelegate.addSystemModule(systemModule);
+    }
+
+    @Override
+    public Iterable<CloudSystemModule> getSystemModules() {
+        return cloudConfiguratorDelegate.getSystemModules();
     }
 
 }

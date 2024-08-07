@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.cloud;
 
+import flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
@@ -26,13 +27,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLDER> {
 
     private static final Logger logger = LoggerFactory.getLogger(CloudConfiguratorDelegate.class);
-
 
     private final Supplier<HOLDER> holderSupplier;
 
@@ -41,6 +43,8 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     private final CloudConfigurable cloudConfiguration;
 
     private CloudTransactioner cloudTransactioner;
+
+    private List<CloudSystemModule> systemModules = new LinkedList<>();
 
     public CloudConfiguratorDelegate(CoreConfigurable coreConfiguration,
                                      CloudConfigurable cloudConfiguration,
@@ -79,6 +83,17 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     public HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner) {
         this.cloudTransactioner = cloudTransactioner;
         return holderSupplier.get();
+    }
+
+    @Override
+    public HOLDER addSystemModule(CloudSystemModule systemModule) {
+        systemModules.add(systemModule);
+        return holderSupplier.get();
+    }
+
+    @Override
+    public Iterable<CloudSystemModule> getSystemModules() {
+        return systemModules;
     }
 
     @Override

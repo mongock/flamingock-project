@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.standalone;
 
+import flamingock.core.api.CloudSystemModule;
 import flamingock.core.api.SystemModule;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
@@ -118,6 +119,16 @@ public class StandaloneCloudBuilder
     @Override
     public Optional<CloudTransactioner> getCloudTransactioner() {
         return cloudConfiguratorDelegate.getCloudTransactioner();
+    }
+
+    @Override
+    public StandaloneCloudBuilder addSystemModule(CloudSystemModule systemModule) {
+        return cloudConfiguratorDelegate.addSystemModule(systemModule);
+    }
+
+    @Override
+    public Iterable<CloudSystemModule> getSystemModules() {
+        return cloudConfiguratorDelegate.getSystemModules();
     }
 
 }
