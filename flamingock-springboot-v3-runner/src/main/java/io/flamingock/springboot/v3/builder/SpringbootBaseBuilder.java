@@ -16,6 +16,7 @@
 
 package io.flamingock.springboot.v3.builder;
 
+import flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurator;
@@ -97,10 +98,11 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
 
     @NotNull
     final protected Pipeline buildPipeline(String[] activeProfiles) {
-        return Pipeline.builder()
-                .setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
-                .addStages(coreConfiguratorDelegate.getCoreConfiguration().getStages())
-                .build();
+        Pipeline.PipelineBuilder pipelineBuilder = Pipeline.builder()
+                .setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)));
+
+        coreConfiguratorDelegate.getCoreConfiguration().getStages().forEach(pipelineBuilder::addStage);
+        return pipelineBuilder.build();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +192,6 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
     public HOLDER addTemplateModule(TemplateModule templateModule) {
         return coreConfiguratorDelegate.addTemplateModule(templateModule);
     }
-
 
     @Override
     public long getLockAcquiredForMillis() {

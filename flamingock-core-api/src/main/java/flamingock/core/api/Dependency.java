@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.runtime.dependency;
+package flamingock.core.api;
 
 
 import flamingock.core.api.exception.FlamingockException;

@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v2;
 
-import io.flamingock.core.runtime.dependency.Dependency;
+import flamingock.core.api.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.exception.ForbiddenParameterException;
 import org.springframework.beans.BeansException;

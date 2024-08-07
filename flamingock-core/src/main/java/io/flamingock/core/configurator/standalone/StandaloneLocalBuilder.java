@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.standalone;
 
+import flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalConfigurable;
@@ -115,6 +116,5 @@ public class StandaloneLocalBuilder
     public LocalConfigurable getLocalConfiguration() {
         return localConfiguratorDelegate.getLocalConfiguration();
     }
-
 
 }

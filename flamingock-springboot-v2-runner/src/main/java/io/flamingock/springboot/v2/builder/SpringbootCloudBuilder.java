@@ -16,6 +16,7 @@
 
 package io.flamingock.springboot.v2.builder;
 
+import flamingock.core.api.SystemModule;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;

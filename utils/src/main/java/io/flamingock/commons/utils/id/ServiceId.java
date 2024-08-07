@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.core;
+package io.flamingock.commons.utils.id;
 
-import io.flamingock.commons.utils.id.Id;
+public class ServiceId extends Id {
 
-public class EnvironmentId extends Id {
-
-    public static EnvironmentId fromString(String value) {
-        return new EnvironmentId(value);
+    public static ServiceId fromString(String value) {
+        return new ServiceId(value);
     }
 
-    private EnvironmentId(String value) {
+    private ServiceId(String value) {
         super(value);
     }
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o) && o instanceof EnvironmentId;
+        return super.equals(o) && o instanceof ServiceId;
     }
 
 

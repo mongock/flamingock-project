@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.runtime.dependency;
+package flamingock.core.api.annotations;
 
-import flamingock.core.api.Dependency;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.Collection;
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SystemChange {
 
-public interface DependencyInjectable {
-
-    default void addDependencies(Collection<? extends Dependency> dependencies) {
-        dependencies.forEach(this::addDependency);
-    }
-
-    default void addDependency(Object object) {
-        addDependency(new Dependency(object));
-    }
-
-    void addDependency(Dependency dependency);
 }

@@ -26,7 +26,7 @@ import io.flamingock.template.TemplateModule;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER>{
+public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER> {
     private final Supplier<HOLDER> holderSupplier;
     private final CoreConfiguration configuration;
 
@@ -42,7 +42,7 @@ public class CoreConfiguratorDelegate<HOLDER> implements CoreConfigurator<HOLDER
 
     @Override
     public HOLDER addStage(Stage stage) {
-        configuration.getStages().add(stage);
+        configuration.addStage(stage);
         return holderSupplier.get();
     }
 

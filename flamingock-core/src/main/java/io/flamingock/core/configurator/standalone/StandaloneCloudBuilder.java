@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.standalone;
 
+import flamingock.core.api.SystemModule;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;

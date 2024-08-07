@@ -20,7 +20,7 @@ import flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.cloud.api.transaction.OngoingStatus;
 import io.flamingock.core.engine.audit.domain.AuditItem;
-import io.flamingock.core.runtime.dependency.Dependency;
+import flamingock.core.api.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.navigation.step.FailedStep;

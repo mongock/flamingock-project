@@ -16,6 +16,7 @@
 
 package io.flamingock.core.configurator.core;
 
+import flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.pipeline.Stage;
@@ -90,15 +91,24 @@ public class CoreConfiguration implements CoreConfigurable {
     private List<Stage> stages = new ArrayList<>();
 
 
+    private List<SystemModule> systemModules = new ArrayList<>();
+
+
     @Override
     public void setStages(List<Stage> stages) {
-        this.stages = assignOrEmpty(stages);
+        this.stages.addAll(stages);
     }
 
     @Override
-    public List<Stage> getStages() {
+    public void addStage(Stage stage) {
+        stages.add(stage);
+    }
+
+    @Override
+    public Iterable<Stage> getStages() {
         return stages;
     }
+
 
     @Override
     public void setLockAcquiredForMillis(long lockAcquiredForMillis) {
