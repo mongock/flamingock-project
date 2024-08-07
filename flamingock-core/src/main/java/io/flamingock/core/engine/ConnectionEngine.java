@@ -32,35 +32,35 @@ import org.apache.http.impl.client.HttpClients;
 
 import java.util.Optional;
 
-public interface ConnectionEngine  extends AutoCloseable{
+public interface ConnectionEngine extends AutoCloseable{
 
   void initialize(RunnerId runnerId);
 
-  ExecutionPlanner getExecutionPlanner();
+    ExecutionPlanner getExecutionPlanner();
 
-  Optional<?  extends TransactionWrapper> getTransactionWrapper();
+    Optional<? extends TransactionWrapper> getTransactionWrapper();
 
 
-  static CloudConnectionEngine initializeAndGetCloud(RunnerId runnerId,
-                                                     CoreConfigurable coreConfiguration,
-                                                     CloudConfigurable cloudConfiguration,
-                                                     CloudTransactioner transactioner) {
-      CloudConnectionEngine connectionEngine = new CloudConnectionEngine(
-              coreConfiguration,
-              cloudConfiguration,
-              Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE),
-              transactioner
-      );
-      connectionEngine.initialize(runnerId);
-      return connectionEngine;
-  }
+    static CloudConnectionEngine initializeAndGetCloud(RunnerId runnerId,
+                                                       CoreConfigurable coreConfiguration,
+                                                       CloudConfigurable cloudConfiguration,
+                                                       CloudTransactioner transactioner) {
+        CloudConnectionEngine connectionEngine = new CloudConnectionEngine(
+                coreConfiguration,
+                cloudConfiguration,
+                Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE),
+                transactioner
+        );
+        connectionEngine.initialize(runnerId);
+        return connectionEngine;
+    }
 
-  static LocalConnectionEngine initializeAndGetLocal(RunnerId runnerId,
-                                                                ConnectionDriver<?> driver,
-                                                                CoreConfigurable coreConfiguration,
-                                                                LocalConfigurable localConfiguration) {
-      LocalConnectionEngine connectionEngine = driver.getConnectionEngine(coreConfiguration, localConfiguration);
-      connectionEngine.initialize(runnerId);
-      return connectionEngine;
-  }
+    static LocalConnectionEngine initializeAndGetLocal(RunnerId runnerId,
+                                                       ConnectionDriver<?> driver,
+                                                       CoreConfigurable coreConfiguration,
+                                                       LocalConfigurable localConfiguration) {
+        LocalConnectionEngine connectionEngine = driver.getConnectionEngine(coreConfiguration, localConfiguration);
+        connectionEngine.initialize(runnerId);
+        return connectionEngine;
+    }
 }

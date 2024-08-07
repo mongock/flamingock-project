@@ -17,13 +17,13 @@
 package io.flamingock.core.engine.local;
 
 import io.flamingock.core.engine.ConnectionEngine;
-import io.flamingock.core.engine.local.Auditor;
 
 public interface LocalConnectionEngine extends ConnectionEngine {
 
-  Auditor getAuditor();
+    Auditor getAuditor();
 
-  @Override
-  default void close() {}
+    @Override
+    default void close() {
+    }
 
 }

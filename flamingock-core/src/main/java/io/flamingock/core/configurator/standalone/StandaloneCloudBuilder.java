@@ -75,6 +75,8 @@ public class StandaloneCloudBuilder
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
 
+        processSystemModules();
+
         CloudConnectionEngine cloudEngine = ConnectionEngine.initializeAndGetCloud(
                 runnerId,
                 coreConfiguratorDelegate.getCoreConfiguration(),
@@ -95,6 +97,12 @@ public class StandaloneCloudBuilder
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
                 cloudEngine::close
         );
+    }
+
+    private void processSystemModules() {
+        cloudConfiguratorDelegate.getSystemModules().forEach(systemModule -> {
+//            systemModule.initialise(cloudConfiguratorDelegate.getCloudConfiguration().getEnvironmentName());
+        });
     }
 
 
