@@ -20,10 +20,8 @@ import io.flamingock.core.task.filter.TaskFilter;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Pipeline {
@@ -47,21 +45,21 @@ public class Pipeline {
 
     public static class PipelineBuilder {
 
-        private final Collection<Stage> stages ;
+        private final Collection<Stage> userStages;
         private final Collection<TaskFilter> taskFilters;
 
         private PipelineBuilder() {
-            stages = new LinkedHashSet<>();
+            userStages = new LinkedHashSet<>();
             taskFilters = new HashSet<>();
         }
 
-        public PipelineBuilder addStages(Collection<Stage> stages) {
-            this.stages.addAll(stages);
+        public PipelineBuilder addUserStages(Iterable<Stage> userStages) {
+            userStages.forEach(this::addUserStage);
             return this;
         }
 
-        public PipelineBuilder addStage(Stage stage) {
-            stages.add(stage);
+        public PipelineBuilder addUserStage(Stage stage) {
+            userStages.add(stage);
             return this;
         }
 
@@ -71,7 +69,7 @@ public class Pipeline {
         }
 
         public Pipeline build() {
-            List<Stage> stagesWithTaskFilter = stages.stream()
+            List<Stage> stagesWithTaskFilter = userStages.stream()
                     .map(stage -> stage.addFilters(taskFilters))
                     .collect(Collectors.toList());
             return new Pipeline(stagesWithTaskFilter);

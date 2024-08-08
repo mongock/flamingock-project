@@ -17,6 +17,7 @@
 package io.flamingock.core.configurator.standalone;
 
 import flamingock.core.api.CloudSystemModule;
+import flamingock.core.api.Dependency;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
@@ -27,6 +28,7 @@ import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
+import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
@@ -77,23 +79,24 @@ public class StandaloneCloudBuilder
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
 
-        Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
-
-        CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
 
         CloudConnectionEngine.Factory engineFactory = CloudConnectionEngine.newFactory(
                 runnerId,
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 cloudConfiguratorDelegate.getCloudConfiguration(),
-                transactioner,
-                requestBuilderFactory
+                getCloudTransactioner().orElse(null),
+                Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE)
         );
+
+        CloudConnectionEngine engine = engineFactory.initializeAndGet();
+
+        processSystemModules(engine);
 
         registerTemplates();
         return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(),
-                engineFactory.initializeAndGet(),
+                engine,
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
@@ -102,9 +105,15 @@ public class StandaloneCloudBuilder
         );
     }
 
-    private void processSystemModules() {
+    private void processSystemModules(CloudConnectionEngine engine) {
         cloudConfiguratorDelegate.getSystemModules().forEach(systemModule -> {
-//            systemModule.initialise(cloudConfiguratorDelegate.getCloudConfiguration().getEnvironmentName());
+            systemModule.initialise(engine.getEnvironmentId(), engine.getServiceId());
+            Iterable<Dependency> dependencies = systemModule.getDependencies();
+            dependencies.forEach(dependency -> addDependency(dependency.getName(), dependency.getType(), dependency.getInstance()));
+
+            Stage stage = new Stage("");
+            stage.setClasses(systemModule.getTaskClasses());
+            addStage(stage);//todo wrong. it's appended to the end. We need at start or indicating the oder
         });
     }
 

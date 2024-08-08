@@ -84,9 +84,9 @@ abstract class AbstractStandaloneBuilder<HOLDER>
 
     @NotNull
     protected Pipeline buildPipeline() {
-        Pipeline.PipelineBuilder builder = Pipeline.builder();
-        coreConfiguratorDelegate().getCoreConfiguration().getStages().forEach(builder::addStage);
-        return builder.build();
+        return Pipeline.builder()
+                .addUserStages(coreConfiguratorDelegate().getCoreConfiguration().getStages())
+                .build();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

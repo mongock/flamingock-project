@@ -48,6 +48,10 @@ public final class CloudConnectionEngine implements ConnectionEngine {
 
     private static final Logger logger = LoggerFactory.getLogger(CloudConnectionEngine.class);
 
+    private final EnvironmentId environmentId;
+
+    private final ServiceId serviceId;
+
     private final CloudTransactioner cloudTransactioner;
 
     private final AuditWriter auditWriter;
@@ -62,12 +66,24 @@ public final class CloudConnectionEngine implements ConnectionEngine {
         return new Factory(runnerId, coreConfiguration, cloudConfiguration, transactioner, requestBuilderFactory);
     }
 
-    private CloudConnectionEngine(AuditWriter auditWriter,
+    private CloudConnectionEngine(EnvironmentId environmentId,
+                                  ServiceId serviceId,
+                                  AuditWriter auditWriter,
                                   ExecutionPlanner executionPlanner,
                                   CloudTransactioner cloudTransactioner) {
+        this.environmentId =environmentId;
+        this.serviceId = serviceId;
         this.auditWriter = auditWriter;
         this.executionPlanner = executionPlanner;
         this.cloudTransactioner = cloudTransactioner;
+    }
+
+    public EnvironmentId getEnvironmentId() {
+        return environmentId;
+    }
+
+    public ServiceId getServiceId() {
+        return serviceId;
     }
 
     public AuditWriter getAuditWriter() {
@@ -161,6 +177,8 @@ public final class CloudConnectionEngine implements ConnectionEngine {
             }
 
             return new CloudConnectionEngine(
+                    environmentId,
+                    serviceId,
                     auditWriter,
                     executionPlanner,
                     transactioner

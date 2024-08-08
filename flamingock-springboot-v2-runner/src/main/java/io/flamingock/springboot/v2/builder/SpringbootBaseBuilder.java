@@ -16,12 +16,11 @@
 
 package io.flamingock.springboot.v2.builder;
 
-import flamingock.core.api.SystemModule;
+import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurator;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
-import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.IPipelineCompletedEvent;
@@ -101,11 +100,10 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
 
     @NotNull
     final protected Pipeline buildPipeline(String[] activeProfiles) {
-        Pipeline.PipelineBuilder pipelineBuilder = Pipeline.builder()
-                .setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)));
-
-        coreConfiguratorDelegate.getCoreConfiguration().getStages().forEach(pipelineBuilder::addStage);
-        return pipelineBuilder.build();
+        return Pipeline.builder()
+                .setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
+                .addUserStages(coreConfiguratorDelegate.getCoreConfiguration().getStages())
+                .build();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
