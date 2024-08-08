@@ -24,7 +24,6 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
-import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.runner.PipelineRunnerCreator;
@@ -79,12 +78,10 @@ public class StandaloneLocalBuilder
                 localConfiguratorDelegate.getLocalConfiguration()
         );
         registerTemplates();
-        return PipelineRunnerCreator.createWithCloser(
+        return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(),
-                connectionEngine.getAuditor(),
-                connectionEngine.getTransactionWrapper().orElse(null),
-                connectionEngine.getExecutionPlanner(),
+                connectionEngine,
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),

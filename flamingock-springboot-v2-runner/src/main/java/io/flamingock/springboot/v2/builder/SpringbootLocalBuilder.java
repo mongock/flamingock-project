@@ -17,16 +17,15 @@
 package io.flamingock.springboot.v2.builder;
 
 import flamingock.core.api.LocalSystemModule;
+import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
-import io.flamingock.core.engine.ConnectionEngine;
-import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
-import io.flamingock.core.runner.Runner;
+import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.runner.PipelineRunnerCreator;
-import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.runner.Runner;
 import io.flamingock.springboot.v2.SpringDependencyContext;
 import io.flamingock.springboot.v2.SpringRunnerBuilder;
 import io.flamingock.springboot.v2.SpringUtil;
@@ -69,12 +68,10 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
-        return PipelineRunnerCreator.createWithCloser(
+        return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(activeProfiles),
-                connectionEngine.getAuditor(),
-                connectionEngine.getTransactionWrapper().orElse(null),
-                connectionEngine.getExecutionPlanner(),
+                connectionEngine,
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),

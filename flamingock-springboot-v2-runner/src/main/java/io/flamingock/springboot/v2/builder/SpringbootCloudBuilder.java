@@ -83,14 +83,11 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
                 transactioner,
                 requestBuilderFactory
         );
-        CloudConnectionEngine cloudEngine = engineFactory.initializeAndGet();
 
         return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(activeProfiles),
-                cloudEngine.getAuditWriter(),
-                transactioner,
-                cloudEngine.getExecutionPlanner(),
+                engineFactory.initializeAndGet(),
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),

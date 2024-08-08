@@ -88,15 +88,12 @@ public class StandaloneCloudBuilder
                 transactioner,
                 requestBuilderFactory
         );
-        CloudConnectionEngine cloudEngine = engineFactory.initializeAndGet();
 
         registerTemplates();
         return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(),
-                cloudEngine.getAuditWriter(),
-                transactioner,
-                cloudEngine.getExecutionPlanner(),
+                engineFactory.initializeAndGet(),
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
