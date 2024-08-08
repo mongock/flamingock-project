@@ -64,7 +64,7 @@ public class SpringDataMongoV3Driver implements ConnectionDriver<SpringDataMongo
     }
 
     @Override
-    public LocalConnectionEngine getConnectionEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration) {
+    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration) {
         SpringDataMongoV3Engine engine = new SpringDataMongoV3Engine(
                 mongoTemplate,
                 coreConfiguration,

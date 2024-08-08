@@ -61,9 +61,8 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     public Runner build() {
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        LocalConnectionEngine connectionEngine = ConnectionEngine.initializeAndGetLocal(
+        LocalConnectionEngine connectionEngine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
-                localConfiguratorDelegate.getDriver(),
                 getCoreConfiguration(),
                 localConfiguratorDelegate.getLocalConfiguration()
         );

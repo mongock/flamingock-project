@@ -73,9 +73,8 @@ public class StandaloneLocalBuilder
     public Runner build() {
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        LocalConnectionEngine connectionEngine = ConnectionEngine.initializeAndGetLocal(
+        LocalConnectionEngine connectionEngine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
-                localConfiguratorDelegate.getDriver(),
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 localConfiguratorDelegate.getLocalConfiguration()
         );

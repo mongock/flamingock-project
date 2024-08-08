@@ -16,12 +16,7 @@
 
 package io.flamingock.core.engine;
 
-import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
-import io.flamingock.core.engine.local.LocalConnectionEngine;
-import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
@@ -32,11 +27,4 @@ public interface ConnectionEngine {
 
     Optional<? extends TransactionWrapper> getTransactionWrapper();
 
-
-    static LocalConnectionEngine initializeAndGetLocal(RunnerId runnerId,
-                                                       ConnectionDriver<?> driver,
-                                                       CoreConfigurable coreConfiguration,
-                                                       LocalConfigurable localConfiguration) {
-        return driver.getConnectionEngine(runnerId, coreConfiguration, localConfiguration);
-    }
 }
