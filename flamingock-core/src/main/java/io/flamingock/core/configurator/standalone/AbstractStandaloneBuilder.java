@@ -16,6 +16,9 @@
 
 package io.flamingock.core.configurator.standalone;
 
+import flamingock.core.api.Dependency;
+import io.flamingock.commons.utils.id.EnvironmentId;
+import io.flamingock.commons.utils.id.ServiceId;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurator;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
@@ -38,6 +41,7 @@ import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -88,6 +92,17 @@ abstract class AbstractStandaloneBuilder<HOLDER>
                 .addUserStages(coreConfiguratorDelegate().getCoreConfiguration().getStages())
                 .build();
     }
+
+    protected Pipeline buildPipeline(Iterable<Stage> beforeUserStages,
+                                     Iterable<Stage> userStages,
+                                     Iterable<Stage> afterUserStages) {
+        return Pipeline.builder()
+                .addBeforeUserStages(beforeUserStages)
+                .addUserStages(userStages)
+                .addAfterUserStages(afterUserStages)
+                .build();
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  CORE

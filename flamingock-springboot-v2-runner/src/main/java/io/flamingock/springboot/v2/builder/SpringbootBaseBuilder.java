@@ -101,7 +101,7 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
     @NotNull
     final protected Pipeline buildPipeline(String[] activeProfiles) {
         return Pipeline.builder()
-                .setFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
+                .addFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
                 .addUserStages(coreConfiguratorDelegate.getCoreConfiguration().getStages())
                 .build();
     }

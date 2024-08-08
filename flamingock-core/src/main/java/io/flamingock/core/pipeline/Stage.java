@@ -112,8 +112,9 @@ public class Stage {
         return classes;
     }
 
-    public void setClasses(Collection<Class<?>> classes) {
+    public Stage setClasses(Collection<Class<?>> classes) {
         this.classes = classes;
+        return this;
     }
 
     public boolean isParallel() {

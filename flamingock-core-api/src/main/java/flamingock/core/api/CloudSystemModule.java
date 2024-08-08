@@ -5,12 +5,8 @@ import io.flamingock.commons.utils.id.ServiceId;
 
 import java.util.Collection;
 
-public abstract class CloudSystemModule extends SystemModule {
+public interface CloudSystemModule extends SystemModule {
 
-    protected CloudSystemModule(Collection<Class<?>> taskClasses) {
-        super(taskClasses);
-    }
-
-    abstract public void initialise(EnvironmentId environmentId, ServiceId serviceId);
+    void initialise(EnvironmentId environmentId, ServiceId serviceId);
 
 }

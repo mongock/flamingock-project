@@ -2,18 +2,30 @@ package flamingock.core.api;
 
 
 import java.util.Collection;
+import java.util.List;
 
-public abstract class SystemModule {
+public interface SystemModule extends Comparable<SystemModule> {
 
-    private final Collection<Class<?>> taskClasses;
+    String getName();
 
-    protected SystemModule(Collection<Class<?>> taskClasses) {
-        this.taskClasses = taskClasses;
+    Collection<Class<?>> getTaskClasses();
+
+    int getOrder();
+
+    /**
+     * @return the dependencies built by the module that are not in the application context
+     */
+    List<Dependency> getDependencies();
+
+    /**
+     * Indicates if this should
+     */
+    boolean isBeforeUserStages();
+
+    @Override
+    default int compareTo(SystemModule o) {
+        return Integer.compare(this.getOrder(), o.getOrder());
     }
 
-    public Collection<Class<?>> getTaskClasses() {
-        return taskClasses;
-    }
 
-    abstract public Iterable<Dependency> getDependencies();
 }

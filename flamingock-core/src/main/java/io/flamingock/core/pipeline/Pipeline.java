@@ -16,22 +16,29 @@
 
 package io.flamingock.core.pipeline;
 
+import flamingock.core.api.SystemModule;
 import io.flamingock.core.task.filter.TaskFilter;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Pipeline {
 
     public static PipelineBuilder builder() {
         return new PipelineBuilder();
     }
+
     private final List<Stage> stages;
 
-    private Pipeline(List< Stage> stages) {
+    private Pipeline(List<Stage> stages) {
         this.stages = stages;
     }
 
@@ -42,38 +49,47 @@ public class Pipeline {
                 .collect(Collectors.toList());
     }
 
-
     public static class PipelineBuilder {
 
-        private final Collection<Stage> userStages;
-        private final Collection<TaskFilter> taskFilters;
+        private final Collection<Stage> beforeUserStages = new LinkedHashSet<>();
+        private final Collection<Stage> userStages = new LinkedHashSet<>();
+        private final Collection<Stage> afterUserStages = new LinkedHashSet<>();
+        private final Collection<TaskFilter> taskFilters = new LinkedHashSet<>();
 
         private PipelineBuilder() {
-            userStages = new LinkedHashSet<>();
-            taskFilters = new HashSet<>();
         }
 
-        public PipelineBuilder addUserStages(Iterable<Stage> userStages) {
-            userStages.forEach(this::addUserStage);
+        public PipelineBuilder addBeforeUserStages(Iterable<Stage> stages) {
+            stages.forEach(userStages::add);
             return this;
         }
 
-        public PipelineBuilder addUserStage(Stage stage) {
-            userStages.add(stage);
+        public PipelineBuilder addUserStages(Iterable<Stage> stages) {
+            stages.forEach(userStages::add);
+            return this;
+        }
+        public PipelineBuilder addAfterUserStages(Iterable<Stage> stages) {
+            stages.forEach(userStages::add);
             return this;
         }
 
-        public PipelineBuilder setFilters(Collection<TaskFilter> taskFilters) {
+        public PipelineBuilder addFilters(Collection<TaskFilter> taskFilters) {
             this.taskFilters.addAll(taskFilters);
             return this;
         }
 
         public Pipeline build() {
-            List<Stage> stagesWithTaskFilter = userStages.stream()
+
+            List<Stage> allSortedStages = new LinkedList<>(beforeUserStages);
+            allSortedStages.addAll(userStages);
+            allSortedStages.addAll(afterUserStages);
+
+            List<Stage> stagesWithTaskFilter = allSortedStages.stream()
                     .map(stage -> stage.addFilters(taskFilters))
                     .collect(Collectors.toList());
             return new Pipeline(stagesWithTaskFilter);
         }
+
 
     }
 }

@@ -20,11 +20,12 @@ import flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
-import io.flamingock.core.cloud.CloudConnectionEngine;
+import io.flamingock.core.engine.CloudConnectionEngine;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
+import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
@@ -136,8 +137,8 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
     }
 
     @Override
-    public Iterable<CloudSystemModule> getSystemModules() {
-        return cloudConfiguratorDelegate.getSystemModules();
+    public CloudSystemModuleManager getCloudSystemModuleManager() {
+        return cloudConfiguratorDelegate.getCloudSystemModuleManager();
     }
 
 }

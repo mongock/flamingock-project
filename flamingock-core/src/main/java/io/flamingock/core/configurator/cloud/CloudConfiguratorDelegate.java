@@ -19,8 +19,6 @@ package io.flamingock.core.configurator.cloud;
 import flamingock.core.api.CloudSystemModule;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -32,7 +30,7 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
 
     private CloudTransactioner cloudTransactioner;
 
-    private List<CloudSystemModule> systemModules = new LinkedList<>();
+    private CloudSystemModuleManager cloudSystemModuleManager = new CloudSystemModuleManager();
 
     public CloudConfiguratorDelegate(CloudConfigurable cloudConfiguration,
                                      Supplier<HOLDER> holderSupplier) {
@@ -73,13 +71,13 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
 
     @Override
     public HOLDER addSystemModule(CloudSystemModule systemModule) {
-        systemModules.add(systemModule);
+        cloudSystemModuleManager.add(systemModule);
         return holderSupplier.get();
     }
 
     @Override
-    public Iterable<CloudSystemModule> getSystemModules() {
-        return systemModules;
+    public CloudSystemModuleManager getCloudSystemModuleManager() {
+        return cloudSystemModuleManager;
     }
 
     @Override

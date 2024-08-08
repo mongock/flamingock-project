@@ -17,18 +17,19 @@
 package io.flamingock.core.configurator.standalone;
 
 import flamingock.core.api.CloudSystemModule;
-import flamingock.core.api.Dependency;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
-import io.flamingock.core.cloud.CloudConnectionEngine;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
+import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
-import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.engine.CloudConnectionEngine;
+import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
@@ -90,14 +91,27 @@ public class StandaloneCloudBuilder
 
         CloudConnectionEngine engine = engineFactory.initializeAndGet();
 
-        processSystemModules(engine);
+        cloudConfiguratorDelegate.getCloudSystemModuleManager().initialize(engine.getEnvironmentId(), engine.getServiceId());
+
+        cloudConfiguratorDelegate.getCloudSystemModuleManager()
+                .getDependencies()
+                .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
 
         registerTemplates();
+
+        CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
+
+        Pipeline pipeline = buildPipeline(
+                cloudConfiguratorDelegate.getCloudSystemModuleManager().getSortedSystemStagesBefore(),
+                coreConfiguration.getStages(),
+                cloudConfiguratorDelegate.getCloudSystemModuleManager().getSortedSystemStagesAfter()
+        );
+
         return PipelineRunnerCreator.create(
                 runnerId,
-                buildPipeline(),
+                pipeline,
                 engine,
-                coreConfiguratorDelegate.getCoreConfiguration(),
+                coreConfiguration,
                 buildEventPublisher(),
                 getDependencyContext(),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
@@ -105,17 +119,17 @@ public class StandaloneCloudBuilder
         );
     }
 
-    private void processSystemModules(CloudConnectionEngine engine) {
-        cloudConfiguratorDelegate.getSystemModules().forEach(systemModule -> {
-            systemModule.initialise(engine.getEnvironmentId(), engine.getServiceId());
-            Iterable<Dependency> dependencies = systemModule.getDependencies();
-            dependencies.forEach(dependency -> addDependency(dependency.getName(), dependency.getType(), dependency.getInstance()));
-
-            Stage stage = new Stage("");
-            stage.setClasses(systemModule.getTaskClasses());
-            addStage(stage);//todo wrong. it's appended to the end. We need at start or indicating the oder
-        });
-    }
+//    private void processSystemModules(EnvironmentId environmentId, ServiceId serviceId) {
+//        cloudConfiguratorDelegate.getCloudSystemModuleManager().forEach(systemModule -> {
+//            systemModule.initialise(environmentId, serviceId);
+//            Iterable<Dependency> dependencies = systemModule.getDependencies();
+//            dependencies.forEach(dependency -> addDependency(dependency.getName(), dependency.getType(), dependency.getInstance()));
+//
+//            Stage stage = new Stage("");
+//            stage.setClasses(systemModule.getTaskClasses());
+//            addStage(stage);//todo wrong. it's appended to the end. We need at start or indicating the oder
+//        });
+//    }
 
 
     @Override
@@ -154,8 +168,8 @@ public class StandaloneCloudBuilder
     }
 
     @Override
-    public Iterable<CloudSystemModule> getSystemModules() {
-        return cloudConfiguratorDelegate.getSystemModules();
+    public CloudSystemModuleManager getCloudSystemModuleManager() {
+        return cloudConfiguratorDelegate.getCloudSystemModuleManager();
     }
 
 }
