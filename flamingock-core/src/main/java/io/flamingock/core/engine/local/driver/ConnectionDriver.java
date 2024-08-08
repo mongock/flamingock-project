@@ -16,13 +16,17 @@
 
 package io.flamingock.core.engine.local.driver;
 
+import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 
 public interface ConnectionDriver<DRIVER_CONFIGURATION extends DriverConfigurable> {
 
-    LocalConnectionEngine getConnectionEngine(CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration);
+    LocalConnectionEngine getConnectionEngine(RunnerId runnerId,
+                                              CoreConfigurable coreConfiguration,
+                                              LocalConfigurable communityConfiguration);
+
 
     ConnectionDriver<DRIVER_CONFIGURATION> setDriverConfiguration(DRIVER_CONFIGURATION configuration);
 }

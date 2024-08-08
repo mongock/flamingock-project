@@ -37,8 +37,6 @@ public interface ConnectionEngine {
                                                        ConnectionDriver<?> driver,
                                                        CoreConfigurable coreConfiguration,
                                                        LocalConfigurable localConfiguration) {
-        LocalConnectionEngine connectionEngine = driver.getConnectionEngine(coreConfiguration, localConfiguration);
-        connectionEngine.initialize(runnerId);
-        return connectionEngine;
+        return driver.getConnectionEngine(runnerId, coreConfiguration, localConfiguration);
     }
 }
