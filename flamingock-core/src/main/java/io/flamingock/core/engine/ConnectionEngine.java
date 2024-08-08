@@ -17,10 +17,6 @@
 package io.flamingock.core.engine;
 
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.commons.utils.http.Http;
-import io.flamingock.core.cloud.CloudConnectionEngineFactory;
-import io.flamingock.core.cloud.transaction.CloudTransactioner;
-import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
@@ -36,21 +32,6 @@ public interface ConnectionEngine {
 
     Optional<? extends TransactionWrapper> getTransactionWrapper();
 
-
-    static CloudConnectionEngineFactory initializeAndGetCloud(RunnerId runnerId,
-                                                              CoreConfigurable coreConfiguration,
-                                                              CloudConfigurable cloudConfiguration,
-                                                              CloudTransactioner transactioner,
-                                                              Http.RequestBuilderFactory requestBuilderFactory) {
-        CloudConnectionEngineFactory connectionEngine = new CloudConnectionEngineFactory(
-                coreConfiguration,
-                cloudConfiguration,
-                transactioner,
-                requestBuilderFactory
-        );
-        connectionEngine.buildAndInitialize(runnerId);
-        return connectionEngine;
-    }
 
     static LocalConnectionEngine initializeAndGetLocal(RunnerId runnerId,
                                                        ConnectionDriver<?> driver,

@@ -16,19 +16,37 @@
 
 package io.flamingock.core.cloud;
 
+import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.TimeService;
+import io.flamingock.commons.utils.http.Http;
+import io.flamingock.commons.utils.id.EnvironmentId;
+import io.flamingock.commons.utils.id.ServiceId;
+import io.flamingock.core.cloud.api.auth.AuthResponse;
+import io.flamingock.core.cloud.audit.HtttpAuditWriter;
+import io.flamingock.core.cloud.auth.AuthClient;
+import io.flamingock.core.cloud.auth.AuthManager;
+import io.flamingock.core.cloud.auth.HttpAuthClient;
+import io.flamingock.core.cloud.lock.CloudLockService;
+import io.flamingock.core.cloud.lock.client.HttpLockServiceClient;
+import io.flamingock.core.cloud.lock.client.LockServiceClient;
+import io.flamingock.core.cloud.planner.CloudExecutionPlanner;
+import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
+import io.flamingock.core.cloud.planner.client.HttpExecutionPlannerClient;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
+import io.flamingock.core.configurator.cloud.CloudConfigurable;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Optional;
 
-public class CloudConnectionEngine implements ConnectionEngine {
+public final class CloudConnectionEngine implements ConnectionEngine {
+
     private static final Logger logger = LoggerFactory.getLogger(CloudConnectionEngine.class);
-
-
 
     private final CloudTransactioner cloudTransactioner;
 
@@ -36,11 +54,17 @@ public class CloudConnectionEngine implements ConnectionEngine {
 
     private final ExecutionPlanner executionPlanner;
 
+    public static Factory newFactory(RunnerId runnerId,
+                                     CoreConfigurable coreConfiguration,
+                                     CloudConfigurable cloudConfiguration,
+                                     CloudTransactioner transactioner,
+                                     Http.RequestBuilderFactory requestBuilderFactory) {
+        return new Factory(runnerId, coreConfiguration, cloudConfiguration, transactioner, requestBuilderFactory);
+    }
 
-
-    public CloudConnectionEngine(AuditWriter auditWriter,
-                                 ExecutionPlanner executionPlanner,
-                                 CloudTransactioner cloudTransactioner) {
+    private CloudConnectionEngine(AuditWriter auditWriter,
+                                  ExecutionPlanner executionPlanner,
+                                  CloudTransactioner cloudTransactioner) {
         this.auditWriter = auditWriter;
         this.executionPlanner = executionPlanner;
         this.cloudTransactioner = cloudTransactioner;
@@ -60,5 +84,108 @@ public class CloudConnectionEngine implements ConnectionEngine {
         return Optional.ofNullable(cloudTransactioner);
     }
 
+    public static class Factory {
+
+        private final RunnerId runnerId;
+        private final CoreConfigurable coreConfiguration;
+        private final CloudConfigurable cloudConfiguration;
+        private final CloudTransactioner transactioner;
+        private final Http.RequestBuilderFactory requestBuilderFactory;
+
+        private Factory(
+                RunnerId runnerId,
+                CoreConfigurable coreConfiguration,
+                CloudConfigurable cloudConfiguration,
+                CloudTransactioner transactioner,
+                Http.RequestBuilderFactory requestBuilderFactory) {
+            this.runnerId = runnerId;
+            this.coreConfiguration = coreConfiguration;
+            this.cloudConfiguration = cloudConfiguration;
+            this.transactioner = transactioner;
+            this.requestBuilderFactory = requestBuilderFactory;
+        }
+
+        public CloudConnectionEngine initializeAndGet() {
+
+            AuthClient authClient = new HttpAuthClient(
+                    cloudConfiguration.getHost(),
+                    cloudConfiguration.getApiVersion(),
+                    requestBuilderFactory);
+
+            AuthManager authManager = new AuthManager(
+                    cloudConfiguration.getApiToken(),
+                    cloudConfiguration.getServiceName(),
+                    cloudConfiguration.getEnvironmentName(),
+                    authClient);
+            AuthResponse authResponse = authManager.authenticate();
+
+            EnvironmentId environmentId = EnvironmentId.fromString(authResponse.getEnvironmentId());
+            ServiceId serviceId = ServiceId.fromString(authResponse.getServiceId());
+            AuditWriter auditWriter = new HtttpAuditWriter(
+                    cloudConfiguration.getHost(),
+                    environmentId,
+                    serviceId,
+                    runnerId,
+                    cloudConfiguration.getApiVersion(),
+                    requestBuilderFactory,
+                    authManager
+            );
+
+            LockServiceClient lockClient = new HttpLockServiceClient(
+                    cloudConfiguration.getHost(),
+                    cloudConfiguration.getApiVersion(),
+                    requestBuilderFactory,
+                    authManager
+            );
+
+            ExecutionPlannerClient executionPlannerClient = new HttpExecutionPlannerClient(
+                    cloudConfiguration.getHost(),
+                    environmentId,
+                    serviceId,
+                    runnerId,
+                    cloudConfiguration.getApiVersion(),
+                    requestBuilderFactory,
+                    authManager
+            );
+
+            ExecutionPlanner executionPlanner = new CloudExecutionPlanner(
+                    runnerId,
+                    executionPlannerClient,
+                    coreConfiguration,
+                    new CloudLockService(lockClient),
+                    transactioner,
+                    TimeService.getDefault()
+            );
+            if (transactioner != null) {
+                transactioner.initialize();
+            }
+
+            return new CloudConnectionEngine(
+                    auditWriter,
+                    executionPlanner,
+                    transactioner
+            );
+        }
+
+        public Runnable getCloser() {
+            return () -> {
+                if (requestBuilderFactory != null) {
+                    try {
+                        requestBuilderFactory.close();
+                    } catch (IOException ex) {
+                        logger.warn("Error closing request builder factory", ex);
+                    }
+                }
+                if (transactioner != null) {
+                    try {
+                        transactioner.close();
+                    } catch (Exception ex) {
+                        logger.warn("Error closing transactioner", ex);
+
+                    }
+                }
+            };
+        }
+    }
 
 }

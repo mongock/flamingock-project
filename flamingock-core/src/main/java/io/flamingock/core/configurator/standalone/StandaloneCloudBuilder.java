@@ -21,8 +21,6 @@ import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.cloud.CloudConnectionEngine;
-import io.flamingock.core.cloud.CloudConnectionEngineFactory;
-import io.flamingock.core.cloud.CloudConnectionEngineCloser;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
@@ -79,33 +77,31 @@ public class StandaloneCloudBuilder
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
 
-        processSystemModules();
-
         Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
-        CloudTransactioner transactionWrapper = getCloudTransactioner().orElse(null);
 
-        CloudConnectionEngineFactory cloudEngineFactory = new CloudConnectionEngineFactory(
+        CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
+
+        CloudConnectionEngine.Factory engineFactory = CloudConnectionEngine.newFactory(
+                runnerId,
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 cloudConfiguratorDelegate.getCloudConfiguration(),
-                transactionWrapper,
+                transactioner,
                 requestBuilderFactory
         );
+        CloudConnectionEngine cloudEngine = engineFactory.initializeAndGet();
 
-        CloudConnectionEngine cloudEngine = cloudEngineFactory.buildAndInitialize(runnerId);
-
-        CloudConnectionEngineCloser closer = new CloudConnectionEngineCloser(requestBuilderFactory, transactionWrapper);
         registerTemplates();
         return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(),
                 cloudEngine.getAuditWriter(),
-                transactionWrapper,
+                transactioner,
                 cloudEngine.getExecutionPlanner(),
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
-                closer::close
+                engineFactory.getCloser()
         );
     }
 

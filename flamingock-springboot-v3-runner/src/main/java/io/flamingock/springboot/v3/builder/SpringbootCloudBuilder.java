@@ -18,19 +18,16 @@ package io.flamingock.springboot.v3.builder;
 
 import flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
+import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.cloud.CloudConnectionEngine;
-import io.flamingock.core.cloud.CloudConnectionEngineCloser;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.cloud.CloudConnectionEngineFactory;
-import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -79,16 +76,14 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
         Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
         CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
 
-        CloudConnectionEngineFactory cloudEngineFactory = new CloudConnectionEngineFactory(
+        CloudConnectionEngine.Factory engineFactory = CloudConnectionEngine.newFactory(
+                runnerId,
                 getCoreConfiguration(),
                 cloudConfiguratorDelegate.getCloudConfiguration(),
                 transactioner,
                 requestBuilderFactory
         );
-
-        CloudConnectionEngine cloudEngine = cloudEngineFactory.buildAndInitialize(runnerId);
-
-        CloudConnectionEngineCloser closer = new CloudConnectionEngineCloser(requestBuilderFactory, transactioner);
+        CloudConnectionEngine cloudEngine = engineFactory.initializeAndGet();
 
         return PipelineRunnerCreator.create(
                 runnerId,
@@ -100,7 +95,7 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
-                closer::close
+                engineFactory.getCloser()
         );
     }
 
