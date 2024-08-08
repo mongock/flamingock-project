@@ -31,7 +31,6 @@ import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
 import io.flamingock.springboot.v3.configurator.SpringbootConfiguration;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +70,7 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
 
-        return PipelineRunnerCreator.create(
+        return PipelineRunnerCreator.createWithCloser(
                 runnerId,
                 buildPipeline(activeProfiles),
                 connectionEngine.getAuditor(),
@@ -80,8 +79,7 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
-                connectionEngine::close
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }
 

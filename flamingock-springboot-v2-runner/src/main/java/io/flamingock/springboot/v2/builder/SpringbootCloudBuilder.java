@@ -18,6 +18,9 @@ package io.flamingock.springboot.v2.builder;
 
 import flamingock.core.api.CloudSystemModule;
 import flamingock.core.api.SystemModule;
+import io.flamingock.commons.utils.JsonObjectMapper;
+import io.flamingock.commons.utils.http.Http;
+import io.flamingock.core.cloud.CloudConnectionEngineCloser;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
@@ -32,6 +35,7 @@ import io.flamingock.springboot.v2.SpringDependencyContext;
 import io.flamingock.springboot.v2.SpringRunnerBuilder;
 import io.flamingock.springboot.v2.SpringUtil;
 import io.flamingock.springboot.v2.configurator.SpringbootConfiguration;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,24 +74,31 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
 
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
+
+        Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
+        CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
+
         CloudConnectionEngine cloudEngine = ConnectionEngine.initializeAndGetCloud(
                 runnerId,
                 getCoreConfiguration(),
                 cloudConfiguratorDelegate.getCloudConfiguration(),
-                getCloudTransactioner().orElse(null)
+                transactioner,
+                requestBuilderFactory
         );
+
+        CloudConnectionEngineCloser closer = new CloudConnectionEngineCloser(requestBuilderFactory, transactioner);
 
         return PipelineRunnerCreator.create(
                 runnerId,
                 buildPipeline(activeProfiles),
                 cloudEngine.getAuditWriter(),
-                cloudEngine.getTransactionWrapper().orElse(null),
+                transactioner,
                 cloudEngine.getExecutionPlanner(),
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
-                cloudEngine::close
+                closer::close
         );
     }
 

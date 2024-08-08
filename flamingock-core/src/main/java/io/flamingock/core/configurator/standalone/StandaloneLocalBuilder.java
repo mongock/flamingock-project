@@ -17,8 +17,7 @@
 package io.flamingock.core.configurator.standalone;
 
 import flamingock.core.api.LocalSystemModule;
-import flamingock.core.api.SystemModule;
-import io.flamingock.core.configurator.core.CoreConfigurable;
+import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalConfigurable;
@@ -30,9 +29,7 @@ import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +80,7 @@ public class StandaloneLocalBuilder
                 localConfiguratorDelegate.getLocalConfiguration()
         );
         registerTemplates();
-        return PipelineRunnerCreator.create(
+        return PipelineRunnerCreator.createWithCloser(
                 runnerId,
                 buildPipeline(),
                 connectionEngine.getAuditor(),
@@ -92,8 +89,7 @@ public class StandaloneLocalBuilder
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(),
                 getDependencyContext(),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
-                connectionEngine::close
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }
 

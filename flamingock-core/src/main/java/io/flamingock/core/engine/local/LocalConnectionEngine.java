@@ -16,14 +16,14 @@
 
 package io.flamingock.core.engine.local;
 
+import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.engine.ConnectionEngine;
 
 public interface LocalConnectionEngine extends ConnectionEngine {
 
+    void initialize(RunnerId runnerId);
+
     Auditor getAuditor();
 
-    @Override
-    default void close() {
-    }
 
 }

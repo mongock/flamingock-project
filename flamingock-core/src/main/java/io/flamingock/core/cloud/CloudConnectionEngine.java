@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class CloudConnectionEngine implements ConnectionEngine {
-    private static final Logger logger = LoggerFactory.getLogger(CloudConnectionEngine.class);
 
     private final CoreConfigurable coreConfiguration;
 
@@ -58,6 +57,7 @@ public class CloudConnectionEngine implements ConnectionEngine {
     private AuditWriter auditWriter;
 
     private ExecutionPlanner executionPlanner;
+
 
 
     public CloudConnectionEngine(CoreConfigurable coreConfiguration,
@@ -74,8 +74,6 @@ public class CloudConnectionEngine implements ConnectionEngine {
         return auditWriter;
     }
 
-
-    @Override
     public void initialize(RunnerId runnerId) {
 
         AuthClient authClient = new HttpAuthClient(
@@ -142,15 +140,4 @@ public class CloudConnectionEngine implements ConnectionEngine {
         return Optional.ofNullable(cloudTransactioner);
     }
 
-    @Override
-    public void close() {
-        if (requestBuilderFactory != null) {
-            try {
-                requestBuilderFactory.close();
-            } catch (IOException ex) {
-              logger.warn("Error closing request builder factory", ex);
-            }
-        }
-        getTransactionWrapper().ifPresent(CloudTransactioner::close);
-    }
 }
