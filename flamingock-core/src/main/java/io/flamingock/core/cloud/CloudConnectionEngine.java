@@ -16,118 +16,38 @@
 
 package io.flamingock.core.cloud;
 
-import io.flamingock.core.cloud.audit.HtttpAuditWriter;
-import io.flamingock.core.cloud.auth.AuthClient;
-import io.flamingock.core.cloud.auth.AuthManager;
-import io.flamingock.core.cloud.auth.HttpAuthClient;
-import io.flamingock.core.cloud.api.auth.AuthResponse;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
-import io.flamingock.core.configurator.cloud.CloudConfigurable;
-import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.commons.utils.id.EnvironmentId;
-import io.flamingock.commons.utils.id.ServiceId;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
-import io.flamingock.core.cloud.lock.CloudLockService;
-import io.flamingock.core.cloud.lock.client.HttpLockServiceClient;
-import io.flamingock.core.cloud.lock.client.LockServiceClient;
-import io.flamingock.core.cloud.planner.CloudExecutionPlanner;
-import io.flamingock.core.cloud.planner.client.ExecutionPlannerClient;
-import io.flamingock.core.cloud.planner.client.HttpExecutionPlannerClient;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
-import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.commons.utils.TimeService;
-import io.flamingock.commons.utils.http.Http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public class CloudConnectionEngine implements ConnectionEngine {
+    private static final Logger logger = LoggerFactory.getLogger(CloudConnectionEngine.class);
 
-    private final CoreConfigurable coreConfiguration;
 
-    private final CloudConfigurable cloudConfiguration;
-
-    private final Http.RequestBuilderFactory requestBuilderFactory;
 
     private final CloudTransactioner cloudTransactioner;
 
-    private AuditWriter auditWriter;
+    private final AuditWriter auditWriter;
 
-    private ExecutionPlanner executionPlanner;
+    private final ExecutionPlanner executionPlanner;
 
 
 
-    public CloudConnectionEngine(CoreConfigurable coreConfiguration,
-                                 CloudConfigurable cloudConfiguration,
-                                 Http.RequestBuilderFactory requestBuilderFactory,
+    public CloudConnectionEngine(AuditWriter auditWriter,
+                                 ExecutionPlanner executionPlanner,
                                  CloudTransactioner cloudTransactioner) {
-        this.coreConfiguration = coreConfiguration;
-        this.cloudConfiguration = cloudConfiguration;
-        this.requestBuilderFactory = requestBuilderFactory;
+        this.auditWriter = auditWriter;
+        this.executionPlanner = executionPlanner;
         this.cloudTransactioner = cloudTransactioner;
     }
 
     public AuditWriter getAuditWriter() {
         return auditWriter;
-    }
-
-    public void initialize(RunnerId runnerId) {
-
-        AuthClient authClient = new HttpAuthClient(
-                cloudConfiguration.getHost(),
-                cloudConfiguration.getApiVersion(),
-                requestBuilderFactory);
-
-        AuthManager authManager = new AuthManager(
-                cloudConfiguration.getApiToken(),
-                cloudConfiguration.getServiceName(),
-                cloudConfiguration.getEnvironmentName(),
-                authClient);
-        AuthResponse authResponse = authManager.authenticate();
-
-        EnvironmentId environmentId = EnvironmentId.fromString(authResponse.getEnvironmentId());
-        ServiceId serviceId = ServiceId.fromString(authResponse.getServiceId());
-        auditWriter = new HtttpAuditWriter(
-                cloudConfiguration.getHost(),
-                environmentId,
-                serviceId,
-                runnerId,
-                cloudConfiguration.getApiVersion(),
-                requestBuilderFactory,
-                authManager
-        );
-
-        LockServiceClient lockClient = new HttpLockServiceClient(
-                cloudConfiguration.getHost(),
-                cloudConfiguration.getApiVersion(),
-                requestBuilderFactory,
-                authManager
-        );
-
-        ExecutionPlannerClient executionPlannerClient = new HttpExecutionPlannerClient(
-                cloudConfiguration.getHost(),
-                environmentId,
-                serviceId,
-                runnerId,
-                cloudConfiguration.getApiVersion(),
-                requestBuilderFactory,
-                authManager
-        );
-
-        executionPlanner = new CloudExecutionPlanner(
-                runnerId,
-                executionPlannerClient,
-                coreConfiguration,
-                new CloudLockService(lockClient),
-                cloudTransactioner,
-                TimeService.getDefault()
-        );
-        getTransactionWrapper().ifPresent(CloudTransactioner::initialize);
-
-
     }
 
     @Override
@@ -139,5 +59,6 @@ public class CloudConnectionEngine implements ConnectionEngine {
     public Optional<CloudTransactioner> getTransactionWrapper() {
         return Optional.ofNullable(cloudTransactioner);
     }
+
 
 }

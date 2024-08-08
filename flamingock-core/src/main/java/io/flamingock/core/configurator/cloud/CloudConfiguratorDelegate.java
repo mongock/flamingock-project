@@ -17,15 +17,7 @@
 package io.flamingock.core.configurator.cloud;
 
 import flamingock.core.api.CloudSystemModule;
-import io.flamingock.commons.utils.JsonObjectMapper;
-import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.commons.utils.http.Http;
-import io.flamingock.core.cloud.CloudConnectionEngine;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
-import io.flamingock.core.configurator.core.CoreConfigurable;
-import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;

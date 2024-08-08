@@ -19,13 +19,14 @@ package io.flamingock.springboot.v3.builder;
 import flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.http.Http;
+import io.flamingock.core.cloud.CloudConnectionEngine;
 import io.flamingock.core.cloud.CloudConnectionEngineCloser;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.cloud.CloudConnectionEngine;
+import io.flamingock.core.cloud.CloudConnectionEngineFactory;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
@@ -78,13 +79,14 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
         Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
         CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
 
-        CloudConnectionEngine cloudEngine = ConnectionEngine.initializeAndGetCloud(
-                runnerId,
+        CloudConnectionEngineFactory cloudEngineFactory = new CloudConnectionEngineFactory(
                 getCoreConfiguration(),
                 cloudConfiguratorDelegate.getCloudConfiguration(),
                 transactioner,
                 requestBuilderFactory
         );
+
+        CloudConnectionEngine cloudEngine = cloudEngineFactory.buildAndInitialize(runnerId);
 
         CloudConnectionEngineCloser closer = new CloudConnectionEngineCloser(requestBuilderFactory, transactioner);
 

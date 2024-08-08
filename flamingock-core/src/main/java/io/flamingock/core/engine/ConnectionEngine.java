@@ -18,7 +18,7 @@ package io.flamingock.core.engine;
 
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
-import io.flamingock.core.cloud.CloudConnectionEngine;
+import io.flamingock.core.cloud.CloudConnectionEngineFactory;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurable;
@@ -37,18 +37,18 @@ public interface ConnectionEngine {
     Optional<? extends TransactionWrapper> getTransactionWrapper();
 
 
-    static CloudConnectionEngine initializeAndGetCloud(RunnerId runnerId,
-                                                       CoreConfigurable coreConfiguration,
-                                                       CloudConfigurable cloudConfiguration,
-                                                       CloudTransactioner transactioner,
-                                                       Http.RequestBuilderFactory requestBuilderFactory) {
-        CloudConnectionEngine connectionEngine = new CloudConnectionEngine(
+    static CloudConnectionEngineFactory initializeAndGetCloud(RunnerId runnerId,
+                                                              CoreConfigurable coreConfiguration,
+                                                              CloudConfigurable cloudConfiguration,
+                                                              CloudTransactioner transactioner,
+                                                              Http.RequestBuilderFactory requestBuilderFactory) {
+        CloudConnectionEngineFactory connectionEngine = new CloudConnectionEngineFactory(
                 coreConfiguration,
                 cloudConfiguration,
-                requestBuilderFactory,
-                transactioner
+                transactioner,
+                requestBuilderFactory
         );
-        connectionEngine.initialize(runnerId);
+        connectionEngine.buildAndInitialize(runnerId);
         return connectionEngine;
     }
 
