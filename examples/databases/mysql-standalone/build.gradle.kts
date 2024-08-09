@@ -12,6 +12,8 @@ dependencies {
     implementation("com.mysql:mysql-connector-j:8.2.0")
     implementation(project(":templates:sql-template"))
 
+    implementation(project(":internal:legacy-importer-mongodb"))
+
     implementation("org.slf4j:slf4j-simple:2.0.6")
 
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
