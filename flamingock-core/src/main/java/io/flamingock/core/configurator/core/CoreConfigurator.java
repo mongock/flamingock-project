@@ -17,15 +17,21 @@
 package io.flamingock.core.configurator.core;
 
 
+import flamingock.core.api.CloudSystemModule;
 import flamingock.core.api.SystemModule;
+import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
+import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.template.TemplateModule;
 
 import java.util.Map;
 
-public interface CoreConfigurator<HOLDER> {
+public interface CoreConfigurator<
+        HOLDER,
+        SYSTEM_MODULE extends SystemModule,
+        SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>> {
 
     CoreConfigurable getCoreConfiguration();
 
@@ -89,5 +95,9 @@ public interface CoreConfigurator<HOLDER> {
     String getDefaultAuthor();
 
     TransactionStrategy getTransactionStrategy();
+
+
+    HOLDER addSystemModule(SYSTEM_MODULE systemModule);
+    SYSTEM_MODULE_MANAGER getSystemModuleManager();
 
 }

@@ -16,14 +16,13 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import flamingock.core.api.Dependency;
-import io.flamingock.commons.utils.id.EnvironmentId;
-import io.flamingock.commons.utils.id.ServiceId;
+import flamingock.core.api.SystemModule;
+import io.flamingock.core.configurator.SystemModuleManager;
+import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfigurator;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
-import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.IPipelineCompletedEvent;
 import io.flamingock.core.event.model.IPipelineFailedEvent;
@@ -41,21 +40,21 @@ import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-abstract class AbstractStandaloneBuilder<HOLDER>
+abstract class AbstractStandaloneBuilder<
+        HOLDER,
+        SYSTEM_MODULE extends SystemModule,
+        SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>>
         implements
-        CoreConfigurator<HOLDER>,
+        CoreConfigurator<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER>,
         StandaloneConfigurator<HOLDER>,
         RunnerBuilder {
 
-    abstract protected CoreConfiguratorDelegate<HOLDER> coreConfiguratorDelegate();
+    abstract protected CoreConfiguratorDelegate<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER> coreConfiguratorDelegate();
 
     abstract protected StandaloneConfiguratorDelegate<HOLDER> standaloneConfiguratorDelegate();
-
-
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -254,6 +253,15 @@ abstract class AbstractStandaloneBuilder<HOLDER>
         return coreConfiguratorDelegate().getTransactionStrategy();
     }
 
+    @Override
+    public HOLDER addSystemModule(SYSTEM_MODULE systemModule) {
+        return coreConfiguratorDelegate().addSystemModule(systemModule);
+    }
+
+    @Override
+    public SYSTEM_MODULE_MANAGER getSystemModuleManager() {
+        return coreConfiguratorDelegate().getSystemModuleManager();
+    }
     ///////////////////////////////////////////////////////////////////////////////////
     //  STANDALONE
     ///////////////////////////////////////////////////////////////////////////////////

@@ -21,6 +21,7 @@ import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
-public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLocalBuilder>
+public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLocalBuilder, LocalSystemModule, LocalSystemModuleManager>
         implements
         LocalConfigurator<SpringbootLocalBuilder>,
         SpringRunnerBuilder {
@@ -55,8 +56,9 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
 
     SpringbootLocalBuilder(CoreConfiguration coreConfiguration,
                            SpringbootConfiguration springbootConfiguration,
-                           LocalConfigurable localConfiguration) {
-        super(coreConfiguration, springbootConfiguration);
+                           LocalConfigurable localConfiguration,
+                           LocalSystemModuleManager systemModuleManager) {
+        super(coreConfiguration, springbootConfiguration, systemModuleManager);
         this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(localConfiguration, () -> this);
     }
 
@@ -69,34 +71,35 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
 
+        CoreConfigurable coreConfiguration = getCoreConfiguration();
         LocalConnectionEngine engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
-                getCoreConfiguration(),
+                coreConfiguration,
                 localConfiguratorDelegate.getLocalConfiguration()
         );
 
 
-        localConfiguratorDelegate.getSystemModuleManager().initialize();
+        getSystemModuleManager().initialize();
 
-        localConfiguratorDelegate.getSystemModuleManager()
+        getSystemModuleManager()
                 .getDependencies()
                 .forEach(this::addDependency);
 
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
         Pipeline pipeline = buildPipeline(activeProfiles,
-                localConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
-                getCoreConfiguration().getStages(),
-                localConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter());
+                getSystemModuleManager().getSortedSystemStagesBefore(),
+                coreConfiguration.getStages(),
+                getSystemModuleManager().getSortedSystemStagesAfter());
 
         return PipelineRunnerCreator.create(
                 runnerId,
                 pipeline,
                 engine,
-                getCoreConfiguration(),
+                coreConfiguration,
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
+                coreConfiguration.isThrowExceptionIfCannotObtainLock()
         );
 
     }
@@ -123,16 +126,6 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     @Override
     public LocalConfigurable getLocalConfiguration() {
         return localConfiguratorDelegate.getLocalConfiguration();
-    }
-
-    @Override
-    public SpringbootLocalBuilder addSystemModule(LocalSystemModule systemModule) {
-        return localConfiguratorDelegate.addSystemModule(systemModule);
-    }
-
-    @Override
-    public LocalSystemModuleManager getSystemModuleManager() {
-        return localConfiguratorDelegate.getSystemModuleManager();
     }
 
 }

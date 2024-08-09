@@ -57,15 +57,5 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
         return LocalConfiguration;
     }
 
-    @Override
-    public HOLDER addSystemModule(LocalSystemModule systemModule) {
-        systemModules.add(systemModule);
-        return holderSupplier.get();
-    }
-
-    @Override
-    public LocalSystemModuleManager getSystemModuleManager() {
-        return systemModules;
-    }
 
 }

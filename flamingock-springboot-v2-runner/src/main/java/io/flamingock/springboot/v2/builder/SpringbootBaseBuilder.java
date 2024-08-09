@@ -17,6 +17,8 @@
 package io.flamingock.springboot.v2.builder;
 
 import flamingock.core.api.Dependency;
+import flamingock.core.api.SystemModule;
+import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
@@ -50,8 +52,6 @@ import io.flamingock.springboot.v2.event.SpringStageIgnoredEvent;
 import io.flamingock.springboot.v2.event.SpringStageStartedEvent;
 import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -59,21 +59,24 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.util.Collections;
 import java.util.Map;
 
-public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder<HOLDER>>
+public abstract class SpringbootBaseBuilder<
+        HOLDER extends SpringbootBaseBuilder<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER>,
+        SYSTEM_MODULE extends SystemModule,
+        SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>>
         implements
-        CoreConfigurator<HOLDER>,
+        CoreConfigurator<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER>,
         SpringbootConfigurator<HOLDER>,
         SpringRunnerBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(SpringbootBaseBuilder.class);
 
-    private final CoreConfiguratorDelegate<HOLDER> coreConfiguratorDelegate;
+    private final CoreConfiguratorDelegate<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER> coreConfiguratorDelegate;
 
     private final SpringbootConfiguratorDelegate<HOLDER> springbootConfiguratorDelegate;
 
     protected SpringbootBaseBuilder(CoreConfiguration coreConfiguration,
-                                    SpringbootConfiguration springbootConfiguration) {
-        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, this::getSelf);
+                                    SpringbootConfiguration springbootConfiguration,
+                                    SYSTEM_MODULE_MANAGER systemModuleManager) {
+        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, this::getSelf, systemModuleManager);
         this.springbootConfiguratorDelegate = new SpringbootConfiguratorDelegate<>(springbootConfiguration, this::getSelf);
     }
 
@@ -272,6 +275,16 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
     @Override
     public TransactionStrategy getTransactionStrategy() {
         return coreConfiguratorDelegate.getTransactionStrategy();
+    }
+
+    @Override
+    public HOLDER addSystemModule(SYSTEM_MODULE systemModule) {
+        return coreConfiguratorDelegate.addSystemModule(systemModule);
+    }
+
+    @Override
+    public SYSTEM_MODULE_MANAGER getSystemModuleManager() {
+        return coreConfiguratorDelegate.getSystemModuleManager();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

@@ -40,11 +40,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class StandaloneLocalBuilder
-        extends AbstractStandaloneBuilder<StandaloneLocalBuilder>
+        extends AbstractStandaloneBuilder<StandaloneLocalBuilder, LocalSystemModule, LocalSystemModuleManager>
         implements LocalConfigurator<StandaloneLocalBuilder> {
 
     private static final Logger logger = LoggerFactory.getLogger(StandaloneLocalBuilder.class);
-    private final CoreConfiguratorDelegate<StandaloneLocalBuilder> coreConfiguratorDelegate;
+    private final CoreConfiguratorDelegate<StandaloneLocalBuilder, LocalSystemModule, LocalSystemModuleManager> coreConfiguratorDelegate;
 
     private final StandaloneConfiguratorDelegate<StandaloneLocalBuilder> standaloneConfiguratorDelegate;
 
@@ -53,8 +53,9 @@ public class StandaloneLocalBuilder
 
     StandaloneLocalBuilder(CoreConfiguration coreConfiguration,
                            LocalConfiguration communityConfiguration,
-                           DependencyInjectableContext dependencyInjectableContext) {
-        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
+                           DependencyInjectableContext dependencyInjectableContext,
+                           LocalSystemModuleManager systemModuleManager) {
+        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this, systemModuleManager);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
         this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
 
@@ -66,7 +67,7 @@ public class StandaloneLocalBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected CoreConfiguratorDelegate<StandaloneLocalBuilder> coreConfiguratorDelegate() {
+    protected CoreConfiguratorDelegate<StandaloneLocalBuilder, LocalSystemModule, LocalSystemModuleManager> coreConfiguratorDelegate() {
         return coreConfiguratorDelegate;
     }
 
@@ -87,9 +88,9 @@ public class StandaloneLocalBuilder
         );
 
 
-        localConfiguratorDelegate.getSystemModuleManager().initialize();
+        coreConfiguratorDelegate.getSystemModuleManager().initialize();
 
-        localConfiguratorDelegate.getSystemModuleManager()
+        coreConfiguratorDelegate.getSystemModuleManager()
                 .getDependencies()
                 .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
 
@@ -98,9 +99,9 @@ public class StandaloneLocalBuilder
         CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
 
         Pipeline pipeline = buildPipeline(
-                localConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
+                coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
                 coreConfiguration.getStages(),
-                localConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
+                coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
         );
 
         return PipelineRunnerCreator.create(
@@ -134,14 +135,4 @@ public class StandaloneLocalBuilder
         return localConfiguratorDelegate.getLocalConfiguration();
     }
 
-
-    @Override
-    public StandaloneLocalBuilder addSystemModule(LocalSystemModule systemModule) {
-        return localConfiguratorDelegate.addSystemModule(systemModule);
-    }
-
-    @Override
-    public LocalSystemModuleManager getSystemModuleManager() {
-        return localConfiguratorDelegate.getSystemModuleManager();
-    }
 }

@@ -21,6 +21,7 @@ import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
+import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
@@ -40,11 +41,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class StandaloneCloudBuilder
-        extends AbstractStandaloneBuilder<StandaloneCloudBuilder>
+        extends AbstractStandaloneBuilder<StandaloneCloudBuilder, CloudSystemModule, CloudSystemModuleManager>
         implements CloudConfigurator<StandaloneCloudBuilder> {
     private static final Logger logger = LoggerFactory.getLogger(StandaloneCloudBuilder.class);
 
-    private final CoreConfiguratorDelegate<StandaloneCloudBuilder> coreConfiguratorDelegate;
+    private final CoreConfiguratorDelegate<StandaloneCloudBuilder, CloudSystemModule, CloudSystemModuleManager> coreConfiguratorDelegate;
 
     private final StandaloneConfiguratorDelegate<StandaloneCloudBuilder> standaloneConfiguratorDelegate;
 
@@ -53,8 +54,9 @@ public class StandaloneCloudBuilder
 
     StandaloneCloudBuilder(CoreConfiguration coreConfiguration,
                            CloudConfiguration cloudConfiguration,
-                           DependencyInjectableContext dependencyInjectableContext) {
-        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
+                           DependencyInjectableContext dependencyInjectableContext,
+                           CloudSystemModuleManager systemModuleManager) {
+        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this, systemModuleManager);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
         this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, () -> this);
 
@@ -66,7 +68,7 @@ public class StandaloneCloudBuilder
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected CoreConfiguratorDelegate<StandaloneCloudBuilder> coreConfiguratorDelegate() {
+    protected CoreConfiguratorDelegate<StandaloneCloudBuilder, CloudSystemModule, CloudSystemModuleManager> coreConfiguratorDelegate() {
         return coreConfiguratorDelegate;
     }
 
@@ -91,9 +93,9 @@ public class StandaloneCloudBuilder
 
         CloudConnectionEngine engine = engineFactory.initializeAndGet();
 
-        cloudConfiguratorDelegate.getSystemModuleManager().initialize(engine.getEnvironmentId(), engine.getServiceId());
+        coreConfiguratorDelegate.getSystemModuleManager().initialize(engine.getEnvironmentId(), engine.getServiceId());
 
-        cloudConfiguratorDelegate.getSystemModuleManager()
+        coreConfiguratorDelegate.getSystemModuleManager()
                 .getDependencies()
                 .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
 
@@ -102,9 +104,9 @@ public class StandaloneCloudBuilder
         CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
 
         Pipeline pipeline = buildPipeline(
-                cloudConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
+                coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
                 coreConfiguration.getStages(),
-                cloudConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
+                coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
         );
 
         return PipelineRunnerCreator.create(
@@ -148,16 +150,6 @@ public class StandaloneCloudBuilder
     @Override
     public Optional<CloudTransactioner> getCloudTransactioner() {
         return cloudConfiguratorDelegate.getCloudTransactioner();
-    }
-
-    @Override
-    public StandaloneCloudBuilder addSystemModule(CloudSystemModule systemModule) {
-        return cloudConfiguratorDelegate.addSystemModule(systemModule);
-    }
-
-    @Override
-    public CloudSystemModuleManager getSystemModuleManager() {
-        return cloudConfiguratorDelegate.getSystemModuleManager();
     }
 
 }

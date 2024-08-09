@@ -16,7 +16,6 @@
 
 package io.flamingock.core.configurator.cloud;
 
-import flamingock.core.api.CloudSystemModule;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 
 import java.util.Optional;
@@ -29,8 +28,6 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     private final CloudConfigurable cloudConfiguration;
 
     private CloudTransactioner cloudTransactioner;
-
-    private CloudSystemModuleManager cloudSystemModuleManager = new CloudSystemModuleManager();
 
     public CloudConfiguratorDelegate(CloudConfigurable cloudConfiguration,
                                      Supplier<HOLDER> holderSupplier) {
@@ -67,17 +64,6 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     public HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner) {
         this.cloudTransactioner = cloudTransactioner;
         return holderSupplier.get();
-    }
-
-    @Override
-    public HOLDER addSystemModule(CloudSystemModule systemModule) {
-        cloudSystemModuleManager.add(systemModule);
-        return holderSupplier.get();
-    }
-
-    @Override
-    public CloudSystemModuleManager getSystemModuleManager() {
-        return cloudSystemModuleManager;
     }
 
     @Override
