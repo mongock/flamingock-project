@@ -16,8 +16,8 @@
 
 package io.flamingock.core.task.navigation.navigator.beforeExecution_1;
 
-import flamingock.core.api.annotations.ChangeUnit;
-import flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
 import io.utils.TestExecutionTrackerTask;
 
 @ChangeUnit(id = "task-with-before-execution", order = "1")

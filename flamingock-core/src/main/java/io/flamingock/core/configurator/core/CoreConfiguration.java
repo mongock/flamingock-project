@@ -16,7 +16,7 @@
 
 package io.flamingock.core.configurator.core;
 
-import flamingock.core.api.SystemModule;
+import io.flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.pipeline.Stage;
@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.flamingock.commons.utils.CollectionUtil.assignOrEmpty;
 import static io.flamingock.commons.utils.Constants.DEFAULT_LOCK_ACQUIRED_FOR_MILLIS;
 import static io.flamingock.commons.utils.Constants.DEFAULT_MIGRATION_AUTHOR;
 import static io.flamingock.commons.utils.Constants.DEFAULT_QUIT_TRYING_AFTER_MILLIS;

@@ -18,8 +18,8 @@ package io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransac
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import flamingock.core.api.annotations.ChangeUnit;
-import flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
 @ChangeUnit( id="insert-another-document" , order = "3")

@@ -17,7 +17,7 @@
 package io.flamingock.core.cloud;
 
 import io.flamingock.commons.utils.ThreadSleeper;
-import flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
 import io.flamingock.core.cloud.changes.CloudChange1;
 import io.flamingock.core.cloud.changes.CloudChange2;

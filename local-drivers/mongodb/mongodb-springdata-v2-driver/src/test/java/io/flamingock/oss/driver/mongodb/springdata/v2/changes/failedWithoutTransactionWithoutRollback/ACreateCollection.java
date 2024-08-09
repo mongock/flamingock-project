@@ -18,8 +18,8 @@ package io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTran
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import flamingock.core.api.annotations.ChangeUnit;
-import flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
 
 @ChangeUnit( id="create-collection" , order = "1", transactional = false)
 public class ACreateCollection {

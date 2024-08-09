@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v3.builder;
 
-import flamingock.core.api.CloudSystemModule;
+import io.flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;

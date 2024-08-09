@@ -1,7 +1,7 @@
 package io.flamingock.core.configurator;
 
-import flamingock.core.api.Dependency;
-import flamingock.core.api.SystemModule;
+import io.flamingock.core.api.Dependency;
+import io.flamingock.core.api.SystemModule;
 import io.flamingock.core.pipeline.Stage;
 
 import java.util.ArrayList;

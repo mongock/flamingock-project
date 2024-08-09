@@ -24,7 +24,7 @@ import io.flamingock.core.event.model.IStageCompletedEvent;
 import io.flamingock.core.event.model.IStageFailedEvent;
 import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
-import flamingock.core.api.Dependency;
+import io.flamingock.core.api.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 

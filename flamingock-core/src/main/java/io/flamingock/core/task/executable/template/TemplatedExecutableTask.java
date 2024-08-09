@@ -17,7 +17,7 @@
 package io.flamingock.core.task.executable.template;
 
 import io.flamingock.core.runtime.RuntimeManager;
-import flamingock.core.api.Dependency;
+import io.flamingock.core.api.Dependency;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptor;
 import io.flamingock.core.task.executable.ReflectionExecutableTask;
 import io.flamingock.commons.utils.FileUtil;

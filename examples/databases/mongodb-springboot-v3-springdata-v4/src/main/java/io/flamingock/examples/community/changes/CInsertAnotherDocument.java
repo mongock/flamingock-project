@@ -16,8 +16,8 @@
 
 package io.flamingock.examples.community.changes;
 
-import flamingock.core.api.annotations.ChangeUnit;
-import flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.examples.community.client.Client;
 import io.flamingock.examples.community.client.ClientRepository;
 

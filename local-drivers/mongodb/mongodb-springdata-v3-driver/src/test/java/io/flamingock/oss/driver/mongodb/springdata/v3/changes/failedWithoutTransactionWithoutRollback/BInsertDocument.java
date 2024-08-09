@@ -17,8 +17,8 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.changes.failedWithoutTransactionWithoutRollback;
 
 import com.mongodb.client.MongoCollection;
-import flamingock.core.api.annotations.ChangeUnit;
-import flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 

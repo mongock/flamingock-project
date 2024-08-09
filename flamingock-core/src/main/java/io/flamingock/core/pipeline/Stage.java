@@ -16,8 +16,8 @@
 
 package io.flamingock.core.pipeline;
 
-import flamingock.core.api.annotations.ChangeUnit;
-import flamingock.core.api.annotations.SystemChange;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.SystemChange;
 import io.flamingock.commons.utils.FileUtil;
 import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
@@ -32,10 +32,8 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This class represents the process defined by the user in the builder, yaml, etc.

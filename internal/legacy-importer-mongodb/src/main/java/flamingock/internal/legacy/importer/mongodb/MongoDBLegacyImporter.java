@@ -1,8 +1,7 @@
 package flamingock.internal.legacy.importer.mongodb;
 
-import flamingock.core.api.CloudSystemModule;
-import flamingock.core.api.Dependency;
-import flamingock.core.api.SystemModule;
+import io.flamingock.core.api.CloudSystemModule;
+import io.flamingock.core.api.Dependency;
 import flamingock.internal.legacy.importer.mongodb.changes.MongockLegacyImporterChangeUnit;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;

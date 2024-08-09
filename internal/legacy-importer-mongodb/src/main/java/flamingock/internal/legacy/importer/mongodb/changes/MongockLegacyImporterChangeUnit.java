@@ -1,9 +1,9 @@
 package flamingock.internal.legacy.importer.mongodb.changes;
 
 
-import flamingock.core.api.annotations.ChangeUnit;
-import flamingock.core.api.annotations.Execution;
-import flamingock.core.api.annotations.SystemChange;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.SystemChange;
 import flamingock.internal.legacy.importer.mongodb.MongoDBLegacyImportConfiguration;
 
 @SystemChange

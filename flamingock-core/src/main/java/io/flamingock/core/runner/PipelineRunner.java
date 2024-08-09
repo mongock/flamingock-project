@@ -16,7 +16,7 @@
 
 package io.flamingock.core.runner;
 
-import flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.engine.lock.LockException;

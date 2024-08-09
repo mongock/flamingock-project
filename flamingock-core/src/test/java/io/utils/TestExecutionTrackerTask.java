@@ -1,9 +1,9 @@
 package io.utils;
 
-import flamingock.core.api.annotations.BeforeExecution;
-import flamingock.core.api.annotations.Execution;
-import flamingock.core.api.annotations.RollbackBeforeExecution;
-import flamingock.core.api.annotations.RollbackExecution;
+import io.flamingock.core.api.annotations.BeforeExecution;
+import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.RollbackBeforeExecution;
+import io.flamingock.core.api.annotations.RollbackExecution;
 
 public class TestExecutionTrackerTask {
 

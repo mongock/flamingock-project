@@ -16,7 +16,6 @@
 
 package io.flamingock.core.configurator.cloud;
 
-import flamingock.core.api.CloudSystemModule;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 
 import java.util.Optional;

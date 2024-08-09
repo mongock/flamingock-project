@@ -17,8 +17,8 @@
 package io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction;
 
 import com.mongodb.client.MongoDatabase;
-import flamingock.core.api.annotations.ChangeUnit;
-import flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
 
 @ChangeUnit( id="create-collection" , order = "1", transactional = false)
 public class ACreateCollection {

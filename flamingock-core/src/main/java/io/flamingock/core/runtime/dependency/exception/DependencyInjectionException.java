@@ -17,7 +17,7 @@
 package io.flamingock.core.runtime.dependency.exception;
 
 
-import flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.exception.FlamingockException;
 
 public class DependencyInjectionException extends FlamingockException {
 

@@ -16,12 +16,11 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import flamingock.core.api.CloudSystemModule;
+import io.flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
-import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;

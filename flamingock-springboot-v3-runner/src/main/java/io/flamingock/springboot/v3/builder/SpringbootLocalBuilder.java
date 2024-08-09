@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v3.builder;
 
-import flamingock.core.api.LocalSystemModule;
+import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;

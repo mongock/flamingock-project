@@ -1,4 +1,4 @@
-package flamingock.core.api;
+package io.flamingock.core.api;
 
 
 import java.util.Collection;

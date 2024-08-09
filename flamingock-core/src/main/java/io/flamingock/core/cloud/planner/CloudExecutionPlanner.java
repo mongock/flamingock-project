@@ -20,7 +20,7 @@ import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.StopWatch;
 import io.flamingock.commons.utils.ThreadSleeper;
 import io.flamingock.commons.utils.TimeService;
-import flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.api.planner.ExecutionPlanRequest;
 import io.flamingock.core.cloud.api.planner.ExecutionPlanResponse;
 import io.flamingock.core.cloud.api.transaction.OngoingStatus;

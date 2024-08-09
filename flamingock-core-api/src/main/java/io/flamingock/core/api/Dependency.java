@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package flamingock.core.api;
+package io.flamingock.core.api;
 
 
-import flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.exception.FlamingockException;
 
 import java.util.Objects;
 

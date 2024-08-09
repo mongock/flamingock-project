@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package flamingock.core.api.annotations;
+package io.flamingock.core.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

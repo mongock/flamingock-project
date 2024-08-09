@@ -16,19 +16,13 @@
 
 package io.flamingock.core.pipeline;
 
-import flamingock.core.api.SystemModule;
 import io.flamingock.core.task.filter.TaskFilter;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Pipeline {
 

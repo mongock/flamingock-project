@@ -17,11 +17,11 @@
 package io.flamingock.core.runtime;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
-import flamingock.core.api.annotations.ChangeUnitConstructor;
-import flamingock.core.api.annotations.FlamingockConstructor;
-import flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.annotations.ChangeUnitConstructor;
+import io.flamingock.core.api.annotations.FlamingockConstructor;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.engine.lock.Lock;
-import flamingock.core.api.Dependency;
+import io.flamingock.core.api.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.runtime.dependency.exception.DependencyInjectionException;

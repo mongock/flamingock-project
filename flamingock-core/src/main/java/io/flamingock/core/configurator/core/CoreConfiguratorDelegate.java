@@ -17,7 +17,7 @@
 package io.flamingock.core.configurator.core;
 
 
-import flamingock.core.api.SystemModule;
+import io.flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;

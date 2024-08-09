@@ -16,7 +16,7 @@
 
 package io.flamingock.core.runtime.dependency;
 
-import flamingock.core.api.Dependency;
+import io.flamingock.core.api.Dependency;
 
 import java.util.LinkedHashSet;
 import java.util.Optional;
