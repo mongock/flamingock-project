@@ -76,7 +76,7 @@ public class CloudConfiguratorDelegate<HOLDER> implements CloudConfigurator<HOLD
     }
 
     @Override
-    public CloudSystemModuleManager getCloudSystemModuleManager() {
+    public CloudSystemModuleManager getSystemModuleManager() {
         return cloudSystemModuleManager;
     }
 

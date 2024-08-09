@@ -17,18 +17,25 @@
 package io.flamingock.core.configurator.standalone;
 
 import flamingock.core.api.LocalSystemModule;
+import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.http.Http;
+import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
+import io.flamingock.core.configurator.local.LocalSystemModuleManager;
+import io.flamingock.core.engine.CloudConnectionEngine;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
+import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,17 +79,35 @@ public class StandaloneLocalBuilder
     public Runner build() {
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        LocalConnectionEngine connectionEngine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
+
+        LocalConnectionEngine engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 localConfiguratorDelegate.getLocalConfiguration()
         );
+
+
+        localConfiguratorDelegate.getSystemModuleManager().initialize();
+
+        localConfiguratorDelegate.getSystemModuleManager()
+                .getDependencies()
+                .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
+
         registerTemplates();
+
+        CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
+
+        Pipeline pipeline = buildPipeline(
+                localConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
+                coreConfiguration.getStages(),
+                localConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
+        );
+
         return PipelineRunnerCreator.create(
                 runnerId,
-                buildPipeline(),
-                connectionEngine,
-                coreConfiguratorDelegate.getCoreConfiguration(),
+                pipeline,
+                engine,
+                coreConfiguration,
                 buildEventPublisher(),
                 getDependencyContext(),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
@@ -116,7 +141,7 @@ public class StandaloneLocalBuilder
     }
 
     @Override
-    public Iterable<LocalSystemModule> getSystemModules() {
-        return localConfiguratorDelegate.getSystemModules();
+    public LocalSystemModuleManager getSystemModuleManager() {
+        return localConfiguratorDelegate.getSystemModuleManager();
     }
 }

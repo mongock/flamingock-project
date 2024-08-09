@@ -91,9 +91,9 @@ public class StandaloneCloudBuilder
 
         CloudConnectionEngine engine = engineFactory.initializeAndGet();
 
-        cloudConfiguratorDelegate.getCloudSystemModuleManager().initialize(engine.getEnvironmentId(), engine.getServiceId());
+        cloudConfiguratorDelegate.getSystemModuleManager().initialize(engine.getEnvironmentId(), engine.getServiceId());
 
-        cloudConfiguratorDelegate.getCloudSystemModuleManager()
+        cloudConfiguratorDelegate.getSystemModuleManager()
                 .getDependencies()
                 .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
 
@@ -102,9 +102,9 @@ public class StandaloneCloudBuilder
         CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
 
         Pipeline pipeline = buildPipeline(
-                cloudConfiguratorDelegate.getCloudSystemModuleManager().getSortedSystemStagesBefore(),
+                cloudConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
                 coreConfiguration.getStages(),
-                cloudConfiguratorDelegate.getCloudSystemModuleManager().getSortedSystemStagesAfter()
+                cloudConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
         );
 
         return PipelineRunnerCreator.create(
@@ -118,18 +118,6 @@ public class StandaloneCloudBuilder
                 engineFactory.getCloser()
         );
     }
-
-//    private void processSystemModules(EnvironmentId environmentId, ServiceId serviceId) {
-//        cloudConfiguratorDelegate.getCloudSystemModuleManager().forEach(systemModule -> {
-//            systemModule.initialise(environmentId, serviceId);
-//            Iterable<Dependency> dependencies = systemModule.getDependencies();
-//            dependencies.forEach(dependency -> addDependency(dependency.getName(), dependency.getType(), dependency.getInstance()));
-//
-//            Stage stage = new Stage("");
-//            stage.setClasses(systemModule.getTaskClasses());
-//            addStage(stage);//todo wrong. it's appended to the end. We need at start or indicating the oder
-//        });
-//    }
 
 
     @Override
@@ -168,8 +156,8 @@ public class StandaloneCloudBuilder
     }
 
     @Override
-    public CloudSystemModuleManager getCloudSystemModuleManager() {
-        return cloudConfiguratorDelegate.getCloudSystemModuleManager();
+    public CloudSystemModuleManager getSystemModuleManager() {
+        return cloudConfiguratorDelegate.getSystemModuleManager();
     }
 
 }

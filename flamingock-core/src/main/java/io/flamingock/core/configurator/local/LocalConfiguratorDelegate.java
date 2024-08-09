@@ -32,7 +32,7 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
 
     private ConnectionDriver<?> connectionDriver;
 
-    private List<LocalSystemModule> systemModules = new LinkedList<>();
+    private LocalSystemModuleManager systemModules = new LocalSystemModuleManager();
 
 
     public LocalConfiguratorDelegate(LocalConfigurable communityConfiguration, Supplier<HOLDER> holderSupplier) {
@@ -64,7 +64,8 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
     }
 
     @Override
-    public Iterable<LocalSystemModule> getSystemModules() {
+    public LocalSystemModuleManager getSystemModuleManager() {
         return systemModules;
     }
+
 }

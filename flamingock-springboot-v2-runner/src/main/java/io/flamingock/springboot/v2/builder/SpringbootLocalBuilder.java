@@ -17,19 +17,26 @@
 package io.flamingock.springboot.v2.builder;
 
 import flamingock.core.api.LocalSystemModule;
+import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.http.Http;
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
+import io.flamingock.core.configurator.local.LocalSystemModuleManager;
+import io.flamingock.core.engine.CloudConnectionEngine;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
+import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.springboot.v2.SpringDependencyContext;
 import io.flamingock.springboot.v2.SpringRunnerBuilder;
 import io.flamingock.springboot.v2.SpringUtil;
 import io.flamingock.springboot.v2.configurator.SpringbootConfiguration;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,27 +63,42 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
     ///////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public Runner build() {
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        LocalConnectionEngine connectionEngine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
+
+        LocalConnectionEngine engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
                 getCoreConfiguration(),
                 localConfiguratorDelegate.getLocalConfiguration()
         );
+
+
+        localConfiguratorDelegate.getSystemModuleManager().initialize();
+
+        localConfiguratorDelegate.getSystemModuleManager()
+                .getDependencies()
+                .forEach(this::addDependency);
+
         String[] activeProfiles = SpringUtil.getActiveProfiles(getSpringContext());
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
+        Pipeline pipeline = buildPipeline(activeProfiles,
+                localConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
+                getCoreConfiguration().getStages(),
+                localConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter());
 
         return PipelineRunnerCreator.create(
                 runnerId,
-                buildPipeline(activeProfiles),
-                connectionEngine,
+                pipeline,
+                engine,
                 getCoreConfiguration(),
                 createEventPublisher(),
                 new SpringDependencyContext(getSpringContext()),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
+
     }
 
     @Override
@@ -109,7 +131,8 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     }
 
     @Override
-    public Iterable<LocalSystemModule> getSystemModules() {
-        return localConfiguratorDelegate.getSystemModules();
+    public LocalSystemModuleManager getSystemModuleManager() {
+        return localConfiguratorDelegate.getSystemModuleManager();
     }
+
 }

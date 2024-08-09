@@ -16,6 +16,7 @@
 
 package io.flamingock.springboot.v3.builder;
 
+import flamingock.core.api.Dependency;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurator;
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Collections;
 import java.util.Map;
@@ -95,12 +97,23 @@ public abstract class SpringbootBaseBuilder<HOLDER extends SpringbootBaseBuilder
                 .addListener(IStageFailedEvent.class, e -> getEventPublisher().publishEvent(new SpringStageFailedEvent(this, e)));
     }
 
-    @NotNull
-    final protected Pipeline buildPipeline(String[] activeProfiles) {
+    protected Pipeline buildPipeline(String[] activeProfiles,
+                                     Iterable<Stage> beforeUserStages,
+                                     Iterable<Stage> userStages,
+                                     Iterable<Stage> afterUserStages) {
         return Pipeline.builder()
                 .addFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
-                .addUserStages(coreConfiguratorDelegate.getCoreConfiguration().getStages())
+                .addBeforeUserStages(beforeUserStages)
+                .addUserStages(userStages)
+                .addAfterUserStages(afterUserStages)
                 .build();
+    }
+
+    protected void addDependency(Dependency dependency) {
+        ConfigurableApplicationContext configurableContext = (ConfigurableApplicationContext) getSpringContext();
+        Object beanInstance = dependency.getInstance();
+        String beanName = dependency.isDefaultNamed() ? beanInstance.getClass().getSimpleName() : dependency.getName();
+        configurableContext.getBeanFactory().registerSingleton(beanName, beanInstance);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

@@ -35,6 +35,6 @@ public interface CloudConfigurator<HOLDER> {
     Optional<CloudTransactioner> getCloudTransactioner();
 
     HOLDER addSystemModule(CloudSystemModule systemModule);
-    CloudSystemModuleManager getCloudSystemModuleManager();
+    CloudSystemModuleManager getSystemModuleManager();
 
 }
