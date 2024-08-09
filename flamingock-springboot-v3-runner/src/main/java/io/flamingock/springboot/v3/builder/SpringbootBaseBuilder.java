@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v3.builder;
 
-import io.flamingock.core.api.Dependency;
+import io.flamingock.core.runtime.Dependency;
 import io.flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;

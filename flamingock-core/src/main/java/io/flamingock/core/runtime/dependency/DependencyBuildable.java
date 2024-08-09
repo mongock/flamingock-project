@@ -16,7 +16,7 @@
 
 package io.flamingock.core.runtime.dependency;
 
-import io.flamingock.core.api.Dependency;
+import io.flamingock.core.runtime.Dependency;
 
 import java.util.function.Function;
 

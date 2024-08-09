@@ -1,6 +1,8 @@
 package io.flamingock.core.api;
 
 
+import io.flamingock.core.runtime.Dependency;
+
 import java.util.Collection;
 import java.util.List;
 
