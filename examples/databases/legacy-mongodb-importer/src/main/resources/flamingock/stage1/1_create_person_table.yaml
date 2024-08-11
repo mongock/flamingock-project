@@ -1,9 +1,9 @@
-id: create-clients-table-from-template
-order: 2
+id: create-persons-table-from-template
+order: 1
 templateName: sql-template
 templateConfiguration:
     executionSql: |
-        CREATE TABLE Clients (
+        CREATE TABLE Persons (
             PersonID int,
             LastName varchar(255),
             FirstName varchar(255),
@@ -11,4 +11,4 @@ templateConfiguration:
             City varchar(255)
         )
     rollbackSql: |
-        DROP TABLE IF EXISTS Clients
+        DROP TABLE IF EXISTS Persons
