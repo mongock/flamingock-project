@@ -114,7 +114,6 @@ public class PipelineRunner implements Runner {
             }
 
         } catch (StageExecutionException exception) {
-            logger.info("Process summary\n{}", exception.getSummary().getPretty());
             eventPublisher.publish(new StageFailedEvent(exception));
             eventPublisher.publish(new PipelineFailedEvent(exception));
             throw exception;

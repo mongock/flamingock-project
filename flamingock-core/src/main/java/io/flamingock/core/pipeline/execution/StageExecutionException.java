@@ -25,6 +25,7 @@ public class StageExecutionException extends FlamingockException {
 
 
     public StageExecutionException(StageSummary summary) {
+        super("\n\n" + summary.getPretty() + "\n");
         this.summary = summary;
     }
 
@@ -36,4 +37,6 @@ public class StageExecutionException extends FlamingockException {
     public StageSummary getSummary() {
         return summary;
     }
+
+
 }

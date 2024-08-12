@@ -42,8 +42,8 @@ public class StageExecutor {
     }
 
     public StageExecutor(DependencyContext dependencyContext,
-                          AuditWriter auditWriter,
-                          TransactionWrapper transactionWrapper) {
+                         AuditWriter auditWriter,
+                         TransactionWrapper transactionWrapper) {
         this.dependencyContext = dependencyContext;
         this.auditWriter = auditWriter;
         this.transactionWrapper = transactionWrapper;
@@ -77,6 +77,8 @@ public class StageExecutor {
                         throw new StageExecutionException(summary);
                     });
 
+        } catch (StageExecutionException stageExecutionException) {
+            throw stageExecutionException;
         } catch (Throwable throwable) {
             throw new StageExecutionException(throwable, summary);
         }

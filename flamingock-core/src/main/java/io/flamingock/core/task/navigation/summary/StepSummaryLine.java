@@ -29,12 +29,14 @@ import java.util.Objects;
 public abstract class StepSummaryLine implements SummaryLine {
 
     private enum SummaryResult {
-        OK("OK"), FAILED("FAILED"), ALREADY_APPLIED("IGNORED - Already applied");
+        OK("OK", "\u2705"), FAILED("FAILED", "\u274C"), ALREADY_APPLIED("IGNORED - Already applied", "\u23ED");
 
-        private final String value;
+        private final String description;
+        private final String icon;
 
-        SummaryResult(String value) {
-            this.value = value;
+        SummaryResult(String description, String icon) {
+            this.description = description;
+            this.icon = icon;
         }
     }
 
@@ -51,7 +53,7 @@ public abstract class StepSummaryLine implements SummaryLine {
     }
 
     public String getPrettyResult() {
-        return result.value;
+        return String.format("%s - %s", result.icon, result.description);
     }
 
     protected void setResultFromSuccess(boolean success) {
@@ -99,7 +101,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return String.format("\tExecution\t\t[%s]", getPrettyResult());
+            return String.format("\tExecution\t\t%s", getPrettyResult());
         }
 
         @Override
@@ -126,7 +128,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return String.format("\tAudit execution\t[%s]", getPrettyResult());
+            return String.format("\tAudit execution\t%s", getPrettyResult());
         }
 
         @Override
@@ -153,7 +155,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return String.format("\tRolled back\t\t[%s]", getPrettyResult());
+            return String.format("\tRolled back\t\t%s", getPrettyResult());
         }
 
         @Override
@@ -181,7 +183,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return String.format("\tAudit rollback\t[%s]", getPrettyResult());
+            return String.format("\tAudit rollback\t%s", getPrettyResult());
         }
 
         @Override
@@ -209,7 +211,7 @@ public abstract class StepSummaryLine implements SummaryLine {
 
         @Override
         public String getLine() {
-            return String.format("\tExecution\t\t[%s]", getPrettyResult());
+            return String.format("\tExecution\t\t%s", getPrettyResult());
         }
 
         @Override

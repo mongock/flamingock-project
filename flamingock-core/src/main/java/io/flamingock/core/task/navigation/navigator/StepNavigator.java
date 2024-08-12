@@ -71,9 +71,9 @@ public class StepNavigator {
 
     private static void logAuditResult(Result saveResult, String id, String operation) {
         if (saveResult instanceof Result.Error) {
-            logger.info("FAILED AUDIT " + operation + " TASK - {}\n{}", id, (((Result.Error) saveResult).getError().getLocalizedMessage()));
+            logger.info("\u274C FAILED AUDIT " + operation + " TASK - {}\n{}", id, (((Result.Error) saveResult).getError().getLocalizedMessage()));
         } else {
-            logger.info("SUCCESS AUDIT " + operation + " TASK - {}", id);
+            logger.info("\u2705 SUCCESS AUDIT " + operation + " TASK - {}", id);
         }
     }
 
@@ -163,12 +163,12 @@ public class StepNavigator {
         summarizer.add(executed);
         if (executed instanceof FailedExecutionStep) {
             FailedExecutionStep failed = (FailedExecutionStep) executed;
-            logger.info("FAILED - " + executed.getTask().getDescriptor().getId());
+            logger.info("\u274C FAILED EXECUTION - " + executed.getTask().getDescriptor().getId());
             String msg = String.format("error execution task[%s] after %d ms", failed.getTask().getDescriptor().getId(), failed.getDuration());
-            logger.warn(msg, failed.getError());
+            //logger.warn(msg, failed.getError());
 
         } else {
-            logger.info("APPLIED - {} after {} ms", executed.getTask().getDescriptor().getId(), executed.getDuration());
+            logger.info("\u2705 APPLIED - {} after {} ms", executed.getTask().getDescriptor().getId(), executed.getDuration());
         }
         return executed;
     }
@@ -187,6 +187,7 @@ public class StepNavigator {
 
     private StepNavigationOutput rollback(RollableFailedStep rollableFailedStep, ExecutionContext executionContext) {
         if (rollableFailedStep instanceof CompleteAutoRolledBackStep) {
+            logger.info("\u2705 ROLLED BACK(auto) - {}", rollableFailedStep.getTask().getDescriptor().getId());
             //It's autoRollable(handled by the database engine or similar)
             auditAutoRollback((CompleteAutoRolledBackStep) rollableFailedStep, executionContext, LocalDateTime.now());
 
@@ -202,12 +203,12 @@ public class StepNavigator {
     private ManualRolledBackStep manualRollback(RollableStep rollable) {
         ManualRolledBackStep rolledBack = rollable.rollback(runtimeManager);
         if (rolledBack instanceof FailedManualRolledBackStep) {
-            logger.info("ROLL BACK FAILED - {} after {} ms", rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
+            logger.info("\u274C FAILED ROLL BACK - {} after {} ms", rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
             String msg = String.format("error rollback task[%s] after %d ms", rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
             logger.error(msg, ((FailedManualRolledBackStep) rolledBack).getError());
 
         } else {
-            logger.info("ROLLED BACK - {} after {} ms", rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
+            logger.info("\u2705 ROLLED BACK(manual) - {} after {} ms", rolledBack.getTask().getDescriptor().getId(), rolledBack.getDuration());
         }
 
         summarizer.add(rolledBack);
