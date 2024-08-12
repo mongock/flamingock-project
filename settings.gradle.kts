@@ -127,6 +127,10 @@ include("examples:databases:mysql-standalone")
 project(":examples:databases:mysql-standalone").name = "mysql-standalone"
 project(":examples:databases:mysql-standalone").projectDir = file("examples/databases/mysql-standalone")
 
+include("examples:databases:legacy-mongodb-importer")
+project(":examples:databases:legacy-mongodb-importer").name = "legacy-mongodb-importer"
+project(":examples:databases:legacy-mongodb-importer").projectDir = file("examples/databases/legacy-mongodb-importer")
+
 
 include("utils-test")
 project(":utils-test").name = "utils-test"
@@ -146,3 +150,4 @@ project(":utils").projectDir = file("utils")
 include("internal:legacy-importer-mongodb")
 project(":internal:legacy-importer-mongodb").name = "legacy-importer-mongodb"
 project(":internal:legacy-importer-mongodb").projectDir = file("internal/legacy-importer-mongodb")
+
