@@ -16,6 +16,7 @@
 
 package io.flamingock.core.runner;
 
+import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.engine.lock.Lock;
@@ -34,14 +35,10 @@ import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
-import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.task.navigation.summary.PipelineSummary;
 import io.flamingock.core.task.navigation.summary.StageSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class PipelineRunner implements Runner {
 
@@ -84,12 +81,12 @@ public class PipelineRunner implements Runner {
     private void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publish(new PipelineStartedEvent());
         boolean keepLooping = true;
-        List<StageSummary> stageSummaries = new LinkedList<>();
+        PipelineSummary pipelineSummary = new PipelineSummary();
         do {
             try {
-                keepLooping = executionPlanner.executeIfRequired(pipeline,(executionId, lock, executableStage) -> {
+                keepLooping = executionPlanner.executeIfRequired(pipeline, (executionId, lock, executableStage) -> {
                     StageSummary stageSummary = runStage(executionId, lock, executableStage);
-                    stageSummaries.add(stageSummary);
+                    pipelineSummary.add(stageSummary);
                 });
 
             } catch (LockException exception) {
@@ -106,7 +103,7 @@ public class PipelineRunner implements Runner {
                             "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
                 }
             } catch (StageExecutionException e) {
-                stageSummaries.add(e.getSummary());
+                pipelineSummary.add(e.getSummary());
                 throw e;
             } catch (RuntimeException e) {
                 throw e;
@@ -116,10 +113,8 @@ public class PipelineRunner implements Runner {
         } while (keepLooping);
 
 
-        String processSummary = stageSummaries.stream()
-                .map(StageSummary::getPretty)
-                .collect(Collectors.joining("\n"));
-        logger.info("Finished Flamingock process successfully\n{}",processSummary);
+        String pretty = pipelineSummary.getPretty();
+        logger.info("Finished Flamingock process successfully\n{}", pretty);
 
         eventPublisher.publish(new PipelineCompletedEvent());
     }

@@ -22,27 +22,28 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class StageSummary implements StepSummary {
+public class StageSummary implements StepSummary, StepSummaryLine {
 
     private final String stageName;
 
-    private final List<StepSummary> stageSummaries = new LinkedList<>();
+    private final List<StepSummary> taskExecutionSummaries = new LinkedList<>();
 
     public StageSummary(String stageName) {
         this.stageName = stageName;
     }
 
     public void addSummary(StepSummary summary) {
-        stageSummaries.add(summary);
+        taskExecutionSummaries.add(summary);
     }
 
-    public List<StepSummary> getSummaries() {
-        return stageSummaries;
+    @Override
+    public String getId() {
+        return stageName;
     }
 
     @Override
     public List<StepSummaryLine> getLines() {
-        return getSummaries().stream()
+        return taskExecutionSummaries.stream()
                 .map(StepSummary::getLines)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
@@ -50,11 +51,11 @@ public class StageSummary implements StepSummary {
 
     @Override
     public String getPretty() {
-        String lines = getLines()
-                .stream()
-                .map(SummaryLine::getLine)
-                .map(line-> "\t" + line)
-                .collect(Collectors.joining("\n"));
-        return String.format("\nStage: %s\n%s", stageName, lines);
+        return String.format("\n%s\n%s", getLine(), StepSummary.super.getPretty());
+    }
+
+    @Override
+    public String getLine() {
+        return "Stage: " + stageName;
     }
 }

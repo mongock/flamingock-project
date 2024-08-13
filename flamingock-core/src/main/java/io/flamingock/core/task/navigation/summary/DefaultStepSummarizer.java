@@ -45,27 +45,27 @@ public class DefaultStepSummarizer implements StepSummarizer {
 
     @Override
     public StepSummarizer add(ExecutionStep step) {
-        return addStep(step.getTask().getDescriptor(), new StepSummaryLine.ExecutedSummaryLine(step));
+        return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.ExecutedTaskSummaryLine(step));
     }
 
     @Override
     public StepSummarizer add(AfterExecutionAuditStep step) {
-        return addStep(step.getTask().getDescriptor(), new StepSummaryLine.AfterExecutionAuditSummaryLine(step));
+        return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.AfterExecutionTaskAuditSummaryLine(step));
     }
 
     @Override
     public StepSummarizer add(RolledBackStep step) {
-        return addStep(step.getTask().getDescriptor(), new StepSummaryLine.RolledBackSummaryLine(step));
+        return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.RolledBackTaskSummaryLine(step));
     }
 
     @Override
     public StepSummarizer add(CompletedFailedManualRollback step) {
-        return addStep(step.getTask().getDescriptor(), new StepSummaryLine.FailedCompletedManualRollbackSummaryLine(step));
+        return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.FailedCompletedManualRollbackTaskSummaryLine(step));
     }
 
     @Override
     public StepSummarizer add(CompletedAlreadyAppliedStep step) {
-        return addStep(step.getTask().getDescriptor(), new StepSummaryLine.AlreadyAppliedSummaryLine(step));
+        return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.AlreadyAppliedTaskSummaryLine(step));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class DefaultStepSummarizer implements StepSummarizer {
 
     private StepSummarizer addStep(TaskDescriptor taskDescriptor, StepSummaryLine step) {
         if (lines.isEmpty()) {
-            add(new StepSummaryLine.InitialSummaryLine(taskDescriptor));
+            add(new AbstractTaskStepSummaryLine.InitialTaskSummaryLine(taskDescriptor));
         }
         return add(step);
     }

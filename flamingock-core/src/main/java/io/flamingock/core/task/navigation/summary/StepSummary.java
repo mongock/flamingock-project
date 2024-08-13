@@ -24,13 +24,15 @@ import java.util.stream.Collectors;
 
 public interface StepSummary extends Summary {
 
-    List<StepSummaryLine> getLines();
+    List<? extends StepSummaryLine> getLines();
 
     @Override
     default String getPretty() {
         return getLines()
                 .stream()
                 .map(SummaryLine::getLine)
+                .map(line -> "\t" + line)
                 .collect(Collectors.joining("\n"));
     }
+
 }
