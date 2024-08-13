@@ -39,7 +39,7 @@ public class ReflectionTaskDescriptor extends AbstractTaskDescriptor implements 
     @Override
     public String pretty() {
         String fromParent = super.pretty();
-        return fromParent + String.format("\n\t[class: %s]", getSourceName());
+        return fromParent + String.format("\n\t\t[class: %s]", getSourceName());
 
     }
 

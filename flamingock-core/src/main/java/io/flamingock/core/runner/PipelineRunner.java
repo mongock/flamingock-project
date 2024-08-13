@@ -35,8 +35,13 @@ import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.task.navigation.summary.StageSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PipelineRunner implements Runner {
 
@@ -79,9 +84,13 @@ public class PipelineRunner implements Runner {
     private void run(Pipeline pipeline) throws FlamingockException {
         eventPublisher.publish(new PipelineStartedEvent());
         boolean keepLooping = true;
+        List<StageSummary> stageSummaries = new LinkedList<>();
         do {
             try {
-                keepLooping = executionPlanner.executeIfRequired(pipeline, this::runStage);
+                keepLooping = executionPlanner.executeIfRequired(pipeline,(executionId, lock, executableStage) -> {
+                    StageSummary stageSummary = runStage(executionId, lock, executableStage);
+                    stageSummaries.add(stageSummary);
+                });
 
             } catch (LockException exception) {
                 keepLooping = false;
@@ -96,33 +105,42 @@ public class PipelineRunner implements Runner {
                             "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" +
                             "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
                 }
+            } catch (StageExecutionException e) {
+                stageSummaries.add(e.getSummary());
+                throw e;
             } catch (RuntimeException e) {
                 throw e;
             } catch (Throwable throwable) {
-                processAndThrow(throwable);
+                throw processAndGetFlamingockException(throwable);
             }
         } while (keepLooping);
+
+
+        String processSummary = stageSummaries.stream()
+                .map(StageSummary::getPretty)
+                .collect(Collectors.joining("\n"));
+        logger.info("Finished Flamingock process successfully\n{}",processSummary);
+
         eventPublisher.publish(new PipelineCompletedEvent());
     }
 
-    private void runStage(String executionId, Lock lock, ExecutableStage executableStage) {
+    private StageSummary runStage(String executionId, Lock lock, ExecutableStage executableStage) {
         try {
-            if (executableStage.doesRequireExecution()) {
-                startStage(executionId, lock, executableStage);
-            } else {
-                skipStage(executableStage);
-            }
+            return executableStage.doesRequireExecution()
+                    ? startStage(executionId, lock, executableStage)
+                    : skipStage(executableStage);
+
 
         } catch (StageExecutionException exception) {
             eventPublisher.publish(new StageFailedEvent(exception));
             eventPublisher.publish(new PipelineFailedEvent(exception));
             throw exception;
         } catch (Throwable generalException) {
-            processAndThrow(generalException);
+            throw processAndGetFlamingockException(generalException);
         }
     }
 
-    private void startStage(String executionId, Lock lock, ExecutableStage executableStage) throws StageExecutionException {
+    private StageSummary startStage(String executionId, Lock lock, ExecutableStage executableStage) throws StageExecutionException {
         eventPublisher.publish(new StageStartedEvent());
 
         logger.debug("Applied state to process:\n{}", executableStage);
@@ -133,21 +151,22 @@ public class PipelineRunner implements Runner {
                 orphanExecutionContext.getAuthor(),
                 orphanExecutionContext.getMetadata());
         StageExecutor.Output executionOutput = stageExecutor.executeStage(executableStage, executionContext, lock);
-        logger.info("Finished process successfully\nProcess summary\n{}", executionOutput.getSummary().getPretty());
         eventPublisher.publish(new StageCompletedEvent(executionOutput));
+        return executionOutput.getSummary();
     }
 
-    private void skipStage(ExecutableStage executableStage) {
+    private StageSummary skipStage(ExecutableStage executableStage) {
         logger.info("Skipping stage[{}]. All the tasks are already executed.", executableStage.getName());
         eventPublisher.publish(new StageIgnoredEvent());
+        return new StageSummary(executableStage.getName());
     }
 
-    private void processAndThrow(Throwable generalException) throws FlamingockException {
+    private FlamingockException processAndGetFlamingockException(Throwable generalException) throws FlamingockException {
         FlamingockException exception = generalException instanceof FlamingockException ? (FlamingockException) generalException : new FlamingockException(generalException);
         logger.error("Error executing the process. ABORTED OPERATION", exception);
         eventPublisher.publish(new StageFailedEvent(exception));
         eventPublisher.publish(new PipelineFailedEvent(exception));
-        throw exception;
+        return exception;
     }
 
     @Override

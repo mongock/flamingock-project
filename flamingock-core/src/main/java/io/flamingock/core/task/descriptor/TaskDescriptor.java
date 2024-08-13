@@ -32,9 +32,9 @@ public interface TaskDescriptor extends Comparable<TaskDescriptor> {
 
     default String pretty() {
         if (getOrder().isPresent()) {
-            return String.format("%s) %s ", getOrder().get(), getId());
+            return String.format("%s) id: %s ", getOrder().get(), getId());
         } else {
-            return String.format(" %s ", getId());
+            return String.format(" id: %s ", getId());
         }
     }
 

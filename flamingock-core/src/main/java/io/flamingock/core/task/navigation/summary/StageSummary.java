@@ -16,13 +16,21 @@
 
 package io.flamingock.core.task.navigation.summary;
 
+import io.flamingock.core.summary.SummaryLine;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class StageSummary implements StepSummary {
 
+    private final String stageName;
+
     private final List<StepSummary> stageSummaries = new LinkedList<>();
+
+    public StageSummary(String stageName) {
+        this.stageName = stageName;
+    }
 
     public void addSummary(StepSummary summary) {
         stageSummaries.add(summary);
@@ -38,5 +46,15 @@ public class StageSummary implements StepSummary {
                 .map(StepSummary::getLines)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPretty() {
+        String lines = getLines()
+                .stream()
+                .map(SummaryLine::getLine)
+                .map(line-> "\t" + line)
+                .collect(Collectors.joining("\n"));
+        return String.format("\nStage: %s\n%s", stageName, lines);
     }
 }

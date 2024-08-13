@@ -53,7 +53,7 @@ public class StageExecutor {
                                ExecutionContext executionContext,
                                Lock lock) throws StageExecutionException {
 
-        StageSummary summary = new StageSummary();
+        StageSummary summary = new StageSummary(executableStage.getName());
 
         StepNavigatorBuilder stepNavigatorBuilder = getStepNavigatorBuilder(executableStage.isParallel());
 
@@ -100,13 +100,13 @@ public class StageExecutor {
 
     public static class Output {
 
-        private final StepSummary summary;
+        private final StageSummary summary;
 
-        public Output(StepSummary summary) {
+        public Output(StageSummary summary) {
             this.summary = summary;
         }
 
-        public StepSummary getSummary() {
+        public StageSummary getSummary() {
             return summary;
         }
     }
