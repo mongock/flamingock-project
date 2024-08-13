@@ -16,8 +16,6 @@
 
 package io.flamingock.core.task.navigation.summary;
 
-import io.flamingock.core.summary.SummaryLine;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,11 +49,8 @@ public class StageSummary implements StepSummary, StepSummaryLine {
 
     @Override
     public String getPretty() {
-        return String.format("\n%s\n%s", getLine(), StepSummary.super.getPretty());
+        return String.format("\nStage: %s\n%s", stageName, StepSummary.super.getPretty());
     }
 
-    @Override
-    public String getLine() {
-        return "Stage: " + stageName;
-    }
+
 }

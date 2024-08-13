@@ -30,7 +30,7 @@ public interface StepSummary extends Summary {
     default String getPretty() {
         return getLines()
                 .stream()
-                .map(SummaryLine::getLine)
+                .map(SummaryLine::getPretty)
                 .map(line -> "\t" + line)
                 .collect(Collectors.joining("\n"));
     }

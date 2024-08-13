@@ -33,6 +33,7 @@ import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
+import io.flamingock.core.pipeline.execution.PipelineExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import io.flamingock.core.task.navigation.summary.PipelineSummary;
@@ -104,7 +105,7 @@ public class PipelineRunner implements Runner {
                 }
             } catch (StageExecutionException e) {
                 pipelineSummary.add(e.getSummary());
-                throw e;
+                throw new PipelineExecutionException(pipelineSummary);
             } catch (RuntimeException e) {
                 throw e;
             } catch (Throwable throwable) {
@@ -113,8 +114,7 @@ public class PipelineRunner implements Runner {
         } while (keepLooping);
 
 
-        String pretty = pipelineSummary.getPretty();
-        logger.info("Finished Flamingock process successfully\n{}", pretty);
+        logger.info("Finished Flamingock process successfully\n{}", pipelineSummary.getPretty());
 
         eventPublisher.publish(new PipelineCompletedEvent());
     }
