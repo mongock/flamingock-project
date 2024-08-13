@@ -39,12 +39,17 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
         }
     }
 
+    protected static SummaryResult getResultFromSuccess(boolean success) {
+        return success ? SummaryResult.OK : SummaryResult.FAILED;
+    }
+
     private final String id;
 
-    protected SummaryResult result;
+    protected final SummaryResult result;
 
-    protected AbstractTaskStepSummaryLine(String id) {
+    protected AbstractTaskStepSummaryLine(String id, SummaryResult result) {
         this.id = id;
+        this.result = result;
     }
 
     public String getId() {
@@ -55,16 +60,13 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
         return String.format("%s - %s", result.icon, result.description);
     }
 
-    protected void setResultFromSuccess(boolean success) {
-        result = success ? SummaryResult.OK : SummaryResult.FAILED;
-    }
 
     public static class InitialTaskSummaryLine extends AbstractTaskStepSummaryLine {
 
         private final TaskDescriptor desc;
 
         public InitialTaskSummaryLine(TaskDescriptor taskDescriptor) {
-            super(taskDescriptor.getId());
+            super(taskDescriptor.getId(), null);
             this.desc = taskDescriptor;
         }
 
@@ -92,8 +94,7 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
     public static class ExecutedTaskSummaryLine extends AbstractTaskStepSummaryLine {
 
         public ExecutedTaskSummaryLine(ExecutionStep step) {
-            super(step.getTask().getDescriptor().getId());
-            setResultFromSuccess(step.isSuccessStep());
+            super(step.getTask().getDescriptor().getId(), getResultFromSuccess(step.isSuccessStep()));
         }
 
 
@@ -120,8 +121,7 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
 
 
         public AfterExecutionTaskAuditSummaryLine(AfterExecutionAuditStep step) {
-            super(step.getTask().getDescriptor().getId());
-            setResultFromSuccess(step.isSuccessStep());
+            super(step.getTask().getDescriptor().getId(), getResultFromSuccess(step.isSuccessStep()));
         }
 
         @Override
@@ -147,8 +147,7 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
     public static class RolledBackTaskSummaryLine extends AbstractTaskStepSummaryLine {
 
         public RolledBackTaskSummaryLine(RolledBackStep step) {
-            super(step.getTask().getDescriptor().getId());
-            setResultFromSuccess(step.isSuccessStep());
+            super(step.getTask().getDescriptor().getId(), getResultFromSuccess(step.isSuccessStep()));
         }
 
         @Override
@@ -175,8 +174,7 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
     public static class FailedCompletedManualRollbackTaskSummaryLine extends AbstractTaskStepSummaryLine {
 
         public FailedCompletedManualRollbackTaskSummaryLine(CompletedFailedManualRollback step) {
-            super(step.getTask().getDescriptor().getId());
-            setResultFromSuccess(step.isSuccessStep());
+            super(step.getTask().getDescriptor().getId(), getResultFromSuccess(step.isSuccessStep()));
         }
 
         @Override
@@ -202,8 +200,7 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
     public static class AlreadyAppliedTaskSummaryLine extends AbstractTaskStepSummaryLine {
 
         public AlreadyAppliedTaskSummaryLine(CompletedAlreadyAppliedStep step) {
-            super(step.getTask().getDescriptor().getId());
-            this.result = SummaryResult.ALREADY_APPLIED;
+            super(step.getTask().getDescriptor().getId(), SummaryResult.ALREADY_APPLIED);
         }
 
         @Override
