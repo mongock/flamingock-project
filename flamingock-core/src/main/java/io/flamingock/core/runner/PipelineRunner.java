@@ -30,16 +30,27 @@ import io.flamingock.core.event.model.impl.StageFailedEvent;
 import io.flamingock.core.event.model.impl.StageIgnoredEvent;
 import io.flamingock.core.event.model.impl.StageStartedEvent;
 import io.flamingock.core.pipeline.ExecutableStage;
+import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.pipeline.execution.PipelineExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
+import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.navigation.summary.PipelineSummary;
 import io.flamingock.core.task.navigation.summary.StageSummary;
+import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PipelineRunner implements Runner {
 
@@ -80,8 +91,9 @@ public class PipelineRunner implements Runner {
     }
 
     private void run(Pipeline pipeline) throws FlamingockException {
+
         eventPublisher.publish(new PipelineStartedEvent());
-        boolean keepLooping = true;
+        boolean keepLooping;
         PipelineSummary pipelineSummary = new PipelineSummary();
         do {
             try {
@@ -104,6 +116,28 @@ public class PipelineRunner implements Runner {
                             "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
                 }
             } catch (StageExecutionException e) {
+
+
+                StageSummary stageSummary = e.getSummary();
+                Set<String> executedTasksInInterruptedStage = stageSummary.getLines()
+                        .stream()
+                        .map(StepSummaryLine::getId)
+                        .collect(Collectors.toSet());
+
+//                pipeline
+//                        .getLoadedStages()
+//                        .stream()
+//                        .filter(loadedStage -> loadedStage.getName().equals(e.getSummary().getId()))
+//                        .findFirst()
+//                        .map(LoadedStage::getTaskDescriptors)
+//                        .orElse(Collections.emptyList())
+//                        .stream()
+//                        .filter(task -> !executedTasksInInterruptedStage.contains(task.getId()))
+//                        .forEach(task -> {
+//                            stageSummary.addSummary();
+//                        });
+//
+
                 pipelineSummary.add(e.getSummary());
                 throw new PipelineExecutionException(pipelineSummary);
             } catch (RuntimeException e) {

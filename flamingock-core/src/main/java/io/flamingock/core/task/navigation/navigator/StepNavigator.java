@@ -83,7 +83,6 @@ public class StepNavigator {
         }
     }
 
-
     void clean() {
         summarizer = null;
         auditWriter = null;

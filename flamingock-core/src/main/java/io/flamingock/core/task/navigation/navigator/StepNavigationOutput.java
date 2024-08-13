@@ -16,7 +16,6 @@
 
 package io.flamingock.core.task.navigation.navigator;
 
-import io.flamingock.core.summary.SummaryLine;
 import io.flamingock.core.task.navigation.summary.StepSummary;
 import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 
