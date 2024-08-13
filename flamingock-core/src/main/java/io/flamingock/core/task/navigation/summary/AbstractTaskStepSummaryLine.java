@@ -75,20 +75,6 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
             return desc.pretty();
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof InitialTaskSummaryLine)) return false;
-            InitialTaskSummaryLine initial = (InitialTaskSummaryLine) o;
-            return desc.equals(initial.desc);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(desc);
-        }
-
-
     }
 
     public static class ExecutedTaskSummaryLine extends AbstractTaskStepSummaryLine {
@@ -103,18 +89,6 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
             return String.format("\tExecution\t\t%s", getPrettyResult());
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof ExecutedTaskSummaryLine)) return false;
-            ExecutedTaskSummaryLine executed = (ExecutedTaskSummaryLine) o;
-            return result == executed.result;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(result);
-        }
     }
 
     public static class AfterExecutionTaskAuditSummaryLine extends AbstractTaskStepSummaryLine {
@@ -127,19 +101,6 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
         @Override
         public String getPretty() {
             return String.format("\tAudit execution\t%s", getPrettyResult());
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof AfterExecutionTaskAuditSummaryLine)) return false;
-            AfterExecutionTaskAuditSummaryLine executed = (AfterExecutionTaskAuditSummaryLine) o;
-            return result == executed.result;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(result);
         }
 
     }
@@ -155,20 +116,6 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
             return String.format("\tRolled back\t\t%s", getPrettyResult());
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof RolledBackTaskSummaryLine)) return false;
-            RolledBackTaskSummaryLine executed = (RolledBackTaskSummaryLine) o;
-            return result == executed.result;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(result);
-        }
-
-
     }
 
     public static class FailedCompletedManualRollbackTaskSummaryLine extends AbstractTaskStepSummaryLine {
@@ -180,19 +127,6 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
         @Override
         public String getPretty() {
             return String.format("\tAudit rollback\t%s", getPrettyResult());
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof FailedCompletedManualRollbackTaskSummaryLine)) return false;
-            FailedCompletedManualRollbackTaskSummaryLine executed = (FailedCompletedManualRollbackTaskSummaryLine) o;
-            return result == executed.result;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(result);
         }
 
     }
@@ -208,18 +142,6 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
             return String.format("\tExecution\t\t%s", getPrettyResult());
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof FailedCompletedManualRollbackTaskSummaryLine)) return false;
-            FailedCompletedManualRollbackTaskSummaryLine executed = (FailedCompletedManualRollbackTaskSummaryLine) o;
-            return result == executed.result;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(result);
-        }
 
     }
 }
