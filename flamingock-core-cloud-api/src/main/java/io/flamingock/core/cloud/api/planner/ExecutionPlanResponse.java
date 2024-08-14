@@ -17,13 +17,13 @@
 package io.flamingock.core.cloud.api.planner;
 
 import java.util.List;
+import java.util.Map;
 
 public class ExecutionPlanResponse {
 
     public enum Action {
         CONTINUE, EXECUTE, AWAIT
     }
-
 
     private Action action;
 
@@ -32,6 +32,8 @@ public class ExecutionPlanResponse {
     private Lock lock;
 
     private List<Stage> stages;
+
+    private Map<String, List<String>> alreadyExecuted;
 
     public ExecutionPlanResponse() {
     }
@@ -64,6 +66,13 @@ public class ExecutionPlanResponse {
         this.stages = stages;
     }
 
+    public Map<String, List<String>> getAlreadyExecuted() {
+        return alreadyExecuted;
+    }
+
+    public void setAlreadyExecuted(Map<String, List<String>> alreadyExecuted) {
+        this.alreadyExecuted = alreadyExecuted;
+    }
 
     public boolean isContinue() {
         return action == Action.CONTINUE;

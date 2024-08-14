@@ -38,15 +38,22 @@ import io.flamingock.core.pipeline.execution.PipelineExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.task.navigation.navigator.StepNavigationOutput;
+import io.flamingock.core.task.navigation.summary.AbstractTaskStepSummaryLine;
+import io.flamingock.core.task.navigation.summary.DefaultStepSummarizer;
 import io.flamingock.core.task.navigation.summary.PipelineSummary;
 import io.flamingock.core.task.navigation.summary.StageSummary;
+import io.flamingock.core.task.navigation.summary.StepSummarizer;
+import io.flamingock.core.task.navigation.summary.StepSummary;
 import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -94,12 +101,13 @@ public class PipelineRunner implements Runner {
 
         eventPublisher.publish(new PipelineStartedEvent());
         boolean keepLooping;
-        PipelineSummary pipelineSummary = new PipelineSummary();
+        PipelineSummary pipelineSummary = new PipelineSummary(pipeline);
+        Map<String, StageSummary> stageSummaryMap = new HashMap<>();
         do {
             try {
                 keepLooping = executionPlanner.executeIfRequired(pipeline, (executionId, lock, executableStage) -> {
                     StageSummary stageSummary = runStage(executionId, lock, executableStage);
-                    pipelineSummary.add(stageSummary);
+                    stageSummaryMap.put(executableStage.getName(), stageSummary);
                 });
 
             } catch (LockException exception) {
@@ -117,28 +125,23 @@ public class PipelineRunner implements Runner {
                 }
             } catch (StageExecutionException e) {
 
+                List<LoadedStage> pipelineStages = pipeline.getLoadedStages();
+                StageSummary stageSummaryWithNotReachedTasks = getStageSummaryWithNotReachedTasks(pipelineStages, e.getSummary());
+                stageSummaryMap.put(e.getSummary().getId(), stageSummaryWithNotReachedTasks);
+                pipelineSummary.add(stageSummaryWithNotReachedTasks);
 
-                StageSummary stageSummary = e.getSummary();
-                Set<String> executedTasksInInterruptedStage = stageSummary.getLines()
-                        .stream()
-                        .map(StepSummaryLine::getId)
-                        .collect(Collectors.toSet());
-
-//                pipeline
-//                        .getLoadedStages()
+//                Set<String> processedStages = pipelineSummary.getLines()
 //                        .stream()
-//                        .filter(loadedStage -> loadedStage.getName().equals(e.getSummary().getId()))
-//                        .findFirst()
-//                        .map(LoadedStage::getTaskDescriptors)
-//                        .orElse(Collections.emptyList())
-//                        .stream()
-//                        .filter(task -> !executedTasksInInterruptedStage.contains(task.getId()))
-//                        .forEach(task -> {
-//                            stageSummary.addSummary();
-//                        });
+//                        .map(StageSummary::getId)
+//                        .collect(Collectors.toSet());
 //
+//                pipelineStages.stream()
+//                        .filter(stage -> !processedStages.contains(stage.getName()))
+//                        .forEach(stage -> {
+//                            pipelineSummary.add(getStageSummaryWithNotReachedTasks(pipelineStages, new StageSummary(stage.getName())));
+//                        });
 
-                pipelineSummary.add(e.getSummary());
+
                 throw new PipelineExecutionException(pipelineSummary);
             } catch (RuntimeException e) {
                 throw e;
@@ -151,6 +154,27 @@ public class PipelineRunner implements Runner {
         logger.info("Finished Flamingock process successfully\n{}", pipelineSummary.getPretty());
 
         eventPublisher.publish(new PipelineCompletedEvent());
+    }
+
+    private static StageSummary getStageSummaryWithNotReachedTasks(List<LoadedStage> pipelineStages, StageSummary stageSummary) {
+        Set<String> executedTasksInInterruptedStage = stageSummary.getLines()
+                .stream()
+                .map(StepSummaryLine::getId)
+                .collect(Collectors.toSet());
+
+        pipelineStages
+                .stream()
+                .filter(loadedStage -> loadedStage.getName().equals(stageSummary.getId()))
+                .findFirst()
+                .map(LoadedStage::getTaskDescriptors)
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(task -> !executedTasksInInterruptedStage.contains(task.getId()))
+                .map(new DefaultStepSummarizer()::addNotReachedTask)
+                .map(summarizer -> new StepNavigationOutput(false, summarizer.getSummary()))
+                .forEach(stageSummary::addSummary);
+
+        return stageSummary;
     }
 
     private StageSummary runStage(String executionId, Lock lock, ExecutableStage executableStage) {

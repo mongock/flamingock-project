@@ -48,12 +48,14 @@ public class LegacyImporterMongoDBApplication {
                     .setApiToken(API_TOKEN)
                     .setEnvironment(ENVIRONMENT)
                     .setService(SERVICE_NAME)
-                    .addSystemModule(new MongoDBLegacyImporter("changeLogs"))
                     .setCloudTransactioner(cloudTransactioner)//for cloud transactions with Sql
                     .setLockAcquiredForMillis(6 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                     .setLockQuitTryingAfterMillis(10 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
                     .setLockTryFrequencyMillis(3000L)//this is just to show how is set. Default value is still 1000L
-                    .addStage(new Stage("database_stage").addFileDirectory("flamingock/stage1"))
+                    .addSystemModule(new MongoDBLegacyImporter("changeLogs"))
+                    .addStage(new Stage("database_stage_1").addFileDirectory("flamingock/stage1"))
+                    .addStage(new Stage("database_stage_2").addFileDirectory("flamingock/stage2"))
+
                     .addTemplateModule(new SqlTemplateModule())
                     .addDependency(Connection.class, getConnection())
                     .build()

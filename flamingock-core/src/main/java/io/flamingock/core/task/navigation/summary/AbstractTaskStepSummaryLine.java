@@ -23,12 +23,18 @@ import io.flamingock.core.task.navigation.step.complete.failed.CompletedFailedMa
 import io.flamingock.core.task.navigation.step.execution.ExecutionStep;
 import io.flamingock.core.task.navigation.step.rolledback.RolledBackStep;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
 
     private enum SummaryResult {
-        OK("OK", "\u2705"), FAILED("FAILED", "\u274C"), ALREADY_APPLIED("IGNORED - Already applied", "\u23ED");
+        OK("OK", "\u2705"),
+        FAILED("FAILED", "\u274C"),
+        ALREADY_APPLIED("ALREADY APPLIED", "\u23ED"),
+        NOT_REACHED("NOT REACHED", "\u23ED"),;
 
         private final String description;
         private final String icon;
@@ -142,6 +148,18 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
             return String.format("\tExecution\t\t%s", getPrettyResult());
         }
 
+    }
+
+    static class NotReachedTaskSummaryLine extends AbstractTaskStepSummaryLine {
+
+        public NotReachedTaskSummaryLine(TaskDescriptor taskDescriptor) {
+            super(taskDescriptor.getId(), SummaryResult.NOT_REACHED);
+        }
+
+        @Override
+        public String getPretty() {
+            return String.format("\tExecution\t\t%s", getPrettyResult());
+        }
 
     }
 }

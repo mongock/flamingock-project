@@ -16,6 +16,7 @@
 
 package io.flamingock.core.task.navigation.summary;
 
+import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.navigation.step.afteraudit.AfterExecutionAuditStep;
 import io.flamingock.core.task.navigation.step.complete.CompletedAlreadyAppliedStep;
 import io.flamingock.core.task.navigation.step.complete.failed.CompletedFailedManualRollback;
@@ -39,6 +40,12 @@ public interface StepSummarizer extends Summarizer<StepSummaryLine> {
     StepSummarizer add(CompletedFailedManualRollback step);
 
     StepSummarizer add(CompletedAlreadyAppliedStep ignoredStep);
+
+    default StepSummarizer addNotReachedTask(TaskDescriptor taskDescriptor) {
+        add(new AbstractTaskStepSummaryLine.InitialTaskSummaryLine(taskDescriptor));
+        add(new AbstractTaskStepSummaryLine.NotReachedTaskSummaryLine(taskDescriptor));
+        return this;
+    }
 
     StepSummary getSummary();
 }
