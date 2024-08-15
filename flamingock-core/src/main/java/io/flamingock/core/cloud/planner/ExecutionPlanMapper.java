@@ -16,6 +16,8 @@
 
 package io.flamingock.core.cloud.planner;
 
+import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.TimeService;
 import io.flamingock.core.cloud.api.planner.ExecutionPlanRequest;
 import io.flamingock.core.cloud.api.planner.ExecutionPlanResponse;
 import io.flamingock.core.cloud.api.planner.StageRequest;
@@ -27,9 +29,7 @@ import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.engine.lock.LockKey;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.LoadedStage;
-import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.commons.utils.TimeService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,7 +63,7 @@ public final class ExecutionPlanMapper {
 
     private static StageRequest.Task mapToTaskRequest(TaskDescriptor descriptor,
                                                       Map<String, AuditItem.Operation> ongoingStatusesMap) {
-        if(ongoingStatusesMap.containsKey(descriptor.getId())) {
+        if (ongoingStatusesMap.containsKey(descriptor.getId())) {
             if (ongoingStatusesMap.get(descriptor.getId()) == AuditItem.Operation.ROLLBACK) {
                 return StageRequest.Task.ongoingRollback(descriptor.getId());
             } else {
@@ -74,7 +74,7 @@ public final class ExecutionPlanMapper {
         }
     }
 
-    public static List<ExecutableStage> getExecutableStages(ExecutionPlanResponse response, List<LoadedStage> loadedStages) {
+    static List<ExecutableStage> getExecutableStages(ExecutionPlanResponse response, List<LoadedStage> loadedStages) {
         //Create a set for the filter in the loop
         Set<String> stageNameSet = response.getStages().stream().map(ExecutionPlanResponse.Stage::getName).collect(Collectors.toSet());
 

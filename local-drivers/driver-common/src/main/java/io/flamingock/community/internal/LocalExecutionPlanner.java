@@ -34,6 +34,7 @@ import io.flamingock.commons.utils.TimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -64,7 +65,7 @@ public class LocalExecutionPlanner extends ExecutionPlanner {
     }
 
     @Override
-    protected ExecutionPlan getNextExecution(Pipeline pipeline) throws LockException {
+    public ExecutionPlan getNextExecution(Pipeline pipeline) throws LockException {
         AuditStageStatus currentAuditStageStatus = auditReader.getAuditStageStatus();
         logger.debug("Pulled remote state:\n{}", currentAuditStageStatus);
 

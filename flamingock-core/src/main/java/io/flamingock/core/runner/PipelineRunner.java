@@ -17,7 +17,9 @@
 package io.flamingock.core.runner;
 
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.TriConsumer;
 import io.flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.engine.execution.ExecutionPlan;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.engine.lock.LockException;
@@ -97,11 +99,13 @@ public class PipelineRunner implements Runner {
         this.finalizer = finalizer;
     }
 
+
+
     private void run(Pipeline pipeline) throws FlamingockException {
 
         eventPublisher.publish(new PipelineStartedEvent());
         boolean keepLooping;
-        PipelineSummary pipelineSummary = new PipelineSummary(pipeline);
+        PipelineSummary pipelineSummary = new PipelineSummary();
         Map<String, StageSummary> stageSummaryMap = new HashMap<>();
         do {
             try {
