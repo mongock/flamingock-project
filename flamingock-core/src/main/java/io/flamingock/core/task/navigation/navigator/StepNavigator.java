@@ -23,6 +23,7 @@ import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.audit.domain.RuntimeContext;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
+import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.task.executable.ExecutableTask;
@@ -52,7 +53,7 @@ public class StepNavigator {
 
     private OngoingStatusRepository ongoingTasksRepository;
 
-    private StepSummarizer summarizer;
+    private TaskSummarizer summarizer;
 
     private AuditWriter auditWriter;
 
@@ -60,7 +61,7 @@ public class StepNavigator {
 
     private TransactionWrapper transactionWrapper;
 
-    StepNavigator(AuditWriter auditWriter, StepSummarizer summarizer, RuntimeManager runtimeManager, TransactionWrapper transactionWrapper) {
+    StepNavigator(AuditWriter auditWriter, TaskSummarizer summarizer, RuntimeManager runtimeManager, TransactionWrapper transactionWrapper) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
         this.runtimeManager = runtimeManager;
@@ -85,7 +86,7 @@ public class StepNavigator {
         runtimeManager = null;
     }
 
-    void setSummarizer(StepSummarizer summarizer) {
+    void setSummarizer(TaskSummarizer summarizer) {
         this.summarizer = summarizer;
     }
 

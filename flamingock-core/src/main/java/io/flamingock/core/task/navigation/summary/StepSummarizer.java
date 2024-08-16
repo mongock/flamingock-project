@@ -25,27 +25,25 @@ import io.flamingock.core.task.navigation.step.rolledback.RolledBackStep;
 import io.flamingock.core.summary.Summarizer;
 
 //No thread safe
-public interface StepSummarizer extends Summarizer<StepSummaryLine> {
+public interface StepSummarizer<SELF extends StepSummarizer<SELF>> extends Summarizer<StepSummaryLine> {
 
     void clear();
 
     Summarizer<StepSummaryLine> add(StepSummaryLine line);
 
-    StepSummarizer add(ExecutionStep step);
+    SELF add(ExecutionStep step);
 
-    StepSummarizer add(AfterExecutionAuditStep step);
+    SELF add(AfterExecutionAuditStep step);
 
-    StepSummarizer add(RolledBackStep step);
+    SELF add(RolledBackStep step);
 
-    StepSummarizer add(CompletedFailedManualRollback step);
+    SELF add(CompletedFailedManualRollback step);
 
-    StepSummarizer add(CompletedAlreadyAppliedStep ignoredStep);
+    SELF add(CompletedAlreadyAppliedStep ignoredStep);
 
-    default StepSummarizer addNotReachedTask(TaskDescriptor taskDescriptor) {
-        add(new AbstractTaskStepSummaryLine.InitialTaskSummaryLine(taskDescriptor));
-        add(new AbstractTaskStepSummaryLine.NotReachedTaskSummaryLine(taskDescriptor));
-        return this;
-    }
+    SELF addNotReachedTask(TaskDescriptor taskDescriptor);
+
+
 
     StepSummary getSummary();
 }

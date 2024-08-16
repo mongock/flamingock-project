@@ -4,7 +4,7 @@ import io.flamingock.core.pipeline.ExecutablePipeline;
 import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.pipeline.execution.StageSummary;
 import io.flamingock.core.task.executable.ExecutableTask;
-import io.flamingock.core.task.navigation.summary.DefaultStepSummarizer;
+import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.task.navigation.summary.StepSummary;
 
 import java.util.LinkedHashMap;
@@ -21,7 +21,7 @@ public class PipelineSummary implements StepSummary {
             StageSummary stageSummary = new StageSummary(executableStage.getName());
 
             for (ExecutableTask executableTask : executableStage.getTasks()) {
-                stageSummary.addSummary(new DefaultStepSummarizer()
+                stageSummary.addSummary(new TaskSummarizer(executableTask.getDescriptor().getId())
                         .addNotReachedTask(executableTask.getDescriptor())
                         .getSummary());
             }

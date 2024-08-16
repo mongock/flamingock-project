@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.navigation.summary;
+package io.flamingock.core.pipeline.execution;
 
 import io.flamingock.core.task.navigation.step.afteraudit.AfterExecutionAuditStep;
 import io.flamingock.core.task.navigation.step.complete.CompletedAlreadyAppliedStep;
@@ -22,15 +22,25 @@ import io.flamingock.core.task.navigation.step.complete.failed.CompletedFailedMa
 import io.flamingock.core.task.navigation.step.execution.ExecutionStep;
 import io.flamingock.core.task.navigation.step.rolledback.RolledBackStep;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
+import io.flamingock.core.task.navigation.summary.AbstractTaskStepSummaryLine;
+import io.flamingock.core.task.navigation.summary.StepSummarizer;
+import io.flamingock.core.task.navigation.summary.StepSummary;
+import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 //NO thread-safe
-public class DefaultStepSummarizer implements StepSummarizer {
+public class TaskSummarizer implements StepSummarizer<TaskSummarizer> {
+
+    private final String taskId;
 
     private List<StepSummaryLine> lines = new LinkedList<>();
+
+    public TaskSummarizer(String taskId) {
+        this.taskId = taskId;
+    }
 
     @Override
     public void clear() {
@@ -38,42 +48,51 @@ public class DefaultStepSummarizer implements StepSummarizer {
     }
 
     @Override
-    public StepSummarizer add(StepSummaryLine line) {
+    public TaskSummarizer add(StepSummaryLine line) {
         lines.add(line);
         return this;
     }
 
     @Override
-    public StepSummarizer add(ExecutionStep step) {
+    public TaskSummarizer add(ExecutionStep step) {
         return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.ExecutedTaskSummaryLine(step));
     }
 
     @Override
-    public StepSummarizer add(AfterExecutionAuditStep step) {
+    public TaskSummarizer add(AfterExecutionAuditStep step) {
         return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.AfterExecutionTaskAuditSummaryLine(step));
     }
 
     @Override
-    public StepSummarizer add(RolledBackStep step) {
+    public TaskSummarizer add(RolledBackStep step) {
         return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.RolledBackTaskSummaryLine(step));
     }
 
     @Override
-    public StepSummarizer add(CompletedFailedManualRollback step) {
+    public TaskSummarizer add(CompletedFailedManualRollback step) {
         return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.FailedCompletedManualRollbackTaskSummaryLine(step));
     }
 
     @Override
-    public StepSummarizer add(CompletedAlreadyAppliedStep step) {
+    public TaskSummarizer add(CompletedAlreadyAppliedStep step) {
         return addStep(step.getTask().getDescriptor(), new AbstractTaskStepSummaryLine.AlreadyAppliedTaskSummaryLine(step));
     }
 
     @Override
-    public StepSummary getSummary() {
-        return () -> new CopyOnWriteArrayList<>(lines);
+    public TaskSummarizer addNotReachedTask(TaskDescriptor taskDescriptor) {
+        add(new AbstractTaskStepSummaryLine.InitialTaskSummaryLine(taskDescriptor));
+        add(new AbstractTaskStepSummaryLine.NotReachedTaskSummaryLine(taskDescriptor));
+        return this;
     }
 
-    private StepSummarizer addStep(TaskDescriptor taskDescriptor, StepSummaryLine step) {
+    @Override
+    public TaskSummary getSummary() {
+        TaskSummary taskSummary = new TaskSummary(taskId);
+        lines.forEach(taskSummary::addLine);
+        return taskSummary;
+    }
+
+    private TaskSummarizer addStep(TaskDescriptor taskDescriptor, StepSummaryLine step) {
         if (lines.isEmpty()) {
             add(new AbstractTaskStepSummaryLine.InitialTaskSummaryLine(taskDescriptor));
         }

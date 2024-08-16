@@ -17,16 +17,14 @@
 package io.flamingock.core.task.navigation.navigator;
 
 import io.flamingock.core.engine.audit.AuditWriter;
-import io.flamingock.core.task.navigation.summary.StepSummarizer;
 import io.flamingock.core.engine.lock.Lock;
+import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.transaction.TransactionWrapper;
 
 public interface StepNavigatorBuilder {
 
-
-    StepNavigatorBuilder setSummarizer(StepSummarizer summarizer);
 
     StepNavigatorBuilder setAuditWriter(AuditWriter auditWriter);
 
@@ -42,7 +40,7 @@ public interface StepNavigatorBuilder {
     abstract class AbstractStepNavigator implements StepNavigatorBuilder {
 
 
-        protected StepSummarizer summarizer = null;
+        protected TaskSummarizer summarizer = null;
         protected AuditWriter auditWriter = null;
 
         protected Lock lock = null;
@@ -52,13 +50,6 @@ public interface StepNavigatorBuilder {
         protected TransactionWrapper transactionWrapper = null;
 
         public AbstractStepNavigator() {
-        }
-
-
-        @Override
-        public StepNavigatorBuilder setSummarizer(StepSummarizer summarizer) {
-            this.summarizer = summarizer;
-            return this;
         }
 
         @Override

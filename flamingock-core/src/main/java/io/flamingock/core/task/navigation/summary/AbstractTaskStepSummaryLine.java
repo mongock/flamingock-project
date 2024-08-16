@@ -150,7 +150,7 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
 
     }
 
-    static class NotReachedTaskSummaryLine extends AbstractTaskStepSummaryLine {
+    public static class NotReachedTaskSummaryLine extends AbstractTaskStepSummaryLine {
 
         public NotReachedTaskSummaryLine(TaskDescriptor taskDescriptor) {
             super(taskDescriptor.getId(), SummaryResult.NOT_REACHED);

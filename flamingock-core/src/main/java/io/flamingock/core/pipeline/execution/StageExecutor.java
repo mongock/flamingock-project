@@ -24,7 +24,6 @@ import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.navigation.navigator.ReusableStepNavigatorBuilder;
 import io.flamingock.core.task.navigation.navigator.StepNavigationOutput;
 import io.flamingock.core.task.navigation.navigator.StepNavigatorBuilder;
-import io.flamingock.core.task.navigation.summary.DefaultStepSummarizer;
 import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.stream.Stream;
@@ -65,7 +64,7 @@ public class StageExecutor {
                             .setStaticContext(dependencyContext)
                             .setLock(lock)
                             .setTransactionWrapper(transactionWrapper)
-                            .setSummarizer(new DefaultStepSummarizer())//todo reuse Summarizer
+                            .setSummarizer(new TaskSummarizer(task.getDescriptor().getId()))
                             .build()
                             .executeTask(task, executionContext)
                     ).peek(summary::addSummary)

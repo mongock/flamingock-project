@@ -38,7 +38,7 @@ import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import io.flamingock.core.pipeline.execution.StageSummary;
 import io.flamingock.core.task.navigation.navigator.StepNavigationOutput;
-import io.flamingock.core.task.navigation.summary.DefaultStepSummarizer;
+import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,7 +171,7 @@ public class PipelineRunner implements Runner {
                 .orElse(Collections.emptyList())
                 .stream()
                 .filter(task -> !executedTasksInInterruptedStage.contains(task.getId()))
-                .map(new DefaultStepSummarizer()::addNotReachedTask)
+                .map(taskDescriptor -> new TaskSummarizer(taskDescriptor.getId()).addNotReachedTask(taskDescriptor))
                 .map(summarizer -> new StepNavigationOutput(false, summarizer.getSummary()))
                 .forEach(stageSummary::addSummary);
 
