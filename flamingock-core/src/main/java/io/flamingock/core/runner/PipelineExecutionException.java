@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.pipeline.execution;
+package io.flamingock.core.runner;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.task.navigation.summary.PipelineSummary;
-import io.flamingock.core.task.navigation.summary.StageSummary;
+import io.flamingock.core.runner.PipelineSummary;
 
 public class PipelineExecutionException extends FlamingockException {
 

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.navigation.summary;
+package io.flamingock.core.pipeline.execution;
+
+import io.flamingock.core.task.navigation.summary.StepSummary;
+import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 
 import java.util.LinkedList;
 import java.util.List;

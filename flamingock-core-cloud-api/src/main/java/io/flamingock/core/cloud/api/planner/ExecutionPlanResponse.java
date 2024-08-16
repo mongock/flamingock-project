@@ -17,7 +17,6 @@
 package io.flamingock.core.cloud.api.planner;
 
 import java.util.List;
-import java.util.Map;
 
 public class ExecutionPlanResponse {
 
@@ -33,7 +32,6 @@ public class ExecutionPlanResponse {
 
     private List<Stage> stages;
 
-    private Map<String, List<String>> alreadyExecuted;
 
     public ExecutionPlanResponse() {
     }
@@ -64,14 +62,6 @@ public class ExecutionPlanResponse {
 
     public void setStages(List<Stage> stages) {
         this.stages = stages;
-    }
-
-    public Map<String, List<String>> getAlreadyExecuted() {
-        return alreadyExecuted;
-    }
-
-    public void setAlreadyExecuted(Map<String, List<String>> alreadyExecuted) {
-        this.alreadyExecuted = alreadyExecuted;
     }
 
     public boolean isContinue() {
@@ -138,9 +128,13 @@ public class ExecutionPlanResponse {
         }
     }
 
+    public static enum TaskState {
+        PENDING_EXECUTION, ALREADY_EXECUTED
+    }
+
     public static class Task {
         private String id;
-        private String ongoingStatus;
+        private TaskState state;
 
         public Task() {
         }
@@ -157,12 +151,12 @@ public class ExecutionPlanResponse {
             this.id = id;
         }
 
-        public String getOngoingStatus() {
-            return ongoingStatus;
+        public TaskState getState() {
+            return state;
         }
 
-        public void setOngoingStatus(String ongoingStatus) {
-            this.ongoingStatus = ongoingStatus;
+        public void setState(TaskState state) {
+            this.state = state;
         }
     }
 

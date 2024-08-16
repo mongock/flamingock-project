@@ -104,7 +104,7 @@ public class StepNavigator {
     }
 
     public final StepNavigationOutput executeTask(ExecutableTask task, ExecutionContext executionContext) {
-        if (task.isInitialExecutionRequired()) {
+        if (task.isExecutionRequired()) {
             logger.info("Starting {}", task.getDescriptor().getId());
             // Main execution
             TaskStep executedStep;

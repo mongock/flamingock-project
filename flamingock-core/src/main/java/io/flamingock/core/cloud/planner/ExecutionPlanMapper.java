@@ -91,7 +91,10 @@ public final class ExecutionPlanMapper {
     }
 
     private static ExecutableStage mapToExecutable(LoadedStage loadedStage, ExecutionPlanResponse.Stage stageResponse) {
-        Set<String> taskPresentInResponse = new HashSet<>(stageResponse.getTasks()).stream().map(ExecutionPlanResponse.Task::getId).collect(Collectors.toSet());
+
+        Map<String, ExecutionPlanResponse.TaskState> taskStateMap = stageResponse.getTasks()
+                .stream()
+                .collect(Collectors.toMap(ExecutionPlanResponse.Task::getId, ExecutionPlanResponse.Task::getState));
 
         AuditStageStatus.StatusBuilder builder = AuditStageStatus.statusBuilder();
 
@@ -100,7 +103,7 @@ public final class ExecutionPlanMapper {
                 .getTaskDescriptors()
                 .stream()
                 .map(TaskDescriptor::getId)
-                .filter(id -> !taskPresentInResponse.contains(id))
+                .filter(taskId -> taskStateMap.get(taskId) != ExecutionPlanResponse.TaskState.PENDING_EXECUTION)
                 .forEach(taskId -> builder.addState(taskId, EXECUTED));
 
         return loadedStage.applyState(builder.build());

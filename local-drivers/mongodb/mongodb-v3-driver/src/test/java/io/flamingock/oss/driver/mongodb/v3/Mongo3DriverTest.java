@@ -24,7 +24,7 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.pipeline.Stage;
-import io.flamingock.core.pipeline.execution.PipelineExecutionException;
+import io.flamingock.core.runner.PipelineExecutionException;
 import io.flamingock.oss.driver.mongodb.v3.driver.Mongo3Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

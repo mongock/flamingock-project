@@ -48,7 +48,7 @@ public class LegacyImporterMongoDBApplication {
                     .setApiToken(API_TOKEN)
                     .setEnvironment(ENVIRONMENT)
                     .setService(SERVICE_NAME)
-                    .setCloudTransactioner(cloudTransactioner)//for cloud transactions with Sql
+//                    .setCloudTransactioner(cloudTransactioner)//for cloud transactions with Sql
                     .setLockAcquiredForMillis(6 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                     .setLockQuitTryingAfterMillis(10 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
                     .setLockTryFrequencyMillis(3000L)//this is just to show how is set. Default value is still 1000L

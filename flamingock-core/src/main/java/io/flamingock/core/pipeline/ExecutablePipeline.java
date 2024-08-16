@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.executable;
-
-import io.flamingock.core.runtime.RuntimeManager;
-import io.flamingock.core.task.Task;
+package io.flamingock.core.pipeline;
 
 import java.util.List;
 
-public interface ExecutableTask extends Task {
+public class ExecutablePipeline {
 
-    String getStageName();
 
-    void execute(RuntimeManager runtimeHelper);
+    private final List<ExecutableStage> stages;
 
-    String getExecutionMethodName();
+    public ExecutablePipeline(List<ExecutableStage> stages) {
+        this.stages = stages;
+    }
 
-    boolean isExecutionRequired();
+    public Iterable<ExecutableStage> getExecutableStages() {
+        return stages;
+    }
 
-    void addRollback(Rollback rollback);
-
-    List<? extends Rollback> getRollbackChain();
+    public boolean isExecutionRequired() {
+        return stages
+                .stream()
+                .anyMatch(ExecutableStage::doesRequireExecution);
+    }
 
 
 }
