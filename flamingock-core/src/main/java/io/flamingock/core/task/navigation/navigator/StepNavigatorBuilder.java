@@ -26,6 +26,8 @@ import io.flamingock.core.transaction.TransactionWrapper;
 public interface StepNavigatorBuilder {
 
 
+    StepNavigatorBuilder setSummarizer(TaskSummarizer summarizer);
+
     StepNavigatorBuilder setAuditWriter(AuditWriter auditWriter);
 
     StepNavigatorBuilder setLock(Lock lock);
@@ -50,6 +52,12 @@ public interface StepNavigatorBuilder {
         protected TransactionWrapper transactionWrapper = null;
 
         public AbstractStepNavigator() {
+        }
+
+        @Override
+        public StepNavigatorBuilder setSummarizer(TaskSummarizer summarizer) {
+            this.summarizer = summarizer;
+            return this;
         }
 
         @Override

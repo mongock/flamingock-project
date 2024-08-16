@@ -37,7 +37,6 @@ import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.pipeline.execution.StageExecutionException;
 import io.flamingock.core.pipeline.execution.StageExecutor;
 import io.flamingock.core.pipeline.execution.StageSummary;
-import io.flamingock.core.task.navigation.navigator.StepNavigationOutput;
 import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 import org.slf4j.Logger;
@@ -70,14 +69,7 @@ public class PipelineRunner implements Runner {
 
     private final Runnable finalizer;
 
-    public PipelineRunner(RunnerId runnerId,
-                          Pipeline pipeline,
-                          ExecutionPlanner executionPlanner,
-                          StageExecutor stageExecutor,
-                          OrphanExecutionContext orphanExecutionContext,
-                          EventPublisher eventPublisher,
-                          boolean throwExceptionIfCannotObtainLock,
-                          Runnable finalizer) {
+    public PipelineRunner(RunnerId runnerId, Pipeline pipeline, ExecutionPlanner executionPlanner, StageExecutor stageExecutor, OrphanExecutionContext orphanExecutionContext, EventPublisher eventPublisher, boolean throwExceptionIfCannotObtainLock, Runnable finalizer) {
         this.runnerId = runnerId;
         this.pipeline = pipeline;
         this.executionPlanner = executionPlanner;
@@ -116,9 +108,7 @@ public class PipelineRunner implements Runner {
                     throw exception;
 
                 } else {
-                    logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" +
-                            "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" +
-                            "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
+                    logger.warn("Process lock not acquired and `throwExceptionIfCannotObtainLock == false`.\n" + "If the application should abort, make `throwExceptionIfCannotObtainLock == true`\n" + "CONTINUING THE APPLICATION WITHOUT FINISHING THE PROCESS", exception);
                 }
                 break;
             } catch (StageExecutionException e) {
@@ -157,27 +147,6 @@ public class PipelineRunner implements Runner {
         eventPublisher.publish(new PipelineCompletedEvent());
     }
 
-    private static StageSummary getStageSummaryWithNotReachedTasks(List<LoadedStage> pipelineStages, StageSummary stageSummary) {
-        Set<String> executedTasksInInterruptedStage = stageSummary.getLines()
-                .stream()
-                .map(StepSummaryLine::getId)
-                .collect(Collectors.toSet());
-
-        pipelineStages
-                .stream()
-                .filter(loadedStage -> loadedStage.getName().equals(stageSummary.getId()))
-                .findFirst()
-                .map(LoadedStage::getTaskDescriptors)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(task -> !executedTasksInInterruptedStage.contains(task.getId()))
-                .map(taskDescriptor -> new TaskSummarizer(taskDescriptor.getId()).addNotReachedTask(taskDescriptor))
-                .map(summarizer -> new StepNavigationOutput(false, summarizer.getSummary()))
-                .forEach(stageSummary::addSummary);
-
-        return stageSummary;
-    }
-
     private StageSummary runStage(String executionId, Lock lock, ExecutableStage executableStage) {
         try {
             return startStage(executionId, lock, executableStage);
@@ -194,11 +163,7 @@ public class PipelineRunner implements Runner {
         eventPublisher.publish(new StageStartedEvent());
         logger.debug("Applied state to process:\n{}", executableStage);
 
-        ExecutionContext executionContext = new ExecutionContext(
-                executionId,
-                orphanExecutionContext.getHostname(),
-                orphanExecutionContext.getAuthor(),
-                orphanExecutionContext.getMetadata());
+        ExecutionContext executionContext = new ExecutionContext(executionId, orphanExecutionContext.getHostname(), orphanExecutionContext.getAuthor(), orphanExecutionContext.getMetadata());
         StageExecutor.Output executionOutput = stageExecutor.executeStage(executableStage, executionContext, lock);
         eventPublisher.publish(new StageCompletedEvent(executionOutput));
         return executionOutput.getSummary();

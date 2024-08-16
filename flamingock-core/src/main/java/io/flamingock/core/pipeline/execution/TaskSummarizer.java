@@ -24,17 +24,17 @@ import io.flamingock.core.task.navigation.step.rolledback.RolledBackStep;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.navigation.summary.AbstractTaskStepSummaryLine;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
-import io.flamingock.core.task.navigation.summary.StepSummary;
 import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 //NO thread-safe
 public class TaskSummarizer implements StepSummarizer<TaskSummarizer> {
 
     private final String taskId;
+
+    private boolean success = false;
 
     private List<StepSummaryLine> lines = new LinkedList<>();
 
@@ -85,9 +85,19 @@ public class TaskSummarizer implements StepSummarizer<TaskSummarizer> {
         return this;
     }
 
+    public TaskSummarizer setSuccessful() {
+        success = true;
+        return this;
+    }
+
+    public TaskSummarizer setFailed() {
+        success = false;
+        return this;
+    }
+
     @Override
     public TaskSummary getSummary() {
-        TaskSummary taskSummary = new TaskSummary(taskId);
+        TaskSummary taskSummary = new TaskSummary(taskId, success);
         lines.forEach(taskSummary::addLine);
         return taskSummary;
     }

@@ -30,8 +30,14 @@ public class PipelineSummary implements StepSummary {
     }
 
     public void merge(StageSummary stageSummary) {
+        StageSummary presentStageSummary = stageSummaries.get(stageSummary.getId());
+        if(presentStageSummary == null) {
+            stageSummaries.put(stageSummary.getId(), stageSummary);
+        } else {
+            StageSummary mergedStageSummary = presentStageSummary.merge(stageSummary);
+            stageSummaries.put(mergedStageSummary.getId(), mergedStageSummary);
+        }
 
-        stageSummaries.put(stageSummary.getId(), stageSummary);
     }
 
     public void put(StageSummary stageSummary) {

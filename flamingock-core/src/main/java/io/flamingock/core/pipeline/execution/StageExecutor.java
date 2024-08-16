@@ -22,7 +22,6 @@ import io.flamingock.core.pipeline.ExecutableStage;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.navigation.navigator.ReusableStepNavigatorBuilder;
-import io.flamingock.core.task.navigation.navigator.StepNavigationOutput;
 import io.flamingock.core.task.navigation.navigator.StepNavigatorBuilder;
 import io.flamingock.core.transaction.TransactionWrapper;
 
@@ -68,7 +67,7 @@ public class StageExecutor {
                             .build()
                             .executeTask(task, executionContext)
                     ).peek(summary::addSummary)
-                    .filter(StepNavigationOutput::isFailed)
+                    .filter(TaskSummary::isFailed)
                     .findFirst()
                     .ifPresent(failed -> {
                         throw new StageExecutionException(summary);

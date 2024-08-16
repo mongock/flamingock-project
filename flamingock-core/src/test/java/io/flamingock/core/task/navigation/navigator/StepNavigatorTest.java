@@ -19,6 +19,7 @@ package io.flamingock.core.task.navigation.navigator;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
+import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
@@ -72,7 +73,7 @@ class StepNavigatorTest {
         AuditWriter auditWriterMock = mock(AuditWriter.class);
         when(auditWriterMock.writeStep(any(AuditItem.class))).thenReturn(Result.OK());
 
-        StepSummarizer stepSummarizerMock = mock(StepSummarizer.class);
+        TaskSummarizer stepSummarizerMock = mock(TaskSummarizer.class);
         RuntimeManager runtimeManagerMock = RuntimeManager.builder()
                 .setDependencyContext(mock(DependencyInjectableContext.class))
                 .setLock(mock(Lock.class))
@@ -119,7 +120,7 @@ class StepNavigatorTest {
         AuditWriter auditWriterMock = mock(AuditWriter.class);
         when(auditWriterMock.writeStep(any(AuditItem.class))).thenReturn(Result.OK());
 
-        StepSummarizer stepSummarizerMock = mock(StepSummarizer.class);
+        TaskSummarizer stepSummarizerMock = mock(TaskSummarizer.class);
         RuntimeManager runtimeManagerMock = RuntimeManager.builder()
                 .setDependencyContext(mock(DependencyInjectableContext.class))
                 .setLock(mock(Lock.class))

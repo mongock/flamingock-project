@@ -26,11 +26,13 @@ import java.util.stream.Collectors;
 public class TaskSummary implements StepSummary, StepSummaryLine {
 
     private final String taskId;
+    private final boolean success;
 
     private final List<StepSummaryLine> lines = new LinkedList<>();
 
-    public TaskSummary(String taskId) {
+    public TaskSummary(String taskId, boolean success) {
         this.taskId = taskId;
+        this.success = success;
     }
 
     public void addLine(StepSummaryLine summary) {
@@ -53,4 +55,11 @@ public class TaskSummary implements StepSummary, StepSummaryLine {
     }
 
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public boolean isFailed() {
+        return !isSuccess();
+    }
 }

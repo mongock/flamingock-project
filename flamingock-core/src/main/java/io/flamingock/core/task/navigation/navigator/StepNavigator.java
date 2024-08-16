@@ -24,6 +24,7 @@ import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.audit.domain.RuntimeContext;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.TaskSummarizer;
+import io.flamingock.core.pipeline.execution.TaskSummary;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.task.executable.ExecutableTask;
@@ -104,7 +105,7 @@ public class StepNavigator {
                 ? (OngoingStatusRepository) transactionWrapper : null;
     }
 
-    public final StepNavigationOutput executeTask(ExecutableTask task, ExecutionContext executionContext) {
+    public final TaskSummary executeTask(ExecutableTask task, ExecutionContext executionContext) {
         if (task.isExecutionRequired()) {
             logger.info("Starting {}", task.getDescriptor().getId());
             // Main execution
@@ -121,12 +122,12 @@ public class StepNavigator {
 
             return executedStep instanceof RollableFailedStep
                     ? rollback((RollableFailedStep) executedStep, executionContext)
-                    : new StepNavigationOutput(true, summarizer.getSummary());
+                    : summarizer.setSuccessful().getSummary();
 
         } else {
             //Task already executed, we
             summarizer.add(new CompletedAlreadyAppliedStep(task));
-            return new StepNavigationOutput(true, summarizer.getSummary());
+            return summarizer.setSuccessful().getSummary();
         }
     }
 
@@ -188,7 +189,7 @@ public class StepNavigator {
         return afterExecutionAudit;
     }
 
-    private StepNavigationOutput rollback(RollableFailedStep rollableFailedStep, ExecutionContext executionContext) {
+    private TaskSummary rollback(RollableFailedStep rollableFailedStep, ExecutionContext executionContext) {
         if (rollableFailedStep instanceof CompleteAutoRolledBackStep) {
             logger.info("change[ {} ] AUTO-ROLLBACK APPLIED \u2705", rollableFailedStep.getTask().getDescriptor().getId());
             //It's autoRollable(handled by the database engine or similar)
@@ -200,7 +201,7 @@ public class StepNavigator {
             auditManualRollback(rolledBack, executionContext, LocalDateTime.now());
         });
 
-        return new StepNavigationOutput(false, summarizer.getSummary());
+        return summarizer.setFailed().getSummary();
     }
 
     private ManualRolledBackStep manualRollback(RollableStep rollable) {

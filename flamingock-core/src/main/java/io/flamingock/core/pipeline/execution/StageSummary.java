@@ -19,7 +19,7 @@ package io.flamingock.core.pipeline.execution;
 import io.flamingock.core.task.navigation.summary.StepSummary;
 import io.flamingock.core.task.navigation.summary.StepSummaryLine;
 
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,14 +27,14 @@ public class StageSummary implements StepSummary, StepSummaryLine {
 
     private final String stageName;
 
-    private final List<StepSummary> taskExecutionSummaries = new LinkedList<>();
+    private final LinkedHashMap<String, TaskSummary> taskExecutionSummaries = new LinkedHashMap<>();
 
     public StageSummary(String stageName) {
         this.stageName = stageName;
     }
 
-    public void addSummary(StepSummary summary) {
-        taskExecutionSummaries.add(summary);
+    public void addSummary(TaskSummary summary) {
+        taskExecutionSummaries.put(summary.getId(), summary);
     }
 
     @Override
@@ -44,7 +44,8 @@ public class StageSummary implements StepSummary, StepSummaryLine {
 
     @Override
     public List<StepSummaryLine> getLines() {
-        return taskExecutionSummaries.stream()
+        return taskExecutionSummaries.values()
+                .stream()
                 .map(StepSummary::getLines)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
@@ -55,5 +56,10 @@ public class StageSummary implements StepSummary, StepSummaryLine {
         return String.format("\nStage: %s\n%s", stageName, StepSummary.super.getPretty());
     }
 
-
+    public StageSummary merge(StageSummary overriderSummary) {
+        for (TaskSummary overriderTask : overriderSummary.taskExecutionSummaries.values()) {
+            taskExecutionSummaries.put(overriderTask.getId(), overriderTask);
+        }
+        return this;
+    }
 }

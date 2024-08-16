@@ -33,8 +33,8 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
     private enum SummaryResult {
         OK("OK", "\u2705"),
         FAILED("FAILED", "\u274C"),
-        ALREADY_APPLIED("ALREADY APPLIED", "\u23ED"),
-        NOT_REACHED("NOT REACHED", "\u23ED"),;
+        ALREADY_APPLIED("ALREADY APPLIED", "\u23E9"),
+        NOT_REACHED("NOT REACHED", "\u2754"),;
 
         private final String description;
         private final String icon;

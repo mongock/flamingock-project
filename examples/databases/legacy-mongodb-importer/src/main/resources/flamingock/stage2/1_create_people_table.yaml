@@ -11,4 +11,4 @@ templateConfiguration:
             City varchar(255)
         )
     rollbackSql: |
-        DROP TABLE IF EXISTS People
+        DROP TABLE IF EXISTS People_NOEXISTS
