@@ -128,7 +128,7 @@ public class ExecutionPlanResponse {
         }
     }
 
-    public static enum TaskState {
+    public enum TaskState {
         PENDING_EXECUTION, ALREADY_EXECUTED
     }
 
@@ -139,8 +139,9 @@ public class ExecutionPlanResponse {
         public Task() {
         }
 
-        public Task(String id) {
+        public Task(String id, TaskState state) {
             this.id = id;
+            this.state = state;
         }
 
         public String getId() {

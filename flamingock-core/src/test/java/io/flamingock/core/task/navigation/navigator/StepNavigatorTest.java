@@ -59,13 +59,6 @@ class StepNavigatorTest {
         TaskWithBeforeExecution.checker.reset();
     }
 
-
-    @Test
-    public void testasda() {
-        System.out.println(UUID.randomUUID());
-    }
-
-
     @Test
     @DisplayName("SHOULD run beforeExecution.Rollback IF task contains beforeExecution WHEN task fails")
     void test1() {
@@ -73,7 +66,9 @@ class StepNavigatorTest {
         AuditWriter auditWriterMock = mock(AuditWriter.class);
         when(auditWriterMock.writeStep(any(AuditItem.class))).thenReturn(Result.OK());
 
-        TaskSummarizer stepSummarizerMock = mock(TaskSummarizer.class);
+        String taskId = "task-with-before-execution";
+
+        TaskSummarizer stepSummarizerMock = new TaskSummarizer(taskId);
         RuntimeManager runtimeManagerMock = RuntimeManager.builder()
                 .setDependencyContext(mock(DependencyInjectableContext.class))
                 .setLock(mock(Lock.class))
@@ -81,7 +76,7 @@ class StepNavigatorTest {
 
         //AND
         TaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
-                "task-with-before-execution",
+                taskId,
                 "1",
                 TaskWithBeforeExecution.class,
                 false,
@@ -120,7 +115,8 @@ class StepNavigatorTest {
         AuditWriter auditWriterMock = mock(AuditWriter.class);
         when(auditWriterMock.writeStep(any(AuditItem.class))).thenReturn(Result.OK());
 
-        TaskSummarizer stepSummarizerMock = mock(TaskSummarizer.class);
+        String taskId = "task-with-before-execution";
+        TaskSummarizer stepSummarizerMock = new TaskSummarizer(taskId);
         RuntimeManager runtimeManagerMock = RuntimeManager.builder()
                 .setDependencyContext(mock(DependencyInjectableContext.class))
                 .setLock(mock(Lock.class))
@@ -128,7 +124,7 @@ class StepNavigatorTest {
 
         //AND
         TaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
-                "task-with-before-execution",
+                taskId,
                 "1",
                 TaskWithBeforeExecution.class,
                 false,
