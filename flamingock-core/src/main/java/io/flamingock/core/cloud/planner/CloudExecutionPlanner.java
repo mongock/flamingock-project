@@ -74,7 +74,7 @@ public class CloudExecutionPlanner extends ExecutionPlanner {
     }
 
     @Override
-    protected ExecutionPlan getNextExecution(Pipeline pipeline) throws LockException {
+    public ExecutionPlan getNextExecution(Pipeline pipeline) throws LockException {
 
         List<LoadedStage> loadedStages = pipeline.getLoadedStages();
 
