@@ -29,7 +29,7 @@ public interface ExecutableTask extends Task {
 
     String getExecutionMethodName();
 
-    boolean isExecutionRequired();
+    boolean isAlreadyExecuted();
 
     void addRollback(Rollback rollback);
 

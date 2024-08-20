@@ -49,6 +49,6 @@ public class ExecutableStage {
     public boolean isExecutionRequired() {
         return tasks.stream()
                 .filter(Objects::nonNull)
-                .anyMatch(ExecutableTask::isExecutionRequired);
+                .anyMatch(executableTask -> !executableTask.isAlreadyExecuted());
     }
 }

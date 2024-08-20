@@ -42,7 +42,6 @@ import io.flamingock.core.task.navigation.step.execution.FailedExecutionStep;
 import io.flamingock.core.task.navigation.step.execution.SuccessExecutionStep;
 import io.flamingock.core.task.navigation.step.rolledback.FailedManualRolledBackStep;
 import io.flamingock.core.task.navigation.step.rolledback.ManualRolledBackStep;
-import io.flamingock.core.task.navigation.summary.StepSummarizer;
 import io.flamingock.core.transaction.TransactionWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +105,7 @@ public class StepNavigator {
     }
 
     public final TaskSummary executeTask(ExecutableTask task, ExecutionContext executionContext) {
-        if (task.isExecutionRequired()) {
+        if (!task.isAlreadyExecuted()) {
             logger.info("Starting {}", task.getDescriptor().getId());
             // Main execution
             TaskStep executedStep;

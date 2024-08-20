@@ -26,15 +26,17 @@ public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> 
 
     protected final DESCRIPTOR descriptor;
 
-    protected final boolean executionRequired;
+    protected final boolean alreadyExecuted;
 
-    public AbstractExecutableTask(String stageName, DESCRIPTOR descriptor, boolean executionRequired) {
+    public AbstractExecutableTask(String stageName,
+                                  DESCRIPTOR descriptor,
+                                  boolean executionRequired) {
         if (descriptor == null) {
             throw new IllegalArgumentException("task descriptor cannot be null");
         }
         this.stageName = stageName;
         this.descriptor = descriptor;
-        this.executionRequired = executionRequired;
+        this.alreadyExecuted = !executionRequired;
     }
 
     @Override
@@ -48,8 +50,8 @@ public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> 
     }
 
     @Override
-    public boolean isExecutionRequired() {
-        return executionRequired;
+    public boolean isAlreadyExecuted() {
+        return alreadyExecuted;
     }
 
     @Override
@@ -69,7 +71,7 @@ public abstract class AbstractExecutableTask<DESCRIPTOR extends TaskDescriptor> 
     public String toString() {
         return "ReflectionExecutableTask{" +
                 ", id='" + descriptor + '\'' +
-                ", state=" + executionRequired +
+                ", state=" + alreadyExecuted +
                 "} ";
     }
 }
