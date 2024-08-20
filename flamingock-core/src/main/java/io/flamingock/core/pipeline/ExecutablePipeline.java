@@ -34,7 +34,7 @@ public class ExecutablePipeline {
     public boolean isExecutionRequired() {
         return stages
                 .stream()
-                .anyMatch(ExecutableStage::doesRequireExecution);
+                .anyMatch(ExecutableStage::isExecutionRequired);
     }
 
 

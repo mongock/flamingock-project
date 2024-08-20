@@ -27,14 +27,14 @@ import java.util.List;
 public class ExecutionPlan implements AutoCloseable {
 
 
-    private static final ExecutionPlan CONTINUE = new ExecutionPlan();
-
-    public static ExecutionPlan newExecution(String executionId, Lock lock, List<ExecutableStage> stages) {
+    public static ExecutionPlan newExecution(String executionId,
+                                             Lock lock,
+                                             List<ExecutableStage> stages) {
         return new ExecutionPlan(executionId, lock, stages);
     }
 
-    public static ExecutionPlan CONTINUE() {
-        return CONTINUE;
+    public static ExecutionPlan CONTINUE(List<ExecutableStage> stages) {
+        return new ExecutionPlan(stages);
     }
 
     private final String executionId;
@@ -43,16 +43,14 @@ public class ExecutionPlan implements AutoCloseable {
 
     private final ExecutablePipeline pipeline;
 
+    private ExecutionPlan(List<ExecutableStage> stages) {
+        this(null, null, stages);
+    }
+
     private ExecutionPlan(String executionId, Lock lock, List<ExecutableStage> stages) {
         this.executionId = executionId;
         this.lock = lock;
         this.pipeline = new ExecutablePipeline(stages);
-    }
-
-    private ExecutionPlan() {
-        executionId = null;
-        this.lock = null;
-        this.pipeline = new ExecutablePipeline(Collections.emptyList());
     }
 
     public boolean isExecutionRequired() {
