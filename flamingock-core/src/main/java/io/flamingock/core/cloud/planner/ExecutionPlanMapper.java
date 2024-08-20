@@ -32,6 +32,7 @@ import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -76,10 +77,11 @@ public final class ExecutionPlanMapper {
 
     static List<ExecutableStage> getExecutableStages(ExecutionPlanResponse response, List<LoadedStage> loadedStages) {
         //Create a set for the filter in the loop
-        Set<String> stageNameSet = response.getStages().stream().map(ExecutionPlanResponse.Stage::getName).collect(Collectors.toSet());
+        List<ExecutionPlanResponse.Stage> stages = response.getStages() != null ? response.getStages() : Collections.emptyList();
+        Set<String> stageNameSet = stages.stream().map(ExecutionPlanResponse.Stage::getName).collect(Collectors.toSet());
 
         //Create a map to allow indexed access when looping
-        Map<String, ExecutionPlanResponse.Stage> responseStagesMap = response.getStages()
+        Map<String, ExecutionPlanResponse.Stage> responseStagesMap = stages
                 .stream()
                 .collect(Collectors.toMap(ExecutionPlanResponse.Stage::getName, Function.identity()));
 
