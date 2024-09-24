@@ -16,68 +16,60 @@
 
 package io.flamingock.examples.mysql.standalone;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import flamingock.internal.legacy.importer.mongodb.MongoDBLegacyImporter;
-import io.flamingock.cloud.transaction.sql.SqlCloudTransactioner;
-import io.flamingock.cloud.transaction.sql.SqlDialect;
-import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
-import io.flamingock.core.pipeline.Stage;
-import io.flamingock.template.sql.SqlTemplateModule;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class LegacyImporterMongoDBApplication {
 
     private static final String SERVICE_NAME = "clients-service";
     private static final String ENVIRONMENT = "development";
-    private static final String API_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcyMjMzMzQ4MSwiZXhwIjoxNzUzODY5NDgxLCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoiMjNjMWE1OTYtNmIwYy00Mzk0LTg3NTYtOWU0NGVhNTI3MzI4IiwicHJvamVjdCI6ImFkMjFlZTgzLTQ0ZjgtNDMyOS1iMzVhLTNiNTNiMWQyMmNmYyIsImVudmlyb25tZW50IjoiYTlmYzFjYTctM2VhMi00ODZiLTkwYTgtNjM0OGNmYmJmMTRmIiwic2VydmljZSI6ImIyOTY0NWJhLTU3MjctNDk4Yi05NmI4LWNiOGY5MzkyM2QyNyJ9.g8NQs6KIvfctV6AdWigYWbiUgaWuCNNgO3wL8Q0dRqsmlzUS06CyhN8u109Soteg2GLmg_X75tyE5kBtQ65kMQb1dF0vDKl2488uuQwOycnBXQO9zA88ACJsbkgUUz_VXEm2eedugJnApCAVWw3g4TY9s5L7o4TyT41bYqC2TCIUFxrzDf08bR70xO5Abky0wc8DXimn5vwNygzvmRLZBo-3grkQvjUd7-3LQk5bdxY7J8tRQR8guJndTQEB5L9YJM_OxtksQkuyQ221Vvu9CO657Bz2X6MgGGjC59eeMU3K8NrlfP0NIhdvIEg-SIThhtXD1XMXwFDKWJObRA";
-
+    private static final String API_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcyNjQxMzQ5MiwiZXhwIjoxNzU3OTQ5NDkyLCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoiNjAxYTZiYTktNjVhNi00YWM3LWEzMDctMzYyYTU1MTk4NjEzIiwicHJvamVjdCI6Ijc2MzgwNDdhLTlmZDUtNGI2NS1hZDc2LTU3NGFiN2U3YjRjYSIsImVudmlyb25tZW50IjoiMDJjN2UwMGItYjZkNS00NDUzLTk2MDktOGZjNjVhMWFhZWVhIiwic2VydmljZSI6IjQyOWE1ZDc5LWM3NTAtNDhkMy04MmMxLWRiYTdkY2MzMTZiNiJ9.dX5RAtvbPPvdsWAHJUX5KqPbU1iyGFP6iUiwMCS9Dms9saLofwB2eq-ayQKnpDg7aqWNTWFIV1SCjQ0avbvbx2yl94u4w1tXgPtcmSVAbHqgLCyNE4mTbpJfG_xc2qkoYWZhjGaKEnHpQy03HLgPzfmVVoYgEyJLu0K9Pd2hGot2YPtYqJ2p7MfQZv8R87NjqY_qB3co2jcY6JSfwZonxccFBRpWcA3fJ2jVtUSBd2jE6eiftyOzZWUhz2TOSt68_SU7LsoT92MrRgLc-nSmpcoj_pamTe8rWbjvu_UbQSK7WMeIpFQXEj0-y7SXS8_DlMGvf_kh2NwNUF9emA";
+    private final static String MONGODB_CHANGELOG_COLLECTION = "mongockChangeLog";
+    public final static String DATABASE_NAME = "test";
     public static void main(String[] args) throws ClassNotFoundException {
         new LegacyImporterMongoDBApplication()
-                .run();
+                .run(getMongoClient("mongodb://localhost:27017/"), DATABASE_NAME);
 
     }
 
-    public void run() throws ClassNotFoundException {
-        try (CloudTransactioner cloudTransactioner = getSqlCloudTransactioner()) {
-            FlamingockStandalone
+    public void run(MongoClient mongoClient, String databaseName) throws ClassNotFoundException {
+
+        FlamingockStandalone
                     .cloud()
                     .setHost("http://localhost:8080")
                     .setApiToken(API_TOKEN)
                     .setEnvironment(ENVIRONMENT)
                     .setService(SERVICE_NAME)
-                    .addSystemModule(new MongoDBLegacyImporter("changeLogs"))
-                    .setCloudTransactioner(cloudTransactioner)//for cloud transactions with Sql
+                    .addSystemModule(new MongoDBLegacyImporter(MONGODB_CHANGELOG_COLLECTION,SERVICE_NAME, ENVIRONMENT, API_TOKEN))
                     .setLockAcquiredForMillis(6 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                     .setLockQuitTryingAfterMillis(10 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
                     .setLockTryFrequencyMillis(3000L)//this is just to show how is set. Default value is still 1000L
-                    .addStage(new Stage("database_stage").addFileDirectory("flamingock/stage1"))
-                    .addTemplateModule(new SqlTemplateModule())
-                    .addDependency(Connection.class, getConnection())
+                    .addDependency(mongoClient.getDatabase(databaseName))
                     .build()
                     .run();
-        }
-    }
 
-    private static SqlCloudTransactioner getSqlCloudTransactioner() throws ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return new SqlCloudTransactioner()
-                .setDialect(SqlDialect.MYSQL)
-                .setUrl("jdbc:mysql://localhost:3307/flamingock")
-                .setUser("root")
-                .setPassword("strong_password");
     }
+    private static MongoClient getMongoClient(String connectionString) {
 
-    //Temporally because we haven't injected transactional = true
-    private static Connection getConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection("jdbc:mysql://localhost:3307/flamingock", "root", "strong_password");
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        CodecRegistry codecRegistry = fromRegistries(CodecRegistries.fromCodecs(new ZonedDateTimeCodec()),
+                MongoClientSettings.getDefaultCodecRegistry(),
+                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+
+        MongoClientSettings.Builder builder = MongoClientSettings.builder();
+        builder.applyConnectionString(new ConnectionString(connectionString));
+        builder.codecRegistry(codecRegistry);
+        MongoClientSettings build = builder.build();
+        return MongoClients.create(build);
     }
 
 }

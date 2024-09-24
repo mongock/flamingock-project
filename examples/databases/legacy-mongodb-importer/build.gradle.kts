@@ -4,7 +4,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.0"
 }
 
-
+val mongodbVersion = "4.3.3"
 val jacksonVersion = "2.16.0"
 dependencies {
     implementation(project(":flamingock-core"))
@@ -13,6 +13,11 @@ dependencies {
     implementation(project(":templates:sql-template"))
 
     implementation(project(":internal:legacy-importer-mongodb"))
+
+    implementation(project(":local-drivers:mongodb:mongodb-sync-v4-driver"))
+    implementation("org.mongodb:mongodb-driver-sync:$mongodbVersion")
+    implementation("org.mongodb:mongodb-driver-core:$mongodbVersion")
+    implementation("org.mongodb:bson:$mongodbVersion")
 
     implementation("org.slf4j:slf4j-simple:2.0.6")
 
