@@ -17,11 +17,11 @@
 package io.flamingock.examples.community.dynamodb.changes;
 
 import io.flamingock.core.api.annotations.*;
-import io.flamingock.oss.driver.dynamodb.internal.util.DynamoClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.DeleteTableRequest;
+import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
 
 import static java.util.Collections.emptyList;
 
@@ -59,11 +59,16 @@ public class NewTableChangeUnit {
                 emptyList(),
                 emptyList()
         );
+        client.describeTable(
+                DescribeTableRequest.builder()
+                        .tableName(tableName)
+                        .build()
+        );
     }
 
     @RollbackExecution
-    public void rollbackExecution(DynamoClients client) {
-        client.getDynamoDbClient().deleteTable(
+    public void rollbackExecution(DynamoDbClient client) {
+        client.deleteTable(
                 DeleteTableRequest.builder()
                         .tableName(tableName)
                         .build()
