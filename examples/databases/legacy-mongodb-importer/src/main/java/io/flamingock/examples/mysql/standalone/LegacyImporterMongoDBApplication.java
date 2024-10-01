@@ -33,7 +33,7 @@ public class LegacyImporterMongoDBApplication {
 
     private static final String SERVICE_NAME = "clients-service";
     private static final String ENVIRONMENT = "development";
-    private static final String API_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcyNjQxMzQ5MiwiZXhwIjoxNzU3OTQ5NDkyLCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoiNjAxYTZiYTktNjVhNi00YWM3LWEzMDctMzYyYTU1MTk4NjEzIiwicHJvamVjdCI6Ijc2MzgwNDdhLTlmZDUtNGI2NS1hZDc2LTU3NGFiN2U3YjRjYSIsImVudmlyb25tZW50IjoiMDJjN2UwMGItYjZkNS00NDUzLTk2MDktOGZjNjVhMWFhZWVhIiwic2VydmljZSI6IjQyOWE1ZDc5LWM3NTAtNDhkMy04MmMxLWRiYTdkY2MzMTZiNiJ9.dX5RAtvbPPvdsWAHJUX5KqPbU1iyGFP6iUiwMCS9Dms9saLofwB2eq-ayQKnpDg7aqWNTWFIV1SCjQ0avbvbx2yl94u4w1tXgPtcmSVAbHqgLCyNE4mTbpJfG_xc2qkoYWZhjGaKEnHpQy03HLgPzfmVVoYgEyJLu0K9Pd2hGot2YPtYqJ2p7MfQZv8R87NjqY_qB3co2jcY6JSfwZonxccFBRpWcA3fJ2jVtUSBd2jE6eiftyOzZWUhz2TOSt68_SU7LsoT92MrRgLc-nSmpcoj_pamTe8rWbjvu_UbQSK7WMeIpFQXEj0-y7SXS8_DlMGvf_kh2NwNUF9emA";
+    private static final String API_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZsYW1pbmdvY2staW50ZXJuYWwifQ.eyJpc3MiOiJodHRwczovL2ZsYW1pbmdvY2suZXUuYXV0aDAuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZmxhbWluZ29jay5pbyIsImlhdCI6MTcyNzc5MzM5NiwiZXhwIjoxNzU5MzI5Mzk2LCJ0b2tlbl90eXBlIjoiYXBpX3Rva2VuIiwib3JnYW5pemF0aW9uIjoiNmI0YzNiM2MtMDAyNy00OWY4LWIxNjQtZGNmNmYwZDkxNzAwIiwicHJvamVjdCI6IjM2MzhjMzk0LTE4NTMtNGM3OC05ZmJiLWI4ZGYxY2QwMmNlZiIsImVudmlyb25tZW50IjoiNjcxMjg3YzItNTUyZC00Yjk0LTk0ZjMtMjc0ODkxM2I2MTM0Iiwic2VydmljZSI6IjA3YTE2MmI0LTU0OGQtNDI2ZS1hNmFmLTg5Mjk0NjNiM2UzYSJ9.IEkYfV5TBQ80KGw6AjjV_8ac-tjTOnHVDt_zZAawW_ON9ejEtz8sdrC4fSUeqZCAbJm-ZsABeIaxUxp2S7oYG-TJEEMBenDz-eExN_Xq5lq4S7-UdYO7NGEJCw9Qi5sfDjHp6IkGimOJoU15jyHwg9APMzyeOjG4N-2Zy975xgqDzvOir3wbvM-sT6Uk_-bwyHxW4eLPCFvH0Hz9P3sZZfoKIttx3Mw83Z3DeIyFMXzbWQOlj5wECkvD0A2Bg9gzUJQeRHZnfCU9A5efbr3Ps3vNRm8kdMqNoZnMW6G-WGf9uy-65D04_sNN8Ttc_yArpOeKbyDxuPJ2yAiZYw";
     private final static String MONGODB_CHANGELOG_COLLECTION = "mongockChangeLog";
     public final static String DATABASE_NAME = "test";
     public static void main(String[] args) throws ClassNotFoundException {
@@ -50,7 +50,7 @@ public class LegacyImporterMongoDBApplication {
                     .setApiToken(API_TOKEN)
                     .setEnvironment(ENVIRONMENT)
                     .setService(SERVICE_NAME)
-                    .addSystemModule(new MongoDBLegacyImporter(MONGODB_CHANGELOG_COLLECTION,SERVICE_NAME, ENVIRONMENT, API_TOKEN))
+                    .addSystemModule(new MongoDBLegacyImporter(MONGODB_CHANGELOG_COLLECTION))
                     .setLockAcquiredForMillis(6 * 1000L)//this is just to show how is set. Default value is still 60 * 1000L
                     .setLockQuitTryingAfterMillis(10 * 1000L)//this is just to show how is set. Default value is still 3 * 60 * 1000L
                     .setLockTryFrequencyMillis(3000L)//this is just to show how is set. Default value is still 1000L

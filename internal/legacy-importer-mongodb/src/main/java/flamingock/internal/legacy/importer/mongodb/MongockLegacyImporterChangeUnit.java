@@ -10,9 +10,7 @@ import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.SystemChange;
-import io.flamingock.core.cloud.api.auth.AuthResponse;
 import io.flamingock.core.cloud.auth.AuthClient;
-import io.flamingock.core.cloud.auth.AuthManager;
 import io.flamingock.core.cloud.auth.HttpAuthClient;
 import org.apache.http.impl.client.HttpClients;
 import org.bson.Document;
@@ -54,20 +52,12 @@ public class MongockLegacyImporterChangeUnit {
         );
 
         try {
-
-            AuthManager authManager = new AuthManager(
-                    configuration.getApiToken(),
-                    configuration.getServiceName(),
-                    configuration.getEnvironmentName(),
-                    authClient);
-
-            AuthResponse authResponse = authManager.authenticate();
             RunnerId runnerId = RunnerId.generate();
 
             requestBuilder
                     .POST(pathTemplate)
                     .withRunnerId(runnerId)
-                    .withBearerToken(authManager.getJwtToken())
+                    .withBearerToken(configuration.getJwt())
                     .setBody(data)
                     .execute();
 

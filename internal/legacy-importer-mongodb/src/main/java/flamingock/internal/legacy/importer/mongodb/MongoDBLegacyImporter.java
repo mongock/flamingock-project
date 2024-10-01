@@ -17,21 +17,15 @@ public class MongoDBLegacyImporter implements CloudSystemModule {
     private List<Dependency> dependencies;
 
     private final String changeUnitsCollection;
-    private final String serviceName;
-    private final String environmentName;
-    private final String apiToken;
 
-    public MongoDBLegacyImporter(String changeUnitsCollection, String serviceName, String environmentName, String apiToken) {
+    public MongoDBLegacyImporter(String changeUnitsCollection) {
         this.changeUnitsCollection = changeUnitsCollection;
-        this.serviceName = serviceName;
-        this.environmentName = environmentName;
-        this.apiToken = apiToken;
     }
 
     @Override
-    public void initialise(EnvironmentId environmentId, ServiceId serviceId) {
+    public void initialise(EnvironmentId environmentId, ServiceId serviceId, String jwt) {
         MongoDBLegacyImportConfiguration configuration = new MongoDBLegacyImportConfiguration(
-                environmentId, serviceId, changeUnitsCollection, serviceName, environmentName, apiToken
+                environmentId, serviceId, jwt, changeUnitsCollection
         );
         dependencies = Collections.singletonList(
                 new Dependency(MongoDBLegacyImportConfiguration.class, configuration)
