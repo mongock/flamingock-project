@@ -10,8 +10,6 @@ import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.SystemChange;
-import io.flamingock.core.cloud.auth.AuthClient;
-import io.flamingock.core.cloud.auth.HttpAuthClient;
 import org.apache.http.impl.client.HttpClients;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -36,14 +34,8 @@ public class MongockLegacyImporterChangeUnit {
                 .into(new ArrayList<>());
 
         //Instance HttpClient
-
         Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
-        Http.RequestBuilder requestBuilder = requestBuilderFactory.getRequestBuilder("http://localhost:8080");
-
-        AuthClient authClient = new HttpAuthClient(
-                "http://localhost:8080",
-                "v1",
-                requestBuilderFactory);
+        Http.RequestBuilder requestBuilder = requestBuilderFactory.getRequestBuilder(configuration.getServerHost());
 
         String pathTemplate = String.format(
                 "/api/v1/environment/%s/service/%s/execution/import",
