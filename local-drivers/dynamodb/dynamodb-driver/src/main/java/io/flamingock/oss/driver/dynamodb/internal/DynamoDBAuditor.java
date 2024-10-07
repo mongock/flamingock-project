@@ -30,6 +30,7 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.TransactionCanceledException;
 
 import java.util.Collections;
@@ -42,25 +43,29 @@ public class DynamoDBAuditor implements Auditor {
     private static final Logger logger = LoggerFactory.getLogger(DynamoDBAuditor.class);
 
     protected final DynamoClients client;
+    protected final DynamoDBTransactionWrapper transactionWrapper;
     private final DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
     protected DynamoDbTable<AuditEntryEntity> table;
 
-    protected DynamoDBAuditor(DynamoClients client) {
+    protected DynamoDBAuditor(DynamoClients client, DynamoDBTransactionWrapper transactionWrapper) {
         this.client = client;
+        this.transactionWrapper = transactionWrapper;
     }
 
-    protected void initialize() {
-        dynamoDBUtil.createTable(
-                client.getDynamoDbClient(),
-                dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK, DynamoDBConstants.AUDIT_LOG_TASK_ID),
-                dynamoDBUtil.getKeySchemas(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK),
-                dynamoDBUtil.getProvisionedThroughput(5L, 5L),
-                DynamoDBConstants.AUDIT_LOG_TABLE_NAME,
-                Collections.singletonList(
-                        dynamoDBUtil.generateLSI(DynamoDBConstants.AUDIT_LOG_LSI_TASK, DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_TASK_ID)
-                ),
-                emptyList()
-        );
+    protected void initialize(Boolean indexCreation) {
+        if (indexCreation) {
+            dynamoDBUtil.createTable(
+                    client.getDynamoDbClient(),
+                    dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK, DynamoDBConstants.AUDIT_LOG_TASK_ID),
+                    dynamoDBUtil.getKeySchemas(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK),
+                    dynamoDBUtil.getProvisionedThroughput(5L, 5L),
+                    DynamoDBConstants.AUDIT_LOG_TABLE_NAME,
+                    Collections.singletonList(
+                            dynamoDBUtil.generateLSI(DynamoDBConstants.AUDIT_LOG_LSI_TASK, DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_TASK_ID)
+                    ),
+                    emptyList()
+            );
+        }
         table = client.getEnhancedClient().table(DynamoDBConstants.AUDIT_LOG_TABLE_NAME, TableSchema.fromBean(AuditEntryEntity.class));
     }
 
@@ -69,7 +74,7 @@ public class DynamoDBAuditor implements Auditor {
      */
     public void deleteAll() {
         table.deleteTable();
-        initialize();
+        initialize(true);
     }
 
     @Override
@@ -78,11 +83,17 @@ public class DynamoDBAuditor implements Auditor {
         logger.debug("Saving audit entry with key {}", entity.getPartitionKey());
 
         try {
-            table.putItem(
-                    PutItemEnhancedRequest.builder(AuditEntryEntity.class)
-                            .item(entity)
-                            .build()
-            );
+            if (transactionWrapper != null) {
+                // TODO: Is this OK?
+                transactionWrapper.getWriteRequestBuilder()
+                        .addPutItem(table, entity);
+            } else {
+                table.putItem(
+                        PutItemEnhancedRequest.builder(AuditEntryEntity.class)
+                                .item(entity)
+                                .build()
+                );
+            }
         } catch (TransactionCanceledException ex) {
             logger.warn("Error saving audit entry with key {}", entity.getPartitionKey(), ex);
         }

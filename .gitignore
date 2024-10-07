@@ -98,3 +98,6 @@ Vagrantfile
 
 #vscode
 .vscode/*
+
+#DynamoDB local
+dynamodb-local-metadata.json

@@ -58,7 +58,7 @@ public class CommunityStandaloneDynamoDBApp {
                 .addStage(new Stage("stage-name").addCodePackage("io.flamingock.examples.community.dynamodb.changes"))
                 .addDependency(client)
                 .setTrackIgnored(true)
-                .setTransactionEnabled(false)
+                .setTransactionEnabled(true)
                 .setPipelineStartedListener(new StartedEventListener())
                 .setPipelineCompletedListener(new SuccessEventListener())
                 .setPipelineFailedListener(new FailureEventListener())

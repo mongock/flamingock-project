@@ -20,8 +20,21 @@ import io.flamingock.core.engine.local.driver.DriverConfigurable;
 
 public class DynamoDBConfiguration implements DriverConfigurable {
 
-    public static DynamoDBConfiguration getDefault() {
-        return new DynamoDBConfiguration();
+    private boolean indexCreation = true;
+
+    DynamoDBConfiguration(Boolean indexCreation) {
+        this.indexCreation = indexCreation;
     }
 
+    public static DynamoDBConfiguration getDefault() {
+        return new DynamoDBConfiguration(true);
+    }
+
+    public boolean isIndexCreation() {
+        return indexCreation;
+    }
+
+    public void setIndexCreation(boolean indexCreation) {
+        this.indexCreation = indexCreation;
+    }
 }

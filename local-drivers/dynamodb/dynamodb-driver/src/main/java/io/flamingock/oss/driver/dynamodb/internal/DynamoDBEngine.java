@@ -36,6 +36,7 @@ public class DynamoDBEngine implements LocalConnectionEngine {
     private final CoreConfigurable coreConfiguration;
     private DynamoDBAuditor auditor;
     private LocalExecutionPlanner executionPlanner;
+    private TransactionWrapper transactionWrapper;
 
 
     public DynamoDBEngine(DynamoClients client,
@@ -50,10 +51,11 @@ public class DynamoDBEngine implements LocalConnectionEngine {
 
     @Override
     public void initialize(RunnerId runnerId) {
-        auditor = new DynamoDBAuditor(client);
-        auditor.initialize();
+        transactionWrapper = coreConfiguration.getTransactionEnabled() ? new DynamoDBTransactionWrapper(client) : null;
+        auditor = new DynamoDBAuditor(client, (DynamoDBTransactionWrapper) transactionWrapper);
+        auditor.initialize(driverConfiguration.isIndexCreation());
         DynamoDBLockService lockService = new DynamoDBLockService(client, TimeService.getDefault());
-        lockService.initialize();
+        lockService.initialize(driverConfiguration.isIndexCreation());
         executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }
 
@@ -70,7 +72,6 @@ public class DynamoDBEngine implements LocalConnectionEngine {
 
     @Override
     public Optional<TransactionWrapper> getTransactionWrapper() {
-        // TODO: Pending implement
-        return Optional.empty();
+        return Optional.ofNullable(transactionWrapper);
     }
 }
