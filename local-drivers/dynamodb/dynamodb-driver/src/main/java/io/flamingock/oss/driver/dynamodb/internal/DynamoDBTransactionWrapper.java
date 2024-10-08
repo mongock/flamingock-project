@@ -34,12 +34,12 @@ public class DynamoDBTransactionWrapper implements TransactionWrapper {
     private final DynamoClients client;
     private final TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder = TransactWriteItemsEnhancedRequest.builder();
 
-    public TransactWriteItemsEnhancedRequest.Builder getWriteRequestBuilder() {
-        return writeRequestBuilder;
-    }
-
     DynamoDBTransactionWrapper(DynamoClients client) {
         this.client = client;
+    }
+
+    public TransactWriteItemsEnhancedRequest.Builder getWriteRequestBuilder() {
+        return writeRequestBuilder;
     }
 
     @Override
@@ -55,6 +55,5 @@ public class DynamoDBTransactionWrapper implements TransactionWrapper {
         }
         return result;
     }
-
 
 }
