@@ -24,7 +24,7 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@ChangeUnit(id = "insert-row", order = "2", transactional = false)
+@ChangeUnit(id = "insert-user", order = "2", transactional = false)
 public class BInsertRow {
 
     @Execution

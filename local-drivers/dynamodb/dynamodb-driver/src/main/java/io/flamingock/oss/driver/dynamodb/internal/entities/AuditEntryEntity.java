@@ -95,7 +95,7 @@ public class AuditEntryEntity {
         this.sortKey = sortKey;
     }
 
-    @DynamoDbAttribute(DynamoDBConstants.AUDIT_LOG_TASK_ID)
+    @DynamoDbAttribute(AuditEntryField.KEY_CHANGE_ID)
     @DynamoDbSecondarySortKey(indexNames = {DynamoDBConstants.AUDIT_LOG_LSI_TASK})
     public String getTaskId() {
         return taskId;

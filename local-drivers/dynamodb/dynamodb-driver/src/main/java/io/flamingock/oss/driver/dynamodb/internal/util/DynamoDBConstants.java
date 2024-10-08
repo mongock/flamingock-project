@@ -21,7 +21,6 @@ public final class DynamoDBConstants {
     public static final String AUDIT_LOG_LSI_TASK = "taskLsi";
     public static final String AUDIT_LOG_PK = "partitionKey";
     public static final String AUDIT_LOG_SK = "sortKey";
-    public static final String AUDIT_LOG_TASK_ID = "taskId";
     public static final String AUDIT_LOG_STAGE_ID = "stageId";
     public static final String AUDIT_LOG_SORT_PREFIX = "[AUDIT]";
 

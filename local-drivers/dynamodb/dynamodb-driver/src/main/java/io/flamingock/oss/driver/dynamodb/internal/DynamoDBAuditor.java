@@ -17,6 +17,7 @@
 package io.flamingock.oss.driver.dynamodb.internal;
 
 import io.flamingock.commons.utils.Result;
+import io.flamingock.community.internal.AuditEntryField;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.core.engine.local.Auditor;
@@ -56,12 +57,12 @@ public class DynamoDBAuditor implements Auditor {
         if (indexCreation) {
             dynamoDBUtil.createTable(
                     client.getDynamoDbClient(),
-                    dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK, DynamoDBConstants.AUDIT_LOG_TASK_ID),
+                    dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK, AuditEntryField.KEY_CHANGE_ID),
                     dynamoDBUtil.getKeySchemas(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK),
                     dynamoDBUtil.getProvisionedThroughput(5L, 5L),
                     DynamoDBConstants.AUDIT_LOG_TABLE_NAME,
                     Collections.singletonList(
-                            dynamoDBUtil.generateLSI(DynamoDBConstants.AUDIT_LOG_LSI_TASK, DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_TASK_ID)
+                            dynamoDBUtil.generateLSI(DynamoDBConstants.AUDIT_LOG_LSI_TASK, DynamoDBConstants.AUDIT_LOG_PK, AuditEntryField.KEY_CHANGE_ID)
                     ),
                     emptyList()
             );
@@ -84,7 +85,6 @@ public class DynamoDBAuditor implements Auditor {
 
         try {
             if (transactionWrapper != null) {
-                // TODO: Is this OK?
                 transactionWrapper.getWriteRequestBuilder()
                         .addPutItem(table, entity);
             } else {

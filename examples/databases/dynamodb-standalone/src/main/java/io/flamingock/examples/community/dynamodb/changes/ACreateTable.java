@@ -23,7 +23,7 @@ import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
 
 import static java.util.Collections.emptyList;
 
-@ChangeUnit(id = "create-collection", order = "1", transactional = false)
+@ChangeUnit(id = "table-create", order = "1", transactional = false)
 public class ACreateTable {
 
     private final DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
