@@ -1,0 +1,225 @@
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import flamingock.internal.legacy.importer.mongodb.MongoDBLegacyImporter;
+import flamingock.internal.legacy.importer.mongodb.MongockLegacyImporterChangeUnit;
+import io.flamingock.common.test.cloud.AuditEntryExpectation;
+import io.flamingock.common.test.cloud.MockRunnerServer;
+import io.flamingock.common.test.cloud.MongockLegacyAuditEntry;
+import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
+import io.flamingock.core.configurator.standalone.FlamingockStandalone;
+import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
+import io.flamingock.core.runner.PipelineExecutionException;
+import io.flamingock.core.runner.Runner;
+import io.flamingock.examples.community.CommunityStandaloneMongodbSyncApp;
+import org.bson.Document;
+import org.junit.jupiter.api.*;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+
+import java.util.*;
+
+import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@Testcontainers
+public class SuccessExecutionImporterTest {
+    @Container
+    public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
+
+    private static MongoClient mongoClient;
+
+    private final String apiToken = "FAKE_API_TOKEN";
+    private final String organisationId = UUID.randomUUID().toString();
+    private final String organisationName = "MyOrganisation";
+
+    private final String projectId = UUID.randomUUID().toString();
+    private final String projectName = "MyOrganisation";
+
+    private final String serviceName = "clients-service";
+    private final String environmentName = "development";
+    private final String serviceId = "clients-service-id";
+    private final String environmentId = "development-env-id";
+    private final String credentialId = UUID.randomUUID().toString();
+    private final int runnerServerPort = 8888;
+    private final String jwt = "fake_jwt";
+    private final static String MONGODB_CHANGELOG_COLLECTION = "mongockChangeLog";
+    private final static String DATABASE_NAME = "test";
+
+    private MockRunnerServer mockRunnerServer;
+    private StandaloneCloudBuilder flamingockBuilder;
+
+    private static final List<AuditEntryExpectation> auditEntryExpectations = new LinkedList<>();
+
+    private static final List<MongockLegacyAuditEntry> legacyAuditEntryExpectations = new LinkedList<>();
+
+    @BeforeAll
+    static void beforeAll() {
+        mongoClient = MongoClients.create(MongoClientSettings
+                .builder()
+                .applyConnectionString(new ConnectionString(mongoDBContainer.getConnectionString()))
+                .build());
+        new CommunityStandaloneMongodbSyncApp().run(mongoClient, "test");
+
+        auditEntryExpectations.add(new
+
+                AuditEntryExpectation(
+                "mongock-legacy-importer-mongodb-v1",
+                AuditEntryRequest.Status.EXECUTED,
+                MongockLegacyImporterChangeUnit.class.getName(),
+                "execution"
+        ));
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        mockRunnerServer = new MockRunnerServer()
+                .setServerPort(runnerServerPort)
+                .setOrganisationId(organisationId)
+                .setOrganisationName(organisationName)
+                .setProjectId(projectId)
+                .setProjectName(projectName)
+                .setServiceId(serviceId)
+                .setServiceName(serviceName)
+                .setEnvironmentId(environmentId)
+                .setEnvironmentName(environmentName)
+                .setCredentialId(credentialId)
+                .setApiToken(apiToken)
+                .setJwt(jwt);
+
+        flamingockBuilder = FlamingockStandalone.cloud()
+                .setApiToken(apiToken)
+                .setHost("http://localhost:" + runnerServerPort)
+                .setService(serviceName)
+                .addSystemModule(new MongoDBLegacyImporter(MONGODB_CHANGELOG_COLLECTION))
+                .addDependency(mongoClient.getDatabase(DATABASE_NAME))
+                .setEnvironment(environmentName);
+    }
+
+    @AfterEach
+    void afterEach() {
+        //tear down
+        mockRunnerServer.stop();
+    }
+
+    @Test
+    @DisplayName("SHOULD import the Flamingock legacy history")
+    void flamingockLegacyAuditImporterOkTest() {
+        ArrayList<Document> flamingockDocuments = mongoClient.getDatabase(DATABASE_NAME)
+                .getCollection(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME)
+                .find()
+                .into(new ArrayList<>());
+
+        Document aCreateCollection = flamingockDocuments.get(0);
+        assertEquals("create-collection", aCreateCollection.get("changeId"));
+        assertEquals("EXECUTED", aCreateCollection.get("state"));
+        assertEquals("io.flamingock.examples.community.changes.ACreateCollection", aCreateCollection.get("changeLogClass"));
+
+        Document bInsertDocument = flamingockDocuments.get(1);
+        assertEquals("insert-document", bInsertDocument.get("changeId"));
+        assertEquals("EXECUTED", bInsertDocument.get("state"));
+        assertEquals("io.flamingock.examples.community.changes.BInsertDocument", bInsertDocument.get("changeLogClass"));
+
+        Document cInsertAnotherDocument = flamingockDocuments.get(2);
+        assertEquals("insert-another-document", cInsertAnotherDocument.get("changeId"));
+        assertEquals("EXECUTED", cInsertAnotherDocument.get("state"));
+        assertEquals("io.flamingock.examples.community.changes.CInsertAnotherDocument", cInsertAnotherDocument.get("changeLogClass"));
+
+        assertEquals(3, flamingockDocuments.size());
+
+        flamingockDocuments.forEach(m -> legacyAuditEntryExpectations.add(new MongockLegacyAuditEntry(
+                m.get("_id"),
+                (String) m.get("executionId"),
+                (String) m.get("changeId"),
+                (String) m.get("state"),
+                (String) m.get("type"),
+                (String) m.get("author"),
+                m.get("timestamp"),
+                (String) m.get("changeLogClass"),
+                (String) m.get("changeSetMethod"),
+                m.get("metadata"),
+                (Long) m.get("executionMillis"),
+                (String) m.get("executionHostname"),
+                (String) m.get("errorTrace"),
+                (Boolean) m.get("systemChange")
+        )));
+
+        String executionId = "execution-1";
+        mockRunnerServer
+                .addSimpleStageExecutionPlan(executionId, "mongodb-legacy-importer", auditEntryExpectations)
+                .addSuccessfulImporterCall(legacyAuditEntryExpectations)
+                .addExecutionWithAllTasksRequestResponse(executionId)
+                .addExecutionContinueRequestResponse();
+
+        mockRunnerServer.start();
+
+        //WHEN
+        //THEN
+        Runner runner = flamingockBuilder
+                .build();
+
+        runner.execute();
+    }
+
+    @Test
+    @DisplayName("SHOULD not import the Flamingock legacy history")
+    void flamingockLegacyAuditImporterFailureTest() {
+        ArrayList<Document> flamingockDocuments = mongoClient.getDatabase(DATABASE_NAME)
+                .getCollection(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME)
+                .find()
+                .into(new ArrayList<>());
+
+        Document aCreateCollection = flamingockDocuments.get(0);
+        assertEquals("create-collection", aCreateCollection.get("changeId"));
+        assertEquals("EXECUTED", aCreateCollection.get("state"));
+        assertEquals("io.flamingock.examples.community.changes.ACreateCollection", aCreateCollection.get("changeLogClass"));
+
+        Document bInsertDocument = flamingockDocuments.get(1);
+        assertEquals("insert-document", bInsertDocument.get("changeId"));
+        assertEquals("EXECUTED", bInsertDocument.get("state"));
+        assertEquals("io.flamingock.examples.community.changes.BInsertDocument", bInsertDocument.get("changeLogClass"));
+
+        Document cInsertAnotherDocument = flamingockDocuments.get(2);
+        assertEquals("insert-another-document", cInsertAnotherDocument.get("changeId"));
+        assertEquals("EXECUTED", cInsertAnotherDocument.get("state"));
+        assertEquals("io.flamingock.examples.community.changes.CInsertAnotherDocument", cInsertAnotherDocument.get("changeLogClass"));
+
+        assertEquals(3, flamingockDocuments.size());
+
+        flamingockDocuments.forEach(m -> legacyAuditEntryExpectations.add(new MongockLegacyAuditEntry(
+                m.get("_id"),
+                (String) m.get("executionId"),
+                (String) m.get("changeId"),
+                (String) m.get("state"),
+                (String) m.get("type"),
+                (String) m.get("author"),
+                m.get("timestamp"),
+                (String) m.get("changeLogClass"),
+                (String) m.get("changeSetMethod"),
+                m.get("metadata"),
+                (Long) m.get("executionMillis"),
+                (String) m.get("executionHostname"),
+                (String) m.get("errorTrace"),
+                (Boolean) m.get("systemChange")
+        )));
+
+        String executionId = "execution-1";
+        mockRunnerServer
+                .addSimpleStageExecutionPlan(executionId, "mongodb-legacy-importer", auditEntryExpectations)
+                .addFailureImporterCall(Collections.emptyList())
+                .addExecutionWithAllTasksRequestResponse(executionId)
+                .addExecutionContinueRequestResponse();
+
+        mockRunnerServer.start();
+
+        //WHEN
+        //THEN
+        Runner runner = flamingockBuilder
+                .build();
+
+        Exception exception = Assertions.assertThrows(PipelineExecutionException.class, runner::execute);
+    }
+}

@@ -39,8 +39,8 @@ public class MongockLegacyImporterChangeUnit {
 
         String pathTemplate = String.format(
                 "/api/v1/environment/%s/service/%s/execution/import",
-                configuration.getServiceId().toString(),
-                configuration.getEnvironmentId().toString()
+                configuration.getEnvironmentId().toString(),
+                configuration.getServiceId().toString()
         );
 
         try {
@@ -55,6 +55,7 @@ public class MongockLegacyImporterChangeUnit {
 
         } catch (Throwable throwable) {
             logger.error("Error writing legacy audit:\n{}", throwable.toString());
+            throw throwable;
         }
     }
 }

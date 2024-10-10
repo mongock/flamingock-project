@@ -28,6 +28,13 @@ dependencies {
 
     implementation("commons-logging:commons-logging:1.2")
 
+    testImplementation("org.testcontainers:mongodb:1.18.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.18.3")
+
+    testImplementation(project(":utils-test"))
+    testImplementation(project(":examples:databases:mongodb-sync-standalone"))
+
+
 }
 
 tasks.withType<Jar> {
