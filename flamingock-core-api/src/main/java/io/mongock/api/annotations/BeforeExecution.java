@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.mongock.api.annotations;
 
-package io.flamingock.core.api.annotations;
+import io.flamingock.core.api.annotations.FlamingockConstructor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,12 +24,13 @@ import java.lang.annotation.Target;
 
 /**
  * For old classes, this annotation can remain. It won't be removed from the legacy library.
- * For new classes, use FlamingockConstructor
+ * For new classes, use io.flamingock.core.api.annotations.BeforeExecution
  * <p>
- * @see FlamingockConstructor
+ * @see io.flamingock.core.api.annotations.BeforeExecution
  */
 @Deprecated
-@Target(ElementType.CONSTRUCTOR)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ChangeUnitConstructor {
+public @interface BeforeExecution {
+
 }

@@ -16,6 +16,8 @@
 
 package io.flamingock.core.api.annotations;
 
+import io.mongock.api.annotations.ChangeUnitConstructor;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -17,7 +17,7 @@
 package io.flamingock.core.runtime;
 
 import io.changock.migration.api.annotations.NonLockGuarded;
-import io.flamingock.core.api.annotations.ChangeUnitConstructor;
+import io.mongock.api.annotations.ChangeUnitConstructor;
 import io.flamingock.core.api.annotations.FlamingockConstructor;
 import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.engine.lock.Lock;
