@@ -52,13 +52,13 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
                                                                                             ReflectionTaskDescriptor taskDescriptor,
                                                                                             AuditEntry.Status initialState) {
 
-        Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), Execution.class)
+        Method executionMethod = ReflectionUtil.findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), Execution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
                         "ExecutableChangeUnit[%s] without %s method",
                         taskDescriptor.getSourceClass().getName(),
                         Execution.class.getSimpleName())));
 
-        Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), RollbackExecution.class);
+        Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), RollbackExecution.class);
         ReflectionExecutableTask<ReflectionTaskDescriptor> task = new ReflectionExecutableTask<>(
                 stageName,
                 taskDescriptor,
@@ -94,12 +94,12 @@ public class ChangeUnitFactory implements ExecutableTaskFactory {
                 false//A beforeExecution task will never be transactional
         );
 
-        Optional<Method> beforeExecutionMethodOptional = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), BeforeExecution.class);
+        Optional<Method> beforeExecutionMethodOptional = ReflectionUtil.findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), BeforeExecution.class);
         if (!beforeExecutionMethodOptional.isPresent()) {
             return Optional.empty();
         }
         Method beforeExecutionMethod = beforeExecutionMethodOptional.get();
-        Optional<Method> rollbackBeforeExecution = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), RollbackBeforeExecution.class);
+        Optional<Method> rollbackBeforeExecution = ReflectionUtil.findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), RollbackBeforeExecution.class);
 
 
         return Optional.of(new ReflectionExecutableTask<>(

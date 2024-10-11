@@ -25,18 +25,27 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class ReflectionUtil {
     private ReflectionUtil() {}
-    public static Optional<Method> findFirstMethodAnnotated(Class<?> source, Class<? extends Annotation> annotation) {
+    public static Optional<Method> findFirstAnnotatedMethod(Class<?> source, Class<? extends Annotation> annotation) {
         return Arrays.stream(source.getMethods())
                 .filter(method -> method.isAnnotationPresent(annotation))
                 .findFirst();
     }
 
     //TODO expand this beyond ChangeUnit
-    public static Collection<Class<?>> loadClassesFromPackage(String packagePath, Class<? extends Annotation> taskAnnotation) {
-        return new Reflections(packagePath).getTypesAnnotatedWith(taskAnnotation);
+
+    @SuppressWarnings("unchecked")
+    public static Collection<Class<?>> loadAnnotatedClassesFromPackage(String packagePath, Class<? extends Annotation>... annotations) {
+        Reflections reflections = new Reflections(packagePath);
+        return Stream.of(annotations)
+                .map(reflections::getTypesAnnotatedWith)
+                .flatMap(Set::stream)
+                .collect(Collectors.toList());
     }
 
     public static List<Class<?>> getParameters(Executable executable) {

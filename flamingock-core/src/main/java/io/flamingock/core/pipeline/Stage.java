@@ -16,10 +16,8 @@
 
 package io.flamingock.core.pipeline;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.SystemChange;
 import io.flamingock.commons.utils.FileUtil;
-import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptorBuilder;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -129,8 +126,6 @@ public class Stage {
     }
 
     public Stage addFilters(Collection<TaskFilter> filters) {
-        Collection<TaskFilter> allFilters = this.filters != null ? new LinkedList<>(this.filters) : new LinkedHashSet<>();
-        if (filters != null) allFilters.addAll(filters);
         if (filters != null) {
             filters.forEach(this::addFilter);
         }
@@ -205,9 +200,10 @@ public class Stage {
         if (codePackages == null) {
             return Collections.emptyList();
         }
+
         Collection<Class<?>> classes = codePackages.
                 stream()
-                .map(packagePath -> ReflectionUtil.loadClassesFromPackage(packagePath, ChangeUnit.class))
+                .map(ExecutionUtils::loadExecutionClassesFromPackage)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
@@ -220,7 +216,7 @@ public class Stage {
         }
         return classes.
                 stream()
-                .filter(clazz -> clazz.isAnnotationPresent(ChangeUnit.class))
+                .filter(ExecutionUtils::isExecutionClass)
                 .filter(filterOperator)
                 .map(ReflectionTaskDescriptorBuilder.recycledBuilder()::setSource)
                 .map(ReflectionTaskDescriptorBuilder::build)

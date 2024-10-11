@@ -58,7 +58,7 @@ public class TemplatedExecutableTaskFactory implements ExecutableTaskFactory {
                                                            TemplatedTaskDescriptor taskDescriptor,
                                                            AuditEntry.Status initialState) {
 
-        Method executionMethod = ReflectionUtil.findFirstMethodAnnotated(taskDescriptor.getSourceClass(), TemplateExecution.class)
+        Method executionMethod = ReflectionUtil.findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), TemplateExecution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
                         "Templated[%s] without %s method",
                         taskDescriptor.getSourceClass().getName(),
@@ -66,11 +66,11 @@ public class TemplatedExecutableTaskFactory implements ExecutableTaskFactory {
         Optional<Method> rollbackMethod = getRollbackMethodOpt(taskDescriptor);
 
         Optional<Method> configurationSetterOpt = ReflectionUtil
-                .findFirstMethodAnnotated(taskDescriptor.getSourceClass(), TemplateConfigSetter.class);
+                .findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), TemplateConfigSetter.class);
 
 
         Optional<Method> configurationValidatorOpt = ReflectionUtil
-                .findFirstMethodAnnotated(taskDescriptor.getSourceClass(), TemplateConfigValidator.class);
+                .findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), TemplateConfigValidator.class);
 
 
         return new TemplatedExecutableTask(
@@ -87,7 +87,7 @@ public class TemplatedExecutableTaskFactory implements ExecutableTaskFactory {
 
     private static Optional<Method> getRollbackMethodOpt(TemplatedTaskDescriptor taskDescriptor) {
         Optional<Method> rollbackMethodOpt = ReflectionUtil
-                .findFirstMethodAnnotated(taskDescriptor.getSourceClass(), TemplateRollbackExecution.class);
+                .findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), TemplateRollbackExecution.class);
         Optional<Method> rollbackMethod;
         if (rollbackMethodOpt.isPresent()) {
             Method potentialRollbackMethod = rollbackMethodOpt.get();
