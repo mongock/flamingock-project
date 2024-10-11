@@ -17,6 +17,7 @@
 package io.flamingock.core.task.executable;
 
 import io.flamingock.core.engine.audit.writer.AuditEntry;
+import io.flamingock.core.task.descriptor.ChangeUnitTaskDescriptor;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptor;
@@ -39,7 +40,7 @@ public class ParentExecutableTaskFactory implements ExecutableTaskFactory {
 
     static {
         factories = new HashMap<>();
-        factories.put(ReflectionTaskDescriptor.class, new ExecutableChangeUnitFactory());
+        factories.put(ChangeUnitTaskDescriptor.class, new ExecutableChangeUnitFactory());
         factories.put(TemplatedTaskDescriptor.class, new TemplatedExecutableTaskFactory());
     }
 

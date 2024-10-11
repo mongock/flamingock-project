@@ -21,10 +21,12 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackBeforeExecution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
+import io.flamingock.core.task.descriptor.ChangeUnitTaskDescriptor;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.commons.utils.StringUtil;
+import io.flamingock.core.utils.ExecutionUtils;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -40,7 +42,7 @@ public class ExecutableChangeUnitFactory implements ExecutableTaskFactory {
     @Override
     public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(String stageName, TaskDescriptor descriptor, AuditEntry.Status initialState) {
         //It assumes "matchesDescriptor" was previously called for this descriptor.
-        if (ReflectionTaskDescriptor.class.equals(descriptor.getClass())) {
+        if (ChangeUnitTaskDescriptor.class.equals(descriptor.getClass())) {
             return getTasksFromReflection(stageName, (ReflectionTaskDescriptor) descriptor, initialState);
         }
 
@@ -57,6 +59,7 @@ public class ExecutableChangeUnitFactory implements ExecutableTaskFactory {
                         "ExecutableChangeUnit[%s] without %s method",
                         taskDescriptor.getSourceClass().getName(),
                         Execution.class.getSimpleName())));
+//        Method executionMethod = ExecutionUtils.getExecutionMethodOrThrow(taskDescriptor.getSourceClass());
 
         Optional<Method> rollbackMethodOpt = ReflectionUtil.findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), RollbackExecution.class);
         ReflectionExecutableTask<ReflectionTaskDescriptor> task = new ReflectionExecutableTask<>(
@@ -86,12 +89,13 @@ public class ExecutableChangeUnitFactory implements ExecutableTaskFactory {
                                                                                                     ReflectionExecutableTask<ReflectionTaskDescriptor> baseTask,
                                                                                                     AuditEntry.Status initialState) {
         //Creates a new TaskDescriptor, based on the main one, but with the "beforeExecution id, also based on the main one"
-        ReflectionTaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
+        ReflectionTaskDescriptor taskDescriptor = new ChangeUnitTaskDescriptor(
                 StringUtil.getBeforeExecutionId(baseTask.getDescriptor().getId()),
                 baseTask.getDescriptor().getOrder().orElse(null),
                 baseTask.getDescriptor().getSourceClass(),
                 baseTask.getDescriptor().isRunAlways(),
-                false//A beforeExecution task will never be transactional
+                false,//A beforeExecution task will never be transactional,
+                false
         );
 
         Optional<Method> beforeExecutionMethodOptional = ReflectionUtil.findFirstAnnotatedMethod(taskDescriptor.getSourceClass(), BeforeExecution.class);

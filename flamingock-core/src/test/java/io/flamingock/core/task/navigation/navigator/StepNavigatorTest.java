@@ -20,6 +20,7 @@ import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.TaskSummarizer;
+import io.flamingock.core.task.descriptor.ChangeUnitTaskDescriptor;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
 import io.flamingock.core.task.navigation.summary.StepSummarizer;
@@ -75,12 +76,13 @@ class StepNavigatorTest {
                 .build();
 
         //AND
-        TaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
+        TaskDescriptor taskDescriptor = new ChangeUnitTaskDescriptor(
                 taskId,
                 "1",
                 TaskWithBeforeExecution.class,
                 false,
-                false
+                false,
+                true
         );
         List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
                 .extractTasks("stage_name", taskDescriptor, null);
@@ -123,11 +125,12 @@ class StepNavigatorTest {
                 .build();
 
         //AND
-        TaskDescriptor taskDescriptor = new ReflectionTaskDescriptor(
+        TaskDescriptor taskDescriptor = new ChangeUnitTaskDescriptor(
                 taskId,
                 "1",
                 TaskWithBeforeExecution.class,
                 false,
+                true,
                 true
         );
         List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE

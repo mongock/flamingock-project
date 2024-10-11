@@ -31,14 +31,17 @@ import java.util.stream.Stream;
 
 public final class ReflectionUtil {
     private ReflectionUtil() {}
-    public static Optional<Method> findFirstAnnotatedMethod(Class<?> source, Class<? extends Annotation> annotation) {
+
+    @SuppressWarnings("unchecked")
+    public static Optional<Method> findFirstAnnotatedMethod(Class<?> source, Class<? extends Annotation>... annotations) {
+
+        List<Class<? extends Annotation>> annotationsList = Arrays.asList(annotations);
         return Arrays.stream(source.getMethods())
-                .filter(method -> method.isAnnotationPresent(annotation))
+                .filter(method -> annotationsList.stream().anyMatch(method::isAnnotationPresent))
                 .findFirst();
     }
 
     //TODO expand this beyond ChangeUnit
-
     @SuppressWarnings("unchecked")
     public static Collection<Class<?>> loadAnnotatedClassesFromPackage(String packagePath, Class<? extends Annotation>... annotations) {
         Reflections reflections = new Reflections(packagePath);

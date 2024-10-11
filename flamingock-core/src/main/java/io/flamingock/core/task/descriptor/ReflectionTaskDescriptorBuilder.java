@@ -37,7 +37,7 @@ public class ReflectionTaskDescriptorBuilder {
 
     public ReflectionTaskDescriptor build() {
         if (ExecutionUtils.isChangeUnit(source)) {
-            return ReflectionTaskDescriptor.fromClass(source);
+            return ChangeUnitTaskDescriptor.fromClass(source);
         } else {
             throw new IllegalArgumentException(String.format("Task type not recognised in class[%s]", source.getName()));
         }
