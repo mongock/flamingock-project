@@ -40,18 +40,13 @@ import java.util.Optional;
 /**
  * Factory for ChangeUnit classes
  */
-public class TemplatedExecutableTaskFactory implements ExecutableTaskFactory {
+public class TemplatedExecutableTaskFactory implements ExecutableTaskFactory<TemplatedTaskDescriptor> {
 
     private static final Logger logger = LoggerFactory.getLogger(StepNavigator.class);
 
     @Override
-    public List<TemplatedExecutableTask> extractTasks(String stageName, TaskDescriptor descriptor, AuditEntry.Status initialState) {
-        if (TemplatedTaskDescriptor.class.equals(descriptor.getClass())) {
-            return Collections.singletonList(getTasksFromReflection(stageName, (TemplatedTaskDescriptor) descriptor, initialState));
-        }
-
-        throw new IllegalArgumentException(String.format("%s not able to process: %s", this.getClass().getSimpleName(), descriptor.getClass().getSimpleName()));
-
+    public List<TemplatedExecutableTask> extractTasks(String stageName, TemplatedTaskDescriptor descriptor, AuditEntry.Status initialState) {
+        return Collections.singletonList(getTasksFromReflection(stageName, descriptor, initialState));
     }
 
     private TemplatedExecutableTask getTasksFromReflection(String stageName,

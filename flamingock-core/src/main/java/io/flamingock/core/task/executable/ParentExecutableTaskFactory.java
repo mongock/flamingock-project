@@ -32,32 +32,28 @@ import java.util.Optional;
  * This is an Abstract factory of factories. Depending on the descriptor it will use one of the factories,
  * that could be ChangeUnitFactory, PluginFactory(not implemented yet), etc.
  */
-public class ParentExecutableTaskFactory implements ExecutableTaskFactory {
+public class ParentExecutableTaskFactory implements ExecutableTaskFactory<TaskDescriptor> {
 
     public static final ParentExecutableTaskFactory INSTANCE = new ParentExecutableTaskFactory();
 
-    private static final Map<Class<? extends TaskDescriptor>, ExecutableTaskFactory> factories;
+    private static final ExecutableChangeUnitFactory executableChangeUnitFactory = new ExecutableChangeUnitFactory();
 
-    static {
-        factories = new HashMap<>();
-        factories.put(ChangeUnitTaskDescriptor.class, new ExecutableChangeUnitFactory());
-        factories.put(TemplatedTaskDescriptor.class, new TemplatedExecutableTaskFactory());
-    }
+    private static final TemplatedExecutableTaskFactory executableTemplatedFactory = new TemplatedExecutableTaskFactory();
 
     private ParentExecutableTaskFactory() {
     }
 
-
     @Override
     public List<? extends ExecutableTask> extractTasks(String stageName, TaskDescriptor taskDescriptor, AuditEntry.Status initialState) {
-        return findFactory(taskDescriptor)
-                .map(executableTaskFactory -> executableTaskFactory.extractTasks(stageName, taskDescriptor, initialState))
-                .orElseThrow(() -> new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", taskDescriptor.getClass().getName())));
+        if(ChangeUnitTaskDescriptor.class.isAssignableFrom(taskDescriptor.getClass())) {
+            return executableChangeUnitFactory.extractTasks(stageName, (ChangeUnitTaskDescriptor)taskDescriptor, initialState);
+        } else if(TemplatedTaskDescriptor.class.isAssignableFrom(taskDescriptor.getClass())) {
+            return executableTemplatedFactory.extractTasks(stageName, (TemplatedTaskDescriptor)taskDescriptor, initialState);
+        } else {
+            throw new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", taskDescriptor.getClass().getName()));
+        }
     }
 
-    private static Optional<ExecutableTaskFactory> findFactory(TaskDescriptor taskDescriptor) {
-        return Optional.ofNullable(factories.get(taskDescriptor.getClass()));
-    }
 
 
 }

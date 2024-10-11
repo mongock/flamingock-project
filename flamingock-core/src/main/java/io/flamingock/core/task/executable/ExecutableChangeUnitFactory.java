@@ -37,17 +37,11 @@ import java.util.Optional;
 /**
  * Factory for ChangeUnit classes
  */
-public class ExecutableChangeUnitFactory implements ExecutableTaskFactory {
+public class ExecutableChangeUnitFactory implements ExecutableTaskFactory<ChangeUnitTaskDescriptor> {
 
     @Override
-    public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(String stageName, TaskDescriptor descriptor, AuditEntry.Status initialState) {
-        //It assumes "matchesDescriptor" was previously called for this descriptor.
-        if (ChangeUnitTaskDescriptor.class.equals(descriptor.getClass())) {
-            return getTasksFromReflection(stageName, (ReflectionTaskDescriptor) descriptor, initialState);
-        }
-
-        throw new IllegalArgumentException(String.format("%s not able to process: %s", this.getClass().getSimpleName(), descriptor.getClass().getSimpleName()));
-
+    public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(String stageName, ChangeUnitTaskDescriptor descriptor, AuditEntry.Status initialState) {
+        return getTasksFromReflection(stageName, descriptor, initialState);
     }
 
     private List<ReflectionExecutableTask<ReflectionTaskDescriptor>> getTasksFromReflection(String stageName,
