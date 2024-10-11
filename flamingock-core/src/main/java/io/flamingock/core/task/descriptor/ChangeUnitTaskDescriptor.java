@@ -16,14 +16,21 @@
 
 package io.flamingock.core.task.descriptor;
 
+import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.utils.ExecutionUtils;
+import io.mongock.api.annotations.BeforeExecution;
+import io.mongock.api.annotations.RollbackBeforeExecution;
 
+import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
 
-    private final boolean newChangeUnit;
+    private final boolean isNewChangeUnit;
 
     public static ChangeUnitTaskDescriptor fromClass(Class<?> source) {
         if (ExecutionUtils.isNewChangeUnit(source)) {
@@ -56,7 +63,40 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
 
     public ChangeUnitTaskDescriptor(String id, String order, Class<?> source, boolean runAlways, boolean transactional, boolean isNewChangeUnit) {
         super(id, order, source, runAlways, transactional);
-        this.newChangeUnit = isNewChangeUnit;
+        this.isNewChangeUnit = isNewChangeUnit;
+    }
+
+
+    public Method getExecutionMethod() {
+        if(isNewChangeUnit) {
+            return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class)
+                    .orElseThrow(() -> new IllegalArgumentException(String.format(
+                            "ExecutableChangeUnit[%s] without %s method",
+                            getSourceClass().getName(),
+                            Execution.class.getSimpleName())));
+        } else {
+            return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.Execution.class)
+                    .orElseThrow(() -> new IllegalArgumentException(String.format(
+                            "ExecutableChangeUnit[%s] without %s method",
+                            getSourceClass().getName(),
+                            io.mongock.api.annotations.Execution.class.getSimpleName())));
+        }
+    }
+
+    public Optional<Method> getRollbackMethod() {
+        if(isNewChangeUnit) {
+            return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class);
+        } else {
+            return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.RollbackExecution.class);
+        }
+    }
+
+    public Optional<Method> getBeforeExecutionMethod() {
+        return isNewChangeUnit ? Optional.empty() : ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), BeforeExecution.class);
+    }
+
+    public Optional<Method> getRollbackBeforeExecutionMethod() {
+        return isNewChangeUnit ? Optional.empty() : ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackBeforeExecution.class);
     }
 
 

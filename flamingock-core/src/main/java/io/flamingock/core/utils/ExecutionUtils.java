@@ -46,13 +46,4 @@ public final class ExecutionUtils {
         return clazz.isAnnotationPresent(LEGACY_CHANGE_UNIT_CLASS);
     }
 
-    @SuppressWarnings("unchecked")
-    public static Method getExecutionMethodOrThrow(Class<?> sourceClass) {
-        return ReflectionUtil.findFirstAnnotatedMethod(sourceClass, EXECUTION_CLASS, LEGACY_EXECUTION_CLASS)
-                .orElseThrow(() -> new IllegalArgumentException(String.format(
-                        "ExecutableChangeUnit[%s] without %s method",
-                        sourceClass.getName(),
-                        Execution.class.getSimpleName())));
-    }
-
 }

@@ -33,11 +33,9 @@ public final class ReflectionUtil {
     private ReflectionUtil() {}
 
     @SuppressWarnings("unchecked")
-    public static Optional<Method> findFirstAnnotatedMethod(Class<?> source, Class<? extends Annotation>... annotations) {
-
-        List<Class<? extends Annotation>> annotationsList = Arrays.asList(annotations);
+    public static Optional<Method> findFirstAnnotatedMethod(Class<?> source, Class<? extends Annotation> annotation) {
         return Arrays.stream(source.getMethods())
-                .filter(method -> annotationsList.stream().anyMatch(method::isAnnotationPresent))
+                .filter(method -> method.isAnnotationPresent(annotation))
                 .findFirst();
     }
 

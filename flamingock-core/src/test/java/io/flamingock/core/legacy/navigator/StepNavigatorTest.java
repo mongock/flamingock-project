@@ -14,36 +14,31 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.navigation.navigator;
+package io.flamingock.core.legacy.navigator;
 
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
+import io.flamingock.core.legacy.navigator.beforeExecution_1.TaskWithBeforeExecution;
+import io.flamingock.core.legacy.utils.EmptyTransactionWrapper;
+import io.flamingock.core.legacy.utils.TestTaskExecution;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.task.descriptor.ChangeUnitTaskDescriptor;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
-import io.flamingock.core.task.navigation.navigator.beforeExecution_1.TaskWithBeforeExecution;
-import io.flamingock.core.task.navigation.summary.StepSummarizer;
+import io.flamingock.core.task.navigation.navigator.StepNavigator;
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.commons.utils.Result;
-import io.utils.EmptyTransactionWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
-import static io.utils.TestTaskExecution.BEFORE_EXECUTION;
-import static io.utils.TestTaskExecution.EXECUTION;
-import static io.utils.TestTaskExecution.ROLLBACK_BEFORE_EXECUTION;
-import static io.utils.TestTaskExecution.ROLLBACK_EXECUTION;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -82,13 +77,13 @@ class StepNavigatorTest {
                 TaskWithBeforeExecution.class,
                 false,
                 false,
-                true
+                false
         );
         List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
                 .extractTasks("stage_name", taskDescriptor, null);
 
         ExecutionContext stageExecutionContext = new ExecutionContext(
-                "executionId", "hsotname", "author", new HashMap<>()
+                "executionId", "hostname", "author", new HashMap<>()
         );
 
         StepNavigator stepNavigator = new StepNavigator(auditWriterMock, stepSummarizerMock, runtimeManagerMock, null);
@@ -99,10 +94,10 @@ class StepNavigatorTest {
 
         //THEN
         TaskWithBeforeExecution.checker.checkOrderStrict(
-                BEFORE_EXECUTION,
-                EXECUTION,
-                ROLLBACK_EXECUTION,
-                ROLLBACK_BEFORE_EXECUTION
+                TestTaskExecution.BEFORE_EXECUTION,
+                TestTaskExecution.EXECUTION,
+                TestTaskExecution.ROLLBACK_EXECUTION,
+                TestTaskExecution.ROLLBACK_BEFORE_EXECUTION
         );
     }
 
@@ -131,7 +126,7 @@ class StepNavigatorTest {
                 TaskWithBeforeExecution.class,
                 false,
                 true,
-                true
+                false
         );
         List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
                 .extractTasks("stage-name", taskDescriptor, null);
@@ -144,9 +139,9 @@ class StepNavigatorTest {
 
         //THEN
         TaskWithBeforeExecution.checker.checkOrderStrict(
-                BEFORE_EXECUTION,
-                EXECUTION,
-                ROLLBACK_BEFORE_EXECUTION
+                TestTaskExecution.BEFORE_EXECUTION,
+                TestTaskExecution.EXECUTION,
+                TestTaskExecution.ROLLBACK_BEFORE_EXECUTION
         );
 
         assertTrue(transactionWrapper.isCalled());
