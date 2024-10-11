@@ -26,6 +26,7 @@ import io.mongock.api.annotations.RollbackBeforeExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -73,6 +74,13 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
     }
 
 
+
+    @Override
+    public Constructor<?> getConstructor() {
+        return null;
+    }
+
+    @Override
     public Method getExecutionMethod() {
         if(isNewChangeUnit) {
             return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class)
@@ -103,6 +111,7 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
         }
     }
 
+    @Override
     public Optional<Method> getRollbackMethod() {
         if(isNewChangeUnit) {
             Optional<Method> firstAnnotatedMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class);

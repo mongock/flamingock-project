@@ -16,7 +16,17 @@
 
 package io.flamingock.core.task.descriptor;
 
+import io.flamingock.commons.utils.ReflectionUtil;
+import io.flamingock.template.annotations.TemplateConfigSetter;
+import io.flamingock.template.annotations.TemplateConfigValidator;
+import io.flamingock.template.annotations.TemplateExecution;
+import io.flamingock.template.annotations.TemplateRollbackExecution;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class TemplatedTaskDescriptor extends ReflectionTaskDescriptor {
@@ -39,5 +49,51 @@ public class TemplatedTaskDescriptor extends ReflectionTaskDescriptor {
     }
 
 
+    @Override
+    public Constructor<?> getConstructor() {
+        return null;
+    }
 
+    @Override
+    public Method getExecutionMethod() {
+        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), TemplateExecution.class)
+                .orElseThrow(() -> new IllegalArgumentException(String.format(
+                        "Templated[%s] without %s method",
+                        getSourceClass().getName(),
+                        TemplateExecution.class.getSimpleName())));
+    }
+
+    public Optional<Method> getConfigSetter() {
+        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), TemplateConfigSetter.class);
+    }
+
+    public Optional<Method> getConfigValidator() {
+        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), TemplateConfigValidator.class);
+    }
+
+    @Override
+    public Optional<Method> getRollbackMethod() {
+        Optional<Method> rollbackMethodOpt = ReflectionUtil
+                .findFirstAnnotatedMethod(getSourceClass(), TemplateRollbackExecution.class);
+        Optional<Method> rollbackMethod;
+        if (rollbackMethodOpt.isPresent()) {
+            Method potentialRollbackMethod = rollbackMethodOpt.get();
+            TemplateRollbackExecution rollbackExecutionAnnotation = potentialRollbackMethod.getAnnotation(TemplateRollbackExecution.class);
+            String[] conditionalOnAllConfigurationPropertiesNotNull = rollbackExecutionAnnotation.conditionalOnAllConfigurationPropertiesNotNull();
+            if (conditionalOnAllConfigurationPropertiesNotNull == null || conditionalOnAllConfigurationPropertiesNotNull.length == 0) {
+                rollbackMethod = Optional.of(potentialRollbackMethod);
+            } else {
+                Map<String, Object> configMap = getTemplateConfiguration();
+                if (Arrays.stream(conditionalOnAllConfigurationPropertiesNotNull).allMatch(configMap::containsKey)) {
+                    rollbackMethod = Optional.of(potentialRollbackMethod);
+                } else {
+                    rollbackMethod = Optional.empty();
+                }
+            }
+
+        } else {
+            rollbackMethod = Optional.empty();
+        }
+        return rollbackMethod;
+    }
 }
