@@ -1,4 +1,4 @@
-package io.flamingock.core.pipeline;
+package io.flamingock.core.utils;
 
 import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.api.annotations.ChangeUnit;
@@ -19,9 +19,25 @@ public final class ExecutionUtils {
         return ReflectionUtil.loadAnnotatedClassesFromPackage(packagePath, ExecutionUtils.CHANGE_UNIT_CLASS, ExecutionUtils.LEGACY_CHANGE_UNIT_CLASS);
     }
 
+    /**
+     * We need this generic method, although currently it only calls `isChangeUnit`, but in the future there will
+     * more annotations, so `isChangeUnit` will be only one of them.
+     */
+    public static boolean isExecutableClass(Class<?> clazz) {
+        return isChangeUnit(clazz);
+    }
 
-    public static boolean isExecutionClass(Class<?> clazz) {
+    public static boolean isChangeUnit(Class<?> clazz) {
         return clazz.isAnnotationPresent(CHANGE_UNIT_CLASS) || clazz.isAnnotationPresent(LEGACY_CHANGE_UNIT_CLASS);
     }
+
+    public static boolean isNewChangeUnit(Class<?> clazz) {
+        return clazz.isAnnotationPresent(CHANGE_UNIT_CLASS);
+    }
+
+    public static boolean isLegacyChangeUnit(Class<?> clazz) {
+        return clazz.isAnnotationPresent(LEGACY_CHANGE_UNIT_CLASS);
+    }
+
 
 }

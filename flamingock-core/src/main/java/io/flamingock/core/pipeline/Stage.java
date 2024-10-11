@@ -22,6 +22,7 @@ import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptorBuilder;
 import io.flamingock.core.task.filter.TaskFilter;
+import io.flamingock.core.utils.ExecutionUtils;
 import io.flamingock.template.TemplatedTaskDefinition;
 
 import java.util.ArrayList;
@@ -216,13 +217,14 @@ public class Stage {
         }
         return classes.
                 stream()
-                .filter(ExecutionUtils::isExecutionClass)
+                .filter(ExecutionUtils::isExecutableClass)
                 .filter(filterOperator)
                 .map(ReflectionTaskDescriptorBuilder.recycledBuilder()::setSource)
                 .map(ReflectionTaskDescriptorBuilder::build)
                 .collect(Collectors.toList());
     }
 
+    //TODO add filter
     private static Collection<TaskDescriptor> getFilteredDescriptorsFromDirectory(Collection<String> directories, Predicate<Class<?>> filterOperator) {
 
         if (directories == null) {
@@ -236,16 +238,13 @@ public class Stage {
                 .map(TemplatedTaskDescriptorBuilder.recycledBuilder()::setFromDefinition)
                 .map(TemplatedTaskDescriptorBuilder::build)
                 .collect(Collectors.toList());
-
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Stage stage = (Stage) o;
-
         return Objects.equals(name, stage.name);
     }
 

@@ -39,7 +39,7 @@ public class ParentExecutableTaskFactory implements ExecutableTaskFactory {
 
     static {
         factories = new HashMap<>();
-        factories.put(ReflectionTaskDescriptor.class, new ChangeUnitFactory());
+        factories.put(ReflectionTaskDescriptor.class, new ExecutableChangeUnitFactory());
         factories.put(TemplatedTaskDescriptor.class, new TemplatedExecutableTaskFactory());
     }
 

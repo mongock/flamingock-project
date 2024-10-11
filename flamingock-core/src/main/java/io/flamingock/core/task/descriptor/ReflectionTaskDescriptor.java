@@ -16,11 +16,41 @@
 
 package io.flamingock.core.task.descriptor;
 
+import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.utils.ExecutionUtils;
+
 import java.util.StringJoiner;
 
 public class ReflectionTaskDescriptor extends AbstractTaskDescriptor implements TaskDescriptor {
 
     protected final Class<?> source;
+
+    public static ReflectionTaskDescriptor fromClass(Class<?> source) {
+        if (ExecutionUtils.isNewChangeUnit(source)) {
+            ChangeUnit changeUnitAnnotation = source.getAnnotation(ChangeUnit.class);
+            return new ReflectionTaskDescriptor(
+                    changeUnitAnnotation.id(),
+                    changeUnitAnnotation.order(),
+                    source,
+                    changeUnitAnnotation.runAlways(),
+                    changeUnitAnnotation.transactional());
+        } else if (ExecutionUtils.isLegacyChangeUnit(source)) {
+            io.mongock.api.annotations.ChangeUnit changeUnitAnnotation = source.getAnnotation(io.mongock.api.annotations.ChangeUnit.class);
+            return new ReflectionTaskDescriptor(
+                    changeUnitAnnotation.id(),
+                    changeUnitAnnotation.order(),
+                    source,
+                    changeUnitAnnotation.runAlways(),
+                    changeUnitAnnotation.transactional());
+        } else {
+            throw new IllegalArgumentException(String.format(
+                    "Task class[%s] should be annotate with %s or %s",
+                    source.getName(),
+                    ChangeUnit.class.getName(),
+                    io.mongock.api.annotations.ChangeUnit.class.getName()
+            ));
+        }
+    }
 
     public ReflectionTaskDescriptor(String id, String order, Class<?> source, boolean runAlways, boolean transactional) {
         super(id, order, runAlways, transactional);

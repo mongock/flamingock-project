@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * Factory for ChangeUnit classes
  */
-public class ChangeUnitFactory implements ExecutableTaskFactory {
+public class ExecutableChangeUnitFactory implements ExecutableTaskFactory {
 
     @Override
     public List<ReflectionExecutableTask<ReflectionTaskDescriptor>> extractTasks(String stageName, TaskDescriptor descriptor, AuditEntry.Status initialState) {
