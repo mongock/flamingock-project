@@ -23,12 +23,15 @@ import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.utils.ExecutionUtils;
 import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.RollbackBeforeExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.StringJoiner;
 
 public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
+    private static final Logger logger = LoggerFactory.getLogger(ChangeUnitTaskDescriptor.class);
 
     private final boolean isNewChangeUnit;
 
@@ -43,6 +46,10 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
                     changeUnitAnnotation.transactional(),
                     true);
         } else if (ExecutionUtils.isLegacyChangeUnit(source)) {
+            logger.warn("Detected legacy changeUnit[{}]. If it's an old changeUnit created for Mongock, it's fine. " +
+                            "Otherwise, it's highly recommended us the new API[in package {}]",
+                    source.getName(),
+                    "io.flamingock.core.api.annotations");
             io.mongock.api.annotations.ChangeUnit changeUnitAnnotation = source.getAnnotation(io.mongock.api.annotations.ChangeUnit.class);
             return new ChangeUnitTaskDescriptor(
                     changeUnitAnnotation.id(),
@@ -53,10 +60,9 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
                     false);
         } else {
             throw new IllegalArgumentException(String.format(
-                    "Task class[%s] should be annotate with %s or %s",
+                    "Task class[%s] should be annotate with %s",
                     source.getName(),
-                    ChangeUnit.class.getName(),
-                    io.mongock.api.annotations.ChangeUnit.class.getName()
+                    ChangeUnit.class.getName()
             ));
         }
     }
@@ -71,23 +77,58 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
         if(isNewChangeUnit) {
             return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class)
                     .orElseThrow(() -> new IllegalArgumentException(String.format(
-                            "ExecutableChangeUnit[%s] without %s method",
+                            "Executable changeUnit[%s] without %s method",
                             getSourceClass().getName(),
-                            Execution.class.getSimpleName())));
+                            Execution.class.getName())));
         } else {
-            return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.Execution.class)
-                    .orElseThrow(() -> new IllegalArgumentException(String.format(
-                            "ExecutableChangeUnit[%s] without %s method",
+            Optional<Method> legacyExecutionMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.Execution.class);
+            if(!legacyExecutionMethod.isPresent()) {
+                if(ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class).isPresent()) {
+                    throw new IllegalArgumentException(String.format(
+                            "You are using new API for Execution annotation in your changeUnit class[%s], however your class is annotated with legacy ChangeUnit annotation[%s]. " +
+                                    "It's highly recommended to use the new API[in package %s], unless it's a legacy changeUnit created with Mongock",
                             getSourceClass().getName(),
-                            io.mongock.api.annotations.Execution.class.getSimpleName())));
+                            io.mongock.api.annotations.Execution.class.getName(),
+                            "io.flamingock.core.api.annotations"));
+                }
+            }
+            return legacyExecutionMethod
+                    .orElseThrow(() -> new IllegalArgumentException(String.format(
+                            "Your changeUnit class[%s] doesn't contain execution method.\n" +
+                                    "It's highly recommended to use the new API[in package %s].\n" +
+                                    "In case it's an legacy changeUnit created with Mongock, please add the execution method annotated with legacy API[%s] ",
+                            getSourceClass().getName(),
+                            "io.flamingock.core.api.annotations",
+                            io.mongock.api.annotations.Execution.class.getName())));
         }
     }
 
     public Optional<Method> getRollbackMethod() {
         if(isNewChangeUnit) {
-            return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class);
+            Optional<Method> firstAnnotatedMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class);
+            if(!firstAnnotatedMethod.isPresent()) {
+                if(ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.RollbackExecution.class).isPresent()) {
+                    throw new IllegalArgumentException(String.format(
+                            "Executable changeUnit[%s] rollback method should be annotated with new API[%s], instead of legacy API[%s] ",
+                            getSourceClass().getName(),
+                            RollbackExecution.class.getName(),
+                            io.mongock.api.annotations.RollbackExecution.class.getName()));
+                }
+            }
+            return firstAnnotatedMethod;
         } else {
-            return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.RollbackExecution.class);
+            Optional<Method> firstAnnotatedMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.RollbackExecution.class);
+            if(!firstAnnotatedMethod.isPresent()) {
+                if(ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class).isPresent()) {
+                    throw new IllegalArgumentException(String.format(
+                            "You are using new API for RollbackExecution annotation in your changeUnit class[%s], however your class is annotated with legacy ChangeUnit annotation[%s]. " +
+                                    "It's highly recommended to use the new API[in package %s], unless it's a legacy changeUnit created with Mongock",
+                            getSourceClass().getName(),
+                            io.mongock.api.annotations.RollbackExecution.class.getName(),
+                            "io.flamingock.core.api.annotations"));
+                }
+            }
+            return firstAnnotatedMethod;
         }
     }
 
