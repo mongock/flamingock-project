@@ -133,11 +133,21 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
     }
 
     public Optional<Method> getBeforeExecutionMethod() {
-        return isNewChangeUnit ? Optional.empty() : ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), BeforeExecution.class);
+        Optional<Method> beforeExecutionMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), BeforeExecution.class);
+        if(isNewChangeUnit && beforeExecutionMethod.isPresent()) {
+            throw new IllegalArgumentException(String.format("You are using legacy annotation [%s] with new API. You should create an independent ChangeUnit for it",
+                    BeforeExecution.class.getName()));
+        }
+        return isNewChangeUnit ? Optional.empty() : beforeExecutionMethod;
     }
 
     public Optional<Method> getRollbackBeforeExecutionMethod() {
-        return isNewChangeUnit ? Optional.empty() : ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackBeforeExecution.class);
+        Optional<Method> rollbackBeforeExecution = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackBeforeExecution.class);
+        if(isNewChangeUnit && rollbackBeforeExecution.isPresent()) {
+            throw new IllegalArgumentException(String.format("You are using legacy annotation [%s] with new API. You should create an independent ChangeUnit for it",
+                    RollbackBeforeExecution.class.getName()));
+        }
+        return isNewChangeUnit ? Optional.empty() : rollbackBeforeExecution;
     }
 
 
