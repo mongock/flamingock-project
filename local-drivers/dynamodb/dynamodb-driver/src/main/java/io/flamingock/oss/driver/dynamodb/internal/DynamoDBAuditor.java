@@ -31,7 +31,7 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
-import software.amazon.awssdk.services.dynamodb.model.TransactionCanceledException;
+import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedException;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -82,19 +82,20 @@ public class DynamoDBAuditor implements Auditor {
         AuditEntryEntity entity = new AuditEntryEntity(auditEntry);
         logger.debug("Saving audit entry with key {}", entity.getPartitionKey());
 
-        try {
-            if (transactionWrapper != null) {
-                transactionWrapper.getWriteRequestBuilder()
-                        .addPutItem(table, entity);
-            } else {
+        if (transactionWrapper == null) {
+            try {
                 table.putItem(
                         PutItemEnhancedRequest.builder(AuditEntryEntity.class)
                                 .item(entity)
                                 .build()
                 );
+            } catch (ConditionalCheckFailedException ex) {
+                logger.warn("Error saving audit entry with key {}", entity.getPartitionKey(), ex);
+                throw ex;
             }
-        } catch (TransactionCanceledException ex) {
-            logger.warn("Error saving audit entry with key {}", entity.getPartitionKey(), ex);
+        } else {
+            transactionWrapper.getWriteRequestBuilder()
+                    .addPutItem(table, entity);
         }
 
         return Result.OK();

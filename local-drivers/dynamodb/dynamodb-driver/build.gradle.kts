@@ -3,7 +3,7 @@ dependencies {
 
     implementation("software.amazon.awssdk:dynamodb-enhanced:2.25.28")
 
-    testImplementation("org.testcontainers:dynalite:1.20.1")
-    testImplementation("org.testcontainers:junit-jupiter:1.18.3")
+    testImplementation("software.amazon.awssdk:url-connection-client:2.24.11")
+    testImplementation("com.amazonaws:DynamoDBLocal:1.25.0")
 
 }

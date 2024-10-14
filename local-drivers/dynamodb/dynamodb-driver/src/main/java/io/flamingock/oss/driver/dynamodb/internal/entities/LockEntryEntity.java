@@ -42,8 +42,8 @@ public class LockEntryEntity {
     private LocalDateTime expiresAt;
 
     public LockEntryEntity(LockEntry lock) {
-        this.partitionKey = partitionKey(lock.getKey());
-        this.sortKey = sortKey();
+        this.partitionKey = lock.getKey();
+        this.sortKey = DynamoDBConstants.LOCK_SORT_PREFIX;
         this.key = lock.getKey();
         this.status = lock.getStatus();
         this.owner = lock.getOwner();
@@ -51,16 +51,6 @@ public class LockEntryEntity {
     }
 
     public LockEntryEntity() {
-    }
-
-    public static String partitionKey(
-            String key
-    ) {
-        return key;
-    }
-
-    public static String sortKey() {
-        return DynamoDBConstants.LOCK_SORT_PREFIX;
     }
 
     @DynamoDbPartitionKey

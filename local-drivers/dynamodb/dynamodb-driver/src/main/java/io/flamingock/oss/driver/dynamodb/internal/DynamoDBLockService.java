@@ -76,8 +76,8 @@ public class DynamoDBLockService implements LocalLockService {
         LockEntry newLock = new LockEntry(key.toString(), LockStatus.LOCK_HELD, owner.toString(), timeService.currentDatePlusMillis(leaseMillis));
         LockEntryEntity existingLockEntity = table.getItem(
                 Key.builder()
-                        .partitionValue(LockEntryEntity.partitionKey(newLock.getKey()))
-                        .sortValue(LockEntryEntity.sortKey())
+                        .partitionValue(newLock.getKey())
+                        .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
                         .build()
         );
         if (existingLockEntity != null) {
@@ -116,8 +116,8 @@ public class DynamoDBLockService implements LocalLockService {
         LockEntry newLock = new LockEntry(key.toString(), LockStatus.LOCK_HELD, owner.toString(), timeService.currentDatePlusMillis(leaseMillis));
         LockEntryEntity existingLockEntity = table.getItem(
                 Key.builder()
-                        .partitionValue(LockEntryEntity.partitionKey(newLock.getKey()))
-                        .sortValue(LockEntryEntity.sortKey())
+                        .partitionValue(newLock.getKey())
+                        .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
                         .build()
         );
         try {
@@ -153,8 +153,8 @@ public class DynamoDBLockService implements LocalLockService {
     public LockAcquisition getLock(LockKey lockKey) {
         LockEntryEntity existingLockEntity = table.getItem(
                 Key.builder()
-                        .partitionValue(LockEntryEntity.partitionKey(lockKey.toString()))
-                        .sortValue(LockEntryEntity.sortKey())
+                        .partitionValue(lockKey.toString())
+                        .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
                         .build()
         );
         if (existingLockEntity != null) {
@@ -169,8 +169,8 @@ public class DynamoDBLockService implements LocalLockService {
     public void releaseLock(LockKey lockKey, RunnerId owner) {
         LockEntryEntity existingLockEntity = table.getItem(
                 Key.builder()
-                        .partitionValue(LockEntryEntity.partitionKey(lockKey.toString()))
-                        .sortValue(LockEntryEntity.sortKey())
+                        .partitionValue(lockKey.toString())
+                        .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
                         .build()
         );
         if (existingLockEntity != null) {
@@ -179,8 +179,8 @@ public class DynamoDBLockService implements LocalLockService {
                 logger.debug("Lock for key {} belongs to us, so removing.", lockKey);
                 table.deleteItem(
                         Key.builder()
-                                .partitionValue(LockEntryEntity.partitionKey(lockKey.toString()))
-                                .sortValue(LockEntryEntity.sortKey())
+                                .partitionValue(lockKey.toString())
+                                .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
                                 .build()
                 );
             } else {

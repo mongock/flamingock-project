@@ -36,31 +36,31 @@ public class AuditEntryEntity {
     private String executionId;
     private String author;
     private LocalDateTime createdAt;
-    private String state;
+    private AuditEntry.Status state;
     private String className;
     private String methodName;
     private Object metadata;
     private Long executionMillis;
     private String executionHostname;
     private Object errorTrace;
-    private String type;
+    private AuditEntry.ExecutionType type;
 
     public AuditEntryEntity(AuditEntry auditEntry) {
         this.partitionKey = partitionKey(auditEntry.getExecutionId(), auditEntry.getTaskId(), auditEntry.getState());
-        this.sortKey = sortKey();
+        this.sortKey = DynamoDBConstants.AUDIT_LOG_SORT_PREFIX;;
         this.taskId = auditEntry.getTaskId();
         this.stageId = auditEntry.getStageId();
         this.executionId = auditEntry.getExecutionId();
         this.author = auditEntry.getAuthor();
         this.createdAt = auditEntry.getCreatedAt();
-        this.state = auditEntry.getState().name();
+        this.state = auditEntry.getState();
         this.className = auditEntry.getClassName();
         this.methodName = auditEntry.getMethodName();
         this.metadata = auditEntry.getMetadata();
         this.executionMillis = auditEntry.getExecutionMillis();
         this.executionHostname = auditEntry.getExecutionHostname();
         this.errorTrace = auditEntry.getErrorTrace();
-        this.type = auditEntry.getType().name();
+        this.type = auditEntry.getType();
         this.systemChange = auditEntry.getSystemChange();
     }
 
@@ -69,10 +69,6 @@ public class AuditEntryEntity {
 
     public static String partitionKey(String executionId, String taskId, AuditEntry.Status state) {
         return executionId + '#' + taskId + '#' + state.name();
-    }
-
-    public static String sortKey() {
-        return DynamoDBConstants.AUDIT_LOG_SORT_PREFIX;
     }
 
     @DynamoDbPartitionKey
@@ -143,11 +139,11 @@ public class AuditEntryEntity {
 
     @DynamoDbAttribute(AuditEntryField.KEY_STATE)
     public String getState() {
-        return state;
+        return state.name();
     }
 
     public void setState(String state) {
-        this.state = state;
+        this.state = AuditEntry.Status.valueOf(state);
     }
 
     @DynamoDbAttribute(AuditEntryField.KEY_CHANGELOG_CLASS)
@@ -206,11 +202,11 @@ public class AuditEntryEntity {
 
     @DynamoDbAttribute(AuditEntryField.KEY_TYPE)
     public String getType() {
-        return type;
+        return type.name();
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.type = AuditEntry.ExecutionType.valueOf(type);
     }
 
     @DynamoDbAttribute(AuditEntryField.KEY_SYSTEM_CHANGE)
@@ -229,8 +225,8 @@ public class AuditEntryEntity {
                 taskId,
                 author,
                 createdAt,
-                AuditEntry.Status.valueOf(state),
-                AuditEntry.ExecutionType.valueOf(type),
+                state,
+                type,
                 className,
                 methodName,
                 executionMillis,
