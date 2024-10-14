@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
  * For old classes, this annotation can remain. It won't be removed from the legacy library.
  * For new classes, use io.flamingock.core.api.annotations.RollbackBeforeExecution
  * <p>
- * @see io.flamingock.core.api.annotations.RollbackBeforeExecution
  */
 @Deprecated
 @Target(ElementType.METHOD)
