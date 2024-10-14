@@ -15,6 +15,8 @@
  */
 package io.mongock.api.annotations;
 
+import io.flamingock.core.api.annotations.FlamingockCliConfiguration;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,7 +26,7 @@ import java.lang.annotation.Target;
  * For old classes, this annotation can remain. It won't be removed from the legacy library.
  * For new classes, use io.flamingock.core.api.annotations.MongockCliConfiguration
  * <p>
- * @see io.flamingock.core.api.annotations.MongockCliConfiguration
+ * @see FlamingockCliConfiguration
  */
 @Deprecated
 @Target(ElementType.TYPE)

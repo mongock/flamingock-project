@@ -19,6 +19,7 @@ package io.flamingock.commons.utils;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -52,5 +53,22 @@ public final class ReflectionUtil {
     public static List<Class<?>> getParameters(Executable executable) {
         return Arrays.asList(executable.getParameterTypes());
     }
+
+    public static List<Constructor<?>> getAnnotatedConstructors(Class<?> source, Class<? extends Annotation> annotationClass) {
+        return getConstructors(source)
+                .stream()
+                .filter(constructor -> isConstructorAnnotationPresent(constructor, annotationClass))
+                .collect(Collectors.toList());
+    }
+
+    public static List<Constructor<?>> getConstructors(Class<?> source) {
+        return Arrays.stream(source.getConstructors())
+                .collect(Collectors.toList());
+    }
+
+    private static boolean isConstructorAnnotationPresent(Constructor<?> constructor, Class<? extends Annotation> annotationClass) {
+        return constructor.isAnnotationPresent(annotationClass) ;
+    }
+
 
 }

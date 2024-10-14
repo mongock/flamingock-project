@@ -18,15 +18,11 @@ package io.flamingock.core.task.executable;
 
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.task.descriptor.ChangeUnitTaskDescriptor;
-import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
-import io.flamingock.core.task.descriptor.TemplatedTaskDescriptor;
+import io.flamingock.core.task.descriptor.TemplatedChangeUnitTaskDescriptor;
 import io.flamingock.core.task.executable.template.TemplatedExecutableTaskFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * This is an Abstract factory of factories. Depending on the descriptor it will use one of the factories,
@@ -47,8 +43,8 @@ public class ParentExecutableTaskFactory implements ExecutableTaskFactory<TaskDe
     public List<? extends ExecutableTask> extractTasks(String stageName, TaskDescriptor taskDescriptor, AuditEntry.Status initialState) {
         if(ChangeUnitTaskDescriptor.class.isAssignableFrom(taskDescriptor.getClass())) {
             return executableChangeUnitFactory.extractTasks(stageName, (ChangeUnitTaskDescriptor)taskDescriptor, initialState);
-        } else if(TemplatedTaskDescriptor.class.isAssignableFrom(taskDescriptor.getClass())) {
-            return executableTemplatedFactory.extractTasks(stageName, (TemplatedTaskDescriptor)taskDescriptor, initialState);
+        } else if(TemplatedChangeUnitTaskDescriptor.class.isAssignableFrom(taskDescriptor.getClass())) {
+            return executableTemplatedFactory.extractTasks(stageName, (TemplatedChangeUnitTaskDescriptor)taskDescriptor, initialState);
         } else {
             throw new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", taskDescriptor.getClass().getName()));
         }

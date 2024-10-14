@@ -22,36 +22,29 @@ import io.flamingock.template.annotations.TemplateConfigValidator;
 import io.flamingock.template.annotations.TemplateExecution;
 import io.flamingock.template.annotations.TemplateRollbackExecution;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
 
-public class TemplatedTaskDescriptor extends ReflectionTaskDescriptor {
+public class TemplatedChangeUnitTaskDescriptor extends AbstractChangeUnitTaskDescriptor {
 
 
     private final Map<String, Object> templateConfiguration;
 
-    public TemplatedTaskDescriptor(String id,
-                                   String order,
-                                   Class<?> templateClass,
-                                   boolean transactional,
-                                   boolean runAlways,
-                                   Map<String, Object> templateConfiguration) {
-        super(id, order, templateClass, runAlways, transactional);
+    public TemplatedChangeUnitTaskDescriptor(String id,
+                                             String order,
+                                             Class<?> templateClass,
+                                             boolean transactional,
+                                             boolean runAlways,
+                                             Map<String, Object> templateConfiguration) {
+        super(id, order, templateClass, runAlways, transactional, true);
         this.templateConfiguration = templateConfiguration;
     }
 
     public Map<String, Object> getTemplateConfiguration() {
         return templateConfiguration;
-    }
-
-
-    @Override
-    public Constructor<?> getConstructor() {
-        return null;
     }
 
     @Override

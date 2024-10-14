@@ -26,15 +26,12 @@ import io.mongock.api.annotations.RollbackBeforeExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
+public class ChangeUnitTaskDescriptor extends AbstractChangeUnitTaskDescriptor {
     private static final Logger logger = LoggerFactory.getLogger(ChangeUnitTaskDescriptor.class);
-
-    private final boolean isNewChangeUnit;
 
     public static ChangeUnitTaskDescriptor fromClass(Class<?> source) {
         if (ExecutionUtils.isNewChangeUnit(source)) {
@@ -69,20 +66,12 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
     }
 
     public ChangeUnitTaskDescriptor(String id, String order, Class<?> source, boolean runAlways, boolean transactional, boolean isNewChangeUnit) {
-        super(id, order, source, runAlways, transactional);
-        this.isNewChangeUnit = isNewChangeUnit;
-    }
-
-
-
-    @Override
-    public Constructor<?> getConstructor() {
-        return null;
+        super(id, order, source, runAlways, transactional, isNewChangeUnit);
     }
 
     @Override
     public Method getExecutionMethod() {
-        if(isNewChangeUnit) {
+        if (isNewChangeUnit()) {
             return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class)
                     .orElseThrow(() -> new IllegalArgumentException(String.format(
                             "Executable changeUnit[%s] without %s method",
@@ -90,8 +79,8 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
                             Execution.class.getName())));
         } else {
             Optional<Method> legacyExecutionMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.Execution.class);
-            if(!legacyExecutionMethod.isPresent()) {
-                if(ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class).isPresent()) {
+            if (!legacyExecutionMethod.isPresent()) {
+                if (ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class).isPresent()) {
                     throw new IllegalArgumentException(String.format(
                             "You are using new API for Execution annotation in your changeUnit class[%s], however your class is annotated with legacy ChangeUnit annotation[%s]. " +
                                     "It's highly recommended to use the new API[in package %s], unless it's a legacy changeUnit created with Mongock",
@@ -113,10 +102,10 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
 
     @Override
     public Optional<Method> getRollbackMethod() {
-        if(isNewChangeUnit) {
+        if (isNewChangeUnit()) {
             Optional<Method> firstAnnotatedMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class);
-            if(!firstAnnotatedMethod.isPresent()) {
-                if(ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.RollbackExecution.class).isPresent()) {
+            if (!firstAnnotatedMethod.isPresent()) {
+                if (ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.RollbackExecution.class).isPresent()) {
                     throw new IllegalArgumentException(String.format(
                             "Executable changeUnit[%s] rollback method should be annotated with new API[%s], instead of legacy API[%s] ",
                             getSourceClass().getName(),
@@ -127,8 +116,8 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
             return firstAnnotatedMethod;
         } else {
             Optional<Method> firstAnnotatedMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.RollbackExecution.class);
-            if(!firstAnnotatedMethod.isPresent()) {
-                if(ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class).isPresent()) {
+            if (!firstAnnotatedMethod.isPresent()) {
+                if (ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class).isPresent()) {
                     throw new IllegalArgumentException(String.format(
                             "You are using new API for RollbackExecution annotation in your changeUnit class[%s], however your class is annotated with legacy ChangeUnit annotation[%s]. " +
                                     "It's highly recommended to use the new API[in package %s], unless it's a legacy changeUnit created with Mongock",
@@ -143,20 +132,20 @@ public class ChangeUnitTaskDescriptor extends ReflectionTaskDescriptor {
 
     public Optional<Method> getBeforeExecutionMethod() {
         Optional<Method> beforeExecutionMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), BeforeExecution.class);
-        if(isNewChangeUnit && beforeExecutionMethod.isPresent()) {
+        if (isNewChangeUnit() && beforeExecutionMethod.isPresent()) {
             throw new IllegalArgumentException(String.format("You are using legacy annotation [%s] with new API. You should create an independent ChangeUnit for it",
                     BeforeExecution.class.getName()));
         }
-        return isNewChangeUnit ? Optional.empty() : beforeExecutionMethod;
+        return isNewChangeUnit() ? Optional.empty() : beforeExecutionMethod;
     }
 
     public Optional<Method> getRollbackBeforeExecutionMethod() {
         Optional<Method> rollbackBeforeExecution = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackBeforeExecution.class);
-        if(isNewChangeUnit && rollbackBeforeExecution.isPresent()) {
+        if (isNewChangeUnit() && rollbackBeforeExecution.isPresent()) {
             throw new IllegalArgumentException(String.format("You are using legacy annotation [%s] with new API. You should create an independent ChangeUnit for it",
                     RollbackBeforeExecution.class.getName()));
         }
-        return isNewChangeUnit ? Optional.empty() : rollbackBeforeExecution;
+        return isNewChangeUnit() ? Optional.empty() : rollbackBeforeExecution;
     }
 
 
