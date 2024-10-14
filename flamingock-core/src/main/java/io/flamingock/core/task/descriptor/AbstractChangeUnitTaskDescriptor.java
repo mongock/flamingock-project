@@ -50,7 +50,7 @@ public abstract class AbstractChangeUnitTaskDescriptor extends ReflectionTaskDes
                         source.getName(),
                         FlamingockConstructor.class.getName());
             } catch (ReflectionUtil.MultipleConstructorsFound ex) {
-                throw new FlamingockException("Found multiple constructors without annotation %s  for class[%s].\n" +
+                throw new FlamingockException("Found multiple constructors, please provide at least one  for class[%s].\n" +
                         "When more than one constructor, exactly one of them must be annotated. And it will be taken as default "
                         , FlamingockConstructor.class.getSimpleName()
                         , source.getName()
@@ -68,7 +68,7 @@ public abstract class AbstractChangeUnitTaskDescriptor extends ReflectionTaskDes
                         source.getName(),
                         ChangeUnitConstructor.class.getName());
             } catch (ReflectionUtil.MultipleConstructorsFound ex) {
-                throw new FlamingockException("Found multiple constructors without annotation %s  for class[%s].\n" +
+                throw new FlamingockException("Found multiple constructors, please provide at least one for class[%s].\n" +
                         "When more than one constructor, exactly one of them must be annotated. And it will be taken as default\n" +
                         "Note: It's highly recommended to use the new API(@FlamingockConstructor)"
                         , ChangeUnitConstructor.class.getSimpleName()
