@@ -2,10 +2,7 @@ package io.flamingock.core.utils;
 
 import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 
 public final class ExecutionUtils {
@@ -14,9 +11,6 @@ public final class ExecutionUtils {
 
     private static final Class<io.mongock.api.annotations.ChangeUnit> LEGACY_CHANGE_UNIT_CLASS = io.mongock.api.annotations.ChangeUnit.class;
 
-    private static final Class<Execution> EXECUTION_CLASS = Execution.class;
-
-    private static final Class<io.mongock.api.annotations.Execution> LEGACY_EXECUTION_CLASS = io.mongock.api.annotations.Execution.class;
 
     private ExecutionUtils() {
     }

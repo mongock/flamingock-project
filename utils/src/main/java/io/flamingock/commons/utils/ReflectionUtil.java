@@ -33,6 +33,9 @@ import java.util.stream.Stream;
 public final class ReflectionUtil {
     private ReflectionUtil() {}
 
+
+
+
     @SuppressWarnings("unchecked")
     public static Optional<Method> findFirstAnnotatedMethod(Class<?> source, Class<? extends Annotation> annotation) {
         return Arrays.stream(source.getMethods())
@@ -61,6 +64,24 @@ public final class ReflectionUtil {
                 .collect(Collectors.toList());
     }
 
+    public static Constructor<?> getConstructorWithAnnotationPreference(Class<?> source, Class<? extends Annotation> annotationClass) {
+        List<Constructor<?>> annotatedConstructors = ReflectionUtil.getAnnotatedConstructors(source, annotationClass);
+        if (annotatedConstructors.size() == 1) {
+            return annotatedConstructors.get(0);
+        } else if (annotatedConstructors.size() > 1) {
+            throw new MultipleAnnotatedConstructorsFound();
+        }
+        Constructor<?>[] constructors = source.getConstructors();
+        if (constructors.length == 0) {
+            throw new ConstructorNotFound();
+        }
+        if (constructors.length > 1) {
+            throw new MultipleConstructorsFound();
+        }
+        return constructors[0];
+    }
+
+
     public static List<Constructor<?>> getConstructors(Class<?> source) {
         return Arrays.stream(source.getConstructors())
                 .collect(Collectors.toList());
@@ -71,4 +92,12 @@ public final class ReflectionUtil {
     }
 
 
+    public static class ConstructorNotFound extends RuntimeException {
+    }
+
+    public static class MultipleAnnotatedConstructorsFound extends RuntimeException {
+    }
+
+    public static class MultipleConstructorsFound extends RuntimeException {
+    }
 }
