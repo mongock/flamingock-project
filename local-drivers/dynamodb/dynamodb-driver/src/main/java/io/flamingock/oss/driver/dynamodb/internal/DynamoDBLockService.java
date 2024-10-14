@@ -31,12 +31,14 @@ import io.flamingock.oss.driver.dynamodb.internal.util.DynamoDBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Expression;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.UpdateItemEnhancedRequest;
-import software.amazon.awssdk.services.dynamodb.model.TransactionCanceledException;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import static java.util.Collections.emptyList;
@@ -74,78 +76,34 @@ public class DynamoDBLockService implements LocalLockService {
     @Override
     public LockAcquisition upsert(LockKey key, RunnerId owner, long leaseMillis) {
         LockEntry newLock = new LockEntry(key.toString(), LockStatus.LOCK_HELD, owner.toString(), timeService.currentDatePlusMillis(leaseMillis));
-        LockEntryEntity existingLockEntity = table.getItem(
-                Key.builder()
-                        .partitionValue(newLock.getKey())
-                        .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
+        table.putItem(
+                PutItemEnhancedRequest.builder(LockEntryEntity.class)
+                        .item(new LockEntryEntity(newLock))
+                        .conditionExpression(Expression.builder()
+                                .expression("attribute_not_exists(partitionKey) OR " +
+                                        "(lockOwner = :ownerVal AND expiresAt > :currentTime) OR " +
+                                        "(lockOwner <> :ownerVal AND expiresAt < :currentTime)")
+                                .putExpressionValue(":ownerVal", AttributeValue.builder().s(newLock.getOwner()).build())
+                                .putExpressionValue(":currentTime", AttributeValue.builder().n(String.valueOf(Timestamp.valueOf(LocalDateTime.now()).getTime())).build())
+                                .build())
                         .build()
         );
-        if (existingLockEntity != null) {
-            LockEntry existingLock = existingLockEntity.toLockEntry();
-            if (newLock.getOwner().equals(existingLock.getOwner()) ||
-                    LocalDateTime.now().isAfter(existingLock.getExpiresAt())) {
-                logger.debug("Lock with key {} already owned by us or is expired, so trying to perform a lock.",
-                        existingLock.getKey());
-                table.updateItem(
-                        UpdateItemEnhancedRequest.builder(LockEntryEntity.class)
-                                .item(new LockEntryEntity(newLock))
-                                .build()
-                );
-                logger.debug("Lock with key {} updated", newLock.getKey());
-
-            } else if (LocalDateTime.now().isBefore(existingLock.getExpiresAt())) {
-                logger.debug("Already locked by {}, will expire at {}", existingLock.getOwner(),
-                        existingLock.getExpiresAt());
-                throw new LockServiceException("Get By" + existingLock.getKey(), newLock.toString(),
-                        "Still locked by " + existingLock.getOwner() + " until " + existingLock.getExpiresAt());
-            }
-        } else {
-            logger.debug("Lock with key {} does not exist, so trying to perform a lock.", newLock.getKey());
-            table.putItem(
-                    PutItemEnhancedRequest.builder(LockEntryEntity.class)
-                            .item(new LockEntryEntity(newLock))
-                            .build()
-            );
-            logger.debug("Lock with key {} created", newLock.getKey());
-        }
         return new LockAcquisition(owner, leaseMillis);
     }
 
     @Override
     public LockAcquisition extendLock(LockKey key, RunnerId owner, long leaseMillis) throws LockServiceException {
-        LockEntry newLock = new LockEntry(key.toString(), LockStatus.LOCK_HELD, owner.toString(), timeService.currentDatePlusMillis(leaseMillis));
-        LockEntryEntity existingLockEntity = table.getItem(
-                Key.builder()
-                        .partitionValue(newLock.getKey())
-                        .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
+        LockEntry updatedLock = new LockEntry(key.toString(), LockStatus.LOCK_HELD, owner.toString(), timeService.currentDatePlusMillis(leaseMillis));
+        table.updateItem(
+                UpdateItemEnhancedRequest.builder(LockEntryEntity.class)
+                        .item(new LockEntryEntity(updatedLock))
+                        .conditionExpression(Expression.builder()
+                                .expression("attribute_exists(partitionKey) AND lockOwner = :ownerVal AND expiresAt > :currentTime")
+                                .putExpressionValue(":ownerVal", AttributeValue.builder().s(updatedLock.getOwner()).build())
+                                .putExpressionValue(":currentTime", AttributeValue.builder().n(String.valueOf(Timestamp.valueOf(LocalDateTime.now()).getTime())).build())
+                                .build())
                         .build()
         );
-        try {
-            if (existingLockEntity != null) {
-                LockEntry existingLock = existingLockEntity.toLockEntry();
-                if (newLock.getOwner().equals(existingLock.getOwner())) {
-                    logger.debug("Lock with key {} already owned by us, so trying to perform a lock.",
-                            existingLock.getKey());
-                    table.updateItem(
-                            UpdateItemEnhancedRequest.builder(LockEntryEntity.class)
-                                    .item(new LockEntryEntity(newLock))
-                                    .build()
-                    );
-                    logger.debug("Lock with key {} updated", newLock.getKey());
-                } else {
-                    logger.debug("Already locked by {}, will expire at {}", existingLock.getOwner(),
-                            existingLock.getExpiresAt());
-                    throw new LockServiceException("Get By " + newLock.getKey(), newLock.toString(),
-                            "Lock belongs to " + existingLock.getOwner());
-                }
-            } else {
-                throw new LockServiceException("Get By " + newLock.getKey(), newLock.toString(),
-                        "Lock with key " + newLock.getKey() + " not found");
-            }
-        } catch (TransactionCanceledException ex) {
-            throw new LockServiceException("Get By " + newLock.getKey(), newLock.toString(),
-                    ex.getMessage());
-        }
         return new LockAcquisition(owner, leaseMillis);
     }
 

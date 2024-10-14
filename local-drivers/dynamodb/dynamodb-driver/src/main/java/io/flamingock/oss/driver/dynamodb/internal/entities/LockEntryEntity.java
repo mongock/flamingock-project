@@ -27,6 +27,8 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -38,7 +40,7 @@ public class LockEntryEntity {
     private String sortKey;
     private String key;
     private LockStatus status;
-    private String owner;
+    private String lockOwner;
     private LocalDateTime expiresAt;
 
     public LockEntryEntity(LockEntry lock) {
@@ -46,7 +48,7 @@ public class LockEntryEntity {
         this.sortKey = DynamoDBConstants.LOCK_SORT_PREFIX;
         this.key = lock.getKey();
         this.status = lock.getStatus();
-        this.owner = lock.getOwner();
+        this.lockOwner = lock.getOwner();
         this.expiresAt = lock.getExpiresAt();
     }
 
@@ -92,31 +94,31 @@ public class LockEntryEntity {
     }
 
     @DynamoDbAttribute(LockEntryField.OWNER_FIELD)
-    public String getOwner() {
-        return owner;
+    public String getLockOwner() {
+        return lockOwner;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setLockOwner(String lockOwner) {
+        this.lockOwner = lockOwner;
     }
 
     @DynamoDbAttribute(LockEntryField.EXPIRES_AT_FIELD)
-    public LocalDateTime getExpiresAt() {
-        return expiresAt;
+    public Long getExpiresAt() {
+        return Timestamp.valueOf(expiresAt).getTime();
     }
 
-    public void setExpiresAt(LocalDateTime expiresAt) {
-        this.expiresAt = expiresAt;
+    public void setExpiresAt(Long expiresAt) {
+        this.expiresAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(expiresAt), ZoneId.of("UTC"));
     }
 
     public LockEntry toLockEntry() {
-        return new LockEntry(key, status, owner, expiresAt);
+        return new LockEntry(key, status, lockOwner, expiresAt);
     }
 
     public LockAcquisition getlockAcquisition() {
         long expiration = this.expiresAt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long diffMillis = expiration - now;
-        return new LockAcquisition(RunnerId.fromString(this.owner), diffMillis);
+        return new LockAcquisition(RunnerId.fromString(this.lockOwner), diffMillis);
     }
 }
