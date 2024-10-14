@@ -93,7 +93,7 @@ public class LockEntryEntity {
         this.status = status;
     }
 
-    @DynamoDbAttribute(LockEntryField.OWNER_FIELD)
+    @DynamoDbAttribute(DynamoDBConstants.LOCK_OWNER)
     public String getLockOwner() {
         return lockOwner;
     }

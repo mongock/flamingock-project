@@ -27,5 +27,6 @@ public final class DynamoDBConstants {
     public static final String LOCK_TABLE_NAME = "locks";
     public static final String LOCK_PK = "partitionKey";
     public static final String LOCK_SK = "sortKey";
+    public static final String LOCK_OWNER = "lockOwner";
     public static final String LOCK_SORT_PREFIX = "[LOCK]";
 }
