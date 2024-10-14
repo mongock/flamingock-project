@@ -17,7 +17,6 @@
 package io.flamingock.oss.driver.dynamodb.internal;
 
 import io.flamingock.commons.utils.Result;
-import io.flamingock.community.internal.AuditEntryField;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.core.engine.local.Auditor;
@@ -33,7 +32,6 @@ import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedException;
 
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -56,13 +54,11 @@ public class DynamoDBAuditor implements Auditor {
         if (indexCreation) {
             dynamoDBUtil.createTable(
                     client.getDynamoDbClient(),
-                    dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK, AuditEntryField.KEY_CHANGE_ID),
-                    dynamoDBUtil.getKeySchemas(DynamoDBConstants.AUDIT_LOG_PK, DynamoDBConstants.AUDIT_LOG_SK),
+                    dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.AUDIT_LOG_PK, null),
+                    dynamoDBUtil.getKeySchemas(DynamoDBConstants.AUDIT_LOG_PK, null),
                     dynamoDBUtil.getProvisionedThroughput(5L, 5L),
                     DynamoDBConstants.AUDIT_LOG_TABLE_NAME,
-                    Collections.singletonList(
-                            dynamoDBUtil.generateLSI(DynamoDBConstants.AUDIT_LOG_LSI_TASK, DynamoDBConstants.AUDIT_LOG_PK, AuditEntryField.KEY_CHANGE_ID)
-                    ),
+                    emptyList(),
                     emptyList()
             );
         }

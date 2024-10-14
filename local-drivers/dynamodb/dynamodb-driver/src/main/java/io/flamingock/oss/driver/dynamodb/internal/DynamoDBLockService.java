@@ -62,8 +62,8 @@ public class DynamoDBLockService implements LocalLockService {
         if (indexCreation) {
             dynamoDBUtil.createTable(
                     client.getDynamoDbClient(),
-                    dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.LOCK_PK, DynamoDBConstants.LOCK_SK),
-                    dynamoDBUtil.getKeySchemas(DynamoDBConstants.LOCK_PK, DynamoDBConstants.LOCK_SK),
+                    dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.LOCK_PK, null),
+                    dynamoDBUtil.getKeySchemas(DynamoDBConstants.LOCK_PK, null),
                     dynamoDBUtil.getProvisionedThroughput(5L, 5L),
                     DynamoDBConstants.LOCK_TABLE_NAME,
                     emptyList(),
@@ -112,7 +112,6 @@ public class DynamoDBLockService implements LocalLockService {
         LockEntryEntity existingLockEntity = table.getItem(
                 Key.builder()
                         .partitionValue(lockKey.toString())
-                        .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
                         .build()
         );
         if (existingLockEntity != null) {
@@ -128,7 +127,6 @@ public class DynamoDBLockService implements LocalLockService {
         LockEntryEntity existingLockEntity = table.getItem(
                 Key.builder()
                         .partitionValue(lockKey.toString())
-                        .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
                         .build()
         );
         if (existingLockEntity != null) {
@@ -138,7 +136,6 @@ public class DynamoDBLockService implements LocalLockService {
                 table.deleteItem(
                         Key.builder()
                                 .partitionValue(lockKey.toString())
-                                .sortValue(DynamoDBConstants.LOCK_SORT_PREFIX)
                                 .build()
                 );
             } else {

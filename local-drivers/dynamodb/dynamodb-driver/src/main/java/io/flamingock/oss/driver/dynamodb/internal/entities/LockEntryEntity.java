@@ -25,7 +25,6 @@ import io.flamingock.oss.driver.dynamodb.internal.util.DynamoDBConstants;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -37,7 +36,6 @@ import java.time.ZoneId;
 public class LockEntryEntity {
 
     private String partitionKey;
-    private String sortKey;
     private String key;
     private LockStatus status;
     private String lockOwner;
@@ -45,7 +43,6 @@ public class LockEntryEntity {
 
     public LockEntryEntity(LockEntry lock) {
         this.partitionKey = lock.getKey();
-        this.sortKey = DynamoDBConstants.LOCK_SORT_PREFIX;
         this.key = lock.getKey();
         this.status = lock.getStatus();
         this.lockOwner = lock.getOwner();
@@ -63,16 +60,6 @@ public class LockEntryEntity {
 
     public void setPartitionKey(String partitionKey) {
         this.partitionKey = partitionKey;
-    }
-
-    @DynamoDbSortKey
-    @DynamoDbAttribute(DynamoDBConstants.LOCK_SK)
-    public String getSortKey() {
-        return sortKey;
-    }
-
-    public void setSortKey(String sortKey) {
-        this.sortKey = sortKey;
     }
 
     @DynamoDbAttribute(LockEntryField.KEY_FIELD)
@@ -108,7 +95,7 @@ public class LockEntryEntity {
     }
 
     public void setExpiresAt(Long expiresAt) {
-        this.expiresAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(expiresAt), ZoneId.of("UTC"));
+        this.expiresAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(expiresAt), ZoneId.systemDefault());
     }
 
     public LockEntry toLockEntry() {

@@ -35,12 +35,14 @@ public final class DynamoDBUtil {
                         .attributeType(ScalarAttributeType.S)
                         .build()
         );
-        result.add(
-                AttributeDefinition.builder()
-                        .attributeName(skName)
-                        .attributeType(ScalarAttributeType.S)
-                        .build()
-        );
+        if (skName != null) {
+            result.add(
+                    AttributeDefinition.builder()
+                            .attributeName(skName)
+                            .attributeType(ScalarAttributeType.S)
+                            .build()
+            );
+        }
         for (String arg : vargs) {
             result.add(
                     AttributeDefinition.builder()
@@ -53,16 +55,22 @@ public final class DynamoDBUtil {
     }
 
     public List<KeySchemaElement> getKeySchemas(String pkName, String skName) {
-        return Arrays.asList(
+        List<KeySchemaElement> result = new ArrayList<>();
+        result.add(
                 KeySchemaElement.builder()
                         .attributeName(pkName)
                         .keyType(KeyType.HASH)
-                        .build(),
-                KeySchemaElement.builder()
-                        .attributeName(skName)
-                        .keyType(KeyType.RANGE)
                         .build()
         );
+        if (skName != null) {
+            result.add(
+                    KeySchemaElement.builder()
+                            .attributeName(skName)
+                            .keyType(KeyType.RANGE)
+                            .build()
+            );
+        }
+        return result;
     }
 
     public ProvisionedThroughput getProvisionedThroughput(Long readCap, Long writeCap) {

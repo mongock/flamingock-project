@@ -19,7 +19,9 @@ package io.flamingock.oss.driver.dynamodb.internal.entities;
 import io.flamingock.community.internal.AuditEntryField;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.oss.driver.dynamodb.internal.util.DynamoDBConstants;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -30,7 +32,6 @@ public class AuditEntryEntity {
 
     protected Boolean systemChange;
     private String partitionKey;
-    private String sortKey;
     private String taskId;
     private String stageId;
     private String executionId;
@@ -47,7 +48,6 @@ public class AuditEntryEntity {
 
     public AuditEntryEntity(AuditEntry auditEntry) {
         this.partitionKey = partitionKey(auditEntry.getExecutionId(), auditEntry.getTaskId(), auditEntry.getState());
-        this.sortKey = DynamoDBConstants.AUDIT_LOG_SORT_PREFIX;;
         this.taskId = auditEntry.getTaskId();
         this.stageId = auditEntry.getStageId();
         this.executionId = auditEntry.getExecutionId();
@@ -81,18 +81,7 @@ public class AuditEntryEntity {
         this.partitionKey = partitionKey;
     }
 
-    @DynamoDbSortKey
-    @DynamoDbAttribute(DynamoDBConstants.AUDIT_LOG_SK)
-    public String getSortKey() {
-        return sortKey;
-    }
-
-    public void setSortKey(String sortKey) {
-        this.sortKey = sortKey;
-    }
-
     @DynamoDbAttribute(AuditEntryField.KEY_CHANGE_ID)
-    @DynamoDbSecondarySortKey(indexNames = {DynamoDBConstants.AUDIT_LOG_LSI_TASK})
     public String getTaskId() {
         return taskId;
     }
