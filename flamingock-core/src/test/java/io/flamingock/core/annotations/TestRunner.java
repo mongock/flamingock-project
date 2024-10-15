@@ -1,11 +1,12 @@
-package io.flamingock.core.legacy;
+package io.flamingock.core.annotations;
 
 import io.flamingock.commons.utils.Result;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.lock.Lock;
-import io.flamingock.core.legacy_old.utils.TaskExecutionChecker;
-import io.flamingock.core.legacy_old.utils.TestTaskExecution;
+import io.flamingock.core.utils.EmptyTransactionWrapper;
+import io.flamingock.core.utils.TaskExecutionChecker;
+import io.flamingock.core.utils.TestTaskExecution;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.runtime.RuntimeManager;
@@ -25,11 +26,29 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class LegacyTestRunner {
+public class TestRunner {
 
-    static void runTest(Class<?> changeUnitClass,
+    public static void runTest(Class<?> changeUnitClass,
+                                int expectedNumberOfExecutableTasks,
+                                TaskExecutionChecker checker,
+                                TestTaskExecution... executionSteps
+    ) {
+        runTestInternal(changeUnitClass, expectedNumberOfExecutableTasks, checker, false, executionSteps);
+    }
+
+    public static void runTestWithTransaction(Class<?> changeUnitClass,
+                               int expectedNumberOfExecutableTasks,
+                               TaskExecutionChecker checker,
+                               TestTaskExecution... executionSteps
+    ) {
+        runTestInternal(changeUnitClass, expectedNumberOfExecutableTasks, checker, true, executionSteps);
+    }
+
+
+    private static void runTestInternal(Class<?> changeUnitClass,
                         int expectedNumberOfExecutableTasks,
                         TaskExecutionChecker checker,
+                        boolean useTransactionWrapper,
                         TestTaskExecution... executionSteps
     ) {
         checker.reset();
@@ -43,14 +62,7 @@ public class LegacyTestRunner {
                 .build();
 
         //AND
-        TaskDescriptor taskDescriptor = new ChangeUnitTaskDescriptor(
-                "taskId",
-                "1",
-                changeUnitClass,
-                false,
-                false,
-                false
-        );
+        TaskDescriptor taskDescriptor = ChangeUnitTaskDescriptor.fromClass(changeUnitClass);
         List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
                 .extractTasks("stage_name", taskDescriptor, null);
 
@@ -58,11 +70,15 @@ public class LegacyTestRunner {
                 "executionId", "hostname", "author", new HashMap<>()
         );
 
-        StepNavigator stepNavigator = new StepNavigator(auditWriterMock, stepSummarizerMock, runtimeManagerMock, null);
+        EmptyTransactionWrapper transactionWrapper = useTransactionWrapper ? new EmptyTransactionWrapper(): null;
+        StepNavigator stepNavigator = new StepNavigator(auditWriterMock, stepSummarizerMock, runtimeManagerMock, transactionWrapper);
 
         executableTasks.forEach(executableTask -> stepNavigator.executeTask(executableTask, stageExecutionContext));
 
         Assertions.assertEquals(expectedNumberOfExecutableTasks, executableTasks.size());
         checker.checkOrderStrict(Arrays.asList(executionSteps));
+        if(useTransactionWrapper) {
+            Assertions.assertTrue(transactionWrapper.isCalled());
+        }
     }
 }

@@ -1,4 +1,4 @@
-package io.flamingock.core.legacy_old.utils;
+package io.flamingock.core.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
