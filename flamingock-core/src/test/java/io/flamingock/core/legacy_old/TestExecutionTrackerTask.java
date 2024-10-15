@@ -1,5 +1,6 @@
-package io.flamingock.core.legacy.utils;
+package io.flamingock.core.legacy_old;
 
+import io.flamingock.core.legacy_old.utils.TaskExecutionChecker;
 import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackBeforeExecution;

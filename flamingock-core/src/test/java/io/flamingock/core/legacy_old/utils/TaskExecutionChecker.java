@@ -1,4 +1,4 @@
-package io.flamingock.core.legacy.utils;
+package io.flamingock.core.legacy_old.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,17 +52,21 @@ public class TaskExecutionChecker {
         List<TestTaskExecution> allExecutions = new ArrayList<>();
         allExecutions.add(execution);
         allExecutions.addAll(Arrays.asList(otherExecutions));
-        if(allExecutions.size() != history.size()) {
+        checkOrderStrict(allExecutions);
+    }
+
+    public void checkOrderStrict(List<TestTaskExecution> executions) {
+        if(executions.size() != history.size()) {
             throw new RuntimeException(String.format("(strict)Expected executions[%d] doesn't match actual executions[%d]" +
-                    "\nexpected:\n\t%s" +
-                    "\nactual:\n\t%s\n",
-                    allExecutions.size(),
+                            "\nexpected:\n\t%s" +
+                            "\nactual:\n\t%s\n",
+                    executions.size(),
                     history.size(),
-                    allExecutions.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t")),
+                    executions.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t")),
                     history.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t"))
-                    ));
+            ));
         }
-        checkExecutions(allExecutions);
+        checkExecutions(executions);
     }
 
 

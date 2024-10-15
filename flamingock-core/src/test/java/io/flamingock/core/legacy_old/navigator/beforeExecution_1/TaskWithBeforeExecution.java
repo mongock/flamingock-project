@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.legacy.navigator.beforeExecution_1;
+package io.flamingock.core.legacy_old.navigator.beforeExecution_1;
 
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
-import io.flamingock.core.legacy.utils.TestExecutionTrackerTask;
+import io.flamingock.core.legacy_old.TestExecutionTrackerTask;
 
 @ChangeUnit(id = "task-with-before-execution", order = "1")
 public class TaskWithBeforeExecution extends TestExecutionTrackerTask {

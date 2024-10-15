@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.legacy.navigator;
+package io.flamingock.core.legacy_old.navigator;
 
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.domain.AuditItem;
-import io.flamingock.core.legacy.navigator.beforeExecution_1.TaskWithBeforeExecution;
-import io.flamingock.core.legacy.utils.EmptyTransactionWrapper;
-import io.flamingock.core.legacy.utils.TestTaskExecution;
+import io.flamingock.core.legacy_old.navigator.beforeExecution_1.TaskWithBeforeExecution;
+import io.flamingock.core.legacy_old.utils.EmptyTransactionWrapper;
+import io.flamingock.core.legacy_old.utils.TestTaskExecution;
 import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.task.descriptor.ChangeUnitTaskDescriptor;
