@@ -1,15 +1,9 @@
-package io.utils;
+package io.flamingock.core.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
-
-import static io.utils.TestTaskExecution.BEFORE_EXECUTION;
-import static io.utils.TestTaskExecution.EXECUTION;
-import static io.utils.TestTaskExecution.ROLLBACK_BEFORE_EXECUTION;
-import static io.utils.TestTaskExecution.ROLLBACK_EXECUTION;
 
 public class TaskExecutionChecker {
 
@@ -23,52 +17,56 @@ public class TaskExecutionChecker {
     }
 
     public boolean isExecuted() {
-        return history.contains(EXECUTION);
+        return history.contains(TestTaskExecution.EXECUTION);
     }
 
     public void markExecution() {
-        history.add(EXECUTION);
+        history.add(TestTaskExecution.EXECUTION);
     }
 
     public boolean isRolledBack() {
-        return history.contains(ROLLBACK_EXECUTION);
+        return history.contains(TestTaskExecution.ROLLBACK_EXECUTION);
     }
 
     public void markRollBackExecution() {
-        history.add(ROLLBACK_EXECUTION);
+        history.add(TestTaskExecution.ROLLBACK_EXECUTION);
     }
 
     public boolean isBeforeExecuted() {
-        return history.contains(BEFORE_EXECUTION);
+        return history.contains(TestTaskExecution.BEFORE_EXECUTION);
     }
 
     public void markBeforeExecution() {
-        history.add(BEFORE_EXECUTION);
+        history.add(TestTaskExecution.BEFORE_EXECUTION);
     }
 
     public boolean isBeforeExecutionRolledBack() {
-        return history.contains(ROLLBACK_BEFORE_EXECUTION);
+        return history.contains(TestTaskExecution.ROLLBACK_BEFORE_EXECUTION);
     }
 
     public void markBeforeExecutionRollBack() {
-        history.add(ROLLBACK_BEFORE_EXECUTION);
+        history.add(TestTaskExecution.ROLLBACK_BEFORE_EXECUTION);
     }
 
     public void checkOrderStrict(TestTaskExecution execution, TestTaskExecution... otherExecutions) {
         List<TestTaskExecution> allExecutions = new ArrayList<>();
         allExecutions.add(execution);
         allExecutions.addAll(Arrays.asList(otherExecutions));
-        if(allExecutions.size() != history.size()) {
+        checkOrderStrict(allExecutions);
+    }
+
+    public void checkOrderStrict(List<TestTaskExecution> executions) {
+        if(executions.size() != history.size()) {
             throw new RuntimeException(String.format("(strict)Expected executions[%d] doesn't match actual executions[%d]" +
-                    "\nexpected:\n\t%s" +
-                    "\nactual:\n\t%s\n",
-                    allExecutions.size(),
+                            "\nexpected:\n\t%s" +
+                            "\nactual:\n\t%s\n",
+                    executions.size(),
                     history.size(),
-                    allExecutions.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t")),
+                    executions.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t")),
                     history.stream().map(TestTaskExecution::name).collect(Collectors.joining(",\n\t"))
-                    ));
+            ));
         }
-        checkExecutions(allExecutions);
+        checkExecutions(executions);
     }
 
 

@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package io.flamingock.core.api.annotations;
+package io.mongock.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * For old classes, this annotation can remain. It won't be removed from the legacy library.
+ * For new classes, use io.flamingock.core.api.annotations.RollbackExecution
+ * <p>
+ * @see io.flamingock.core.api.annotations.RollbackExecution
+ */
+@Deprecated
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RollbackBeforeExecution {
+public @interface RollbackExecution {
 
 }

@@ -1,4 +1,4 @@
-package io.utils;
+package io.flamingock.core.utils;
 
 public enum TestTaskExecution {
 

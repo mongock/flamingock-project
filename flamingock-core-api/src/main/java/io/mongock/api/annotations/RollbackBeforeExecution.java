@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.mongock.api.annotations;
 
-package io.flamingock.core.task.navigation.navigator.beforeExecution_1;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
-import io.utils.TestExecutionTrackerTask;
-
-@ChangeUnit(id = "task-with-before-execution", order = "1")
-public class TaskWithBeforeExecution extends TestExecutionTrackerTask {
-
-
-    @Execution
-    public void execution() {
-        super.execution();
-        throw new RuntimeException("INTENTIONED EXCEPTION");
-    }
-
+/**
+ * For old classes, this annotation can remain. It won't be removed from the legacy library.
+ * For new classes, use io.flamingock.core.api.annotations.RollbackBeforeExecution
+ * <p>
+ */
+@Deprecated
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RollbackBeforeExecution {
 
 }
