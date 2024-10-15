@@ -77,12 +77,6 @@ class LegacyExecution {
         }
 
         //added but it shouldn't be executed
-        @RollbackBeforeExecution
-        public void rollbackBeforeExecution() {
-            CHECKER.markBeforeExecutionRollBack();
-        }
-
-        //added but it shouldn't be executed
         @RollbackExecution
         public void rollbackExecution() {
             CHECKER.markRollBackExecution();
@@ -98,15 +92,15 @@ class LegacyExecution {
             CHECKER.markBeforeExecution();
         }
 
-        @Execution
-        public void execution() {
-            CHECKER.markExecution();
-        }
-
         //added but it shouldn't be executed
         @RollbackBeforeExecution
         public void rollbackBeforeExecution() {
             CHECKER.markBeforeExecutionRollBack();
+        }
+
+        @Execution
+        public void execution() {
+            CHECKER.markExecution();
         }
 
         //added but it shouldn't be executed

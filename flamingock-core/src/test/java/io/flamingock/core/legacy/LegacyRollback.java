@@ -67,8 +67,9 @@ class LegacyRollback {
                 CHECKER,
                 TestTaskExecution.BEFORE_EXECUTION,
                 TestTaskExecution.EXECUTION,
-                TestTaskExecution.ROLLBACK_BEFORE_EXECUTION,
-                TestTaskExecution.ROLLBACK_EXECUTION);
+                TestTaskExecution.ROLLBACK_EXECUTION,
+                TestTaskExecution.ROLLBACK_BEFORE_EXECUTION
+        );
     }
 
     @ChangeUnit(id = "taskId", order = "1")
@@ -99,15 +100,15 @@ class LegacyRollback {
             CHECKER.markBeforeExecution();
         }
 
+        @RollbackBeforeExecution
+        public void rollbackBeforeExecution() {
+            CHECKER.markBeforeExecutionRollBack();
+        }
+
         @Execution
         public void execution() {
             CHECKER.markExecution();
             throw new RuntimeException();
-        }
-
-        @RollbackBeforeExecution
-        public void rollbackBeforeExecution() {
-            CHECKER.markBeforeExecutionRollBack();
         }
 
         @RollbackExecution
