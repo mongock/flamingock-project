@@ -1,4 +1,4 @@
-package io.utils;
+package io.flamingock.core.utils;
 
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.task.descriptor.TaskDescriptor;

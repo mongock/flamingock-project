@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.mongock.api.annotations;
 
-package io.flamingock.core.api.annotations;
+import io.flamingock.core.api.annotations.FlamingockCliConfiguration;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.METHOD)
+/**
+ * For old classes, this annotation can remain. It won't be removed from the legacy library.
+ * For new classes, use io.flamingock.core.api.annotations.MongockCliConfiguration
+ * <p>
+ * @see FlamingockCliConfiguration
+ */
+@Deprecated
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BeforeExecution {
+public @interface MongockCliConfiguration {
+
+  Class<?>[] sources() default {};
 
 }
