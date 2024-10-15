@@ -31,11 +31,6 @@ import java.util.HashMap;
 
 class LegacyRollbackTest {
 
-    private static final ExecutionContext EXECUTION_CONTEXT = new ExecutionContext(
-            "executionId", "host", "author", new HashMap<>()
-    );
-
-
     private static final TaskExecutionChecker CHECKER = new TaskExecutionChecker();
 
     @Test
