@@ -233,6 +233,16 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
+    public void setMongockLegacyImporterEnabled(boolean flag) {
+        coreConfiguration.setMongockLegacyImporterEnabled(flag);
+    }
+
+    @Override
+    public boolean getMongockLegacyImporterEnabled() {
+        return coreConfiguration.getMongockLegacyImporterEnabled();
+    }
+
+    @Override
     public SpringRunnerType getRunnerType() {
         return runnerType;
     }

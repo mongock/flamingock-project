@@ -17,11 +17,19 @@
 package io.flamingock.core.engine.local;
 
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.engine.ConnectionEngine;
+
+import java.util.Optional;
 
 public interface LocalConnectionEngine extends ConnectionEngine {
     void initialize(RunnerId runnerId);
 
     Auditor getAuditor();
+
+
+    default Optional<LocalSystemModule> getMongockLegacyImporterModule() {
+        return Optional.empty();
+    }
 
 }

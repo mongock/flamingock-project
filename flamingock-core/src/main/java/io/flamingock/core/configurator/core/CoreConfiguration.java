@@ -92,6 +92,8 @@ public class CoreConfiguration implements CoreConfigurable {
 
     private List<SystemModule> systemModules = new ArrayList<>();
 
+    private boolean mongockLegacyImporterEnabled = false;
+
 
     @Override
     public void setStages(List<Stage> stages) {
@@ -259,6 +261,16 @@ public class CoreConfiguration implements CoreConfigurable {
     @Override
     public TransactionStrategy getTransactionStrategy() {
         return transactionStrategy;
+    }
+
+    @Override
+    public void setMongockLegacyImporterEnabled(boolean flag) {
+        this.mongockLegacyImporterEnabled = flag;
+    }
+
+    @Override
+    public boolean getMongockLegacyImporterEnabled() {
+        return mongockLegacyImporterEnabled;
     }
 
 
