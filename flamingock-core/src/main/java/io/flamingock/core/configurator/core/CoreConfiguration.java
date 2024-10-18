@@ -33,7 +33,9 @@ import static io.flamingock.commons.utils.Constants.DEFAULT_TRY_FREQUENCY_MILLIS
 
 public class CoreConfiguration implements CoreConfigurable {
 
-    private final LockConfiguration lockConfiguration  = new LockConfiguration();
+    private final LockConfiguration lockConfiguration = new LockConfiguration();
+
+    private MongockImporterConfiguration mongockImporterConfiguration = new MongockImporterConfiguration();
     /**
      * If true, will track ignored changeSets in history. Default false
      */
@@ -87,12 +89,10 @@ public class CoreConfiguration implements CoreConfigurable {
     private TransactionStrategy transactionStrategy = TransactionStrategy.CHANGE_UNIT;
 
 
-    private List<Stage> stages = new ArrayList<>();
+    private final List<Stage> stages = new ArrayList<>();
 
 
-    private List<SystemModule> systemModules = new ArrayList<>();
-
-    private boolean mongockLegacyImporterEnabled = false;
+    private final List<SystemModule> systemModules = new ArrayList<>();
 
 
     @Override
@@ -264,13 +264,13 @@ public class CoreConfiguration implements CoreConfigurable {
     }
 
     @Override
-    public void setMongockLegacyImporterEnabled(boolean flag) {
-        this.mongockLegacyImporterEnabled = flag;
+    public void setMongockImporterConfiguration(MongockImporterConfiguration mongockImporterConfiguration) {
+        this.mongockImporterConfiguration = mongockImporterConfiguration;
     }
 
     @Override
-    public boolean getMongockLegacyImporterEnabled() {
-        return mongockLegacyImporterEnabled;
+    public MongockImporterConfiguration getMongockImporterConfiguration() {
+        return mongockImporterConfiguration;
     }
 
 
@@ -349,6 +349,25 @@ public class CoreConfiguration implements CoreConfigurable {
 
         public boolean isEnableRefreshDaemon() {
             return enableRefreshDaemon;
+        }
+    }
+
+    public static class MongockImporterConfiguration {
+        private String sourceName;
+
+        private MongockImporterConfiguration() {
+        }
+
+        public void setSourceName(String sourceName) {
+            this.sourceName = sourceName;
+        }
+
+        public String getSourceName() {
+            return sourceName;
+        }
+
+        public boolean isEnabled() {
+            return sourceName != null;
         }
     }
 }

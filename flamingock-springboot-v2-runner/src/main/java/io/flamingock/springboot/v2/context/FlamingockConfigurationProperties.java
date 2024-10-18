@@ -161,15 +161,6 @@ public class FlamingockConfigurationProperties
         coreConfiguration.setTransactionStrategy(transactionStrategy);
     }
 
-    @Override
-    public void setMongockLegacyImporterEnabled(boolean flag) {
-        coreConfiguration.setMongockLegacyImporterEnabled(flag);
-    }
-
-    @Override
-    public boolean getMongockLegacyImporterEnabled() {
-        return coreConfiguration.getMongockLegacyImporterEnabled();
-    }
 
     @Override
     public long getLockAcquiredForMillis() {
@@ -239,6 +230,16 @@ public class FlamingockConfigurationProperties
     @Override
     public TransactionStrategy getTransactionStrategy() {
         return coreConfiguration.getTransactionStrategy();
+    }
+
+    @Override
+    public void setMongockImporterConfiguration(CoreConfiguration.MongockImporterConfiguration mongockImporterConfiguration) {
+        coreConfiguration.setMongockImporterConfiguration(mongockImporterConfiguration);
+    }
+
+    @Override
+    public CoreConfiguration.MongockImporterConfiguration getMongockImporterConfiguration() {
+        return null;
     }
 
     @Override

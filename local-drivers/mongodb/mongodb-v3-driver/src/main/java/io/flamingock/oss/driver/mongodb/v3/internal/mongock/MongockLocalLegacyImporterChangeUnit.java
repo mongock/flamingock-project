@@ -1,4 +1,4 @@
-package io.flamingock.oss.driver.mongodb.v3.internal.legacy;
+package io.flamingock.oss.driver.mongodb.v3.internal.mongock;
 
 
 import io.flamingock.core.api.annotations.ChangeUnit;
@@ -10,7 +10,7 @@ import io.flamingock.core.api.annotations.SystemChange;
 public class MongockLocalLegacyImporterChangeUnit {
 
     @Execution
-    public void execution(MongockLegacyImporterConfiguration configuration) {
+    public void execution(MongockImporterConfiguration configuration) {
         System.out.println("THIS SHOULD THE LOCAL MIGRATION with configuration " + configuration.toString());
     }
 }

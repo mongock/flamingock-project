@@ -1,34 +1,35 @@
-package io.flamingock.oss.driver.mongodb.v3.internal.legacy;
+package io.flamingock.oss.driver.mongodb.v3.internal.mongock;
 
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoCollection;
 import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.runtime.dependency.Dependency;
+import org.bson.Document;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class MongoDBLocalLegacyImporterModule implements LocalSystemModule {
+public class MongockImporterModule implements LocalSystemModule {
     public static final List<Class<?>> TASK_CLASSES = Collections.singletonList(
             MongockLocalLegacyImporterChangeUnit.class
     );
     private List<Dependency> dependencies;
-    private final MongoDatabase mongoDatabase;
+    private final MongoCollection<Document> sourceCollection;
     private final AuditWriter auditWriter;
 
-    public MongoDBLocalLegacyImporterModule(MongoDatabase mongoDatabase, AuditWriter auditWriter) {
-        this.mongoDatabase = mongoDatabase;
+    public MongockImporterModule(MongoCollection<Document> sourceCollection, AuditWriter auditWriter) {
+        this.sourceCollection = sourceCollection;
         this.auditWriter = auditWriter;
     }
 
     @Override
     public void initialise() {
-        MongockLegacyImporterConfiguration configuration = new MongockLegacyImporterConfiguration(
-                mongoDatabase, auditWriter
+        MongockImporterConfiguration configuration = new MongockImporterConfiguration(
+                sourceCollection, auditWriter
         );
         dependencies = Collections.singletonList(
-                new Dependency(MongockLegacyImporterConfiguration.class, configuration)
+                new Dependency(MongockImporterConfiguration.class, configuration)
         );
     }
 

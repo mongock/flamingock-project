@@ -92,8 +92,9 @@ public interface CoreConfigurable {
 
     TransactionStrategy getTransactionStrategy();
 
-    void setMongockLegacyImporterEnabled(boolean flag);
+    void setMongockImporterConfiguration(CoreConfiguration.MongockImporterConfiguration mongockImporterConfiguration);
 
-    boolean getMongockLegacyImporterEnabled();
+
+    CoreConfiguration.MongockImporterConfiguration getMongockImporterConfiguration();
 
 }
