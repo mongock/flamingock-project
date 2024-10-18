@@ -10,7 +10,16 @@ import io.flamingock.core.api.annotations.SystemChange;
 public class MongockLocalLegacyImporterChangeUnit {
 
     @Execution
-    public void execution(MongockImporterConfiguration configuration) {
-        System.out.println("THIS SHOULD THE LOCAL MIGRATION with configuration " + configuration.toString());
+    public void execution(InternalMongockImporterConfiguration configuration) {
+        if(configuration.getSourceCollection() == null) {
+            throw new RuntimeException("AuditWriter not injected");
+        }
+        if(configuration.getAuditWriter() == null) {
+            throw new RuntimeException("AuditWriter not injected");
+        }
+
+        if(true) {
+            throw new RuntimeException("Mongock importer needs to be implemented");
+        }
     }
 }

@@ -94,7 +94,6 @@ public interface CoreConfigurable {
 
     void setMongockImporterConfiguration(CoreConfiguration.MongockImporterConfiguration mongockImporterConfiguration);
 
-
     CoreConfiguration.MongockImporterConfiguration getMongockImporterConfiguration();
 
 }

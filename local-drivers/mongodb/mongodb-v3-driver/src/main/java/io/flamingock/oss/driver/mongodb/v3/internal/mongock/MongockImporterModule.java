@@ -25,11 +25,11 @@ public class MongockImporterModule implements LocalSystemModule {
 
     @Override
     public void initialise() {
-        MongockImporterConfiguration configuration = new MongockImporterConfiguration(
+        InternalMongockImporterConfiguration configuration = new InternalMongockImporterConfiguration(
                 sourceCollection, auditWriter
         );
         dependencies = Collections.singletonList(
-                new Dependency(MongockImporterConfiguration.class, configuration)
+                new Dependency(InternalMongockImporterConfiguration.class, configuration)
         );
     }
 

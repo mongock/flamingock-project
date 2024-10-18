@@ -6,18 +6,18 @@ import io.flamingock.core.engine.audit.AuditWriter;
 import org.bson.Document;
 
 @NonLockGuarded
-public class MongockImporterConfiguration {
+public class InternalMongockImporterConfiguration {
 
     private final MongoCollection<Document> sourceCollection;
 
     private final AuditWriter auditWriter;
 
-    public MongockImporterConfiguration(MongoCollection<Document> sourceCollection, AuditWriter auditWriter) {
+    public InternalMongockImporterConfiguration(MongoCollection<Document> sourceCollection, AuditWriter auditWriter) {
         this.sourceCollection = sourceCollection;
         this.auditWriter = auditWriter;
     }
 
-    public MongoCollection<Document> getMongoDatabase() {
+    public MongoCollection<Document> getSourceCollection() {
         return sourceCollection;
     }
 

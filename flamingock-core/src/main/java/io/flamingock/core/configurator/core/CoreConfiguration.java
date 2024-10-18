@@ -35,7 +35,7 @@ public class CoreConfiguration implements CoreConfigurable {
 
     private final LockConfiguration lockConfiguration = new LockConfiguration();
 
-    private MongockImporterConfiguration mongockImporterConfiguration = new MongockImporterConfiguration();
+    private MongockImporterConfiguration mongockImporterConfiguration = MongockImporterConfiguration.getDisabled();
     /**
      * If true, will track ignored changeSets in history. Default false
      */
@@ -353,13 +353,19 @@ public class CoreConfiguration implements CoreConfigurable {
     }
 
     public static class MongockImporterConfiguration {
-        private String sourceName;
 
-        private MongockImporterConfiguration() {
+        private static MongockImporterConfiguration getDisabled() {
+            return new MongockImporterConfiguration(null);
         }
 
-        public void setSourceName(String sourceName) {
-            this.sourceName = sourceName;
+        public static MongockImporterConfiguration withSource(String sourceName) {
+            return new MongockImporterConfiguration(sourceName);
+        }
+
+        private final String sourceName;
+
+        private MongockImporterConfiguration(String collectionSourceName) {
+            this.sourceName = collectionSourceName;
         }
 
         public String getSourceName() {
