@@ -10,8 +10,7 @@ import io.flamingock.core.api.annotations.SystemChange;
 public class MongockLocalLegacyImporterChangeUnit {
 
     @Execution
-    public void execution() {
-
-
+    public void execution(MongockLegacyImporterConfiguration configuration) {
+        System.out.println("THIS SHOULD THE LOCAL MIGRATION with configuration " + configuration.toString());
     }
 }

@@ -20,6 +20,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.community.internal.LocalExecutionPlanner;
+import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.engine.local.Auditor;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
@@ -29,6 +30,7 @@ import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.commons.utils.TimeService;
 import io.flamingock.oss.driver.common.mongodb.SessionManager;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
+import io.flamingock.oss.driver.mongodb.v3.internal.legacy.MongoDBLocalLegacyImporterModule;
 
 import java.util.Optional;
 
@@ -89,5 +91,16 @@ public class Mongo3Engine implements LocalConnectionEngine {
     @Override
     public Optional<TransactionWrapper> getTransactionWrapper() {
         return Optional.ofNullable(transactionWrapper);
+    }
+
+    @Override
+    public Optional<MongoDBLocalLegacyImporterModule> getMongockLegacyImporterModule() {
+        if(coreConfiguration.getMongockLegacyImporterEnabled()) {
+            return Optional.of(
+                    new MongoDBLocalLegacyImporterModule(database, auditor)
+            );
+        } else {
+            return Optional.empty();
+        }
     }
 }
