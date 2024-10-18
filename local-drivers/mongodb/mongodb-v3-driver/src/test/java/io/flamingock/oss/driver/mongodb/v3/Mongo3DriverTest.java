@@ -21,7 +21,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.configurator.core.CoreConfiguration;
+import static io.flamingock.core.configurator.core.CoreConfiguration.MongockImporterConfiguration;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.pipeline.Stage;
@@ -49,6 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 @Testcontainers
 class Mongo3DriverTest {
@@ -315,7 +316,7 @@ class Mongo3DriverTest {
     void shouldRunMongockImporter() {
         //Given-When
         Runner runner = FlamingockStandalone.local()
-                .setMongockImporterConfiguration(CoreConfiguration.MongockImporterConfiguration.withSource("mongockChangeLogs"))
+                .setMongockImporterConfiguration(MongockImporterConfiguration.withSource("mongockChangeLogs"))
                 .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
                 .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
