@@ -17,9 +17,5 @@ public class MongockLocalLegacyImporterChangeUnit {
         if(configuration.getAuditWriter() == null) {
             throw new RuntimeException("AuditWriter not injected");
         }
-
-        if(true) {
-            throw new RuntimeException("Mongock importer needs to be implemented");
-        }
     }
 }

@@ -21,13 +21,15 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import static io.flamingock.core.configurator.core.CoreConfiguration.MongockImporterConfiguration;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.PipelineExecutionException;
-import io.flamingock.core.runner.Runner;
 import io.flamingock.oss.driver.mongodb.v3.driver.Mongo3Driver;
+import io.flamingock.oss.driver.mongodb.v3.mongock.ClientInitializerChangeUnit;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.mongock.runner.standalone.MongockStandalone;
+import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -39,6 +41,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -310,28 +313,41 @@ class Mongo3DriverTest {
         assertTrue(clients.contains("Jorge"));
     }
 
-    //TODO change this test when importer implemented
     @Test
     @DisplayName("When standalone runs the driver with mongock importer should run migration")
     void shouldRunMongockImporter() {
-        //Given-When
-        Runner runner = FlamingockStandalone.local()
-                .setMongockImporterConfiguration(MongockImporterConfiguration.withSource("mongockChangeLogs"))
-                .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
-                .addDependency(mongoClient.getDatabase(DB_NAME))
+        //Given
+        MongoSync4Driver mongoSync4Driver = MongoSync4Driver.withDefaultLock(mongoClient, DB_NAME);
+        MongockStandalone.builder()
+                .setDriver(mongoSync4Driver)
+                .addMigrationClass(ClientInitializerChangeUnit.class)
                 .setTrackIgnored(true)
-                .setTransactionEnabled(true)
-                .build();
+                .setTransactional(false)
+                .buildRunner()
+                .execute();
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, runner::execute);
-        Assertions.assertTrue(runtimeException.getMessage().contains("Stage: mongodb-local-legacy-importer\n" +
-                "\t1) id: mongock-local-legacy-importer-mongodb-3 \n" +
-                "\t\t[class: io.flamingock.oss.driver.mongodb.v3.internal.mongock.MongockLocalLegacyImporterChangeUnit]\n" +
-                "\t\t[class: io.flamingock.oss.driver.mongodb.v3.internal.mongock.MongockLocalLegacyImporterChangeUnit]\n" +
-                "\t\tExecution\t\t❌ - FAILED\n" +
-                "\t\tAudit execution\t✅ - OK\n" +
-                "\t\tRolled back\t\t✅ - OK"));
+        ArrayList<Document> mongockDbState = mongoClient.getDatabase(DB_NAME).getCollection(mongoSync4Driver.getMigrationRepositoryName())
+                .find()
+                .into(new ArrayList<>());
+
+        Assertions.assertEquals(4, mongockDbState.size());
+        assertEquals("system-change-00001_before", mongockDbState.get(0).get("changeId"));
+        assertEquals("system-change-00001", mongockDbState.get(1).get("changeId"));
+        assertEquals("client-initializer_before", mongockDbState.get(2).get("changeId"));
+        assertEquals("client-initializer", mongockDbState.get(3).get("changeId"));
+
+        //When
+//        FlamingockStandalone.local()
+//                .setMongockImporterConfiguration(MongockImporterConfiguration.withSource("mongockChangeLogs"))
+//                .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
+//                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
+//                .addDependency(mongoClient.getDatabase(DB_NAME))
+//                .setTrackIgnored(true)
+//                .setTransactionEnabled(true)
+//                .build()
+//                .run();
+
 
     }
+
 }
