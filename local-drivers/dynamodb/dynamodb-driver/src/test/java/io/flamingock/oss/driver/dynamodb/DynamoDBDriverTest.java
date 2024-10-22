@@ -138,7 +138,7 @@ class DynamoDBDriverTest {
         assertTrue(rows.contains("Pablo López"));
     }
 
-    //    @Test
+    @Test
     @DisplayName("When standalone runs the driver with transactions disabled should persist the audit logs and the user's table updated")
     void happyPathWithoutTransaction() {
         //Given-When
@@ -147,7 +147,7 @@ class DynamoDBDriverTest {
                 .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.dynamodb.changes.happyPathWithoutTransaction"))
                 .addDependency(client)
                 .setTrackIgnored(true)
-                .setTransactionEnabled(true)
+                .setTransactionEnabled(false)
                 .build()
                 .run();
 
