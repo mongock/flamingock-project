@@ -26,12 +26,7 @@ import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.PipelineExecutionException;
 import io.flamingock.oss.driver.mongodb.v3.driver.Mongo3Driver;
-import io.flamingock.oss.driver.mongodb.v3.mongock.ClientInitializerChangeUnit;
-import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
-import io.mongock.runner.standalone.MongockStandalone;
-import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,13 +36,12 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.LEGACY_DEFAULT_LOCK_REPOSITORY_NAME;
-import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
+import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_LOCK_REPOSITORY_NAME;
+import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_MIGRATION_REPOSITORY_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -86,8 +80,8 @@ class Mongo3DriverTest {
 
     @BeforeEach
     void setupEach() {
-        mongoDatabase.getCollection(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME).drop();
-        mongoDatabase.getCollection(LEGACY_DEFAULT_LOCK_REPOSITORY_NAME).drop();
+        mongoDatabase.getCollection(DEFAULT_MIGRATION_REPOSITORY_NAME).drop();
+        mongoDatabase.getCollection(DEFAULT_LOCK_REPOSITORY_NAME).drop();
         mongoDatabase.getCollection(CUSTOM_MIGRATION_REPOSITORY_NAME).drop();
         mongoDatabase.getCollection(CUSTOM_LOCK_REPOSITORY_NAME).drop();
     }
@@ -110,8 +104,8 @@ class Mongo3DriverTest {
                 .build()
                 .run();
 
-        assertTrue(mongoDBTestHelper.collectionExists(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME));
-        assertTrue(mongoDBTestHelper.collectionExists(LEGACY_DEFAULT_LOCK_REPOSITORY_NAME));
+        assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_MIGRATION_REPOSITORY_NAME));
+        assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_LOCK_REPOSITORY_NAME));
 
         assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_MIGRATION_REPOSITORY_NAME));
         assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_LOCK_REPOSITORY_NAME));
@@ -134,8 +128,8 @@ class Mongo3DriverTest {
                 .build()
                 .run();
 
-        assertFalse(mongoDBTestHelper.collectionExists(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME));
-        assertFalse(mongoDBTestHelper.collectionExists(LEGACY_DEFAULT_LOCK_REPOSITORY_NAME));
+        assertFalse(mongoDBTestHelper.collectionExists(DEFAULT_MIGRATION_REPOSITORY_NAME));
+        assertFalse(mongoDBTestHelper.collectionExists(DEFAULT_LOCK_REPOSITORY_NAME));
 
         assertTrue(mongoDBTestHelper.collectionExists(CUSTOM_MIGRATION_REPOSITORY_NAME));
         assertTrue(mongoDBTestHelper.collectionExists(CUSTOM_LOCK_REPOSITORY_NAME));
@@ -156,7 +150,7 @@ class Mongo3DriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
@@ -190,7 +184,7 @@ class Mongo3DriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
@@ -226,7 +220,7 @@ class Mongo3DriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
@@ -259,7 +253,7 @@ class Mongo3DriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
@@ -294,7 +288,7 @@ class Mongo3DriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME);
+        List<AuditEntry> auditLog = mongoDBTestHelper.getAuditEntriesSorted(DEFAULT_MIGRATION_REPOSITORY_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("create-collection", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
@@ -311,43 +305,6 @@ class Mongo3DriverTest {
         assertEquals(2, clients.size());
         assertTrue(clients.contains("Federico"));
         assertTrue(clients.contains("Jorge"));
-    }
-
-    @Test
-    @DisplayName("When standalone runs the driver with mongock importer should run migration")
-    void shouldRunMongockImporter() {
-        //Given
-        MongoSync4Driver mongoSync4Driver = MongoSync4Driver.withDefaultLock(mongoClient, DB_NAME);
-        MongockStandalone.builder()
-                .setDriver(mongoSync4Driver)
-                .addMigrationClass(ClientInitializerChangeUnit.class)
-                .setTrackIgnored(true)
-                .setTransactional(false)
-                .buildRunner()
-                .execute();
-
-        ArrayList<Document> mongockDbState = mongoClient.getDatabase(DB_NAME).getCollection(mongoSync4Driver.getMigrationRepositoryName())
-                .find()
-                .into(new ArrayList<>());
-
-        Assertions.assertEquals(4, mongockDbState.size());
-        assertEquals("system-change-00001_before", mongockDbState.get(0).get("changeId"));
-        assertEquals("system-change-00001", mongockDbState.get(1).get("changeId"));
-        assertEquals("client-initializer_before", mongockDbState.get(2).get("changeId"));
-        assertEquals("client-initializer", mongockDbState.get(3).get("changeId"));
-
-        //When
-//        FlamingockStandalone.local()
-//                .setMongockImporterConfiguration(MongockImporterConfiguration.withSource("mongockChangeLogs"))
-//                .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-//                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
-//                .addDependency(mongoClient.getDatabase(DB_NAME))
-//                .setTrackIgnored(true)
-//                .setTransactionEnabled(true)
-//                .build()
-//                .run();
-
-
     }
 
 }

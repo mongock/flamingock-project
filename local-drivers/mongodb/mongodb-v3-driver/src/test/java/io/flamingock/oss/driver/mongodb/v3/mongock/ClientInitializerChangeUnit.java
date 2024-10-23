@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 public class ClientInitializerChangeUnit {
 
     public final static int INITIAL_CLIENTS = 10;
-    public final static String CLIENTS_COLLECTION_NAME = "clientCollection";
+    public final static String CLIENTS_COLLECTION_NAME = "mongockClientCollection";
 
     @BeforeExecution
     public void beforeExecution(MongoDatabase mongoDatabase) {
