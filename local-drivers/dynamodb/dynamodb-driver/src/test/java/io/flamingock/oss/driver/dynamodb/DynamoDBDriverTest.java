@@ -60,14 +60,14 @@ class DynamoDBDriverTest {
                 new String[]{
                         "-inMemory",
                         "-port",
-                        "8001"
+                        "8000"
                 }
         );
         dynamoDBLocal.start();
 
         client = DynamoDbClient.builder()
                 .region(Region.EU_WEST_1)
-                .endpointOverride(new URI("http://localhost:8001"))
+                .endpointOverride(new URI("http://localhost:8000"))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
                                 AwsBasicCredentials.create("dummye", "dummye")

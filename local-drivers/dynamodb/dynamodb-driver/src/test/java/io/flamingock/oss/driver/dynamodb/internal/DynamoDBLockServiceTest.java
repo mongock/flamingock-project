@@ -32,10 +32,10 @@ class DynamoDBLockServiceTest {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        dynamoDBLocal = ServerRunner.createServerFromCommandLineArgs(new String[]{"-inMemory", "-port", "8001"});
+        dynamoDBLocal = ServerRunner.createServerFromCommandLineArgs(new String[]{"-inMemory", "-port", "8000"});
         dynamoDBLocal.start();
 
-        client = DynamoDbClient.builder().region(Region.EU_WEST_1).endpointOverride(new URI("http://localhost:8001")).credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("dummye", "dummye"))).build();
+        client = DynamoDbClient.builder().region(Region.EU_WEST_1).endpointOverride(new URI("http://localhost:8000")).credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("dummye", "dummye"))).build();
 
         lockService = new DynamoDBLockService(new DynamoClients(client), new TimeService());
         lockService.initialize(true);
