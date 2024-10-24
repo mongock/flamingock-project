@@ -23,7 +23,7 @@ import java.net.URI;
 
 class DynamoDBLockServiceTest {
 
-    private static final String lockKey1 = "invoice_service";
+    private static final LockKey lockKey = LockKey.fromString("lockKey1");
 
     private static DynamoDBProxyServer dynamoDBLocal;
     private static DynamoDbClient client;
@@ -51,7 +51,6 @@ class DynamoDBLockServiceTest {
     @DisplayName("Should acquire lock")
     public void shouldAcquire() {
 
-        LockKey lockKey = LockKey.fromString(lockKey1);
         RunnerId runnerId = RunnerId.fromString("runner-1");
         LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 10);
 
@@ -60,16 +59,33 @@ class DynamoDBLockServiceTest {
     }
 
     @Test
+    @DisplayName("Should acquire lock")
+    public void shouldAcquireTwoDifferentKeys() {
+
+        RunnerId runnerId = RunnerId.fromString("runner-1");
+        LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 10);
+
+        Assertions.assertEquals(runnerId, lockAcquisition.getOwner());
+        Assertions.assertEquals(10, lockAcquisition.getAcquiredForMillis());
+
+
+        LockAcquisition lockAcquisition2 = lockService.upsert(LockKey.fromString("lockKey2"), runnerId, 20);
+
+        Assertions.assertEquals(runnerId, lockAcquisition2.getOwner());
+        Assertions.assertEquals(20, lockAcquisition2.getAcquiredForMillis());
+    }
+
+    @Test
     @DisplayName("Should allow acquiring again lock")
     public void shouldAllowAcquiringAgain() {
 
         RunnerId runnerId = RunnerId.fromString("runner-1");
-        LockAcquisition lockAcquisition = lockService.upsert(LockKey.fromString(lockKey1), runnerId, 1000 * 10);
+        LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 1000 * 10);
 
         Assertions.assertEquals(runnerId, lockAcquisition.getOwner());
         Assertions.assertEquals(10000, lockAcquisition.getAcquiredForMillis());
 
-        LockAcquisition secondAcquisition = lockService.upsert(LockKey.fromString(lockKey1), runnerId, 2000 * 10);
+        LockAcquisition secondAcquisition = lockService.upsert(lockKey, runnerId, 2000 * 10);
 
         Assertions.assertEquals(runnerId, secondAcquisition.getOwner());
         Assertions.assertEquals(20000, secondAcquisition.getAcquiredForMillis());
@@ -80,12 +96,12 @@ class DynamoDBLockServiceTest {
     public void shouldExtend() {
 
         RunnerId runnerId = RunnerId.fromString("runner-1");
-        LockAcquisition lockAcquisition = lockService.upsert(LockKey.fromString(lockKey1), runnerId, 1000 * 10);
+        LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 1000 * 10);
 
         Assertions.assertEquals(runnerId, lockAcquisition.getOwner());
         Assertions.assertEquals(10000, lockAcquisition.getAcquiredForMillis());
 
-        LockAcquisition lockExtension = lockService.extendLock(LockKey.fromString(lockKey1), runnerId, 1000 * 10);
+        LockAcquisition lockExtension = lockService.extendLock(lockKey, runnerId, 1000 * 10);
 
         Assertions.assertEquals(runnerId, lockExtension.getOwner());
         Assertions.assertEquals(10000, lockExtension.getAcquiredForMillis());
@@ -96,14 +112,14 @@ class DynamoDBLockServiceTest {
     public void shouldNotAcquireIfDifferentOwner() {
 
         RunnerId runnerId = RunnerId.fromString("runner-1");
-        LockAcquisition lockAcquisition = lockService.upsert(LockKey.fromString(lockKey1), runnerId, 1000 * 10);
+        LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 1000 * 10);
 
         Assertions.assertEquals(runnerId, lockAcquisition.getOwner());
         Assertions.assertEquals(10000, lockAcquisition.getAcquiredForMillis());
 
         ConditionalCheckFailedException exception = Assertions.assertThrows(ConditionalCheckFailedException.class,
                 () -> lockService.upsert(
-                        LockKey.fromString(lockKey1),
+                        lockKey,
                         RunnerId.fromString("runner-2"),
                         1000 * 10));
 
@@ -116,7 +132,7 @@ class DynamoDBLockServiceTest {
     public void shouldNotAcquireIfExpired() throws InterruptedException {
 
         RunnerId runnerId = RunnerId.fromString("runner-1");
-        LockAcquisition lockAcquisition = lockService.upsert(LockKey.fromString(lockKey1), runnerId, 1);
+        LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 1);
 
         Assertions.assertEquals(runnerId, lockAcquisition.getOwner());
         Assertions.assertEquals(1, lockAcquisition.getAcquiredForMillis());
@@ -125,7 +141,7 @@ class DynamoDBLockServiceTest {
 
         ConditionalCheckFailedException exception = Assertions.assertThrows(ConditionalCheckFailedException.class,
                 () -> lockService.upsert(
-                        LockKey.fromString(lockKey1),
+                        lockKey,
                         runnerId,
                         1000 * 10));
 
@@ -137,14 +153,14 @@ class DynamoDBLockServiceTest {
     public void shouldNotExtendIfDifferentOwner() {
 
         RunnerId runnerId = RunnerId.fromString("runner-1");
-        LockAcquisition lockAcquisition = lockService.upsert(LockKey.fromString(lockKey1), runnerId, 1000 * 10);
+        LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 1000 * 10);
 
         Assertions.assertEquals(runnerId, lockAcquisition.getOwner());
         Assertions.assertEquals(10000, lockAcquisition.getAcquiredForMillis());
 
         ConditionalCheckFailedException exception = Assertions.assertThrows(ConditionalCheckFailedException.class,
                 () -> lockService.extendLock(
-                        LockKey.fromString(lockKey1),
+                        lockKey,
                         RunnerId.fromString("runner-2"),
                         1000 * 10));
 
@@ -157,7 +173,7 @@ class DynamoDBLockServiceTest {
     public void shouldNotExtendIfExpired() throws InterruptedException {
 
         RunnerId runnerId = RunnerId.fromString("runner-1");
-        LockAcquisition lockAcquisition = lockService.upsert(LockKey.fromString(lockKey1), runnerId, 1);
+        LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 1);
 
         Assertions.assertEquals(runnerId, lockAcquisition.getOwner());
         Assertions.assertEquals(1, lockAcquisition.getAcquiredForMillis());
@@ -166,7 +182,7 @@ class DynamoDBLockServiceTest {
 
         ConditionalCheckFailedException exception = Assertions.assertThrows(ConditionalCheckFailedException.class,
                 () -> lockService.extendLock(
-                        LockKey.fromString(lockKey1),
+                        lockKey,
                         runnerId,
                         1000 * 10));
 
