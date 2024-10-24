@@ -39,7 +39,7 @@ public class CommunityStandaloneDynamoDBApp {
     private static DynamoDbClient connect() throws URISyntaxException {
         return DynamoDbClient.builder()
                 .region(Region.EU_WEST_1)
-                .endpointOverride(new URI("http://localhost:8000"))
+                .endpointOverride(new URI("http://localhost:8001"))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
                                 AwsBasicCredentials.create("dummye", "dummye")

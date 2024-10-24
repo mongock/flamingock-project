@@ -59,14 +59,14 @@ public class SuccessExecutionTest {
                 new String[]{
                         "-inMemory",
                         "-port",
-                        "8000"
+                        "8001"
                 }
         );
         dynamoDBLocal.start();
 
         client = DynamoDbClient.builder()
                 .region(Region.EU_WEST_1)
-                .endpointOverride(new URI("http://localhost:8000"))
+                .endpointOverride(new URI("http://localhost:8001"))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
                                 AwsBasicCredentials.create("dummye", "dummye")
