@@ -128,8 +128,8 @@ class DynamoDBLockServiceTest {
     }
 
     @Test
-    @DisplayName("Should not re-acquire if expired")
-    public void shouldNotAcquireIfExpired() throws InterruptedException {
+    @DisplayName("Should allow re-acquiring if expired")
+    public void shouldAllowReAcquiringIfExpired() throws InterruptedException {
 
         RunnerId runnerId = RunnerId.fromString("runner-1");
         LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 1);
@@ -139,13 +139,28 @@ class DynamoDBLockServiceTest {
 
         Thread.sleep(1);
 
-        ConditionalCheckFailedException exception = Assertions.assertThrows(ConditionalCheckFailedException.class,
-                () -> lockService.upsert(
-                        lockKey,
-                        runnerId,
-                        1000 * 10));
+        LockAcquisition secondAcquisition = lockService.upsert(lockKey, runnerId, 2000 * 10);
 
-        Assertions.assertTrue(exception.getMessage().startsWith("The conditional request failed"));
+        Assertions.assertEquals(runnerId, secondAcquisition.getOwner());
+        Assertions.assertEquals(20000, secondAcquisition.getAcquiredForMillis());
+    }
+
+    @Test
+    @DisplayName("Should allow acquiring by other if expired")
+    public void shouldAllowAcquiringByOtherIfExpired() throws InterruptedException {
+
+        RunnerId runnerId = RunnerId.fromString("runner-1");
+        LockAcquisition lockAcquisition = lockService.upsert(lockKey, runnerId, 1);
+
+        Assertions.assertEquals(runnerId, lockAcquisition.getOwner());
+        Assertions.assertEquals(1, lockAcquisition.getAcquiredForMillis());
+
+        Thread.sleep(1);
+
+        LockAcquisition secondAcquisition = lockService.upsert(lockKey, RunnerId.fromString("runner-2"), 2000 * 10);
+
+        Assertions.assertEquals(RunnerId.fromString("runner-2"), secondAcquisition.getOwner());
+        Assertions.assertEquals(20000, secondAcquisition.getAcquiredForMillis());
     }
 
     @Test

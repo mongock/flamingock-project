@@ -82,7 +82,7 @@ public class DynamoDBLockService implements LocalLockService {
                         .conditionExpression(Expression.builder()
                                 .expression("attribute_not_exists(partitionKey) OR " +
                                         "(lockOwner = :ownerVal AND expiresAt > :currentTime) OR " +
-                                        "(lockOwner <> :ownerVal AND expiresAt < :currentTime)")
+                                        "(expiresAt < :currentTime)")
                                 .putExpressionValue(":ownerVal", AttributeValue.builder().s(newLock.getOwner()).build())
                                 .putExpressionValue(":currentTime", AttributeValue.builder().n(String.valueOf(Timestamp.valueOf(LocalDateTime.now()).getTime())).build())
                                 .build())

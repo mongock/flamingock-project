@@ -285,28 +285,4 @@ class DynamoDBDriverTest {
         assertTrue(rows.contains("Pepe Pérez"));
         assertTrue(rows.contains("Pablo López"));
     }
-
-//    @Test
-//    @DisplayName("When upsert a new lock check if properly created")
-//    void lockServiceUpsertRaceConditions() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-//        //Given-When
-//
-//        DynamoDBLockService lockService = (DynamoDBLockService) dynamoDBTestHelper.getNewLockService().invoke(null, new DynamoClients(client), TimeService.getDefault());
-//        dynamoDBTestHelper.getLockServiceInitialize().invoke(lockService, true);
-//
-//        lockService.upsert(
-//                (LockKey) dynamoDBTestHelper.getNewLockKey().invoke(null, "lockKey1"),
-//                (RunnerId) dynamoDBTestHelper.getNewRunnerId().invoke(null, "owner1"),
-//                60000
-//        );
-//
-//        lockService.upsert(
-//                (LockKey) dynamoDBTestHelper.getNewLockKey().invoke(null, "lockKey1"),
-//                (RunnerId) dynamoDBTestHelper.getNewRunnerId().invoke(null, "owner2"),
-//                60000
-//        );
-//
-//        //Then
-//
-//    }
 }
