@@ -148,19 +148,19 @@ public class SuccessExecutionImporterTest {
 
         flamingockDocuments.forEach(m -> legacyAuditEntryExpectations.add(new MongockLegacyAuditEntry(
                 m.get("_id"),
-                (String) m.get("executionId"),
-                (String) m.get("changeId"),
-                (String) m.get("state"),
-                (String) m.get("type"),
-                (String) m.get("author"),
+                m.getString("executionId"),
+                m.getString("changeId"),
+                m.getString("state"),
+                m.getString("type"),
+                m.getString("author"),
                 m.get("timestamp"),
-                (String) m.get("changeLogClass"),
-                (String) m.get("changeSetMethod"),
+                m.getString("changeLogClass"),
+                m.getString("changeSetMethod"),
                 m.get("metadata"),
-                (Long) m.get("executionMillis"),
-                (String) m.get("executionHostname"),
-                (String) m.get("errorTrace"),
-                (Boolean) m.get("systemChange")
+                m.getLong("executionMillis"),
+                m.getString("executionHostname"),
+                m.getString("errorTrace"),
+                m.getBoolean("systemChange")
         )));
 
         String executionId = "execution-1";
@@ -207,19 +207,19 @@ public class SuccessExecutionImporterTest {
 
         flamingockDocuments.forEach(m -> legacyAuditEntryExpectations.add(new MongockLegacyAuditEntry(
                 m.get("_id"),
-                (String) m.get("executionId"),
-                (String) m.get("changeId"),
-                (String) m.get("state"),
-                (String) m.get("type"),
-                (String) m.get("author"),
+                m.getString("executionId"),
+                m.getString("changeId"),
+                m.getString("state"),
+                m.getString("type"),
+                m.getString("author"),
                 m.get("timestamp"),
-                (String) m.get("changeLogClass"),
-                (String) m.get("changeSetMethod"),
+                m.getString("changeLogClass"),
+                m.getString("changeSetMethod"),
                 m.get("metadata"),
-                (Long) m.get("executionMillis"),
-                (String) m.get("executionHostname"),
-                (String) m.get("errorTrace"),
-                (Boolean) m.get("systemChange")
+                m.getLong("executionMillis"),
+                m.getString("executionHostname"),
+                m.getString("errorTrace"),
+                m.getBoolean("systemChange")
         )));
 
         String executionId = "execution-1";
