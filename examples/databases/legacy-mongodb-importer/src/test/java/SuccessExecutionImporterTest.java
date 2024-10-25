@@ -38,7 +38,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.*;
 
-import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME;
+import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_MIGRATION_REPOSITORY_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
@@ -62,9 +62,7 @@ public class SuccessExecutionImporterTest {
     private final String credentialId = UUID.randomUUID().toString();
     private final int runnerServerPort = 8888;
     private final String jwt = "fake_jwt";
-    private final static String MONGODB_CHANGELOG_COLLECTION = "mongockChangeLog";
     private final static String DATABASE_NAME = "test";
-
     private MockRunnerServer mockRunnerServer;
     private StandaloneCloudBuilder flamingockBuilder;
 
@@ -78,7 +76,7 @@ public class SuccessExecutionImporterTest {
                 .builder()
                 .applyConnectionString(new ConnectionString(mongoDBContainer.getConnectionString()))
                 .build());
-        new CommunityStandaloneMongodbSyncApp().run(mongoClient, "test");
+        new CommunityStandaloneMongodbSyncApp().run(mongoClient, DATABASE_NAME);
 
         auditEntryExpectations.add(new
 
@@ -110,7 +108,7 @@ public class SuccessExecutionImporterTest {
                 .setApiToken(apiToken)
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
-                .addSystemModule(new MongoDBLegacyImporter(MONGODB_CHANGELOG_COLLECTION))
+                .addSystemModule(new MongoDBLegacyImporter(DEFAULT_MIGRATION_REPOSITORY_NAME))
                 .addDependency(mongoClient.getDatabase(DATABASE_NAME))
                 .setEnvironment(environmentName);
     }
@@ -125,7 +123,7 @@ public class SuccessExecutionImporterTest {
     @DisplayName("SHOULD import the Flamingock legacy history")
     void flamingockLegacyAuditImporterOkTest() {
         ArrayList<Document> flamingockDocuments = mongoClient.getDatabase(DATABASE_NAME)
-                .getCollection(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME)
+                .getCollection(DEFAULT_MIGRATION_REPOSITORY_NAME)
                 .find()
                 .into(new ArrayList<>());
 
@@ -184,7 +182,7 @@ public class SuccessExecutionImporterTest {
     @DisplayName("SHOULD not import the Flamingock legacy history")
     void flamingockLegacyAuditImporterFailureTest() {
         ArrayList<Document> flamingockDocuments = mongoClient.getDatabase(DATABASE_NAME)
-                .getCollection(LEGACY_DEFAULT_MIGRATION_REPOSITORY_NAME)
+                .getCollection(DEFAULT_MIGRATION_REPOSITORY_NAME)
                 .find()
                 .into(new ArrayList<>());
 
