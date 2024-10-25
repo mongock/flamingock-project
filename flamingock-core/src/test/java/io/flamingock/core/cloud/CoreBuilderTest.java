@@ -16,48 +16,27 @@
 
 package io.flamingock.core.cloud;
 
-import io.flamingock.common.test.cloud.AuditEntryExpectation;
 import io.flamingock.common.test.cloud.MockRunnerServer;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
-import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
 import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.runner.Runner;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 
-//TODO add listener to check final Summary
-//TODO verify calls to server
 public class CoreBuilderTest {
+    private static MockRunnerServer mockRunnerServer;
 
-    @Test
-    @DisplayName("Should throw an exception when package of change units empty")
-    void happyPath() {
-
-        startServer();
-
-        StandaloneCloudBuilder flamingockBuilder = FlamingockStandalone.cloud()
-                .setApiToken("FAKE_API_TOKEN")
-                .setHost("http://localhost:8888" )
-                .setService("clients-service")
-                .setEnvironment("development")
-                .addStage(new Stage("stage-1")
-                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package")));
-        Exception exception = Assertions.assertThrows(Exception.class, flamingockBuilder::build);
-
-        exception.printStackTrace();
-
-
-    }
-
-    private void startServer() {
-        MockRunnerServer mockRunnerServer = new MockRunnerServer()
+    @BeforeAll
+    public static void beforeAll() {
+        mockRunnerServer = new MockRunnerServer()
                 .setServerPort(8888)
                 .setOrganisationId(UUID.randomUUID().toString())
                 .setOrganisationName("MyOrganisation")
@@ -73,6 +52,71 @@ public class CoreBuilderTest {
                 .addExecutionContinueRequestResponse();
 
         mockRunnerServer.start();
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        mockRunnerServer.stop();
+    }
+
+    @Test
+    @DisplayName("Should throw an exception when the only stage is empty")
+    void shouldThrowExceptionWhenTheOnlyStageEmpty() {
+
+        Runner runner = FlamingockStandalone.cloud()
+                .setApiToken("FAKE_API_TOKEN")
+                .setHost("http://localhost:8888")
+                .setService("clients-service")
+                .setEnvironment("development")
+                .addStage(new Stage("failing-stage-1")
+                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package")))
+                .build();
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, runner::execute);
+
+        Assertions.assertEquals("There are empty stages: failing-stage-1", exception.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw an exception when all stages are empty")
+    void shouldThrowExceptionWhenAllPackagesEmpty() {
+
+        Runner runner = FlamingockStandalone.cloud()
+                .setApiToken("FAKE_API_TOKEN")
+                .setHost("http://localhost:8888")
+                .setService("clients-service")
+                .setEnvironment("development")
+                .addStage(new Stage("failing-stage-1")
+                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-1")))
+                .addStage(new Stage("failing-stage-2")
+                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-2")))
+                .build();
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, runner::execute);
+
+        Assertions.assertEquals("There are empty stages: failing-stage-1,failing-stage-2", exception.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw an exception when all stages are empty")
+    void shouldThrowExceptionWhenAtLeastOnePackagesEmpty() {
+
+        Runner runner = FlamingockStandalone.cloud()
+                .setApiToken("FAKE_API_TOKEN")
+                .setHost("http://localhost:8888")
+                .setService("clients-service")
+                .setEnvironment("development")
+                .addStage(new Stage("failing-stage-1")
+                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-1")))
+                .addStage(new Stage("success-stage")
+                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
+                .addStage(new Stage("failing-stage-2")
+                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-2")))
+                .build();
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, runner::execute);
+
+        Assertions.assertEquals("There are empty stages: failing-stage-1,failing-stage-2", exception.getMessage());
+
     }
 
 
