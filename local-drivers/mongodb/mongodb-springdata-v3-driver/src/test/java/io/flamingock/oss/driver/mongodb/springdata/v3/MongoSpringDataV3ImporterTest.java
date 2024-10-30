@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.v3;
+package io.flamingock.oss.driver.mongodb.springdata.v3;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.pipeline.Stage;
-import io.flamingock.oss.driver.mongodb.v3.driver.Mongo3Driver;
-import io.flamingock.oss.driver.mongodb.v3.mongock.ClientInitializerChangeUnit;
-import io.mongock.driver.mongodb.v3.driver.MongoCore3Driver;
+import io.flamingock.oss.driver.mongodb.springdata.v3.driver.SpringDataMongoV3Driver;
+import io.flamingock.oss.driver.mongodb.springdata.v3.mongock.ClientInitializerChangeUnit;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import io.mongock.runner.standalone.MongockStandalone;
 import org.bson.Document;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +33,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -49,14 +49,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @Testcontainers
-class Mongo3ImporterTest {
+class MongoSpringDataV3ImporterTest {
 
     private static final String DB_NAME = "test";
 
     private static MongoClient mongoClient;
-
-    private static MongoDatabase mongoDatabase;
-
+    private static MongoTemplate mongoTemplate;
     private static MongoDBTestHelper mongoDBTestHelper;
 
     @Container
@@ -68,30 +66,30 @@ class Mongo3ImporterTest {
                 .builder()
                 .applyConnectionString(new ConnectionString(mongoDBContainer.getConnectionString()))
                 .build());
-        mongoDatabase = mongoClient.getDatabase(DB_NAME);
-        mongoDBTestHelper = new MongoDBTestHelper(mongoDatabase);
+        mongoTemplate = new MongoTemplate(mongoClient, DB_NAME);
+        mongoDBTestHelper = new MongoDBTestHelper(mongoTemplate.getDb());
     }
 
     @BeforeEach
     void setupEach() {
-        mongoDatabase.getCollection(DEFAULT_MIGRATION_REPOSITORY_NAME).drop();
-        mongoDatabase.getCollection(DEFAULT_LOCK_REPOSITORY_NAME).drop();
+        mongoTemplate.getCollection(DEFAULT_MIGRATION_REPOSITORY_NAME).drop();
+        mongoTemplate.getCollection(DEFAULT_LOCK_REPOSITORY_NAME).drop();
     }
 
     @Test
     @DisplayName("When standalone runs the driver with mongock importer should run migration")
     void shouldRunMongockImporter() {
         //Given
-        MongoCore3Driver mongoSync4Driver = MongoCore3Driver.withDefaultLock(mongoClient, DB_NAME);
+        MongoSync4Driver mongo3Driver = MongoSync4Driver.withDefaultLock(mongoClient, DB_NAME);
         MongockStandalone.builder()
-                .setDriver(mongoSync4Driver)
+                .setDriver(mongo3Driver)
                 .addMigrationClass(ClientInitializerChangeUnit.class)
                 .setTrackIgnored(true)
                 .setTransactional(false)
                 .buildRunner()
                 .execute();
 
-        ArrayList<Document> mongockDbState = mongoClient.getDatabase(DB_NAME).getCollection(mongoSync4Driver.getMigrationRepositoryName())
+        ArrayList<Document> mongockDbState = mongoClient.getDatabase(DB_NAME).getCollection(mongo3Driver.getMigrationRepositoryName())
                 .find()
                 .into(new ArrayList<>());
 
@@ -103,10 +101,10 @@ class Mongo3ImporterTest {
 
         //When
         FlamingockStandalone.local()
-                .setMongockImporterConfiguration(MongockImporterConfiguration.withSource(mongoSync4Driver.getMigrationRepositoryName()))
-                .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
-                .addDependency(mongoClient.getDatabase(DB_NAME))
+                .setMongockImporterConfiguration(MongockImporterConfiguration.withSource(mongo3Driver.getMigrationRepositoryName()))
+                .setDriver(new SpringDataMongoV3Driver(mongoTemplate))
+                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v3.changes.happyPathWithTransaction"))
+                .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .setTransactionEnabled(true)
                 .build()
@@ -164,7 +162,7 @@ class Mongo3ImporterTest {
                 null,
                 "mongock-local-legacy-importer-mongodb-3",
                 AuditEntry.Status.EXECUTED,
-                "io.flamingock.oss.driver.mongodb.v3.internal.mongock.MongockLocalLegacyImporterChangeUnit",
+                "io.flamingock.oss.driver.mongodb.sync.v4.internal.mongock.MongockLocalLegacyImporterChangeUnit",
                 "execution",
                 AuditEntry.ExecutionType.EXECUTION,
                 false);
