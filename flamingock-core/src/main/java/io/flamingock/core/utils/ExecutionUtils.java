@@ -1,11 +1,16 @@
 package io.flamingock.core.utils;
 
 import io.flamingock.commons.utils.ReflectionUtil;
+import io.flamingock.core.api.FlamingockConfiguration;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.NonLockGuardedType;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +30,35 @@ public final class ExecutionUtils {
 
     @SuppressWarnings("unchecked")
     public static Collection<Class<?>> loadExecutionClassesFromPackage(String packagePath) {
-        return ReflectionUtil.loadAnnotatedClassesFromPackage(packagePath, ExecutionUtils.CHANGE_UNIT_CLASS, ExecutionUtils.LEGACY_CHANGE_UNIT_CLASS);
+        Collection<Class<?>> classesFromConfigFile = getClassFromConfiguration(packagePath);
+
+        return classesFromConfigFile.size() > 0
+                ? classesFromConfigFile
+                : ReflectionUtil.loadAnnotatedClassesFromPackage(packagePath, ExecutionUtils.CHANGE_UNIT_CLASS, ExecutionUtils.LEGACY_CHANGE_UNIT_CLASS);
+    }
+
+    private static Collection<Class<?>> getClassFromConfiguration(String packagePath) {
+
+        ClassLoader classLoader = ExecutionUtils.class.getClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream(FlamingockConfiguration.FILE_PATH)) {
+            if (inputStream != null) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    String line;
+                    Collection<Class<?>> annotatedClasses = new ArrayList<>();
+                    while ((line = reader.readLine()) != null) {
+                        if (line.startsWith(packagePath)) {
+                            annotatedClasses.add(classLoader.loadClass(line));
+                        }
+
+                    }
+                    return annotatedClasses;
+                }
+            } else {
+                return Collections.emptyList();
+            }
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 
     /**

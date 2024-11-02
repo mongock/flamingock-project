@@ -89,10 +89,10 @@ public final class RuntimeManager implements DependencyInjectable {
     }
 
     public Object executeMethod(Object instance, Method method) {
-        List<Object> signatureParameters = getSignatureParameters(method);
         try {
+            List<Object> signatureParameters = getSignatureParameters(method);
             return method.invoke(instance, signatureParameters.toArray());
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
