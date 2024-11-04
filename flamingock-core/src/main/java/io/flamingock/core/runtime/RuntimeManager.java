@@ -62,7 +62,7 @@ public final class RuntimeManager implements DependencyInjectable {
     private final DependencyInjectableContext dependencyContext;
     private final LockGuardProxyFactory proxyFactory;
 
-    public RuntimeManager(LockGuardProxyFactory proxyFactory,
+    private RuntimeManager(LockGuardProxyFactory proxyFactory,
                           DependencyInjectableContext dependencyContext) {
         this.dependencyContext = dependencyContext;
         this.proxyFactory = proxyFactory;

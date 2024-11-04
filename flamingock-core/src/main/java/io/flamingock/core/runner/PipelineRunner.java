@@ -69,7 +69,14 @@ public class PipelineRunner implements Runner {
 
     private final Runnable finalizer;
 
-    public PipelineRunner(RunnerId runnerId, Pipeline pipeline, ExecutionPlanner executionPlanner, StageExecutor stageExecutor, OrphanExecutionContext orphanExecutionContext, EventPublisher eventPublisher, boolean throwExceptionIfCannotObtainLock, Runnable finalizer) {
+    public PipelineRunner(RunnerId runnerId,
+                          Pipeline pipeline,
+                          ExecutionPlanner executionPlanner,
+                          StageExecutor stageExecutor,
+                          OrphanExecutionContext orphanExecutionContext,
+                          EventPublisher eventPublisher,
+                          boolean throwExceptionIfCannotObtainLock,
+                          Runnable finalizer) {
         this.runnerId = runnerId;
         this.pipeline = pipeline;
         this.executionPlanner = executionPlanner;

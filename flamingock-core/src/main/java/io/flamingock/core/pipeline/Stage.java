@@ -67,7 +67,12 @@ public class Stage {
         this(prototype.getName(), prototype.getCodePackages(), prototype.getFileDirectories(), prototype.getClasses(), prototype.getFilters(), prototype.isParallel());
     }
 
-    public Stage(String name, Collection<String> codePackages, Collection<String> fileDirectories, Collection<Class<?>> classes, Collection<TaskFilter> filters, boolean parallel) {
+    public Stage(String name,
+                 Collection<String> codePackages,
+                 Collection<String> fileDirectories,
+                 Collection<Class<?>> classes,
+                 Collection<TaskFilter> filters,
+                 boolean parallel) {
         this.name = name;
         this.codePackages = codePackages != null ? new LinkedHashSet<>(codePackages) : null;
         this.fileDirectories = fileDirectories != null ? new LinkedHashSet<>(fileDirectories) : null;

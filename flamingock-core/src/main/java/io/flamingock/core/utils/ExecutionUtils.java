@@ -1,7 +1,7 @@
 package io.flamingock.core.utils;
 
 import io.flamingock.commons.utils.ReflectionUtil;
-import io.flamingock.core.api.FlamingockConfiguration;
+import io.flamingock.core.api.FlamingockMetadata;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.NonLockGuardedType;
@@ -40,7 +40,7 @@ public final class ExecutionUtils {
     private static Collection<Class<?>> getClassFromConfiguration(String packagePath) {
 
         ClassLoader classLoader = ExecutionUtils.class.getClassLoader();
-        try (InputStream inputStream = classLoader.getResourceAsStream(FlamingockConfiguration.FILE_PATH)) {
+        try (InputStream inputStream = classLoader.getResourceAsStream(FlamingockMetadata.FILE_PATH)) {
             if (inputStream != null) {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                     String line;
