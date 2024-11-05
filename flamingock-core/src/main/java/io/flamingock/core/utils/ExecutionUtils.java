@@ -1,7 +1,7 @@
 package io.flamingock.core.utils;
 
 import io.flamingock.commons.utils.ReflectionUtil;
-import io.flamingock.core.api.FlamingockMetadata;
+import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.NonLockGuardedType;
