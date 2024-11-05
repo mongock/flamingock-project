@@ -64,7 +64,12 @@ public class Stage {
     }
 
     public Stage(Stage prototype) {
-        this(prototype.getName(), prototype.getCodePackages(), prototype.getFileDirectories(), prototype.getClasses(), prototype.getFilters(), prototype.isParallel());
+        this(prototype.getName(),
+                prototype.getCodePackages(),
+                prototype.getFileDirectories(),
+                prototype.getClasses(),
+                prototype.getFilters(),
+                prototype.isParallel());
     }
 
     public Stage(String name,
