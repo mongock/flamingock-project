@@ -1,5 +1,7 @@
 package io.flamingock.core.api;
 
+
+
 import java.util.Collection;
 
 public class FlamingockMetadata {
@@ -33,5 +35,13 @@ public class FlamingockMetadata {
 
     public void setClasses(Collection<String> classes) {
         this.classes = classes;
+    }
+
+
+    @Override
+    public String toString() {
+        return "FlamingockMetadata{" + "suppressedProxies=" + suppressedProxies +
+                ", classes=" + classes +
+                '}';
     }
 }
