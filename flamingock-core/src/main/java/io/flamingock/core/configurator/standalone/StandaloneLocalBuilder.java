@@ -18,6 +18,7 @@ package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
@@ -133,4 +134,13 @@ public class StandaloneLocalBuilder
         return localConfiguratorDelegate.getLocalConfiguration();
     }
 
+    @Override
+    public StandaloneLocalBuilder setFlamingockMetadata(FlamingockMetadata metadata) {
+        return coreConfiguratorDelegate.setFlamingockMetadata(metadata);
+    }
+
+    @Override
+    public FlamingockMetadata getFlamingockMetadata() {
+        return coreConfiguratorDelegate.getFlamingockMetadata();
+    }
 }

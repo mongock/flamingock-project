@@ -18,6 +18,7 @@ package io.flamingock.core.pipeline;
 
 import io.flamingock.core.api.annotations.SystemChange;
 import io.flamingock.commons.utils.FileUtil;
+import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.task.descriptor.ReflectionTaskDescriptorBuilder;
 import io.flamingock.core.task.descriptor.TaskDescriptor;
 import io.flamingock.core.task.descriptor.TemplatedTaskDescriptorBuilder;
@@ -184,7 +185,7 @@ public class Stage {
      *
      * @return the LoadedStage with contain the task Definition
      */
-    public LoadedStage load() {
+    public LoadedStage load(FlamingockMetadata metadata) {
         Predicate<Class<?>> filterOperator = getFilterOperator(getFilters());
 
         Collection<TaskDescriptor> descriptors = new ArrayList<>(getFilteredDescriptorsFromCodePackages(codePackages, filterOperator));

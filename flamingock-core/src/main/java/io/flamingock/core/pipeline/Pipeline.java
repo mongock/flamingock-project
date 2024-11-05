@@ -17,6 +17,7 @@
 package io.flamingock.core.pipeline;
 
 import io.flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.task.filter.TaskFilter;
 
 import java.util.Collection;
@@ -27,20 +28,23 @@ import java.util.stream.Collectors;
 
 public class Pipeline {
 
+    private final FlamingockMetadata metadata;
+
+    private final List<Stage> stages;
+
     public static PipelineBuilder builder() {
         return new PipelineBuilder();
     }
 
-    private final List<Stage> stages;
-
-    private Pipeline(List<Stage> stages) {
+    private Pipeline(List<Stage> stages, FlamingockMetadata metadata) {
         this.stages = stages;
+        this.metadata = metadata;
     }
 
     public List<LoadedStage> getLoadedStages() {
         List<LoadedStage> loadedStages = stages
                 .stream()
-                .map(Stage::load)
+                .map(stage-> stage.load(metadata))
                 .collect(Collectors.toList());
         validateStages(loadedStages);
         return loadedStages;
@@ -64,6 +68,7 @@ public class Pipeline {
         private final Collection<Stage> userStages = new LinkedHashSet<>();
         private final Collection<Stage> afterUserStages = new LinkedHashSet<>();
         private final Collection<TaskFilter> taskFilters = new LinkedHashSet<>();
+        private FlamingockMetadata metadata;
 
         private PipelineBuilder() {
         }
@@ -87,6 +92,11 @@ public class Pipeline {
             return this;
         }
 
+        public PipelineBuilder setMetadata(FlamingockMetadata metadata) {
+            this.metadata = metadata;
+            return this;
+        }
+
         public Pipeline build() {
 
             List<Stage> allSortedStages = new LinkedList<>(beforeUserStages);
@@ -96,7 +106,9 @@ public class Pipeline {
             List<Stage> stagesWithTaskFilter = allSortedStages.stream()
                     .map(stage -> stage.addFilters(taskFilters))
                     .collect(Collectors.toList());
-            return new Pipeline(stagesWithTaskFilter);
+            //If no metadata injected(normal behaviour), it will take the default, which is the one generated or null if not generated at all.
+            FlamingockMetadata metadata1 = metadata != null ? metadata : FlamingockMetadata.getInstance().orElse(null);
+            return new Pipeline(stagesWithTaskFilter, metadata1);
         }
 
 

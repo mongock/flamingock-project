@@ -16,6 +16,7 @@
 
 package io.flamingock.springboot.v2.context;
 
+import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
@@ -240,6 +241,16 @@ public class FlamingockConfigurationProperties
     @Override
     public CoreConfiguration.MongockImporterConfiguration getMongockImporterConfiguration() {
         return null;
+    }
+
+    @Override
+    public void setFlamingockMetadata(FlamingockMetadata metadata) {
+        coreConfiguration.setFlamingockMetadata(metadata);
+    }
+
+    @Override
+    public FlamingockMetadata getFlamingockMetadata() {
+        return coreConfiguration.getFlamingockMetadata();
     }
 
     @Override
