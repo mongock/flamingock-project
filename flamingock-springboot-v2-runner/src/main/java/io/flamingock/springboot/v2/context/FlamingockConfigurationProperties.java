@@ -240,17 +240,7 @@ public class FlamingockConfigurationProperties
 
     @Override
     public CoreConfiguration.MongockImporterConfiguration getMongockImporterConfiguration() {
-        return null;
-    }
-
-    @Override
-    public void setFlamingockMetadata(FlamingockMetadata metadata) {
-        coreConfiguration.setFlamingockMetadata(metadata);
-    }
-
-    @Override
-    public FlamingockMetadata getFlamingockMetadata() {
-        return coreConfiguration.getFlamingockMetadata();
+        return coreConfiguration.getMongockImporterConfiguration();
     }
 
     @Override

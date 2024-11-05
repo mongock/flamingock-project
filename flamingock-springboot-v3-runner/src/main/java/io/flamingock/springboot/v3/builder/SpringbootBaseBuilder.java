@@ -16,6 +16,7 @@
 
 package io.flamingock.springboot.v3.builder;
 
+import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
@@ -116,6 +117,7 @@ public abstract class SpringbootBaseBuilder<
                 .addBeforeUserStages(beforeUserStages)
                 .addUserStages(userStages)
                 .addAfterUserStages(afterUserStages)
+                .setMetadata(getFlamingockMetadata())
                 .build();
     }
 
@@ -297,6 +299,17 @@ public abstract class SpringbootBaseBuilder<
     public CoreConfiguration.MongockImporterConfiguration getMongockImporterConfiguration() {
         return coreConfiguratorDelegate.getMongockImporterConfiguration();
     }
+
+    @Override
+    public HOLDER setFlamingockMetadata(FlamingockMetadata metadata) {
+        return coreConfiguratorDelegate.setFlamingockMetadata(metadata);
+    }
+
+    @Override
+    public FlamingockMetadata getFlamingockMetadata() {
+        return coreConfiguratorDelegate.getFlamingockMetadata();
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////
     //  SPRINGBOOT
     ///////////////////////////////////////////////////////////////////////////////////

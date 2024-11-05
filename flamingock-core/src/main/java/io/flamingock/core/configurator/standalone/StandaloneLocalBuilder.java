@@ -134,13 +134,4 @@ public class StandaloneLocalBuilder
         return localConfiguratorDelegate.getLocalConfiguration();
     }
 
-    @Override
-    public StandaloneLocalBuilder setFlamingockMetadata(FlamingockMetadata metadata) {
-        return coreConfiguratorDelegate.setFlamingockMetadata(metadata);
-    }
-
-    @Override
-    public FlamingockMetadata getFlamingockMetadata() {
-        return coreConfiguratorDelegate.getFlamingockMetadata();
-    }
 }

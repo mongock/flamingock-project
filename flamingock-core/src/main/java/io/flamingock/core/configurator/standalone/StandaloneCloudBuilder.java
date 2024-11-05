@@ -153,13 +153,4 @@ public class StandaloneCloudBuilder
         return cloudConfiguratorDelegate.getCloudTransactioner();
     }
 
-    @Override
-    public StandaloneCloudBuilder setFlamingockMetadata(FlamingockMetadata metadata) {
-        return coreConfiguratorDelegate.setFlamingockMetadata(metadata);
-    }
-
-    @Override
-    public FlamingockMetadata getFlamingockMetadata() {
-        return coreConfiguratorDelegate.getFlamingockMetadata();
-    }
 }

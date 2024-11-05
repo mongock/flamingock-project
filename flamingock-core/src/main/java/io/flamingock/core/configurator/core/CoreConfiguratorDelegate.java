@@ -38,6 +38,7 @@ public class CoreConfiguratorDelegate<
     private final Supplier<HOLDER> holderSupplier;
     private final CoreConfiguration configuration;
     private final SYSTEM_MODULE_MANAGER systemModuleManager;
+    private FlamingockMetadata flamingockMetadata;
 
     public CoreConfiguratorDelegate(CoreConfiguration configuration,
                                     Supplier<HOLDER> holderSupplier,
@@ -238,13 +239,13 @@ public class CoreConfiguratorDelegate<
 
     @Override
     public HOLDER setFlamingockMetadata(FlamingockMetadata metadata) {
-        configuration.setFlamingockMetadata(metadata);
+        this.flamingockMetadata = metadata;
         return holderSupplier.get();
     }
 
     @Override
     public FlamingockMetadata getFlamingockMetadata() {
-        return configuration.getFlamingockMetadata();
+        return flamingockMetadata;
     }
 
     @Override

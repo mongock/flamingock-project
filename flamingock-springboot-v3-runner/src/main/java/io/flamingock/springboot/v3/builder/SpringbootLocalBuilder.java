@@ -18,6 +18,7 @@ package io.flamingock.springboot.v3.builder;
 
 import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
@@ -122,5 +123,4 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
     public LocalConfigurable getLocalConfiguration() {
         return localConfiguratorDelegate.getLocalConfiguration();
     }
-
 }
