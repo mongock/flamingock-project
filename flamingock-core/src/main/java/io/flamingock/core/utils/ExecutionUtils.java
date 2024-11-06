@@ -1,16 +1,11 @@
 package io.flamingock.core.utils;
 
 import io.flamingock.commons.utils.ReflectionUtil;
-import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.NonLockGuardedType;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
