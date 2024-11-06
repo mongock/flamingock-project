@@ -38,7 +38,7 @@ public class CoreConfiguratorDelegate<
     private final Supplier<HOLDER> holderSupplier;
     private final CoreConfiguration configuration;
     private final SYSTEM_MODULE_MANAGER systemModuleManager;
-    private FlamingockMetadata flamingockMetadata;
+    private FlamingockMetadata flamingockMetadata = FlamingockMetadata.getInstance().orElse(null);
 
     public CoreConfiguratorDelegate(CoreConfiguration configuration,
                                     Supplier<HOLDER> holderSupplier,

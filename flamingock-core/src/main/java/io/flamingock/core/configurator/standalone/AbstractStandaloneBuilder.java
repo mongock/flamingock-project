@@ -93,7 +93,6 @@ abstract class AbstractStandaloneBuilder<
                 .addBeforeUserStages(beforeUserStages)
                 .addUserStages(userStages)
                 .addAfterUserStages(afterUserStages)
-                .setMetadata(getFlamingockMetadata())
                 .build();
     }
 

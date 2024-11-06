@@ -91,6 +91,7 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
         return PipelineRunnerCreator.create(
                 runnerId,
                 pipeline,
+                getFlamingockMetadata(),
                 engine,
                 coreConfiguration,
                 createEventPublisher(),

@@ -113,6 +113,7 @@ public class StandaloneCloudBuilder
         return PipelineRunnerCreator.create(
                 runnerId,
                 pipeline,
+                coreConfiguratorDelegate.getFlamingockMetadata(),
                 engine,
                 coreConfiguration,
                 buildEventPublisher(),

@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FlamingockMetadata {
 
@@ -71,6 +72,12 @@ public class FlamingockMetadata {
 
     public void setChangeUnits(Collection<ChangeUnitMedata> changeUnits) {
         this.changeUnits = changeUnits;
+    }
+
+    public Collection<ChangeUnitMedata> getChangeUnitsByPackage(String packagePath) {
+        return changeUnits.stream()
+                .filter(changeUnitMetadata -> packagePath.equals(changeUnitMetadata.getPackage()))
+                .collect(Collectors.toList());
     }
 
     @Override

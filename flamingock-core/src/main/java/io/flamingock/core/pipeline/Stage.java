@@ -188,7 +188,7 @@ public class Stage {
     public LoadedStage load(FlamingockMetadata metadata) {
         Predicate<Class<?>> filterOperator = getFilterOperator(getFilters());
 
-        Collection<TaskDescriptor> descriptors = new ArrayList<>(getFilteredDescriptorsFromCodePackages(codePackages, filterOperator));
+        Collection<TaskDescriptor> descriptors = new ArrayList<>(getFilteredDescriptorsFromCodePackages(codePackages, filterOperator, metadata));
 
         descriptors.addAll(getFilteredDescriptorsFromClasses(classes, filterOperator));
 
@@ -208,16 +208,35 @@ public class Stage {
         }
     }
 
-    private static Collection<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages, Predicate<Class<?>> filterOperator) {
+    private static Collection<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages,
+                                                                                     Predicate<Class<?>> filterOperator,
+                                                                                     FlamingockMetadata metadata) {
         if (codePackages == null) {
             return Collections.emptyList();
         }
 
-        Collection<Class<?>> classes = codePackages.
-                stream()
-                .map(ExecutionUtils::loadExecutionClassesFromPackage)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        Collection<Class<?>> classes;
+        if(metadata != null) {
+            classes = codePackages
+                    .stream()
+                    .map(metadata::getChangeUnitsByPackage)
+                    .flatMap(Collection::stream)
+                    .map(changeUnitMedata -> {
+                        try {
+                            return Stage.class.getClassLoader().loadClass(changeUnitMedata.getClassName());
+                        } catch (ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            classes = codePackages.
+                    stream()
+                    .map(ExecutionUtils::loadExecutionClassesFromPackage)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+        }
+
 
         return getFilteredDescriptorsFromClasses(classes, filterOperator);
     }

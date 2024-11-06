@@ -117,7 +117,6 @@ public abstract class SpringbootBaseBuilder<
                 .addBeforeUserStages(beforeUserStages)
                 .addUserStages(userStages)
                 .addAfterUserStages(afterUserStages)
-                .setMetadata(getFlamingockMetadata())
                 .build();
     }
 

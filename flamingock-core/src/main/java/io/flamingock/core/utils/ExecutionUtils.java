@@ -30,36 +30,9 @@ public final class ExecutionUtils {
 
     @SuppressWarnings("unchecked")
     public static Collection<Class<?>> loadExecutionClassesFromPackage(String packagePath) {
-        Collection<Class<?>> classesFromConfigFile = getClassFromConfiguration(packagePath);
-
-        return classesFromConfigFile.size() > 0
-                ? classesFromConfigFile
-                : ReflectionUtil.loadAnnotatedClassesFromPackage(packagePath, ExecutionUtils.CHANGE_UNIT_CLASS, ExecutionUtils.LEGACY_CHANGE_UNIT_CLASS);
+        return ReflectionUtil.loadAnnotatedClassesFromPackage(packagePath, ExecutionUtils.CHANGE_UNIT_CLASS, ExecutionUtils.LEGACY_CHANGE_UNIT_CLASS);
     }
 
-    private static Collection<Class<?>> getClassFromConfiguration(String packagePath) {
-
-        ClassLoader classLoader = ExecutionUtils.class.getClassLoader();
-        try (InputStream inputStream = classLoader.getResourceAsStream(FlamingockMetadata.FILE_PATH)) {
-            if (inputStream != null) {
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-                    String line;
-                    Collection<Class<?>> annotatedClasses = new ArrayList<>();
-                    while ((line = reader.readLine()) != null) {
-                        if (line.startsWith(packagePath)) {
-                            annotatedClasses.add(classLoader.loadClass(line));
-                        }
-
-                    }
-                    return annotatedClasses;
-                }
-            } else {
-                return Collections.emptyList();
-            }
-        } catch (Exception e) {
-            return Collections.emptyList();
-        }
-    }
 
     /**
      * We need this generic method, although currently it only calls `isChangeUnit`, but in the future there will

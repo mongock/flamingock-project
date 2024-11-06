@@ -47,6 +47,7 @@ public class ReusableStepNavigatorBuilder extends StepNavigatorBuilder.AbstractS
         RuntimeManager runtimeManager = RuntimeManager.builder()
                 .setDependencyContext(injectableContext)
                 .setLock(lock)
+                .setFlamingockMetadata(flamingockMetadata)
                 .build();
         instance.setRuntimeManager(runtimeManager);
         instance.setTransactionWrapper(transactionWrapper);

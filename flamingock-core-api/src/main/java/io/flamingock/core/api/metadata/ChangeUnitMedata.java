@@ -19,6 +19,12 @@ public class ChangeUnitMedata {
         this.className = className;
     }
 
+    //TODO change this to inject package directly(this doens't work with inner classes)
+    public String getPackage() {
+        int lastIndex = className.lastIndexOf(".");
+        return lastIndex > 0 ? className.substring(0, lastIndex) : "";
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -37,7 +43,6 @@ public class ChangeUnitMedata {
 
     @Override
     public String toString() {
-        return "ChangeUnitMedata{" + "className='" + className + '\'' +
-                '}';
+        return "ChangeUnitMedata{" + "className='" + className + '\'' + '}';
     }
 }

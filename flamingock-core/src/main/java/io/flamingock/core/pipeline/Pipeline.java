@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 public class Pipeline {
 
-    private final FlamingockMetadata metadata;
 
     private final List<Stage> stages;
 
@@ -36,12 +35,11 @@ public class Pipeline {
         return new PipelineBuilder();
     }
 
-    private Pipeline(List<Stage> stages, FlamingockMetadata metadata) {
+    private Pipeline(List<Stage> stages) {
         this.stages = stages;
-        this.metadata = metadata;
     }
 
-    public List<LoadedStage> getLoadedStages() {
+    public List<LoadedStage> getLoadedStages(FlamingockMetadata metadata) {
         List<LoadedStage> loadedStages = stages
                 .stream()
                 .map(stage-> stage.load(metadata))
@@ -68,7 +66,6 @@ public class Pipeline {
         private final Collection<Stage> userStages = new LinkedHashSet<>();
         private final Collection<Stage> afterUserStages = new LinkedHashSet<>();
         private final Collection<TaskFilter> taskFilters = new LinkedHashSet<>();
-        private FlamingockMetadata metadata;
 
         private PipelineBuilder() {
         }
@@ -92,11 +89,6 @@ public class Pipeline {
             return this;
         }
 
-        public PipelineBuilder setMetadata(FlamingockMetadata metadata) {
-            this.metadata = metadata;
-            return this;
-        }
-
         public Pipeline build() {
 
             List<Stage> allSortedStages = new LinkedList<>(beforeUserStages);
@@ -106,9 +98,7 @@ public class Pipeline {
             List<Stage> stagesWithTaskFilter = allSortedStages.stream()
                     .map(stage -> stage.addFilters(taskFilters))
                     .collect(Collectors.toList());
-            //If no metadata injected(normal behaviour), it will take the default, which is the one generated or null if not generated at all.
-            FlamingockMetadata metadata1 = metadata != null ? metadata : FlamingockMetadata.getInstance().orElse(null);
-            return new Pipeline(stagesWithTaskFilter, metadata1);
+            return new Pipeline(stagesWithTaskFilter);
         }
 
 
