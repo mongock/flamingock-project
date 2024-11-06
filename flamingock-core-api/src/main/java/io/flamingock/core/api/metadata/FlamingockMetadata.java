@@ -76,7 +76,7 @@ public class FlamingockMetadata {
 
     public Collection<ChangeUnitMedata> getChangeUnitsByPackage(String packagePath) {
         return changeUnits.stream()
-                .filter(changeUnitMetadata -> packagePath.equals(changeUnitMetadata.getPackage()))
+                .filter(changeUnitMetadata -> packagePath.equals(changeUnitMetadata.getPackageName()))
                 .collect(Collectors.toList());
     }
 
