@@ -43,9 +43,8 @@ public class ReusableStepNavigatorBuilder extends StepNavigatorBuilder.AbstractS
         instance.setSummarizer(summarizer);
         instance.setAuditWriter(auditWriter);
 
-        DependencyInjectableContext injectableContext = new PriorityDependencyInjectableContext(staticContext);
         RuntimeManager runtimeManager = RuntimeManager.builder()
-                .setDependencyContext(injectableContext)
+                .setDependencyContext(new PriorityDependencyInjectableContext(staticContext))
                 .setLock(lock)
                 .setFlamingockMetadata(flamingockMetadata)
                 .build();
