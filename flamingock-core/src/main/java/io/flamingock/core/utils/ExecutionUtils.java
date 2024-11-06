@@ -28,7 +28,6 @@ public final class ExecutionUtils {
         return ReflectionUtil.loadAnnotatedClassesFromPackage(packagePath, ExecutionUtils.CHANGE_UNIT_CLASS, ExecutionUtils.LEGACY_CHANGE_UNIT_CLASS);
     }
 
-
     /**
      * We need this generic method, although currently it only calls `isChangeUnit`, but in the future there will
      * more annotations, so `isChangeUnit` will be only one of them.
