@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class FlamingockMetadata {
 
-    public static final String FILE_PATH = "META-INF/flamingock-metadata.json";
+    public static final String FILE_PATH = "META-INF/flamingock/metadata.json";
 
     private static FlamingockMetadata instance;
     private static boolean alreadyTriedToLoad = false;
