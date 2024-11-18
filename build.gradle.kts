@@ -1,12 +1,13 @@
 plugins {
     `kotlin-dsl`
-    `maven-publish`
+    id("maven-publish")
+    id("signing")
     id("java")
 }
 
 allprojects {
     group = "io.flamingock"
-    version = "1.0.0-SNAPSHOT"
+    version = "1.0.0-beta"
 }
 
 
@@ -14,15 +15,38 @@ subprojects {
 
     apply {
         plugin("org.jetbrains.kotlin.jvm")
-
         plugin("maven-publish")
+        plugin("signing")
     }
 
+
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
+                artifactId = project.name
+            }
+        }
+
+        repositories {
+            maven {
+                name = "OSSRH"
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username = findProperty("mavenUsername") as String? ?: System.getenv("MAVEN_USERNAME")
+                    password = findProperty("mavenPassword") as String? ?: System.getenv("MAVEN_CENTRAL_TOKEN")
+                }
+            }
+        }
+    }
 
     repositories {
         mavenCentral()
         mavenLocal()
     }
+
+
 
 
     val implementation by configurations
@@ -68,9 +92,4 @@ subprojects {
 }
 
 
-fun getGroupId(project: Project) : String{
-    val relativeProjectDir = project.projectDir.canonicalPath
-        .substring(rootProject.projectDir.canonicalPath.length + 1)
-    return if(relativeProjectDir.startsWith("community")) "io.flamingock.community" else "io.flamingock"
-}
 
