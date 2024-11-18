@@ -2,6 +2,7 @@ plugins {
     //`maven-publish`
 }
 
+extra["publish"] = "true"
 //publishing {
 //    publications {
 //        create<MavenPublication>("mavenJava") {

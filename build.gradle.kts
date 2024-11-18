@@ -12,34 +12,76 @@ allprojects {
 
 
 subprojects {
-
-    apply {
-        plugin("org.jetbrains.kotlin.jvm")
-        plugin("maven-publish")
-        plugin("signing")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    if (project.hasProperty("publish") && project.property("publish") == "true") {
+        apply(plugin = "maven-publish")
+        apply(plugin = "signing")
     }
 
+    afterEvaluate {
+        if (project.hasProperty("publish") && project.property("publish") == "true") {
+            publishing {
+                publications {
+                    create<MavenPublication>("mavenJava") {
+                        from(components["java"])
+                        artifactId = project.name
+                        pom {
+                            name.set(project.name)
+                            description.set(project.description)
+                            url.set("https://github.com/mongock/flamingock-project")
+                        }
+                    }
+                }
 
-
-    publishing {
-        publications {
-            create<MavenPublication>("mavenJava") {
-                from(components["java"])
-                artifactId = project.name
-            }
-        }
-
-        repositories {
-            maven {
-                name = "OSSRH"
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = findProperty("mavenUsername") as String? ?: System.getenv("MAVEN_USERNAME")
-                    password = findProperty("mavenPassword") as String? ?: System.getenv("MAVEN_CENTRAL_TOKEN")
+                repositories {
+                    maven {
+                        name = "OSSRH"
+                        //./gradlew publish -Prelease
+                        if (project.hasProperty("release")) {
+                            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                        } else {
+                            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                        }
+                        credentials {
+                            username = project.findProperty("mavenUsername") as String? ?: System.getenv("MAVEN_USERNAME")
+                            password = project.findProperty("mavenPassword") as String? ?: System.getenv("MAVEN_CENTRAL_TOKEN")
+                        }
+                    }
                 }
             }
+
+            signing {
+                useGpgCmd()
+                sign(publishing.publications["mavenJava"])
+            }
         }
+
     }
+
+//    publishing {
+//        publications {
+//            create<MavenPublication>("mavenJava") {
+//                from(components["java"])
+//                artifactId = project.name
+//            }
+//        }
+//
+//        repositories {
+//            maven {
+//                name = "OSSRH"
+//                //./gradlew publish -Prelease
+//                if (project.hasProperty("release")) {
+//                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+//                } else {
+//                    url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+//                }
+//                credentials {
+//                    username = findProperty("mavenUsername") as String? ?: System.getenv("MAVEN_USERNAME")
+//                    password = findProperty("mavenPassword") as String? ?: System.getenv("MAVEN_CENTRAL_TOKEN")
+//                }
+//            }
+//        }
+//    }
 
     repositories {
         mavenCentral()
