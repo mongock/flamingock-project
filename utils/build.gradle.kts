@@ -1,6 +1,12 @@
 plugins {
-    //`maven-publish`
+    id("maven-publish")
+    id("signing")
+    id("java")
 }
+
+
+apply(plugin = "maven-publish")
+apply(plugin = "signing")
 
 extra["publish"] = "true"
 //publishing {
