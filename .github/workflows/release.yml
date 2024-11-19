@@ -54,3 +54,4 @@ jobs:
 #          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           SIGNING_GNUPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_SIGNING_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
+          GPG_TTY: $(tty)
