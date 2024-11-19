@@ -117,7 +117,7 @@ class DynamoDBDriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted();
+        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted(DynamoDBConstants.AUDIT_LOG_TABLE_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("table-create", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
@@ -153,7 +153,7 @@ class DynamoDBDriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted();
+        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted(DynamoDBConstants.AUDIT_LOG_TABLE_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("table-create", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
@@ -191,12 +191,14 @@ class DynamoDBDriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted();
-        assertEquals(2, auditLog.size());
+        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted(DynamoDBConstants.AUDIT_LOG_TABLE_NAME);
+        assertEquals(3, auditLog.size());
         assertEquals("table-create", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
         assertEquals("insert-user", auditLog.get(1).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(1).getState());
+        assertEquals("execution-with-exception", auditLog.get(2).getTaskId());
+        assertEquals(AuditEntry.Status.ROLLED_BACK, auditLog.get(2).getState());
 
         //Checking user table
         List<String> rows = dynamoDBTestHelper.client.getEnhancedClient()
@@ -226,7 +228,7 @@ class DynamoDBDriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted();
+        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted(DynamoDBConstants.AUDIT_LOG_TABLE_NAME);
         assertEquals(4, auditLog.size());
         assertEquals("table-create", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
@@ -265,7 +267,7 @@ class DynamoDBDriverTest {
 
         //Then
         //Checking auditLog
-        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted();
+        List<AuditEntry> auditLog = dynamoDBTestHelper.getAuditEntriesSorted(DynamoDBConstants.AUDIT_LOG_TABLE_NAME);
         assertEquals(3, auditLog.size());
         assertEquals("table-create", auditLog.get(0).getTaskId());
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(0).getState());
