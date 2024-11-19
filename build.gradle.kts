@@ -43,8 +43,8 @@ subprojects {
                             url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                         }
                         credentials {
-                            username = project.findProperty("mavenUsername") as String? ?: System.getenv("MAVEN_USERNAME")
-                            password = project.findProperty("mavenPassword") as String? ?: System.getenv("MAVEN_CENTRAL_TOKEN")
+                            username = System.getenv("MAVEN_USERNAME")
+                            password = System.getenv("MAVEN_CENTRAL_TOKEN")
                         }
                     }
                 }
