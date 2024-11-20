@@ -131,4 +131,9 @@ subprojects {
 }
 
 
-
+tasks.register("printEnv") {
+    doLast {
+        println("MAVEN_USERNAME=${System.getenv("MAVEN_USERNAME")}")
+        println("MAVEN_CENTRAL_TOKEN=${System.getenv("MAVEN_CENTRAL_TOKEN")?.take(5)}****")
+    }
+}

@@ -29,6 +29,9 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
 
+      - name: Showing Env variables
+        run: ./gradlew printEnv -x test
+
       - name: Configure Git User
         run: |
           git config user.email "actions@github.com"
