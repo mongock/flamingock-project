@@ -51,37 +51,14 @@ subprojects {
             }
 
             signing {
-                useGpgCmd()
+                useInMemoryPgpKeys(
+                    System.getenv("GPG_SIGNING_PRIVATE_KEY"),
+                    System.getenv("GPG_PASSPHRASE")
+                )
                 sign(publishing.publications["mavenJava"])
             }
         }
-
     }
-
-//    publishing {
-//        publications {
-//            create<MavenPublication>("mavenJava") {
-//                from(components["java"])
-//                artifactId = project.name
-//            }
-//        }
-//
-//        repositories {
-//            maven {
-//                name = "OSSRH"
-//                //./gradlew publish -Prelease
-//                if (project.hasProperty("release")) {
-//                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-//                } else {
-//                    url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-//                }
-//                credentials {
-//                    username = findProperty("mavenUsername") as String? ?: System.getenv("MAVEN_USERNAME")
-//                    password = findProperty("mavenPassword") as String? ?: System.getenv("MAVEN_CENTRAL_TOKEN")
-//                }
-//            }
-//        }
-//    }
 
     repositories {
         mavenCentral()

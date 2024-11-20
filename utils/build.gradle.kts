@@ -9,19 +9,6 @@ apply(plugin = "maven-publish")
 apply(plugin = "signing")
 
 extra["publish"] = "true"
-//publishing {
-//    publications {
-//        create<MavenPublication>("mavenJava") {
-//            from(components["java"])
-//            groupId = project.group.toString()
-//            artifactId = project.name
-//            version = project.version.toString()
-//        }
-//    }
-//    repositories {
-//        mavenLocal()
-//    }
-//}
 
 val jacksonVersion = "2.16.0"
 dependencies {
@@ -33,8 +20,5 @@ dependencies {
     api("org.apache.httpcomponents:httpclient:4.5.14")
     
     api("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
-    
 
-//
-//    testImplementation(project(":commons:test-utils"))
 }
