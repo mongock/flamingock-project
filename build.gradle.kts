@@ -7,7 +7,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "1.0.0-beta"
+    version = "1.0.0-beta.1"
 }
 
 
@@ -29,6 +29,30 @@ subprojects {
                             name.set(project.name)
                             description.set(project.description)
                             url.set("https://github.com/mongock/flamingock-project")
+                        }
+
+                        pom {
+                            name.set(project.name)
+                            description.set(project.description)
+                            url.set("https://github.com/mongock/flamingock-project")
+                            licenses {
+                                license {
+                                    name.set("Apache License, Version 2.0")
+                                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id.set("dieppa")
+                                    name.set("Antonio Perez Diepa")
+                                    email.set("aperezdieppa@gmail.com")
+                                }
+                            }
+                            scm {
+                                url.set("https://github.com/mongock/flamingock-project")
+                                connection.set("scm:git:git://github.com/mongock/flamingock-project.git")
+                                developerConnection.set("scm:git:ssh://github.com/mongock/flamingock-project.git")
+                            }
                         }
                     }
                 }
