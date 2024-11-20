@@ -7,7 +7,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.1"
+    version = "1.0.0-alpha.0-SNAPSHOT"
 }
 
 
@@ -25,11 +25,6 @@ subprojects {
                     create<MavenPublication>("mavenJava") {
                         from(components["java"])
                         artifactId = project.name
-                        pom {
-                            name.set(project.name)
-                            description.set(project.description)
-                            url.set("https://github.com/mongock/flamingock-project")
-                        }
 
                         pom {
                             name.set(project.name)
@@ -60,13 +55,13 @@ subprojects {
                 repositories {
                     maven {
                         name = "OSSRH"
-                        url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+//                        url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                         //./gradlew publish -Prelease
-//                        if (project.hasProperty("release")) {
-//                            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-//                        } else {
-//                            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-//                        }
+                        if (project.hasProperty("release")) {
+                            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                        } else {
+                            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                        }
                         credentials {
                             username = System.getenv("MAVEN_USERNAME")
                             password = System.getenv("MAVEN_CENTRAL_TOKEN")
