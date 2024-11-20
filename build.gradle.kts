@@ -36,12 +36,13 @@ subprojects {
                 repositories {
                     maven {
                         name = "OSSRH"
+                        url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                         //./gradlew publish -Prelease
-                        if (project.hasProperty("release")) {
-                            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                        } else {
-                            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                        }
+//                        if (project.hasProperty("release")) {
+//                            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+//                        } else {
+//                            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+//                        }
                         credentials {
                             username = System.getenv("MAVEN_USERNAME")
                             password = System.getenv("MAVEN_CENTRAL_TOKEN")
