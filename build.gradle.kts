@@ -7,7 +7,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "1.0.0-alpha.0-SNAPSHOT"
+    version = "0.0.1"
 }
 
 
