@@ -130,10 +130,12 @@ subprojects {
     }
 }
 
-
 tasks.register("printEnv") {
     doLast {
+        println("GITHUB_TOKEN=${System.getenv("GITHUB_TOKEN")}")
         println("MAVEN_USERNAME=${System.getenv("MAVEN_USERNAME")}")
         println("MAVEN_CENTRAL_TOKEN=${System.getenv("MAVEN_CENTRAL_TOKEN")?.take(5)}****")
+        println("GPG_PASSPHRASE=${System.getenv("GPG_PASSPHRASE")?.take(5)}****")
+        println("GPG_SIGNING_PRIVATE_KEY=${System.getenv("GPG_SIGNING_PRIVATE_KEY")}")
     }
 }

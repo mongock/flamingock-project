@@ -29,9 +29,6 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
 
-      - name: Showing Env variables
-        run: ./gradlew printEnv -x test
-
       - name: Configure Git User
         run: |
           git config user.email "actions@github.com"
@@ -42,6 +39,16 @@ jobs:
           echo "$GPG_SIGNING_PRIVATE_KEY" > private.asc
           gpg --import --batch private.asc
         env:
+          GPG_SIGNING_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
+
+
+      - name: Showing Env variables
+        run: ./gradlew printEnv -x test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.NEXUS_USER }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.NEXUS_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_SIGNING_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
 
       - name: Publish to Maven Central using Gradle
