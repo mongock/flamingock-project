@@ -42,7 +42,7 @@ jobs:
           GPG_SIGNING_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
 
       - name: Publish to Maven Central using Gradle
-        run: ./gradlew publish
+        run: ./gradlew publish --stacktrace --debug
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAVEN_USERNAME: ${{ secrets.NEXUS_USER }}
