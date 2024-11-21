@@ -63,10 +63,10 @@ subprojects {
                             url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                         }
 
-                        credentials {
-                            username = System.getenv("MAVEN_USERNAME")
-                            password = System.getenv("MAVEN_CENTRAL_TOKEN")
-                        }
+//                        credentials {
+//                            username = System.getenv("MAVEN_USERNAME")
+//                            password = System.getenv("MAVEN_CENTRAL_TOKEN")
+//                        }
                     }
                 }
             }
