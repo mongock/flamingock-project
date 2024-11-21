@@ -64,8 +64,8 @@ subprojects {
                         }
 
                         credentials {
-                            username = "other-username"//System.getenv("MAVEN_USERNAME")
-                            password = "other-password"//System.getenv("MAVEN_CENTRAL_TOKEN")
+                            username = System.getenv("MAVEN_USERNAME")
+                            password = System.getenv("MAVEN_CENTRAL_TOKEN")
                         }
                     }
                 }
