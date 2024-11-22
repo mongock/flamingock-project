@@ -2,6 +2,7 @@ plugins {
     `kotlin-dsl`
     `maven-publish`
     id("java")
+    id("org.jreleaser") version "1.15.0"
 }
 
 allprojects {
