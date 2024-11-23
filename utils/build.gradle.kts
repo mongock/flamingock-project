@@ -36,6 +36,15 @@
 //    }
 //}
 
+
+tasks.named("jreleaserFullRelease") {
+    doFirst {
+        val outputDir = file("${layout.buildDirectory}/jreleaser")
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
+    }
+}
 val jacksonVersion = "2.16.0"
 dependencies {
 

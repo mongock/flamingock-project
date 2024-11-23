@@ -23,6 +23,10 @@ subprojects {
 
 
     if(shouldBeReleased(project)) {
+
+
+
+
         apply(plugin = "maven-publish")
         apply(plugin = "org.jreleaser")
         publishing {
@@ -71,14 +75,16 @@ subprojects {
                 active.set(Active.ALWAYS)
                 armored = true
             }
+
             deploy {
                 maven {
                     mavenCentral {
-                        sonatype {
+                        create("sonatype") {
                             active.set(Active.ALWAYS)
-                            url = uri("https://central.sonatype.com/api/v1/publisher")
+                            url.set("https://central.sonatype.com/api/v1/publisher")
                             stagingRepository("target/staging-deploy")
                         }
+
                     }
                 }
             }
