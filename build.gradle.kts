@@ -1,11 +1,11 @@
 import org.jreleaser.model.Active
-import org.jreleaser.sdk.mavencentral.MavenCentralMavenDeployer
 
 plugins {
     `kotlin-dsl`
     `maven-publish`
     id("java-library")
     id("org.jreleaser") version "1.15.0"
+
 }
 
 allprojects {
@@ -75,6 +75,8 @@ subprojects {
                 active.set(Active.ALWAYS)
                 armored = true
             }
+
+            gitRootSearch.set(true)
 
             deploy {
                 maven {
