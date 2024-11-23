@@ -1,20 +1,40 @@
-plugins {
-    `maven-publish`
-}
 
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            groupId = project.group.toString()
-            artifactId = project.name
-            version = project.version.toString()
-        }
-    }
-    repositories {
-        mavenLocal()
-    }
-}
+//    project {
+//        authors.set(listOf("dieppa"))
+//        license.set("Apache-2.0")
+//        links {
+//            homepage.set("https://github.com/mongock/flamingock-project")
+//        }
+//        inceptionYear.set("2024")
+//    }
+//
+//    release {
+//        github {
+//            repoOwner.set("dieppa")
+//            overwrite.set(true)
+//        }
+//    }
+//
+//
+//    distributions {
+//        create(name) {
+//            artifact {
+//                path.set(file("build/libs/${name}-${version}.jar"))
+//            }
+//        }
+//    }
+//
+//    deploy {
+//        maven {
+//            repository {
+//                name.set("MavenCentral")
+//                url.set("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+//                username.set(System.getenv("OSSRH_USERNAME")) // Add OSSRH_USERNAME to env variables
+//                password.set(System.getenv("OSSRH_PASSWORD")) // Add OSSRH_PASSWORD to env variables
+//            }
+//        }
+//    }
+//}
 
 val jacksonVersion = "2.16.0"
 dependencies {

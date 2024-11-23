@@ -1,22 +1,67 @@
 plugins {
     `kotlin-dsl`
     `maven-publish`
-    id("java")
+    id("java-library")
     id("org.jreleaser") version "1.15.0"
 }
 
 allprojects {
     group = "io.flamingock"
     version = "1.0.0-SNAPSHOT"
+
+    apply(plugin = "org.jetbrains.kotlin.jvm")
 }
 
 
 subprojects {
 
-    apply {
-        plugin("org.jetbrains.kotlin.jvm")
 
-        plugin("maven-publish")
+    apply(plugin = "java-library")
+
+
+    if(shouldBeReleased(project)) {
+        apply(plugin = "maven-publish")
+        apply(plugin = "org.jreleaser")
+        publishing {
+            publications {
+                create<MavenPublication>("maven") {
+                    groupId = project.group.toString()
+                    artifactId = project.name
+
+                    from(components["java"])
+
+                    pom {
+                        name.set(project.name)
+                        description.set(project.description)
+                        url.set("https://github.com/mongock/flamingock-project")
+                        inceptionYear.set("2021")
+                        licenses {
+                            license {
+                                name.set("Apache-2.0")
+                                url.set("https://spdx.org/licenses/Apache-2.0.html")
+                            }
+                        }
+                        developers {
+                            developer {
+                                id.set("dieppa")
+                                name.set("Antonio Perez Dieppa")
+                            }
+                        }
+                        scm {
+                            connection.set("scm:git:https://github.com:mongock/flamingock-project.git")
+                            developerConnection.set("scm:git:ssh://github.com:mongock/flamingock-project.git")
+                            url.set("https://github.com/mongock/flamingock-project")
+                        }
+                    }
+                }
+            }
+
+            repositories {
+                maven {
+                    url = layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
+                }
+            }
+        }
     }
 
 
@@ -68,10 +113,7 @@ subprojects {
     }
 }
 
-
-fun getGroupId(project: Project) : String{
-    val relativeProjectDir = project.projectDir.canonicalPath
-        .substring(rootProject.projectDir.canonicalPath.length + 1)
-    return if(relativeProjectDir.startsWith("community")) "io.flamingock.community" else "io.flamingock"
+fun shouldBeReleased(project: Project) : Boolean {
+    return project.name == "utils"
 }
 
