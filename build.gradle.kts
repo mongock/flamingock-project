@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.2"
+    version = "0.0.3"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 }
@@ -42,6 +42,7 @@ subprojects {
                         description.set(project.description)
                         url.set("https://github.com/mongock/flamingock-project")
                         inceptionYear.set("2021")
+
                         licenses {
                             license {
                                 name.set("Apache-2.0")
