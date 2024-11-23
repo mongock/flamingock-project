@@ -1,3 +1,6 @@
+import org.jreleaser.model.Active
+import org.jreleaser.sdk.mavencentral.MavenCentralMavenDeployer
+
 plugins {
     `kotlin-dsl`
     `maven-publish`
@@ -62,6 +65,24 @@ subprojects {
                 }
             }
         }
+
+        jreleaser {
+            signing {
+                active.set(Active.ALWAYS)
+                armored = true
+            }
+            deploy {
+                maven {
+                    mavenCentral {
+                        sonatype {
+                            active.set(Active.ALWAYS)
+                            url = uri("https://central.sonatype.com/api/v1/publisher")
+                            stagingRepository("target/staging-deploy")
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -116,4 +137,3 @@ subprojects {
 fun shouldBeReleased(project: Project) : Boolean {
     return project.name == "utils"
 }
-
