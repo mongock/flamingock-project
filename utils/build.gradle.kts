@@ -36,6 +36,7 @@
 //    }
 //}
 
+description = "Internal util library"
 
 tasks.named("jreleaserFullRelease") {
     doFirst {
