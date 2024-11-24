@@ -39,7 +39,7 @@ subprojects {
 
                     pom {
                         name.set(project.name)
-                        description.set(project.description)
+                        description.set("Description should be here")
                         url.set("https://github.com/mongock/flamingock-project")
                         inceptionYear.set("2024")
 
@@ -87,8 +87,8 @@ subprojects {
                             active.set(Active.ALWAYS)
                             url.set("https://central.sonatype.com/api/v1/publisher")
                             stagingRepository("build/staging-deploy")
-                            sourceJar.set(false)
-                            javadocJar.set(false)
+                            sourceJar.set(true)
+                            javadocJar.set(true)
                             verifyPom.set(false)
                         }
 
