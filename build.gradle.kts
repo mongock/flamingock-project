@@ -88,8 +88,9 @@ subprojects {
                             url.set("https://central.sonatype.com/api/v1/publisher")
                             stagingRepository("build/staging-deploy")
                             artifactOverride {
-                                sourceJar.set(false)
-                                javadocJar.set(false)
+                                artifactId.set("utils")
+                                sourceJar.set(true)
+                                javadocJar.set(true)
                                 verifyPom.set(false)
                             }
                         }
@@ -151,5 +152,5 @@ subprojects {
 }
 
 fun shouldBeReleased(project: Project) : Boolean {
-    return project.name == "utils"
+    return project.name == "test-release"
 }
