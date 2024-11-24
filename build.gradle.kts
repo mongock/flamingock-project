@@ -87,9 +87,11 @@ subprojects {
                             active.set(Active.ALWAYS)
                             url.set("https://central.sonatype.com/api/v1/publisher")
                             stagingRepository("build/staging-deploy")
-                            sourceJar.set(true)
-                            javadocJar.set(true)
-                            verifyPom.set(false)
+                            artifactOverride {
+                                sourceJar.set(false)
+                                javadocJar.set(false)
+                                verifyPom.set(false)
+                            }
                         }
 
 
