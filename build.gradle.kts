@@ -41,7 +41,7 @@ subprojects {
                         name.set(project.name)
                         description.set(project.description)
                         url.set("https://github.com/mongock/flamingock-project")
-                        inceptionYear.set("2021")
+                        inceptionYear.set("2024")
 
                         licenses {
                             license {
@@ -82,11 +82,16 @@ subprojects {
             deploy {
                 maven {
                     mavenCentral {
+
                         create("sonatype") {
                             active.set(Active.ALWAYS)
                             url.set("https://central.sonatype.com/api/v1/publisher")
                             stagingRepository("build/staging-deploy")
+                            sourceJar.set(false)
+                            javadocJar.set(false)
+                            verifyPom.set(false)
                         }
+
 
                     }
                 }
