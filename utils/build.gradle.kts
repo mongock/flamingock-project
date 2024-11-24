@@ -1,4 +1,6 @@
-
+plugins {
+    id("java")
+}
 //    project {
 //        authors.set(listOf("dieppa"))
 //        license.set("Apache-2.0")
@@ -35,6 +37,20 @@
 //        }
 //    }
 //}
+
+tasks {
+    // Create sources JAR
+    register<Jar>("sourcesJar") {
+        from(sourceSets["main"].allSource)
+        archiveClassifier.set("sources")
+    }
+
+    // Create Javadoc JAR
+    register<Jar>("javadocJar") {
+        from(javadoc)
+        archiveClassifier.set("javadoc")
+    }
+}
 
 description = "Internal util library"
 
