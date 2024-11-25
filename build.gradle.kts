@@ -36,7 +36,7 @@ subprojects {
             description = "Creates the staging-deploy folder inside the build directory."
 
             doLast {
-                val stagingDeployDir = layout.buildDirectory.dir("staging-deploy").get().asFile
+                val stagingDeployDir = layout.buildDirectory.dir("jreleaser").get().asFile
                 if (!stagingDeployDir.exists()) {
                     stagingDeployDir.mkdirs()
                     println("Created: $stagingDeployDir")
@@ -44,9 +44,9 @@ subprojects {
             }
         }
 
-        tasks.named("jreleaserFullRelease") {
-            dependsOn("createStagingDeployFolder")
-        }
+//        tasks.matching { it.name == "publish" }.configureEach {
+//            finalizedBy("createStagingDeployFolder")
+//        }
 
 
 
@@ -229,6 +229,41 @@ subprojects {
             }
 
             gitRootSearch.set(true)
+
+            release {
+                github {
+                    changelog {
+                        enabled.set(true)
+                        links.set(true)
+                        sort.set(org.jreleaser.model.Changelog.Sort.DESC)
+
+                        category {
+                            key.set("feat")
+                            title.set("🚀 New Features")
+                            labels.set(setOf("feat"))
+                            order.set(1)
+                        }
+                        category {
+                            key.set("fix")
+                            title.set("🐛 Bug Fixes")
+                            labels.set(setOf("fix"))
+                            order.set(2)
+                        }
+                        category {
+                            key.set("docs")
+                            title.set("📚 Documentation")
+                            labels.set(setOf("fix"))
+                            order.set(2)
+                        }
+                        category {
+                            key.set("chore")
+                            title.set("🛠️ Maintenance")
+                            labels.set(setOf("chore"))
+                            order.set(3)
+                        }
+                    }
+                }
+            }
 
             deploy {
                 maven {
