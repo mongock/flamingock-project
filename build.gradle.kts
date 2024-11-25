@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.5"
+    version = "0.0.6-beta"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 }
@@ -219,3 +219,5 @@ subprojects {
 fun shouldBeReleased(project: Project): Boolean {
     return project.name == "utils"
 }
+
+
