@@ -10,21 +10,36 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.6-beta"
+    version = "0.0.7"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 }
 
+val projectsToRelease = setOf(
+    "flamingock-core",
+    "flamingock-core-api",//required by flamingock-graalvm
+    "flamingock-springboot-v2-runner",
+    "flamingock-springboot-v3-runner",
+    "metadata-generator",
+    "couchbase-driver",
+    "couchbase-springboot-v2-driver",
+    "dynamodb-driver",
+    "mongodb-springdata-v2-driver",
+    "mongodb-springdata-v3-driver",
+    "mongodb-springdata-v4-driver",
+    "mongodb-sync-v4-driver",
+    "mongodb-v3-driver",
+    "sql-template",
+    "sql-springboot-template",
+    "sql-cloud-transactioner"
+)
+
 
 subprojects {
 
-
     apply(plugin = "java-library")
 
-
-
-
-    if (shouldBeReleased(project)) {
+    if (project.shouldBeReleased()) {
 
         java {
             withSourcesJar()
@@ -57,7 +72,7 @@ subprojects {
                 create<MavenPublication>("maven") {
                     groupId = project.group.toString()
                     artifactId = project.name
-
+                    version = project.getReleaseVersion()
                     from(components["java"])
 
                     pom {
@@ -216,8 +231,11 @@ subprojects {
     }
 }
 
-fun shouldBeReleased(project: Project): Boolean {
-    return project.name == "utils"
+
+
+
+fun Project.getReleaseVersion() : String {
+    return project.version.toString() + "-beta"
 }
 
-
+fun Project.shouldBeReleased() = projectsToRelease.contains(name)

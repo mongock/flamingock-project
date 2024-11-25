@@ -159,8 +159,3 @@ project(":metadata-generator").projectDir = file("metadata-generator")
 include("internal:legacy-importer-mongodb")
 project(":internal:legacy-importer-mongodb").name = "legacy-importer-mongodb"
 project(":internal:legacy-importer-mongodb").projectDir = file("internal/legacy-importer-mongodb")
-
-
-include("test-release")
-project(":test-release").name = "test-release"
-project(":test-release").projectDir = file("test-release")
