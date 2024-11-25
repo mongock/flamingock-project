@@ -28,12 +28,16 @@ jobs:
           gpg-private-key: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
           gpg-passphrase: JRELEASER_GPG_PASSPHRASE
 
-
-
       - name: Configure Git User
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
+
+      - name: Debug GPG_SECRET_KEY content
+        run: |
+          echo "$GPG_SECRET_KEY" | head -n 10
+        env:
+          GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
 
       - name: Set up GPG
         run: |
