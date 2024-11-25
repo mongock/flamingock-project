@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.8"
+    version = "0.0.8-beta"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 }
@@ -72,7 +72,8 @@ subprojects {
                 create<MavenPublication>("maven") {
                     groupId = project.group.toString()
                     artifactId = project.name
-                    version = project.getReleaseVersion()
+                    version = project.version.toString()
+
                     from(components["java"])
 
                     pom {
@@ -231,11 +232,5 @@ subprojects {
     }
 }
 
-
-
-
-fun Project.getReleaseVersion() : String {
-    return project.version.toString() + "-beta"
-}
 
 fun Project.shouldBeReleased() = projectsToRelease.contains(name)
