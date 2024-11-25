@@ -44,9 +44,9 @@ subprojects {
             }
         }
 
-//        tasks.matching { it.name == "publish" }.configureEach {
-//            finalizedBy("createStagingDeployFolder")
-//        }
+        tasks.matching { it.name == "publish" }.configureEach {
+            finalizedBy("createStagingDeployFolder")
+        }
 
 
 
@@ -231,10 +231,12 @@ subprojects {
             gitRootSearch.set(true)
 
             release {
+
                 github {
+                    overwrite.set(true)
                     changelog {
                         enabled.set(true)
-                        formatted.set(org.jreleaser.model.Active.RELEASE)
+                        formatted.set(Active.RELEASE)
                         links.set(true)
                         sort.set(org.jreleaser.model.Changelog.Sort.DESC)
 
