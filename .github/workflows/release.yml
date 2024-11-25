@@ -41,7 +41,7 @@ jobs:
 
       - name: Set up GPG
         run: |
-          echo "GPG_SECRET_KEY" > private.asc
+          echo "$GPG_SECRET_KEY" > private.asc
           gpg --import --batch private.asc
         env:
           GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
