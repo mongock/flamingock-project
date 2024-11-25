@@ -220,14 +220,7 @@ subprojects {
                         create("sonatype") {
                             active.set(Active.ALWAYS)
                             url.set("https://central.sonatype.com/api/v1/publisher")
-                            //https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/
                             stagingRepository("build/staging-deploy")
-                            artifactOverride {
-                                artifactId.set("utils")
-                                sourceJar.set(true)
-                                javadocJar.set(true)
-                                verifyPom.set(true)
-                            }
                         }
 
 
