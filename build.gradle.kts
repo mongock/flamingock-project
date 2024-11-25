@@ -31,6 +31,23 @@ subprojects {
             withJavadocJar()
         }
 
+        tasks.register("createStagingDeployFolder") {
+            group = "build"
+            description = "Creates the staging-deploy folder inside the build directory."
+
+            doLast {
+                val stagingDeployDir = layout.buildDirectory.dir("staging-deploy").get().asFile
+                if (!stagingDeployDir.exists()) {
+                    stagingDeployDir.mkdirs()
+                    println("Created: $stagingDeployDir")
+                }
+            }
+        }
+
+        tasks.named("jreleaserFullRelease") {
+            dependsOn("createStagingDeployFolder")
+        }
+
 
 
         apply(plugin = "maven-publish")
