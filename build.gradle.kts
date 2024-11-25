@@ -234,6 +234,7 @@ subprojects {
                 github {
                     changelog {
                         enabled.set(true)
+                        formatted.set(org.jreleaser.model.Active.RELEASE)
                         links.set(true)
                         sort.set(org.jreleaser.model.Changelog.Sort.DESC)
 
@@ -253,14 +254,17 @@ subprojects {
                             key.set("docs")
                             title.set("📚 Documentation")
                             labels.set(setOf("fix"))
-                            order.set(2)
+                            order.set(3)
                         }
                         category {
                             key.set("chore")
                             title.set("🛠️ Maintenance")
                             labels.set(setOf("chore"))
-                            order.set(3)
+                            order.set(4)
                         }
+                    }
+                    releaseNotes {
+                        enabled.set(true)
                     }
                 }
             }
