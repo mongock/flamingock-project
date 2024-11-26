@@ -56,6 +56,13 @@ val projectsToRelease = setOf(
 
 
 val alreadyReleasedProjects = HashMap<String, Boolean>()
+
+println("(3)JRELEASER_MAVENCENTRAL_USERNAME= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
+println("(3)JRELEASER_MAVENCENTRAL_PASSWORD= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
+val encodedCredentials: String = Base64.getEncoder()
+    .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
+
+println("(3)encoded= $encodedCredentials")
 subprojects {
 
     logger.lifecycle(project.name)
@@ -74,8 +81,7 @@ subprojects {
 
 //    alreadyReleasedProjects[project.name] = project.getIfAlreadyReleasedFromCentralPortal()
 
-    println("(2)JRELEASER_MAVENCENTRAL_USERNAME= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
-    println("(2)JRELEASER_MAVENCENTRAL_PASSWORD= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
+
 
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
@@ -278,8 +284,7 @@ fun Project.isReleasable(): Boolean {
 }
 
 //val client: HttpClient = HttpClient.newHttpClient()
-val encodedCredentials: String = Base64.getEncoder()
-    .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
+
 
 fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
