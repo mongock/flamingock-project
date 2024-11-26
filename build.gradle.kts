@@ -20,7 +20,7 @@ val projectsToRelease = setOf(
 //    "flamingock-core-api",//required by flamingock-graalvm
 //    "flamingock-springboot-v2-runner",
 //    "flamingock-springboot-v3-runner",
-    "metadata-generator",
+//    "metadata-generator",
     "couchbase-driver",
     "couchbase-springboot-v2-driver",
     "dynamodb-driver",
