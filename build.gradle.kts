@@ -64,6 +64,8 @@ subprojects {
     if (project.shouldBeReleased()) {
         if(project.notReleasedYet()) {
 
+            println("$group:$name:$version PUBLISHING")
+
             java {
                 withSourcesJar()
                 withJavadocJar()
