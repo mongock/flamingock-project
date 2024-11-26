@@ -8,3 +8,5 @@ dependencies {
 
     testImplementation(project(":utils-test"))
 }
+
+description = "${project.name}'s description"

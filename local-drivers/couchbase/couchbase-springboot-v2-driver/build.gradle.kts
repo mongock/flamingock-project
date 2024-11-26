@@ -9,3 +9,5 @@ dependencies {
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.7.12")
 }
+
+description = "${project.name}'s description"

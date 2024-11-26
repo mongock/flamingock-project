@@ -13,3 +13,5 @@ dependencies {
     testImplementation("io.mongock:mongodb-v3-driver:5.5.0")
 
 }
+
+description = "${project.name}'s description"

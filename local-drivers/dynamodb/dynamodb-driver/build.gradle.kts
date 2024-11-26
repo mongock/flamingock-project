@@ -10,3 +10,5 @@ dependencies {
     testImplementation("io.mongock:mongock-standalone:5.5.0")
     testImplementation("io.mongock:dynamodb-driver:5.5.0")
 }
+
+description = "${project.name}'s description"

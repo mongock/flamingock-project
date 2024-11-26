@@ -6,6 +6,7 @@ plugins {
     id("java")
 }
 
+description = "${project.name}'s description"
 
 val jacksonVersion = "2.15.2"
 dependencies {

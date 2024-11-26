@@ -8,3 +8,5 @@ dependencies {
     testImplementation("org.testcontainers:mongodb:1.18.3")
     testImplementation("org.testcontainers:junit-jupiter:1.18.3")
 }
+
+description = "${project.name}'s description"

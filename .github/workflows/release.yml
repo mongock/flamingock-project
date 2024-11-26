@@ -65,10 +65,6 @@ jobs:
             build/jreleaser/output.properties
             build/jreleaser/trace.log
 
-      - name: Printing logs on failure
-        if: failure()
-        run: |
-          cat build/jreleaser/trace.log 
 
 #      - name: Synchronizing develop branch
 #        run: |

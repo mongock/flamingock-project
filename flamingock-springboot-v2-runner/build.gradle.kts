@@ -10,3 +10,5 @@ dependencies {
 
 
 }
+
+description = "${project.name}'s description"
