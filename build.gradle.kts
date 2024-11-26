@@ -269,8 +269,10 @@ val encodedCredentials: String = Base64.getEncoder()
     .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
 
 fun Project.notReleasedYet() : Boolean {
+    val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
+    logger.lifecycle("Checking is artefact is published: $url")
     val request = HttpRequest.newBuilder()
-        .uri(URI.create("https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"))
+        .uri(URI.create(url))
         .header("accept", "application/json")
         .header("Authorization", "Basic $encodedCredentials")
         .GET()
