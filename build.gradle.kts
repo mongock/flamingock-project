@@ -61,8 +61,8 @@ subprojects {
 
     apply(plugin = "java-library")
 
-    if (project.shouldBeReleased()) {
-        if(project.notReleasedYet()) {
+    if (project.isReleasable()) {
+        if(!project.isAlreadyReleased()) {
 
             println("$group:$name:$version PUBLISHING")
 
@@ -262,13 +262,13 @@ subprojects {
 }
 
 
-fun Project.shouldBeReleased() = projectsToRelease.contains(name)
+fun Project.isReleasable() = projectsToRelease.contains(name)
 
 //val client: HttpClient = HttpClient.newHttpClient()
 val encodedCredentials: String = Base64.getEncoder()
     .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
 
-fun Project.notReleasedYet() : Boolean {
+fun Project.isAlreadyReleased() : Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
     logger.lifecycle("Checking is artefact is published: $url")
     val request = HttpRequest.newBuilder()
