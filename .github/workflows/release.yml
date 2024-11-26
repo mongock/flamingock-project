@@ -28,9 +28,23 @@ jobs:
           gpg-private-key: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
           gpg-passphrase: JRELEASER_GPG_PASSPHRASE
 
+      - name: Configure Git User
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
 
-      - name: Print variable
-        run: ./gradlew printVariable
+      - name: Set up GPG
+        run: |
+          echo "$GPG_SECRET_KEY" > private.asc
+          gpg --import --batch private.asc
+        env:
+          GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
+
+#      - name: Build, unit and Integration tests
+#        run: ./gradlew clean build
+
+      - name: Release to Maven Central portal
+        run: ./gradlew publish jreleaserFullRelease --no-daemon --stacktrace
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
@@ -38,40 +52,15 @@ jobs:
           JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-#
-#      - name: Configure Git User
-#        run: |
-#          git config user.email "actions@github.com"
-#          git config user.name "GitHub Actions"
-#
-#      - name: Set up GPG
-#        run: |
-#          echo "$GPG_SECRET_KEY" > private.asc
-#          gpg --import --batch private.asc
-#        env:
-#          GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-#
-##      - name: Build, unit and Integration tests
-##        run: ./gradlew clean build
-#
-#      - name: Release to Maven Central portal
-#        run: ./gradlew publish jreleaserFullRelease --no-daemon --stacktrace
-#        env:
-#          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-#          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-#          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-#          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-#          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-#          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-#
-#      - name: JReleaser release output
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: jreleaser-release
-#          path: |
-#            build/jreleaser/output.properties
-#            build/jreleaser/trace.log
+
+      - name: JReleaser release output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jreleaser-release
+          path: |
+            build/jreleaser/output.properties
+            build/jreleaser/trace.log
 
 
 #      - name: Synchronizing develop branch
