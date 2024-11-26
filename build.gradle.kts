@@ -61,6 +61,17 @@ subprojects {
     logger.lifecycle(project.name)
     apply(plugin = "java-library")
 
+    tasks.register("printVariable") {
+        group = "build"
+        description = "Creates the staging-deploy folder inside the build directory."
+
+        doLast {
+            println("JRELEASER_MAVENCENTRAL_USERNAME= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
+            println("JRELEASER_MAVENCENTRAL_PASSWORD= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
+        }
+    }
+
+
 
 //    alreadyReleasedProjects[project.name] = project.getIfAlreadyReleasedFromCentralPortal()
 
