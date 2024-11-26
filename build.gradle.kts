@@ -56,7 +56,7 @@ val projectsToRelease = setOf(
 
 logger.lifecycle("\n" +
         "\n" +
-        "\nCREDENTIALS${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}\n\n\n")
+        "\nCREDENTIALS->${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}\n\n\n")
 
 
 subprojects {
