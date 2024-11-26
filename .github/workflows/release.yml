@@ -43,6 +43,12 @@ jobs:
 #      - name: Build, unit and Integration tests
 #        run: ./gradlew clean build
 
+      - name: Perform publish
+        run: ./gradlew publish
+        env:
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
+          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
+
       - name: Release to Maven Central portal
         run: ./gradlew publish jreleaserFullRelease --no-daemon --stacktrace
         env:
