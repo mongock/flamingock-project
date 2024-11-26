@@ -5,6 +5,7 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.Base64
+import org.jetbrains.kotlin.fir.scopes.impl.overrides
 
 import org.json.JSONObject
 
@@ -189,6 +190,7 @@ subprojects {
                 }
 
                 deploy {
+
                     maven {
                         mavenCentral {
                             //Requires env variables
@@ -198,6 +200,7 @@ subprojects {
                                 active.set(Active.ALWAYS)
                                 url.set("https://central.sonatype.com/api/v1/publisher")
                                 stagingRepository("build/staging-deploy")
+
                             }
 
 
@@ -280,16 +283,21 @@ fun Project.isAlreadyReleased() : Boolean {
 
     val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
 
+    println("[${response.statusCode()}: ${response.body()}]")
     return if (response.statusCode() == 200) {
         val jsonObject = JSONObject(response.body())
         val map: Map<String, Any> = jsonObject.toMap()
         if (map["published"] != null && map["published"] is Boolean) {
-            map["published"] as Boolean
+            val result = map["published"] as Boolean
+            println("Good if(is boolean): $result" )
+            result
         } else {
+            println("Bad internal of if: map" )
             false
         }
     } else {
         //TODO implement retry
+        println("Bad external if" )
         false
     }
 }
