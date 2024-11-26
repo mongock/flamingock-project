@@ -55,23 +55,16 @@ val projectsToRelease = setOf(
 )
 
 
-val encodedCredentials: String = "bmllTVZMREs6clJXZkRyVHEycFZ1K2t2Vk1EUUJOanl6RC9YTmpOS1ZObEo5ZlRFZ3UvUWM="
-//    Base64.getEncoder()
-//    .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
+val mavenUsername: String = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
+val mavenPassword: String = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
+val encodedCredentials: String = Base64.getEncoder()
+    .encodeToString("$mavenUsername:$mavenPassword".toByteArray())
 
 subprojects {
 
     logger.lifecycle(project.name)
     apply(plugin = "java-library")
-
-    tasks.register("printVariable") {
-        group = "build"
-        description = "Creates the staging-deploy folder inside the build directory."
-
-        doLast {
-
-        }
-    }
+    println("Credentials: $mavenUsername:$mavenPassword")
 
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
@@ -205,7 +198,10 @@ subprojects {
                             //Requires env variables
                             // JRELEASER_MAVENCENTRAL_USERNAME
                             // JRELEASER_MAVENCENTRAL_PASSWORD
+                            
                             create("sonatype") {
+                                username.set(mavenUsername)
+                                password.set(mavenPassword)
                                 active.set(Active.ALWAYS)
                                 url.set("https://central.sonatype.com/api/v1/publisher")
                                 stagingRepository("build/staging-deploy")
