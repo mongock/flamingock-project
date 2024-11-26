@@ -264,7 +264,7 @@ subprojects {
 
 fun Project.shouldBeReleased() = projectsToRelease.contains(name)
 
-val client: HttpClient = HttpClient.newHttpClient()
+//val client: HttpClient = HttpClient.newHttpClient()
 val encodedCredentials: String = Base64.getEncoder()
     .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
 
@@ -276,7 +276,7 @@ fun Project.notReleasedYet() : Boolean {
         .GET()
         .build()
 
-    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+    val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
 
     return if (response.statusCode() == 200) {
         val jsonObject = JSONObject(response.body())
