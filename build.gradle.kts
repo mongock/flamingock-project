@@ -55,14 +55,10 @@ val projectsToRelease = setOf(
 )
 
 
-val alreadyReleasedProjects = HashMap<String, Boolean>()
+val encodedCredentials: String = "bmllTVZMREs6clJXZkRyVHEycFZ1K2t2Vk1EUUJOanl6RC9YTmpOS1ZObEo5ZlRFZ3UvUWM="
+//    Base64.getEncoder()
+//    .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
 
-println("(3)JRELEASER_MAVENCENTRAL_USERNAME= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
-println("(3)JRELEASER_MAVENCENTRAL_PASSWORD= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
-val encodedCredentials: String = Base64.getEncoder()
-    .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
-
-println("(3)encoded= $encodedCredentials")
 subprojects {
 
     logger.lifecycle(project.name)
@@ -76,12 +72,6 @@ subprojects {
 
         }
     }
-
-
-
-//    alreadyReleasedProjects[project.name] = project.getIfAlreadyReleasedFromCentralPortal()
-
-
 
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
@@ -169,7 +159,9 @@ subprojects {
 
                 release {
 
+
                     github {
+
                         //Requires env variable: JRELEASER_GITHUB_TOKEN
                         overwrite.set(true)
 
