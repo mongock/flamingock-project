@@ -5,7 +5,6 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.Base64
-import org.jetbrains.kotlin.fir.scopes.impl.overrides
 
 import org.json.JSONObject
 
@@ -63,7 +62,7 @@ subprojects {
     apply(plugin = "java-library")
 
     if (project.isReleasable()) {
-        if(!project.isAlreadyReleased()) {
+        if(!project.alreadyReleased()) {
 
             println("$group:$name:$version PUBLISHING")
 
@@ -190,7 +189,6 @@ subprojects {
                 }
 
                 deploy {
-
                     maven {
                         mavenCentral {
                             //Requires env variables
@@ -200,7 +198,6 @@ subprojects {
                                 active.set(Active.ALWAYS)
                                 url.set("https://central.sonatype.com/api/v1/publisher")
                                 stagingRepository("build/staging-deploy")
-
                             }
 
 
@@ -209,10 +206,10 @@ subprojects {
                 }
             }
         } else {
-            println("$group:$name:$version ALREADY PUBLISHED")
+            logger.lifecycle("$group:$name:$version ALREADY PUBLISHED. Won't release it")
         }
     } else {
-        println("$group:$name:$version DOES NOT NEED PUBLISHING")
+        logger.lifecycle("$group:$name:$version DOES NOT NEED PUBLISHING. Won't release it")
     }
 
 
@@ -271,9 +268,11 @@ fun Project.isReleasable() = projectsToRelease.contains(name)
 val encodedCredentials: String = Base64.getEncoder()
     .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
 
-fun Project.isAlreadyReleased() : Boolean {
+fun Project.alreadyReleased() : Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
-    logger.lifecycle("Checking is artefact is published: $url")
+    logger.lifecycle("Checking if published from: $url")
+    logger.lifecycle("Using credentials: $encodedCredentials")
+
     val request = HttpRequest.newBuilder()
         .uri(URI.create(url))
         .header("accept", "application/json")
@@ -282,22 +281,18 @@ fun Project.isAlreadyReleased() : Boolean {
         .build()
 
     val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
-
-    println("[${response.statusCode()}: ${response.body()}]")
+    logger.lifecycle("response[${response.statusCode()}]: ${response.body()}")
     return if (response.statusCode() == 200) {
         val jsonObject = JSONObject(response.body())
         val map: Map<String, Any> = jsonObject.toMap()
         if (map["published"] != null && map["published"] is Boolean) {
-            val result = map["published"] as Boolean
-            println("Good if(is boolean): $result" )
-            result
+            map["published"] as Boolean
         } else {
-            println("Bad internal of if: map" )
             false
         }
     } else {
         //TODO implement retry
-        println("Bad external if" )
+        logger.lifecycle("Error checking if artefact already published[${response.statusCode()}]: ${response.body()}")
         false
     }
 }
