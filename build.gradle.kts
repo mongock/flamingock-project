@@ -66,8 +66,7 @@ subprojects {
         description = "Creates the staging-deploy folder inside the build directory."
 
         doLast {
-            println("JRELEASER_MAVENCENTRAL_USERNAME= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
-            println("JRELEASER_MAVENCENTRAL_PASSWORD= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
+
         }
     }
 
@@ -75,6 +74,8 @@ subprojects {
 
 //    alreadyReleasedProjects[project.name] = project.getIfAlreadyReleasedFromCentralPortal()
 
+    println("(2)JRELEASER_MAVENCENTRAL_USERNAME= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
+    println("(2)JRELEASER_MAVENCENTRAL_PASSWORD= ${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}")
 
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
