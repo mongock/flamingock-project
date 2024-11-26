@@ -29,7 +29,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.10-beta"
+    version = "0.0.11-beta"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
@@ -58,19 +58,15 @@ val projectsToRelease = setOf(
 val alreadyReleasedProjects = HashMap<String, Boolean>()
 subprojects {
 
+    logger.lifecycle(project.name)
     apply(plugin = "java-library")
 
 
 //    alreadyReleasedProjects[project.name] = project.getIfAlreadyReleasedFromCentralPortal()
 
 
-
-
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
-
-            println("$group:$name:$version PUBLISHING")
-
             java {
                 withSourcesJar()
                 withJavadocJar()
@@ -210,11 +206,7 @@ subprojects {
                     }
                 }
             }
-        } else {
-            logger.lifecycle("$group:$name:$version ALREADY PUBLISHED. Won't release it")
         }
-    } else {
-        logger.lifecycle("$group:$name:$version DOES NOT NEED PUBLISHING. Won't release it")
     }
 
 
@@ -267,7 +259,11 @@ subprojects {
 }
 
 
-fun Project.isReleasable() = projectsToRelease.contains(name)
+fun Project.isReleasable(): Boolean {
+    val result = projectsToRelease.contains(name)
+    logger.lifecycle("\treleaseable: $result")
+    return result
+}
 
 //val client: HttpClient = HttpClient.newHttpClient()
 val encodedCredentials: String = Base64.getEncoder()
@@ -275,7 +271,7 @@ val encodedCredentials: String = Base64.getEncoder()
 
 fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
-    logger.lifecycle("Checking if published from: $url")
+    logger.lifecycle("\tChecking if published with url: $url")
 
     val request = HttpRequest.newBuilder()
         .uri(URI.create(url))
@@ -285,18 +281,20 @@ fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
         .build()
 
     val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
-    logger.lifecycle("response[${response.statusCode()}]: ${response.body()}")
+    logger.lifecycle("\tresponse[${response.statusCode()}]: ${response.body()}")
     return if (response.statusCode() == 200) {
         val jsonObject = JSONObject(response.body())
         val map: Map<String, Any> = jsonObject.toMap()
         if (map["published"] != null && map["published"] is Boolean) {
+            logger.lifecycle("$group:$name:$version PUBLISHING")
             map["published"] as Boolean
         } else {
+            logger.lifecycle("\t$group:$name:$version ALREADY PUBLISHED. Won't release it")
             false
         }
     } else {
         //TODO implement retry
-        logger.lifecycle("Error checking if artefact already published[${response.statusCode()}]: ${response.body()}")
+        logger.lifecycle("\tError checking if artefact already published[${response.statusCode()}]: ${response.body()}")
         true
     }
 }
