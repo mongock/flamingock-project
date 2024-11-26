@@ -50,7 +50,7 @@ jobs:
           JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
 
       - name: Release to Maven Central portal
-        run: ./gradlew publish jreleaserFullRelease --no-daemon --stacktrace
+        run: ./gradlew jreleaserFullRelease --no-daemon --stacktrace
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
