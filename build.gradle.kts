@@ -16,10 +16,10 @@ allprojects {
 }
 
 val projectsToRelease = setOf(
-    "flamingock-core",
-    "flamingock-core-api",//required by flamingock-graalvm
-    "flamingock-springboot-v2-runner",
-    "flamingock-springboot-v3-runner",
+//    "flamingock-core",
+//    "flamingock-core-api",//required by flamingock-graalvm
+//    "flamingock-springboot-v2-runner",
+//    "flamingock-springboot-v3-runner",
     "metadata-generator",
     "couchbase-driver",
     "couchbase-springboot-v2-driver",
