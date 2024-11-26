@@ -64,7 +64,7 @@ subprojects {
     apply(plugin = "java-library")
 
     if (project.isReleasable()) {
-        if(!project.alreadyReleased()) {
+        if(!project.isAlreadyReleased()) {
 
             println("$group:$name:$version PUBLISHING")
 
@@ -270,7 +270,7 @@ fun Project.isReleasable() = projectsToRelease.contains(name)
 val encodedCredentials: String = Base64.getEncoder()
     .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
 
-fun Project.alreadyReleased() : Boolean {
+fun Project.isAlreadyReleased() : Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
     logger.lifecycle("Checking if published from: $url")
     logger.lifecycle("Using credentials: $encodedCredentials")
@@ -278,7 +278,7 @@ fun Project.alreadyReleased() : Boolean {
     val request = HttpRequest.newBuilder()
         .uri(URI.create(url))
         .header("accept", "application/json")
-        .header("Authorization", "Basic $encodedCredentials")
+        .header("Authorization", "Basic bmllTVZMREs6clJXZkRyVHEycFZ1K2t2Vk1EUUJOanl6RC9YTmpOS1ZObEo5ZlRFZ3UvUWM=")
         .GET()
         .build()
 
@@ -295,6 +295,6 @@ fun Project.alreadyReleased() : Boolean {
     } else {
         //TODO implement retry
         logger.lifecycle("Error checking if artefact already published[${response.statusCode()}]: ${response.body()}")
-        false
+        true
     }
 }
