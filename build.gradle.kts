@@ -54,17 +54,20 @@ val projectsToRelease = setOf(
     "sql-cloud-transactioner"
 )
 
-logger.lifecycle("\n" +
-        "\n" +
-        "\nCREDENTIALS->${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}\n\n\n")
 
-
+val alreadyReleasedProjects = HashMap<String, Boolean>()
 subprojects {
 
     apply(plugin = "java-library")
 
+
+//    alreadyReleasedProjects[project.name] = project.getIfAlreadyReleasedFromCentralPortal()
+
+
+
+
     if (project.isReleasable()) {
-        if(!project.isAlreadyReleased()) {
+        if(!project.getIfAlreadyReleasedFromCentralPortal()) {
 
             println("$group:$name:$version PUBLISHING")
 
@@ -270,15 +273,14 @@ fun Project.isReleasable() = projectsToRelease.contains(name)
 val encodedCredentials: String = Base64.getEncoder()
     .encodeToString("${System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")}:${System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")}".toByteArray())
 
-fun Project.isAlreadyReleased() : Boolean {
+fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
     logger.lifecycle("Checking if published from: $url")
-    logger.lifecycle("Using credentials: $encodedCredentials")
 
     val request = HttpRequest.newBuilder()
         .uri(URI.create(url))
         .header("accept", "application/json")
-        .header("Authorization", "Basic bmllTVZMREs6clJXZkRyVHEycFZ1K2t2Vk1EUUJOanl6RC9YTmpOS1ZObEo5ZlRFZ3UvUWM=")
+        .header("Authorization", "Basic $encodedCredentials")
         .GET()
         .build()
 
