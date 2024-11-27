@@ -55,6 +55,7 @@ val projectsToRelease = setOf(
 )
 
 
+//val client: HttpClient = HttpClient.newHttpClient()
 val mavenUsername: String = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
 val mavenPassword: String = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
 val encodedCredentials: String = Base64.getEncoder()
@@ -65,7 +66,7 @@ subprojects {
 
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
-            logger.lifecycle("${project.name}: PUBLISHING")
+            logger.lifecycle("${project.name}:\tPUBLISHING")
             java {
                 withSourcesJar()
                 withJavadocJar()
@@ -168,10 +169,10 @@ subprojects {
                 }
             }
         } else {
-            logger.lifecycle("${project.name}: NOT PUBLISHING(already published)")
+            logger.lifecycle("${project.name}:\tNOT PUBLISHING(already published)")
         }
     } else {
-        logger.lifecycle("${project.name}: NOT RELEASABLE")
+        logger.lifecycle("${project.name}:\tNOT RELEASABLE")
     }
 
 
@@ -223,15 +224,7 @@ subprojects {
     }
 }
 
-
-fun Project.isReleasable(): Boolean {
-    val result = projectsToRelease.contains(name)
-    logger.lifecycle("\treleaseable: $result")
-    return result
-}
-
-//val client: HttpClient = HttpClient.newHttpClient()
-
+fun Project.isReleasable(): Boolean = projectsToRelease.contains(name)
 
 fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
