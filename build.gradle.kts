@@ -61,12 +61,11 @@ val encodedCredentials: String = Base64.getEncoder()
     .encodeToString("$mavenUsername:$mavenPassword".toByteArray())
 
 subprojects {
-
-    logger.lifecycle(project.name)
     apply(plugin = "java-library")
 
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
+            logger.lifecycle("${project.name}: PUBLISHING")
             java {
                 withSourcesJar()
                 withJavadocJar()
@@ -168,7 +167,11 @@ subprojects {
                     }
                 }
             }
+        } else {
+            logger.lifecycle("${project.name}: NOT PUBLISHING(already published)")
         }
+    } else {
+        logger.lifecycle("${project.name}: NOT RELEASABLE")
     }
 
 
@@ -240,17 +243,12 @@ fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
         .build()
 
     val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
-    logger.debug("\tresponse from Maven Publisher[${response.statusCode()}]: ${response.body()}")
+    logger.debug("${project.name}: response from Maven Publisher[${response.statusCode()}]: ${response.body()}")
     return if (response.statusCode() == 200) {
         val jsonObject = JSONObject(response.body())
         val map: Map<String, Any> = jsonObject.toMap()
         if (map["published"] != null && map["published"] is Boolean) {
             val isPublished = map["published"] as Boolean
-            if(isPublished){
-                logger.lifecycle("\tNOT PUBLISHING(already published)")
-            } else {
-                logger.lifecycle("\tPUBLISHING")
-            }
             isPublished
         } else {
             throw RuntimeException("Error parsing response from Maven Publisher: body = ${response.body()})")
