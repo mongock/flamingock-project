@@ -189,7 +189,7 @@ subprojects {
                             // JRELEASER_MAVENCENTRAL_PASSWORD
 
                             create("sonatype") {
-                                active.set(Active.ALWAYS)
+                                active.set(Active.NEVER)
                                 applyMavenCentralRules.set(true)
                                 url.set("https://central.sonatype.com/api/v1/publisher")
                                 stagingRepository("build/staging-deploy")
