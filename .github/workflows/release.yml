@@ -34,7 +34,7 @@ jobs:
           git config user.name "GitHub Actions"
 
       - name: Show tags
-        run: echo "$((git tag --sort=authordate | cat))"
+        run: echo "$(git tag --sort=authordate)"
 
 #      - name: Set up GPG
 #        run: |
