@@ -179,7 +179,12 @@ subprojects {
                 }
 
                 gitRootSearch.set(true)
-                release { github { skipRelease.set(true) } }
+                release {
+                    github {
+                        skipRelease.set(true)
+                        skipTag.set(true)
+                    }
+                }
 
                 deploy {
                     maven {
