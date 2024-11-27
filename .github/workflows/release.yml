@@ -29,11 +29,13 @@ jobs:
           gpg-passphrase: JRELEASER_GPG_PASSPHRASE
 
       - name: Configure Git User
-        shell: bash
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git tag --sort=authordate | cat
+
+      - name: Show tags
+        shell: bash {0}
+        run: git tag --sort=authordate | cat
 
 #      - name: Set up GPG
 #        run: |
