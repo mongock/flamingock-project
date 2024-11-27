@@ -215,7 +215,6 @@ subprojects {
                 }
             }
         } else {
-            logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDE80 PUBLISHING ]")
             logger.lifecycle("${project.name}${tabsPrefix}[ ✅ ALREADY PUBLISHED ]")
         }
     } else {
