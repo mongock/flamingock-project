@@ -218,7 +218,6 @@ subprojects {
             logger.lifecycle("${project.name}${tabsPrefix}[ NOT PUBLISHING(already published) ]")
         }
     } else {
-        logger.lifecycle("${project.name}:${tabsPrefix}NOT RELEASABLE")
         logger.lifecycle("${project.name}${tabsPrefix}[ NOT RELEASABLE ]")
     }
 
