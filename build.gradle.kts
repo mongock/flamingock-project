@@ -155,8 +155,9 @@ subprojects {
                     github {
 
                         //Requires env variable: JRELEASER_GITHUB_TOKEN
-                        overwrite.set(true)
+//                        overwrite.set(true)
 
+                        skipRelease.set(true)
                         changelog {
                             enabled.set(true)
                             formatted.set(Active.ALWAYS)
