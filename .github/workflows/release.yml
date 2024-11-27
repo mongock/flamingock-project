@@ -52,7 +52,7 @@ jobs:
       - name: Release to Maven Central portal
         run: |
           for i in {1..3}; do
-            if ./gradlew jreleaserFullRelease --no-daemon --stacktrace; then
+            if ./gradlew jreleaserFullRelease --no-daemon --stacktrace --debug; then
               exit 0
             fi
             if [ $i -eq 3 ]; then
