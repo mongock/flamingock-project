@@ -149,48 +149,6 @@ subprojects {
 
                 gitRootSearch.set(true)
 
-                release {
-
-
-                    github {
-
-                        //Requires env variable: JRELEASER_GITHUB_TOKEN
-//                        overwrite.set(true)
-
-                        skipRelease.set(true)
-                        changelog {
-                            enabled.set(true)
-                            formatted.set(Active.ALWAYS)
-                            links.set(true)
-                            sort.set(org.jreleaser.model.Changelog.Sort.DESC)
-
-                            category {
-                                key.set("feat")
-                                title.set("🚀 New Features")
-                                labels.set(setOf("feat"))
-                                order.set(1)
-                            }
-                            category {
-                                key.set("fix")
-                                title.set("🐛 Bug Fixes")
-                                labels.set(setOf("fix"))
-                                order.set(2)
-                            }
-                            category {
-                                key.set("docs")
-                                title.set("📚 Documentation")
-                                labels.set(setOf("fix"))
-                                order.set(3)
-                            }
-                            category {
-                                key.set("chore")
-                                title.set("🛠️ Maintenance")
-                                labels.set(setOf("chore"))
-                                order.set(4)
-                            }
-                        }
-                    }
-                }
 
                 deploy {
                     maven {
