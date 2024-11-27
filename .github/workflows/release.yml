@@ -51,6 +51,7 @@ jobs:
 
       - name: Release to Maven Central portal
         run: ./gradlew jreleaserFullRelease --no-daemon --stacktrace
+        retry: 5
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
