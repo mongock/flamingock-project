@@ -80,7 +80,6 @@ jobs:
             build/jreleaser/output.properties
             build/jreleaser/trace.log
 
-
 #      - name: Synchronizing develop branch
 #        run: |
 #          git pull origin
