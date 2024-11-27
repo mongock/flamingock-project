@@ -278,8 +278,7 @@ fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
         }
     } else {
         //TODO implement retry
-//        throw RuntimeException("Error calling Maven Publisher(status:${response.statusCode()}, body:${response.body()})")
-        return false
+        throw RuntimeException("Error calling Maven Publisher(status:${response.statusCode()}, body:${response.body()})")
     }
 }
 
