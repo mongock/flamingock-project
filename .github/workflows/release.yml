@@ -32,9 +32,8 @@ jobs:
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-
-      - name: Show tags
-        run: echo "$(git tag --sort=authordate)"
+          echo "Test"
+          echo "$(git tag --sort=authordate)"
 
 #      - name: Set up GPG
 #        run: |
