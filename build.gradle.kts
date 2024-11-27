@@ -4,6 +4,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.Base64
 import org.jreleaser.model.Active
+import org.jreleaser.model.UpdateSection
 
 import org.json.JSONObject
 
@@ -28,7 +29,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.12-beta"
+    version = "0.0.4"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
@@ -59,10 +60,35 @@ val tabWidth = 8 //Usually 8 spaces)
 val statusPosition = ((projectNameMaxLength / tabWidth) + 1) * tabWidth
 
 //val client: HttpClient = HttpClient.newHttpClient()
-val mavenUsername: String = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
-val mavenPassword: String = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
+val mavenUsername: String? = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
+val mavenPassword: String? = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
 val encodedCredentials: String = Base64.getEncoder()
     .encodeToString("$mavenUsername:$mavenPassword".toByteArray())
+
+jreleaser {
+    gitRootSearch.set(true)
+    release {
+        github {
+            //Requires env variable: JRELEASER_GITHUB_TOKEN
+            update {
+                enabled.set(true)
+                sections.set(setOf(
+                    UpdateSection.TITLE,
+                    UpdateSection.BODY,
+                    UpdateSection.ASSETS
+                ))
+            }
+
+            changelog {
+                enabled.set(true)
+                formatted.set(Active.ALWAYS)
+                links.set(true)
+                sort.set(org.jreleaser.model.Changelog.Sort.DESC)
+                preset.set("conventional-commits")
+            }
+        }
+    }
+}
 
 subprojects {
     apply(plugin = "java-library")
@@ -153,48 +179,7 @@ subprojects {
                 }
 
                 gitRootSearch.set(true)
-                release {
-
-
-                    github {
-
-                        //Requires env variable: JRELEASER_GITHUB_TOKEN
-                        overwrite.set(true)
-
-                        skipRelease.set(true)
-                        changelog {
-                            enabled.set(true)
-                            formatted.set(Active.ALWAYS)
-                            links.set(true)
-                            sort.set(org.jreleaser.model.Changelog.Sort.DESC)
-
-                            category {
-                                key.set("feat")
-                                title.set("🚀 New Features")
-                                labels.set(setOf("feat"))
-                                order.set(1)
-                            }
-                            category {
-                                key.set("fix")
-                                title.set("🐛 Bug Fixes")
-                                labels.set(setOf("fix"))
-                                order.set(2)
-                            }
-                            category {
-                                key.set("docs")
-                                title.set("📚 Documentation")
-                                labels.set(setOf("fix"))
-                                order.set(3)
-                            }
-                            category {
-                                key.set("chore")
-                                title.set("🛠️ Maintenance")
-                                labels.set(setOf("chore"))
-                                order.set(4)
-                            }
-                        }
-                    }
-                }
+                release { github { skipRelease.set(true) } }
 
                 deploy {
                     maven {
@@ -205,11 +190,10 @@ subprojects {
 
                             create("sonatype") {
                                 active.set(Active.ALWAYS)
+                                applyMavenCentralRules.set(true)
                                 url.set("https://central.sonatype.com/api/v1/publisher")
                                 stagingRepository("build/staging-deploy")
                             }
-
-
                         }
                     }
                 }
@@ -291,11 +275,11 @@ fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
             isPublished
         } else {
             throw RuntimeException("Error parsing response from Maven Publisher: body = ${response.body()})")
-
         }
     } else {
         //TODO implement retry
-        throw RuntimeException("Error calling Maven Publisher(status:${response.statusCode()}, body:${response.body()})")
+//        throw RuntimeException("Error calling Maven Publisher(status:${response.statusCode()}, body:${response.body()})")
+        return false
     }
 }
 
