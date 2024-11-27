@@ -1,10 +1,9 @@
-import org.jreleaser.model.Active
-
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.Base64
+import org.jreleaser.model.Active
 
 import org.json.JSONObject
 
@@ -55,6 +54,10 @@ val projectsToRelease = setOf(
 )
 
 
+val projectNameMaxLength = projectsToRelease.maxOf { it.length }
+val tabWidth = 8 //Usually 8 spaces)
+val statusPosition = ((projectNameMaxLength / tabWidth) + 1) * tabWidth
+
 //val client: HttpClient = HttpClient.newHttpClient()
 val mavenUsername: String = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
 val mavenPassword: String = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
@@ -64,9 +67,11 @@ val encodedCredentials: String = Base64.getEncoder()
 subprojects {
     apply(plugin = "java-library")
 
+    val tabsPrefix = getTabsPrefix()
+
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
-            logger.lifecycle("${project.name}:\tPUBLISHING")
+            logger.lifecycle("${project.name}${tabsPrefix}[ PUBLISHING ]")
             java {
                 withSourcesJar()
                 withJavadocJar()
@@ -197,7 +202,7 @@ subprojects {
                             //Requires env variables
                             // JRELEASER_MAVENCENTRAL_USERNAME
                             // JRELEASER_MAVENCENTRAL_PASSWORD
-                            
+
                             create("sonatype") {
                                 active.set(Active.ALWAYS)
                                 url.set("https://central.sonatype.com/api/v1/publisher")
@@ -210,10 +215,11 @@ subprojects {
                 }
             }
         } else {
-            logger.lifecycle("${project.name}:\tNOT PUBLISHING(already published)")
+            logger.lifecycle("${project.name}${tabsPrefix}[ NOT PUBLISHING(already published) ]")
         }
     } else {
-        logger.lifecycle("${project.name}:\tNOT RELEASABLE")
+        logger.lifecycle("${project.name}:${tabsPrefix}NOT RELEASABLE")
+        logger.lifecycle("${project.name}${tabsPrefix}[ NOT RELEASABLE ]")
     }
 
 
@@ -292,4 +298,21 @@ fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
         //TODO implement retry
         throw RuntimeException("Error calling Maven Publisher(status:${response.statusCode()}, body:${response.body()})")
     }
+}
+
+
+fun getTabsPrefix(): String {
+    val currentPosition = project.name.length
+    val tabsNeeded = ((statusPosition - currentPosition + tabWidth - 1) / tabWidth) + 1
+    return "\t".repeat(tabsNeeded)
+}
+
+
+val String.isPalindrome: Boolean
+    get() = this == this.reversed()
+
+fun Project.getTabsPrefix(): String {
+    val currentPosition = name.length
+    val tabsNeeded = ((statusPosition - currentPosition + tabWidth - 1) / tabWidth) + 1
+    return "\t".repeat(tabsNeeded)
 }
