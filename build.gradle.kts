@@ -64,7 +64,6 @@ subprojects {
 
     logger.lifecycle(project.name)
     apply(plugin = "java-library")
-    println("Credentials: $mavenUsername:$mavenPassword")
 
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
@@ -274,8 +273,6 @@ fun Project.isReleasable(): Boolean {
 
 fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
-    logger.lifecycle("\tChecking if published with url: $url")
-
     val request = HttpRequest.newBuilder()
         .uri(URI.create(url))
         .header("accept", "application/json")
@@ -284,20 +281,24 @@ fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
         .build()
 
     val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
-    logger.lifecycle("\tresponse[${response.statusCode()}]: ${response.body()}")
+    logger.debug("\tresponse from Maven Publisher[${response.statusCode()}]: ${response.body()}")
     return if (response.statusCode() == 200) {
         val jsonObject = JSONObject(response.body())
         val map: Map<String, Any> = jsonObject.toMap()
         if (map["published"] != null && map["published"] is Boolean) {
-            logger.lifecycle("$group:$name:$version PUBLISHING")
-            map["published"] as Boolean
+            val isPublished = map["published"] as Boolean
+            if(isPublished){
+                logger.lifecycle("\tNOT PUBLISHING(already published)")
+            } else {
+                logger.lifecycle("\tPUBLISHING")
+            }
+            isPublished
         } else {
-            logger.lifecycle("\t$group:$name:$version ALREADY PUBLISHED. Won't release it")
-            false
+            throw RuntimeException("Error parsing response from Maven Publisher: body = ${response.body()})")
+
         }
     } else {
         //TODO implement retry
-        logger.lifecycle("\tError checking if artefact already published[${response.statusCode()}]: ${response.body()}")
-        true
+        throw RuntimeException("Error calling Maven Publisher(status:${response.statusCode()}, body:${response.body()})")
     }
 }
