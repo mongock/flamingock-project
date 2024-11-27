@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - jreleaser-github-releaser
+      - jreleaser-github-release
 jobs:
   release:
     runs-on: ubuntu-latest
