@@ -71,7 +71,7 @@ subprojects {
 
     if (project.isReleasable()) {
         if(!project.getIfAlreadyReleasedFromCentralPortal()) {
-            logger.lifecycle("${project.name}${tabsPrefix}[ PUBLISHING ]")
+            logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDE80 PUBLISHING ]")
             java {
                 withSourcesJar()
                 withJavadocJar()
@@ -215,10 +215,11 @@ subprojects {
                 }
             }
         } else {
-            logger.lifecycle("${project.name}${tabsPrefix}[ NOT PUBLISHING(already published) ]")
+            logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDE80 PUBLISHING ]")
+            logger.lifecycle("${project.name}${tabsPrefix}[ ✅ ALREADY PUBLISHED ]")
         }
     } else {
-        logger.lifecycle("${project.name}${tabsPrefix}[ NOT RELEASABLE ]")
+        logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDCA4 NOT RELEASABLE ]")
     }
 
 
