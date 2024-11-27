@@ -2,6 +2,8 @@ name: Manual Trigger with Inputs
 
 on:
   workflow_dispatch:
+    branches:
+      - master
 
 jobs:
   deploy:
