@@ -20,7 +20,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import flamingock.importer.cloud.mongodb.MongoDBLegacyImporter;
+import io.flamingock.importer.cloud.mongodb.MongoDBLegacyImporter;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;

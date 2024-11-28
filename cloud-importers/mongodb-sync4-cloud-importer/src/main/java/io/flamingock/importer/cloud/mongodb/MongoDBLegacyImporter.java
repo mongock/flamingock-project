@@ -1,4 +1,4 @@
-package flamingock.importer.cloud.mongodb;
+package io.flamingock.importer.cloud.mongodb;
 
 import io.flamingock.core.api.CloudSystemModule;
 import io.flamingock.core.runtime.dependency.Dependency;

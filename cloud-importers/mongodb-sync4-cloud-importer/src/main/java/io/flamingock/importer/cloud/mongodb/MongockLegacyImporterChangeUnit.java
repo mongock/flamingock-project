@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package flamingock.importer.cloud.mongodb;
+package io.flamingock.importer.cloud.mongodb;
 
 
 import com.mongodb.client.MongoCollection;

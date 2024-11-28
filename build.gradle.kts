@@ -99,7 +99,6 @@ if(isReleasing) {
 subprojects {
     apply(plugin = "java-library")
 
-
     val tabsPrefix = getTabsPrefix()
     if (isReleasing) {
         if (project.isReleasable()) {
@@ -330,13 +329,6 @@ fun Project.getIfAlreadyReleasedFromCentralPortal(): Boolean {
         //TODO implement retry
         throw RuntimeException("Error calling Maven Publisher(status:${response.statusCode()}, body:${response.body()})")
     }
-}
-
-
-fun getTabsPrefix(): String {
-    val currentPosition = project.name.length
-    val tabsNeeded = ((statusPosition - currentPosition + tabWidth - 1) / tabWidth) + 1
-    return "\t".repeat(tabsNeeded)
 }
 
 
