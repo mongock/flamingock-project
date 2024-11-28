@@ -1,8 +1,8 @@
-name: Release
+name: Release(manual)
 on:
-  push:
+  workflow_dispatch:
     branches:
-      - jreleaser-github-release
+      - master
 jobs:
   release:
     runs-on: ubuntu-latest
