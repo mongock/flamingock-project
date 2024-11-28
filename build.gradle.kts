@@ -258,6 +258,7 @@ subprojects {
                                     applyMavenCentralRules.set(true)
                                     url.set("https://central.sonatype.com/api/v1/publisher")
                                     stagingRepository("build/staging-deploy")
+                                    verifyUrl.set(verifyPublicationUrl)
                                 }
 
 
@@ -361,3 +362,9 @@ fun Project.getTabsPrefix(): String {
 
 fun Project.getIsReleasing() =
     gradle.startParameter.taskNames.contains("jreleaserDeploy") || gradle.startParameter.taskNames.contains("publish")
+
+private val Project.verifyPublicationUrl: String
+    get() {
+        val groupIdPath = group.toString().replace(".", "/")
+        return "https://repo.maven.apache.org/maven2/$groupIdPath/$name/$version/"
+    }
