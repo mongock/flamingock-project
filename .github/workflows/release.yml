@@ -42,29 +42,115 @@ jobs:
         env:
           GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
 
-      - name: Build, unit and Integration tests
-        run: ./gradlew clean build
+#      - name: Build, unit and Integration tests
+#        run: ./gradlew clean build
+#
+#      - name: Perform publish
+#        run: ./gradlew publish -PreleaseBundle=all
+#        env:
+#          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
+#          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
+#
+#      - name: Release core projects to Maven Central portal
+#        run: |
+#          for i in {1..3}; do
+#            if ./gradlew jreleaserFullRelease -PreleaseBundle=core --no-daemon --stacktrace; then
+#              exit 0
+#            fi
+#            if [ $i -eq 3 ]; then
+#              echo "Failed release after 3 attempts"
+#              exit 1
+#            fi
+#            echo
+#            echo "********************************************************************************** RELEASE ATTEMPT($((i + 1))) **********************************************************************************"
+#            sleep 5
+#          done
+#        env:
+#          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
+#          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
+#          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
+#          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
+#          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
+#          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
+#
+#      - name: Release driver projects to Maven Central portal
+#        run: |
+#          for i in {1..3}; do
+#            if ./gradlew jreleaserFullRelease -PreleaseBundle=driver --no-daemon --stacktrace; then
+#              exit 0
+#            fi
+#            if [ $i -eq 3 ]; then
+#              echo "Failed release after 3 attempts"
+#              exit 1
+#            fi
+#            echo
+#            echo "********************************************************************************** RELEASE ATTEMPT($((i + 1))) **********************************************************************************"
+#            sleep 5
+#          done
+#        env:
+#          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
+#          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
+#          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
+#          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
+#          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
+#          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
+#
+#      - name: Release template projects to Maven Central portal
+#        run: |
+#          for i in {1..3}; do
+#            if ./gradlew jreleaserFullRelease -PreleaseBundle=template --no-daemon --stacktrace; then
+#              exit 0
+#            fi
+#            if [ $i -eq 3 ]; then
+#              echo "Failed release after 3 attempts"
+#              exit 1
+#            fi
+#            echo
+#            echo "********************************************************************************** RELEASE ATTEMPT($((i + 1))) **********************************************************************************"
+#            sleep 5
+#          done
+#        env:
+#          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
+#          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
+#          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
+#          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
+#          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
+#          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
+#
+#      - name: Release transactioner projects to Maven Central portal
+#        run: |
+#          for i in {1..3}; do
+#            if ./gradlew jreleaserFullRelease -PreleaseBundle=transactioner --no-daemon --stacktrace; then
+#              exit 0
+#            fi
+#            if [ $i -eq 3 ]; then
+#              echo "Failed release after 3 attempts"
+#              exit 1
+#            fi
+#            echo
+#            echo "********************************************************************************** RELEASE ATTEMPT($((i + 1))) **********************************************************************************"
+#            sleep 5
+#          done
+#        env:
+#          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
+#          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
+#          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
+#          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
+#          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
+#          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
+#
+#      - name: JReleaser release output
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: jreleaser-release
+#          path: |
+#            build/jreleaser/output.properties
+#            build/jreleaser/trace.log
 
-      - name: Perform publish
-        run: ./gradlew publish -PreleaseBundle=all
-        env:
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-
-      - name: Release core projects to Maven Central portal
+      - name: Publish Release in Github
         run: |
-          for i in {1..3}; do
-            if ./gradlew jreleaserFullRelease -PreleaseBundle=core --no-daemon --stacktrace; then
-              exit 0
-            fi
-            if [ $i -eq 3 ]; then
-              echo "Failed release after 3 attempts"
-              exit 1
-            fi
-            echo
-            echo "********************************************************************************** RELEASE ATTEMPT($((i + 1))) **********************************************************************************"
-            sleep 5
-          done
+          ./gradlew jreleaserRelease
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
@@ -72,81 +158,6 @@ jobs:
           JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Release driver projects to Maven Central portal
-        run: |
-          for i in {1..3}; do
-            if ./gradlew jreleaserFullRelease -PreleaseBundle=driver --no-daemon --stacktrace; then
-              exit 0
-            fi
-            if [ $i -eq 3 ]; then
-              echo "Failed release after 3 attempts"
-              exit 1
-            fi
-            echo
-            echo "********************************************************************************** RELEASE ATTEMPT($((i + 1))) **********************************************************************************"
-            sleep 5
-          done
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Release template projects to Maven Central portal
-        run: |
-          for i in {1..3}; do
-            if ./gradlew jreleaserFullRelease -PreleaseBundle=template --no-daemon --stacktrace; then
-              exit 0
-            fi
-            if [ $i -eq 3 ]; then
-              echo "Failed release after 3 attempts"
-              exit 1
-            fi
-            echo
-            echo "********************************************************************************** RELEASE ATTEMPT($((i + 1))) **********************************************************************************"
-            sleep 5
-          done
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Release transactioner projects to Maven Central portal
-        run: |
-          for i in {1..3}; do
-            if ./gradlew jreleaserFullRelease -PreleaseBundle=transactioner --no-daemon --stacktrace; then
-              exit 0
-            fi
-            if [ $i -eq 3 ]; then
-              echo "Failed release after 3 attempts"
-              exit 1
-            fi
-            echo
-            echo "********************************************************************************** RELEASE ATTEMPT($((i + 1))) **********************************************************************************"
-            sleep 5
-          done
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: JReleaser release output
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jreleaser-release
-          path: |
-            build/jreleaser/output.properties
-            build/jreleaser/trace.log
 
 #      - name: Synchronizing develop branch
 #        run: |

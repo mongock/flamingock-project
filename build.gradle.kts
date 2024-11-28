@@ -29,7 +29,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.4"
+    version = "0.0.5"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
@@ -254,7 +254,7 @@ subprojects {
                                 // JRELEASER_MAVENCENTRAL_PASSWORD
 
                                 create("sonatype") {
-                                    active.set(Active.NEVER)
+                                    active.set(Active.ALWAYS)
                                     applyMavenCentralRules.set(true)
                                     url.set("https://central.sonatype.com/api/v1/publisher")
                                     stagingRepository("build/staging-deploy")
@@ -360,4 +360,4 @@ fun Project.getTabsPrefix(): String {
 }
 
 fun Project.getIsReleasing() =
-    gradle.startParameter.taskNames.contains("jreleaserFullRelease") || gradle.startParameter.taskNames.contains("publish")
+    gradle.startParameter.taskNames.contains("jreleaserDeploy") || gradle.startParameter.taskNames.contains("publish")
