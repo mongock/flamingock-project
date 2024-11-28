@@ -57,7 +57,7 @@ val projectNameMaxLength = projectsToRelease.maxOf { it.length }
 val tabWidth = 8 //Usually 8 spaces)
 val statusPosition = ((projectNameMaxLength / tabWidth) + 1) * tabWidth
 
-//val client: HttpClient = HttpClient.newHttpClient()
+val httpClient: HttpClient = HttpClient.newHttpClient()
 val mavenUsername: String = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
 val mavenPassword: String = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
 val encodedCredentials: String = Base64.getEncoder()
@@ -287,7 +287,8 @@ fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
         .GET()
         .build()
 
-    val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
+
+    val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
     logger.debug("${project.name}: response from Maven Publisher[${response.statusCode()}]: ${response.body()}")
     return if (response.statusCode() == 200) {
         val jsonObject = JSONObject(response.body())
