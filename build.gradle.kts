@@ -60,7 +60,7 @@ val statusPosition = ((projectNameMaxLength / tabWidth) + 1) * tabWidth
 val httpClient: HttpClient = HttpClient.newHttpClient()
 val mavenUsername: String? = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
 val mavenPassword: String? = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
-val encodedCredentials: String? = if(mavenUsername != null && mavenPassword != null)Base64.getEncoder()
+val encodedCredentials: String? = if (mavenUsername != null && mavenPassword != null) Base64.getEncoder()
     .encodeToString("$mavenUsername:$mavenPassword".toByteArray()) else null
 
 
@@ -71,9 +71,9 @@ subprojects {
 
 
     val tabsPrefix = getTabsPrefix()
-    if(isReleasing) {
+    if (isReleasing) {
         if (project.isReleasable()) {
-            if(!project.getIfAlreadyReleasedFromCentralPortal()) {
+            if (!project.getIfAlreadyReleasedFromCentralPortal()) {
                 logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDE80 PUBLISHING ]")
                 java {
                     withSourcesJar()
@@ -278,14 +278,10 @@ subprojects {
 
 fun Project.isReleasable(): Boolean = projectsToRelease.contains(name)
 
-fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
+fun Project.getIfAlreadyReleasedFromCentralPortal(): Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create(url))
-        .header("accept", "application/json")
-        .header("Authorization", "Basic $encodedCredentials")
-        .GET()
-        .build()
+    val request = HttpRequest.newBuilder().uri(URI.create(url)).header("accept", "application/json")
+        .header("Authorization", "Basic $encodedCredentials").GET().build()
 
 
     val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
@@ -323,5 +319,5 @@ fun Project.getTabsPrefix(): String {
     return "\t".repeat(tabsNeeded)
 }
 
-fun Project.getIsReleasing() = gradle.startParameter.taskNames.contains("jreleaserFullRelease") ||
-        gradle.startParameter.taskNames.contains("publish")
+fun Project.getIsReleasing() =
+    gradle.startParameter.taskNames.contains("jreleaserFullRelease") || gradle.startParameter.taskNames.contains("publish")
