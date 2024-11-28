@@ -19,10 +19,6 @@ include("flamingock-core-api")
 project(":flamingock-core-api").name = "flamingock-core-api"
 project(":flamingock-core-api").projectDir = file("flamingock-core-api")
 
-include("flamingock-core-cloud-api")
-project(":flamingock-core-cloud-api").projectDir = file("flamingock-core-cloud-api")
-project(":flamingock-core-cloud-api").name = "flamingock-core-cloud-api"
-
 include("flamingock-core")
 project(":flamingock-core").projectDir = file("flamingock-core")
 project(":flamingock-core").name = "flamingock-core"

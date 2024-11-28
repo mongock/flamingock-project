@@ -37,6 +37,7 @@ allprojects {
 val coreProjects = setOf(
     "flamingock-core",
     "flamingock-core-api",
+    "",
     "flamingock-springboot-v2-runner",
     "flamingock-springboot-v3-runner",
     "utils"
