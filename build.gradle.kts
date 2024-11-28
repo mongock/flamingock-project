@@ -108,43 +108,6 @@ jreleaser {
                         |({{commitAuthor}})
                     |""".trimMargin().replace("\n", "").replace("\r", ""))
 
-
-                category {
-                    title.set(":twisted_rightwards_arrows: Merge")
-                    key.set("merge")
-                    labels.set(setOf("merge"))
-                }
-
-                category {
-                    title.set(":sparkles: New Features")
-                    key.set("features")
-                    labels.set(setOf("feat"))
-                }
-                category {
-                    title.set(":adhesive_bandage: Bug Fixes")
-                    key.set("fixes")
-                    labels.set(setOf("fix"))
-                }
-                category {
-                    title.set(":construction_worker: Maintenance")
-                    key.set("tasks")
-                    labels.set(setOf(
-                        "chore",
-                        "task",
-                        "refactor"
-                    ))
-                }
-                category {
-                    title.set(":memo: Documentation")
-                    key.set("docs")
-                    labels.set(setOf("doc"))
-                }
-                category {
-                    title.set(":test_tube: Tests")
-                    key.set("test")
-                    labels.set(setOf("test"))
-                }
-
                 contributors {
                     enabled.set(true)
                     format.set("- {{contributorName}} ({{contributorUsernameAsLink}})")
