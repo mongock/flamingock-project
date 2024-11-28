@@ -5,9 +5,9 @@ rootProject.name = "flamingock-project"
 //////////////////////////////////////
 // CORE
 //////////////////////////////////////
-include("flamingock-template")
-project(":flamingock-template").projectDir = file("flamingock-template")
-project(":flamingock-template").name = "flamingock-template"
+include("flamingock-core-template")
+project(":flamingock-core-template").projectDir = file("flamingock-core-template")
+project(":flamingock-core-template").name = "flamingock-core-template"
 
 
 include("cloud-transactioners:sql-cloud-transactioner")
