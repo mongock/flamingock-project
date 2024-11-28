@@ -34,11 +34,15 @@ allprojects {
 
 }
 
-val projectsToRelease = setOf(
+val coreProjects = setOf(
     "flamingock-core",
     "flamingock-core-api",
     "flamingock-springboot-v2-runner",
     "flamingock-springboot-v3-runner",
+    "utils"
+)
+
+val localDriverProjects = setOf(
     "couchbase-driver",
     "couchbase-springboot-v2-driver",
     "dynamodb-driver",
@@ -52,8 +56,21 @@ val projectsToRelease = setOf(
     "sql-cloud-transactioner"
 )
 
+val templateProjects = setOf(
+    "sql-template",
+    "sql-springboot-template",
+    "sql-cloud-transactioner"
+)
 
-val projectNameMaxLength = projectsToRelease.maxOf { it.length }
+
+val transactionerProjects = setOf(
+    "sql-cloud-transactioner"
+)
+
+val allProjects = coreProjects + localDriverProjects + templateProjects + transactionerProjects
+
+
+val projectNameMaxLength = coreProjects.maxOf { it.length }
 val tabWidth = 8 //Usually 8 spaces)
 val statusPosition = ((projectNameMaxLength / tabWidth) + 1) * tabWidth
 
@@ -62,9 +79,22 @@ val mavenUsername: String? = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
 val mavenPassword: String? = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
 val encodedCredentials: String? = if (mavenUsername != null && mavenPassword != null) Base64.getEncoder()
     .encodeToString("$mavenUsername:$mavenPassword".toByteArray()) else null
+val releaseBundle: String? = project.findProperty("releaseBundle") as String?
+val projectsToRelease = when(releaseBundle) {
+    "core" -> coreProjects
+    "driver" -> localDriverProjects
+    "template" -> templateProjects
+    "transactioner" -> transactionerProjects
+    "all" -> allProjects
+    else -> setOf()
+}
 
 
 val isReleasing = getIsReleasing()
+
+if(isReleasing) {
+    logger.lifecycle("Release bundle: $releaseBundle")
+}
 
 subprojects {
     apply(plugin = "java-library")
@@ -74,7 +104,7 @@ subprojects {
     if (isReleasing) {
         if (project.isReleasable()) {
             if (!project.getIfAlreadyReleasedFromCentralPortal()) {
-                logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDE80 PUBLISHING ]")
+                logger.lifecycle("${project.name}${tabsPrefix}\uD83D\uDE80 PUBLISHING")
                 java {
                     withSourcesJar()
                     withJavadocJar()
@@ -219,10 +249,10 @@ subprojects {
                     }
                 }
             } else {
-                logger.lifecycle("${project.name}${tabsPrefix}[ ✅ ALREADY PUBLISHED ]")
+                logger.lifecycle("${project.name}${tabsPrefix}✅  ALREADY PUBLISHED")
             }
         } else {
-            logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDCA4 NOT RELEASABLE ]")
+            logger.debug("${project.name}${tabsPrefix}\uD83D\uDCA4 NOT RELEASABLE")
         }
     }
 
