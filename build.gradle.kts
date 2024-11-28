@@ -29,40 +29,65 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.12-beta"
+    version = "0.0.13-beta"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
 }
 
-val projectsToRelease = setOf(
+val coreProjects = setOf(
     "flamingock-core",
     "flamingock-core-api",
+    "flamingock-core-template",
     "flamingock-springboot-v2-runner",
     "flamingock-springboot-v3-runner",
+    "utils"
+)
+
+val localDriverProjects = setOf(
+    "driver-common",
     "couchbase-driver",
     "couchbase-springboot-v2-driver",
     "dynamodb-driver",
+    "mongodb-facade",
     "mongodb-springdata-v2-driver",
     "mongodb-springdata-v3-driver",
     "mongodb-springdata-v4-driver",
     "mongodb-sync-v4-driver",
-    "mongodb-v3-driver",
+    "mongodb-v3-driver"
+)
+
+val templateProjects = setOf(
     "sql-template",
-    "sql-springboot-template",
-    "sql-cloud-transactioner"
+    "sql-springboot-template"
 )
 
 
-val projectNameMaxLength = projectsToRelease.maxOf { it.length }
+val transactionerProjects = setOf(
+    "sql-cloud-transactioner"
+)
+
+val allProjects = coreProjects + localDriverProjects + templateProjects + transactionerProjects
+
+
+val projectNameMaxLength = coreProjects.maxOf { it.length }
 val tabWidth = 8 //Usually 8 spaces)
 val statusPosition = ((projectNameMaxLength / tabWidth) + 1) * tabWidth
 
 val httpClient: HttpClient = HttpClient.newHttpClient()
 val mavenUsername: String? = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
 val mavenPassword: String? = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
-val encodedCredentials: String? = if(mavenUsername != null && mavenPassword != null)Base64.getEncoder()
+val encodedCredentials: String? = if (mavenUsername != null && mavenPassword != null) Base64.getEncoder()
     .encodeToString("$mavenUsername:$mavenPassword".toByteArray()) else null
+val releaseBundle: String? = project.findProperty("releaseBundle") as String?
+val projectsToRelease = when(releaseBundle) {
+    "core" -> coreProjects
+    "driver" -> localDriverProjects
+    "template" -> templateProjects
+    "transactioner" -> transactionerProjects
+    "all" -> allProjects
+    else -> setOf()
+}
 
 jreleaser {
     gitRootSearch.set(true)
@@ -92,15 +117,18 @@ jreleaser {
 
 val isReleasing = getIsReleasing()
 
+if(isReleasing) {
+    logger.lifecycle("Release bundle: $releaseBundle")
+}
+
 subprojects {
     apply(plugin = "java-library")
 
-
     val tabsPrefix = getTabsPrefix()
-    if(isReleasing) {
+    if (isReleasing) {
         if (project.isReleasable()) {
-            if(!project.getIfAlreadyReleasedFromCentralPortal()) {
-                logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDE80 PUBLISHING ]")
+            if (!project.getIfAlreadyReleasedFromCentralPortal()) {
+                logger.lifecycle("${project.name}${tabsPrefix}\uD83D\uDE80 PUBLISHING")
                 java {
                     withSourcesJar()
                     withJavadocJar()
@@ -210,10 +238,10 @@ subprojects {
                     }
                 }
             } else {
-                logger.lifecycle("${project.name}${tabsPrefix}[ ✅ ALREADY PUBLISHED ]")
+                logger.lifecycle("${project.name}${tabsPrefix}✅  ALREADY PUBLISHED")
             }
         } else {
-            logger.lifecycle("${project.name}${tabsPrefix}[ \uD83D\uDCA4 NOT RELEASABLE ]")
+            logger.debug("${project.name}${tabsPrefix}\uD83D\uDCA4 NOT RELEASABLE")
         }
     }
 
@@ -269,14 +297,10 @@ subprojects {
 
 fun Project.isReleasable(): Boolean = projectsToRelease.contains(name)
 
-fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
+fun Project.getIfAlreadyReleasedFromCentralPortal(): Boolean {
     val url = "https://central.sonatype.com/api/v1/publisher/published?namespace=${group}&name=$name&version=$version"
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create(url))
-        .header("accept", "application/json")
-        .header("Authorization", "Basic $encodedCredentials")
-        .GET()
-        .build()
+    val request = HttpRequest.newBuilder().uri(URI.create(url)).header("accept", "application/json")
+        .header("Authorization", "Basic $encodedCredentials").GET().build()
 
 
     val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
@@ -298,13 +322,6 @@ fun Project.getIfAlreadyReleasedFromCentralPortal() : Boolean {
 }
 
 
-fun getTabsPrefix(): String {
-    val currentPosition = project.name.length
-    val tabsNeeded = ((statusPosition - currentPosition + tabWidth - 1) / tabWidth) + 1
-    return "\t".repeat(tabsNeeded)
-}
-
-
 val String.isPalindrome: Boolean
     get() = this == this.reversed()
 
@@ -314,5 +331,5 @@ fun Project.getTabsPrefix(): String {
     return "\t".repeat(tabsNeeded)
 }
 
-fun Project.getIsReleasing() = gradle.startParameter.taskNames.contains("jreleaserFullRelease") ||
-        gradle.startParameter.taskNames.contains("publish")
+fun Project.getIsReleasing() =
+    gradle.startParameter.taskNames.contains("jreleaserFullRelease") || gradle.startParameter.taskNames.contains("publish")
