@@ -58,10 +58,10 @@ val tabWidth = 8 //Usually 8 spaces)
 val statusPosition = ((projectNameMaxLength / tabWidth) + 1) * tabWidth
 
 val httpClient: HttpClient = HttpClient.newHttpClient()
-val mavenUsername: String = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
-val mavenPassword: String = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
-val encodedCredentials: String = Base64.getEncoder()
-    .encodeToString("$mavenUsername:$mavenPassword".toByteArray())
+val mavenUsername: String? = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME")
+val mavenPassword: String? = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD")
+val encodedCredentials: String? = if(mavenUsername != null && mavenPassword != null)Base64.getEncoder()
+    .encodeToString("$mavenUsername:$mavenPassword".toByteArray()) else null
 
 
 val isReleasing = getIsReleasing()
