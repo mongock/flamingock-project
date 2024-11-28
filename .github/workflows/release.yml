@@ -1,8 +1,8 @@
 name: Release(manual)
 on:
-  workflow_dispatch:
+  push: # TODO: Change to `workflow_dispatch`
     branches:
-      - master
+      - jreleaser-github-release-format # TODO: Change to `master`
 jobs:
   release:
     runs-on: ubuntu-latest

@@ -29,7 +29,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.12-beta"
+    version = "0.0.4"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
@@ -80,10 +80,76 @@ jreleaser {
 
             changelog {
                 enabled.set(true)
+                sort.set(org.jreleaser.model.Changelog.Sort.DESC)
                 formatted.set(Active.ALWAYS)
                 links.set(true)
-                sort.set(org.jreleaser.model.Changelog.Sort.DESC)
+
+                releaseName.set("Release {{tagName}}")
+
+                content.set("""
+                ## Changelog
+
+                {{changelogChanges}}
+                {{changelogContributors}}
+                """)
+
+                categoryTitleFormat.set("### {{categoryTitle}}")
                 preset.set("conventional-commits")
+                format.set("""
+                    |- {{commitShortHash}} 
+                        |{{#commitIsConventional}}
+                            |{{#conventionalCommitIsBreakingChange}}:rotating_light: {{/conventionalCommitIsBreakingChange}}
+                            |{{#conventionalCommitScope}}**{{conventionalCommitScope}}**: {{/conventionalCommitScope}}
+                            |{{conventionalCommitDescription}}
+                            |{{#conventionalCommitBreakingChangeContent}} - *{{conventionalCommitBreakingChangeContent}}*{{/conventionalCommitBreakingChangeContent}}
+                        |{{/commitIsConventional}}
+                        |{{^commitIsConventional}}{{commitTitle}}{{/commitIsConventional}}
+                        |{{#commitHasIssues}}, closes{{#commitIssues}} {{issue}}{{/commitIssues}}{{/commitHasIssues}} 
+                        |({{commitAuthor}})
+                    |""".trimMargin().replace("\n", "").replace("\r", ""))
+
+
+                category {
+                    title.set(":twisted_rightwards_arrows: Merge")
+                    key.set("merge")
+                    labels.set(setOf("merge"))
+                }
+
+                category {
+                    title.set(":sparkles: New Features")
+                    key.set("features")
+                    labels.set(setOf("feat"))
+                }
+                category {
+                    title.set(":adhesive_bandage: Bug Fixes")
+                    key.set("fixes")
+                    labels.set(setOf("fix"))
+                }
+                category {
+                    title.set(":construction_worker: Maintenance")
+                    key.set("tasks")
+                    labels.set(setOf(
+                        "chore",
+                        "task",
+                        "refactor"
+                    ))
+                }
+                category {
+                    title.set(":memo: Documentation")
+                    key.set("docs")
+                    labels.set(setOf("doc"))
+                }
+                category {
+                    title.set(":test_tube: Tests")
+                    key.set("test")
+                    labels.set(setOf("test"))
+                }
+
+                contributors {
+                    enabled.set(true)
+                    format.set("- {{contributorName}} ({{contributorUsernameAsLink}})")
+                }
+
             }
         }
     }
@@ -198,7 +264,7 @@ subprojects {
                                 // JRELEASER_MAVENCENTRAL_PASSWORD
 
                                 create("sonatype") {
-                                    active.set(Active.ALWAYS)
+                                    active.set(Active.NEVER)
                                     applyMavenCentralRules.set(true)
                                     url.set("https://central.sonatype.com/api/v1/publisher")
                                     stagingRepository("build/staging-deploy")
