@@ -28,7 +28,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.12-beta"
+    version = "0.0.13-beta"
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
@@ -37,30 +37,28 @@ allprojects {
 val coreProjects = setOf(
     "flamingock-core",
     "flamingock-core-api",
-    "",
+    "flamingock-core-template",
     "flamingock-springboot-v2-runner",
     "flamingock-springboot-v3-runner",
     "utils"
 )
 
 val localDriverProjects = setOf(
+    "driver-common",
     "couchbase-driver",
     "couchbase-springboot-v2-driver",
     "dynamodb-driver",
+    "mongodb-facade",
     "mongodb-springdata-v2-driver",
     "mongodb-springdata-v3-driver",
     "mongodb-springdata-v4-driver",
     "mongodb-sync-v4-driver",
-    "mongodb-v3-driver",
-    "sql-template",
-    "sql-springboot-template",
-    "sql-cloud-transactioner"
+    "mongodb-v3-driver"
 )
 
 val templateProjects = setOf(
     "sql-template",
-    "sql-springboot-template",
-    "sql-cloud-transactioner"
+    "sql-springboot-template"
 )
 
 
