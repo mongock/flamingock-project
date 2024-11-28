@@ -156,6 +156,6 @@ project(":metadata-generator").projectDir = file("metadata-generator")
 //////////////////////////////////////
 // INTERNAL
 //////////////////////////////////////
-include("cloud-importers:legacy-importer-mongodb")
-project(":cloud-importers:legacy-importer-mongodb").name = "legacy-importer-mongodb"
-project(":cloud-importers:legacy-importer-mongodb").projectDir = file("cloud-importers/legacy-importer-mongodb")
+include("cloud-importers:mongodb-sync4-cloud-importer")
+project(":cloud-importers:mongodb-sync4-cloud-importer").name = "mongodb-sync4-cloud-importer"
+project(":cloud-importers:mongodb-sync4-cloud-importer").projectDir = file("cloud-importers/mongodb-sync4-cloud-importer")
