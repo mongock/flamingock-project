@@ -272,7 +272,8 @@ subprojects {
                                     applyMavenCentralRules.set(true)
                                     url.set("https://central.sonatype.com/api/v1/publisher")
                                     stagingRepository("build/staging-deploy")
-                                    maxRetries.set(120)
+                                    maxRetries.set(90)
+                                    retryDelay.set(20)
                                 }
 
 
