@@ -363,7 +363,9 @@ fun Project.getTabsPrefix(): String {
 }
 
 fun Project.getIsReleasing() =
-    gradle.startParameter.taskNames.contains("jreleaserDeploy") || gradle.startParameter.taskNames.contains("publish")
+    gradle.startParameter.taskNames.contains("jreleaserFullRelease")
+            || gradle.startParameter.taskNames.contains("jreleaserDeploy")
+            || gradle.startParameter.taskNames.contains("publish")
 
 private val Project.verifyPublicationUrl: String
     get() {
