@@ -10,7 +10,7 @@ on:
 
     secrets:
       FLAMINGOCK_JRELEASER_GITHUB_TOKEN:
-        required: tru
+        required: true
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME:
         required: true
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD:
