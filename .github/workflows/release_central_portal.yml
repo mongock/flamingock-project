@@ -6,7 +6,7 @@ on:
 jobs:
   flamingock-core:
     name: Release flamingock-core module to Central Portal
-    uses: .github/workflows/release-module.ymll@master
+    uses: .github/workflows/release-module.yml@master
     with:
       module: flamingock-core
 
@@ -17,7 +17,7 @@ jobs:
       module: flamingock-core-api
 
   flamingock-core-template:
-    uses: .github/workflows/release-module.ymll@master
+    uses: .github/workflows/release-module.yml@master
     with:
       module: flamingock-core-template
 
