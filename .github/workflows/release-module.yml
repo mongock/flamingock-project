@@ -3,7 +3,6 @@ name: Release flamingock-core
 on:
   workflow_call:
 
-
 jobs:
   release flamingock-core:
     runs-on: ubuntu-latest
