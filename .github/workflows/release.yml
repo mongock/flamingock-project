@@ -1,119 +1,67 @@
-name: Release(manual)
+name: Release
 on:
   workflow_dispatch:
     branches:
       - master
+
+#  "flamingock-core-template",
+#  "flamingock-springboot-v2-runner",
+#  "flamingock-springboot-v3-runner",
+#  "utils"
+#  "driver-common",
+#  "couchbase-driver",
+#  "couchbase-springboot-v2-driver",
+#  "dynamodb-driver",
+#  "mongodb-facade",
+#  "mongodb-springdata-v2-driver",
+#  "mongodb-springdata-v3-driver",
+#  "mongodb-springdata-v4-driver",
+#  "mongodb-sync-v4-driver",
+#  "mongodb-v3-driver"
+#  "sql-template",
+#  "sql-springboot-template"
+#  "sql-cloud-transactioner"
+
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout project
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+  flamingock-core:
+    name: Release flamingock-core module to Central Portal
+    uses: ./.github/workflows/release-module.yml
+    with:
+      module: flamingock-core
 
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven-
+  flamingock-core-api:
+    name: Release flamingock-core-api module to Central Portal
+    uses: ./.github/workflows/release-module.yml
+    with:
+      module: flamingock-core-api
 
-      - name: Setup java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          server-id: central
-          server-username: JRELEASER_MAVENCENTRAL_USERNAME
-          server-password: JRELEASER_MAVENCENTRAL_PASSWORD
-          gpg-private-key: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-          gpg-passphrase: JRELEASER_GPG_PASSPHRASE
+  flamingock-core-template:
+    uses: ./.github/workflows/release-module.yml
+    with:
+      module: flamingock-core-template
 
-      - name: Configure Git User
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
+  github-release:
+    name: Publish Release to Github
+    needs: [flamingock-core, flamingock-core-api, flamingock-core-template]
+    run: |
+      ./gradlew jreleaserRelease
+    env:
+      JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
+      JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
+      JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
+      JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
+      JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
+      JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
 
-      - name: Set up GPG
-        run: |
-          echo "$GPG_SECRET_KEY" > private.asc
-          gpg --import --batch private.asc
-        env:
-          GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-
-#      - name: Build, unit and Integration tests
-#        run: ./gradlew clean build
-
-      - name: Perform publish
-        run: ./gradlew publish -PreleaseBundle=all
-        env:
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-
-      - name: Release core projects to Maven Central portal
-        run: |
-          ./infra/portalCentralDeploy.sh core 5 20
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Release driver projects to Maven Central portal
-        run: |
-          ./infra/portalCentralDeploy.sh driver 5 20
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Release template projects to Maven Central portal
-        run: |
-          ./infra/portalCentralDeploy.sh template 5 20
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Release transactioner projects to Maven Central portal
-        run: |
-          ./infra/portalCentralDeploy.sh transactioner 5 20
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Publish Release to Github
-        run: |
-            ./gradlew jreleaserRelease
-        env:
-            JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
-            JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
-            JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_PASSWORD }}
-            JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PUBLIC_KEY }}
-            JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
-            JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
-
-      - name: JReleaser release output
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jreleaser-release
-          path: |
-            build/jreleaser/output.properties
-            build/jreleaser/trace.log
+  release-output:
+    name: JReleaser release output
+    if: always()
+    uses: actions/upload-artifact@v4
+    with:
+      name: jreleaser-release
+      path: |
+        build/jreleaser/output.properties
+        build/jreleaser/trace.log
 
 #      - name: Synchronizing develop branch
 #        run: |
