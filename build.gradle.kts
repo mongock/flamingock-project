@@ -105,8 +105,9 @@ val projectsToRelease = if(module != null) {
 
 jreleaser {
     project {
-        description = "Description should be here"
-        copyright = "2024 dieppa"
+        description.set("Description should be here")
+        inceptionYear.set("2024")
+        authors.set(setOf("dieppa"))
     }
     gitRootSearch.set(true)
     release {
