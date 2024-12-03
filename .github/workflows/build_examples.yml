@@ -5,6 +5,7 @@ on:
       - master
 jobs:
   print-message:
+    runs-on: ubuntu-latest
     steps:
       - name: Print message
         run: echo "Hello world"
