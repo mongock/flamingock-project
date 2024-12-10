@@ -5,6 +5,7 @@
 While Mongock focused on versioning NoSQL databases, Flamingock extends this concept to all technologies, systems, and configurations. It ensures seamless deployment by managing configuration changes in dependent components and systems, with built-in auditing and rollback capabilities.
 
 Flamingock also introduces flexible,  extensible and customizable ways to define change units, offering a broader approach to system evolution beyond traditional code-based methods.
+
 ---
 
 ## 🔑 Key Features
