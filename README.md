@@ -27,7 +27,11 @@ Flamingock also introduces new mechanisms for defining changes in an extensible 
 
 - 👥 **Multi-Tenant Support**: Designed to handle multiple tenants within the same infrastructure.
 
-- 🔒 **Sophisticated Distributed Locking**: Ensures synchronized deployment of multiple service instances, maintaining consistency and preventing conflicts in distributed environments
+- 🔒 **Distributed Locking**: Ensures synchronized deployment of multiple service instances, maintaining consistency and preventing conflicts in distributed environments.
+
+- 🛠️ **Advanced Workflow Management**: Enables multiple streams of change units that can be organized to execute sequentially, in parallel, or as a combination, providing flexibility in managing complex processes.
+
+- 🔀 Parallel Execution with Multiple Instances: When workflows include parallel streams, they can be executed simultaneously by different service instances, maximizing efficiency in distributed deployments.
 ___
 
 ## 📂 Getting started with our examples  
