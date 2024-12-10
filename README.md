@@ -6,11 +6,17 @@ Flamingock is the evolution of Mongock, designed as a cloud-native solution for 
 
 ## 🔑 Key Features
 - 🔄 **Auditing & Rollback**: Comprehensive auditing capabilities with support for rollback of changes to ensure consistency and control.
+
 - ☁️ **Cloud-Native**: Optimized for cloud environments, providing scalability, flexibility, and high availability.
+
 - 🔗 **Extended System Support**: Expands on Mongock's support to all systems, technologies and configurations.
+
 - 🚀 **Seamless Deployment**: Deploy your application and systems together, ensuring version compatibility and reducing deployment friction.
+
 - 🧩 **Flexible Migration Templates**: Define migrations using YAML templates, providing a code-free option for managing changes.
+
 - ⚡ **GraalVM Support**: Enables the compilation of Java applications into native executables for improved performance.
+
 - 👥 **Multi-Tenant Support**: Designed to handle multiple tenants within the same infrastructure.
 
 ___
