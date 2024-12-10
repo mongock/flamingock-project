@@ -15,18 +15,19 @@ Flamingock also introduces new mechanisms for defining changes in an extensible 
 ## 🔑 Key Features
 - 🔄 **Auditing & Rollback**: Comprehensive auditing capabilities with support for rollback of changes to ensure consistency and control.
 
-- ☁️ **Cloud-Native**: Optimized for cloud environments, providing scalability, flexibility, and high availability.
+- ☁️ **Cloud-Native**: Offers a fully managed service by hosting Flamingock’s operational data on our servers, removing the need for users to set up and manage their own databases.
 
-- 🔗 **Extended System Support**: Expands on Mongock's support to all systems, technologies and configurations.
+- 🔗 **Extended System Support**: Expands on Mongock's support to all systems, databases, technologies and configurations.
 
 - 🚀 **Seamless Deployment**: Deploy your application and systems together, ensuring version compatibility and reducing deployment friction.
 
-- 🧩 **Flexible Migration Templates**: Define migrations using YAML templates, providing a code-free option for managing changes.
+- 🧩 **Flexible Migration Templates**: New mechanisms for defining changes, offering a no-code option to streamline and simplify change management.
 
 - ⚡ **GraalVM Support**: Enables the compilation of Java applications into native executables for improved performance.
 
 - 👥 **Multi-Tenant Support**: Designed to handle multiple tenants within the same infrastructure.
 
+- 🔒 **Sophisticated Distributed Locking**: Ensures synchronized deployment of multiple service instances, maintaining consistency and preventing conflicts in distributed environments
 ___
 
 ## 📂 Getting started with our examples  
