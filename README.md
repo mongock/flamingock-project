@@ -10,8 +10,6 @@ Flamingock also introduces new mechanisms for defining changes in an extensible 
 
 > Additionally, Flamingock offers multiple infrastructure setups for providing flexibility to users, as it introduces a Cloud offering whilst still retaining existing supported databases such as MongoDB, DynamoDB, or Couchbase.
 
----
-
 ## 🔑 Key Features
 - 🔄 **Auditing & Rollback**: Comprehensive auditing capabilities with support for rollback of changes to ensure consistency and control.
 
@@ -27,12 +25,8 @@ Flamingock also introduces new mechanisms for defining changes in an extensible 
 
 - 👥 **Multi-Tenant Support**: Designed to handle multiple tenants within the same infrastructure.
 
-___
-
 ## 📂 Getting started with our examples  
 For full examples of how to use Flamingock in various environments, check the [examples project](https://github.com/mongock/flamingock-examples).
-
-___
 
 ## 🔀 Migration from Mongock
 If you're transitioning from Mongock to Flamingock, we have separate migration guides for each use case:
@@ -42,12 +36,10 @@ If you're transitioning from Mongock to Flamingock, we have separate migration g
 
 Each guide provides specific instructions tailored to the corresponding environment. Follow the appropriate guide to ensure a smooth migration process.
 
-___
 
 ## 📢 Contributing
 We welcome contributions! If you have an idea for a new example or improvement to an existing one, feel free to submit a pull request. Check out our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-___
 
 ## 🤝 Get Involved
 ⭐ Star the [Flamingock repository](https://github.com/mongock/flamingock-project) to show your support!
@@ -56,12 +48,9 @@ ___
 
 💬 Join the discussion in the [Flamingock community](https://github.com/mongock/flamingock-project/discussions).
 
-___
 
 ## 📜 License
 This repository is licensed under the [Apache License 2.0](LICENSE.md).
-
-___
 
 ## 🔥 Explore, experiment, and empower your projects with Flamingock!
 Let us know what you think or where you’d like to see Flamingock used next.
