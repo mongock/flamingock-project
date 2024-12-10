@@ -1,4 +1,5 @@
 ![Header Image](misc/logo-with-text.png)
+___ 
 
 **Flamingock** is the evolution of Mongock, designed as a cloud-native solution for managing versioning, and auditing changes in systems that evolve alongside your application.
 
