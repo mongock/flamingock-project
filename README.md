@@ -1,11 +1,10 @@
 # Flamingock 🦩
 
-Flamingock is the evolution of Mongock, designed as a cloud-native solution for managing changes in systems that evolve alongside your application.
+**Flamingock** is the evolution of Mongock, designed as a cloud-native solution for managing, tracking, versioning and auditing changes in systems that evolve alongside your application.
 
 While Mongock focused on versioning NoSQL databases, Flamingock extends this concept to all technologies, systems, and configurations. It ensures seamless deployment by managing configuration changes in dependent components and systems, with built-in auditing and rollback capabilities.
 
 Flamingock also introduces flexible,  extensible and customizable ways to define change units, offering a broader approach to system evolution beyond traditional code-based methods.
-
 ---
 
 ## 🔑 Key Features
