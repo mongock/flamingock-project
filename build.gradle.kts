@@ -122,6 +122,11 @@ jreleaser {
                 ))
             }
 
+            prerelease {
+                enabled.set(true)
+                pattern.set(".*-(beta|snapshot|alpha)\$")
+            }
+
             changelog {
                 enabled.set(true)
                 sort.set(org.jreleaser.model.Changelog.Sort.DESC)
