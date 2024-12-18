@@ -18,7 +18,7 @@ package io.flamingock.oss.driver.couchbase.internal;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
-import io.flamingock.community.internal.LocalExecutionPlanner;
+import io.flamingock.core.driver.LocalExecutionPlanner;
 import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.configurator.core.CoreConfigurable;

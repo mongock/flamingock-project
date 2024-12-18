@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.community.internal;
+package io.flamingock.core.driver;
 
 import java.util.HashMap;
 import java.util.Map;

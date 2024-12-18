@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":flamingock-core"))
+    implementation(project(":flamingock-core"))
 
     implementation("org.mongodb:mongodb-driver-sync:4.3.3")
 

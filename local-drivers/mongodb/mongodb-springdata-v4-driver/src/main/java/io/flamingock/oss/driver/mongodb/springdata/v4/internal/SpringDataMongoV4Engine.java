@@ -26,7 +26,7 @@ import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongock.MongockImporter
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
 import io.flamingock.core.engine.local.Auditor;
-import io.flamingock.community.internal.LocalExecutionPlanner;
+import io.flamingock.core.driver.LocalExecutionPlanner;
 
 import java.util.Optional;
 

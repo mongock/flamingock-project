@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.community.internal.lock;
+package io.flamingock.core.driver.lock;
 
 public class LockEntryField {
     public static final String KEY_FIELD = "key";

@@ -18,8 +18,8 @@ package io.flamingock.oss.driver.dynamodb.internal;
 
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.TimeService;
-import io.flamingock.community.internal.LocalExecutionPlanner;
-import io.flamingock.community.internal.TransactionManager;
+import io.flamingock.core.driver.LocalExecutionPlanner;
+import io.flamingock.core.driver.TransactionManager;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
