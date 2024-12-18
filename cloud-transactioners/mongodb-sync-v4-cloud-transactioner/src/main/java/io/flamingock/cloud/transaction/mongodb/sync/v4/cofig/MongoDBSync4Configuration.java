@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.sync.v4;
+package io.flamingock.cloud.transaction.mongodb.sync.v4.cofig;
 
 import io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration;
-import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb.ReadWriteConfiguration;
 
 public class MongoDBSync4Configuration extends MongoDBDriverConfiguration {
 

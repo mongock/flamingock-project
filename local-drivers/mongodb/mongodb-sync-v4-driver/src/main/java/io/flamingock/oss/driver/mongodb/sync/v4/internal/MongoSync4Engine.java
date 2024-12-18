@@ -20,6 +20,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.cloud.transaction.mongodb.sync.v4.wrapper.MongoSync4TransactionWrapper;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
@@ -29,7 +30,7 @@ import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.commons.utils.TimeService;
 import io.flamingock.core.driver.TransactionManager;
-import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
+import io.flamingock.cloud.transaction.mongodb.sync.v4.cofig.MongoDBSync4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.mongock.MongockImporterModule;
 import org.bson.Document;
 

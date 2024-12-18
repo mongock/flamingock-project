@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.sync.v4.internal.mongodb;
+package io.flamingock.cloud.transaction.mongodb.sync.v4.wrapper;
 
 import io.flamingock.oss.driver.common.mongodb.DocumentWrapper;
 import org.bson.Document;

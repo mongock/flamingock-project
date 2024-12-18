@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.sync.v4.internal;
+package io.flamingock.cloud.transaction.mongodb.sync.v4.wrapper;
 
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
@@ -33,7 +33,7 @@ public class MongoSync4TransactionWrapper implements TransactionWrapper {
 
     private final TransactionManager<ClientSession> sessionManager;
 
-    MongoSync4TransactionWrapper(TransactionManager<ClientSession> sessionManager) {
+    public MongoSync4TransactionWrapper(TransactionManager<ClientSession> sessionManager) {
         this.sessionManager = sessionManager;
     }
 

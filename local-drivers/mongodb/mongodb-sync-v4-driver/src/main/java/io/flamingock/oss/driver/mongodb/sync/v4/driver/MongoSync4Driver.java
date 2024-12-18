@@ -22,7 +22,7 @@ import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.engine.local.LocalConnectionEngine;
-import io.flamingock.oss.driver.mongodb.sync.v4.MongoDBSync4Configuration;
+import io.flamingock.cloud.transaction.mongodb.sync.v4.cofig.MongoDBSync4Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4Engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
