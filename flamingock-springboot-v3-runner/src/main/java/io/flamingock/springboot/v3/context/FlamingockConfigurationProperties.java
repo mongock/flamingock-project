@@ -148,7 +148,7 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
-    public void setTransactionEnabled(Boolean transactionEnabled) {
+    public void setTransactionEnabled(boolean transactionEnabled) {
         coreConfiguration.setTransactionEnabled(transactionEnabled);
     }
 

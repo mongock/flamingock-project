@@ -126,7 +126,7 @@ public class CoreConfiguratorDelegate<
     }
 
     @Override
-    public HOLDER setTransactionEnabled(Boolean transactionEnabled) {
+    public HOLDER setTransactionEnabled(boolean transactionEnabled) {
         configuration.setTransactionEnabled(transactionEnabled);
         return holderSupplier.get();
     }

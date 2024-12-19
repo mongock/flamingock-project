@@ -69,7 +69,7 @@ public class CoreConfiguration implements CoreConfigurable {
      * To enable/disable transactions. It works together with the driver, so enabling transactions with a non-transactional
      * driver or a transactional driver with transaction mode off, will throw a MongockException
      */
-    private boolean transactionEnabled = true;
+    private Boolean transactionEnabled = null;
     /**
      * From version 5, author is not a mandatory field, but still needed for backward compatibility. This is why Mongock
      * has provided this field, so you can set the author once and forget about it.
@@ -187,7 +187,7 @@ public class CoreConfiguration implements CoreConfigurable {
     }
 
     @Override
-    public void setTransactionEnabled(Boolean transactionEnabled) {
+    public void setTransactionEnabled(boolean transactionEnabled) {
         this.transactionEnabled = transactionEnabled;
     }
 

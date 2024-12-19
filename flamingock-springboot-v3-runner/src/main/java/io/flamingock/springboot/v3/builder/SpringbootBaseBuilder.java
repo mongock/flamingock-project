@@ -189,7 +189,7 @@ public abstract class SpringbootBaseBuilder<
     }
 
     @Override
-    public HOLDER setTransactionEnabled(Boolean transactionEnabled) {
+    public HOLDER setTransactionEnabled(boolean transactionEnabled) {
         return coreConfiguratorDelegate.setTransactionEnabled(transactionEnabled);
     }
 

@@ -58,7 +58,7 @@ public interface CoreConfigurable {
 
     void setLegacyMigration(LegacyMigration legacyMigration);
 
-    void setTransactionEnabled(Boolean transactionEnabled);
+    void setTransactionEnabled(boolean transactionEnabled);
 
     void setDefaultAuthor(String defaultAuthor);
 

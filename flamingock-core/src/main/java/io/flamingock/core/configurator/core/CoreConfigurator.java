@@ -58,7 +58,7 @@ public interface CoreConfigurator<
 
     HOLDER setLegacyMigration(LegacyMigration legacyMigration);
 
-    HOLDER setTransactionEnabled(Boolean transactionEnabled);
+    HOLDER setTransactionEnabled(boolean transactionEnabled);
 
     HOLDER setDefaultAuthor(String defaultMigrationAuthor);
 
