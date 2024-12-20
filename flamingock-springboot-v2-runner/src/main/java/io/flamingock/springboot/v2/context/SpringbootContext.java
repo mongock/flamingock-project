@@ -18,7 +18,7 @@ package io.flamingock.springboot.v2.context;
 
 import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
-import io.flamingock.core.engine.local.driver.ConnectionDriver;
+import io.flamingock.core.engine.local.driver.LocalDriver;
 import io.flamingock.springboot.v2.SpringRunnerBuilder;
 import io.flamingock.springboot.v2.builder.FlamingockSpringboot;
 import io.flamingock.springboot.v2.builder.AbstractSpringbootBuilder;
@@ -54,7 +54,7 @@ public class SpringbootContext {
 
     @Bean("flamingock-builder")
     @Profile(Constants.NON_CLI_PROFILE)
-    public SpringRunnerBuilder localSpringbootBuilder(Optional<ConnectionDriver<?>> connectionDriverOptional,
+    public SpringRunnerBuilder localSpringbootBuilder(Optional<LocalDriver<?>> connectionDriverOptional,
                                                       FlamingockConfigurationProperties configurationProperties,
                                                       ApplicationContext springContext,
                                                       ApplicationEventPublisher applicationEventPublisher) {

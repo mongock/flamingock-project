@@ -39,16 +39,15 @@ import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
-import io.flamingock.core.transaction.TransactionWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Optional;
 
-public final class CloudConnectionEngine implements ConnectionEngine {
+public final class CloudEngine implements ConnectionEngine {
 
-    private static final Logger logger = LoggerFactory.getLogger(CloudConnectionEngine.class);
+    private static final Logger logger = LoggerFactory.getLogger(CloudEngine.class);
 
     private final EnvironmentId environmentId;
 
@@ -69,12 +68,12 @@ public final class CloudConnectionEngine implements ConnectionEngine {
         return new Factory(runnerId, coreConfiguration, cloudConfiguration, transactioner, requestBuilderFactory);
     }
 
-    private CloudConnectionEngine(EnvironmentId environmentId,
-                                  ServiceId serviceId,
-                                  String jwt,
-                                  AuditWriter auditWriter,
-                                  ExecutionPlanner executionPlanner,
-                                  CloudTransactioner cloudTransactioner) {
+    private CloudEngine(EnvironmentId environmentId,
+                        ServiceId serviceId,
+                        String jwt,
+                        AuditWriter auditWriter,
+                        ExecutionPlanner executionPlanner,
+                        CloudTransactioner cloudTransactioner) {
         this.environmentId =environmentId;
         this.serviceId = serviceId;
         this.jwt = jwt;
@@ -130,7 +129,7 @@ public final class CloudConnectionEngine implements ConnectionEngine {
             this.requestBuilderFactory = requestBuilderFactory;
         }
 
-        public CloudConnectionEngine initializeAndGet() {
+        public CloudEngine initializeAndGet() {
 
             checkTransactionalConsistency();
 
@@ -189,7 +188,7 @@ public final class CloudConnectionEngine implements ConnectionEngine {
                 transactioner.initialize();
             }
 
-            return new CloudConnectionEngine(
+            return new CloudEngine(
                     environmentId,
                     serviceId,
                     jwt,

@@ -16,7 +16,7 @@
 
 package io.flamingock.core.engine.local.driver;
 
-public interface ConnectionDriver<DRIVER_CONFIGURATION extends DriverConfigurable> extends LocalConnectionEngineFactory {
+public interface LocalDriver<DRIVER_CONFIGURATION extends DriverConfigurable> extends LocalEngineFactory {
 
-    ConnectionDriver<DRIVER_CONFIGURATION> setDriverConfiguration(DRIVER_CONFIGURATION configuration);
+    LocalDriver<DRIVER_CONFIGURATION> setDriverConfiguration(DRIVER_CONFIGURATION configuration);
 }

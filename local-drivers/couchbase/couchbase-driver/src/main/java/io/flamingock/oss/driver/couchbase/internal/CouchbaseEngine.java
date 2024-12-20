@@ -23,7 +23,8 @@ import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.engine.local.LocalConnectionEngine;
+import io.flamingock.core.engine.local.AbstractLocalEngine;
+import io.flamingock.core.engine.local.LocalEngine;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.commons.utils.TimeService;
@@ -31,7 +32,7 @@ import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
 
 import java.util.Optional;
 
-public class CouchbaseEngine implements LocalConnectionEngine {
+public class CouchbaseEngine extends AbstractLocalEngine {
 
     private final Collection collection;
     private final Cluster cluster;

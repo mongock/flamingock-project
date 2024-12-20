@@ -22,7 +22,8 @@ import io.flamingock.core.driver.LocalExecutionPlanner;
 import io.flamingock.core.driver.TransactionManager;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.engine.local.LocalConnectionEngine;
+import io.flamingock.core.engine.local.AbstractLocalEngine;
+import io.flamingock.core.engine.local.LocalEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.dynamodb.DynamoDBConfiguration;
 import io.flamingock.oss.driver.dynamodb.internal.mongock.ChangeEntryDynamoDB;
@@ -34,7 +35,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhanced
 
 import java.util.Optional;
 
-public class DynamoDBEngine implements LocalConnectionEngine {
+public class DynamoDBEngine extends AbstractLocalEngine {
 
     private final DynamoClients client;
     private final LocalConfigurable localConfiguration;

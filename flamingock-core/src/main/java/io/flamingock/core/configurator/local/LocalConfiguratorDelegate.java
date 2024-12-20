@@ -16,7 +16,7 @@
 
 package io.flamingock.core.configurator.local;
 
-import io.flamingock.core.engine.local.driver.ConnectionDriver;
+import io.flamingock.core.engine.local.driver.LocalDriver;
 
 import java.util.function.Supplier;
 
@@ -26,7 +26,7 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
 
     private final Supplier<HOLDER> holderSupplier;
 
-    private ConnectionDriver<?> connectionDriver;
+    private LocalDriver<?> connectionDriver;
 
     private LocalSystemModuleManager systemModules = new LocalSystemModuleManager();
 
@@ -38,13 +38,13 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
     }
 
     @Override
-    public HOLDER setDriver(ConnectionDriver<?> connectionDriver) {
+    public HOLDER setDriver(LocalDriver<?> connectionDriver) {
         this.connectionDriver = connectionDriver;
         return holderSupplier.get();
     }
 
     @Override
-    public ConnectionDriver<?> getDriver() {
+    public LocalDriver<?> getDriver() {
         return connectionDriver;
     }
 

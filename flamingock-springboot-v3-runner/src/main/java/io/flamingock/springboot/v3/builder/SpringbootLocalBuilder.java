@@ -25,8 +25,8 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
-import io.flamingock.core.engine.local.LocalConnectionEngine;
-import io.flamingock.core.engine.local.driver.ConnectionDriver;
+import io.flamingock.core.engine.local.LocalEngine;
+import io.flamingock.core.engine.local.driver.LocalDriver;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
@@ -69,7 +69,7 @@ public class SpringbootLocalBuilder extends AbstractSpringbootBuilder<Springboot
         logger.info("Generated runner id:  {}", runnerId);
 
         CoreConfigurable coreConfiguration = getCoreConfiguration();
-        LocalConnectionEngine engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
+        LocalEngine engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
                 coreConfiguration,
                 localConfiguratorDelegate.getLocalConfiguration()
@@ -123,12 +123,12 @@ public class SpringbootLocalBuilder extends AbstractSpringbootBuilder<Springboot
     ///////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public SpringbootLocalBuilder setDriver(ConnectionDriver<?> connectionDriver) {
+    public SpringbootLocalBuilder setDriver(LocalDriver<?> connectionDriver) {
         return localConfiguratorDelegate.setDriver(connectionDriver);
     }
 
     @Override
-    public ConnectionDriver<?> getDriver() {
+    public LocalDriver<?> getDriver() {
         return localConfiguratorDelegate.getDriver();
     }
 

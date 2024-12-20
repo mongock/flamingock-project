@@ -20,23 +20,17 @@ import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.engine.ConnectionEngine;
 
 import java.util.Optional;
 
-public interface LocalConnectionEngine extends ConnectionEngine {
+public interface LocalEngine extends ConnectionEngine {
     void initialize(RunnerId runnerId);
 
     Auditor getAuditor();
 
     Optional<? extends LocalSystemModule> getMongockLegacyImporterModule();
 
-    default void validate(CoreConfigurable coreConfiguration) {
-        Boolean transactionEnabled = coreConfiguration.getTransactionEnabled();
-        if(getTransactionWrapper().isPresent() && transactionEnabled != null && transactionEnabled) {
-            throw new FlamingockException("[transactionEnabled = true] and driver is not transactional");
-        }
-    }
+
 
 }

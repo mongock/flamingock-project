@@ -20,18 +20,16 @@ import io.flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
-import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.cloud.CloudConnectionEngine;
+import io.flamingock.core.cloud.CloudEngine;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
-import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -79,7 +77,7 @@ public class SpringbootCloudBuilder extends AbstractSpringbootBuilder<Springboot
         Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
         CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
 
-        CloudConnectionEngine.Factory engineFactory = CloudConnectionEngine.newFactory(
+        CloudEngine.Factory engineFactory = CloudEngine.newFactory(
                 runnerId,
                 getCoreConfiguration(),
                 cloudConfiguratorDelegate.getCloudConfiguration(),
@@ -87,7 +85,7 @@ public class SpringbootCloudBuilder extends AbstractSpringbootBuilder<Springboot
                 requestBuilderFactory
         );
 
-        CloudConnectionEngine engine = engineFactory.initializeAndGet();
+        CloudEngine engine = engineFactory.initializeAndGet();
 
         getSystemModuleManager().initialize(engine.getEnvironmentId(), engine.getServiceId(), engine.getJwt(), cloudConfiguratorDelegate.getCloudConfiguration().getHost());
 
