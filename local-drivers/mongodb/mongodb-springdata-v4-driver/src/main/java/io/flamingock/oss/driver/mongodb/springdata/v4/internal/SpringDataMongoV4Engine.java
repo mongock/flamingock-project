@@ -36,7 +36,6 @@ import java.util.Optional;
 public class SpringDataMongoV4Engine extends AbstractLocalEngine {
 
     private final MongoTemplate mongoTemplate;
-    private final LocalConfigurable localConfiguration;
     private final SpringDataMongoV4Configuration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
     private SpringDataMongoV4Auditor auditor;
@@ -49,11 +48,10 @@ public class SpringDataMongoV4Engine extends AbstractLocalEngine {
                                    CoreConfigurable coreConfiguration,
                                    LocalConfigurable localConfiguration,
                                    SpringDataMongoV4Configuration driverConfiguration) {
-        super(coreConfiguration);
+        super(localConfiguration);
         this.mongoTemplate = mongoTemplate;
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.localConfiguration = localConfiguration;
     }
 
     @Override
@@ -61,7 +59,9 @@ public class SpringDataMongoV4Engine extends AbstractLocalEngine {
         ReadWriteConfiguration readWriteConfiguration = new ReadWriteConfiguration(driverConfiguration.getBuiltMongoDBWriteConcern(),
                 new ReadConcern(driverConfiguration.getReadConcern()),
                 driverConfiguration.getReadPreference().getValue());
-        transactionWrapper = coreConfiguration.getTransactionEnabled() ? new SpringDataMongoV4TransactionWrapper(mongoTemplate, readWriteConfiguration) : null;
+        transactionWrapper = localConfiguration.isTransactionDisabled()
+                ? null
+                : new SpringDataMongoV4TransactionWrapper(mongoTemplate, readWriteConfiguration);
         auditor = new SpringDataMongoV4Auditor(
                 mongoTemplate,
                 driverConfiguration.getMigrationRepositoryName(),

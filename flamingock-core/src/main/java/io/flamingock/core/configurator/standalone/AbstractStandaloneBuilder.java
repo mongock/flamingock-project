@@ -168,11 +168,6 @@ abstract class AbstractStandaloneBuilder<
     }
 
     @Override
-    public HOLDER setTransactionEnabled(boolean transactionEnabled) {
-        return coreConfiguratorDelegate().setTransactionEnabled(transactionEnabled);
-    }
-
-    @Override
     public HOLDER setDefaultAuthor(String publicMigrationAuthor) {
         return coreConfiguratorDelegate().setDefaultAuthor(publicMigrationAuthor);
     }
@@ -242,10 +237,6 @@ abstract class AbstractStandaloneBuilder<
         return coreConfiguratorDelegate().getLegacyMigration();
     }
 
-    @Override
-    public Boolean getTransactionEnabled() {
-        return coreConfiguratorDelegate().getTransactionEnabled();
-    }
 
     @Override
     public String getDefaultAuthor() {

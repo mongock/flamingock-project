@@ -36,7 +36,6 @@ public class CouchbaseEngine extends AbstractLocalEngine {
 
     private final Collection collection;
     private final Cluster cluster;
-    private final LocalConfigurable LocalConfiguration;
 
     private CouchbaseAuditor auditor;
     private LocalExecutionPlanner executionPlanner;
@@ -47,14 +46,13 @@ public class CouchbaseEngine extends AbstractLocalEngine {
     public CouchbaseEngine(Cluster cluster,
                            Collection collection,
                            CoreConfigurable coreConfiguration,
-                           LocalConfigurable LocalConfiguration,
+                           LocalConfigurable localConfiguration,
                            CouchbaseConfiguration driverConfiguration) {
-        super(coreConfiguration);
+        super(localConfiguration);
         this.cluster = cluster;
         this.collection = collection;
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.LocalConfiguration = LocalConfiguration;
     }
 
     @Override

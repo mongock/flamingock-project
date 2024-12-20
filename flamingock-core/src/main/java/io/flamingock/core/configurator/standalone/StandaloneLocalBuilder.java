@@ -85,7 +85,6 @@ public class StandaloneLocalBuilder
                 localConfiguratorDelegate.getLocalConfiguration()
         );
 
-        checkTransactionalConsistency(engine.getTransactionWrapper().orElse(null));
 
         //adds Mongock legacy importer, if the user has required it
         engine.getMongockLegacyImporterModule().ifPresent(coreConfiguratorDelegate::addSystemModule);
@@ -119,13 +118,6 @@ public class StandaloneLocalBuilder
     }
 
 
-    private void checkTransactionalConsistency(TransactionWrapper transactionWrapper) {
-        Boolean transactionEnabled = coreConfiguratorDelegate().getTransactionEnabled();
-        if(transactionWrapper == null && transactionEnabled != null && transactionEnabled) {
-            throw new FlamingockException("[transactionEnabled = true] and driver is not transactional");
-        }
-
-    }
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -145,6 +137,16 @@ public class StandaloneLocalBuilder
     @Override
     public LocalConfigurable getLocalConfiguration() {
         return localConfiguratorDelegate.getLocalConfiguration();
+    }
+
+    @Override
+    public StandaloneLocalBuilder disableTransaction() {
+        return localConfiguratorDelegate.disableTransaction();
+    }
+
+    @Override
+    public boolean isTransactionDisabled() {
+        return localConfiguratorDelegate.isTransactionDisabled();
     }
 
 }

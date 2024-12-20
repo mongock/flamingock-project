@@ -100,7 +100,6 @@ class MongoSync4DriverTest {
                 .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
-                .setTransactionEnabled(true)
                 .build()
                 .run();
 
@@ -124,7 +123,7 @@ class MongoSync4DriverTest {
                 .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
-                .setTransactionEnabled(true)
+                
                 .build()
                 .run();
 
@@ -144,7 +143,7 @@ class MongoSync4DriverTest {
                 .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
-                .setTransactionEnabled(true)
+                
                 .build()
                 .run();
 
@@ -178,7 +177,7 @@ class MongoSync4DriverTest {
                 .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
-                .setTransactionEnabled(false)
+                .disableTransaction()
                 .build()
                 .run();
 
@@ -213,7 +212,7 @@ class MongoSync4DriverTest {
                     .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithTransaction"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
-                    .setTransactionEnabled(true)
+                    
                     .build()
                     .run();
         });
@@ -246,7 +245,7 @@ class MongoSync4DriverTest {
                     .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
-                    .setTransactionEnabled(false)
+                    .disableTransaction()
                     .build()
                     .run();
         });
@@ -281,7 +280,7 @@ class MongoSync4DriverTest {
                     .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithoutRollback"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
-                    .setTransactionEnabled(false)
+                    .disableTransaction()
                     .build()
                     .run();
         });

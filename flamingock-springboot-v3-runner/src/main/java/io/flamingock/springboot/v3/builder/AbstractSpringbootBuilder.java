@@ -188,11 +188,6 @@ public abstract class AbstractSpringbootBuilder<
     }
 
     @Override
-    public HOLDER setTransactionEnabled(boolean transactionEnabled) {
-        return coreConfiguratorDelegate.setTransactionEnabled(transactionEnabled);
-    }
-
-    @Override
     public HOLDER setDefaultAuthor(String publicMigrationAuthor) {
         return coreConfiguratorDelegate.setDefaultAuthor(publicMigrationAuthor);
     }
@@ -261,11 +256,6 @@ public abstract class AbstractSpringbootBuilder<
     @Override
     public LegacyMigration getLegacyMigration() {
         return coreConfiguratorDelegate.getLegacyMigration();
-    }
-
-    @Override
-    public Boolean getTransactionEnabled() {
-        return coreConfiguratorDelegate.getTransactionEnabled();
     }
 
     @Override

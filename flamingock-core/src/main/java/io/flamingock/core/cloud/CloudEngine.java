@@ -130,9 +130,6 @@ public final class CloudEngine implements ConnectionEngine {
         }
 
         public CloudEngine initializeAndGet() {
-
-            checkTransactionalConsistency();
-
             AuthClient authClient = new HttpAuthClient(
                     cloudConfiguration.getHost(),
                     cloudConfiguration.getApiVersion(),
@@ -198,15 +195,6 @@ public final class CloudEngine implements ConnectionEngine {
             );
         }
 
-        private void checkTransactionalConsistency() {
-            Boolean transactionEnabled = coreConfiguration.getTransactionEnabled();
-            if(transactioner == null && transactionEnabled != null && transactionEnabled) {
-                throw new FlamingockException("[transactionEnabled = true] and cloudTransactioner not provided");
-            }
-            if(transactioner != null && transactionEnabled != null && !transactionEnabled) {
-                throw new FlamingockException("[transactionEnabled = false] and cloudTransactioner provided. Either mark [transactionEnabled = true] or remove cloudTransactioner");
-            }
-        }
 
 
         public Runnable getCloser() {

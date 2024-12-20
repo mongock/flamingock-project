@@ -38,7 +38,6 @@ import java.util.Optional;
 public class DynamoDBEngine extends AbstractLocalEngine {
 
     private final DynamoClients client;
-    private final LocalConfigurable localConfiguration;
     private final DynamoDBConfiguration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
     private DynamoDBAuditor auditor;
@@ -51,17 +50,16 @@ public class DynamoDBEngine extends AbstractLocalEngine {
                           CoreConfigurable coreConfiguration,
                           LocalConfigurable localConfiguration,
                           DynamoDBConfiguration driverConfiguration) {
-        super(coreConfiguration);
+        super(localConfiguration);
         this.client = client;
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.localConfiguration = localConfiguration;
     }
 
     @Override
     protected void doInitialize(RunnerId runnerId) {
         TransactionManager<TransactWriteItemsEnhancedRequest.Builder> transactionManager = new TransactionManager<>(TransactWriteItemsEnhancedRequest::builder);
-        transactionWrapper = coreConfiguration.getTransactionEnabled() ? new DynamoDBTransactionWrapper(client, transactionManager) : null;
+        transactionWrapper = localConfiguration.isTransactionDisabled() ? null : new DynamoDBTransactionWrapper(client, transactionManager);
         auditor = new DynamoDBAuditor(client, transactionManager);
         auditor.initialize(driverConfiguration.isIndexCreation());
         DynamoDBLockService lockService = new DynamoDBLockService(client, TimeService.getDefault());

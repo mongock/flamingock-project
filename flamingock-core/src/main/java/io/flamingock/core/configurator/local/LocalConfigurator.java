@@ -24,4 +24,8 @@ public interface LocalConfigurator<HOLDER> {
     LocalDriver<?> getDriver();
 
     LocalConfigurable getLocalConfiguration();
+
+    HOLDER disableTransaction();
+
+    boolean isTransactionDisabled();
 }

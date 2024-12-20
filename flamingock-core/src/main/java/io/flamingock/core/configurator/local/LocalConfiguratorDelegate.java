@@ -53,5 +53,16 @@ public class LocalConfiguratorDelegate<HOLDER> implements LocalConfigurator<HOLD
         return LocalConfiguration;
     }
 
+    @Override
+    public HOLDER disableTransaction() {
+        getLocalConfiguration().setTransactionDisabled(true);
+        return holderSupplier.get();
+    }
+
+    @Override
+    public boolean isTransactionDisabled() {
+        return getLocalConfiguration().isTransactionDisabled();
+    }
+
 
 }

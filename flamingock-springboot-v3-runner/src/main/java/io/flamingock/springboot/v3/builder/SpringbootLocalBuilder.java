@@ -75,8 +75,6 @@ public class SpringbootLocalBuilder extends AbstractSpringbootBuilder<Springboot
                 localConfiguratorDelegate.getLocalConfiguration()
         );
 
-        checkTransactionalConsistency(engine.getTransactionWrapper().orElse(null));
-
         //adds Mongock legacy importer, if the user has required it
         engine.getMongockLegacyImporterModule().ifPresent(coreConfiguratorDelegate::addSystemModule);
 
@@ -106,13 +104,6 @@ public class SpringbootLocalBuilder extends AbstractSpringbootBuilder<Springboot
 
     }
 
-    private void checkTransactionalConsistency(TransactionWrapper transactionWrapper) {
-        Boolean transactionEnabled = coreConfiguratorDelegate.getTransactionEnabled();
-        if(transactionWrapper == null && transactionEnabled != null && transactionEnabled) {
-            throw new FlamingockException("[transactionEnabled = true] and driver not provided");
-        }
-    }
-
     @Override
     protected SpringbootLocalBuilder getSelf() {
         return this;
@@ -135,5 +126,15 @@ public class SpringbootLocalBuilder extends AbstractSpringbootBuilder<Springboot
     @Override
     public LocalConfigurable getLocalConfiguration() {
         return localConfiguratorDelegate.getLocalConfiguration();
+    }
+
+    @Override
+    public SpringbootLocalBuilder disableTransaction() {
+        return localConfiguratorDelegate.disableTransaction();
+    }
+
+    @Override
+    public boolean isTransactionDisabled() {
+        return localConfiguratorDelegate.isTransactionDisabled();
     }
 }

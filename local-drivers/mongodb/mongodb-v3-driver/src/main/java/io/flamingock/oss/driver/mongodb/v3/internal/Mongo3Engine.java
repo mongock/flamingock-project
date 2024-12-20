@@ -39,7 +39,6 @@ public class Mongo3Engine extends AbstractLocalEngine {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;
-    private final LocalConfigurable localConfiguration;
     private final MongoDB3Configuration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
     private Mongo3Auditor auditor;
@@ -53,18 +52,19 @@ public class Mongo3Engine extends AbstractLocalEngine {
                         CoreConfigurable coreConfiguration,
                         LocalConfigurable localConfiguration,
                         MongoDB3Configuration driverConfiguration) {
-        super(coreConfiguration);
+        super(localConfiguration);
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
-        this.localConfiguration = localConfiguration;
     }
 
     @Override
     protected void doInitialize(RunnerId runnerId) {
         TransactionManager<ClientSession> sessionManager = new TransactionManager<>(mongoClient::startSession);
-        transactionWrapper = coreConfiguration.getTransactionEnabled() ? new Mongo3TransactionWrapper(sessionManager) : null;
+        transactionWrapper = localConfiguration.isTransactionDisabled()
+                ? null
+                : new Mongo3TransactionWrapper(sessionManager);
         //Auditor
         auditor = new Mongo3Auditor(database,
                 driverConfiguration.getMigrationRepositoryName(),

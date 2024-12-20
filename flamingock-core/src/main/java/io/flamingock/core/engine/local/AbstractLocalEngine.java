@@ -2,14 +2,14 @@ package io.flamingock.core.engine.local;
 
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.configurator.core.CoreConfigurable;
+import io.flamingock.core.configurator.local.LocalConfigurable;
 
 public abstract class AbstractLocalEngine implements LocalEngine {
 
-    private final CoreConfigurable coreConfiguration;
+    protected final LocalConfigurable localConfiguration;
 
-    protected AbstractLocalEngine(CoreConfigurable coreConfiguration) {
-        this.coreConfiguration = coreConfiguration;
+    protected AbstractLocalEngine(LocalConfigurable localConfiguration) {
+        this.localConfiguration = localConfiguration;
     }
 
     public void initialize(RunnerId runnerId) {
@@ -20,9 +20,9 @@ public abstract class AbstractLocalEngine implements LocalEngine {
     abstract protected void doInitialize(RunnerId runnerId);
 
     private void validate() {
-        Boolean transactionEnabled = coreConfiguration.getTransactionEnabled();
-        if (!getTransactionWrapper().isPresent() && transactionEnabled != null && transactionEnabled) {
-            throw new FlamingockException("[transactionEnabled = true] and driver is not transactional");
+        boolean transactionEnabled = !localConfiguration.isTransactionDisabled();
+        if (!getTransactionWrapper().isPresent() && transactionEnabled) {
+            throw new FlamingockException("[transactionDisabled = false] and driver is not transactional. Either set transactionDisabled = true or provide a transactional driver");
         }
     }
 }
