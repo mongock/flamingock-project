@@ -79,7 +79,6 @@ public class SpringbootCloudBuilder extends AbstractSpringbootBuilder<Springboot
         Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
         CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
 
-        checkTransactionalConsistency(transactioner);
         CloudConnectionEngine.Factory engineFactory = CloudConnectionEngine.newFactory(
                 runnerId,
                 getCoreConfiguration(),
@@ -115,16 +114,6 @@ public class SpringbootCloudBuilder extends AbstractSpringbootBuilder<Springboot
                 engineFactory.getCloser()
         );
 
-    }
-
-    private void checkTransactionalConsistency(TransactionWrapper transactionWrapper) {
-        Boolean transactionEnabled = coreConfiguratorDelegate.getTransactionEnabled();
-        if(transactionWrapper == null && transactionEnabled != null && transactionEnabled) {
-            throw new FlamingockException("[transactionEnabled = true] and cloudTransactioner not provided");
-        }
-        if(transactionWrapper != null && transactionEnabled != null && !transactionEnabled) {
-            throw new FlamingockException("[transactionEnabled = false] and cloudTransactioner provided. Either mark [transactionEnabled = true] or remove cloudTransactioner");
-        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

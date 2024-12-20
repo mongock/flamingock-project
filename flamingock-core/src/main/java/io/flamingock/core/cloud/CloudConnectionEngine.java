@@ -21,6 +21,7 @@ import io.flamingock.commons.utils.TimeService;
 import io.flamingock.commons.utils.http.Http;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.api.auth.AuthResponse;
 import io.flamingock.core.cloud.audit.HtttpAuditWriter;
 import io.flamingock.core.cloud.auth.AuthClient;
@@ -38,6 +39,7 @@ import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
+import io.flamingock.core.transaction.TransactionWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,6 +132,8 @@ public final class CloudConnectionEngine implements ConnectionEngine {
 
         public CloudConnectionEngine initializeAndGet() {
 
+            checkTransactionalConsistency();
+
             AuthClient authClient = new HttpAuthClient(
                     cloudConfiguration.getHost(),
                     cloudConfiguration.getApiVersion(),
@@ -194,6 +198,17 @@ public final class CloudConnectionEngine implements ConnectionEngine {
                     transactioner
             );
         }
+
+        private void checkTransactionalConsistency() {
+            Boolean transactionEnabled = coreConfiguration.getTransactionEnabled();
+            if(transactioner == null && transactionEnabled != null && transactionEnabled) {
+                throw new FlamingockException("[transactionEnabled = true] and cloudTransactioner not provided");
+            }
+            if(transactioner != null && transactionEnabled != null && !transactionEnabled) {
+                throw new FlamingockException("[transactionEnabled = false] and cloudTransactioner provided. Either mark [transactionEnabled = true] or remove cloudTransactioner");
+            }
+        }
+
 
         public Runnable getCloser() {
             return () -> {
