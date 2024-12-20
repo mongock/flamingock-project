@@ -68,7 +68,9 @@ public class CouchbaseDriver implements LocalDriver<CouchbaseConfiguration> {
     }
 
     @Override
-    public LocalEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
+    public LocalEngine initializeAndGetEngine(RunnerId runnerId, 
+                                              CoreConfigurable coreConfiguration, 
+                                              LocalConfigurable localConfiguration) {
         CouchbaseEngine couchbaseEngine = new CouchbaseEngine(
                 cluster,
                 collection,

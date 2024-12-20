@@ -53,6 +53,7 @@ public class Mongo3Engine extends AbstractLocalEngine {
                         CoreConfigurable coreConfiguration,
                         LocalConfigurable localConfiguration,
                         MongoDB3Configuration driverConfiguration) {
+        super(coreConfiguration);
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);
         this.driverConfiguration = driverConfiguration;
@@ -61,7 +62,7 @@ public class Mongo3Engine extends AbstractLocalEngine {
     }
 
     @Override
-    public void initialize(RunnerId runnerId) {
+    protected void doInitialize(RunnerId runnerId) {
         TransactionManager<ClientSession> sessionManager = new TransactionManager<>(mongoClient::startSession);
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new Mongo3TransactionWrapper(sessionManager) : null;
         //Auditor

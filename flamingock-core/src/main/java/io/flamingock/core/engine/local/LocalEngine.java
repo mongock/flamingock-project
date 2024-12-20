@@ -16,21 +16,16 @@
 
 package io.flamingock.core.engine.local;
 
-import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.api.LocalSystemModule;
-import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.engine.ConnectionEngine;
 
 import java.util.Optional;
 
 public interface LocalEngine extends ConnectionEngine {
-    void initialize(RunnerId runnerId);
 
     Auditor getAuditor();
 
     Optional<? extends LocalSystemModule> getMongockLegacyImporterModule();
-
 
 
 }

@@ -54,6 +54,7 @@ public class MongoSync4Engine extends AbstractLocalEngine {
                             CoreConfigurable coreConfiguration,
                             LocalConfigurable localConfiguration,
                             MongoDBSync4Configuration driverConfiguration) {
+        super(coreConfiguration);
         this.mongoClient = mongoClient;
         this.database = mongoClient.getDatabase(databaseName);
         this.driverConfiguration = driverConfiguration;
@@ -62,7 +63,7 @@ public class MongoSync4Engine extends AbstractLocalEngine {
     }
 
     @Override
-    public void initialize(RunnerId runnerId) {
+    protected void doInitialize(RunnerId runnerId) {
         TransactionManager<ClientSession> sessionManager = new TransactionManager<>(mongoClient::startSession);
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new MongoSync4TransactionWrapper(sessionManager) : null;
         //Auditor

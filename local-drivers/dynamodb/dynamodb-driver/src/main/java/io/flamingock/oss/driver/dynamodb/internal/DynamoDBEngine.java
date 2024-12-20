@@ -51,6 +51,7 @@ public class DynamoDBEngine extends AbstractLocalEngine {
                           CoreConfigurable coreConfiguration,
                           LocalConfigurable localConfiguration,
                           DynamoDBConfiguration driverConfiguration) {
+        super(coreConfiguration);
         this.client = client;
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
@@ -58,7 +59,7 @@ public class DynamoDBEngine extends AbstractLocalEngine {
     }
 
     @Override
-    public void initialize(RunnerId runnerId) {
+    protected void doInitialize(RunnerId runnerId) {
         TransactionManager<TransactWriteItemsEnhancedRequest.Builder> transactionManager = new TransactionManager<>(TransactWriteItemsEnhancedRequest::builder);
         transactionWrapper = coreConfiguration.getTransactionEnabled() ? new DynamoDBTransactionWrapper(client, transactionManager) : null;
         auditor = new DynamoDBAuditor(client, transactionManager);
