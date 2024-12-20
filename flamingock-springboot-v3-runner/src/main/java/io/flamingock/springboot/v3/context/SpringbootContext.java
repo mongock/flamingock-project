@@ -21,7 +21,7 @@ import io.flamingock.core.configurator.local.LocalSystemModuleManager;
 import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.builder.FlamingockSpringboot;
-import io.flamingock.springboot.v3.builder.SpringbootBaseBuilder;
+import io.flamingock.springboot.v3.builder.AbstractSpringbootBuilder;
 import io.flamingock.commons.utils.Constants;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.ApplicationRunner;
@@ -58,7 +58,7 @@ public class SpringbootContext {
                                                       FlamingockConfigurationProperties configurationProperties,
                                                       ApplicationContext springContext,
                                                       ApplicationEventPublisher applicationEventPublisher) {
-        SpringbootBaseBuilder<?, ?, ?> springRunnerBuilder;
+        AbstractSpringbootBuilder<?, ?, ?> springRunnerBuilder;
         if (connectionDriverOptional.isPresent() && configurationProperties.isCloudConfigurationEmpty()) {
             springRunnerBuilder = FlamingockSpringboot.localBuilder(
                     configurationProperties.getCoreConfiguration(),

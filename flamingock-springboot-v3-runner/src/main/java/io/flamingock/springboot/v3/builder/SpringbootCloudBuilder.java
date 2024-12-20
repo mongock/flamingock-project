@@ -20,6 +20,7 @@ import io.flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
@@ -30,6 +31,7 @@ import io.flamingock.core.cloud.CloudConnectionEngine;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
+import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootCloudBuilder, CloudSystemModule, CloudSystemModuleManager>
+public class SpringbootCloudBuilder extends AbstractSpringbootBuilder<SpringbootCloudBuilder, CloudSystemModule, CloudSystemModuleManager>
         implements
         CloudConfigurator<SpringbootCloudBuilder>,
         SpringRunnerBuilder {
@@ -76,6 +78,8 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
 
         Http.RequestBuilderFactory requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
         CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
+
+        checkTransactionalConsistency(transactioner);
 
         CloudConnectionEngine.Factory engineFactory = CloudConnectionEngine.newFactory(
                 runnerId,
@@ -114,6 +118,16 @@ public class SpringbootCloudBuilder extends SpringbootBaseBuilder<SpringbootClou
 
     }
 
+
+    private void checkTransactionalConsistency(TransactionWrapper transactionWrapper) {
+        Boolean transactionEnabled = coreConfiguratorDelegate.getTransactionEnabled();
+        if(transactionWrapper == null && transactionEnabled != null && transactionEnabled) {
+            throw new FlamingockException("[transactionEnabled = true] and cloudTransactioner not provided");
+        }
+        if(transactionWrapper != null && transactionEnabled != null && !transactionEnabled) {
+            throw new FlamingockException("[transactionEnabled = false] and cloudTransactioner provided. Either mark [transactionEnabled = true] or remove cloudTransactioner");
+        }
+    }
     ///////////////////////////////////////////////////////////////////////////////////
     //  CLOUD
     ///////////////////////////////////////////////////////////////////////////////////

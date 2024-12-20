@@ -54,10 +54,10 @@ public final class PipelineRunnerCreator {
                 eventPublisher,
                 dependencyContext,
                 isThrowExceptionIfCannotObtainLock,
-                () -> {}
+                () -> {
+                }
         );
     }
-
 
 
     public static Runner create(RunnerId runnerId,
@@ -85,15 +85,15 @@ public final class PipelineRunnerCreator {
 
     private static Runner create(RunnerId runnerId,
                                  Pipeline pipeline,
-                                FlamingockMetadata metadata,
-                                AuditWriter auditWriter,
-                                TransactionWrapper transactionWrapper,
-                                ExecutionPlanner executionPlanner,
-                                CoreConfigurable coreConfiguration,
-                                EventPublisher eventPublisher,
-                                DependencyContext dependencyContext,
-                                boolean isThrowExceptionIfCannotObtainLock,
-                                Runnable finalizer) {
+                                 FlamingockMetadata metadata,
+                                 AuditWriter auditWriter,
+                                 TransactionWrapper transactionWrapper,
+                                 ExecutionPlanner executionPlanner,
+                                 CoreConfigurable coreConfiguration,
+                                 EventPublisher eventPublisher,
+                                 DependencyContext dependencyContext,
+                                 boolean isThrowExceptionIfCannotObtainLock,
+                                 Runnable finalizer) {
         //Instantiated here, so we don't wait until Runner.run() and fail fast
         final StageExecutor stageExecutor = new StageExecutor(dependencyContext, auditWriter, transactionWrapper);
         return new PipelineRunner(

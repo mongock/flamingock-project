@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2.builder;
+package io.flamingock.springboot.v3.builder;
 
 import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.runtime.dependency.Dependency;
@@ -37,20 +37,20 @@ import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.Stage;
-import io.flamingock.springboot.v2.SpringProfileFilter;
-import io.flamingock.springboot.v2.SpringRunnerBuilder;
-import io.flamingock.springboot.v2.configurator.SpringRunnerType;
-import io.flamingock.springboot.v2.configurator.SpringbootConfiguration;
-import io.flamingock.springboot.v2.configurator.SpringbootConfigurator;
-import io.flamingock.springboot.v2.configurator.SpringbootConfiguratorDelegate;
-import io.flamingock.springboot.v2.event.SpringPipelineCompletedEvent;
-import io.flamingock.springboot.v2.event.SpringPipelineFailedEvent;
-import io.flamingock.springboot.v2.event.SpringPipelineIgnoredEvent;
-import io.flamingock.springboot.v2.event.SpringPipelineStartedEvent;
-import io.flamingock.springboot.v2.event.SpringStageCompletedEvent;
-import io.flamingock.springboot.v2.event.SpringStageFailedEvent;
-import io.flamingock.springboot.v2.event.SpringStageIgnoredEvent;
-import io.flamingock.springboot.v2.event.SpringStageStartedEvent;
+import io.flamingock.springboot.v3.SpringProfileFilter;
+import io.flamingock.springboot.v3.SpringRunnerBuilder;
+import io.flamingock.springboot.v3.configurator.SpringRunnerType;
+import io.flamingock.springboot.v3.configurator.SpringbootConfiguration;
+import io.flamingock.springboot.v3.configurator.SpringbootConfigurator;
+import io.flamingock.springboot.v3.configurator.SpringbootConfiguratorDelegate;
+import io.flamingock.springboot.v3.event.SpringPipelineCompletedEvent;
+import io.flamingock.springboot.v3.event.SpringPipelineFailedEvent;
+import io.flamingock.springboot.v3.event.SpringPipelineIgnoredEvent;
+import io.flamingock.springboot.v3.event.SpringPipelineStartedEvent;
+import io.flamingock.springboot.v3.event.SpringStageCompletedEvent;
+import io.flamingock.springboot.v3.event.SpringStageFailedEvent;
+import io.flamingock.springboot.v3.event.SpringStageIgnoredEvent;
+import io.flamingock.springboot.v3.event.SpringStageStartedEvent;
 import io.flamingock.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
@@ -60,8 +60,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.util.Collections;
 import java.util.Map;
 
-public abstract class SpringbootBaseBuilder<
-        HOLDER extends SpringbootBaseBuilder<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER>,
+
+public abstract class AbstractSpringbootBuilder<
+        HOLDER extends AbstractSpringbootBuilder<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER>,
         SYSTEM_MODULE extends SystemModule,
         SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>>
         implements
@@ -74,9 +75,9 @@ public abstract class SpringbootBaseBuilder<
 
     protected final SpringbootConfiguratorDelegate<HOLDER> springbootConfiguratorDelegate;
 
-    protected SpringbootBaseBuilder(CoreConfiguration coreConfiguration,
-                                    SpringbootConfiguration springbootConfiguration,
-                                    SYSTEM_MODULE_MANAGER systemModuleManager) {
+    protected AbstractSpringbootBuilder(CoreConfiguration coreConfiguration,
+                                        SpringbootConfiguration springbootConfiguration,
+                                        SYSTEM_MODULE_MANAGER systemModuleManager) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, this::getSelf, systemModuleManager);
         this.springbootConfiguratorDelegate = new SpringbootConfiguratorDelegate<>(springbootConfiguration, this::getSelf);
     }
@@ -89,7 +90,6 @@ public abstract class SpringbootBaseBuilder<
         String beanName = dependency.isDefaultNamed() ? beanInstance.getClass().getSimpleName() : dependency.getName();
         configurableContext.getBeanFactory().registerSingleton(beanName, beanInstance);
     }
-
 
     @NotNull
     final protected EventPublisher createEventPublisher() {
@@ -297,7 +297,6 @@ public abstract class SpringbootBaseBuilder<
     public CoreConfiguration.MongockImporterConfiguration getMongockImporterConfiguration() {
         return coreConfiguratorDelegate.getMongockImporterConfiguration();
     }
-
 
     @Override
     public HOLDER setFlamingockMetadata(FlamingockMetadata metadata) {

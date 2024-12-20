@@ -18,6 +18,7 @@ package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
@@ -33,6 +34,7 @@ import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.transaction.TransactionWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +86,8 @@ public class StandaloneLocalBuilder
                 localConfiguratorDelegate.getLocalConfiguration()
         );
 
+        checkTransactionalConsistency(engine.getTransactionWrapper().orElse(null));
+
         //adds Mongock legacy importer, if the user has required it
         engine.getMongockLegacyImporterModule().ifPresent(coreConfiguratorDelegate::addSystemModule);
 
@@ -113,6 +117,15 @@ public class StandaloneLocalBuilder
                 getDependencyContext(),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
+    }
+
+
+    private void checkTransactionalConsistency(TransactionWrapper transactionWrapper) {
+        Boolean transactionEnabled = coreConfiguratorDelegate().getTransactionEnabled();
+        if(transactionWrapper == null && transactionEnabled != null && transactionEnabled) {
+            throw new FlamingockException("[transactionEnabled = true] and driver is not transactional");
+        }
+
     }
 
 

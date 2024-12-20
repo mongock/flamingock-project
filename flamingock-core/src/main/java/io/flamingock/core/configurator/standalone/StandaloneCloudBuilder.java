@@ -20,6 +20,7 @@ import io.flamingock.core.api.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
@@ -33,6 +34,7 @@ import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.transaction.TransactionWrapper;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,12 +83,15 @@ public class StandaloneCloudBuilder
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
 
+        CloudTransactioner transactioner = getCloudTransactioner().orElse(null);
+
+        checkTransactionalConsistency(transactioner);
 
         CloudConnectionEngine.Factory engineFactory = CloudConnectionEngine.newFactory(
                 runnerId,
                 coreConfiguratorDelegate.getCoreConfiguration(),
                 cloudConfiguratorDelegate.getCloudConfiguration(),
-                getCloudTransactioner().orElse(null),
+                transactioner,
                 Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE)
         );
 
@@ -120,6 +125,16 @@ public class StandaloneCloudBuilder
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
                 engineFactory.getCloser()
         );
+    }
+
+    private void checkTransactionalConsistency(TransactionWrapper transactionWrapper) {
+        Boolean transactionEnabled = coreConfiguratorDelegate().getTransactionEnabled();
+        if(transactionWrapper == null && transactionEnabled != null && transactionEnabled) {
+            throw new FlamingockException("[transactionEnabled = true] and cloudTransactioner not provided");
+        }
+        if(transactionWrapper != null && transactionEnabled != null && !transactionEnabled) {
+            throw new FlamingockException("[transactionEnabled = false] and cloudTransactioner provided. Either mark [transactionEnabled = true] or remove cloudTransactioner");
+        }
     }
 
 

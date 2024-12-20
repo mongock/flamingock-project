@@ -18,7 +18,7 @@ package io.flamingock.springboot.v3.builder;
 
 import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.core.api.metadata.FlamingockMetadata;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
@@ -30,6 +30,7 @@ import io.flamingock.core.engine.local.driver.ConnectionDriver;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
+import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.springboot.v3.SpringDependencyContext;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;
 import io.flamingock.springboot.v3.SpringUtil;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
-public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLocalBuilder, LocalSystemModule, LocalSystemModuleManager>
+public class SpringbootLocalBuilder extends AbstractSpringbootBuilder<SpringbootLocalBuilder, LocalSystemModule, LocalSystemModuleManager>
         implements
         LocalConfigurator<SpringbootLocalBuilder>,
         SpringRunnerBuilder {
@@ -74,6 +75,7 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
                 localConfiguratorDelegate.getLocalConfiguration()
         );
 
+        checkTransactionalConsistency(engine.getTransactionWrapper().orElse(null));
 
         //adds Mongock legacy importer, if the user has required it
         engine.getMongockLegacyImporterModule().ifPresent(coreConfiguratorDelegate::addSystemModule);
@@ -102,6 +104,13 @@ public class SpringbootLocalBuilder extends SpringbootBaseBuilder<SpringbootLoca
                 coreConfiguration.isThrowExceptionIfCannotObtainLock()
         );
 
+    }
+
+    private void checkTransactionalConsistency(TransactionWrapper transactionWrapper) {
+        Boolean transactionEnabled = coreConfiguratorDelegate.getTransactionEnabled();
+        if(transactionWrapper == null && transactionEnabled != null && transactionEnabled) {
+            throw new FlamingockException("[transactionEnabled = true] and driver not provided");
+        }
     }
 
     @Override
