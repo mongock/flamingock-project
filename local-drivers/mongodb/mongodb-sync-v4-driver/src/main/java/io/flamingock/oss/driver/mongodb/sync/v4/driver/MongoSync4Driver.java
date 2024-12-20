@@ -69,12 +69,12 @@ public class MongoSync4Driver implements ConnectionDriver<MongoDBSync4Configurat
 
 
     @Override
-    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration) {
+    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
         MongoSync4Engine engine = new MongoSync4Engine(
                 mongoClient,
                 databaseName,
                 coreConfiguration,
-                communityConfiguration,
+                localConfiguration,
                 driverConfiguration != null ? driverConfiguration : MongoDBSync4Configuration.getDefault());
         engine.initialize(runnerId);
         return engine;

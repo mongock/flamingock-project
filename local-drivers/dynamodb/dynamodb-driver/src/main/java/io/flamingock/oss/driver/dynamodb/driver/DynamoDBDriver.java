@@ -69,11 +69,11 @@ public class DynamoDBDriver implements ConnectionDriver<DynamoDBConfiguration> {
     }
 
     @Override
-    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration) {
+    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
         DynamoDBEngine dynamodbEngine = new DynamoDBEngine(
                 client,
                 coreConfiguration,
-                communityConfiguration,
+                localConfiguration,
                 driverConfiguration != null ? driverConfiguration : DynamoDBConfiguration.getDefault());
         dynamodbEngine.initialize(runnerId);
         return dynamodbEngine;

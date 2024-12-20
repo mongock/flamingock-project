@@ -7,7 +7,16 @@ import io.flamingock.core.engine.local.LocalConnectionEngine;
 
 public interface LocalConnectionEngineFactory {
 
+
+    default LocalConnectionEngine initializeValidateAndGetEngine(RunnerId runnerId,
+                                                 CoreConfigurable coreConfiguration,
+                                                 LocalConfigurable localConfiguration) {
+        LocalConnectionEngine engine = initializeAndGetEngine(runnerId, coreConfiguration, localConfiguration);
+        engine.validate(coreConfiguration);
+        return engine;
+    }
+
     LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId,
                                                  CoreConfigurable coreConfiguration,
-                                                 LocalConfigurable communityConfiguration);
+                                                 LocalConfigurable localConfiguration);
 }

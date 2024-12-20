@@ -68,12 +68,12 @@ public class Mongo3Driver implements ConnectionDriver<MongoDB3Configuration> {
     }
 
     @Override
-    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration) {
+    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
         Mongo3Engine engine = new Mongo3Engine(
                 mongoClient,
                 databaseName,
                 coreConfiguration,
-                communityConfiguration,
+                localConfiguration,
                 driverConfiguration != null ? driverConfiguration : MongoDB3Configuration.getDefault());
 
         engine.initialize(runnerId);

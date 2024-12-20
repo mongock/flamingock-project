@@ -68,12 +68,12 @@ public class CouchbaseDriver implements ConnectionDriver<CouchbaseConfiguration>
     }
 
     @Override
-    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration) {
+    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
         CouchbaseEngine couchbaseEngine = new CouchbaseEngine(
                 cluster,
                 collection,
                 coreConfiguration,
-                communityConfiguration,
+                localConfiguration,
                 driverConfiguration != null ? driverConfiguration : CouchbaseConfiguration.getDefault());
         couchbaseEngine.initialize(runnerId);
         return couchbaseEngine;

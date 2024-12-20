@@ -64,11 +64,11 @@ public class SpringDataMongoV2Driver implements ConnectionDriver<SpringDataMongo
     }
 
     @Override
-    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable communityConfiguration) {
+    public LocalConnectionEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
         SpringDataMongoV2Engine engine = new SpringDataMongoV2Engine(
                 mongoTemplate,
                 coreConfiguration,
-                communityConfiguration,
+                localConfiguration,
                 driverConfiguration != null ? driverConfiguration : SpringDataMongoV2Configuration.getDefault());
         engine.initialize(runnerId);
         return engine;
