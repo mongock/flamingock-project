@@ -65,12 +65,12 @@ public final class ExecutionPlanMapper {
                                                       Map<String, AuditItem.Operation> ongoingStatusesMap) {
         if (ongoingStatusesMap.containsKey(descriptor.getId())) {
             if (ongoingStatusesMap.get(descriptor.getId()) == AuditItem.Operation.ROLLBACK) {
-                return StageRequest.Task.ongoingRollback(descriptor.getId());
+                return StageRequest.Task.ongoingRollback(descriptor.getId(), descriptor.isTransactional());
             } else {
-                return StageRequest.Task.ongoingExecution(descriptor.getId());
+                return StageRequest.Task.ongoingExecution(descriptor.getId(), descriptor.isTransactional());
             }
         } else {
-            return StageRequest.Task.task(descriptor.getId());
+            return StageRequest.Task.task(descriptor.getId(), descriptor.isTransactional());
         }
     }
 
