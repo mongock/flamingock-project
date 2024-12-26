@@ -16,6 +16,8 @@
 
 package io.flamingock.core.engine.audit;
 
+import io.flamingock.core.engine.audit.domain.ExecutionAuditItem;
+import io.flamingock.core.engine.audit.domain.RollbackAuditItem;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditEntryMapper;
 import io.flamingock.core.engine.audit.domain.AuditItem;
@@ -25,13 +27,16 @@ import io.flamingock.commons.utils.Result;
  * This class implements the Facade pattern containing the responsibility to log the taskStep, map it to Entry
  * and log then entry just in order to avoid having too many classes to implement that depend on the
  * same AuditEntry implementation, which would enforce to add the generic to the holder/orchestrator class.
- *
- * However, the `mapper responsibility` is intended to be delegated to a Mapper class, but that's is left to decide
+ * However, the `mapper responsibility` is intended to be delegated to a Mapper class, but that's left to decide
  * to the developer implementing this abstract class.
  */
 public interface AuditWriter {
 
-    default Result writeStep(AuditItem auditItem) {
+    default Result writeStep(ExecutionAuditItem auditItem) {
+        return writeEntry(AuditEntryMapper.map(auditItem));
+    }
+
+    default Result writeStep(RollbackAuditItem auditItem) {
         return writeEntry(AuditEntryMapper.map(auditItem));
     }
 
