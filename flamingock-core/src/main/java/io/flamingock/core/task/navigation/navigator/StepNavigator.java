@@ -114,6 +114,7 @@ public class StepNavigator {
             TaskStep executedStep;
             StartStep startStep = new StartStep(task);
 
+            //TODO: We can avoid this when, in the cloud, the task is transactional
             ExecutableStep executableStep = auditStartExecution(startStep, executionContext, LocalDateTime.now());
 
             if (transactionWrapper != null && task.getDescriptor().isTransactional()) {
