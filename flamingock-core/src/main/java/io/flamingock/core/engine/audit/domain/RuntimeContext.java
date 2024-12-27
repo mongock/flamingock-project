@@ -18,6 +18,7 @@ package io.flamingock.core.engine.audit.domain;
 
 import io.flamingock.core.task.navigation.step.ExecutableStep;
 import io.flamingock.core.task.navigation.step.FailedWithErrorStep;
+import io.flamingock.core.task.navigation.step.StartStep;
 import io.flamingock.core.task.navigation.step.TaskStep;
 import io.flamingock.core.task.navigation.step.complete.failed.CompleteAutoRolledBackStep;
 import io.flamingock.core.task.navigation.step.execution.ExecutionStep;
@@ -104,7 +105,7 @@ public final class RuntimeContext {
         private Builder() {
         }
 
-        public Builder setStartStep(ExecutableStep taskStep) {
+        public Builder setStartStep(StartStep taskStep) {
             duration = 0L;
             methodExecutor = taskStep.getTask().getExecutionMethodName();
             stageName = taskStep.getTask().getStageName();

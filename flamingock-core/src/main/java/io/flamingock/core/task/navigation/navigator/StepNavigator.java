@@ -31,6 +31,7 @@ import io.flamingock.core.runtime.dependency.DependencyInjectable;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.navigation.step.ExecutableStep;
 import io.flamingock.core.task.navigation.step.RollableFailedStep;
+import io.flamingock.core.task.navigation.step.StartStep;
 import io.flamingock.core.task.navigation.step.TaskStep;
 import io.flamingock.core.task.navigation.step.afteraudit.AfterExecutionAuditStep;
 import io.flamingock.core.task.navigation.step.afteraudit.RollableStep;
@@ -111,15 +112,14 @@ public class StepNavigator {
             logger.info("Starting {}", task.getDescriptor().getId());
             // Main execution
             TaskStep executedStep;
-            ExecutableStep executableStep = new ExecutableStep(task);
+            StartStep startStep = new StartStep(task);
 
+            ExecutableStep executableStep = auditStartExecution(startStep, executionContext, LocalDateTime.now());
 
             if (transactionWrapper != null && task.getDescriptor().isTransactional()) {
                 logger.debug("Executing(transactional, cloud={}) task[{}]", ongoingTasksRepository != null, task.getDescriptor().getId());
                 executedStep = executeWithinTransaction(executableStep, executionContext, runtimeManager);
             } else {
-
-                auditStartExecution(executableStep, executionContext, LocalDateTime.now());
                 logger.debug("Executing(non-transactional) task[{}]", task.getDescriptor().getId());
                 ExecutionStep executionStep = executeTask(executableStep);
                 executedStep = auditExecution(executionStep, executionContext, LocalDateTime.now());
@@ -184,14 +184,15 @@ public class StepNavigator {
     }
 
 
-
-    private void auditStartExecution(ExecutableStep executionStep,
-                                     ExecutionContext executionContext,
-                                     LocalDateTime executedAt) {
-        RuntimeContext runtimeContext = RuntimeContext.builder().setStartStep(executionStep).setExecutedAt(executedAt).build();
-        Result auditResult = auditWriter.writeStartExecution(new StartExecutionAuditItem(executionStep.getTaskDescriptor(), executionContext, runtimeContext));
-        logAuditResult(auditResult, executionStep.getTaskDescriptor().getId());
-
+    private ExecutableStep auditStartExecution(StartStep startStep,
+                                               ExecutionContext executionContext,
+                                               LocalDateTime executedAt) {
+        RuntimeContext runtimeContext = RuntimeContext.builder().setStartStep(startStep).setExecutedAt(executedAt).build();
+        Result auditResult = auditWriter.writeStartExecution(new StartExecutionAuditItem(startStep.getTaskDescriptor(), executionContext, runtimeContext));
+        logAuditResult(auditResult, startStep.getTaskDescriptor().getId());
+        ExecutableStep executableStep = startStep.start();
+        summarizer.add(executableStep);
+        return executableStep;
     }
 
     private AfterExecutionAuditStep auditExecution(ExecutionStep executionStep,
