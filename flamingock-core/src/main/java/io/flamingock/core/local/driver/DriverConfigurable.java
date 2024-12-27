@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.local.driver;
+package io.flamingock.core.local.driver;
 
 //Marker interface for Driver configuration
 public interface DriverConfigurable {

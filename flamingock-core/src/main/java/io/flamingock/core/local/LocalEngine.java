@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.engine.local;
+package io.flamingock.core.local;
 
 import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.engine.ConnectionEngine;

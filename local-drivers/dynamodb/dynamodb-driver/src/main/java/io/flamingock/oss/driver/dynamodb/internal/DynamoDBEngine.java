@@ -22,7 +22,7 @@ import io.flamingock.core.local.LocalExecutionPlanner;
 import io.flamingock.core.local.TransactionManager;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.engine.local.AbstractLocalEngine;
+import io.flamingock.core.local.AbstractLocalEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.dynamodb.DynamoDBConfiguration;
 import io.flamingock.oss.driver.dynamodb.internal.mongock.ChangeEntryDynamoDB;
