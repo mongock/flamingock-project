@@ -64,13 +64,12 @@ public class StepNavigator {
 
     private TransactionWrapper transactionWrapper;
 
-    public StepNavigator(AuditWriter auditWriter, TaskSummarizer summarizer, RuntimeManager runtimeManager, TransactionWrapper transactionWrapper) {
+    public StepNavigator(AuditWriter auditWriter, TaskSummarizer summarizer, RuntimeManager runtimeManager, TransactionWrapper transactionWrapper, OngoingStatusRepository ongoingTasksRepository) {
         this.auditWriter = auditWriter;
         this.summarizer = summarizer;
         this.runtimeManager = runtimeManager;
         this.transactionWrapper = transactionWrapper;
-        this.ongoingTasksRepository = transactionWrapper != null && CloudTransactioner.class.isAssignableFrom(transactionWrapper.getClass())
-                ? (OngoingStatusRepository) transactionWrapper : null;
+        this.ongoingTasksRepository = ongoingTasksRepository;
     }
 
     private static void logAuditResult(Result auditionResult, String id) {
@@ -103,8 +102,10 @@ public class StepNavigator {
 
     void setTransactionWrapper(TransactionWrapper transactionWrapper) {
         this.transactionWrapper = transactionWrapper;
-        this.ongoingTasksRepository = transactionWrapper != null && CloudTransactioner.class.isAssignableFrom(transactionWrapper.getClass())
-                ? (OngoingStatusRepository) transactionWrapper : null;
+    }
+
+    void setOngoingTasksRepository(OngoingStatusRepository ongoingStatusRepository) {
+        this.ongoingTasksRepository = ongoingStatusRepository;
     }
 
     public final TaskSummary executeTask(ExecutableTask task, ExecutionContext executionContext) {
