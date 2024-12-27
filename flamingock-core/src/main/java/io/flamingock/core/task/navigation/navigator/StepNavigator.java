@@ -17,11 +17,8 @@
 package io.flamingock.core.task.navigation.navigator;
 
 import io.flamingock.commons.utils.Result;
-import io.flamingock.core.cloud.audit.CloudAuditWriter;
-import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.cloud.transaction.OngoingStatusRepository;
 import io.flamingock.core.engine.audit.AuditWriter;
-import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.core.engine.audit.domain.ExecutionAuditItem;
 import io.flamingock.core.engine.audit.domain.RollbackAuditItem;
 import io.flamingock.core.engine.audit.domain.RuntimeContext;
@@ -194,7 +191,7 @@ public class StepNavigator {
                                                    LocalDateTime executedAt) {
         RuntimeContext runtimeContext = RuntimeContext.builder().setTaskStep(executionStep).setExecutedAt(executedAt).build();
 
-        Result auditResult = auditWriter.writeStep(new ExecutionAuditItem(executionStep.getTaskDescriptor(), executionContext, runtimeContext));
+        Result auditResult = auditWriter.writeExecution(new ExecutionAuditItem(executionStep.getTaskDescriptor(), executionContext, runtimeContext));
         logAuditResult(auditResult, executionStep.getTaskDescriptor().getId());
         AfterExecutionAuditStep afterExecutionAudit = executionStep.applyAuditResult(auditResult);
         summarizer.add(afterExecutionAudit);
@@ -234,7 +231,7 @@ public class StepNavigator {
 
     private void auditManualRollback(ManualRolledBackStep rolledBackStep, ExecutionContext executionContext, LocalDateTime executedAt) {
         RuntimeContext runtimeContext = RuntimeContext.builder().setTaskStep(rolledBackStep).setExecutedAt(executedAt).build();
-        Result auditResult = auditWriter.writeStep(new RollbackAuditItem(rolledBackStep.getTaskDescriptor(), executionContext, runtimeContext));
+        Result auditResult = auditWriter.writeRollback(new RollbackAuditItem(rolledBackStep.getTaskDescriptor(), executionContext, runtimeContext));
         logAuditResult(auditResult, rolledBackStep.getTaskDescriptor().getId());
         CompletedFailedManualRollback failedStep = rolledBackStep.applyAuditResult(auditResult);
         summarizer.add(failedStep);
@@ -242,7 +239,7 @@ public class StepNavigator {
 
     private void auditAutoRollback(CompleteAutoRolledBackStep rolledBackStep, ExecutionContext executionContext, LocalDateTime executedAt) {
         RuntimeContext runtimeContext = RuntimeContext.builder().setTaskStep(rolledBackStep).setExecutedAt(executedAt).build();
-        Result auditResult = auditWriter.writeStep(new RollbackAuditItem(rolledBackStep.getTaskDescriptor(), executionContext, runtimeContext));
+        Result auditResult = auditWriter.writeRollback(new RollbackAuditItem(rolledBackStep.getTaskDescriptor(), executionContext, runtimeContext));
         logAuditResult(auditResult, rolledBackStep.getTaskDescriptor().getId());
         summarizer.add(rolledBackStep);
     }

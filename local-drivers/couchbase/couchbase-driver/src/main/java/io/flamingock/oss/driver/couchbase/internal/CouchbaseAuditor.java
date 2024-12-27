@@ -26,7 +26,7 @@ import com.couchbase.client.java.kv.UpsertOptions;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.QueryScanConsistency;
-import io.flamingock.core.local.Auditor;
+import io.flamingock.core.local.LocalAuditor;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.commons.utils.Result;
@@ -57,7 +57,7 @@ import static io.flamingock.core.local.AuditEntryField.KEY_TYPE;
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_AUDIT_ENTRY;
 import static io.flamingock.oss.driver.couchbase.internal.CouchbaseConstants.DOCUMENT_TYPE_KEY;
 
-public class CouchbaseAuditor implements Auditor {
+public class CouchbaseAuditor implements LocalAuditor {
 
     private static final Logger logger = LoggerFactory.getLogger(CouchbaseAuditor.class);
 

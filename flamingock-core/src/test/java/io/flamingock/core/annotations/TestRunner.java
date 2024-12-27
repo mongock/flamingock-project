@@ -3,7 +3,6 @@ package io.flamingock.core.annotations;
 import io.flamingock.commons.utils.Result;
 import io.flamingock.core.cloud.audit.CloudAuditWriter;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
-import io.flamingock.core.cloud.transaction.OngoingStatusRepository;
 import io.flamingock.core.engine.audit.domain.ExecutionAuditItem;
 import io.flamingock.core.engine.audit.domain.RollbackAuditItem;
 import io.flamingock.core.engine.audit.domain.StartExecutionAuditItem;
@@ -57,9 +56,9 @@ public class TestRunner {
     ) {
         checker.reset();
         CloudAuditWriter auditWriterMock = mock(CloudAuditWriter.class);
-        when(auditWriterMock.writeStep(any(StartExecutionAuditItem.class))).thenReturn(Result.OK());
-        when(auditWriterMock.writeStep(any(ExecutionAuditItem.class))).thenReturn(Result.OK());
-        when(auditWriterMock.writeStep(any(RollbackAuditItem.class))).thenReturn(Result.OK());
+        when(auditWriterMock.writeStartExecution(any(StartExecutionAuditItem.class))).thenReturn(Result.OK());
+        when(auditWriterMock.writeExecution(any(ExecutionAuditItem.class))).thenReturn(Result.OK());
+        when(auditWriterMock.writeRollback(any(RollbackAuditItem.class))).thenReturn(Result.OK());
 
         TaskSummarizer stepSummarizerMock = new TaskSummarizer("taskId");
         RuntimeManager runtimeManagerMock = RuntimeManager.builder()

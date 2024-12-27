@@ -27,7 +27,7 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.local.LocalExecutionPlanner;
 import io.flamingock.core.local.TransactionManager;
 import io.flamingock.core.local.AbstractLocalEngine;
-import io.flamingock.core.local.Auditor;
+import io.flamingock.core.local.LocalAuditor;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongock.MongockImporterModule;
@@ -89,7 +89,7 @@ public class Mongo3Engine extends AbstractLocalEngine {
     }
 
     @Override
-    public Auditor getAuditor() {
+    public LocalAuditor getAuditor() {
         return auditor;
     }
 

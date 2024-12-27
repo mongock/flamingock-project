@@ -20,7 +20,7 @@ import com.mongodb.ReadConcern;
 import com.mongodb.client.MongoCollection;
 import io.flamingock.core.local.LocalExecutionPlanner;
 import io.flamingock.core.local.AbstractLocalEngine;
-import io.flamingock.core.local.Auditor;
+import io.flamingock.core.local.LocalAuditor;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.commons.utils.RunnerId;
@@ -85,7 +85,7 @@ public class SpringDataMongoV2Engine extends AbstractLocalEngine {
     }
 
     @Override
-    public Auditor getAuditor() {
+    public LocalAuditor getAuditor() {
         return auditor;
     }
 

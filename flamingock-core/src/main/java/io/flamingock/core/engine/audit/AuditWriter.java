@@ -18,9 +18,8 @@ package io.flamingock.core.engine.audit;
 
 import io.flamingock.core.engine.audit.domain.ExecutionAuditItem;
 import io.flamingock.core.engine.audit.domain.RollbackAuditItem;
+import io.flamingock.core.engine.audit.domain.StartExecutionAuditItem;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.core.engine.audit.writer.AuditEntryMapper;
-import io.flamingock.core.engine.audit.domain.AuditItem;
 import io.flamingock.commons.utils.Result;
 
 /**
@@ -32,13 +31,11 @@ import io.flamingock.commons.utils.Result;
  */
 public interface AuditWriter {
 
-    default Result writeStep(ExecutionAuditItem auditItem) {
-        return writeEntry(AuditEntryMapper.map(auditItem));
-    }
+    Result writeStartExecution(StartExecutionAuditItem auditItem);
 
-    default Result writeStep(RollbackAuditItem auditItem) {
-        return writeEntry(AuditEntryMapper.map(auditItem));
-    }
+    Result writeExecution(ExecutionAuditItem auditItem);
+
+    Result writeRollback(RollbackAuditItem auditItem);
 
     Result writeEntry(AuditEntry auditEntry);
 
