@@ -10,8 +10,10 @@ import io.flamingock.core.engine.audit.writer.AuditEntryMapper;
 public interface CloudAuditWriter extends AuditWriter {
 
     default Result writeStartExecution(StartExecutionAuditItem auditItem) {
-        return writeEntry(AuditEntryMapper.map(auditItem));
+        return Result.OK();//TODO remove this
+//        return writeEntry(AuditEntryMapper.map(auditItem));
     }
+
 
     default Result writeExecution(ExecutionAuditItem auditItem) {
         return writeEntry(AuditEntryMapper.map(auditItem));
