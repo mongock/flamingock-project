@@ -38,7 +38,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
-import static io.flamingock.core.driver.AuditEntryField.*;
+import static io.flamingock.core.local.AuditEntryField.*;
 
 public class SpringDataMongoV2Auditor implements Auditor {
 

@@ -17,7 +17,7 @@
 package io.flamingock.oss.driver.dynamodb.internal;
 
 import io.flamingock.commons.utils.Result;
-import io.flamingock.core.driver.TransactionManager;
+import io.flamingock.core.local.TransactionManager;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.core.engine.local.Auditor;
