@@ -16,6 +16,7 @@
 
 package io.flamingock.core.engine.audit.domain;
 
+import io.flamingock.core.task.navigation.step.ExecutableStep;
 import io.flamingock.core.task.navigation.step.FailedWithErrorStep;
 import io.flamingock.core.task.navigation.step.TaskStep;
 import io.flamingock.core.task.navigation.step.complete.failed.CompleteAutoRolledBackStep;
@@ -103,7 +104,15 @@ public final class RuntimeContext {
         private Builder() {
         }
 
-        public Builder setTaskStep(ExecutionStep taskStep) {
+        public Builder setStartStep(ExecutableStep taskStep) {
+            duration = 0L;
+            methodExecutor = taskStep.getTask().getExecutionMethodName();
+            stageName = taskStep.getTask().getStageName();
+            setFailure(taskStep);
+            return this;
+        }
+
+        public Builder setExecutionStep(ExecutionStep taskStep) {
             duration = taskStep.getDuration();
             methodExecutor = taskStep.getTask().getExecutionMethodName();
             stageName = taskStep.getTask().getStageName();
@@ -111,7 +120,7 @@ public final class RuntimeContext {
             return this;
         }
 
-        public Builder setTaskStep(ManualRolledBackStep rolledBackStep) {
+        public Builder setManualRollbackStep(ManualRolledBackStep rolledBackStep) {
             duration = rolledBackStep.getDuration();
             methodExecutor = rolledBackStep.getRollback().getRollbackMethodName();
             stageName = rolledBackStep.getTask().getStageName();
@@ -119,7 +128,7 @@ public final class RuntimeContext {
             return this;
         }
 
-        public Builder setTaskStep(CompleteAutoRolledBackStep rolledBackStep) {
+        public Builder setAutoRollbackStep(CompleteAutoRolledBackStep rolledBackStep) {
             duration = 0L;
             methodExecutor = "native_db_engine";
             stageName = rolledBackStep.getTask().getStageName();
