@@ -124,6 +124,7 @@ public class DynamoDBCloudTransactioner implements CloudTransactioner {
             return result;
         } finally {
             transactionManager.closeSession(sessionId);
+
         }
 
     }
