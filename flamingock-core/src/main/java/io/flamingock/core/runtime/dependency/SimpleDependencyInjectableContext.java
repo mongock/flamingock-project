@@ -49,7 +49,8 @@ public class SimpleDependencyInjectableContext extends AbstractDependencyContext
         if(dependencyStore.contains(dependency)) {
             boolean isSafeToRemove = dependencyStore.stream()
                     .filter(dependency::equals)//it only can return one at max
-                    .anyMatch(storedRef -> storedRef == dependency);//if it's also the same reference
+                    .map(Dependency::getInstance)
+                    .anyMatch(storedRef -> storedRef == dependency.instance);//if it's also the same reference
 
             if(isSafeToRemove) {
                 dependencyStore.remove(dependency);
