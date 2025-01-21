@@ -41,7 +41,6 @@ public class AuditEntryExpectation {
         return methodName;
     }
 
-    //TODO remove transient when sending to server `transactional` field
     @Transient
     public boolean isTransactional() {
         return transactional;
