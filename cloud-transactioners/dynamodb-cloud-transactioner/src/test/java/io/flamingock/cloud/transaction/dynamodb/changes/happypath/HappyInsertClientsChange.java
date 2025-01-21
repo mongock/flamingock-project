@@ -20,23 +20,22 @@ import io.flamingock.cloud.transaction.dynamodb.changes.common.UserEntity;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @ChangeUnit(id = "insert-clients", order = "2")
 public class HappyInsertClientsChange {
 
     @Execution
-    public void execution(DynamoDbClient client) {
-        DynamoDbEnhancedClient.builder()
+    public void execution(DynamoDbClient client, TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder) {
+        DynamoDbTable<UserEntity> table = DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(client)
                 .build()
-                .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class))
-                .putItem(
-                        PutItemEnhancedRequest.builder(UserEntity.class)
-                                .item(new UserEntity("Pepe", "Pérez"))
-                                .build()
-                );
+                .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class));
+
+        writeRequestBuilder.addPutItem(table, new UserEntity("Pepe", "Pérez"));
     }
 }

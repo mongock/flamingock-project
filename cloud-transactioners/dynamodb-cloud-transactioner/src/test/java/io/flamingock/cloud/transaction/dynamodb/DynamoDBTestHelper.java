@@ -24,6 +24,8 @@ import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
+import java.util.function.Predicate;
+
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,6 +39,10 @@ public class DynamoDBTestHelper {
 
     public boolean tableExists(String tableName) {
         return dynamoDBUtil.getDynamoDbClient().listTables().tableNames().contains(tableName);
+    }
+
+    public DynamoDbClient getDynamoDbClient() {
+        return dynamoDBUtil.getDynamoDbClient();
     }
 
     public void insertOngoingExecution(String taskId) {
@@ -71,6 +77,10 @@ public class DynamoDBTestHelper {
     }
 
     public void checkAtLeastOneOngoingTask() {
+        checkOngoingTask(result -> result >= 1);
+    }
+
+    public void checkOngoingTask(Predicate<Long> predicate) {
         DynamoDbTable<OngoingTaskEntity> table = dynamoDBUtil.getEnhancedClient().table(OngoingTaskEntity.tableName, TableSchema.fromBean(OngoingTaskEntity.class));
         long result = table
                 .scan(ScanEnhancedRequest.builder()
@@ -80,6 +90,6 @@ public class DynamoDBTestHelper {
                 .items()
                 .stream()
                 .count();
-        assertTrue(result >= 1);
+        assertTrue(predicate.test(result));
     }
 }

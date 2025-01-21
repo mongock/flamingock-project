@@ -39,18 +39,18 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 import static io.flamingock.core.cloud.api.audit.AuditEntryRequest.Status.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class DynamoDBCloudTransactionerTest {
 
@@ -81,26 +81,19 @@ public class DynamoDBCloudTransactionerTest {
     @BeforeEach
     void beforeEach() throws Exception {
         logger.info("Starting DynamoDB Local...");
-//        dynamoDBLocal = ServerRunner.createServerFromCommandLineArgs(
-//                new String[]{
-//                        "-inMemory",
-//                        "-port",
-//                        "8000"
-//                }
-//        );
-//        dynamoDBLocal.start();
+        dynamoDBLocal = ServerRunner.createServerFromCommandLineArgs(
+                new String[]{
+                        "-inMemory",
+                        "-port",
+                        "8000"
+                }
+        );
+        dynamoDBLocal.start();
 
-        client = DynamoDbClient.builder()
-                .region(Region.EU_WEST_1)
-                .endpointOverride(new URI("http://localhost:8000"))
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create("dummye", "dummye")
-                        )
-                )
-                .build();
+        client = getDynamoDbClient();
 
-        dynamoDBTestHelper = new DynamoDBTestHelper(client);
+        //We use different client, as the transactioner will close it
+        dynamoDBTestHelper = new DynamoDBTestHelper(getDynamoDbClient());
 
         logger.info("Starting Mock Server...");
         mockRunnerServer = new MockRunnerServer()
@@ -131,7 +124,9 @@ public class DynamoDBCloudTransactionerTest {
         mockRunnerServer.stop();
 
         logger.info("Stopping DynamoDB Local...");
-        dynamoDBLocal.stop();
+        if(dynamoDBLocal != null) {
+            dynamoDBLocal.stop();
+        }
     }
 
     @Test
@@ -143,7 +138,8 @@ public class DynamoDBCloudTransactionerTest {
                 "create-table-clients",
                 EXECUTED,
                 HappyCreateTableClientsChange.class.getName(),
-                "execution"
+                "execution",
+                false
         ));
         auditEntryExpectations.add(new
                 AuditEntryExpectation(
@@ -177,14 +173,15 @@ public class DynamoDBCloudTransactionerTest {
                     .execute();
 
             // check clients changes
+            client.close();
             dynamoDBTestHelper.checkCount(
                     DynamoDbEnhancedClient.builder()
-                            .dynamoDbClient(client)
+                            .dynamoDbClient(dynamoDBTestHelper.getDynamoDbClient())
                             .build()
                             .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class)),
-                    0);
+                    1);
             // check ongoing status
-            dynamoDBTestHelper.checkAtLeastOneOngoingTask();
+            dynamoDBTestHelper.checkOngoingTask(ongoingCount -> ongoingCount == 0);
         }
     }
 
@@ -197,7 +194,8 @@ public class DynamoDBCloudTransactionerTest {
                 "unhappy-create-table-clients",
                 EXECUTED,
                 UnhappyCreateTableClientsChange.class.getName(),
-                "execution"
+                "execution",
+                false
         ));
 
         auditEntryExpectations.add(new
@@ -242,7 +240,7 @@ public class DynamoDBCloudTransactionerTest {
             // check clients changes
             dynamoDBTestHelper.checkCount(
                     DynamoDbEnhancedClient.builder()
-                            .dynamoDbClient(client)
+                            .dynamoDbClient(dynamoDBTestHelper.getDynamoDbClient())
                             .build()
                             .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class)),
                     0);
@@ -262,7 +260,8 @@ public class DynamoDBCloudTransactionerTest {
                 "unhappy-create-table-clients",
                 EXECUTED,
                 UnhappyCreateTableClientsChange.class.getName(),
-                "execution"
+                "execution",
+                false
         ));
 
         auditEntryExpectations.add(new
@@ -307,6 +306,22 @@ public class DynamoDBCloudTransactionerTest {
 
             //then
             PipelineExecutionException ex = Assertions.assertThrows(PipelineExecutionException.class, runner::run);
+        }
+    }
+
+    private static DynamoDbClient getDynamoDbClient() {
+        try {
+            return DynamoDbClient.builder()
+                    .region(Region.EU_WEST_1)
+                    .endpointOverride(new URI("http://localhost:8000"))
+                    .credentialsProvider(
+                            StaticCredentialsProvider.create(
+                                    AwsBasicCredentials.create("dummye", "dummye")
+                            )
+                    )
+                    .build();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 }

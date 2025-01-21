@@ -24,23 +24,20 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @ChangeUnit(id = "unhappy-insert-clients", order = "2")
 public class UnhappyInsertionClientsChange {
 
     @Execution
-    public void execution(DynamoDbClient client) {
+    public void execution(DynamoDbClient client, TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder) {
         DynamoDbTable<UserEntity> table = DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(client)
                 .build()
                 .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class));
 
-        table.putItem(
-                PutItemEnhancedRequest.builder(UserEntity.class)
-                        .item(new UserEntity("Should Have Been", "Rolled Back"))
-                        .build()
-        );
+        writeRequestBuilder.addPutItem(table, new UserEntity("Should Have Been", "Rolled Back"));
         throw new RuntimeException("Intended exception");
     }
 }

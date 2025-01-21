@@ -26,7 +26,7 @@ import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
 
 import static java.util.Collections.emptyList;
 
-@ChangeUnit(id = "create-table-clients", order = "1")
+@ChangeUnit(id = "create-table-clients", order = "1", transactional = false)
 public class HappyCreateTableClientsChange {
 
     @Execution
