@@ -19,12 +19,13 @@ package io.flamingock.cloud.transaction.mongodb.sync.v4.changes.unhappypath;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.NonLockGuarded;
 
 @ChangeUnit(id = "create-clients-collection", order = "1", transactional = false)
 public class UnhappyCreateClientsCollectionChange {
 
     @Execution
-    public void execution(MongoDatabase mongoDatabase) {
+    public void execution(@NonLockGuarded MongoDatabase mongoDatabase) {
         mongoDatabase.createCollection("clientCollection");
     }
 }

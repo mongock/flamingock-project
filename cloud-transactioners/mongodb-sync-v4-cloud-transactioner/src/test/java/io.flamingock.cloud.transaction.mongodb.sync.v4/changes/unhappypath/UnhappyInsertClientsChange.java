@@ -21,13 +21,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.NonLockGuarded;
 import org.bson.Document;
 
 @ChangeUnit(id = "insert-clients", order = "2")
 public class UnhappyInsertClientsChange {
 
     @Execution
-    public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
+    public void execution(@NonLockGuarded MongoDatabase mongoDatabase, ClientSession clientSession) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
         collection.insertOne(clientSession, new Document().append("name", "Should Have Been Rolled Back"));;
         throw new RuntimeException("Intended exception");

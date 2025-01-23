@@ -70,7 +70,6 @@ public class MongoDBTestHelper {
     public <T> void checkCount(MongoCollection<Document> collection, int count) {
         long result = collection
                 .find()
-                .map(this::mapToOnGoingStatus)
                 .into(new HashSet<>())
                 .size();
         assertEquals(count, (int) result);
@@ -84,15 +83,10 @@ public class MongoDBTestHelper {
         MongoCollection<Document> onGoingTasksCollection = mongoDatabase.getCollection("flamingockOnGoingTasks");
 
         long result = onGoingTasksCollection.find()
-                .map(this::mapToOnGoingStatus)
+                .map(MongoSync4CloudTransactioner::mapToOnGoingStatus)
                 .into(new HashSet<>())
                 .size();
 
         assertTrue(predicate.test(result));
-    }
-
-    private OngoingStatus mapToOnGoingStatus(Document document) {
-        OngoingStatus.Operation operation = OngoingStatus.Operation.valueOf(document.getString("operation"));
-        return new OngoingStatus(document.getString("taskId"), operation);
     }
 }
