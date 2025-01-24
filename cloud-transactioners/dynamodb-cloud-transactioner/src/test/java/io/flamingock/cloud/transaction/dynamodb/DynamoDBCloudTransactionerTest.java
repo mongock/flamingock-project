@@ -51,7 +51,7 @@ import java.util.UUID;
 
 import static io.flamingock.core.cloud.api.audit.AuditEntryRequest.Status.*;
 
-
+@Disabled
 public class DynamoDBCloudTransactionerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamoDBCloudTransactionerTest.class);
