@@ -29,7 +29,7 @@ import java.time.ZoneId;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 
-public class Lock {
+public abstract class Lock {
 
     private static final Logger logger = LoggerFactory.getLogger(Lock.class);
 

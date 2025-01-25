@@ -23,11 +23,13 @@ import io.flamingock.core.cloud.changes.CloudChange1;
 import io.flamingock.core.cloud.changes.CloudChange2;
 import io.flamingock.common.test.cloud.AuditEntryExpectation;
 import io.flamingock.common.test.cloud.MockRunnerServer;
+import io.flamingock.core.cloud.utils.MyThirdPartyDependency;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
 import io.flamingock.core.engine.lock.LockException;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
+import io.flamingock.core.utils.TaskExecutionChecker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -112,6 +114,7 @@ public class CloudEngineTest {
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
                 .setEnvironment(environmentName)
+                .addDependency(new MyThirdPartyDependency())
                 .addStage(new Stage("stage-1")
                         .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")));
     }

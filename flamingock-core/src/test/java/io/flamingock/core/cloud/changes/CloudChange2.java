@@ -18,16 +18,18 @@ package io.flamingock.core.cloud.changes;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.NonLockGuarded;
+import io.flamingock.core.cloud.utils.MyThirdPartyDependency;
 import io.flamingock.core.utils.TaskExecutionChecker;
 
 @ChangeUnit(id = "create-persons-table-from-template-2", order = "2")
 public class CloudChange2 {
-    public static final TaskExecutionChecker checker = new TaskExecutionChecker();
 
     @Execution
-    public void execution() {
-        checker.markExecution();
+    public void execution(MyThirdPartyDependency myDependency) {
+        String remoteValue = myDependency.getDataFromRemoteServer();
+        if(remoteValue == null) {
+            throw new RuntimeException("Remote value shouldn't be null");
+        }
     }
-
-
 }

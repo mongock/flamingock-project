@@ -73,7 +73,8 @@ public class LockGuardProxyFactory implements GuardProxyFactory {
     }
 
     public Object getRawProxy(Object targetObject, Class<?> interfaceType) {
-        return shouldBeLockGuardProxied(targetObject, interfaceType) ? createProxy(targetObject, interfaceType) : targetObject;
+        boolean shouldBeProxied = shouldBeLockGuardProxied(targetObject, interfaceType);
+        return shouldBeProxied ? createProxy(targetObject, interfaceType) : targetObject;
     }
 
     private boolean shouldBeLockGuardProxied(Object targetObject, Class<?> interfaceType) {

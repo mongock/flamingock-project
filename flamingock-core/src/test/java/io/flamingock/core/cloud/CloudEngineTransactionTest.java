@@ -22,6 +22,7 @@ import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
 import io.flamingock.core.cloud.changes.CloudChange1;
 import io.flamingock.core.cloud.changes.CloudChange2;
 import io.flamingock.core.cloud.api.transaction.OngoingStatus;
+import io.flamingock.core.cloud.utils.MyThirdPartyDependency;
 import io.flamingock.core.cloud.utils.TestCloudTransactioner;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
@@ -105,6 +106,7 @@ public class CloudEngineTransactionTest {
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
                 .setEnvironment(environmentName)
+                .addDependency(new MyThirdPartyDependency())
                 .addStage(new Stage("stage-1")
                         .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")));
     }

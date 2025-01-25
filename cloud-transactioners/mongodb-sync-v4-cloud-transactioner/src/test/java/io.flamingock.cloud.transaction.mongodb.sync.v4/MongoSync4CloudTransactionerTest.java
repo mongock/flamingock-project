@@ -50,7 +50,6 @@ import java.util.UUID;
 import static io.flamingock.core.cloud.api.audit.AuditEntryRequest.Status.*;
 
 @Testcontainers
-@Disabled
 public class MongoSync4CloudTransactionerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(MongoSync4CloudTransactionerTest.class);
