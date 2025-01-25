@@ -171,12 +171,16 @@ public final class MockRunnerServer {
         Map<String, OngoingStatus.Operation> ongoingOperationByTask = ongoingStatuses.stream()
                 .collect(Collectors.toMap(OngoingStatus::getTaskId, OngoingStatus::getOperation));
 
+        Set<String> ongoingStatusesInserted = new HashSet<>();
         Set<String> alreadyAddedTasks = new HashSet<>();
         List<StageRequest.Task> tasks = auditEntries.stream()
                 .filter(auditEntryExpectation -> !alreadyAddedTasks.contains(auditEntryExpectation.getTaskId()))
                 .map(auditEntryExpectation -> {
                     alreadyAddedTasks.add(auditEntryExpectation.getTaskId());
                     OngoingStatus.Operation operation = ongoingOperationByTask.get(auditEntryExpectation.getTaskId());
+                    if(operation != null) {
+                        ongoingStatusesInserted.add(auditEntryExpectation.getTaskId());
+                    }
                     if (operation == null) {
                         return StageRequest.Task.task(auditEntryExpectation.getTaskId(), auditEntryExpectation.isTransactional());
                     } else if (operation == OngoingStatus.Operation.ROLLBACK) {
@@ -187,6 +191,9 @@ public final class MockRunnerServer {
                 })
                 .collect(Collectors.toList());
 
+        if(ongoingStatusesInserted.size() != ongoingOperationByTask.size()) {
+            throw new RuntimeException("There are ongoing statuses injected but not used");
+        }
         StageRequest stageRequest = new StageRequest(stageName, 0, tasks);
 
         executionExpectation = new ExecutionExpectation(executionId, stageRequest, auditEntries, 60000, 0);
