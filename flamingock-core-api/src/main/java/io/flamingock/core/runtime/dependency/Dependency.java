@@ -33,7 +33,7 @@ public class Dependency {
 
 
   public Dependency(Object instance) {
-    this(instance.getClass(), instance);
+    this(instance.getClass(), instance, true);
   }
 
   public Dependency(Class<?> type, Object instance) {
