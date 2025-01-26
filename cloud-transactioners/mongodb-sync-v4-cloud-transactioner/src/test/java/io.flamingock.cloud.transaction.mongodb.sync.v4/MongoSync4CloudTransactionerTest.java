@@ -270,7 +270,7 @@ public class MongoSync4CloudTransactionerTest {
             mongoDBTestHelper.insertOngoingExecution("failed-insert-clients");
             List<OngoingStatus> ongoingStatuses = Collections.singletonList(new OngoingStatus("failed-insert-clients", OngoingStatus.Operation.EXECUTION));
             mockRunnerServer
-                    .addSimpleStageExecutionPlan(executionId, stageName, auditEntryExpectations, ongoingStatuses)
+                    .addSimpleStageExecutionPlan(executionId, stageName, auditEntryExpectations)
                     .addExecutionWithAllTasksRequestResponse(executionId)
                     .addExecutionContinueRequestResponse()
                     .start();

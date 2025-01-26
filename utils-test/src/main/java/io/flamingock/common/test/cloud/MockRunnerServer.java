@@ -163,13 +163,10 @@ public final class MockRunnerServer {
     }
 
     public MockRunnerServer addSimpleStageExecutionPlan(String executionId, String stageName, List<AuditEntryExpectation> auditEntries) {
-        return addSimpleStageExecutionPlan(executionId, stageName, auditEntries, Collections.emptyList());
-    }
 
-    public MockRunnerServer addSimpleStageExecutionPlan(String executionId, String stageName, List<AuditEntryExpectation> auditEntries, List<OngoingStatus> ongoingStatuses) {
-
-        Map<String, OngoingStatus.Operation> ongoingOperationByTask = ongoingStatuses.stream()
-                .collect(Collectors.toMap(OngoingStatus::getTaskId, OngoingStatus::getOperation));
+        Map<String, OngoingStatus.Operation> ongoingOperationByTask = new HashMap<>();
+//        Collections.emptyList().stream()
+//                .collect(Collectors.toMap(OngoingStatus::getTaskId, OngoingStatus::getOperation));
 
         Set<String> ongoingStatusesInserted = new HashSet<>();
         Set<String> alreadyAddedTasks = new HashSet<>();

@@ -2,48 +2,45 @@ package io.flamingock.common.test.cloud;
 
 
 import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
+import io.flamingock.core.cloud.api.transaction.OngoingStatus;
 
-import java.beans.Transient;
-
-public class AuditEntryExpectation {
-    private final String taskId;
+public class AuditEntryExpectation extends AuditEntryExpectationBase {
     private final AuditEntryRequest.Status state;
-    private final String className;
-    private final String methodName;
+    private final OngoingStatus ongoingStatus;
 
-    private final boolean transactional;
 
-    public AuditEntryExpectation(String taskId, AuditEntryRequest.Status state, String className, String methodName) {
+    public AuditEntryExpectation(String taskId,
+                                 AuditEntryRequest.Status state,
+                                 String className,
+                                 String methodName) {
         this(taskId, state, className, methodName, true);
     }
 
-    public AuditEntryExpectation(String taskId, AuditEntryRequest.Status state, String className, String methodName, boolean transactional) {
-        this.taskId = taskId;
-        this.state = state;
-        this.className = className;
-        this.methodName = methodName;
-        this.transactional = transactional;
+    public AuditEntryExpectation(String taskId,
+                                 AuditEntryRequest.Status state,
+                                 String className,
+                                 String methodName,
+                                 boolean transactional) {
+        this(taskId, null, state, className, methodName, transactional);
     }
 
-    public String getTaskId() {
-        return taskId;
+    public AuditEntryExpectation(String taskId,
+                                 OngoingStatus ongoingStatus,
+                                 AuditEntryRequest.Status state,
+                                 String className,
+                                 String methodName,
+                                 boolean transactional) {
+        super(taskId, className, methodName, transactional);
+        this.state = state;
+        this.ongoingStatus = ongoingStatus;
     }
+
 
     public AuditEntryRequest.Status getState() {
         return state;
     }
 
-    public String getClassName() {
-        return className;
+    public OngoingStatus getOngoingStatus() {
+        return ongoingStatus;
     }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    @Transient
-    public boolean isTransactional() {
-        return transactional;
-    }
-
 }
