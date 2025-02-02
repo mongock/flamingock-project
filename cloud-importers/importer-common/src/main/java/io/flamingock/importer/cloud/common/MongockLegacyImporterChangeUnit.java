@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-package io.flamingock.importer.cloud.mongodb.v4;
-
+package io.flamingock.importer.cloud.common;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.SystemChange;
-import io.flamingock.importer.cloud.common.ImporterService;
-import io.flamingock.importer.cloud.common.MongockLegacyAuditEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 @SystemChange
-@ChangeUnit(id = "mongock-legacy-importer-mongodb-v1", order = "1")
+@ChangeUnit(id = "mongock-legacy-importer-v1", order = "1")
 public class MongockLegacyImporterChangeUnit {
 
     private static final Logger logger = LoggerFactory.getLogger(MongockLegacyImporterChangeUnit.class);
 
     @Execution
-    public void execution(@NonLockGuarded MongoDBLegacyImportConfiguration configuration) {
+    public void execution(@NonLockGuarded MongockLegacyImporterConfiguration configuration) {
 
         List<MongockLegacyAuditEntry> data = configuration.readMongockLegacyAuditEntries();
 

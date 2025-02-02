@@ -23,11 +23,12 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.common.test.cloud.AuditEntryExpectation;
 import io.flamingock.common.test.cloud.MockRunnerServer;
-import io.flamingock.core.configurator.legacy.LegacyMigration;
+import io.flamingock.commons.utils.TimeUtil;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.importer.cloud.common.MongockLegacyAuditEntry;
+import io.flamingock.importer.cloud.common.MongockLegacyImporterChangeUnit;
 import io.flamingock.importer.cloud.mongodb.v4.changes.ACreateCollection;
 import io.flamingock.importer.cloud.mongodb.v4.mongock.ClientInitializerChangeUnit;
 import io.mongock.runner.standalone.MongockStandalone;
@@ -40,14 +41,11 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.flamingock.core.cloud.api.audit.AuditEntryRequest.Status.EXECUTED;
-import static io.flamingock.core.configurator.core.CoreConfiguration.MongockImporterConfiguration;
+import static io.flamingock.core.local.AuditEntryField.KEY_TIMESTAMP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -56,8 +54,6 @@ class MongoSync4CloudImporterTest {
 
     @Container
     private static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
-
-    private final Logger logger = LoggerFactory.getLogger(MongoSync4CloudImporterTest.class);
 
     private static final String DB_NAME = "test";
     private static final String MONGOCK_CLIENTS_COLLECTION = "mongockClientCollection";
@@ -78,8 +74,11 @@ class MongoSync4CloudImporterTest {
 
     private static MongoClient mongoClient;
     private static MongoDatabase testDatabase;
+
     private static MockRunnerServer mockRunnerServer;
     private static StandaloneCloudBuilder flamingockBuilder;
+
+    private final Logger logger = LoggerFactory.getLogger(MongoSync4CloudImporterTest.class);
 
     @BeforeAll
     static void beforeAll() {
@@ -97,7 +96,7 @@ class MongoSync4CloudImporterTest {
                 document.getString("state"),
                 document.getString("type"),
                 document.getString("author"),
-                document.getDate("timestamp"),
+                document.getDate("timestamp").getTime(),
                 document.getString("changeLogClass"),
                 document.getString("changeSetMethod"),
                 document.get("metadata"),
@@ -155,9 +154,12 @@ class MongoSync4CloudImporterTest {
                 .buildRunner()
                 .execute();
 
-        ArrayList<Document> mongockDbState = testDatabase.getCollection(mongockMongoSync4Driver.getMigrationRepositoryName())
+        List<Document> mongockDbState = testDatabase.getCollection(mongockMongoSync4Driver.getMigrationRepositoryName())
                 .find()
-                .into(new ArrayList<>());
+                .into(new ArrayList<>())
+                .stream()
+                .sorted(Comparator.comparing(d -> TimeUtil.toLocalDateTime(d.get(KEY_TIMESTAMP))))
+                .collect(Collectors.toList());
 
         //Check if Mongock works properly
         Assertions.assertEquals(4, mongockDbState.size());
@@ -175,7 +177,7 @@ class MongoSync4CloudImporterTest {
         List<AuditEntryExpectation> auditEntryExpectations = new LinkedList<>();
         auditEntryExpectations.add(new
                 AuditEntryExpectation(
-                "mongock-legacy-importer-mongodb-v1",
+                "mongock-legacy-importer-v1",
                 EXECUTED,
                 MongockLegacyImporterChangeUnit.class.getName(),
                 "execution"

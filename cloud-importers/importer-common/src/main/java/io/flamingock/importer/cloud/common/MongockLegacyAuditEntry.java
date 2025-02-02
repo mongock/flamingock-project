@@ -23,7 +23,7 @@ public class MongockLegacyAuditEntry {
     private final String state;
     private final String type;
     private final String author;
-    private final Object timestamp;
+    private final Long timestamp;
     private final String changeLogClass;
     private final String changeSetMethod;
     private final Object metadata;
@@ -38,7 +38,7 @@ public class MongockLegacyAuditEntry {
             String state,
             String type,
             String author,
-            Object timestamp,
+            Long timestamp,
             String changeLogClass,
             String changeSetMethod,
             Object metadata,
@@ -82,7 +82,7 @@ public class MongockLegacyAuditEntry {
         return author;
     }
 
-    public Object getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
