@@ -1,9 +1,11 @@
-package io.flamingock.importer.cloud.mongodb;
+package io.flamingock.importer.cloud.mongodb.v4;
 
-import io.flamingock.core.api.CloudSystemModule;
-import io.flamingock.core.runtime.dependency.Dependency;
+import com.mongodb.client.MongoCollection;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;
+import io.flamingock.core.api.CloudSystemModule;
+import io.flamingock.core.runtime.dependency.Dependency;
+import org.bson.Document;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,22 +15,22 @@ public class MongoDBLegacyImporter implements CloudSystemModule {
     public static final List<Class<?>> TASK_CLASSES = Collections.singletonList(
             MongockLegacyImporterChangeUnit.class
     );
-
+    private final MongoCollection<Document> changeUnitsCollection;
     private List<Dependency> dependencies;
 
-    private final String changeUnitsCollection;
-
-    public MongoDBLegacyImporter(String changeUnitsCollection) {
+    public MongoDBLegacyImporter(MongoCollection<Document> changeUnitsCollection) {
         this.changeUnitsCollection = changeUnitsCollection;
     }
 
     @Override
     public void initialise(EnvironmentId environmentId, ServiceId serviceId, String jwt, String serverHost) {
-        MongoDBLegacyImportConfiguration configuration = new MongoDBLegacyImportConfiguration(
-                environmentId, serviceId, jwt, serverHost, changeUnitsCollection
-        );
         dependencies = Collections.singletonList(
-                new Dependency(MongoDBLegacyImportConfiguration.class, configuration)
+                new Dependency(
+                        MongoDBLegacyImportConfiguration.class,
+                        new MongoDBLegacyImportConfiguration(
+                                environmentId, serviceId, jwt, serverHost, changeUnitsCollection
+                        )
+                )
         );
     }
 
