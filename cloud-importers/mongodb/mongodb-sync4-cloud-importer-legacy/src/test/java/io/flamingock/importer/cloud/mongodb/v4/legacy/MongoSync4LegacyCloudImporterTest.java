@@ -154,7 +154,7 @@ class MongoSync4LegacyCloudImporterTest {
         //Prepare expectations for Mocked Server
         List<AuditEntry> importExpectations = mongockDbState
                 .stream()
-                .map(MongoDBLegacyImportConfiguration::toMongockLegacyAuditEntry)
+                .map(MongoDBLegacyAuditReader::toMongockLegacyAuditEntry)
                 .map(MongockLegacyAuditEntry::toAuditEntry)
                 .collect(Collectors.toList());
 
@@ -174,7 +174,7 @@ class MongoSync4LegacyCloudImporterTest {
                 "execution",
                 false
         ));
-        MongoDBLegacyImporter mongoDBLegacyImporter = new MongoDBLegacyImporter(testDatabase.getCollection(mongockMongoSync4Driver.getMigrationRepositoryName()));
+        MongoDBLegacyImporter mongoDBLegacyImporter = new MongoDBLegacyImporter(mongoClient, DB_NAME);
 
         //Run Mocked Server
         String executionId = "execution-1";

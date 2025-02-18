@@ -147,7 +147,7 @@ class MongoSync4LocalCloudImporterTest {
         //Prepare expectations for Mocked Server
         List<AuditEntry> importExpectations = flamingockDbState
                 .stream()
-                .map(MongoDBLocalImportConfiguration::toAuditEntry)
+                .map(MongoDBLocalAuditReader::toAuditEntry)
                 .collect(Collectors.toList());
 
         List<AuditEntryMatcher> auditEntryExpectations = new LinkedList<>();
@@ -165,7 +165,7 @@ class MongoSync4LocalCloudImporterTest {
                 InsertClient.class.getName(),
                 "execution"
         ));
-        MongoDBLocalImporter mongoDBLegacyImporter = new MongoDBLocalImporter(testDatabase.getCollection(MongoDBSync4Configuration.DEFAULT_MIGRATION_REPOSITORY_NAME));
+        MongoDBLocalImporter mongoDBLegacyImporter = new MongoDBLocalImporter(mongoClient, DB_NAME);
 
         //Run Mocked Server
         String executionId = "execution-1";

@@ -33,6 +33,7 @@ import io.flamingock.core.pipeline.Stage;
 import io.flamingock.importer.cloud.common.ImporterChangeUnit;
 import io.flamingock.importer.cloud.common.MongockLegacyAuditEntry;
 import io.flamingock.importer.cloud.dynamodb.legacy.changes.ACreateCollection;
+import io.flamingock.importer.cloud.dynamodb.legacy.entities.ChangeEntryEntity;
 import io.flamingock.importer.cloud.dynamodb.legacy.mongock.ClientInitializerChangeUnit;
 import io.mongock.runner.standalone.MongockStandalone;
 import org.junit.jupiter.api.*;
@@ -174,14 +175,14 @@ class DynamoDBLegcayCloudImporterTest {
                 .buildRunner()
                 .execute();
 
-        List<ChangeEntry> mongockDbState = dynamoDBUtil.getEnhancedClient().table(mongockDynamoDBDriver.getMigrationRepositoryName(), TableSchema.fromBean(ChangeEntry.class))
+        List<ChangeEntryEntity> mongockDbState = dynamoDBUtil.getEnhancedClient().table(mongockDynamoDBDriver.getMigrationRepositoryName(), TableSchema.fromBean(ChangeEntryEntity.class))
                 .scan(ScanEnhancedRequest.builder()
                         .consistentRead(true)
                         .build()
                 )
                 .items()
                 .stream()
-                .sorted(Comparator.comparing(ChangeEntry::getTimestamp))
+                .sorted(Comparator.comparing(ChangeEntryEntity::getTimestamp))
                 .collect(Collectors.toList());
 
         //Check if Mongock works properly
@@ -194,7 +195,7 @@ class DynamoDBLegcayCloudImporterTest {
         //Prepare expectations for Mocked Server
         List<AuditEntry> importExpectations = mongockDbState
                 .stream()
-                .map(DynamoDBLegacyImportConfiguration::toMongockLegacyAuditEntry)
+                .map(DynamoDBLegacyAuditReader::toMongockLegacyAuditEntry)
                 .map(MongockLegacyAuditEntry::toAuditEntry)
                 .collect(Collectors.toList());
 
@@ -214,7 +215,7 @@ class DynamoDBLegcayCloudImporterTest {
                 "execution",
                 false
         ));
-        DynamoDBLegacyImporter dynamoDBLegacyImporter = new DynamoDBLegacyImporter(dynamoDBUtil.getEnhancedClient().table(mongockDynamoDBDriver.getMigrationRepositoryName(), TableSchema.fromBean(ChangeEntry.class)));
+        DynamoDBLegacyImporter dynamoDBLegacyImporter = new DynamoDBLegacyImporter(dynamoDBUtil.getEnhancedClient());
 
         //Run Mocked Server
         String executionId = "execution-1";

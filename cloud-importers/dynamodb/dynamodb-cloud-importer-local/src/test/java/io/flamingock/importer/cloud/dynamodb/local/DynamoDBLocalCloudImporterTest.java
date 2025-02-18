@@ -208,7 +208,7 @@ class DynamoDBLocalCloudImporterTest {
                 InsertClient.class.getName(),
                 "execution"
         ));
-        DynamoDBLocalImporter dynamoDBLegacyImporter = new DynamoDBLocalImporter(dynamoDBUtil.getEnhancedClient().table(DynamoDBConstants.AUDIT_LOG_TABLE_NAME, TableSchema.fromBean(AuditEntryEntity.class)));
+        DynamoDBLocalImporter dynamoDBLegacyImporter = new DynamoDBLocalImporter(dynamoDBUtil.getEnhancedClient());
 
         //Run Mocked Server
         String executionId = "execution-1";
