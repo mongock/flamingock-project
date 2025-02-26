@@ -21,16 +21,18 @@ import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.NonLockGuardedType;
 import io.flamingock.template.mongodb.model.MongoOperation;
 
+import java.util.List;
+
 @NonLockGuarded(NonLockGuardedType.NONE)
 public class MongoChangeTemplateConfig {
-    private MongoOperation execution;
-    private MongoOperation rollback;
+    private List<MongoOperation> execution;
+    private List<MongoOperation> rollback;
 
-    public MongoOperation getExecution() { return execution; }
-    public void setExecution(MongoOperation execution) { this.execution = execution; }
+    public List<MongoOperation> getExecution() { return execution; }
+    public void setExecution(List<MongoOperation> execution) { this.execution = execution; }
 
-    public MongoOperation getRollback() { return rollback; }
-    public void setRollback(MongoOperation rollback) {
+    public List<MongoOperation> getRollback() { return rollback; }
+    public void setRollback(List<MongoOperation> rollback) {
         this.rollback = rollback;
     }
 

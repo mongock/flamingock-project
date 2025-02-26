@@ -43,14 +43,15 @@ public class MongoChangeTemplate {
         return config.validate();
     }
 
+    //TODO if transactional we need to add clientSession to the dependency
     @TemplateExecution
     public void execute(MongoDatabase db) {
-        executeOp(db, config.getExecution());
+        config.getExecution().forEach(executionOperation -> executeOp(db, executionOperation));
     }
 
     @TemplateRollbackExecution
     public void rollback(MongoDatabase db) {
-        executeOp(db, config.getRollback());
+        config.getRollback().forEach(executionOperation -> executeOp(db, executionOperation));
     }
 
     private void executeOp(MongoDatabase db, MongoOperation op) {
