@@ -99,9 +99,9 @@ project(":templates:sql-springboot-template").name = "sql-springboot-template"
 project(":templates:sql-springboot-template").projectDir = file("templates/sql-springboot-template")
 
 //MONGODB
-include("templates:mongodb-template")
-project(":templates:mongodb-template").name = "mongodb-template"
-project(":templates:mongodb-template").projectDir = file("templates/mongodb-template")
+include("templates:mongodb-change-template")
+project(":templates:mongodb-change-template").name = "mongodb-change-template"
+project(":templates:mongodb-change-template").projectDir = file("templates/mongodb-change-template")
 
 //////////////////////////////////////
 // UTILS
