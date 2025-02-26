@@ -1,4 +1,4 @@
-package io.flamingock.importer.mongodb.sync4;
+package io.flamingock.importer.mongodb;
 
 import com.mongodb.client.MongoCollection;
 import io.flamingock.core.engine.audit.importer.ImporterReader;
