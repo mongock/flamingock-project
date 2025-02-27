@@ -24,23 +24,24 @@ import io.flamingock.template.mongodb.model.MongoOperation;
 import java.util.List;
 
 @NonLockGuarded(NonLockGuardedType.NONE)
-public class MongoChangeTemplateConfig {
-    private List<MongoOperation> execution;
-    private List<MongoOperation> rollback;
+public class MongoChangeTemplateConfig  {
+    private List<MongoOperation> changes;
+    private List<MongoOperation> rollbacks;
 
-    public List<MongoOperation> getExecution() { return execution; }
-    public void setExecution(List<MongoOperation> execution) { this.execution = execution; }
+    public List<MongoOperation> getChanges() { return changes; }
 
-    public List<MongoOperation> getRollback() { return rollback; }
-    public void setRollback(List<MongoOperation> rollback) {
-        this.rollback = rollback;
+    public void setChanges(List<MongoOperation> changes) { this.changes = changes; }
+
+    public List<MongoOperation> getRollbacks() { return rollbacks; }
+
+    public void setRollbacks(List<MongoOperation> rollbacks) {
+        this.rollbacks = rollbacks;
     }
 
-    boolean validate() {
+    public void validate() {
         //TODO implement validation
         // we probably want 3 validations
         // config generic
         // and operation validation in execution and rollback
-        return true;
     }
 }
