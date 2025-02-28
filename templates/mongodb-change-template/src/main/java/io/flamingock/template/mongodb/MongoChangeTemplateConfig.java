@@ -44,4 +44,11 @@ public class MongoChangeTemplateConfig  {
         // config generic
         // and operation validation in execution and rollback
     }
+
+    @Override
+    public String toString() {
+        return "MongoChangeTemplateConfig{" + "changes=" + changes +
+                ", rollbacks=" + rollbacks +
+                '}';
+    }
 }

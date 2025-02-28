@@ -1,9 +1,9 @@
 package io.flamingock.template.mongodb.model;
 
-import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.annotations.NonLockGuardedType;
-import io.flamingock.template.mongodb.utils.IndexOptionsMapper;
+import io.flamingock.template.mongodb.model.operator.MongoOperator;
 import org.bson.Document;
 
 import java.util.List;
@@ -17,10 +17,6 @@ public class MongoOperation {
     private Map<String, Object> parameters;
 
     public String getType() { return type; }
-
-    public MongoOperationType getTypeEnum() {
-        return MongoOperationType.getFromValue(getType());
-    }
 
     public String getCollection() { return collection; }
 
@@ -44,12 +40,6 @@ public class MongoOperation {
         return new Document((Map<String, Object>) parameters.get("keys"));
     }
 
-    @SuppressWarnings("unchecked")
-    public IndexOptions getIndexOptions() {
-        return parameters.containsKey("indexOptions")
-                ? IndexOptionsMapper.mapToIndexOptions((Map<String, Object>)parameters.get("indexOptions"))
-                : new IndexOptions();
-    }
 
 
     @SuppressWarnings("unchecked")
@@ -62,5 +52,20 @@ public class MongoOperation {
     @SuppressWarnings("unchecked")
     public Document getFilter() {
         return new Document((Map<String, Object>) parameters.get("filter"));
+    }
+
+
+    public MongoOperator getOperator(MongoDatabase db) {
+        return MongoOperationType.getFromValue(getType()).getOperator(db, this);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("MongoOperation{");
+        sb.append("type='").append(type).append('\'');
+        sb.append(", collection='").append(collection).append('\'');
+        sb.append(", parameters=").append(parameters);
+        sb.append('}');
+        return sb.toString();
     }
 }
