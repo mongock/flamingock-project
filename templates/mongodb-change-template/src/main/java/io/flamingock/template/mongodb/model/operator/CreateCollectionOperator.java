@@ -1,18 +1,16 @@
 package io.flamingock.template.mongodb.model.operator;
 
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.template.mongodb.model.MongoOperation;
 
 public class CreateCollectionOperator extends MongoOperator {
 
-    private final String collectionName;
-
-    public CreateCollectionOperator(MongoDatabase mongoDatabase, String collectionName) {
-        super(mongoDatabase);
-        this.collectionName = collectionName;
+    public CreateCollectionOperator(MongoDatabase mongoDatabase, MongoOperation operation) {
+        super(mongoDatabase, operation);
     }
 
     @Override
     public void execute() {
-        mongoDatabase.createCollection(collectionName);
+        mongoDatabase.createCollection(op.getCollection());
     }
 }
