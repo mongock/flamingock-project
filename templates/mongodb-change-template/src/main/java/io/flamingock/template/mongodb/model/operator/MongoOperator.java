@@ -11,12 +11,12 @@ public abstract class MongoOperator {
 
     protected final MongoDatabase mongoDatabase;
     protected final MongoOperation op;
-    protected final boolean transactionable;
+    protected final boolean transactional;
 
-    protected MongoOperator(MongoDatabase mongoDatabase, MongoOperation op, boolean transactionable) {
-        this.mongoDatabase = mongoDatabase;
+    protected MongoOperator(MongoDatabase mongoDatabase, MongoOperation op, boolean transactional) {
         this.op = op;
-        this.transactionable = transactionable;
+        this.mongoDatabase = mongoDatabase;
+        this.transactional = transactional;
     }
 
     public final void apply(ClientSession clientSession) {
@@ -27,7 +27,7 @@ public abstract class MongoOperator {
     private void logOperation(boolean withClientSession) {
         String simpleName = getClass().getSimpleName();
 
-        if (transactionable) {
+        if (transactional) {
             if (withClientSession) {
                 logger.warn("{} is a transactional operation but is not being applied within a transaction. " +
                                 "Recommend marking ChangeUnit as transactional.",

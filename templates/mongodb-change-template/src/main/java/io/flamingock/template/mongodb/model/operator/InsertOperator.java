@@ -33,22 +33,20 @@ public class InsertOperator extends MongoOperator {
     }
 
     private void insertMany(ClientSession clientSession, MongoCollection<Document> collection) {
-        List<Document> documents = op.getDocuments();
-        logger.debug("Inserting documents: " + documents);
         if(clientSession != null) {
             if(op.getOptions().size() != 0) {
                 InsertManyOptions insertManyOptions = InsertOptionsMapper.mapToInertManyOptions(op.getOptions());
-                collection.insertMany(clientSession, documents, insertManyOptions);
+                collection.insertMany(clientSession, op.getDocuments(), insertManyOptions);
             } else {
-                collection.insertMany(clientSession, documents);
+                collection.insertMany(clientSession, op.getDocuments());
             }
 
         } else {
             if(op.getOptions().size() != 0) {
                 InsertManyOptions insertManyOptions = InsertOptionsMapper.mapToInertManyOptions(op.getOptions());
-                collection.insertMany(documents, insertManyOptions);
+                collection.insertMany(op.getDocuments(), insertManyOptions);
             } else {
-                collection.insertMany(documents);
+                collection.insertMany(op.getDocuments());
             }
         }
     }
