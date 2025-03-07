@@ -19,7 +19,7 @@ package io.flamingock.core.task.descriptor;
 import java.util.Objects;
 import java.util.Optional;
 
-public abstract class AbstractTaskDescriptor implements TaskDescriptor {
+public abstract class AbstractLoadedTask implements LoadedTask {
 
     private final String id;
 
@@ -29,10 +29,10 @@ public abstract class AbstractTaskDescriptor implements TaskDescriptor {
     
     private final boolean transactional;
 
-    public AbstractTaskDescriptor(String id,
-                                  String order,
-                                  boolean runAlways,
-                                  boolean transactional) {
+    public AbstractLoadedTask(String id,
+                              String order,
+                              boolean runAlways,
+                              boolean transactional) {
         this.id = id;
         this.order = order;
         this.runAlways = runAlways;
@@ -63,8 +63,8 @@ public abstract class AbstractTaskDescriptor implements TaskDescriptor {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AbstractTaskDescriptor)) return false;
-        AbstractTaskDescriptor that = (AbstractTaskDescriptor) o;
+        if (!(o instanceof AbstractLoadedTask)) return false;
+        AbstractLoadedTask that = (AbstractLoadedTask) o;
         return id.equals(that.id);
     }
 

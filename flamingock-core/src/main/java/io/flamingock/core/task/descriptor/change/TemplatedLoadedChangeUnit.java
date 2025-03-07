@@ -28,17 +28,17 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public class TemplatedChangeUnitDescriptor extends AbstractChangeUnitDescriptor {
+public class TemplatedLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
 
     private final Map<String, Object> templateConfiguration;
 
-    public TemplatedChangeUnitDescriptor(String id,
-                                         String order,
-                                         Class<?> templateClass,
-                                         boolean transactional,
-                                         boolean runAlways,
-                                         Map<String, Object> templateConfiguration) {
+    public TemplatedLoadedChangeUnit(String id,
+                                     String order,
+                                     Class<?> templateClass,
+                                     boolean transactional,
+                                     boolean runAlways,
+                                     Map<String, Object> templateConfiguration) {
         super(id, order, templateClass, runAlways, transactional, true);
         this.templateConfiguration = templateConfiguration;
     }

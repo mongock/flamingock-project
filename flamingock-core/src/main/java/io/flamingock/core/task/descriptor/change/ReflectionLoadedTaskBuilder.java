@@ -16,29 +16,29 @@
 
 package io.flamingock.core.task.descriptor.change;
 
-import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
+import io.flamingock.core.task.descriptor.ReflectionLoadedTask;
 import io.flamingock.core.utils.ExecutionUtils;
 
-public class ReflectionTaskDescriptorBuilder {
-    private static final ReflectionTaskDescriptorBuilder instance = new ReflectionTaskDescriptorBuilder();
+public class ReflectionLoadedTaskBuilder {
+    private static final ReflectionLoadedTaskBuilder instance = new ReflectionLoadedTaskBuilder();
 
-    public static ReflectionTaskDescriptorBuilder recycledBuilder() {
+    public static ReflectionLoadedTaskBuilder recycledBuilder() {
         return instance;
     }
 
     private Class<?> source;
 
-    private ReflectionTaskDescriptorBuilder() {
+    private ReflectionLoadedTaskBuilder() {
     }
 
-    public ReflectionTaskDescriptorBuilder setSource(Class<?> source) {
+    public ReflectionLoadedTaskBuilder setSource(Class<?> source) {
         this.source = source;
         return this;
     }
 
-    public ReflectionTaskDescriptor build() {
+    public ReflectionLoadedTask build() {
         if (ExecutionUtils.isChangeUnit(source)) {
-            return ChangeUnitDescriptor.fromClass(source);
+            return LoadedChangeUnit.fromClass(source);
         } else {
             throw new IllegalArgumentException(String.format("Task type not recognised in class[%s]", source.getName()));
         }

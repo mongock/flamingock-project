@@ -19,21 +19,21 @@ package io.flamingock.core.task.descriptor.change;
 import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.api.annotations.FlamingockConstructor;
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.task.descriptor.ReflectionTaskDescriptor;
+import io.flamingock.core.task.descriptor.ReflectionLoadedTask;
 import io.mongock.api.annotations.ChangeUnitConstructor;
 
 import java.lang.reflect.Constructor;
 
-public abstract class AbstractChangeUnitDescriptor extends ReflectionTaskDescriptor {
+public abstract class AbstractLoadedChangeUnit extends ReflectionLoadedTask {
 
     private final boolean isNewChangeUnit;
 
-    public AbstractChangeUnitDescriptor(String id,
-                                        String order,
-                                        Class<?> source,
-                                        boolean runAlways,
-                                        boolean transactional,
-                                        boolean isNewChangeUnit) {
+    public AbstractLoadedChangeUnit(String id,
+                                    String order,
+                                    Class<?> source,
+                                    boolean runAlways,
+                                    boolean transactional,
+                                    boolean isNewChangeUnit) {
         super(id, order, source, runAlways, transactional);
         this.isNewChangeUnit = isNewChangeUnit;
     }

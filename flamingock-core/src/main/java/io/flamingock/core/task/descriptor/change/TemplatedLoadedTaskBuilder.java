@@ -26,10 +26,10 @@ import java.util.Map;
 
 
 //TODO how to set transactional and runAlways
-public class TemplatedTaskDescriptorBuilder {
-    private static final TemplatedTaskDescriptorBuilder instance = new TemplatedTaskDescriptorBuilder();
+public class TemplatedLoadedTaskBuilder {
+    private static final TemplatedLoadedTaskBuilder instance = new TemplatedLoadedTaskBuilder();
 
-    public static TemplatedTaskDescriptorBuilder recycledBuilder() {
+    public static TemplatedLoadedTaskBuilder recycledBuilder() {
         return instance;
     }
 
@@ -45,49 +45,49 @@ public class TemplatedTaskDescriptorBuilder {
 
     private Map<String, Object> templateConfiguration;
 
-    private TemplatedTaskDescriptorBuilder() {
+    private TemplatedLoadedTaskBuilder() {
     }
 
-    public TemplatedTaskDescriptorBuilder setId(String id) {
+    public TemplatedLoadedTaskBuilder setId(String id) {
         this.id = id;
         return this;
     }
 
-    public TemplatedTaskDescriptorBuilder setOrder(String order) {
+    public TemplatedLoadedTaskBuilder setOrder(String order) {
         this.order = order;
         return this;
     }
 
-    public TemplatedTaskDescriptorBuilder setRunAlways(boolean runAlways) {
+    public TemplatedLoadedTaskBuilder setRunAlways(boolean runAlways) {
         this.runAlways = runAlways;
         return this;
     }
 
-    public TemplatedTaskDescriptorBuilder setTransactional(Boolean transactional) {
+    public TemplatedLoadedTaskBuilder setTransactional(Boolean transactional) {
         this.transactional = transactional;
         return this;
     }
 
-    public TemplatedTaskDescriptorBuilder setTemplateName(String templateName) {
+    public TemplatedLoadedTaskBuilder setTemplateName(String templateName) {
         this.templateName = templateName;
         return this;
     }
 
-    public TemplatedTaskDescriptorBuilder setTemplateConfiguration(Map<String, Object> templateConfiguration) {
+    public TemplatedLoadedTaskBuilder setTemplateConfiguration(Map<String, Object> templateConfiguration) {
         this.templateConfiguration = templateConfiguration;
         return this;
     }
 
-    public TemplatedChangeUnitDescriptor build() {
+    public TemplatedLoadedChangeUnit build() {
 
         TemplateSpec templateSpec = TemplateFactory.getTemplate(templateName)
                 .orElseThrow(() -> new FlamingockException("Template not found: " + templateName));
 
         boolean isTaskTransactional = isTaskTransactionalAccordingTemplate(templateSpec);
-        return new TemplatedChangeUnitDescriptor(id, order, templateSpec.getTemplateClass(), isTaskTransactional, runAlways, templateConfiguration);
+        return new TemplatedLoadedChangeUnit(id, order, templateSpec.getTemplateClass(), isTaskTransactional, runAlways, templateConfiguration);
     }
 
-    public TemplatedTaskDescriptorBuilder setFromDefinition(TemplatedTaskDefinition templatedTaskDefinition) {
+    public TemplatedLoadedTaskBuilder setFromDefinition(TemplatedTaskDefinition templatedTaskDefinition) {
         setId(templatedTaskDefinition.getId());
         setOrder(templatedTaskDefinition.getOrder());
         setTemplateName(templatedTaskDefinition.getTemplateName());

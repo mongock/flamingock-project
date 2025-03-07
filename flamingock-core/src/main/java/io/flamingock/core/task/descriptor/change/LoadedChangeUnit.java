@@ -17,14 +17,10 @@
 package io.flamingock.core.task.descriptor.change;
 
 import io.flamingock.commons.utils.ReflectionUtil;
-import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
-import io.flamingock.core.legacy.MongockLegacyIdGenerator;
-import io.flamingock.core.utils.ExecutionUtils;
 import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.RollbackBeforeExecution;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,14 +29,14 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-public class ChangeUnitDescriptor extends AbstractChangeUnitDescriptor {
-    private static final Logger logger = LoggerFactory.getLogger(ChangeUnitDescriptor.class);
+public class LoadedChangeUnit extends AbstractLoadedChangeUnit {
+    private static final Logger logger = LoggerFactory.getLogger(LoadedChangeUnit.class);
 
-    public static ChangeUnitDescriptor fromClass(Class<?> source) {
+    public static LoadedChangeUnit fromClass(Class<?> source) {
         return ChangeUnitUtil.getChangeUnitDescriptor(source);
     }
 
-    public ChangeUnitDescriptor(String id, String order, Class<?> source, boolean runAlways, boolean transactional, boolean isNewChangeUnit) {
+    public LoadedChangeUnit(String id, String order, Class<?> source, boolean runAlways, boolean transactional, boolean isNewChangeUnit) {
         super(id, order, source, runAlways, transactional, isNewChangeUnit);
     }
 
@@ -132,7 +128,7 @@ public class ChangeUnitDescriptor extends AbstractChangeUnitDescriptor {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", ChangeUnitDescriptor.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", LoadedChangeUnit.class.getSimpleName() + "[", "]")
                 .add("source=" + source)
                 .add("sourceClass=" + getSourceClass())
                 .add("sourceName='" + getSourceName() + "'")

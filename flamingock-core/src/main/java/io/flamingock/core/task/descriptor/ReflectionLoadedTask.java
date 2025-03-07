@@ -21,11 +21,11 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-public abstract class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
+public abstract class ReflectionLoadedTask extends AbstractLoadedTask {
 
     protected final Class<?> source;
 
-    public ReflectionTaskDescriptor(String id, String order, Class<?> source, boolean runAlways, boolean transactional) {
+    public ReflectionLoadedTask(String id, String order, Class<?> source, boolean runAlways, boolean transactional) {
         super(id, order, runAlways, transactional);
         this.source = source;
     }
@@ -47,7 +47,7 @@ public abstract class ReflectionTaskDescriptor extends AbstractTaskDescriptor {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", ReflectionTaskDescriptor.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", ReflectionLoadedTask.class.getSimpleName() + "[", "]")
                 .add("source=" + source)
                 .add("sourceClass=" + getSourceClass())
                 .add("sourceName='" + getSourceName() + "'")

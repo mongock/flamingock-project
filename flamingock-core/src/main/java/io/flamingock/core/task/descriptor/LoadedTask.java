@@ -18,7 +18,7 @@ package io.flamingock.core.task.descriptor;
 
 import java.util.Optional;
 
-public interface TaskDescriptor extends Comparable<TaskDescriptor> {
+public interface LoadedTask extends Comparable<LoadedTask> {
 
     String getId();
 
@@ -43,7 +43,7 @@ public interface TaskDescriptor extends Comparable<TaskDescriptor> {
     }
 
     @Override
-    default int compareTo(TaskDescriptor other) {
+    default int compareTo(LoadedTask other) {
         if (!other.getOrder().isPresent()) {
             return -1;
         } else if (!this.getOrder().isPresent()) {
