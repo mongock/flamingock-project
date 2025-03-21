@@ -18,8 +18,8 @@ package io.flamingock.core.task.executable;
 
 import io.flamingock.commons.utils.StringUtil;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.core.task.descriptor.change.LoadedChangeUnit;
-import io.flamingock.core.task.descriptor.ReflectionLoadedTask;
+import io.flamingock.core.task.loaded.change.CodeLoadedChangeUnit;
+import io.flamingock.core.task.loaded.ReflectionLoadedTask;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -30,15 +30,15 @@ import java.util.Optional;
 /**
  * Factory for ChangeUnit classes
  */
-public class ExecutableChangeUnitFactory implements ExecutableTaskFactory<LoadedChangeUnit> {
+public class ExecutableChangeUnitFactory implements ExecutableTaskFactory<CodeLoadedChangeUnit> {
 
     @Override
-    public List<ReflectionExecutableTask<ReflectionLoadedTask>> extractTasks(String stageName, LoadedChangeUnit descriptor, AuditEntry.Status initialState) {
+    public List<ReflectionExecutableTask<ReflectionLoadedTask>> extractTasks(String stageName, CodeLoadedChangeUnit descriptor, AuditEntry.Status initialState) {
         return getTasksFromReflection(stageName, descriptor, initialState);
     }
 
     private List<ReflectionExecutableTask<ReflectionLoadedTask>> getTasksFromReflection(String stageName,
-                                                                                        LoadedChangeUnit loadedTask,
+                                                                                        CodeLoadedChangeUnit loadedTask,
                                                                                         AuditEntry.Status initialState) {
 
         Method executionMethod = loadedTask.getExecutionMethod();
@@ -70,7 +70,7 @@ public class ExecutableChangeUnitFactory implements ExecutableTaskFactory<Loaded
                                                                                                 ReflectionExecutableTask<ReflectionLoadedTask> baseTask,
                                                                                                 AuditEntry.Status initialState) {
         //Creates a new LoadedTask, based on the main one, but with the "beforeExecution id, also based on the main one"
-        LoadedChangeUnit loadedTask = new LoadedChangeUnit(
+        CodeLoadedChangeUnit loadedTask = new CodeLoadedChangeUnit(
                 StringUtil.getBeforeExecutionId(baseTask.getDescriptor().getId()),
                 baseTask.getDescriptor().getOrder().orElse(null),
                 baseTask.getDescriptor().getSourceClass(),

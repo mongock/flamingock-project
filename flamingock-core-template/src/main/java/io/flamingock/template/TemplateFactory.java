@@ -31,10 +31,13 @@ public final class TemplateFactory {
         templateModule.getTemplates().forEach(TemplateFactory::registerTemplate);
     }
 
+    public static void registerTemplate(String name, Class<?> templateClass) {
+        registerTemplate(new TemplateSpec(name, templateClass));
+    }
+
     public static void registerTemplate(TemplateSpec templateSpec) {
         templateSpecs.put(templateSpec.getName(), templateSpec);
     }
-
 
     public static Optional<TemplateSpec> getTemplate(String templateName) {
         return Optional.ofNullable(templateSpecs.get(templateName));

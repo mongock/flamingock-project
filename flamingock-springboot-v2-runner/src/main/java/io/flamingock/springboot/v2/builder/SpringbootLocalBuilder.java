@@ -88,9 +88,8 @@ public class SpringbootLocalBuilder extends AbstractSpringbootBuilder<Springboot
         logger.info("Creating runner with spring profiles[{}]", Arrays.toString(activeProfiles));
         Pipeline pipeline = buildPipeline(activeProfiles,
                 getSystemModuleManager().getSortedSystemStagesBefore(),
-                coreConfiguration.getStages(),
-                getSystemModuleManager().getSortedSystemStagesAfter(),
-                getFlamingockMetadata());
+                coreConfiguration.getPreviewPipeline(),
+                getSystemModuleManager().getSortedSystemStagesAfter());
 
         //injecting the pipeline descriptor to the dependencies
         addDependency(new Dependency(PipelineDescriptor.class, pipeline));
@@ -100,7 +99,6 @@ public class SpringbootLocalBuilder extends AbstractSpringbootBuilder<Springboot
         return PipelineRunnerCreator.createLocal(
                 runnerId,
                 pipeline,
-                getFlamingockMetadata(),
                 engine,
                 coreConfiguration,
                 createEventPublisher(),

@@ -101,10 +101,11 @@ public class SpringbootCloudBuilder extends AbstractSpringbootBuilder<Springboot
         Pipeline pipeline = buildPipeline(
                 activeProfiles,
                 getSystemModuleManager().getSortedSystemStagesBefore(),
-                getCoreConfiguration().getStages(),
-                getSystemModuleManager().getSortedSystemStagesAfter(),
-                getFlamingockMetadata()
+                getCoreConfiguration().getPreviewPipeline(),
+                getSystemModuleManager().getSortedSystemStagesAfter()
         );
+
+
 
         //injecting the pipeline descriptor to the dependencies
         addDependency(new Dependency(PipelineDescriptor.class, pipeline));
@@ -114,7 +115,6 @@ public class SpringbootCloudBuilder extends AbstractSpringbootBuilder<Springboot
         return PipelineRunnerCreator.createCloud(
                 runnerId,
                 pipeline,
-                getFlamingockMetadata(),
                 engine,
                 getCoreConfiguration(),
                 createEventPublisher(),

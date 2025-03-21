@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.descriptor.change;
+package io.flamingock.core.task.loaded.builder;
 
-import io.flamingock.core.task.descriptor.ReflectionLoadedTask;
+import io.flamingock.core.task.loaded.ReflectionLoadedTask;
+import io.flamingock.core.task.loaded.change.CodeLoadedChangeUnit;
 import io.flamingock.core.utils.ExecutionUtils;
 
 public class ReflectionLoadedTaskBuilder {
@@ -38,7 +39,7 @@ public class ReflectionLoadedTaskBuilder {
 
     public ReflectionLoadedTask build() {
         if (ExecutionUtils.isChangeUnit(source)) {
-            return LoadedChangeUnit.fromClass(source);
+            return CodeLoadedChangeUnit.fromClass(source);
         } else {
             throw new IllegalArgumentException(String.format("Task type not recognised in class[%s]", source.getName()));
         }

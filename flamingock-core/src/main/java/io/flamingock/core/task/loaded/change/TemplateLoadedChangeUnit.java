@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.descriptor.change;
+package io.flamingock.core.task.loaded.change;
 
 import io.flamingock.commons.utils.ReflectionUtil;
-import io.flamingock.template.annotations.TemplateConfigSetter;
-import io.flamingock.template.annotations.TemplateConfigValidator;
-import io.flamingock.template.annotations.TemplateExecution;
-import io.flamingock.template.annotations.TemplateRollbackExecution;
+import io.flamingock.template.annotations.ChangeTemplateConfigSetter;
+import io.flamingock.template.annotations.ChangeTemplateConfigValidator;
+import io.flamingock.template.annotations.ChangeTemplateExecution;
+import io.flamingock.template.annotations.ChangeTemplateRollbackExecution;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -28,17 +28,17 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public class TemplatedLoadedChangeUnit extends AbstractLoadedChangeUnit {
+public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
 
     private final Map<String, Object> templateConfiguration;
 
-    public TemplatedLoadedChangeUnit(String id,
-                                     String order,
-                                     Class<?> templateClass,
-                                     boolean transactional,
-                                     boolean runAlways,
-                                     Map<String, Object> templateConfiguration) {
+    public TemplateLoadedChangeUnit(String id,
+                                    String order,
+                                    Class<?> templateClass,
+                                    boolean transactional,
+                                    boolean runAlways,
+                                    Map<String, Object> templateConfiguration) {
         super(id, order, templateClass, runAlways, transactional, true);
         this.templateConfiguration = templateConfiguration;
     }
@@ -49,29 +49,29 @@ public class TemplatedLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
     @Override
     public Method getExecutionMethod() {
-        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), TemplateExecution.class)
+        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), ChangeTemplateExecution.class)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(
                         "Templated[%s] without %s method",
-                        getSourceClass().getName(),
-                        TemplateExecution.class.getSimpleName())));
+                        getSource(),
+                        ChangeTemplateExecution.class.getSimpleName())));
     }
 
     public Optional<Method> getConfigSetter() {
-        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), TemplateConfigSetter.class);
+        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), ChangeTemplateConfigSetter.class);
     }
 
     public Optional<Method> getConfigValidator() {
-        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), TemplateConfigValidator.class);
+        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), ChangeTemplateConfigValidator.class);
     }
 
     @Override
     public Optional<Method> getRollbackMethod() {
         Optional<Method> rollbackMethodOpt = ReflectionUtil
-                .findFirstAnnotatedMethod(getSourceClass(), TemplateRollbackExecution.class);
+                .findFirstAnnotatedMethod(getSourceClass(), ChangeTemplateRollbackExecution.class);
         Optional<Method> rollbackMethod;
         if (rollbackMethodOpt.isPresent()) {
             Method potentialRollbackMethod = rollbackMethodOpt.get();
-            TemplateRollbackExecution rollbackExecutionAnnotation = potentialRollbackMethod.getAnnotation(TemplateRollbackExecution.class);
+            ChangeTemplateRollbackExecution rollbackExecutionAnnotation = potentialRollbackMethod.getAnnotation(ChangeTemplateRollbackExecution.class);
             String[] conditionalOnAllConfigurationPropertiesNotNull = rollbackExecutionAnnotation.conditionalOnAllConfigurationPropertiesNotNull();
             if (conditionalOnAllConfigurationPropertiesNotNull == null || conditionalOnAllConfigurationPropertiesNotNull.length == 0) {
                 rollbackMethod = Optional.of(potentialRollbackMethod);

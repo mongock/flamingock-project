@@ -17,44 +17,42 @@
 package io.flamingock.template.mongodb;
 
 import com.mongodb.client.ClientSession;
-import io.flamingock.template.annotations.TemplateConfigSetter;
-import io.flamingock.template.annotations.TemplateConfigValidator;
-import io.flamingock.template.annotations.TemplateExecution;
-import io.flamingock.template.annotations.TemplateRollbackExecution;
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.template.annotations.ChangeTemplate;
+import io.flamingock.template.annotations.ChangeTemplateConfigSetter;
+import io.flamingock.template.annotations.ChangeTemplateConfigValidator;
+import io.flamingock.template.annotations.ChangeTemplateExecution;
+import io.flamingock.template.annotations.ChangeTemplateRollbackExecution;
 import io.flamingock.template.mongodb.model.MongoOperation;
 import jakarta.annotation.Nullable;
-import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
+@ChangeTemplate("mongo-change-template")
 public class MongoChangeTemplate {
     protected static final Logger logger = LoggerFactory.getLogger(MongoChangeTemplate.class);
 
     private MongoChangeTemplateConfig config;
 
-    @TemplateConfigSetter
+    @ChangeTemplateConfigSetter
     public void setConfiguration(MongoChangeTemplateConfig config) {
         logger.trace("setting MongoChangeTemplate config: " + config);
         this.config = config;
     }
 
-    @TemplateConfigValidator
+    @ChangeTemplateConfigValidator
     public void validate() {
         logger.trace("validating MongoChangeTemplate");
         config.validate();
     }
 
-    @TemplateExecution
+    @ChangeTemplateExecution
     public void execute(MongoDatabase db, @Nullable ClientSession clientSession) {
         logger.debug("MongoChangeTemplate changes with clientSession[{}]", clientSession != null);
         config.getChanges().forEach(executionOperation -> executeOp(db, executionOperation, clientSession));
     }
 
-    @TemplateRollbackExecution
+    @ChangeTemplateRollbackExecution
     public void rollback(MongoDatabase db, @Nullable ClientSession clientSession) {
         logger.debug("MongoChangeTemplate rollbacks with clientSession[{}]", clientSession != null);
         config.getRollbacks().forEach(executionOperation -> executeOp(db, executionOperation, clientSession));

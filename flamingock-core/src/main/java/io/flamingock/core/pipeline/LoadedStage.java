@@ -18,7 +18,7 @@ package io.flamingock.core.pipeline;
 
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
-import io.flamingock.core.task.descriptor.LoadedTask;
+import io.flamingock.core.task.TaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 
@@ -35,14 +35,14 @@ public class LoadedStage {
 
     private final String name;
 
-    private final Collection<LoadedTask> loadedTasks;
+    private final Collection<TaskDescriptor> loadedTasks;
 
     private final boolean parallel;
 
     private final ParentExecutableTaskFactory factory;
 
     public LoadedStage(String name,
-                       Collection<LoadedTask> loadedTasks,
+                       Collection<TaskDescriptor> loadedTasks,
                        boolean parallel) {
         this.name = name;
         this.loadedTasks = loadedTasks;
@@ -69,11 +69,20 @@ public class LoadedStage {
     }
 
 
-    public Collection<LoadedTask> getLoadedTasks() {
+    public Collection<TaskDescriptor> getLoadedTasks() {
         return loadedTasks;
     }
 
     public boolean isParallel() {
         return parallel;
+    }
+
+    @Override
+    public String toString() {
+        return "LoadedStage{" + "name='" + name + '\'' +
+                ", loadedTasks=" + loadedTasks +
+                ", parallel=" + parallel +
+                ", factory=" + factory +
+                '}';
     }
 }

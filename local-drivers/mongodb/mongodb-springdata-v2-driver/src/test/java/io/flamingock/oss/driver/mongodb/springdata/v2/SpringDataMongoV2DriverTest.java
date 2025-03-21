@@ -97,7 +97,7 @@ class SpringDataMongoV2DriverTest {
         FlamingockStandalone.local()
                 .withImporter(CoreConfiguration.ImporterConfiguration.withSource("mongockChangeLog"))
                 .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
+                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .build()
@@ -120,7 +120,7 @@ class SpringDataMongoV2DriverTest {
 
         FlamingockStandalone.local()
                 .setDriver(new SpringDataMongoV2Driver(mongoTemplate).setDriverConfiguration(driverConfiguration))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
+                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .build()
@@ -139,7 +139,7 @@ class SpringDataMongoV2DriverTest {
         //Given-When
         FlamingockStandalone.local()
                 .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
+                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .build()
@@ -172,7 +172,7 @@ class SpringDataMongoV2DriverTest {
         //Given-When
         FlamingockStandalone.local()
                 .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithoutTransaction"))
+                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithoutTransaction"))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .build()
@@ -206,7 +206,7 @@ class SpringDataMongoV2DriverTest {
         assertThrows(PipelineExecutionException.class, () -> {
             FlamingockStandalone.local()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                    .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithTransaction"))
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithTransaction"))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .build()
@@ -238,7 +238,7 @@ class SpringDataMongoV2DriverTest {
         assertThrows(PipelineExecutionException.class, () -> {
             FlamingockStandalone.local()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                    .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithRollback"))
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithRollback"))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .build()
@@ -272,7 +272,7 @@ class SpringDataMongoV2DriverTest {
         assertThrows(PipelineExecutionException.class, () -> {
             FlamingockStandalone.local()
                     .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                    .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithoutRollback"))
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithoutRollback"))
                     .addDependency(mongoTemplate)
                     .setTrackIgnored(true)
                     .disableTransaction()

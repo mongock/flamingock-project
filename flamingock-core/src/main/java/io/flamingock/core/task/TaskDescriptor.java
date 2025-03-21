@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.descriptor;
+package io.flamingock.core.task;
 
 import java.util.Optional;
 
-public interface LoadedTask extends Comparable<LoadedTask> {
+public interface TaskDescriptor extends Comparable<TaskDescriptor> {
 
     String getId();
 
@@ -26,7 +26,7 @@ public interface LoadedTask extends Comparable<LoadedTask> {
 
     boolean isTransactional();
 
-    String getSourceName();
+    String getSource();
 
     Optional<String> getOrder();
 
@@ -43,7 +43,7 @@ public interface LoadedTask extends Comparable<LoadedTask> {
     }
 
     @Override
-    default int compareTo(LoadedTask other) {
+    default int compareTo(TaskDescriptor other) {
         if (!other.getOrder().isPresent()) {
             return -1;
         } else if (!this.getOrder().isPresent()) {

@@ -54,6 +54,7 @@ public @interface ChangeUnit {
      *
      * @return ChangeSet if the ChangeLog is fail fast
      */
+    @Deprecated
     boolean failFast() default true;
 
     /**

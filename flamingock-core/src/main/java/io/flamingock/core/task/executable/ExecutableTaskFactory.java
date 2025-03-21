@@ -17,11 +17,11 @@
 package io.flamingock.core.task.executable;
 
 import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.core.task.descriptor.LoadedTask;
+import io.flamingock.core.task.TaskDescriptor;
 
 import java.util.List;
 
-public interface ExecutableTaskFactory<DESCRIPTOR extends LoadedTask> {
+public interface ExecutableTaskFactory<DESCRIPTOR extends TaskDescriptor> {
 
     List<? extends ExecutableTask> extractTasks(String stageName, DESCRIPTOR loadedTask, AuditEntry.Status initialState);
 }

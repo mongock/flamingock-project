@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v2.builder;
 
-import io.flamingock.core.api.metadata.FlamingockMetadata;
+import io.flamingock.core.pipeline.PreviewPipeline;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.api.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
@@ -57,6 +57,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -107,16 +108,14 @@ public abstract class AbstractSpringbootBuilder<
     }
 
     protected Pipeline buildPipeline(String[] activeProfiles,
-                                     Iterable<Stage> beforeUserStages,
-                                     Iterable<Stage> userStages,
-                                     Iterable<Stage> afterUserStages,
-                                     FlamingockMetadata flamingockMetadata) {
+                                     Collection<Stage> beforeUserStages,
+                                     PreviewPipeline previewPipeline,
+                                     Collection<Stage> afterUserStages) {
         return Pipeline.builder()
                 .addFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
                 .addBeforeUserStages(beforeUserStages)
-                .addUserStages(userStages)
+                .addPreviewPipeline(previewPipeline)
                 .addAfterUserStages(afterUserStages)
-                .setFlamingockMetadata(flamingockMetadata)
                 .build();
     }
 
@@ -126,11 +125,6 @@ public abstract class AbstractSpringbootBuilder<
     @Override
     public CoreConfigurable getCoreConfiguration() {
         return coreConfiguratorDelegate.getCoreConfiguration();
-    }
-
-    @Override
-    public HOLDER addStage(Stage stage) {
-        return coreConfiguratorDelegate.addStage(stage);
     }
 
     @Override
@@ -287,17 +281,6 @@ public abstract class AbstractSpringbootBuilder<
     @Override
     public CoreConfiguration.ImporterConfiguration getMongockImporterConfiguration() {
         return coreConfiguratorDelegate.getMongockImporterConfiguration();
-    }
-
-
-    @Override
-    public HOLDER setFlamingockMetadata(FlamingockMetadata metadata) {
-        return coreConfiguratorDelegate.setFlamingockMetadata(metadata);
-    }
-
-    @Override
-    public FlamingockMetadata getFlamingockMetadata() {
-        return coreConfiguratorDelegate.getFlamingockMetadata();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

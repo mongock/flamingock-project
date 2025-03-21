@@ -106,8 +106,9 @@ public class CloudEngineTransactionTest {
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
                 .setEnvironment(environmentName)
-                .addStage(new Stage("stage-1")
-                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")));
+                //.addStage(new Stage("stage-1")
+//                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
+        ;
     }
 
     @AfterEach

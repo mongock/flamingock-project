@@ -18,7 +18,7 @@ package io.flamingock.core.task.executable.template;
 
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.Dependency;
-import io.flamingock.core.task.descriptor.change.TemplatedLoadedChangeUnit;
+import io.flamingock.core.task.loaded.change.TemplateLoadedChangeUnit;
 import io.flamingock.core.task.executable.ReflectionExecutableTask;
 import io.flamingock.commons.utils.FileUtil;
 import io.flamingock.commons.utils.ReflectionUtil;
@@ -26,19 +26,19 @@ import io.flamingock.commons.utils.ReflectionUtil;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class TemplatedExecutableTask extends ReflectionExecutableTask<TemplatedLoadedChangeUnit> {
+public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoadedChangeUnit> {
     private final Method configValidatorMethod;
 
     private final Method configSetterMethod;
 
 
-    public TemplatedExecutableTask(String stageName,
-                                   TemplatedLoadedChangeUnit descriptor,
-                                   boolean requiredExecution,
-                                   Method executionMethod,
-                                   Method rollbackMethod,
-                                   Method configSetterMethod,
-                                   Method configValidatorMethod) {
+    public TemplateExecutableTask(String stageName,
+                                  TemplateLoadedChangeUnit descriptor,
+                                  boolean requiredExecution,
+                                  Method executionMethod,
+                                  Method rollbackMethod,
+                                  Method configSetterMethod,
+                                  Method configValidatorMethod) {
         super(stageName, descriptor, requiredExecution, executionMethod, rollbackMethod);
         this.configSetterMethod = configSetterMethod;
         this.configValidatorMethod = configValidatorMethod;

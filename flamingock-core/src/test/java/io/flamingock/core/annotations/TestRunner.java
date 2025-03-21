@@ -14,8 +14,8 @@ import io.flamingock.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
-import io.flamingock.core.task.descriptor.change.LoadedChangeUnit;
-import io.flamingock.core.task.descriptor.LoadedTask;
+import io.flamingock.core.task.loaded.change.CodeLoadedChangeUnit;
+import io.flamingock.core.task.TaskDescriptor;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.executable.ParentExecutableTaskFactory;
 import io.flamingock.core.task.navigation.navigator.StepNavigator;
@@ -67,7 +67,7 @@ public class TestRunner {
                 .build();
 
         //AND
-        LoadedTask loadedTask = LoadedChangeUnit.fromClass(changeUnitClass);
+        TaskDescriptor loadedTask = CodeLoadedChangeUnit.fromClass(changeUnitClass);
         List<? extends ExecutableTask> executableTasks = ParentExecutableTaskFactory.INSTANCE
                 .extractTasks("stage_name", loadedTask, null);
 

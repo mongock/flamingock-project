@@ -18,12 +18,12 @@ package io.flamingock.template;
 
 import java.util.Map;
 
-public class TemplatedTaskDefinition {
+public class TemplateTaskDefinition {
     private String id;
 
     private String order;
 
-    private String templateName;
+    private String template;
 
     private Boolean transactional;
 
@@ -45,12 +45,12 @@ public class TemplatedTaskDefinition {
         this.order = order;
     }
 
-    public String getTemplateName() {
-        return templateName;
+    public String getTemplate() {
+        return template;
     }
 
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
+    public void setTemplate(String template) {
+        this.template = template;
     }
 
     public Map<String, Object> getTemplateConfiguration() {

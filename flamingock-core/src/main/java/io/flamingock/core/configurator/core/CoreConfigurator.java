@@ -18,7 +18,6 @@ package io.flamingock.core.configurator.core;
 
 
 import io.flamingock.core.api.SystemModule;
-import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
@@ -33,8 +32,6 @@ public interface CoreConfigurator<
         SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>> {
 
     CoreConfigurable getCoreConfiguration();
-
-    HOLDER addStage(Stage stage);
 
     HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis);
 
@@ -100,8 +97,5 @@ public interface CoreConfigurator<
 
     CoreConfiguration.ImporterConfiguration getMongockImporterConfiguration();
 
-    HOLDER setFlamingockMetadata(FlamingockMetadata metadata);
-
-    FlamingockMetadata getFlamingockMetadata();
 
 }

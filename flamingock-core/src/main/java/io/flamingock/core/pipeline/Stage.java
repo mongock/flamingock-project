@@ -18,13 +18,12 @@ package io.flamingock.core.pipeline;
 
 import io.flamingock.core.api.annotations.SystemChange;
 import io.flamingock.commons.utils.FileUtil;
-import io.flamingock.core.api.metadata.FlamingockMetadata;
-import io.flamingock.core.task.descriptor.change.ReflectionLoadedTaskBuilder;
-import io.flamingock.core.task.descriptor.LoadedTask;
-import io.flamingock.core.task.descriptor.change.TemplatedLoadedTaskBuilder;
+import io.flamingock.core.task.loaded.builder.ReflectionLoadedTaskBuilder;
+import io.flamingock.core.task.TaskDescriptor;
 import io.flamingock.core.task.filter.TaskFilter;
+import io.flamingock.core.task.loaded.builder.TemplateLoadedTaskBuilder;
 import io.flamingock.core.utils.ExecutionUtils;
-import io.flamingock.template.TemplatedTaskDefinition;
+import io.flamingock.template.TemplateTaskDefinition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -185,20 +184,20 @@ public class Stage {
      *
      * @return the LoadedStage with contain the task Definition
      */
-    public LoadedStage load(FlamingockMetadata metadata) {
+    public LoadedStage load() {
         Predicate<Class<?>> filterOperator = getFilterOperator(getFilters());
 
-        Collection<LoadedTask> descriptors = new ArrayList<>(getFilteredDescriptorsFromCodePackages(codePackages, filterOperator, metadata));
+        Collection<TaskDescriptor> descriptors = new ArrayList<>(getFilteredDescriptorsFromCodePackages(codePackages, filterOperator));
 
         descriptors.addAll(getFilteredDescriptorsFromClasses(classes, filterOperator));
 
         descriptors.addAll(getFilteredDescriptorsFromDirectory(fileDirectories, filterOperator));
 
-        if (descriptors.stream().allMatch(LoadedTask::isSortable)) {
+        if (descriptors.stream().allMatch(TaskDescriptor::isSortable)) {
             //if all descriptors are sorted, we return a sorted collection
             return new LoadedStage(name, descriptors.stream().sorted().collect(Collectors.toList()), parallel);
 
-        } else if (descriptors.parallelStream().anyMatch(LoadedTask::isSortable)) {
+        } else if (descriptors.parallelStream().anyMatch(TaskDescriptor::isSortable)) {
             //if at least one of them are sorted, but not all. An exception is thrown
             throw new IllegalArgumentException("Either all tasks are ordered or none is");
 
@@ -208,40 +207,43 @@ public class Stage {
         }
     }
 
-    private static Collection<LoadedTask> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages,
-                                                                                 Predicate<Class<?>> filterOperator,
-                                                                                 FlamingockMetadata metadata) {
+    private static Collection<TaskDescriptor> getFilteredDescriptorsFromCodePackages(Collection<String> codePackages,
+                                                                                     Predicate<Class<?>> filterOperator) {
         if (codePackages == null) {
             return Collections.emptyList();
         }
 
-        Collection<Class<?>> classes;
-        if(metadata != null) {
-            classes = codePackages
-                    .stream()
-                    .map(metadata::getChangeUnitsByPackage)
-                    .flatMap(Collection::stream)
-                    .map(changeUnitMedata -> {
-                        try {
-                            return Stage.class.getClassLoader().loadClass(changeUnitMedata.getClassName());
-                        } catch (ClassNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .collect(Collectors.toList());
-        } else {
-            classes = codePackages.
-                    stream()
-                    .map(ExecutionUtils::loadExecutionClassesFromPackage)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList());
-        }
+        Collection<Class<?>> classes = codePackages.
+                stream()
+                .map(ExecutionUtils::loadExecutionClassesFromPackage)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+//        if(metadata != null) {
+//            classes = codePackages
+//                    .stream()
+//                    .map(metadata::getChangeUnitsByPackage)
+//                    .flatMap(Collection::stream)
+//                    .map(changeUnitMedata -> {
+//                        try {
+//                            return Stage.class.getClassLoader().loadClass(changeUnitMedata.getClassName());
+//                        } catch (ClassNotFoundException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    })
+//                    .collect(Collectors.toList());
+//        } else {
+//            classes = codePackages.
+//                    stream()
+//                    .map(ExecutionUtils::loadExecutionClassesFromPackage)
+//                    .flatMap(Collection::stream)
+//                    .collect(Collectors.toList());
+//        }
 
 
         return getFilteredDescriptorsFromClasses(classes, filterOperator);
     }
 
-    private static Collection<LoadedTask> getFilteredDescriptorsFromClasses(Collection<Class<?>> classes, Predicate<Class<?>> filterOperator) {
+    private static Collection<TaskDescriptor> getFilteredDescriptorsFromClasses(Collection<Class<?>> classes, Predicate<Class<?>> filterOperator) {
         if (classes == null) {
             return Collections.emptyList();
         }
@@ -255,7 +257,7 @@ public class Stage {
     }
 
     //TODO add filter
-    private static Collection<LoadedTask> getFilteredDescriptorsFromDirectory(Collection<String> directories, Predicate<Class<?>> filterOperator) {
+    private static Collection<TaskDescriptor> getFilteredDescriptorsFromDirectory(Collection<String> directories, Predicate<Class<?>> filterOperator) {
 
         if (directories == null) {
             return Collections.emptyList();
@@ -263,10 +265,10 @@ public class Stage {
         return directories.stream()
                 .map(directoryPath -> FileUtil.loadFilesFromDirectory(directoryPath, Stage.class.getClassLoader()))
                 .flatMap(Collection::stream)
-                .map(file -> FileUtil.getFromYamlFile(file, TemplatedTaskDefinition.class))
-//                .filter(source to filters.stream().allMatch(filter to filter.filter(source)))
-                .map(TemplatedLoadedTaskBuilder.recycledBuilder()::setFromDefinition)
-                .map(TemplatedLoadedTaskBuilder::build)
+                .map(file -> FileUtil.getFromYamlFile(file, TemplateTaskDefinition.class))
+//                .filter(source -> filters.stream().allMatch(filter -> filter.filter(source)))
+                .map(TemplateLoadedTaskBuilder.recycledBuilder()::setFromDefinition)
+                .map(TemplateLoadedTaskBuilder::getLoaded)
                 .collect(Collectors.toList());
     }
 

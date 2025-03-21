@@ -16,7 +16,7 @@
 
 package io.flamingock.core.task.navigation.summary;
 
-import io.flamingock.core.task.descriptor.LoadedTask;
+import io.flamingock.core.task.TaskDescriptor;
 import io.flamingock.core.task.navigation.step.ExecutableStep;
 import io.flamingock.core.task.navigation.step.afteraudit.AfterExecutionAuditStep;
 import io.flamingock.core.task.navigation.step.complete.CompletedAlreadyAppliedStep;
@@ -65,9 +65,9 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
 
     public static class InitialTaskSummaryLine extends AbstractTaskStepSummaryLine {
 
-        private final LoadedTask desc;
+        private final TaskDescriptor desc;
 
-        public InitialTaskSummaryLine(LoadedTask loadedTask) {
+        public InitialTaskSummaryLine(TaskDescriptor loadedTask) {
             super(loadedTask.getId(), null);
             this.desc = loadedTask;
         }
@@ -162,7 +162,7 @@ public abstract class AbstractTaskStepSummaryLine implements StepSummaryLine {
 
     public static class NotReachedTaskSummaryLine extends AbstractTaskStepSummaryLine {
 
-        public NotReachedTaskSummaryLine(LoadedTask loadedTask) {
+        public NotReachedTaskSummaryLine(TaskDescriptor loadedTask) {
             super(loadedTask.getId(), SummaryResult.NOT_REACHED);
         }
 

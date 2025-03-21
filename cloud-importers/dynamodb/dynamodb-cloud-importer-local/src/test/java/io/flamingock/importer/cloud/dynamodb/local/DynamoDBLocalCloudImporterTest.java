@@ -147,7 +147,7 @@ class DynamoDBLocalCloudImporterTest {
         DynamoDBDriver flamingockMongoSync4Driver = new DynamoDBDriver(getDynamoDbClient());
         FlamingockStandalone.local()
                 .setDriver(flamingockMongoSync4Driver)
-                .addStage(new Stage("setup-stage").addCodePackage("io.flamingock.importer.cloud.dynamodb.local.setup"))
+                //.addStage(new Stage("setup-stage").addCodePackage("io.flamingock.importer.cloud.dynamodb.local.setup"))
                 .addDependency(getDynamoDbClient())
                 .setTrackIgnored(true)
                 .build()
@@ -200,7 +200,7 @@ class DynamoDBLocalCloudImporterTest {
         //Finally run Flamingock changes with Cloud Importer
         flamingockBuilder
                 .addSystemModule(dynamoDBLegacyImporter)
-                .addStage(new Stage(stageName).addCodePackage("io.flamingock.importer.cloud.dynamodb.local.changes"))
+                //.addStage(new Stage(stageName).addCodePackage("io.flamingock.importer.cloud.dynamodb.local.changes"))
                 .addDependency(client)
                 .setTrackIgnored(true)
                 .build()

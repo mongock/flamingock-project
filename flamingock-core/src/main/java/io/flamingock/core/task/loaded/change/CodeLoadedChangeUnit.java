@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.descriptor.change;
+package io.flamingock.core.task.loaded.change;
 
 import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.api.annotations.Execution;
@@ -29,14 +29,14 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-public class LoadedChangeUnit extends AbstractLoadedChangeUnit {
-    private static final Logger logger = LoggerFactory.getLogger(LoadedChangeUnit.class);
+public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
+    private static final Logger logger = LoggerFactory.getLogger(CodeLoadedChangeUnit.class);
 
-    public static LoadedChangeUnit fromClass(Class<?> source) {
-        return ChangeUnitUtil.getChangeUnitDescriptor(source);
+    public static CodeLoadedChangeUnit fromClass(Class<?> sourceClass) {
+        return ChangeUnitUtil.getChangeUnitDescriptor(sourceClass);
     }
 
-    public LoadedChangeUnit(String id, String order, Class<?> source, boolean runAlways, boolean transactional, boolean isNewChangeUnit) {
+    public CodeLoadedChangeUnit(String id, String order, Class<?> source, boolean runAlways, boolean transactional, boolean isNewChangeUnit) {
         super(id, order, source, runAlways, transactional, isNewChangeUnit);
     }
 
@@ -46,7 +46,7 @@ public class LoadedChangeUnit extends AbstractLoadedChangeUnit {
             return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class)
                     .orElseThrow(() -> new IllegalArgumentException(String.format(
                             "Executable changeUnit[%s] without %s method",
-                            getSourceClass().getName(),
+                            getSource(),
                             Execution.class.getName())));
         } else {
             Optional<Method> legacyExecutionMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.Execution.class);
@@ -55,7 +55,7 @@ public class LoadedChangeUnit extends AbstractLoadedChangeUnit {
                     throw new IllegalArgumentException(String.format(
                             "You are using new API for Execution annotation in your changeUnit class[%s], however your class is annotated with legacy ChangeUnit annotation[%s]. " +
                                     "It's highly recommended to use the new API[in package %s], unless it's a legacy changeUnit created with Mongock",
-                            getSourceClass().getName(),
+                            getSource(),
                             io.mongock.api.annotations.Execution.class.getName(),
                             "io.flamingock.core.api.annotations"));
                 }
@@ -65,7 +65,7 @@ public class LoadedChangeUnit extends AbstractLoadedChangeUnit {
                             "Your changeUnit class[%s] doesn't contain execution method.\n" +
                                     "It's highly recommended to use the new API[in package %s].\n" +
                                     "In case it's an legacy changeUnit created with Mongock, please add the execution method annotated with legacy API[%s] ",
-                            getSourceClass().getName(),
+                            getSource(),
                             "io.flamingock.core.api.annotations",
                             io.mongock.api.annotations.Execution.class.getName())));
         }
@@ -79,7 +79,7 @@ public class LoadedChangeUnit extends AbstractLoadedChangeUnit {
                 if (ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), io.mongock.api.annotations.RollbackExecution.class).isPresent()) {
                     throw new IllegalArgumentException(String.format(
                             "Executable changeUnit[%s] rollback method should be annotated with new API[%s], instead of legacy API[%s] ",
-                            getSourceClass().getName(),
+                            getSource(),
                             RollbackExecution.class.getName(),
                             io.mongock.api.annotations.RollbackExecution.class.getName()));
                 }
@@ -92,7 +92,7 @@ public class LoadedChangeUnit extends AbstractLoadedChangeUnit {
                     throw new IllegalArgumentException(String.format(
                             "You are using new API for RollbackExecution annotation in your changeUnit class[%s], however your class is annotated with legacy ChangeUnit annotation[%s]. " +
                                     "It's highly recommended to use the new API[in package %s], unless it's a legacy changeUnit created with Mongock",
-                            getSourceClass().getName(),
+                            getSource(),
                             io.mongock.api.annotations.RollbackExecution.class.getName(),
                             "io.flamingock.core.api.annotations"));
                 }
@@ -122,16 +122,16 @@ public class LoadedChangeUnit extends AbstractLoadedChangeUnit {
     @Override
     public String pretty() {
         String fromParent = super.pretty();
-        return fromParent + String.format("\n\t\t[class: %s]", getSourceName());
+        return fromParent + String.format("\n\t\t[class: %s]", getSource());
     }
 
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", LoadedChangeUnit.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", CodeLoadedChangeUnit.class.getSimpleName() + "[", "]")
                 .add("source=" + source)
-                .add("sourceClass=" + getSourceClass())
-                .add("sourceName='" + getSourceName() + "'")
+                .add("sourceClass=" + getSource())
+                .add("sourceName='" + getSource() + "'")
                 .add("id='" + getId() + "'")
                 .add("runAlways=" + isRunAlways())
                 .add("transactional=" + isTransactional())

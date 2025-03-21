@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.descriptor.change;
+package io.flamingock.core.task.loaded.change;
 
 import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.api.annotations.FlamingockConstructor;
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.task.descriptor.ReflectionLoadedTask;
+import io.flamingock.core.task.loaded.ReflectionLoadedTask;
 import io.mongock.api.annotations.ChangeUnitConstructor;
 
 import java.lang.reflect.Constructor;
@@ -30,11 +30,11 @@ public abstract class AbstractLoadedChangeUnit extends ReflectionLoadedTask {
 
     public AbstractLoadedChangeUnit(String id,
                                     String order,
-                                    Class<?> source,
+                                    Class<?> sourceClass,
                                     boolean runAlways,
                                     boolean transactional,
                                     boolean isNewChangeUnit) {
-        super(id, order, source, runAlways, transactional);
+        super(id, order, sourceClass, runAlways, transactional);
         this.isNewChangeUnit = isNewChangeUnit;
     }
 
@@ -42,39 +42,39 @@ public abstract class AbstractLoadedChangeUnit extends ReflectionLoadedTask {
     public Constructor<?> getConstructor() {
         if (isNewChangeUnit()) {
             try {
-                return ReflectionUtil.getConstructorWithAnnotationPreference(source, FlamingockConstructor.class);
+                return ReflectionUtil.getConstructorWithAnnotationPreference(getSourceClass(), FlamingockConstructor.class);
             } catch (ReflectionUtil.MultipleAnnotatedConstructorsFound ex) {
                 throw new FlamingockException("Found multiple constructors for class[%s] annotated with %s." +
                         " Annotate the one you want Flamingock to use to instantiate your changeUnit",
-                        source.getName(),
+                        getSource(),
                         FlamingockConstructor.class.getName());
             } catch (ReflectionUtil.MultipleConstructorsFound ex) {
                 throw new FlamingockException("Found multiple constructors, please provide at least one  for class[%s].\n" +
                         "When more than one constructor, exactly one of them must be annotated. And it will be taken as default "
                         , FlamingockConstructor.class.getSimpleName()
-                        , source.getName()
+                        , getSource()
                 );
             } catch (ReflectionUtil.ConstructorNotFound ex) {
-                throw new FlamingockException("Cannot find a valid constructor for class[%s]", source.getName());
+                throw new FlamingockException("Cannot find a valid constructor for class[%s]", getSource());
             }
         } else {
             try {
-                return ReflectionUtil.getConstructorWithAnnotationPreference(source, ChangeUnitConstructor.class);
+                return ReflectionUtil.getConstructorWithAnnotationPreference(getSourceClass(), ChangeUnitConstructor.class);
             } catch (ReflectionUtil.MultipleAnnotatedConstructorsFound ex) {
                 throw new FlamingockException("Found multiple LEGACY constructors for class[%s] annotated with %s." +
                         " Annotate the one you want Flamingock to use to instantiate your changeUnit.\n" +
                         "Note: It's highly recommended to use the new API(@FlamingockConstructor)",
-                        source.getName(),
+                        getSource(),
                         ChangeUnitConstructor.class.getName());
             } catch (ReflectionUtil.MultipleConstructorsFound ex) {
                 throw new FlamingockException("Found multiple constructors, please provide at least one for class[%s].\n" +
                         "When more than one constructor, exactly one of them must be annotated. And it will be taken as default\n" +
                         "Note: It's highly recommended to use the new API(@FlamingockConstructor)"
                         , ChangeUnitConstructor.class.getSimpleName()
-                        , source.getName()
+                        , getSource()
                 );
             } catch (ReflectionUtil.ConstructorNotFound ex) {
-                throw new FlamingockException("Cannot find a valid constructor for class[%s]", source.getName());
+                throw new FlamingockException("Cannot find a valid constructor for class[%s]", getSource());
             }
         }
     }

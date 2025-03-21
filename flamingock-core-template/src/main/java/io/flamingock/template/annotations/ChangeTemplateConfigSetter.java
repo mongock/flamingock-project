@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TemplateRollbackExecution {
+public @interface ChangeTemplateConfigSetter {
 
-    String[] conditionalOnAllConfigurationPropertiesNotNull() default {};
 }

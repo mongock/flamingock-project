@@ -230,7 +230,7 @@ class DynamoDBLegcayCloudImporterTest {
         //Finally run Flamingock changes with Cloud Importer
         flamingockBuilder
                 .addSystemModule(dynamoDBLegacyImporter)
-                .addStage(new Stage(stageName).addCodePackage("io.flamingock.importer.cloud.dynamodb.legacy.changes"))
+                //.addStage(new Stage(stageName).addCodePackage("io.flamingock.importer.cloud.dynamodb.legacy.changes"))
                 .addDependency(client)
                 .setTrackIgnored(true)
                 .build()

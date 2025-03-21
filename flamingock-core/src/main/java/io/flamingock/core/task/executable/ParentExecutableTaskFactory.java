@@ -17,10 +17,10 @@
 package io.flamingock.core.task.executable;
 
 import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.core.task.descriptor.change.LoadedChangeUnit;
-import io.flamingock.core.task.descriptor.LoadedTask;
-import io.flamingock.core.task.descriptor.change.TemplatedLoadedChangeUnit;
-import io.flamingock.core.task.executable.template.TemplatedExecutableTaskFactory;
+import io.flamingock.core.task.loaded.change.CodeLoadedChangeUnit;
+import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.core.task.loaded.change.TemplateLoadedChangeUnit;
+import io.flamingock.core.task.executable.template.TemplateExecutableTaskFactory;
 
 import java.util.List;
 
@@ -28,23 +28,23 @@ import java.util.List;
  * This is an Abstract factory of factories. Depending on the descriptor it will use one of the factories,
  * that could be ChangeUnitFactory, PluginFactory(not implemented yet), etc.
  */
-public class ParentExecutableTaskFactory implements ExecutableTaskFactory<LoadedTask> {
+public class ParentExecutableTaskFactory implements ExecutableTaskFactory<TaskDescriptor> {
 
     public static final ParentExecutableTaskFactory INSTANCE = new ParentExecutableTaskFactory();
 
     private static final ExecutableChangeUnitFactory executableChangeUnitFactory = new ExecutableChangeUnitFactory();
 
-    private static final TemplatedExecutableTaskFactory executableTemplatedFactory = new TemplatedExecutableTaskFactory();
+    private static final TemplateExecutableTaskFactory executableTemplatedFactory = new TemplateExecutableTaskFactory();
 
     private ParentExecutableTaskFactory() {
     }
 
     @Override
-    public List<? extends ExecutableTask> extractTasks(String stageName, LoadedTask loadedTask, AuditEntry.Status initialState) {
-        if(LoadedChangeUnit.class.isAssignableFrom(loadedTask.getClass())) {
-            return executableChangeUnitFactory.extractTasks(stageName, (LoadedChangeUnit)loadedTask, initialState);
-        } else if(TemplatedLoadedChangeUnit.class.isAssignableFrom(loadedTask.getClass())) {
-            return executableTemplatedFactory.extractTasks(stageName, (TemplatedLoadedChangeUnit)loadedTask, initialState);
+    public List<? extends ExecutableTask> extractTasks(String stageName, TaskDescriptor loadedTask, AuditEntry.Status initialState) {
+        if(CodeLoadedChangeUnit.class.isAssignableFrom(loadedTask.getClass())) {
+            return executableChangeUnitFactory.extractTasks(stageName, (CodeLoadedChangeUnit)loadedTask, initialState);
+        } else if(TemplateLoadedChangeUnit.class.isAssignableFrom(loadedTask.getClass())) {
+            return executableTemplatedFactory.extractTasks(stageName, (TemplateLoadedChangeUnit)loadedTask, initialState);
         } else {
             throw new IllegalArgumentException(String.format("ExecutableTask type not recognised[%s]", loadedTask.getClass().getName()));
         }

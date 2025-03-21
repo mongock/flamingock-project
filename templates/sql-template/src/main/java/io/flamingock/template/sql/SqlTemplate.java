@@ -16,10 +16,10 @@
 
 package io.flamingock.template.sql;
 
-import io.flamingock.template.annotations.TemplateConfigSetter;
-import io.flamingock.template.annotations.TemplateConfigValidator;
-import io.flamingock.template.annotations.TemplateExecution;
-import io.flamingock.template.annotations.TemplateRollbackExecution;
+import io.flamingock.template.annotations.ChangeTemplateConfigSetter;
+import io.flamingock.template.annotations.ChangeTemplateConfigValidator;
+import io.flamingock.template.annotations.ChangeTemplateExecution;
+import io.flamingock.template.annotations.ChangeTemplateRollbackExecution;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,22 +28,22 @@ public class SqlTemplate {
 
     private SqlTemplateConfiguration configuration;
 
-    @TemplateConfigSetter
+    @ChangeTemplateConfigSetter
     public void setConfiguration(SqlTemplateConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    @TemplateConfigValidator
+    @ChangeTemplateConfigValidator
     public boolean validateConfiguration() {
         return configuration.getExecutionSql() != null;
     }
 
-    @TemplateExecution
+    @ChangeTemplateExecution
     public void execution(Connection connection) {
         execute(connection, configuration.getExecutionSql());
     }
 
-    @TemplateRollbackExecution(conditionalOnAllConfigurationPropertiesNotNull = {"rollbackSql"})
+    @ChangeTemplateRollbackExecution(conditionalOnAllConfigurationPropertiesNotNull = {"rollbackSql"})
     public void rollback(Connection connection) {
         execute(connection, configuration.getRollbackSql());
     }
