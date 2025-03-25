@@ -105,7 +105,7 @@ class MongoSpringDataV2ImporterTest {
         FlamingockStandalone.local()
                 .withImporter(ImporterConfiguration.withSource(mongo3Driver.getMigrationRepositoryName()))
                 .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
+                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .disableTransaction()

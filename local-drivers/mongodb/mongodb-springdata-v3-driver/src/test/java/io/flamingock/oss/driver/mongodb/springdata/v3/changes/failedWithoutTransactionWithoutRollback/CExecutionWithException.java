@@ -21,10 +21,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.mongodb.client.MongoCollection;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 
-@ChangeUnit( id="execution-with-exception" , order = "3")
+@Change( id="execution-with-exception" , order = "3")
 public class CExecutionWithException {
 
     @Execution

@@ -16,7 +16,7 @@
 
 package io.flamingock.importer.cloud.dynamodb.local.changes;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.importer.cloud.dynamodb.local.common.UserEntity;
@@ -26,7 +26,7 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@ChangeUnit( id="insert-row" , order = "1")
+@Change( id="insert-row" , order = "1")
 public class InsertClient {
 
     @Execution

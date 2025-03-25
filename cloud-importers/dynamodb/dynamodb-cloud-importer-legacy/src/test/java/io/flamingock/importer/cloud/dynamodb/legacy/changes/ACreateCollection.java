@@ -17,7 +17,7 @@
 package io.flamingock.importer.cloud.dynamodb.legacy.changes;
 
 import io.flamingock.commons.utils.DynamoDBUtil;
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.importer.cloud.dynamodb.legacy.common.UserEntity;
@@ -26,7 +26,7 @@ import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
 
 import static java.util.Collections.emptyList;
 
-@ChangeUnit( id="create-table" , order = "1", transactional = false)
+@Change( id="create-table" , order = "1", transactional = false)
 public class ACreateCollection {
 
     @Execution

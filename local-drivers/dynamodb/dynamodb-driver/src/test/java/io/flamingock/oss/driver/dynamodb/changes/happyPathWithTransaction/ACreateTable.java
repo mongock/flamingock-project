@@ -16,7 +16,7 @@
 
 package io.flamingock.oss.driver.dynamodb.changes.happyPathWithTransaction;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.oss.driver.dynamodb.changes.common.DynamoDBUtil;
 import io.flamingock.oss.driver.dynamodb.changes.common.UserEntity;
@@ -25,7 +25,7 @@ import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
 
 import static java.util.Collections.emptyList;
 
-@ChangeUnit(id = "table-create", order = "1", transactional = false)
+@Change(id = "table-create", order = "1", transactional = false)
 public class ACreateTable {
 
     private final DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();

@@ -20,7 +20,6 @@ import io.flamingock.commons.utils.Constants;
 import io.flamingock.commons.utils.StringUtil;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.api.metadata.FlamingockMetadata;
 import io.flamingock.core.engine.lock.Lock;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyInjectable;
@@ -51,17 +50,14 @@ public final class RuntimeManager implements DependencyInjectable {
     private static final Function<Parameter, String> parameterNameProvider = parameter -> parameter.isAnnotationPresent(Named.class)
             ? parameter.getAnnotation(Named.class).value()
             : null;
-    private final FlamingockMetadata flamingockMetadata;
     private final Set<Class<?>> nonProxyableTypes = Collections.emptySet();
     private final DependencyInjectableContext dependencyContext;
     private final LockGuardProxyFactory proxyFactory;
 
     private RuntimeManager(LockGuardProxyFactory proxyFactory,
-                           DependencyInjectableContext dependencyContext,
-                           FlamingockMetadata flamingockMetadata) {
+                           DependencyInjectableContext dependencyContext) {
         this.dependencyContext = dependencyContext;
         this.proxyFactory = proxyFactory;
-        this.flamingockMetadata = flamingockMetadata;
     }
 
     public static Builder builder() {
@@ -139,10 +135,10 @@ public final class RuntimeManager implements DependencyInjectable {
         );
 
         final Dependency dependency;
-        if(dependencyOptional.isPresent()) {
+        if (dependencyOptional.isPresent()) {
             dependency = dependencyOptional.get();
         } else {
-            if(parameter.isAnnotationPresent(Nullable.class)) {
+            if (parameter.isAnnotationPresent(Nullable.class)) {
                 return null;
             } else {
                 throw new DependencyInjectionException(type, name);
@@ -154,7 +150,9 @@ public final class RuntimeManager implements DependencyInjectable {
                 && !type.isAnnotationPresent(io.changock.migration.api.annotations.NonLockGuarded.class)
                 && !parameter.isAnnotationPresent(io.changock.migration.api.annotations.NonLockGuarded.class)
                 && !nonProxyableTypes.contains(type)
-                && (flamingockMetadata == null || !flamingockMetadata.isSuppressedProxies());
+                //TODO add similar mechanism when GraalVM
+//                && (flamingockMetadata == null || !flamingockMetadata.isSuppressedProxies())
+                ;
 
         return dependency.isProxeable() && lockGuarded
                 ? proxyFactory.getRawProxy(dependency.getInstance(), type)
@@ -171,8 +169,6 @@ public final class RuntimeManager implements DependencyInjectable {
         private DependencyInjectableContext dependencyContext;
         private Lock lock;
 
-        private FlamingockMetadata flamingockMetadata;
-
         public Builder setLock(Lock lock) {
             this.lock = lock;
             return this;
@@ -183,14 +179,10 @@ public final class RuntimeManager implements DependencyInjectable {
             return this;
         }
 
-        public Builder setFlamingockMetadata(FlamingockMetadata flamingockMetadata) {
-            this.flamingockMetadata = flamingockMetadata;
-            return this;
-        }
 
         public RuntimeManager build() {
             LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
-            return new RuntimeManager(proxyFactory, dependencyContext, flamingockMetadata);
+            return new RuntimeManager(proxyFactory, dependencyContext);
         }
     }
 }

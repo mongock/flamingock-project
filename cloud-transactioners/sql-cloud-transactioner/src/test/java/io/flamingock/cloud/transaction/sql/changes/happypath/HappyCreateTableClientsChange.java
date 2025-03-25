@@ -17,15 +17,14 @@
 package io.flamingock.cloud.transaction.sql.changes.happypath;
 
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.api.annotations.NonLockGuarded;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-@ChangeUnit(id = "create-table-clients", order = "1", transactional = false)
+@Change(id = "create-table-clients", order = "1", transactional = false)
 public class HappyCreateTableClientsChange {
 
     @Execution

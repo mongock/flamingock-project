@@ -19,7 +19,7 @@ package io.flamingock.importer.cloud.dynamodb.local;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;
 import io.flamingock.core.runtime.dependency.Dependency;
-import io.flamingock.importer.cloud.common.Importer;
+import io.flamingock.importer.cloud.common.CloudImporter;
 import io.flamingock.importer.cloud.dynamodb.local.entities.AuditEntryEntity;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DynamoDBLocalImporter implements Importer {
+public class DynamoDBLocalImporter implements CloudImporter {
 
     public final static String DEFAULT_FLAMINGOCK_REPOSITORY_NAME = AuditEntryEntity.AUDIT_LOG_TABLE_NAME;
 

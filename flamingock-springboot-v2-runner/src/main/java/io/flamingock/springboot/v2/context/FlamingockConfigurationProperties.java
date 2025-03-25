@@ -24,6 +24,8 @@ import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.metadata.util.Deserializer;
+import io.flamingock.core.pipeline.PreviewPipeline;
 import io.flamingock.core.pipeline.Stage;
 import io.flamingock.springboot.v2.configurator.SpringRunnerType;
 import io.flamingock.springboot.v2.configurator.SpringbootConfigurable;
@@ -67,18 +69,8 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
-    public void setStages(List<Stage> stages) {
-        coreConfiguration.setStages(stages);
-    }
-
-    @Override
-    public void addStage(Stage stage) {
-        coreConfiguration.addStage(stage);
-    }
-
-    @Override
-    public Iterable<Stage> getStages() {
-        return coreConfiguration.getStages();
+    public PreviewPipeline getPreviewPipeline() {
+        return Deserializer.readPreviewPipelineFromFile();
     }
 
     @Override

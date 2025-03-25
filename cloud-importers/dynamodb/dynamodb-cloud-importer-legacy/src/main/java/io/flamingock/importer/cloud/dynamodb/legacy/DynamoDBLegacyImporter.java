@@ -19,7 +19,7 @@ package io.flamingock.importer.cloud.dynamodb.legacy;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;
 import io.flamingock.core.runtime.dependency.Dependency;
-import io.flamingock.importer.cloud.common.Importer;
+import io.flamingock.importer.cloud.common.CloudImporter;
 import io.flamingock.importer.cloud.dynamodb.legacy.entities.ChangeEntryEntity;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DynamoDBLegacyImporter implements Importer {
+public class DynamoDBLegacyImporter implements CloudImporter {
 
     private final DynamoDbTable<ChangeEntryEntity> sourceTable;
     private List<Dependency> dependencies;

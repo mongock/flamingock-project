@@ -17,12 +17,12 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.changes.withImporter;
 
 import com.mongodb.client.MongoCollection;
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-@ChangeUnit( id="insert-document" , order = "3")
+@Change( id="insert-document" , order = "3")
 public class BInsertDocument {
 
     @Execution

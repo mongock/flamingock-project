@@ -17,12 +17,12 @@
 package io.flamingock.oss.driver.mongodb.springdata.v4.changes.failedWithoutTransactionWithRollback;
 
 import com.mongodb.client.MongoCollection;
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-@ChangeUnit( id="insert-document" , order = "2")
+@Change( id="insert-document" , order = "2")
 public class BInsertDocument {
 
     @Execution

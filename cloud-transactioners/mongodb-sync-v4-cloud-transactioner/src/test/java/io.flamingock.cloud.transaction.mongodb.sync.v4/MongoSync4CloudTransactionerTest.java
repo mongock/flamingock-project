@@ -155,8 +155,8 @@ public class MongoSync4CloudTransactionerTest {
             //WHEN
             flamingockBuilder
                     .setCloudTransactioner(mongoSync4CloudTransactioner)
-                    .addStage(new Stage(stageName)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.mongodb.sync.v4.changes.happypath")))
+                    //.addStage(new Stage(stageName)
+//                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.mongodb.sync.v4.changes.happypath")))
                     .addDependency(testDatabase)
                     .build()
                     .execute();
@@ -203,8 +203,8 @@ public class MongoSync4CloudTransactionerTest {
             //WHEN
             Runner runner = flamingockBuilder
                     .setCloudTransactioner(mongoSync4CloudTransactioner)
-                    .addStage(new Stage(stageName)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.mongodb.sync.v4.changes.unhappypath")))
+                    //.addStage(new Stage(stageName)
+//                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.mongodb.sync.v4.changes.unhappypath")))
                     .addDependency(testDatabase)
                     .build();
 
@@ -254,8 +254,8 @@ public class MongoSync4CloudTransactionerTest {
             //WHEN
             flamingockBuilder
                     .setCloudTransactioner(mongoSync4CloudTransactioner)
-                    .addStage(new Stage(stageName)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.mongodb.sync.v4.changes.happypath")))
+                    //.addStage(new Stage(stageName)
+//                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.mongodb.sync.v4.changes.happypath")))
                     .addDependency(testDatabase)
                     .build()
                     .execute();

@@ -107,7 +107,7 @@ class MongoSync4ImporterTest {
         FlamingockStandalone.local()
                 .withImporter(withSource("mongockChangeLog"))
                 .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.withImporter"))
+                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.withImporter"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
 

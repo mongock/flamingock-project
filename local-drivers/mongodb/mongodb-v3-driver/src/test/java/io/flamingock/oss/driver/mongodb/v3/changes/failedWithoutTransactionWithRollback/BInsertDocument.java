@@ -18,11 +18,11 @@ package io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWith
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
-@ChangeUnit( id="insert-document" , order = "2")
+@Change( id="insert-document" , order = "2")
 public class BInsertDocument {
 
     @Execution

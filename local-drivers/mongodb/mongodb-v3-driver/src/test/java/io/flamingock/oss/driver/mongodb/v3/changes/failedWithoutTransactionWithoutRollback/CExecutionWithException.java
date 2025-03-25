@@ -20,10 +20,10 @@ import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 
-@ChangeUnit( id="execution-with-exception" , order = "3")
+@Change( id="execution-with-exception" , order = "3")
 public class CExecutionWithException {
 
     @Execution

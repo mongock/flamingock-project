@@ -2,9 +2,8 @@ package io.flamingock.oss.driver.mongodb.v3.internal.mongock;
 
 
 import com.mongodb.client.MongoCollection;
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.api.annotations.SystemChange;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.importer.model.ChangeEntry;
 import io.flamingock.core.engine.audit.importer.model.ChangeState;
@@ -21,31 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SystemChange
-@ChangeUnit(id = "mongock-importer", order = "1")
+@Change(id = "mongock-importer", order = "1")
 public class MongockImporterChangeUnit {
-
-
-    @Execution
-    public void execution(InternalMongockImporterConfiguration configuration) {
-        MongoCollection<Document> sourceCollection = configuration.getSourceCollection();
-        if (sourceCollection == null) {
-            throw new RuntimeException("AuditWriter not injected");
-        }
-        AuditWriter auditWriter = configuration.getAuditWriter();
-        if (auditWriter == null) {
-            throw new RuntimeException("AuditWriter not injected");
-        }
-
-        List<AuditEntry> collect = sourceCollection.find()
-                .into(new ArrayList<>())
-                .stream()
-                .map(MongockImporterChangeUnit::toChangeEntry)
-                .map(MongockImporterChangeUnit::toAuditEntry)
-                .collect(Collectors.toList());
-        collect.forEach(auditWriter::writeEntry);
-
-    }
 
 
     private static ChangeEntry toChangeEntry(Document document) {
@@ -93,5 +69,26 @@ public class MongockImporterChangeUnit {
                 changeEntry.getSystemChange(),
                 changeEntry.getErrorTrace()
         );
+    }
+
+    @Execution
+    public void execution(InternalMongockImporterConfiguration configuration) {
+        MongoCollection<Document> sourceCollection = configuration.getSourceCollection();
+        if (sourceCollection == null) {
+            throw new RuntimeException("AuditWriter not injected");
+        }
+        AuditWriter auditWriter = configuration.getAuditWriter();
+        if (auditWriter == null) {
+            throw new RuntimeException("AuditWriter not injected");
+        }
+
+        List<AuditEntry> collect = sourceCollection.find()
+                .into(new ArrayList<>())
+                .stream()
+                .map(MongockImporterChangeUnit::toChangeEntry)
+                .map(MongockImporterChangeUnit::toAuditEntry)
+                .collect(Collectors.toList());
+        collect.forEach(auditWriter::writeEntry);
+
     }
 }

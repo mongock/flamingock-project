@@ -107,7 +107,7 @@ class Mongo3ImporterTest {
         FlamingockStandalone.local()
                 .withImporter(ImporterConfiguration.withSource(mongoSync4Driver.getMigrationRepositoryName()))
                 .setDriver(new Mongo3Driver(mongoClient, DB_NAME))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
+                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction"))
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setTrackIgnored(true)
                 

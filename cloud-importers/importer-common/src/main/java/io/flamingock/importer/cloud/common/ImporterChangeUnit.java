@@ -16,18 +16,16 @@
 
 package io.flamingock.importer.cloud.common;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.NonLockGuarded;
-import io.flamingock.core.api.annotations.SystemChange;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-@SystemChange
-@ChangeUnit(id = "importer-v1", order = "1")
+@Change(id = "importer-v1", order = "1")
 public class ImporterChangeUnit {
 
     private static final Logger logger = LoggerFactory.getLogger(ImporterChangeUnit.class);

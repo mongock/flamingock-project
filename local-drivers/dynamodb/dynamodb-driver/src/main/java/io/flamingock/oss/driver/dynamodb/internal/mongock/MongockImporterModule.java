@@ -16,22 +16,42 @@
 
 package io.flamingock.oss.driver.dynamodb.internal.mongock;
 
-import io.flamingock.core.api.LocalSystemModule;
 import io.flamingock.core.engine.audit.AuditWriter;
+import io.flamingock.core.engine.audit.importer.ImporterReader;
+import io.flamingock.core.pipeline.PipelineDescriptor;
+import io.flamingock.core.pipeline.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
+import io.flamingock.core.system.LocalSystemModule;
+import io.flamingock.core.task.preview.CodePreviewChangeUnit;
+import io.flamingock.core.task.preview.MethodPreview;
+import io.flamingock.core.task.preview.builder.PreviewTaskBuilder;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class MongockImporterModule implements LocalSystemModule {
-    public static final List<Class<?>> TASK_CLASSES = Collections.singletonList(
-            MongockImporterChangeUnit.class
+
+
+
+
+    private static final List<CodePreviewChangeUnit> MONGOCK_CHANGE_UNITS = Collections.singletonList(
+            PreviewTaskBuilder.getCodeBuilder()
+                    .setId("mongock-local-legacy-importer-dynamodb")
+                    .setOrder("1")
+                    .setSourceClassPath(MongockImporterChangeUnit.class.getName())
+                    .setExecutionMethod(new MethodPreview("execution", Collections.singletonList(
+                            InternalMongockImporterConfiguration.class.getName())))
+                    .setRunAlways(false)
+                    .setTransactional(true)
+                    .setNewChangeUnit(true)
+                    .setSystem(true)
+                    .build()
     );
-    private List<Dependency> dependencies;
     private final DynamoDbTable<ChangeEntryDynamoDB> sourceTable;
     private final AuditWriter auditWriter;
+    private List<Dependency> dependencies;
 
     public MongockImporterModule(DynamoDbTable<ChangeEntryDynamoDB> sourceTable, AuditWriter auditWriter) {
         this.sourceTable = sourceTable;
@@ -49,13 +69,12 @@ public class MongockImporterModule implements LocalSystemModule {
     }
 
     @Override
-    public String getName() {
-        return "dynamodb-local-legacy-importer";
-    }
-
-    @Override
-    public Collection<Class<?>> getTaskClasses() {
-        return TASK_CLASSES;
+    public PreviewStage getStage() {
+        return PreviewStage.builder()
+                .setName("dynamodb-local-legacy-importer")
+                .setDescription("DynamoDB importer from Mongock")
+                .setChangeUnitClasses(MONGOCK_CHANGE_UNITS)
+                .build();
     }
 
     @Override

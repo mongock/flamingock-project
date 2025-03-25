@@ -17,13 +17,11 @@
 package io.flamingock.core.configurator.core;
 
 
-import io.flamingock.core.api.SystemModule;
-import io.flamingock.core.api.metadata.FlamingockMetadata;
+import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
-import io.flamingock.core.pipeline.Stage;
-import io.flamingock.template.TemplateModule;
+import io.flamingock.core.api.template.TemplateModule;
 
 import java.util.Map;
 
@@ -33,8 +31,6 @@ public interface CoreConfigurator<
         SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>> {
 
     CoreConfigurable getCoreConfiguration();
-
-    HOLDER addStage(Stage stage);
 
     HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis);
 
@@ -100,8 +96,5 @@ public interface CoreConfigurator<
 
     CoreConfiguration.ImporterConfiguration getMongockImporterConfiguration();
 
-    HOLDER setFlamingockMetadata(FlamingockMetadata metadata);
-
-    FlamingockMetadata getFlamingockMetadata();
 
 }

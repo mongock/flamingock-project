@@ -16,11 +16,11 @@
 
 package io.flamingock.oss.driver.mongodb.springdata.v3.changes.withImporter;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-@ChangeUnit( id="create-collection" , order = "2", transactional = false)
+@Change( id="create-collection" , order = "2", transactional = false)
 public class ACreateCollection {
 
     @Execution

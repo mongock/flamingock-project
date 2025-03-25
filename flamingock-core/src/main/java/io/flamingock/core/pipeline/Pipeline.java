@@ -17,10 +17,12 @@
 package io.flamingock.core.pipeline;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.api.metadata.FlamingockMetadata;
-import io.flamingock.core.task.descriptor.LoadedTask;
+import io.flamingock.core.task.TaskDescriptor;
 import io.flamingock.core.task.filter.TaskFilter;
+import io.flamingock.core.task.loaded.AbstractLoadedTask;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 
 public class Pipeline implements PipelineDescriptor {
 
+    private final Collection<TaskFilter> taskFilters;
 
     private final List<LoadedStage> loadedStages;
 
@@ -37,8 +40,9 @@ public class Pipeline implements PipelineDescriptor {
         return new PipelineBuilder();
     }
 
-    private Pipeline(List<LoadedStage> loadedStages) {
+    private Pipeline(List<LoadedStage> loadedStages, Collection<TaskFilter> taskFilters) {
         this.loadedStages = loadedStages;
+        this.taskFilters = taskFilters;
     }
 
     public List<LoadedStage> validateAndGetLoadedStages() {
@@ -59,7 +63,7 @@ public class Pipeline implements PipelineDescriptor {
     }
 
     @Override
-    public Optional<LoadedTask> getLoadedTask(String taskId) {
+    public Optional<AbstractLoadedTask> getLoadedTask(String taskId) {
         return loadedStages.stream()
                 .map(LoadedStage::getLoadedTasks)
                 .flatMap(Collection::stream)
@@ -70,7 +74,7 @@ public class Pipeline implements PipelineDescriptor {
     @Override
     public Optional<String> getStageByTask(String taskId) {
         for(LoadedStage loadedStage: loadedStages) {
-            for(LoadedTask loadedTask: loadedStage.getLoadedTasks()) {
+            for(TaskDescriptor loadedTask: loadedStage.getLoadedTasks()) {
                 if(loadedTask.getId().equals(taskId)) {
                     return Optional.of(loadedStage.getName());
                 }
@@ -82,26 +86,25 @@ public class Pipeline implements PipelineDescriptor {
 
     public static class PipelineBuilder {
 
-        private final Collection<Stage> beforeUserStages = new LinkedHashSet<>();
-        private final Collection<Stage> userStages = new LinkedHashSet<>();
-        private final Collection<Stage> afterUserStages = new LinkedHashSet<>();
-        private final Collection<TaskFilter> taskFilters = new LinkedHashSet<>();
-        private FlamingockMetadata flamingockMetadata;
+        private Collection<PreviewStage> beforeUserStages = new LinkedHashSet<>();
+        private PreviewPipeline previewPipeline;
+        private Collection<PreviewStage> afterUserStages = new LinkedHashSet<>();
+        private Collection<TaskFilter> taskFilters = new LinkedHashSet<>();
 
         private PipelineBuilder() {
         }
 
-        public PipelineBuilder addBeforeUserStages(Iterable<Stage> stages) {
-            stages.forEach(userStages::add);
+        public PipelineBuilder addBeforeUserStages(Collection<PreviewStage> stages) {
+            this.beforeUserStages = stages;
             return this;
         }
 
-        public PipelineBuilder addUserStages(Iterable<Stage> stages) {
-            stages.forEach(userStages::add);
+        public PipelineBuilder addPreviewPipeline(PreviewPipeline previewPipeline) {
+            this.previewPipeline = previewPipeline;
             return this;
         }
-        public PipelineBuilder addAfterUserStages(Iterable<Stage> stages) {
-            stages.forEach(userStages::add);
+        public PipelineBuilder addAfterUserStages(Collection<PreviewStage> stages) {
+            this.afterUserStages = stages;
             return this;
         }
 
@@ -110,26 +113,22 @@ public class Pipeline implements PipelineDescriptor {
             return this;
         }
 
-        public PipelineBuilder setFlamingockMetadata(FlamingockMetadata flamingockMetadata) {
-            this.flamingockMetadata = flamingockMetadata;
-            return this;
-        }
 
         public Pipeline build() {
+            List<LoadedStage> allSortedStages = new LinkedList<>(transformToLoadedStages(beforeUserStages));
+            allSortedStages.addAll(transformToLoadedStages(previewPipeline.getStages()));
+            allSortedStages.addAll(transformToLoadedStages(afterUserStages));
 
-            List<Stage> allSortedStages = new LinkedList<>(beforeUserStages);
-            allSortedStages.addAll(userStages);
-            allSortedStages.addAll(afterUserStages);
+            return new Pipeline(allSortedStages, taskFilters);
+        }
 
-            List<Stage> stagesWithTaskFilter = allSortedStages.stream()
-                    .map(stage -> stage.addFilters(taskFilters))
-                    .collect(Collectors.toList());
-
-            List<LoadedStage> loadedStages = stagesWithTaskFilter
+        @NotNull
+        private static List<LoadedStage> transformToLoadedStages(Collection<PreviewStage> stages) {
+            return stages
                     .stream()
-                    .map(stage-> stage.load(flamingockMetadata))
+                    .map(LoadedStage.builder()::setPreviewStage)
+                    .map(LoadedStage.Builder::build)
                     .collect(Collectors.toList());
-            return new Pipeline(loadedStages);
         }
 
 

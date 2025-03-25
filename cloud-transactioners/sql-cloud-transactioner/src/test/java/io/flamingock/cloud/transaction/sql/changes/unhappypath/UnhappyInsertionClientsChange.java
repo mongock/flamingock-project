@@ -16,15 +16,14 @@
 
 package io.flamingock.cloud.transaction.sql.changes.unhappypath;
 
-import io.flamingock.core.api.annotations.NonLockGuarded;
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@ChangeUnit(id = "unhappy-insert-clients", order = "2")
+@Change(id = "unhappy-insert-clients", order = "2")
 public class UnhappyInsertionClientsChange {
 
     @Execution

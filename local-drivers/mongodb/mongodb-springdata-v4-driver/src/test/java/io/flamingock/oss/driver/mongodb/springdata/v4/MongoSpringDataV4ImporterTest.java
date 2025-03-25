@@ -104,7 +104,7 @@ class MongoSpringDataV4ImporterTest {
         FlamingockStandalone.local()
                 .withImporter(ImporterConfiguration.withSource(mongo3Driver.getMigrationRepositoryName()))
                 .setDriver(new SpringDataMongoV4Driver(mongoTemplate))
-                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.withImporter"))
+                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v4.changes.withImporter"))
                 .addDependency(mongoTemplate)
                 .setTrackIgnored(true)
                 .build()

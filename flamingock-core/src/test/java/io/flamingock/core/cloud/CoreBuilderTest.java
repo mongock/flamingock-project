@@ -68,8 +68,8 @@ public class CoreBuilderTest {
                 .setHost("http://localhost:8888")
                 .setService("clients-service")
                 .setEnvironment("development")
-                .addStage(new Stage("failing-stage-1")
-                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package")))
+                //.addStage(new Stage("failing-stage-1")
+//                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package")))
                 .build();
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, runner::execute);
 
@@ -86,10 +86,10 @@ public class CoreBuilderTest {
                 .setHost("http://localhost:8888")
                 .setService("clients-service")
                 .setEnvironment("development")
-                .addStage(new Stage("failing-stage-1")
-                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-1")))
-                .addStage(new Stage("failing-stage-2")
-                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-2")))
+                //.addStage(new Stage("failing-stage-1")
+//                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-1")))
+//                //.addStage(new Stage("failing-stage-2")
+//                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-2")))
                 .build();
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, runner::execute);
 
@@ -106,12 +106,12 @@ public class CoreBuilderTest {
                 .setHost("http://localhost:8888")
                 .setService("clients-service")
                 .setEnvironment("development")
-                .addStage(new Stage("failing-stage-1")
-                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-1")))
-                .addStage(new Stage("success-stage")
-                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
-                .addStage(new Stage("failing-stage-2")
-                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-2")))
+                //.addStage(new Stage("failing-stage-1")
+//                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-1")))
+                //.addStage(new Stage("success-stage")
+//                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
+                //.addStage(new Stage("failing-stage-2")
+//                        .setCodePackages(Collections.singletonList("io.flamingock.wrong.package-2")))
                 .build();
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, runner::execute);
 

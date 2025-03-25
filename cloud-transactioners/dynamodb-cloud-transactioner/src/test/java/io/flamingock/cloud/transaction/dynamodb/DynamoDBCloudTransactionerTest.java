@@ -160,8 +160,8 @@ public class DynamoDBCloudTransactionerTest {
             //WHEN
             flamingockBuilder
                     .setCloudTransactioner(dynamoDBCloudTransactioner)
-                    .addStage(new Stage(stageName)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.dynamodb.changes.happypath")))
+                    //.addStage(new Stage(stageName)
+//                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.dynamodb.changes.happypath")))
                     .addDependency(client)
                     .build()
                     .execute();
@@ -214,8 +214,8 @@ public class DynamoDBCloudTransactionerTest {
             //WHEN
             Runner runner = flamingockBuilder
                     .setCloudTransactioner(dynamoDBCloudTransactioner)
-                    .addStage(new Stage(stageName)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.dynamodb.changes.unhappypath")))
+                    //.addStage(new Stage(stageName)
+//                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.dynamodb.changes.unhappypath")))
                     .addDependency(client)
                     .build();
 
@@ -270,8 +270,8 @@ public class DynamoDBCloudTransactionerTest {
             //WHEN
             flamingockBuilder
                     .setCloudTransactioner(dynamoDBCloudTransactioner)
-                    .addStage(new Stage(stageName)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.dynamodb.changes.happypath")))
+                    //.addStage(new Stage(stageName)
+//                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.dynamodb.changes.happypath")))
                     .addDependency(client)
                     .build()
                     .execute();

@@ -16,7 +16,7 @@
 
 package io.flamingock.oss.driver.dynamodb.changes.failedWithTransaction;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.oss.driver.dynamodb.changes.common.UserEntity;
@@ -26,7 +26,7 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@ChangeUnit(id = "execution-with-exception", order = "3")
+@Change(id = "execution-with-exception", order = "3")
 public class CExecutionWithException {
 
     @Execution

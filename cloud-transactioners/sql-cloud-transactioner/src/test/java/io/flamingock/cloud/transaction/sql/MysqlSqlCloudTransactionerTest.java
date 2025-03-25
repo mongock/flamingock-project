@@ -154,8 +154,8 @@ public class MysqlSqlCloudTransactionerTest {
             flamingockBuilder
                     .setCloudTransactioner(sqlCloudTransactioner)
                     .addDependency(connection)
-                    .addStage(new Stage(STAGE_NAME_1)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.happypath")))
+                    //.addStage(new Stage(STAGE_NAME_1)
+//                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.happypath")))
                     .build()
                     .execute();
 
@@ -212,8 +212,8 @@ public class MysqlSqlCloudTransactionerTest {
             Runner runner = flamingockBuilder
                     .setCloudTransactioner(sqlCloudTransactioner)
                     .addDependency(connection)
-                    .addStage(new Stage(STAGE_NAME_1)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.unhappypath")))
+                    //.addStage(new Stage(STAGE_NAME_1)
+                            //.setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.unhappypath")))
                     .build();
             PipelineExecutionException ex = Assertions.assertThrows(PipelineExecutionException.class, runner::run);
 
@@ -257,8 +257,8 @@ public class MysqlSqlCloudTransactionerTest {
             flamingockBuilder
                     .setCloudTransactioner(sqlCloudTransactioner)
                     .addDependency(connection)
-                    .addStage(new Stage(STAGE_NAME_1)
-                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.happypath")))
+                    //.addStage(new Stage(STAGE_NAME_1)
+//                            .setCodePackages(Collections.singletonList("io.flamingock.cloud.transaction.sql.changes.happypath")))
                     .build()
                     .run();
 

@@ -20,7 +20,7 @@ import com.mongodb.ReadConcern;
 import com.mongodb.client.MongoCollection;
 import io.flamingock.cloud.transaction.mongodb.sync.v4.cofig.ReadWriteConfiguration;
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.core.api.LocalSystemModule;
+import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.local.AbstractLocalEngine;
