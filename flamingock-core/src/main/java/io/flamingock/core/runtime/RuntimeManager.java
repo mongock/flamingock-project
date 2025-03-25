@@ -53,11 +53,14 @@ public final class RuntimeManager implements DependencyInjectable {
     private final Set<Class<?>> nonProxyableTypes = Collections.emptySet();
     private final DependencyInjectableContext dependencyContext;
     private final LockGuardProxyFactory proxyFactory;
+    private final boolean isNativeImage;
 
     private RuntimeManager(LockGuardProxyFactory proxyFactory,
-                           DependencyInjectableContext dependencyContext) {
+                           DependencyInjectableContext dependencyContext,
+                           boolean isNativeImage) {
         this.dependencyContext = dependencyContext;
         this.proxyFactory = proxyFactory;
+        this.isNativeImage = isNativeImage;
     }
 
     public static Builder builder() {
@@ -150,8 +153,7 @@ public final class RuntimeManager implements DependencyInjectable {
                 && !type.isAnnotationPresent(io.changock.migration.api.annotations.NonLockGuarded.class)
                 && !parameter.isAnnotationPresent(io.changock.migration.api.annotations.NonLockGuarded.class)
                 && !nonProxyableTypes.contains(type)
-                //TODO add similar mechanism when GraalVM
-//                && (flamingockMetadata == null || !flamingockMetadata.isSuppressedProxies())
+                && !isNativeImage
                 ;
 
         return dependency.isProxeable() && lockGuarded
@@ -166,12 +168,18 @@ public final class RuntimeManager implements DependencyInjectable {
 
     public static final class Builder {
 
+
         private DependencyInjectableContext dependencyContext;
         private Lock lock;
+        private Boolean forceNativeImage = null;
 
         public Builder setLock(Lock lock) {
             this.lock = lock;
             return this;
+        }
+
+        public void setForceNativeImage(Boolean forceNativeImage) {
+            this.forceNativeImage = forceNativeImage;
         }
 
         public Builder setDependencyContext(DependencyInjectableContext dependencyContext) {
@@ -182,7 +190,23 @@ public final class RuntimeManager implements DependencyInjectable {
 
         public RuntimeManager build() {
             LockGuardProxyFactory proxyFactory = new LockGuardProxyFactory(lock);
-            return new RuntimeManager(proxyFactory, dependencyContext);
+            boolean isNativeImage;
+            if(forceNativeImage != null) {
+                isNativeImage = forceNativeImage;
+            } else {
+                isNativeImage = isRunningInNativeImage();
+            }
+            logger.info("Running on native image: {}", isNativeImage);
+            return new RuntimeManager(proxyFactory, dependencyContext, isNativeImage);
         }
+
+        private static  boolean isRunningInNativeImage() {
+            try {
+                return "runtime".equals(System.getProperty("org.graalvm.nativeimage.imagecode"));
+            } catch (SecurityException exception) {
+                return false;
+            }
+        }
+
     }
 }

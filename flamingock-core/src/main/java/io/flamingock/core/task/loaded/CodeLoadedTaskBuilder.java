@@ -123,8 +123,6 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
     }
 
     public CodeLoadedTaskBuilder setNewChangeUnit(boolean newChangeUnit) {
-        System.out.printf("\n\nSetting(from %s) \n newChangeUnit(%s)", source, newChangeUnit);
-
         this.isNewChangeUnit = newChangeUnit;
         return this;
     }
