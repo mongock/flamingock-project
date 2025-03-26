@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v3.builder;
 
-import io.flamingock.core.pipeline.PreviewStage;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
@@ -35,7 +35,7 @@ import io.flamingock.core.event.model.IStageFailedEvent;
 import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.pipeline.Pipeline;
-import io.flamingock.core.pipeline.PreviewPipeline;
+import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.springboot.v3.SpringProfileFilter;
 import io.flamingock.springboot.v3.SpringRunnerBuilder;

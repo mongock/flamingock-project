@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.pipeline;
+package io.flamingock.core.preview;
 
 import io.flamingock.commons.utils.FileUtil;
-import io.flamingock.core.task.preview.AbstractPreviewTask;
-import io.flamingock.core.task.preview.builder.PreviewTaskBuilder;
+import io.flamingock.core.preview.builder.PreviewTaskBuilder;
 import io.flamingock.core.api.template.ChangeFileDescriptor;
 
 import java.io.File;

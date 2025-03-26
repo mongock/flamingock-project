@@ -1,4 +1,4 @@
-package io.flamingock.core.task.preview;
+package io.flamingock.core.preview;
 
 import java.util.List;
 

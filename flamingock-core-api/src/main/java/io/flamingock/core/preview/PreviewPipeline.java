@@ -1,4 +1,4 @@
-package io.flamingock.core.pipeline;
+package io.flamingock.core.preview;
 
 import java.util.Collection;
 

@@ -16,8 +16,8 @@
 
 package io.flamingock.springboot.v2.builder;
 
-import io.flamingock.core.pipeline.PreviewPipeline;
-import io.flamingock.core.pipeline.PreviewStage;
+import io.flamingock.core.preview.PreviewPipeline;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;

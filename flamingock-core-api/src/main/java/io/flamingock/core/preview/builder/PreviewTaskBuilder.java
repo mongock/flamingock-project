@@ -1,8 +1,8 @@
-package io.flamingock.core.task.preview.builder;
+package io.flamingock.core.preview.builder;
 
-import io.flamingock.core.task.preview.AbstractPreviewTask;
-import io.flamingock.core.task.preview.CodePreviewChangeUnit;
-import io.flamingock.core.task.preview.TemplatePreviewChangeUnit;
+import io.flamingock.core.preview.AbstractPreviewTask;
+import io.flamingock.core.preview.CodePreviewChangeUnit;
+import io.flamingock.core.preview.TemplatePreviewChangeUnit;
 import io.flamingock.core.api.template.ChangeFileDescriptor;
 
 import javax.lang.model.element.TypeElement;

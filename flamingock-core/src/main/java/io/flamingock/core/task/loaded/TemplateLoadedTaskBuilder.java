@@ -16,8 +16,8 @@
 
 package io.flamingock.core.task.loaded;
 
-import io.flamingock.core.task.preview.AbstractPreviewTask;
-import io.flamingock.core.task.preview.TemplatePreviewChangeUnit;
+import io.flamingock.core.preview.AbstractPreviewTask;
+import io.flamingock.core.preview.TemplatePreviewChangeUnit;
 
 import java.util.Map;
 

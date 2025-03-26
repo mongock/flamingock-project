@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.preview.builder;
+package io.flamingock.core.preview.builder;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
-import io.flamingock.core.task.preview.CodePreviewChangeUnit;
-import io.flamingock.core.task.preview.CodePreviewLegacyChangeUnit;
-import io.flamingock.core.task.preview.MethodPreview;
+import io.flamingock.core.preview.CodePreviewChangeUnit;
+import io.flamingock.core.preview.CodePreviewLegacyChangeUnit;
+import io.flamingock.core.preview.MethodPreview;
 import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.RollbackBeforeExecution;

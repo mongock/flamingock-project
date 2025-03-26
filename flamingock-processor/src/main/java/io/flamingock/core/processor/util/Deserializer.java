@@ -1,8 +1,8 @@
-package io.flamingock.core.metadata.util;
+package io.flamingock.core.processor.util;
 
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.core.api.metadata.Constants;
-import io.flamingock.core.pipeline.PreviewPipeline;
+import io.flamingock.core.preview.PreviewPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,9 @@ public final class Deserializer {
     private static final ClassLoader CLASS_LOADER = PreviewPipeline.class.getClassLoader();
 
 
-    private Deserializer() {}
+    private Deserializer() {
+    }
+
     /**
      * Reads the preview pipeline from file. It first tries to load the full pipeline,
      * and if not found, falls back to the templated pipeline.

@@ -1,10 +1,10 @@
-package io.flamingock.core.metadata.util;
+package io.flamingock.core.processor.util;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.core.api.metadata.Constants;
-import io.flamingock.core.pipeline.PreviewPipeline;
-import io.flamingock.core.pipeline.PreviewStage;
+import io.flamingock.core.preview.PreviewPipeline;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.task.TaskDescriptor;
 
 import javax.annotation.processing.ProcessingEnvironment;

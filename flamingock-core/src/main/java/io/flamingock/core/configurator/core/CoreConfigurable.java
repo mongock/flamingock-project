@@ -18,7 +18,7 @@ package io.flamingock.core.configurator.core;
 
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
-import io.flamingock.core.pipeline.PreviewPipeline;
+import io.flamingock.core.preview.PreviewPipeline;
 
 import java.util.Map;
 

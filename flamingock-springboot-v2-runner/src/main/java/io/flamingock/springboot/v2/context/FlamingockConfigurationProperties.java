@@ -24,15 +24,13 @@ import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
-import io.flamingock.core.metadata.util.Deserializer;
-import io.flamingock.core.pipeline.PreviewPipeline;
-import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.processor.util.Deserializer;
+import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.springboot.v2.configurator.SpringRunnerType;
 import io.flamingock.springboot.v2.configurator.SpringbootConfigurable;
 import io.flamingock.springboot.v2.configurator.SpringbootConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.List;
 import java.util.Map;
 
 @ConfigurationProperties("flamingock")

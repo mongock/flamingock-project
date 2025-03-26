@@ -26,6 +26,10 @@ include("flamingock-core")
 project(":flamingock-core").projectDir = file("flamingock-core")
 project(":flamingock-core").name = "flamingock-core"
 
+include("flamingock-processor")
+project(":flamingock-processor").projectDir = file("flamingock-processor")
+project(":flamingock-processor").name = "flamingock-processor"
+
 include("flamingock-springboot-v2-runner")
 project(":flamingock-springboot-v2-runner").projectDir = file("flamingock-springboot-v2-runner")
 project(":flamingock-springboot-v2-runner").name = "flamingock-springboot-v2-runner"

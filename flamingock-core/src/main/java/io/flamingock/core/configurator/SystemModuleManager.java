@@ -1,7 +1,6 @@
 package io.flamingock.core.configurator;
 
-import io.flamingock.core.pipeline.LoadedStage;
-import io.flamingock.core.pipeline.PreviewStage;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.system.SystemModule;
 

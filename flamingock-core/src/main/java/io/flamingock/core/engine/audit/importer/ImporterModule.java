@@ -4,12 +4,12 @@ import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.audit.importer.changeunit.FlamingockLocalImporterChangeUnit;
 import io.flamingock.core.engine.audit.importer.changeunit.MongockImporterChangeUnit;
 import io.flamingock.core.pipeline.PipelineDescriptor;
-import io.flamingock.core.pipeline.PreviewStage;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.system.LocalSystemModule;
-import io.flamingock.core.task.preview.CodePreviewChangeUnit;
-import io.flamingock.core.task.preview.MethodPreview;
-import io.flamingock.core.task.preview.builder.PreviewTaskBuilder;
+import io.flamingock.core.preview.CodePreviewChangeUnit;
+import io.flamingock.core.preview.MethodPreview;
+import io.flamingock.core.preview.builder.PreviewTaskBuilder;
 
 import java.util.Arrays;
 import java.util.Collections;

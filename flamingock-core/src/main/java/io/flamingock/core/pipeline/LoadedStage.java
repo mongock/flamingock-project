@@ -18,6 +18,7 @@ package io.flamingock.core.pipeline;
 
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.task.executable.ExecutableTask;
 import io.flamingock.core.task.executable.builder.ExecutableTaskBuilder;
 import io.flamingock.core.task.loaded.AbstractLoadedTask;

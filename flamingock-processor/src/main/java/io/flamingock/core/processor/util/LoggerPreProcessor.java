@@ -1,4 +1,4 @@
-package io.flamingock.core.metadata.util;
+package io.flamingock.core.processor.util;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;

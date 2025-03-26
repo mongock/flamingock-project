@@ -16,11 +16,11 @@
 
 package io.flamingock.importer.cloud.common;
 
-import io.flamingock.core.pipeline.PreviewStage;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.system.CloudSystemModule;
-import io.flamingock.core.task.preview.CodePreviewChangeUnit;
-import io.flamingock.core.task.preview.MethodPreview;
-import io.flamingock.core.task.preview.builder.PreviewTaskBuilder;
+import io.flamingock.core.preview.CodePreviewChangeUnit;
+import io.flamingock.core.preview.MethodPreview;
+import io.flamingock.core.preview.builder.PreviewTaskBuilder;
 
 import java.util.Arrays;
 import java.util.Collections;

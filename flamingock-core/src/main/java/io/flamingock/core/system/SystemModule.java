@@ -1,7 +1,7 @@
 package io.flamingock.core.system;
 
 
-import io.flamingock.core.pipeline.PreviewStage;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
 
 import java.util.List;

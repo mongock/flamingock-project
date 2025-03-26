@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.task.preview;
+package io.flamingock.core.preview;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

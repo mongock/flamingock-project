@@ -19,8 +19,8 @@ package io.flamingock.core.configurator.core;
 import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
-import io.flamingock.core.metadata.util.Deserializer;
-import io.flamingock.core.pipeline.PreviewPipeline;
+import io.flamingock.core.processor.util.Deserializer;
+import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.pipeline.Stage;
 
 import java.util.ArrayList;
