@@ -13,14 +13,21 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 
 
-
-//    api("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
-
-
+    testAnnotationProcessor(project(":flamingock-processor"))
     testImplementation(project(":utils-test"))
 }
 
 description = "${project.name}'s description"
+
+
+tasks.withType<JavaCompile>().configureEach {
+    if (name.contains("Test", ignoreCase = true)) {
+        options.compilerArgs.addAll(listOf(
+            "-Asources=${projectDir}/src/test/java",
+            "-Aresources=${projectDir}/src/test/resources"
+        ))
+    }
+}
 
 java {
     toolchain {

@@ -25,6 +25,7 @@ import io.flamingock.core.task.loaded.AbstractLoadedTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +53,10 @@ public class Pipeline implements PipelineDescriptor {
     }
 
     public void validateStages() {
+        if(loadedStages == null || loadedStages.size() == 0) {
+            throw new FlamingockException("Pipeline must contain at least one stage");
+        }
+
         List<String> emptyLoadedStages= loadedStages
                 .stream()
                 .filter(stage-> stage.getLoadedTasks().size() == 0)
@@ -125,6 +130,9 @@ public class Pipeline implements PipelineDescriptor {
 
         @NotNull
         private static List<LoadedStage> transformToLoadedStages(Collection<PreviewStage> stages) {
+            if(stages == null) {
+                return Collections.emptyList();
+            }
             return stages
                     .stream()
                     .map(LoadedStage.builder()::setPreviewStage)
