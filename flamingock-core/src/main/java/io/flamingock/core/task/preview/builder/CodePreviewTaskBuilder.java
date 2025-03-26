@@ -146,6 +146,7 @@ public class CodePreviewTaskBuilder implements PreviewTaskBuilder<CodePreviewCha
         setSourceClassPath(typeElement.getQualifiedName().toString());
         setExecutionMethod(getAnnotatedMethodInfo(typeElement, Execution.class).orElse(null));
         setRollbackMethod(getAnnotatedMethodInfo(typeElement, RollbackExecution.class).orElse(null));
+        setTransactional(annotation.transactional());
         setRunAlways(annotation.runAlways());
         setNewChangeUnit(true);
         setSystem(false);
@@ -161,6 +162,7 @@ public class CodePreviewTaskBuilder implements PreviewTaskBuilder<CodePreviewCha
         setRollbackMethod(getAnnotatedMethodInfo(typeElement, RollbackExecution.class).orElse(null));
         setBeforeExecutionMethod(getAnnotatedMethodInfo(typeElement, BeforeExecution.class).orElse(null));
         setRollbackBeforeExecutionMethod(getAnnotatedMethodInfo(typeElement, RollbackBeforeExecution.class).orElse(null));
+        setTransactional(annotation.transactional());
         setRunAlways(annotation.runAlways());
         setNewChangeUnit(false);
         setSystem(false);

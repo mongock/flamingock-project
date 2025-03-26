@@ -111,6 +111,8 @@ public class ChangesPreProcessor extends AbstractProcessor {
     private Serializer serializer;
     private AnnotationFinder annotationFinder;
 
+    public ChangesPreProcessor(){}
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
@@ -123,9 +125,12 @@ public class ChangesPreProcessor extends AbstractProcessor {
         pipelineFile = getFlamingockPipelineFile();
         PreviewPipeline pipeline = getPipelineFromTemplatedChanges();
         serializer.serializeTemplatedPipeline(pipeline);
-        //todo remote
-        logger.info("Pipeline(init)\n\n" + pipeline);
-        logger.info("\n\n\ninitialized");
+        logger.info("initialized");
+    }
+
+    @Override
+    public Set<String> getSupportedOptions() {
+        return new HashSet<>(Arrays.asList("sources", "resources"));
     }
 
     @Override
@@ -138,7 +143,6 @@ public class ChangesPreProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        logger.info("PROCESSING");
         if (roundEnv.processingOver()) {
             logger.info("final processing round - skipping execution.");
             return false;
@@ -152,9 +156,7 @@ public class ChangesPreProcessor extends AbstractProcessor {
                 new AnnotationFinder(roundEnv, logger).getCodedChangeUnitsMapByPackage()
         );
         serializer.serializeFullPipeline(pipeline);
-        //todo remote
-        logger.info("Pipeline(process)\n\n" + pipeline);
-        logger.info("\n\n\nFinished process");
+        logger.info("Finished process");
         return true;
     }
 
