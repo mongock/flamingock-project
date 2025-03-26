@@ -16,8 +16,6 @@
 
 package io.flamingock.core.task.preview;
 
-import java.beans.Transient;
-
 public class CodePreviewChangeUnit extends AbstractCodePreviewTask {
 
     protected boolean isNewChangeUnit;

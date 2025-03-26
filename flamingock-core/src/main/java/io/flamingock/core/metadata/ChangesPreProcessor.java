@@ -66,13 +66,14 @@ import java.util.Set;
  * <h2>Supported Annotations</h2>
  * The processor detects and processes classes annotated with:
  * <ul>
- *     <li>{@link  ChangeUnitSource} - Represents a change unit defined within the code.</li>
+ *     <li>{@link  Change} - Represents a change unit defined within the code.</li>
+ *     <li>{@link  ChangeUnit} - Represents a legacy change unit defined within the code.</li>
  * </ul>
  *
  * <h2>Generated Metadata Files</h2>
  * <ul>
- *     <li><b><code>metadata-templated.json</code></b> - Contains only templated changes.</li>
- *     <li><b><code>metadata-full.json</code></b> - Contains all processed changes
+ *     <li><b><code>templated-pipeline.json</code></b> - Contains only templated changes.</li>
+ *     <li><b><code>full-pipeline.json</code></b> - Contains all processed changes
  *         (templated + annotated classes).</li>
  * </ul>
  *

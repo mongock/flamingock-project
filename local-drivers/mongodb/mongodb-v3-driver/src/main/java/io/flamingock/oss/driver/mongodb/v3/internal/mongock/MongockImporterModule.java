@@ -1,9 +1,7 @@
 package io.flamingock.oss.driver.mongodb.v3.internal.mongock;
 
 import com.mongodb.client.MongoCollection;
-import io.flamingock.core.engine.audit.importer.ImporterReader;
 import io.flamingock.core.engine.audit.importer.changeunit.MongockImporterChangeUnit;
-import io.flamingock.core.pipeline.PipelineDescriptor;
 import io.flamingock.core.pipeline.PreviewStage;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.engine.audit.AuditWriter;
@@ -13,8 +11,6 @@ import io.flamingock.core.task.preview.MethodPreview;
 import io.flamingock.core.task.preview.builder.PreviewTaskBuilder;
 import org.bson.Document;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

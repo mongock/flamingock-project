@@ -3,9 +3,7 @@ package io.flamingock.core.system;
 
 import io.flamingock.core.pipeline.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
-import io.flamingock.core.task.preview.CodePreviewChangeUnit;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface SystemModule extends Comparable<SystemModule> {
