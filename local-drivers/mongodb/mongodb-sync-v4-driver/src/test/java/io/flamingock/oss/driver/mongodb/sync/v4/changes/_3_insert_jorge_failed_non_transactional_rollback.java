@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback;
+package io.flamingock.oss.driver.mongodb.sync.v4.changes;
 
 import org.bson.Document;
 
@@ -25,7 +25,7 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 
 @Change( id="execution-with-exception" , order = "3")
-public class CExecutionWithException {
+public class _3_insert_jorge_failed_non_transactional_rollback {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {

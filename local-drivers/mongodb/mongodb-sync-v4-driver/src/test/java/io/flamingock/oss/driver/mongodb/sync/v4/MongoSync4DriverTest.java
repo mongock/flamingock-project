@@ -24,6 +24,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.cloud.transaction.mongodb.sync.v4.cofig.MongoDBSync4Configuration;
 import io.flamingock.commons.utils.Pair;
+import io.flamingock.commons.utils.Trio;
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
@@ -33,11 +34,14 @@ import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.core.runner.PipelineExecutionException;
-import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._1_create_client_collection_happy;
-import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._2_insert_federico_client_happy;
-import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._3_insert_jorge_client_happy;
-import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction._2_insert_federico_client_happy_non_transactional;
-import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction._3_insert_jorge_client_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes._1_create_client_collection_happy;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes._2_insert_federico_client_happy;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes._3_insert_jorge_client_happy_transactional;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes._2_insert_federico_client_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes._3_insert_jorge_client_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes._3_insert_jorge_client_failed_transactional;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes._3_insert_jorge_failed_non_transactional_rollback;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithoutRollback._3_insert_jorge_client_failed_non_transactional;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -114,10 +118,9 @@ class MongoSync4DriverTest {
         //Given-When
         try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
             mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
-                    "stage-name",
-                    new Pair<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
-                    new Pair<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
-                    new Pair<>(_3_insert_jorge_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
+                    new Trio<>(_3_insert_jorge_client_happy_transactional.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
             );
 
             FlamingockStandalone.local()
@@ -145,10 +148,9 @@ class MongoSync4DriverTest {
 
         try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
             mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
-                    "stage-name",
-                    new Pair<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
-                    new Pair<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
-                    new Pair<>(_3_insert_jorge_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
+                    new Trio<>(_3_insert_jorge_client_happy_transactional.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
             );
 
             FlamingockStandalone.local()
@@ -172,10 +174,9 @@ class MongoSync4DriverTest {
 
         try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
             mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
-                    "stage-name",
-                    new Pair<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
-                    new Pair<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
-                    new Pair<>(_3_insert_jorge_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
+                    new Trio<>(_3_insert_jorge_client_happy_transactional.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
             );
 
             FlamingockStandalone.local()
@@ -214,10 +215,9 @@ class MongoSync4DriverTest {
         //Given-When
         try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
             mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
-                    "stage-name",
-                    new Pair<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
-                    new Pair<>(_2_insert_federico_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)),
-                    new Pair<>(_3_insert_jorge_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)))
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_2_insert_federico_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_3_insert_jorge_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)))
             );
 
             FlamingockStandalone.local()
@@ -256,16 +256,23 @@ class MongoSync4DriverTest {
     @DisplayName("When standalone runs the driver with transactions enabled and execution fails should persist only the executed audit logs")
     void failedWithTransaction() {
         //Given-When
-        assertThrows(PipelineExecutionException.class, () -> {
-            FlamingockStandalone.local()
-                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithTransaction"))
-                    .addDependency(mongoClient.getDatabase(DB_NAME))
-                    .setTrackIgnored(true)
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_2_insert_federico_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_3_insert_jorge_client_failed_transactional.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
+            );
 
-                    .build()
-                    .run();
-        });
+            assertThrows(PipelineExecutionException.class, () -> {
+                FlamingockStandalone.local()
+                        .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
+                        //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithTransaction"))
+                        .addDependency(mongoClient.getDatabase(DB_NAME))
+
+                        .build()
+                        .run();
+            });
+        }
 
         //Then
         //Checking auditLog
@@ -289,16 +296,26 @@ class MongoSync4DriverTest {
     @DisplayName("When standalone runs the driver with transactions disabled and execution fails (with rollback method) should persist all the audit logs up to the failed one (ROLLED_BACK)")
     void failedWithoutTransactionWithRollback() {
         //Given-When
-        assertThrows(PipelineExecutionException.class, () -> {
-            FlamingockStandalone.local()
-                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback"))
-                    .addDependency(mongoClient.getDatabase(DB_NAME))
-                    .setTrackIgnored(true)
-                    .disableTransaction()
-                    .build()
-                    .run();
-        });
+
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_2_insert_federico_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_3_insert_jorge_failed_non_transactional_rollback.class, Collections.singletonList(MongoDatabase.class), Collections.singletonList(MongoDatabase.class)))
+            );
+
+            assertThrows(PipelineExecutionException.class, () -> {
+                FlamingockStandalone.local()
+                        .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
+                        //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback"))
+                        .addDependency(mongoClient.getDatabase(DB_NAME))
+                        .disableTransaction()
+                        .build()
+                        .run();
+            });
+        }
+
+
 
         //Then
         //Checking auditLog
@@ -324,16 +341,24 @@ class MongoSync4DriverTest {
     @DisplayName("When standalone runs the driver with transactions disabled and execution fails (without rollback method) should persist all the audit logs up to the failed one (FAILED)")
     void failedWithoutTransactionWithoutRollback() {
         //Given-When
-        assertThrows(PipelineExecutionException.class, () -> {
-            FlamingockStandalone.local()
-                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithoutRollback"))
-                    .addDependency(mongoClient.getDatabase(DB_NAME))
-                    .setTrackIgnored(true)
-                    .disableTransaction()
-                    .build()
-                    .run();
-        });
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_2_insert_federico_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_3_insert_jorge_client_failed_non_transactional.class, Collections.singletonList(MongoDatabase.class), Collections.singletonList(MongoDatabase.class)))
+            );
+
+            assertThrows(PipelineExecutionException.class, () -> {
+                FlamingockStandalone.local()
+                        .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
+                        //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithoutRollback"))
+                        .addDependency(mongoClient.getDatabase(DB_NAME))
+                        .disableTransaction()
+                        .build()
+                        .run();
+            });
+        }
+
 
         //Then
         //Checking auditLog
@@ -363,14 +388,14 @@ class MongoSync4DriverTest {
      * <ul>
      *   <li>The first item is the {@link Class} annotated with {@link Change}</li>
      *   <li>The second item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @Execution}</li>
+    *   <li>The third item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @RollbackExecution}</li>
      * </ul>
      *
-     * @param stageName         the name of the stage in the pipeline
      * @param changeDefinitions varargs of pairs containing change classes and their execution method parameters
      * @return a {@link PreviewPipeline} ready for preview or testing
      */
     @SafeVarargs
-    private final PreviewPipeline getPreviewPipeline(String stageName, Pair<Class<?>, List<Class<?>>>... changeDefinitions) {
+    private final PreviewPipeline getPreviewPipeline(Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
 
         List<CodePreviewChangeUnit> tasks = Arrays.stream(changeDefinitions)
                 .map(pair-> {
@@ -394,7 +419,7 @@ class MongoSync4DriverTest {
                 .collect(Collectors.toList());
 
         PreviewStage stage = new PreviewStage(
-                stageName,
+                "stage-name",
                 "some description",
                 null,
                 null,
