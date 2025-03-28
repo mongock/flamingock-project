@@ -23,7 +23,7 @@ import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
 @Change( id="insert-document" , order = "2")
-public class ABInsertDocument {
+public class _2_insert_federico_client_happy_non_transactional {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {

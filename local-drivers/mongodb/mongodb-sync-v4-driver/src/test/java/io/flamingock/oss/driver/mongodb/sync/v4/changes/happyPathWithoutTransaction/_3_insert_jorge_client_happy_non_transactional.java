@@ -23,7 +23,7 @@ import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
 @Change( id="insert-another-document" , order = "3")
-public class CInsertAnotherDocument {
+public class _3_insert_jorge_client_happy_non_transactional {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {

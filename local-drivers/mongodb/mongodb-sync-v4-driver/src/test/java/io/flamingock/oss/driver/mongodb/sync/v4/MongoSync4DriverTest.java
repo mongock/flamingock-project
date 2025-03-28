@@ -36,6 +36,8 @@ import io.flamingock.core.runner.PipelineExecutionException;
 import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._1_create_client_collection_happy;
 import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._2_insert_federico_client_happy;
 import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._3_insert_jorge_client_happy;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction._2_insert_federico_client_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction._3_insert_jorge_client_happy_non_transactional;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -110,13 +112,21 @@ class MongoSync4DriverTest {
     @DisplayName("When standalone runs the driver with DEFAULT repository names related collections should exists")
     void happyPathWithDefaultRepositoryNames() {
         //Given-When
-        FlamingockStandalone.local()
-                .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
-                .addDependency(mongoClient.getDatabase(DB_NAME))
-                .setTrackIgnored(true)
-                .build()
-                .run();
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
+                    "stage-name",
+                    new Pair<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Pair<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
+                    new Pair<>(_3_insert_jorge_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
+            );
+
+            FlamingockStandalone.local()
+                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
+                    .addDependency(mongoClient.getDatabase(DB_NAME))
+                    .build()
+                    .run();
+        }
 
         assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_MIGRATION_REPOSITORY_NAME));
         assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_LOCK_REPOSITORY_NAME));
@@ -133,14 +143,21 @@ class MongoSync4DriverTest {
         driverConfiguration.setMigrationRepositoryName(CUSTOM_MIGRATION_REPOSITORY_NAME);
         driverConfiguration.setLockRepositoryName(CUSTOM_LOCK_REPOSITORY_NAME);
 
-        FlamingockStandalone.local()
-                .setDriver(new MongoSync4Driver(mongoClient, DB_NAME).setDriverConfiguration(driverConfiguration))
-                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
-                .addDependency(mongoClient.getDatabase(DB_NAME))
-                .setTrackIgnored(true)
-                
-                .build()
-                .run();
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
+                    "stage-name",
+                    new Pair<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Pair<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
+                    new Pair<>(_3_insert_jorge_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
+            );
+
+            FlamingockStandalone.local()
+                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME).setDriverConfiguration(driverConfiguration))
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
+                    .addDependency(mongoClient.getDatabase(DB_NAME))
+                    .build()
+                    .run();
+        }
 
         assertFalse(mongoDBTestHelper.collectionExists(DEFAULT_MIGRATION_REPOSITORY_NAME));
         assertFalse(mongoDBTestHelper.collectionExists(DEFAULT_LOCK_REPOSITORY_NAME));
@@ -195,14 +212,24 @@ class MongoSync4DriverTest {
     @DisplayName("When standalone runs the driver with transactions disabled should persist the audit logs and the user's collection updated")
     void happyPathWithoutTransaction() {
         //Given-When
-        FlamingockStandalone.local()
-                .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction"))
-                .addDependency(mongoClient.getDatabase(DB_NAME))
-                .setTrackIgnored(true)
-                .disableTransaction()
-                .build()
-                .run();
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
+                    "stage-name",
+                    new Pair<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Pair<>(_2_insert_federico_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)),
+                    new Pair<>(_3_insert_jorge_client_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)))
+            );
+
+            FlamingockStandalone.local()
+                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithoutTransaction"))
+                    .addDependency(mongoClient.getDatabase(DB_NAME))
+                    .disableTransaction()
+                    .build()
+                    .run();
+        }
+
+
 
         //Then
         //Checking auditLog
