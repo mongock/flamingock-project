@@ -43,7 +43,7 @@ public class PreviewStage {
 
     private String resourcesDir;
 
-    private Collection<AbstractPreviewTask> tasks;
+    private Collection<? extends AbstractPreviewTask> tasks;
 
     private boolean parallel;
 
@@ -54,7 +54,7 @@ public class PreviewStage {
                         String description,
                         String sourcesPackage,
                         String resourcesDir,
-                        Collection<AbstractPreviewTask> tasks,
+                        Collection<? extends AbstractPreviewTask> tasks,
                         boolean parallel) {
         this.name = name;
         this.description = description;
@@ -100,11 +100,11 @@ public class PreviewStage {
         this.resourcesDir = resourcesDir;
     }
 
-    public Collection<AbstractPreviewTask> getTasks() {
+    public Collection<? extends AbstractPreviewTask> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Collection<AbstractPreviewTask> tasks) {
+    public void setTasks(Collection<? extends AbstractPreviewTask> tasks) {
         this.tasks = tasks;
     }
 

@@ -18,28 +18,43 @@ package io.flamingock.oss.driver.mongodb.sync.v4;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.cloud.transaction.mongodb.sync.v4.cofig.MongoDBSync4Configuration;
+import io.flamingock.commons.utils.Pair;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.preview.CodePreviewChangeUnit;
+import io.flamingock.core.preview.MethodPreview;
+import io.flamingock.core.preview.PreviewPipeline;
+import io.flamingock.core.preview.PreviewStage;
+import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.core.runner.PipelineExecutionException;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._1_create_client_collection_happy;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._2_insert_federico_client_happy;
+import io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction._3_insert_jorge_client_happy;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_LOCK_REPOSITORY_NAME;
 import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_MIGRATION_REPOSITORY_NAME;
@@ -137,15 +152,23 @@ class MongoSync4DriverTest {
     @Test
     @DisplayName("When standalone runs the driver with transactions enabled should persist the audit logs and the user's collection updated")
     void happyPathWithTransaction() {
-        //Given-When
-        FlamingockStandalone.local()
-                .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
-                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
-                .addDependency(mongoClient.getDatabase(DB_NAME))
-                .setTrackIgnored(true)
-                
-                .build()
-                .run();
+
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(getPreviewPipeline(
+                    "stage-name",
+                    new Pair<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Pair<>(_2_insert_federico_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
+                    new Pair<>(_3_insert_jorge_client_happy.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
+            );
+
+            FlamingockStandalone.local()
+                    .setDriver(new MongoSync4Driver(mongoClient, DB_NAME))
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
+                    .addDependency(mongoClient.getDatabase(DB_NAME))
+                    .build()
+                    .run();
+        }
+
 
         //Then
         //Checking auditLog
@@ -212,7 +235,7 @@ class MongoSync4DriverTest {
                     //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithTransaction"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
                     .setTrackIgnored(true)
-                    
+
                     .build()
                     .run();
         });
@@ -304,5 +327,54 @@ class MongoSync4DriverTest {
         assertEquals(2, clients.size());
         assertTrue(clients.contains("Federico"));
         assertTrue(clients.contains("Jorge"));
+    }
+
+    /**
+     * Builds a {@link PreviewPipeline} composed of a single {@link PreviewStage} containing one or more {@link CodePreviewChangeUnit}s.
+     * <p>
+     * Each change unit is derived from a {@link Pair} where:
+     * <ul>
+     *   <li>The first item is the {@link Class} annotated with {@link Change}</li>
+     *   <li>The second item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @Execution}</li>
+     * </ul>
+     *
+     * @param stageName         the name of the stage in the pipeline
+     * @param changeDefinitions varargs of pairs containing change classes and their execution method parameters
+     * @return a {@link PreviewPipeline} ready for preview or testing
+     */
+    @SafeVarargs
+    private final PreviewPipeline getPreviewPipeline(String stageName, Pair<Class<?>, List<Class<?>>>... changeDefinitions) {
+
+        List<CodePreviewChangeUnit> tasks = Arrays.stream(changeDefinitions)
+                .map(pair-> {
+                    Change ann = pair.getFirst().getAnnotation(Change.class);
+                    List<String> parameterTypes = pair.getSecond()
+                            .stream()
+                            .map(Class::getName)
+                            .collect(Collectors.toList());
+                    return new CodePreviewChangeUnit(
+                            ann.id(),
+                            ann.order(),
+                            pair.getFirst().getName(),
+                            new MethodPreview("execution", parameterTypes),
+                            null,
+                            false,
+                            ann.transactional(),
+                            true,
+                            false
+                    );
+                })
+                .collect(Collectors.toList());
+
+        PreviewStage stage = new PreviewStage(
+                stageName,
+                "some description",
+                null,
+                null,
+                tasks,
+                false
+        );
+
+        return new PreviewPipeline(Collections.singletonList(stage));
     }
 }

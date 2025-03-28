@@ -16,19 +16,15 @@
 
 package io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction;
 
-import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
-import org.bson.Document;
 
-@Change( id="insert-another-document" , order = "3")
-public class CInsertAnotherDocument {
+@Change( id="create-collection" , order = "1", transactional = false)
+public class _1_create_client_collection_happy {
 
     @Execution
-    public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
-        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(clientSession, new Document().append("name", "Jorge"));
+    public void execution(MongoDatabase mongoDatabase) {
+        mongoDatabase.createCollection("clientCollection");
     }
 }

@@ -31,7 +31,7 @@ public final class Deserializer {
         logger.debug("reading flamingock pipeline preview");
         return readFileIfExists(Constants.FULL_PIPELINE_FILE_PATH)
                 .orElseGet(() -> readFileIfExists(Constants.TEMPLATED_PIPELINE_FILE_PATH)
-                        .orElseThrow(() -> new RuntimeException("Exiting as Flamingock Pipeline file not found")));
+                        .orElseThrow(() -> new RuntimeException("Flamingock Pipeline file not found")));
     }
 
     /**

@@ -28,13 +28,13 @@ public class CodePreviewChangeUnit extends AbstractCodePreviewTask {
     public CodePreviewChangeUnit(String id,
                                  String order,
                                  String sourceClassPath,
-                                 MethodPreview executionMethodName,
-                                 MethodPreview rollbackMethodName,
+                                 MethodPreview executionMethodPreview,
+                                 MethodPreview rollbackMethodPreview,
                                  boolean runAlways,
                                  boolean transactional,
                                  boolean isNewChangeUnit,
                                  boolean system) {
-        super(id, order, sourceClassPath, executionMethodName, rollbackMethodName, runAlways, transactional, system);
+        super(id, order, sourceClassPath, executionMethodPreview, rollbackMethodPreview, runAlways, transactional, system);
         this.isNewChangeUnit = isNewChangeUnit;
     }
 

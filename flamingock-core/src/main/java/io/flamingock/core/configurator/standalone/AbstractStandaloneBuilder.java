@@ -126,6 +126,7 @@ abstract class AbstractStandaloneBuilder<
         return coreConfiguratorDelegate().setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
+    @Deprecated
     @Override
     public HOLDER setTrackIgnored(boolean trackIgnored) {
         return coreConfiguratorDelegate().setTrackIgnored(trackIgnored);
