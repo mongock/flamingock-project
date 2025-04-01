@@ -1,4 +1,4 @@
-package io.flamingock.oss.driver.mongodb.sync.v4.mongock;
+package io.flamingock.oss.driver.mongodb.sync.v4.changes;
 
 import com.mongodb.client.MongoDatabase;
 import io.mongock.api.annotations.BeforeExecution;
@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
-@ChangeUnit(id = "client-initializer", order = "1", author = "mongock")
-public class ClientInitializerChangeUnit {
+@ChangeUnit(id = "create-author-collection", order = "0", author = "mongock")
+public class _0_mongock_create_authors_collection {
 
     public final static int INITIAL_CLIENTS = 10;
     public final static String CLIENTS_COLLECTION_NAME = "mongockClientCollection";
@@ -35,7 +35,7 @@ public class ClientInitializerChangeUnit {
 
         mongoDatabase.getCollection(CLIENTS_COLLECTION_NAME)
                 .insertMany(IntStream.range(0, INITIAL_CLIENTS)
-                        .mapToObj(ClientInitializerChangeUnit::getClient)
+                        .mapToObj(_0_mongock_create_authors_collection::getClient)
                         .collect(Collectors.toList()));
     }
 

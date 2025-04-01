@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.sync.v4.changes.failedWithoutTransactionWithRollback;
+package io.flamingock.oss.driver.mongodb.sync.v4.changes;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -22,8 +22,8 @@ import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
-@Change( id="insert-document" , order = "2")
-public class BInsertDocument {
+@Change( id="insert-federico-document" , order = "2")
+public class _2_insert_federico_happy_non_transactional {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {
