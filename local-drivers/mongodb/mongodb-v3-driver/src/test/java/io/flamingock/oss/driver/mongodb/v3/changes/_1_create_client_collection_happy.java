@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithoutRollback;
+package io.flamingock.oss.driver.mongodb.v3.changes;
 
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 
-@Change( id="create-collection" , order = "1", transactional = false)
-public class ACreateCollection {
+@Change( id="create-client-collection" , order = "1", transactional = false)
+public class _1_create_client_collection_happy {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {

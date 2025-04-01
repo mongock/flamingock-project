@@ -102,25 +102,25 @@ public class MongoDBTestHelper {
     public final PreviewPipeline getPreviewPipeline(Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
 
         List<CodePreviewChangeUnit> tasks = Arrays.stream(changeDefinitions)
-                .map(pair-> {
-                    boolean isNewChangeUnit = pair.getFirst().isAnnotationPresent(Change.class);
+                .map(trio-> {
+                    boolean isNewChangeUnit = trio.getFirst().isAnnotationPresent(Change.class);
                     Function<Class<?>, Trio<String, String, Boolean>> extractor = isNewChangeUnit
                             ? infoExtractor
                             : infoExtractorLegacy;
-                    Trio<String, String, Boolean> changeInfo = extractor.apply(pair.getFirst());
-                    List<String> parameterTypes = pair.getSecond()
-                            .stream()
-                            .map(Class::getName)
-                            .collect(Collectors.toList());
-                    //TODO rollback????
+                    Trio<String, String, Boolean> changeInfo = extractor.apply(trio.getFirst());
+                    MethodPreview rollback = null;
+                    if(trio.getThird() != null) {
+                        rollback = new MethodPreview("rollbackExecution", getParameterTypes(trio.getThird()));
+                    }
+
 
                     List<CodePreviewChangeUnit> changes = new ArrayList<>();
                     changes.add(new CodePreviewChangeUnit(
                             changeInfo.getFirst(),
                             changeInfo.getSecond(),
-                            pair.getFirst().getName(),
-                            new MethodPreview("execution", parameterTypes),
-                            null,
+                            trio.getFirst().getName(),
+                            new MethodPreview("execution", getParameterTypes(trio.getSecond())),
+                            rollback,
                             false,
                             changeInfo.getThird(),
                             isNewChangeUnit,
@@ -128,14 +128,20 @@ public class MongoDBTestHelper {
                     ));
 
                     //we are assuming, for testing purpose, that if it's legacy, it provides beforeExecution,
-                    // with same parameterTypes
+                    // with same parameterTypes and, if 'rollbackBeforeExecution' provided too, it is with the same
+                    //parameters
                     if(!isNewChangeUnit) {
+                        MethodPreview rollbackBeforeExecution = null;
+                        if(trio.getThird() != null) {
+                            rollbackBeforeExecution = new MethodPreview("rollbackBeforeExecution", getParameterTypes(trio.getThird()));
+                        }
+
                         changes.add(new CodePreviewChangeUnit(
                                 changeInfo.getFirst() + "_before",
                                 changeInfo.getSecond(),
-                                pair.getFirst().getName(),
-                                new MethodPreview("beforeExecution", parameterTypes),
-                                null,
+                                trio.getFirst().getName(),
+                                new MethodPreview("beforeExecution", getParameterTypes(trio.getSecond())),
+                                rollbackBeforeExecution,
                                 false,
                                 changeInfo.getThird(),
                                 false,
@@ -157,5 +163,13 @@ public class MongoDBTestHelper {
         );
 
         return new PreviewPipeline(Collections.singletonList(stage));
+    }
+
+    @NotNull
+    private static List<String> getParameterTypes(List<Class<?>> second) {
+        return second
+                .stream()
+                .map(Class::getName)
+                .collect(Collectors.toList());
     }
 }

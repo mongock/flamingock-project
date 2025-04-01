@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.sync.v4.changes.withImporter;
+package io.flamingock.oss.driver.mongodb.v3.changes;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.RollbackExecution;
 import org.bson.Document;
 
-@Change( id="insert-another-document" , order = "3")
-public class CInsertAnotherDocument {
+@Change( id="insert-jorge-document" , order = "3")
+public class _3_insert_jorge_failed_non_transactional_rollback {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
         collection.insertOne(new Document().append("name", "Jorge"));
+        throw new RuntimeException("test");
+    }
+
+    @RollbackExecution
+    public void rollbackExecution(MongoDatabase mongoDatabase) {
+        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
+        collection.deleteOne(new Document().append("name", "Jorge"));
     }
 }

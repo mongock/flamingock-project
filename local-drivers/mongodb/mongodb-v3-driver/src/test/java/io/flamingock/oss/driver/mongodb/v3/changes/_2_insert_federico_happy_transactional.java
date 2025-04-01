@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.v3.changes.happyPathWithTransaction;
+package io.flamingock.oss.driver.mongodb.v3.changes;
 
+import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
+import org.bson.Document;
 
-@Change( id="create-collection" , order = "1", transactional = false)
-public class ACreateCollection {
+@Change( id="insert-federico-document" , order = "2")
+public class _2_insert_federico_happy_transactional {
 
     @Execution
-    public void execution(MongoDatabase mongoDatabase) {
-        mongoDatabase.createCollection("clientCollection");
+    public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
+        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
+        collection.insertOne(clientSession, new Document().append("name", "Federico"));
     }
 }

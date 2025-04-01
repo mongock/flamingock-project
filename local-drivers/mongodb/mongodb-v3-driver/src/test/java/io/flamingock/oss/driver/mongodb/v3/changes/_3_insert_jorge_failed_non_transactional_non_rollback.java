@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.v3.changes.failedWithoutTransactionWithoutRollback;
+package io.flamingock.oss.driver.mongodb.v3.changes;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -22,12 +22,14 @@ import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 
-@Change( id="insert-document" , order = "2")
-public class BInsertDocument {
+@Change( id="insert-jorge-document" , order = "3", transactional = false)
+public class _3_insert_jorge_failed_non_transactional_non_rollback {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(new Document().append("name", "Federico"));
+        collection.insertOne(new Document().append("name", "Jorge"));
+        throw new RuntimeException("test");
     }
+
 }
