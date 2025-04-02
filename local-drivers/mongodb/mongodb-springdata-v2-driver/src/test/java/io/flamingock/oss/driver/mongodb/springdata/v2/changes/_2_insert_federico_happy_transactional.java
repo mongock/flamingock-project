@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithoutTransaction;
+package io.flamingock.oss.driver.mongodb.springdata.v2.changes;
 
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-@Change( id="insert-document" , order = "2")
-public class BInsertDocument {
+@Change( id="insert-federico-document" , order = "2")
+public class _2_insert_federico_happy_transactional {
 
     @Execution
-    public void execution(MongoTemplate mongoTemplate) {
-        MongoCollection<Document> collection = mongoTemplate.getCollection("clientCollection");
+    public void execution(MongoTemplate mongoDatabase) {
+        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
         collection.insertOne(new Document().append("name", "Federico"));
     }
 }

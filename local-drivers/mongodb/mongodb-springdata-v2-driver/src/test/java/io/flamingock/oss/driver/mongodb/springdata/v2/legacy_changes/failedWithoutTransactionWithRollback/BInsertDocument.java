@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithoutRollback;
+package io.flamingock.oss.driver.mongodb.springdata.v2.legacy_changes.failedWithoutTransactionWithRollback;
 
 import com.mongodb.client.MongoCollection;
 import io.flamingock.core.api.annotations.Change;

@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithTransaction;
+package io.flamingock.oss.driver.mongodb.springdata.v2.legacy_changes.happyPathWithTransaction;
 
+import com.mongodb.client.MongoCollection;
+import io.flamingock.core.api.annotations.Change;
+import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import com.mongodb.client.MongoCollection;
-
-import io.flamingock.core.api.annotations.Change;
-import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.api.annotations.RollbackExecution;
-
-@Change( id="execution-with-exception" , order = "3")
-public class CExecutionWithException {
+@Change( id="insert-document" , order = "2")
+public class BInsertDocument {
 
     @Execution
     public void execution(MongoTemplate mongoTemplate) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("clientCollection");
-        collection.insertOne(new Document().append("name", "Jorge"));
-        throw new RuntimeException("test");
-    }
-
-    @RollbackExecution
-    public void rollbackExecution(MongoTemplate mongoTemplate) {
-        // Do nothing
+        collection.insertOne(new Document().append("name", "Federico"));
     }
 }

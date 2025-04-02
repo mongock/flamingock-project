@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithTransaction;
+package io.flamingock.oss.driver.mongodb.springdata.v2.legacy_changes.failedWithTransaction;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 

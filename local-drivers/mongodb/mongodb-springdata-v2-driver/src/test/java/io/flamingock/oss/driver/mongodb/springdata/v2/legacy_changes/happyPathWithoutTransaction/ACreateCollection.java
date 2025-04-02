@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v2.changes.failedWithoutTransactionWithoutRollback;
-
-import org.springframework.data.mongodb.core.MongoTemplate;
+package io.flamingock.oss.driver.mongodb.springdata.v2.legacy_changes.happyPathWithoutTransaction;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Change( id="create-collection" , order = "1", transactional = false)
 public class ACreateCollection {

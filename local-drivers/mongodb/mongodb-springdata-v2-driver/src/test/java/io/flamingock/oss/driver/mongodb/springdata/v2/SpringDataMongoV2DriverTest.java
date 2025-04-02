@@ -18,26 +18,42 @@ package io.flamingock.oss.driver.mongodb.springdata.v2;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
+import io.flamingock.commons.utils.Trio;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.processor.util.Deserializer;
+import io.flamingock.oss.driver.mongodb.springdata.v2.changes._1_create_client_collection_happy;
+import io.flamingock.oss.driver.mongodb.springdata.v2.changes._2_insert_federico_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.v2.changes._2_insert_federico_happy_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.v2.changes._3_insert_jorge_failed_non_transactional_non_rollback;
+import io.flamingock.oss.driver.mongodb.springdata.v2.changes._3_insert_jorge_failed_non_transactional_rollback;
+import io.flamingock.oss.driver.mongodb.springdata.v2.changes._3_insert_jorge_failed_transactional_non_rollback;
+import io.flamingock.oss.driver.mongodb.springdata.v2.changes._3_insert_jorge_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.v2.changes._3_insert_jorge_happy_transactional;
 import io.flamingock.core.runner.PipelineExecutionException;
 import io.flamingock.oss.driver.mongodb.springdata.v2.config.SpringDataMongoV2Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v2.driver.SpringDataMongoV2Driver;
+import io.flamingock.oss.driver.mongodb.v3.driver.Mongo3Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -93,15 +109,24 @@ class SpringDataMongoV2DriverTest {
     @Test
     @DisplayName("When standalone runs the driver with DEFAULT repository names related collections should exists")
     void happyPathWithDefaultRepositoryNames() {
+
         //Given-When
-        FlamingockStandalone.local()
-                .withImporter(CoreConfiguration.ImporterConfiguration.withSource("mongockChangeLog"))
-                .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
-                //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
-                .addDependency(mongoTemplate)
-                .setTrackIgnored(true)
-                .build()
-                .run();
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(mongoDBTestHelper.getPreviewPipeline(
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
+                    new Trio<>(_2_insert_federico_happy_transactional.class, Arrays.asList(MongoDatabase.class, ClientSession.class)),
+                    new Trio<>(_3_insert_jorge_happy_non_transactional.class, Arrays.asList(MongoDatabase.class, ClientSession.class)))
+            );
+
+            FlamingockStandalone.local()
+                    .withImporter(CoreConfiguration.ImporterConfiguration.withSource("mongockChangeLog"))
+                    .setDriver(new SpringDataMongoV2Driver(mongoTemplate))
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithTransaction"))
+                    .addDependency(mongoTemplate)
+                    .build()
+                    .run();
+        }
+
 
         assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_MIGRATION_REPOSITORY_NAME));
         assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_LOCK_REPOSITORY_NAME));

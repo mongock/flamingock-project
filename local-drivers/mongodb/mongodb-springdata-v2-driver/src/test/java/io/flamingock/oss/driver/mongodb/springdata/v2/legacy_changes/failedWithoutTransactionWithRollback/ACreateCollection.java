@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v2.changes.happyPathWithoutTransaction;
+package io.flamingock.oss.driver.mongodb.springdata.v2.legacy_changes.failedWithoutTransactionWithRollback;
 
-import com.mongodb.client.MongoCollection;
-import io.flamingock.core.api.annotations.Change;
-import io.flamingock.core.api.annotations.Execution;
-import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-@Change( id="insert-another-document" , order = "3")
-public class CInsertAnotherDocument {
+import io.flamingock.core.api.annotations.Change;
+import io.flamingock.core.api.annotations.Execution;
+
+@Change( id="create-collection" , order = "1", transactional = false)
+public class ACreateCollection {
 
     @Execution
     public void execution(MongoTemplate mongoTemplate) {
-        MongoCollection<Document> collection = mongoTemplate.getCollection("clientCollection");
-        collection.insertOne(new Document().append("name", "Jorge"));
+        mongoTemplate.createCollection("clientCollection");
     }
 }
