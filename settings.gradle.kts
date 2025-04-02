@@ -133,6 +133,11 @@ include("cloud-importers:dynamodb:dynamodb-cloud-importer-local")
 project(":cloud-importers:dynamodb:dynamodb-cloud-importer-local").name = "dynamodb-cloud-importer-local"
 project(":cloud-importers:dynamodb:dynamodb-cloud-importer-local").projectDir = file("cloud-importers/dynamodb/dynamodb-cloud-importer-local")
 
-include("importers:mongodb-importer")
-project(":importers:mongodb-importer").name = "mongodb-importer"
-project(":importers:mongodb-importer").projectDir = file("importers/mongodb-importer")
+include("importers:mongodb-importer-sync-v4")
+project(":importers:mongodb-importer-sync-v4").name = "mongodb-importer-sync-v4"
+project(":importers:mongodb-importer-sync-v4").projectDir = file("importers/mongodb-importer-sync-v4")
+
+
+include("importers:mongodb-importer-v3")
+project(":importers:mongodb-importer-v3").name = "mongodb-importer-v3"
+project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-importer-v3")

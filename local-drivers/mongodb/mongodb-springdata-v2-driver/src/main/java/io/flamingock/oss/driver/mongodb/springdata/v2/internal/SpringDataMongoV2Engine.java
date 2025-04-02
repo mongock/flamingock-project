@@ -27,7 +27,7 @@ import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.transaction.TransactionWrapper;
-import io.flamingock.importer.mongodb.MongoImporterReader;
+import io.flamingock.importer.mongodb.v3.MongoImporterReader;
 import io.flamingock.oss.driver.mongodb.springdata.v2.config.SpringDataMongoV2Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.mongodb.ReadWriteConfiguration;
 import org.bson.Document;

@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":commons:mongodb-facade"))
-    implementation(project(":importers:mongodb-importer"))
+    implementation(project(":importers:mongodb-importer-v3"))
 
     implementation(project(":flamingock-core"))
     api(project(":local-drivers:mongodb:mongodb-v3-driver"))

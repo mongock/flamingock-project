@@ -31,7 +31,7 @@ import io.flamingock.core.local.LocalExecutionPlanner;
 import io.flamingock.core.local.TransactionManager;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.transaction.TransactionWrapper;
-import io.flamingock.importer.mongodb.MongoImporterReader;
+import io.flamingock.importer.mongodb.sync.v4.MongoImporterReader;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 import org.bson.Document;
 
