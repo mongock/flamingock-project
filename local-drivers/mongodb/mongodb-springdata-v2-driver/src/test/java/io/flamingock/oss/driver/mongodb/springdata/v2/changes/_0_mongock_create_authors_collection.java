@@ -1,6 +1,5 @@
 package io.flamingock.oss.driver.mongodb.springdata.v2.changes;
 
-import com.mongodb.client.MongoDatabase;
 import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
