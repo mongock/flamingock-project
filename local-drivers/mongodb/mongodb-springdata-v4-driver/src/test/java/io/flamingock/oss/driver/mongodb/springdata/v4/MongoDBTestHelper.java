@@ -16,7 +16,7 @@
 
 package io.flamingock.oss.driver.mongodb.springdata.v4;
 
-import com.mongodb.Function;
+import java.util.function.Function;
 import com.mongodb.client.MongoDatabase;
 
 import io.flamingock.commons.utils.Pair;

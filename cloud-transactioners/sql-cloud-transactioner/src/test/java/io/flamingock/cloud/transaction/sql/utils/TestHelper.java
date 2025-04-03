@@ -14,79 +14,44 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v3;
-
-import java.util.function.Function;
-import com.mongodb.client.MongoDatabase;
+package io.flamingock.cloud.transaction.sql.utils;
 
 import io.flamingock.commons.utils.Pair;
 import io.flamingock.commons.utils.Trio;
 import io.flamingock.core.api.annotations.Change;
-import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.commons.utils.TimeUtil;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.MethodPreview;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
-import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
-import io.flamingock.oss.driver.mongodb.springdata.v3.internal.mongodb.SpringDataMongoV3DocumentWrapper;
+import io.mongock.api.annotations.ChangeUnit;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.mongock.api.annotations.ChangeUnit;
-import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
+public class TestHelper {
 
-import static io.flamingock.core.local.AuditEntryField.KEY_CHANGE_ID;
-import static io.flamingock.core.local.AuditEntryField.KEY_TIMESTAMP;
-
-public class MongoDBTestHelper {
-    public final MongoDatabase mongoDatabase;
-    private final MongoDBAuditMapper<SpringDataMongoV3DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new SpringDataMongoV3DocumentWrapper(new Document()));
-
-    private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractor = c-> {
+    private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractor = c -> {
         Change ann = c.getAnnotation(Change.class);
         return new Trio<>(ann.id(), ann.order(), ann.transactional());
     };
 
-    private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractorLegacy = c-> {
+    private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractorLegacy = c -> {
         ChangeUnit ann = c.getAnnotation(ChangeUnit.class);
         return new Trio<>("[" + ann.author() + "]" + ann.id(), ann.order(), ann.transactional());
     };
 
-    public MongoDBTestHelper(MongoDatabase mongoDatabase) {
-        this.mongoDatabase = mongoDatabase;
-    }
-
-    public boolean collectionExists(String collectionName) {
-        return mongoDatabase.listCollectionNames().into(new ArrayList()).contains(collectionName);
-    }
-
-    public List<String> getAuditLogSorted(String auditLogCollection) {
-        return mongoDatabase.getCollection(auditLogCollection)
-                .find()
-                .into(new LinkedList<>())
+    @NotNull
+    private static List<String> getParameterTypes(List<Class<?>> second) {
+        return second
                 .stream()
-                .sorted(Comparator.comparing(d -> TimeUtil.toLocalDateTime(d.get(KEY_TIMESTAMP))))
-                .map(document -> document.getString(KEY_CHANGE_ID))
+                .map(Class::getName)
                 .collect(Collectors.toList());
     }
-
-    public List<AuditEntry> getAuditEntriesSorted(String auditLogCollection) {
-        return mongoDatabase.getCollection(auditLogCollection).find()
-                .into(new LinkedList<>())
-                .stream()
-                .map(SpringDataMongoV3DocumentWrapper::new)
-                .map(mapper::fromDocument)
-                .collect(Collectors.toList());
-    }
-
 
     /**
      * Builds a {@link PreviewPipeline} composed of a single {@link PreviewStage} containing one or more {@link CodePreviewChangeUnit}s.
@@ -102,17 +67,17 @@ public class MongoDBTestHelper {
      * @return a {@link PreviewPipeline} ready for preview or testing
      */
     @SafeVarargs
-    public final PreviewPipeline getPreviewPipeline(Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
+    public static PreviewPipeline getPreviewPipeline(String stageName, Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
 
         List<CodePreviewChangeUnit> tasks = Arrays.stream(changeDefinitions)
-                .map(trio-> {
+                .map(trio -> {
                     boolean isNewChangeUnit = trio.getFirst().isAnnotationPresent(Change.class);
                     Function<Class<?>, Trio<String, String, Boolean>> extractor = isNewChangeUnit
                             ? infoExtractor
                             : infoExtractorLegacy;
                     Trio<String, String, Boolean> changeInfo = extractor.apply(trio.getFirst());
                     MethodPreview rollback = null;
-                    if(trio.getThird() != null) {
+                    if (trio.getThird() != null) {
                         rollback = new MethodPreview("rollbackExecution", getParameterTypes(trio.getThird()));
                     }
 
@@ -133,9 +98,9 @@ public class MongoDBTestHelper {
                     //we are assuming, for testing purpose, that if it's legacy, it provides beforeExecution,
                     // with same parameterTypes and, if 'rollbackBeforeExecution' provided too, it is with the same
                     //parameters
-                    if(!isNewChangeUnit) {
+                    if (!isNewChangeUnit) {
                         MethodPreview rollbackBeforeExecution = null;
-                        if(trio.getThird() != null) {
+                        if (trio.getThird() != null) {
                             rollbackBeforeExecution = new MethodPreview("rollbackBeforeExecution", getParameterTypes(trio.getThird()));
                         }
 
@@ -157,7 +122,7 @@ public class MongoDBTestHelper {
                 .collect(Collectors.toList());
 
         PreviewStage stage = new PreviewStage(
-                "stage-name",
+                stageName,
                 "some description",
                 null,
                 null,
@@ -168,12 +133,8 @@ public class MongoDBTestHelper {
         return new PreviewPipeline(Collections.singletonList(stage));
     }
 
-    @NotNull
-    private static List<String> getParameterTypes(List<Class<?>> second) {
-        return second
-                .stream()
-                .map(Class::getName)
-                .collect(Collectors.toList());
-    }
-
+//    @SafeVarargs
+//    public static PreviewPipeline getPreviewPipeline(Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
+//        return getPreviewPipeline("default-stage-name", changeDefinitions);
+//    }
 }
