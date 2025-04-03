@@ -28,6 +28,9 @@ import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 public class MongoChangeTemplate implements ChangeTemplate {
     //avoids static loading at building time to keep GraalVM happy
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -62,4 +65,11 @@ public class MongoChangeTemplate implements ChangeTemplate {
         op.getOperator(db).apply(clientSession);
     }
 
+    @Override
+    public Collection<Class<?>> getReflectiveClasses() {
+        return Arrays.asList(
+                MongoChangeTemplateConfig.class,
+                MongoOperation.class
+        );
+    }
 }

@@ -82,13 +82,11 @@ public class RegistrationFeature implements Feature {
 
     }
 
-
-
-
     private void registerTemplates() {
         logger.initRegistration("templates");
         for (ChangeTemplate template : ServiceLoader.load(ChangeTemplate.class)) {
             registerClass(template.getClass());
+            template.getReflectiveClasses().forEach(RegistrationFeature::registerClass);
         }
         logger.finishedRegistration("templates");
     }
@@ -101,7 +99,6 @@ public class RegistrationFeature implements Feature {
                     .stream()
                     .filter(task -> AbstractCodePreviewTask.class.isAssignableFrom(task.getClass()))
                     .map(task -> (AbstractCodePreviewTask) task)
-                    .peek(task -> System.out.println("Flamingock: registering module task: " + task.getSource()))
                     .map(AbstractTaskDescriptor::getSource)
                     .forEach(RegistrationFeature::registerClass);
             registerClass(systemModule.getClass());
@@ -115,7 +112,6 @@ public class RegistrationFeature implements Feature {
         RuntimeReflection.register(clazz);
         RuntimeReflection.register(clazz.getDeclaredConstructors());
         RuntimeReflection.register(clazz.getDeclaredMethods());
-        logger.finishedClassRegistration(clazz);
     }
 
 }

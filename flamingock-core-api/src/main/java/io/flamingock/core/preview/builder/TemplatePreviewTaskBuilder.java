@@ -54,7 +54,7 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
         return this;
     }
 
-    public void setTemplateClassPath(String templateClassPath) {
+    public void setTemplate(String templateClassPath) {
         this.templateClassPath = templateClassPath;
     }
 
@@ -90,7 +90,7 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
     TemplatePreviewTaskBuilder setFromDefinition(ChangeFileDescriptor templateTaskDefinition) {
         setId(templateTaskDefinition.getId());
         setOrder(templateTaskDefinition.getOrder());
-        setTemplateClassPath(templateTaskDefinition.getTemplate());
+        setTemplate(templateTaskDefinition.getTemplate());
         setTemplateConfiguration(templateTaskDefinition.getTemplateConfiguration());
         setTransactional(templateTaskDefinition.getTransactional());
         setRunAlways(false);

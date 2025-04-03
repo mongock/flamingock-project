@@ -24,6 +24,8 @@ import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecuti
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
 
 public class SqlTemplate implements ChangeTemplate {
 
@@ -58,4 +60,8 @@ public class SqlTemplate implements ChangeTemplate {
     }
 
 
+    @Override
+    public Collection<Class<?>> getReflectiveClasses() {
+        return Collections.singletonList(SqlTemplateConfiguration.class);
+    }
 }
