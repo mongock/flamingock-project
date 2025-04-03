@@ -14,35 +14,31 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.dynamodb.changes.failedWithTransaction;
+package io.flamingock.oss.driver.dynamodb.changes;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.oss.driver.dynamodb.changes.common.UserEntity;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@Change(id = "execution-with-exception", order = "3")
-public class CExecutionWithException {
+@Change(id = "insert-user", order = "2", transactional = false)
+public class _2_insert_federico_happy_non_transactional {
 
     @Execution
-    public void execution(DynamoDbClient client, TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder) {
+    public void execution(DynamoDbClient client) {
         DynamoDbTable<UserEntity> table = DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(client)
                 .build()
                 .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class));
 
-        writeRequestBuilder.addPutItem(table, new UserEntity("Pablo", "López"));
-        throw new RuntimeException("test");
-    }
-
-    @RollbackExecution
-    public void rollbackExecution(DynamoDbClient client, TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder) {
-        // Do nothing
-        System.out.println("THIS SHOULD NOT BE CALLED");
+        table.putItem(
+                PutItemEnhancedRequest.builder(UserEntity.class)
+                        .item(new UserEntity("Pepe", "Pérez"))
+                        .build()
+        );
     }
 }

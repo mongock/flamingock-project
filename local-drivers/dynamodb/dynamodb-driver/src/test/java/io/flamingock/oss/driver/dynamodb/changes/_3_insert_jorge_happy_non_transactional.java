@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.dynamodb.changes.happyPathWithTransaction;
+package io.flamingock.oss.driver.dynamodb.changes;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
@@ -22,19 +22,23 @@ import io.flamingock.oss.driver.dynamodb.changes.common.UserEntity;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@Change(id = "insert-another-user", order = "4")
-public class CInsertAnotherRow {
+@Change(id = "insert-another-user", order = "4", transactional = false)
+public class _3_insert_jorge_happy_non_transactional {
 
     @Execution
-    public void execution(DynamoDbClient client, TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder) {
+    public void execution(DynamoDbClient client) {
         DynamoDbTable<UserEntity> table = DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(client)
                 .build()
                 .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class));
 
-        writeRequestBuilder.addPutItem(table, new UserEntity("Pablo", "López"));
+        table.putItem(
+                PutItemEnhancedRequest.builder(UserEntity.class)
+                        .item(new UserEntity("Pablo", "López"))
+                        .build()
+        );
     }
 }

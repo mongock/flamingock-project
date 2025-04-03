@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.dynamodb.changes.failedWithoutTransactionWithoutRollback;
+package io.flamingock.oss.driver.dynamodb.changes;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
@@ -26,7 +26,7 @@ import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
 import static java.util.Collections.emptyList;
 
 @Change(id = "table-create", order = "1", transactional = false)
-public class ACreateTable {
+public class _1_create_client_collection_happy {
 
     private final DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
 

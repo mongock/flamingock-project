@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.dynamodb.changes.happyPathWithoutTransaction;
+package io.flamingock.oss.driver.dynamodb.changes;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.oss.driver.dynamodb.changes.common.UserEntity;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.model.DeleteItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@Change(id = "insert-user", order = "2", transactional = false)
-public class BInsertRow {
+@Change(id = "execution-with-exception", order = "3", transactional = false)
+public class _3_insert_jorge_failed_non_transactional_rollback {
 
     @Execution
     public void execution(DynamoDbClient client) {
@@ -37,7 +40,22 @@ public class BInsertRow {
 
         table.putItem(
                 PutItemEnhancedRequest.builder(UserEntity.class)
-                        .item(new UserEntity("Pepe", "Pérez"))
+                        .item(new UserEntity("Pablo", "López"))
+                        .build()
+        );
+        throw new RuntimeException("test");
+    }
+
+    @RollbackExecution
+    public void rollbackExecution(DynamoDbClient client) {
+        DynamoDbTable<UserEntity> table = DynamoDbEnhancedClient.builder()
+                .dynamoDbClient(client)
+                .build()
+                .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class));
+
+        table.deleteItem(
+                DeleteItemEnhancedRequest.builder()
+                        .key(Key.builder().partitionValue("Pablo López").sortValue("Usuario").build())
                         .build()
         );
     }

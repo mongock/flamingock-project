@@ -116,7 +116,7 @@ class MongoSync4ImporterTest {
 
 
         try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
-            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(mongoDBTestHelper.getPreviewPipeline(
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
                     new Trio<>(_0_mongock_create_authors_collection.class, Collections.singletonList(MongoDatabase.class)),
                     new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(MongoDatabase.class)),
                     new Trio<>(_2_insert_federico_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class)),

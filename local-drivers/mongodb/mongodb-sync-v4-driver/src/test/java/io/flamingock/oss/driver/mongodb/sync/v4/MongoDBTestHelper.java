@@ -48,16 +48,6 @@ public class MongoDBTestHelper {
     public final MongoDatabase mongoDatabase;
     private final MongoDBAuditMapper<MongoSync4DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new MongoSync4DocumentWrapper(new Document()));
 
-    private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractor = c-> {
-        Change ann = c.getAnnotation(Change.class);
-        return new Trio<>(ann.id(), ann.order(), ann.transactional());
-    };
-
-    private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractorLegacy = c-> {
-        ChangeUnit ann = c.getAnnotation(ChangeUnit.class);
-        return new Trio<>("[" + ann.author() + "]" + ann.id(), ann.order(), ann.transactional());
-    };
-
     public MongoDBTestHelper(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
     }
@@ -85,91 +75,4 @@ public class MongoDBTestHelper {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Builds a {@link PreviewPipeline} composed of a single {@link PreviewStage} containing one or more {@link CodePreviewChangeUnit}s.
-     * <p>
-     * Each change unit is derived from a {@link Pair} where:
-     * <ul>
-     *   <li>The first item is the {@link Class} annotated with {@link Change} or {@link ChangeUnit}</li>
-     *   <li>The second item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @Execution}</li>
-     *   <li>The third item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @RollbackExecution}</li>
-     * </ul>
-     *
-     * @param changeDefinitions varargs of pairs containing change classes and their execution method parameters
-     * @return a {@link PreviewPipeline} ready for preview or testing
-     */
-    @SafeVarargs
-    public final PreviewPipeline getPreviewPipeline(Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
-
-        List<CodePreviewChangeUnit> tasks = Arrays.stream(changeDefinitions)
-                .map(trio-> {
-                    boolean isNewChangeUnit = trio.getFirst().isAnnotationPresent(Change.class);
-                    Function<Class<?>, Trio<String, String, Boolean>> extractor = isNewChangeUnit
-                            ? infoExtractor
-                            : infoExtractorLegacy;
-                    Trio<String, String, Boolean> changeInfo = extractor.apply(trio.getFirst());
-                    MethodPreview rollback = null;
-                    if(trio.getThird() != null) {
-                        rollback = new MethodPreview("rollbackExecution", getParameterTypes(trio.getThird()));
-                    }
-
-
-                    List<CodePreviewChangeUnit> changes = new ArrayList<>();
-                    changes.add(new CodePreviewChangeUnit(
-                            changeInfo.getFirst(),
-                            changeInfo.getSecond(),
-                            trio.getFirst().getName(),
-                            new MethodPreview("execution", getParameterTypes(trio.getSecond())),
-                            rollback,
-                            false,
-                            changeInfo.getThird(),
-                            isNewChangeUnit,
-                            false
-                    ));
-
-                    //we are assuming, for testing purpose, that if it's legacy, it provides beforeExecution,
-                    // with same parameterTypes and, if 'rollbackBeforeExecution' provided too, it is with the same
-                    //parameters
-                    if(!isNewChangeUnit) {
-                        MethodPreview rollbackBeforeExecution = null;
-                        if(trio.getThird() != null) {
-                            rollbackBeforeExecution = new MethodPreview("rollbackBeforeExecution", getParameterTypes(trio.getThird()));
-                        }
-
-                        changes.add(new CodePreviewChangeUnit(
-                                changeInfo.getFirst() + "_before",
-                                changeInfo.getSecond(),
-                                trio.getFirst().getName(),
-                                new MethodPreview("beforeExecution", getParameterTypes(trio.getSecond())),
-                                rollbackBeforeExecution,
-                                false,
-                                changeInfo.getThird(),
-                                false,
-                                false
-                        ));
-                    }
-                    return changes;
-                })
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-
-        PreviewStage stage = new PreviewStage(
-                "stage-name",
-                "some description",
-                null,
-                null,
-                tasks,
-                false
-        );
-
-        return new PreviewPipeline(Collections.singletonList(stage));
-    }
-
-    @NotNull
-    private static List<String> getParameterTypes(List<Class<?>> second) {
-        return second
-                .stream()
-                .map(Class::getName)
-                .collect(Collectors.toList());
-    }
 }

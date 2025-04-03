@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.dynamodb.changes.failedWithoutTransactionWithRollback;
+package io.flamingock.oss.driver.dynamodb.changes;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
@@ -22,41 +22,21 @@ import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.oss.driver.dynamodb.changes.common.UserEntity;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.DeleteItemEnhancedRequest;
-import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@Change(id = "execution-with-exception", order = "3", transactional = false)
-public class CExecutionWithException {
+@Change(id = "execution-with-exception", order = "3")
+public class _3_insert_jorge_failed_transactional_non_rollback {
 
     @Execution
-    public void execution(DynamoDbClient client) {
+    public void execution(DynamoDbClient client, TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder) {
         DynamoDbTable<UserEntity> table = DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(client)
                 .build()
                 .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class));
 
-        table.putItem(
-                PutItemEnhancedRequest.builder(UserEntity.class)
-                        .item(new UserEntity("Pablo", "López"))
-                        .build()
-        );
+        writeRequestBuilder.addPutItem(table, new UserEntity("Pablo", "López"));
         throw new RuntimeException("test");
-    }
-
-    @RollbackExecution
-    public void rollbackExecution(DynamoDbClient client) {
-        DynamoDbTable<UserEntity> table = DynamoDbEnhancedClient.builder()
-                .dynamoDbClient(client)
-                .build()
-                .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class));
-
-        table.deleteItem(
-                DeleteItemEnhancedRequest.builder()
-                        .key(Key.builder().partitionValue("Pablo López").sortValue("Usuario").build())
-                        .build()
-        );
     }
 }
