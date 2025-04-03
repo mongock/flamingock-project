@@ -59,6 +59,7 @@ public class MongoDBTestHelper {
         ChangeUnit ann = c.getAnnotation(ChangeUnit.class);
         return new Trio<>("[" + ann.author() + "]" + ann.id(), ann.order(), ann.transactional());
     };
+
     public MongoDBTestHelper(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
     }

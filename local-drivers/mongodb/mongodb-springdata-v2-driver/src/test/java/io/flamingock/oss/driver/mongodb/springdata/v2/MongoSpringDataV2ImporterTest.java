@@ -31,7 +31,6 @@ import io.flamingock.oss.driver.mongodb.springdata.v2.changes._1_create_client_c
 import io.flamingock.oss.driver.mongodb.springdata.v2.changes._2_insert_federico_happy_non_transactional;
 import io.flamingock.oss.driver.mongodb.springdata.v2.changes._3_insert_jorge_happy_non_transactional;
 import io.flamingock.oss.driver.mongodb.springdata.v2.driver.SpringDataMongoV2Driver;
-import io.flamingock.oss.driver.mongodb.springdata.v2.mongock.ClientInitializerChangeUnit;
 import io.mongock.driver.mongodb.v3.driver.MongoCore3Driver;
 import io.mongock.runner.standalone.MongockStandalone;
 import org.bson.Document;
