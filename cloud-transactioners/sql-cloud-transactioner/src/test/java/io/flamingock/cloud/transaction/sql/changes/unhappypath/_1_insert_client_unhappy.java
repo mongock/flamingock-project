@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.cloud.transaction.sql.changes.happypath;
+package io.flamingock.cloud.transaction.sql.changes.unhappypath;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
@@ -23,15 +23,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@Change(id = "insert-clients", order = "2")
-public class HappyInsertClientsChange {
+@Change(id = "unhappy-insert-clients", order = "2")
+public class _1_insert_client_unhappy {
 
     @Execution
     public void execution(Connection connection) throws SQLException {
-        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTS(id, name) values(?, ?)")) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTS_2(id, name) values(?, ?)")) {
             preparedStatement.setInt(1, 1);
-            preparedStatement.setString(2, "Robert Mccoy");
+            preparedStatement.setString(2, "Should_have_been_rolled_back");
             int rows = preparedStatement.executeUpdate();
         }
+        throw new RuntimeException("Intended exception");
+
     }
 }

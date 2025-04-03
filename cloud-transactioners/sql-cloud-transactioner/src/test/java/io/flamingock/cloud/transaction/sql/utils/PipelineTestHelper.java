@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class TestHelper {
+public class PipelineTestHelper {
 
     private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractor = c -> {
         Change ann = c.getAnnotation(Change.class);
@@ -133,8 +133,8 @@ public class TestHelper {
         return new PreviewPipeline(Collections.singletonList(stage));
     }
 
-//    @SafeVarargs
-//    public static PreviewPipeline getPreviewPipeline(Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
-//        return getPreviewPipeline("default-stage-name", changeDefinitions);
-//    }
+    @SafeVarargs
+    public static PreviewPipeline getPreviewPipeline(Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
+        return getPreviewPipeline("default-stage-name", changeDefinitions);
+    }
 }

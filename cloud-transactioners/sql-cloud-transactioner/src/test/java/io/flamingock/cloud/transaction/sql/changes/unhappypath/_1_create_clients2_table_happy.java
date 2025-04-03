@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.cloud.transaction.sql.changes.happypath;
-
+package io.flamingock.cloud.transaction.sql.changes.unhappypath;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
@@ -24,14 +23,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-@Change(id = "create-table-clients", order = "1", transactional = false)
-public class HappyCreateTableClientsChange {
+@Change(id = "unhappy-create-table-clients", order = "1", transactional = false)
+public class _1_create_clients2_table_happy {
 
     @Execution
     public void execution(Connection connection) throws SQLException {
 
         try(Statement statement = connection.createStatement()) {
-            statement.executeUpdate("CREATE TABLE CLIENTS (" +
+            statement.executeUpdate("CREATE TABLE CLIENTS_2 (" +
                     "id INTEGER not NULL, " +
                     " name VARCHAR(255), " +
                     " PRIMARY KEY ( id )" +

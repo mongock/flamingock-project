@@ -16,12 +16,12 @@
 
 package io.flamingock.cloud.transaction.sql;
 
-import io.flamingock.cloud.transaction.sql.changes.happypath.HappyCreateTableClientsChange;
-import io.flamingock.cloud.transaction.sql.changes.happypath.HappyInsertClientsChange;
-import io.flamingock.cloud.transaction.sql.changes.unhappypath.UnhappyCreateTableClientsChange;
-import io.flamingock.cloud.transaction.sql.changes.unhappypath.UnhappyInsertionClientsChange;
+import io.flamingock.cloud.transaction.sql.changes.happypath._1_create_clients_table_happy;
+import io.flamingock.cloud.transaction.sql.changes.happypath._2_insert_client_happy;
+import io.flamingock.cloud.transaction.sql.changes.unhappypath._1_create_clients2_table_happy;
+import io.flamingock.cloud.transaction.sql.changes.unhappypath._1_insert_client_unhappy;
 import io.flamingock.cloud.transaction.sql.utils.SqlTestUtil;
-import io.flamingock.cloud.transaction.sql.utils.TestHelper;
+import io.flamingock.cloud.transaction.sql.utils.PipelineTestHelper;
 import io.flamingock.common.test.cloud.AuditRequestExpectation;
 import io.flamingock.common.test.cloud.MockRunnerServer;
 import io.flamingock.common.test.cloud.execution.ExecutionContinueRequestResponseMock;
@@ -81,14 +81,14 @@ public class MysqlSqlCloudTransactionerTest {
 
     private final PrototypeClientSubmission HAPPY_PROTOTYPE_CLIENT_SUBMISSION = new PrototypeClientSubmission(
             new PrototypeStage(STAGE_NAME_1, 0)
-                    .addTask("create-table-clients", HappyCreateTableClientsChange.class.getName(), "execution", false)
-                    .addTask("insert-clients", HappyInsertClientsChange.class.getName(), "execution", true)
+                    .addTask("create-table-clients", _1_create_clients_table_happy.class.getName(), "execution", false)
+                    .addTask("insert-clients", _2_insert_client_happy.class.getName(), "execution", true)
     );
 
     private final PrototypeClientSubmission UNHAPPY_PROTOTYPE_CLIENT_SUBMISSION = new PrototypeClientSubmission(
             new PrototypeStage(STAGE_NAME_1, 0)
-                    .addTask("unhappy-create-table-clients", UnhappyCreateTableClientsChange.class.getName(), "execution", false)
-                    .addTask("unhappy-insert-clients", UnhappyCreateTableClientsChange.class.getName(), "execution", true)
+                    .addTask("unhappy-create-table-clients", _1_create_clients2_table_happy.class.getName(), "execution", false)
+                    .addTask("unhappy-insert-clients", _1_create_clients2_table_happy.class.getName(), "execution", true)
     );
 
     private MockRunnerServer mockRunnerServer;
@@ -160,10 +160,10 @@ public class MysqlSqlCloudTransactionerTest {
                     .setDialect(SqlDialect.MYSQL)
             );
 
-            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(TestHelper.getPreviewPipeline(
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
                     "stage-1",
-                    new Trio<>(HappyCreateTableClientsChange.class, Collections.singletonList(Connection.class)),
-                    new Trio<>(HappyInsertClientsChange.class, Collections.singletonList(Connection.class))
+                    new Trio<>(_1_create_clients_table_happy.class, Collections.singletonList(Connection.class)),
+                    new Trio<>(_2_insert_client_happy.class, Collections.singletonList(Connection.class))
             ));
 
             flamingockBuilder
@@ -226,10 +226,10 @@ public class MysqlSqlCloudTransactionerTest {
             );
 
             //WHEN
-            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(TestHelper.getPreviewPipeline(
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
                     "stage-1",
-                    new Trio<>(UnhappyCreateTableClientsChange.class, Collections.singletonList(Connection.class)),
-                    new Trio<>(UnhappyInsertionClientsChange.class, Collections.singletonList(Connection.class))
+                    new Trio<>(_1_create_clients2_table_happy.class, Collections.singletonList(Connection.class)),
+                    new Trio<>(_1_insert_client_unhappy.class, Collections.singletonList(Connection.class))
             ));
             Runner runner = flamingockBuilder
                     .setCloudTransactioner(sqlCloudTransactioner)
@@ -277,10 +277,10 @@ public class MysqlSqlCloudTransactionerTest {
             );
 
             //WHEN
-            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(TestHelper.getPreviewPipeline(
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
                     "stage-1",
-                    new Trio<>(HappyCreateTableClientsChange.class, Collections.singletonList(Connection.class)),
-                    new Trio<>(HappyInsertClientsChange.class, Collections.singletonList(Connection.class))
+                    new Trio<>(_1_create_clients_table_happy.class, Collections.singletonList(Connection.class)),
+                    new Trio<>(_2_insert_client_happy.class, Collections.singletonList(Connection.class))
             ));
             flamingockBuilder
                     .setCloudTransactioner(sqlCloudTransactioner)
