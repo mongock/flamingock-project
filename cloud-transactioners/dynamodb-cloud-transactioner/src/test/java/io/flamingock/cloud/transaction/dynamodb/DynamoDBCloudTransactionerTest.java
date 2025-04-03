@@ -30,13 +30,16 @@ import io.flamingock.common.test.cloud.execution.ExecutionPlanRequestResponseMoc
 import io.flamingock.common.test.cloud.mock.MockRequestResponseTask;
 import io.flamingock.common.test.cloud.prototype.PrototypeClientSubmission;
 import io.flamingock.common.test.cloud.prototype.PrototypeStage;
+import io.flamingock.commons.utils.Trio;
 import io.flamingock.core.cloud.api.vo.OngoingStatus;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
 import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.core.runner.PipelineExecutionException;
 import io.flamingock.core.runner.Runner;
 import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,7 +146,8 @@ public class DynamoDBCloudTransactionerTest {
 
         //GIVEN
         try (
-                DynamoDBCloudTransactioner transactioner = new DynamoDBCloudTransactioner(client)
+                DynamoDBCloudTransactioner transactioner = new DynamoDBCloudTransactioner(client);
+                MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)
         ) {
             mockRunnerServer
                     .withClientSubmissionBase(prototypeClientSubmission)
@@ -158,6 +162,11 @@ public class DynamoDBCloudTransactionerTest {
             DynamoDBCloudTransactioner dynamoDBCloudTransactioner = Mockito.spy(transactioner);
 
             //WHEN
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
+                    "stage-1",
+                    new Trio<>(HappyCreateTableClientsChange.class, Collections.singletonList(DynamoDbClient.class)),
+                    new Trio<>(HappyInsertClientsChange.class, Collections.singletonList(DynamoDbClient.class))
+            ));
             flamingockBuilder
                     .setCloudTransactioner(dynamoDBCloudTransactioner)
                     //.addStage(new Stage(stageName)
@@ -196,7 +205,8 @@ public class DynamoDBCloudTransactionerTest {
 
         //GIVEN
         try (
-                DynamoDBCloudTransactioner transactioner = new DynamoDBCloudTransactioner(client)
+                DynamoDBCloudTransactioner transactioner = new DynamoDBCloudTransactioner(client);
+                MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)
         ) {
             mockRunnerServer
                     .withClientSubmissionBase(prototypeClientSubmission)
@@ -212,6 +222,11 @@ public class DynamoDBCloudTransactionerTest {
             DynamoDBCloudTransactioner dynamoDBCloudTransactioner = Mockito.spy(transactioner);
 
             //WHEN
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
+                    "stage-1",
+                    new Trio<>(UnhappyCreateTableClientsChange.class, Collections.singletonList(DynamoDbClient.class)),
+                    new Trio<>(UnhappyInsertionClientsChange.class, Collections.singletonList(DynamoDbClient.class))
+            ));
             Runner runner = flamingockBuilder
                     .setCloudTransactioner(dynamoDBCloudTransactioner)
                     //.addStage(new Stage(stageName)
@@ -252,7 +267,8 @@ public class DynamoDBCloudTransactionerTest {
 
         //GIVEN
         try (
-                DynamoDBCloudTransactioner transactioner = new DynamoDBCloudTransactioner(client)
+                DynamoDBCloudTransactioner transactioner = new DynamoDBCloudTransactioner(client);
+                MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)
         ) {
             dynamoDBTestHelper.insertOngoingExecution("insert-clients");
             mockRunnerServer
@@ -268,6 +284,11 @@ public class DynamoDBCloudTransactionerTest {
             DynamoDBCloudTransactioner dynamoDBCloudTransactioner = Mockito.spy(transactioner);
 
             //WHEN
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
+                    "stage-1",
+                    new Trio<>(HappyCreateTableClientsChange.class, Collections.singletonList(DynamoDbClient.class)),
+                    new Trio<>(HappyInsertClientsChange.class, Collections.singletonList(DynamoDbClient.class))
+            ));
             flamingockBuilder
                     .setCloudTransactioner(dynamoDBCloudTransactioner)
                     //.addStage(new Stage(stageName)

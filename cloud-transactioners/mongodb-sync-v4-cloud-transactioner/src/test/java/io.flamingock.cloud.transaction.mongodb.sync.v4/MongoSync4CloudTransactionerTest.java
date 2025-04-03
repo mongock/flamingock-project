@@ -98,7 +98,7 @@ public class MongoSync4CloudTransactionerTest {
     }
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() {
         mockRunnerServer = new MockRunnerServer()
                 .setServerPort(runnerServerPort)
                 .setOrganisationId(organisationId)
