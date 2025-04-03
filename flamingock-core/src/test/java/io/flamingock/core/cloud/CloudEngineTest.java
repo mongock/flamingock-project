@@ -26,7 +26,6 @@ import io.flamingock.common.test.cloud.deprecated.MockRunnerServerOld;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
 import io.flamingock.core.engine.lock.LockException;
-import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

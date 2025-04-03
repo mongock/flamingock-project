@@ -20,8 +20,8 @@ import java.beans.Transient;
 
 public class AbstractCodePreviewTask extends AbstractPreviewTask {
 
-    private MethodPreview executionMethodName;
-    private MethodPreview rollbackMethodName;
+    private PreviewMethod executionMethodName;
+    private PreviewMethod rollbackMethodName;
 
     private String sourcePackage;
 
@@ -32,8 +32,8 @@ public class AbstractCodePreviewTask extends AbstractPreviewTask {
     public AbstractCodePreviewTask(String id,
                                    String order,
                                    String sourceClassPath,
-                                   MethodPreview executionMethodName,
-                                   MethodPreview rollbackMethodName,
+                                   PreviewMethod executionMethodName,
+                                   PreviewMethod rollbackMethodName,
                                    boolean runAlways,
                                    boolean transactional,
                                    boolean system) {
@@ -43,19 +43,19 @@ public class AbstractCodePreviewTask extends AbstractPreviewTask {
         this.sourcePackage = sourceClassPath.substring(0, sourceClassPath.lastIndexOf("."));
     }
 
-    public MethodPreview getExecutionMethodName() {
+    public PreviewMethod getExecutionMethodName() {
         return executionMethodName;
     }
 
-    public void setExecutionMethodName(MethodPreview executionMethodName) {
+    public void setExecutionMethodName(PreviewMethod executionMethodName) {
         this.executionMethodName = executionMethodName;
     }
 
-    public MethodPreview getRollbackMethodName() {
+    public PreviewMethod getRollbackMethodName() {
         return rollbackMethodName;
     }
 
-    public void setRollbackMethodName(MethodPreview rollbackMethodName) {
+    public void setRollbackMethodName(PreviewMethod rollbackMethodName) {
         this.rollbackMethodName = rollbackMethodName;
     }
 

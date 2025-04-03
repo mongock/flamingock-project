@@ -21,7 +21,7 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.CodePreviewLegacyChangeUnit;
-import io.flamingock.core.preview.MethodPreview;
+import io.flamingock.core.preview.PreviewMethod;
 import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.RollbackBeforeExecution;
@@ -47,10 +47,10 @@ public class CodePreviewTaskBuilder implements PreviewTaskBuilder<CodePreviewCha
     private String id;
     private String order;
     private String sourceClassPath;
-    private MethodPreview executionMethod;
-    private MethodPreview rollbackMethod;
-    private MethodPreview beforeExecutionMethod;
-    private MethodPreview rollbackBeforeExecutionMethod;
+    private PreviewMethod executionMethod;
+    private PreviewMethod rollbackMethod;
+    private PreviewMethod beforeExecutionMethod;
+    private PreviewMethod rollbackBeforeExecutionMethod;
     private boolean runAlways;
     private boolean transactional;
     private boolean isNewChangeUnit;
@@ -82,21 +82,21 @@ public class CodePreviewTaskBuilder implements PreviewTaskBuilder<CodePreviewCha
         return this;
     }
 
-    public CodePreviewTaskBuilder setExecutionMethod(MethodPreview executionMethod) {
+    public CodePreviewTaskBuilder setExecutionMethod(PreviewMethod executionMethod) {
         this.executionMethod = executionMethod;
         return this;
     }
 
-    public CodePreviewTaskBuilder setRollbackMethod(MethodPreview rollbackMethod) {
+    public CodePreviewTaskBuilder setRollbackMethod(PreviewMethod rollbackMethod) {
         this.rollbackMethod = rollbackMethod;
         return this;
     }
 
-    public void setBeforeExecutionMethod(MethodPreview beforeExecutionMethod) {
+    public void setBeforeExecutionMethod(PreviewMethod beforeExecutionMethod) {
         this.beforeExecutionMethod = beforeExecutionMethod;
     }
 
-    public void setRollbackBeforeExecutionMethod(MethodPreview rollbackBeforeExecutionMethod) {
+    public void setRollbackBeforeExecutionMethod(PreviewMethod rollbackBeforeExecutionMethod) {
         this.rollbackBeforeExecutionMethod = rollbackBeforeExecutionMethod;
     }
 
@@ -197,7 +197,7 @@ public class CodePreviewTaskBuilder implements PreviewTaskBuilder<CodePreviewCha
                 system);
     }
 
-    private Optional<MethodPreview> getAnnotatedMethodInfo(TypeElement typeElement,
+    private Optional<PreviewMethod> getAnnotatedMethodInfo(TypeElement typeElement,
                                                            Class<? extends Annotation> annotationType) {
         for (Element enclosedElement : typeElement.getEnclosedElements()) {
             if (enclosedElement.getKind() == ElementKind.METHOD &&
@@ -212,7 +212,7 @@ public class CodePreviewTaskBuilder implements PreviewTaskBuilder<CodePreviewCha
                     parameterTypes.add(paramType.toString()); // fully qualified name (e.g., java.lang.String)
                 }
 
-                return Optional.of(new MethodPreview(methodName, parameterTypes));
+                return Optional.of(new PreviewMethod(methodName, parameterTypes));
             }
         }
 

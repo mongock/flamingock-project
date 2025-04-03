@@ -21,7 +21,6 @@ import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
 import io.flamingock.commons.utils.Trio;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
-import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.core.runner.PipelineExecutionException;
 import io.flamingock.oss.driver.dynamodb.changes._1_create_client_collection_happy;

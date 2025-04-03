@@ -21,7 +21,7 @@ import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.MethodPreview;
+import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.builder.PreviewTaskBuilder;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 
@@ -38,7 +38,7 @@ public class MongockImporterModule implements LocalSystemModule {
                     .setId("mongock-local-legacy-importer-dynamodb")
                     .setOrder("1")
                     .setSourceClassPath(MongockImporterChangeUnit.class.getName())
-                    .setExecutionMethod(new MethodPreview("execution", Collections.singletonList(
+                    .setExecutionMethod(new PreviewMethod("execution", Collections.singletonList(
                             InternalMongockImporterConfiguration.class.getName())))
                     .setRunAlways(false)
                     .setTransactional(true)
@@ -70,7 +70,7 @@ public class MongockImporterModule implements LocalSystemModule {
         return PreviewStage.builder()
                 .setName("dynamodb-local-legacy-importer")
                 .setDescription("DynamoDB importer from Mongock")
-                .setChangeUnitClasses(MONGOCK_CHANGE_UNITS)
+                .setChanges(MONGOCK_CHANGE_UNITS)
                 .build();
     }
 

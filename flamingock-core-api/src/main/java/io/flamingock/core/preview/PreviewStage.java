@@ -50,6 +50,7 @@ public class PreviewStage {
     public PreviewStage() {
     }
 
+    //TODO it shouldn't be public
     public PreviewStage(String name,
                         String description,
                         String sourcesPackage,
@@ -144,7 +145,7 @@ public class PreviewStage {
      * A {@code PreviewStage} represents a stage containing one or more {@link AbstractPreviewTask} units,
      * which can be defined either:
      * <ul>
-     *     <li>Explicitly via {@link #setChangeUnitClasses(Collection)}</li>
+     *     <li>Explicitly via {@link #setChanges(Collection)}</li>
      *     <li>Implicitly by parsing templated YAML files located in a specified resources directory or source package</li>
      * </ul>
      * <p>
@@ -163,7 +164,7 @@ public class PreviewStage {
         private String sourcesPackage;
         private String resourcesRoot;
         private Collection<String> sourcesRoots;
-        private Collection<? extends AbstractPreviewTask> changeUnitClasses;
+        private Collection<? extends AbstractPreviewTask> changes;
         private boolean parallel = false;
 
         private Builder() {
@@ -241,11 +242,11 @@ public class PreviewStage {
         /**
          * Sets a collection of {@link AbstractPreviewTask} implementations directly.
          *
-         * @param changeUnitClasses the collection of change unit task classes
+         * @param changes the collection of change unit task classes
          * @return this builder instance
          */
-        public Builder setChangeUnitClasses(Collection<? extends AbstractPreviewTask> changeUnitClasses) {
-            this.changeUnitClasses = changeUnitClasses;
+        public Builder setChanges(Collection<? extends AbstractPreviewTask> changes) {
+            this.changes = changes;
             return this;
         }
 
@@ -289,8 +290,8 @@ public class PreviewStage {
                 throw new RuntimeException("Stage requires name");
             }
 
-            Collection<? extends AbstractPreviewTask> changeUnitClassesList = changeUnitClasses != null
-                    ? changeUnitClasses
+            Collection<? extends AbstractPreviewTask> changeUnitClassesList = changes != null
+                    ? changes
                     : Collections.emptyList();
 
             if (resourcesDirectories.isEmpty() && changeUnitClassesList.isEmpty()) {

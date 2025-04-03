@@ -18,8 +18,8 @@ package io.flamingock.core.preview;
 
 public class CodePreviewLegacyChangeUnit extends CodePreviewChangeUnit {
 
-    private MethodPreview beforeExecutionMethodName;
-    private MethodPreview rollbackBeforeExecutionMethodName;
+    private PreviewMethod beforeExecutionMethodName;
+    private PreviewMethod rollbackBeforeExecutionMethodName;
 
     public CodePreviewLegacyChangeUnit() {
     }
@@ -27,10 +27,10 @@ public class CodePreviewLegacyChangeUnit extends CodePreviewChangeUnit {
     public CodePreviewLegacyChangeUnit(String id,
                                        String order,
                                        String sourceClassPath,
-                                       MethodPreview executionMethodName,
-                                       MethodPreview rollbackMethodName,
-                                       MethodPreview beforeExecutionMethodName,
-                                       MethodPreview rollbackBeforeExecutionMethodName,
+                                       PreviewMethod executionMethodName,
+                                       PreviewMethod rollbackMethodName,
+                                       PreviewMethod beforeExecutionMethodName,
+                                       PreviewMethod rollbackBeforeExecutionMethodName,
                                        boolean runAlways,
                                        boolean transactional,
                                        boolean system) {
@@ -39,19 +39,19 @@ public class CodePreviewLegacyChangeUnit extends CodePreviewChangeUnit {
         this.rollbackBeforeExecutionMethodName = rollbackBeforeExecutionMethodName;
     }
 
-    public MethodPreview getBeforeExecutionMethodName() {
+    public PreviewMethod getBeforeExecutionMethodName() {
         return beforeExecutionMethodName;
     }
 
-    public void setBeforeExecutionMethodName(MethodPreview beforeExecutionMethodName) {
+    public void setBeforeExecutionMethodName(PreviewMethod beforeExecutionMethodName) {
         this.beforeExecutionMethodName = beforeExecutionMethodName;
     }
 
-    public MethodPreview getRollbackBeforeExecutionMethodName() {
+    public PreviewMethod getRollbackBeforeExecutionMethodName() {
         return rollbackBeforeExecutionMethodName;
     }
 
-    public void setRollbackBeforeExecutionMethodName(MethodPreview rollbackBeforeExecutionMethodName) {
+    public void setRollbackBeforeExecutionMethodName(PreviewMethod rollbackBeforeExecutionMethodName) {
         this.rollbackBeforeExecutionMethodName = rollbackBeforeExecutionMethodName;
     }
 

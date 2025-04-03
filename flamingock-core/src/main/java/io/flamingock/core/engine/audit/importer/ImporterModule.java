@@ -8,7 +8,7 @@ import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.MethodPreview;
+import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.builder.PreviewTaskBuilder;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class ImporterModule implements LocalSystemModule {
                     .setId(MongockImporterChangeUnit.IMPORTER_FROM_MONGOCK)
                     .setOrder("1")
                     .setSourceClassPath(MongockImporterChangeUnit.class.getName())
-                    .setExecutionMethod(new MethodPreview("execution", Arrays.asList(
+                    .setExecutionMethod(new PreviewMethod("execution", Arrays.asList(
                             ImporterReader.class.getName(),
                             AuditWriter.class.getName(),
                             PipelineDescriptor.class.getName())))
@@ -44,7 +44,7 @@ public class ImporterModule implements LocalSystemModule {
                     .setId(FlamingockLocalImporterChangeUnit.IMPORTER_FROM_FLAMINGOCK_LOCAL)
                     .setOrder("2")
                     .setSourceClassPath(MongockImporterChangeUnit.class.getName())
-                    .setExecutionMethod(new MethodPreview("execution", Arrays.asList(
+                    .setExecutionMethod(new PreviewMethod("execution", Arrays.asList(
                             ImporterReader.class.getName(),
                             AuditWriter.class.getName(),
                             PipelineDescriptor.class.getName())))
@@ -81,7 +81,7 @@ public class ImporterModule implements LocalSystemModule {
         return PreviewStage.builder()
                 .setName(fromMongock ? FROM_MONGOCK_NAME : FROM_FLAMINGOCK_LITE_NAME)
                 .setDescription(fromMongock ? FROM_MONGOCK_DESC : FROM_FLAMINGOCK_LITE_DESC)
-                .setChangeUnitClasses(fromMongock ? fromMongockChangeUnits : fromFlamingockChangeUnits)
+                .setChanges(fromMongock ? fromMongockChangeUnits : fromFlamingockChangeUnits)
                 .build();
     }
 

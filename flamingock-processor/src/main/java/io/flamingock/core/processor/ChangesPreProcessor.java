@@ -190,7 +190,7 @@ public class ChangesPreProcessor extends AbstractProcessor {
                         .setSourcesPackage(sourcesPackage)
                         .setResourcesRoot(resourcesRoot)
                         .setResourcesDir(stageMap.get("resourcesDir"))
-                        .setChangeUnitClasses(changeUnitClasses)
+                        .setChanges(changeUnitClasses)
                         .build();
                 stages.add(stage);
             }

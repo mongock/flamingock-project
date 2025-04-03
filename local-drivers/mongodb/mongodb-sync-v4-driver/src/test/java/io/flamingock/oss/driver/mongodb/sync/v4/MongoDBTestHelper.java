@@ -16,26 +16,14 @@
 
 package io.flamingock.oss.driver.mongodb.sync.v4;
 
-import java.util.function.Function;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.commons.utils.Pair;
-import io.flamingock.commons.utils.Trio;
-import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.commons.utils.TimeUtil;
-import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.MethodPreview;
-import io.flamingock.core.preview.PreviewPipeline;
-import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.cloud.transaction.mongodb.sync.v4.wrapper.MongoSync4DocumentWrapper;
-import io.mongock.api.annotations.ChangeUnit;
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;

@@ -2,14 +2,14 @@ package io.flamingock.core.preview;
 
 import java.util.List;
 
-public class MethodPreview {
+public class PreviewMethod {
     private String name;
     private List<String> parameterTypes;
 
-    public MethodPreview() {
+    public PreviewMethod() {
     }
 
-    public MethodPreview(String name, List<String> parameterTypes) {
+    public PreviewMethod(String name, List<String> parameterTypes) {
         this.name = name;
         this.parameterTypes = parameterTypes;
     }

@@ -20,7 +20,7 @@ import io.flamingock.commons.utils.Pair;
 import io.flamingock.commons.utils.Trio;
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.MethodPreview;
+import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
 import io.mongock.api.annotations.ChangeUnit;
@@ -76,9 +76,9 @@ public class PipelineTestHelper {
                             ? infoExtractor
                             : infoExtractorLegacy;
                     Trio<String, String, Boolean> changeInfo = extractor.apply(trio.getFirst());
-                    MethodPreview rollback = null;
+                    PreviewMethod rollback = null;
                     if (trio.getThird() != null) {
-                        rollback = new MethodPreview("rollbackExecution", getParameterTypes(trio.getThird()));
+                        rollback = new PreviewMethod("rollbackExecution", getParameterTypes(trio.getThird()));
                     }
 
 
@@ -87,7 +87,7 @@ public class PipelineTestHelper {
                             changeInfo.getFirst(),
                             changeInfo.getSecond(),
                             trio.getFirst().getName(),
-                            new MethodPreview("execution", getParameterTypes(trio.getSecond())),
+                            new PreviewMethod("execution", getParameterTypes(trio.getSecond())),
                             rollback,
                             false,
                             changeInfo.getThird(),
@@ -99,16 +99,16 @@ public class PipelineTestHelper {
                     // with same parameterTypes and, if 'rollbackBeforeExecution' provided too, it is with the same
                     //parameters
                     if (!isNewChangeUnit) {
-                        MethodPreview rollbackBeforeExecution = null;
+                        PreviewMethod rollbackBeforeExecution = null;
                         if (trio.getThird() != null) {
-                            rollbackBeforeExecution = new MethodPreview("rollbackBeforeExecution", getParameterTypes(trio.getThird()));
+                            rollbackBeforeExecution = new PreviewMethod("rollbackBeforeExecution", getParameterTypes(trio.getThird()));
                         }
 
                         changes.add(new CodePreviewChangeUnit(
                                 changeInfo.getFirst() + "_before",
                                 changeInfo.getSecond(),
                                 trio.getFirst().getName(),
-                                new MethodPreview("beforeExecution", getParameterTypes(trio.getSecond())),
+                                new PreviewMethod("beforeExecution", getParameterTypes(trio.getSecond())),
                                 rollbackBeforeExecution,
                                 false,
                                 changeInfo.getThird(),

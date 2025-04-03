@@ -26,7 +26,6 @@ import io.flamingock.core.cloud.transaction.TaskWithOngoingStatus;
 import io.flamingock.core.cloud.utils.TestCloudTransactioner;
 import io.flamingock.core.configurator.standalone.FlamingockStandalone;
 import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
-import io.flamingock.core.pipeline.Stage;
 import io.flamingock.core.runner.Runner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
