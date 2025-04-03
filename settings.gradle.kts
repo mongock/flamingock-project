@@ -121,18 +121,6 @@ project(":dynamodb-utils").projectDir = file("dynamodb-utils")
 //////////////////////////////////////
 // INTERNAL
 //////////////////////////////////////
-include("cloud-importers:importer-common")
-project(":cloud-importers:importer-common").name = "importer-common"
-project(":cloud-importers:importer-common").projectDir = file("cloud-importers/importer-common")
-
-include("cloud-importers:dynamodb:dynamodb-cloud-importer-legacy")
-project(":cloud-importers:dynamodb:dynamodb-cloud-importer-legacy").name = "dynamodb-cloud-importer-legacy"
-project(":cloud-importers:dynamodb:dynamodb-cloud-importer-legacy").projectDir = file("cloud-importers/dynamodb/dynamodb-cloud-importer-legacy")
-
-include("cloud-importers:dynamodb:dynamodb-cloud-importer-local")
-project(":cloud-importers:dynamodb:dynamodb-cloud-importer-local").name = "dynamodb-cloud-importer-local"
-project(":cloud-importers:dynamodb:dynamodb-cloud-importer-local").projectDir = file("cloud-importers/dynamodb/dynamodb-cloud-importer-local")
-
 include("importers:mongodb-importer-sync-v4")
 project(":importers:mongodb-importer-sync-v4").name = "mongodb-importer-sync-v4"
 project(":importers:mongodb-importer-sync-v4").projectDir = file("importers/mongodb-importer-sync-v4")
