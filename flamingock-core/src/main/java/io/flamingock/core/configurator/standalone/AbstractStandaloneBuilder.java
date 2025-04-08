@@ -16,8 +16,8 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.api.SystemModule;
-import io.flamingock.core.api.metadata.FlamingockMetadata;
+import io.flamingock.core.preview.PreviewStage;
+import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.core.CoreConfigurable;
@@ -35,13 +35,14 @@ import io.flamingock.core.event.model.IStageFailedEvent;
 import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.pipeline.Pipeline;
-import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerBuilder;
 import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.template.TemplateModule;
+import io.flamingock.core.api.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -86,15 +87,13 @@ abstract class AbstractStandaloneBuilder<
                 ;
     }
 
-    protected Pipeline buildPipeline(Iterable<Stage> beforeUserStages,
-                                     Iterable<Stage> userStages,
-                                     Iterable<Stage> afterUserStages,
-                                     FlamingockMetadata flamingockMetadata) {
+    protected Pipeline buildPipeline(Collection<PreviewStage> beforeUserStages,
+                                     PreviewPipeline previewPipeline,
+                                     Collection<PreviewStage> afterUserStages) {
         return Pipeline.builder()
+                .addPreviewPipeline(previewPipeline)
                 .addBeforeUserStages(beforeUserStages)
-                .addUserStages(userStages)
                 .addAfterUserStages(afterUserStages)
-                .setFlamingockMetadata(flamingockMetadata)
                 .build();
     }
 
@@ -105,11 +104,6 @@ abstract class AbstractStandaloneBuilder<
     @Override
     public CoreConfigurable getCoreConfiguration() {
         return coreConfiguratorDelegate().getCoreConfiguration();
-    }
-
-    @Override
-    public HOLDER addStage(Stage stage) {
-        return coreConfiguratorDelegate().addStage(stage);
     }
 
     @Override
@@ -132,6 +126,7 @@ abstract class AbstractStandaloneBuilder<
         return coreConfiguratorDelegate().setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
+    @Deprecated
     @Override
     public HOLDER setTrackIgnored(boolean trackIgnored) {
         return coreConfiguratorDelegate().setTrackIgnored(trackIgnored);
@@ -269,15 +264,6 @@ abstract class AbstractStandaloneBuilder<
         return coreConfiguratorDelegate().getMongockImporterConfiguration();
     }
 
-    @Override
-    public HOLDER setFlamingockMetadata(FlamingockMetadata metadata) {
-        return coreConfiguratorDelegate().setFlamingockMetadata(metadata);
-    }
-
-    @Override
-    public FlamingockMetadata getFlamingockMetadata() {
-        return coreConfiguratorDelegate().getFlamingockMetadata();
-    }
     ///////////////////////////////////////////////////////////////////////////////////
     //  STANDALONE
     ///////////////////////////////////////////////////////////////////////////////////

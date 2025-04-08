@@ -16,9 +16,11 @@
 
 package io.flamingock.core.configurator.core;
 
-import io.flamingock.core.api.SystemModule;
+import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
+import io.flamingock.core.processor.util.Deserializer;
+import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.pipeline.Stage;
 
 import java.util.ArrayList;
@@ -98,20 +100,9 @@ public class CoreConfiguration implements CoreConfigurable {
         return mongockImporterConfiguration;
     }
 
-
     @Override
-    public void setStages(List<Stage> stages) {
-        this.stages.addAll(stages);
-    }
-
-    @Override
-    public void addStage(Stage stage) {
-        stages.add(stage);
-    }
-
-    @Override
-    public Iterable<Stage> getStages() {
-        return stages;
+    public PreviewPipeline getPreviewPipeline() {
+        return Deserializer.readPreviewPipelineFromFile();
     }
 
 

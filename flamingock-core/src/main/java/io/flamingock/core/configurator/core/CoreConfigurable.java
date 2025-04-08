@@ -18,19 +18,13 @@ package io.flamingock.core.configurator.core;
 
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.legacy.LegacyMigration;
-import io.flamingock.core.pipeline.Stage;
+import io.flamingock.core.preview.PreviewPipeline;
 
-import java.util.List;
 import java.util.Map;
 
 public interface CoreConfigurable {
 
-    void setStages(List<Stage> stages);
-
-    void addStage(Stage stage);
-
-    Iterable<Stage> getStages();
-
+    PreviewPipeline getPreviewPipeline();
 
     void setLockAcquiredForMillis(long lockAcquiredForMillis);
 

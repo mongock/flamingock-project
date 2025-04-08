@@ -16,9 +16,10 @@
 
 package io.flamingock.springboot.v2.builder;
 
-import io.flamingock.core.api.metadata.FlamingockMetadata;
+import io.flamingock.core.preview.PreviewPipeline;
+import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
-import io.flamingock.core.api.SystemModule;
+import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.core.CoreConfigurable;
@@ -36,7 +37,6 @@ import io.flamingock.core.event.model.IStageFailedEvent;
 import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.pipeline.Pipeline;
-import io.flamingock.core.pipeline.Stage;
 import io.flamingock.springboot.v2.SpringProfileFilter;
 import io.flamingock.springboot.v2.SpringRunnerBuilder;
 import io.flamingock.springboot.v2.configurator.SpringRunnerType;
@@ -51,12 +51,13 @@ import io.flamingock.springboot.v2.event.SpringStageCompletedEvent;
 import io.flamingock.springboot.v2.event.SpringStageFailedEvent;
 import io.flamingock.springboot.v2.event.SpringStageIgnoredEvent;
 import io.flamingock.springboot.v2.event.SpringStageStartedEvent;
-import io.flamingock.template.TemplateModule;
+import io.flamingock.core.api.template.TemplateModule;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -107,16 +108,14 @@ public abstract class AbstractSpringbootBuilder<
     }
 
     protected Pipeline buildPipeline(String[] activeProfiles,
-                                     Iterable<Stage> beforeUserStages,
-                                     Iterable<Stage> userStages,
-                                     Iterable<Stage> afterUserStages,
-                                     FlamingockMetadata flamingockMetadata) {
+                                     Collection<PreviewStage> beforeUserStages,
+                                     PreviewPipeline previewPipeline,
+                                     Collection<PreviewStage> afterUserStages) {
         return Pipeline.builder()
                 .addFilters(Collections.singletonList(new SpringProfileFilter(activeProfiles)))
                 .addBeforeUserStages(beforeUserStages)
-                .addUserStages(userStages)
+                .addPreviewPipeline(previewPipeline)
                 .addAfterUserStages(afterUserStages)
-                .setFlamingockMetadata(flamingockMetadata)
                 .build();
     }
 
@@ -126,11 +125,6 @@ public abstract class AbstractSpringbootBuilder<
     @Override
     public CoreConfigurable getCoreConfiguration() {
         return coreConfiguratorDelegate.getCoreConfiguration();
-    }
-
-    @Override
-    public HOLDER addStage(Stage stage) {
-        return coreConfiguratorDelegate.addStage(stage);
     }
 
     @Override
@@ -287,17 +281,6 @@ public abstract class AbstractSpringbootBuilder<
     @Override
     public CoreConfiguration.ImporterConfiguration getMongockImporterConfiguration() {
         return coreConfiguratorDelegate.getMongockImporterConfiguration();
-    }
-
-
-    @Override
-    public HOLDER setFlamingockMetadata(FlamingockMetadata metadata) {
-        return coreConfiguratorDelegate.setFlamingockMetadata(metadata);
-    }
-
-    @Override
-    public FlamingockMetadata getFlamingockMetadata() {
-        return coreConfiguratorDelegate.getFlamingockMetadata();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
