@@ -5,7 +5,7 @@ import javax.tools.Diagnostic;
 
 public class LoggerPreProcessor {
 
-    private final String logPrefix = "Flamingock annotation processor: ";
+    private final String logPrefix = "[Flamingock] ";
 
     private final ProcessingEnvironment processingEnv;
 
@@ -14,7 +14,7 @@ public class LoggerPreProcessor {
     }
 
     public void info(String message) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, logPrefix + message);
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "\t " + logPrefix + message);
     }
 
     public void warn(String message) {
@@ -22,6 +22,6 @@ public class LoggerPreProcessor {
     }
 
     public void error(String message) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, logPrefix + message);
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "\t" + logPrefix + message);
     }
 }

@@ -30,7 +30,7 @@ public class RegistrationFeature implements Feature {
 
     @Override
     public void beforeAnalysis(BeforeAnalysisAccess access) {
-        logger.initProcess("GraalVM classes registration");
+        logger.startProcess("GraalVM classes registration");
         registerInternalClasses();
         registerTemplates();
         registerModules();
@@ -39,8 +39,7 @@ public class RegistrationFeature implements Feature {
     }
 
     private static void registerInternalClasses() {
-//        System.out.println("Flamingock: ...registering flamingock internal class");
-        logger.initRegistration("internal classes");
+        logger.startRegistration("internal classes");
 
         registerClass(TaskDescriptor.class.getName());
         registerClass(AbstractTaskDescriptor.class.getName());
@@ -63,14 +62,14 @@ public class RegistrationFeature implements Feature {
         //others
         registerClass(CoderResult.class.getName());
 
-        logger.finishedRegistration("internal classes");
+        logger.completedRegistration("internal classes");
     }
 
     private static void registerUserClasses() {
-        logger.initRegistration("user classes");
+        logger.startRegistration("user classes");
         List<String> classesToRegister = FileUtil.getClassesForRegistration();
         classesToRegister.forEach(RegistrationFeature::registerClass);
-        logger.finishedRegistration("user classes");
+        logger.completedRegistration("user classes");
     }
 
     private static void registerClass(String className) {
@@ -83,16 +82,16 @@ public class RegistrationFeature implements Feature {
     }
 
     private void registerTemplates() {
-        logger.initRegistration("templates");
+        logger.startRegistration("templates");
         for (ChangeTemplate template : ServiceLoader.load(ChangeTemplate.class)) {
             registerClass(template.getClass());
             template.getReflectiveClasses().forEach(RegistrationFeature::registerClass);
         }
-        logger.finishedRegistration("templates");
+        logger.completedRegistration("templates");
     }
 
     private void registerModules() {
-        logger.initRegistration("system modules");
+        logger.startRegistration("system modules");
         for (SystemModule systemModule : ServiceLoader.load(SystemModule.class)) {
             PreviewStage previewStage = systemModule.getStage();
             previewStage.getTasks()
@@ -103,7 +102,7 @@ public class RegistrationFeature implements Feature {
                     .forEach(RegistrationFeature::registerClass);
             registerClass(systemModule.getClass());
         }
-        logger.finishedRegistration("system modules");
+        logger.completedRegistration("system modules");
     }
 
 

@@ -30,7 +30,7 @@ public final class AnnotationFinder {
     }
 
     public Map<String, List<AbstractPreviewTask>> getCodedChangeUnitsMapByPackage() {
-        logger.info("Searching coded changeUnits");
+        logger.info("Searching for code-based changes (Java classes annotated with @Change or legacy @ChangeUnit annotations)");
         Collection<CodePreviewChangeUnit> allChanges = new LinkedList<>(findAnnotatedChanges(ChangeUnit.class));
         allChanges.addAll(findAnnotatedChanges(Change.class));
         Map<String, List<AbstractPreviewTask>> mapByPackage = new HashMap<>();

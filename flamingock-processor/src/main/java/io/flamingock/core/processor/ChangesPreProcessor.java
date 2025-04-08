@@ -118,7 +118,7 @@ public class ChangesPreProcessor extends AbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         logger = new LoggerPreProcessor(processingEnv);
-        logger.info("starting");
+        logger.info("Starting Flamingock annotation processor initialization.");
         resourcesRoot = getResourcesRoot();
         flamingockDir = getFlamingockDir(resourcesRoot);
         sourceRoots = getSourcesPathList();
@@ -126,7 +126,7 @@ public class ChangesPreProcessor extends AbstractProcessor {
         pipelineFile = getFlamingockPipelineFile();
         PreviewPipeline pipeline = getPipelineFromTemplatedChanges();
         serializer.serializeTemplatedPipeline(pipeline);
-        logger.info("initialized");
+        logger.info("Initialization completed. Processed templated-based changes.");
     }
 
     @Override
@@ -145,11 +145,11 @@ public class ChangesPreProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (roundEnv.processingOver()) {
-            logger.info("final processing round - skipping execution.");
+            logger.info("Final processing round detected - skipping execution.");
             return false;
         }
         if (hasProcessed) {
-            logger.info("already processed - skipping execution.");
+            logger.info("Changes already processed - skipping execution.");
             return true;
         }
 
@@ -157,7 +157,7 @@ public class ChangesPreProcessor extends AbstractProcessor {
                 new AnnotationFinder(roundEnv, logger).getCodedChangeUnitsMapByPackage()
         );
         serializer.serializeFullPipeline(pipeline);
-        logger.info("Finished process");
+        logger.info("Finished processing annotated classes and generating metadata.");
         return true;
     }
 
@@ -167,7 +167,7 @@ public class ChangesPreProcessor extends AbstractProcessor {
 
     @SuppressWarnings("unchecked")
     private PreviewPipeline getPipelineFromProcessChanges(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
-        logger.info("reading flamingock pipeline from " + pipelineFile.getPath());
+        logger.info("Reading flamingock pipeline from file: '" + pipelineFile.getPath() + "'");
 
         if (codedChangeUnitsByPackage == null) {
             codedChangeUnitsByPackage = new HashMap<>();
@@ -208,10 +208,10 @@ public class ChangesPreProcessor extends AbstractProcessor {
     private List<String> getSourcesPathList() {
         if (processingEnv.getOptions().containsKey(SOURCES_PATH_ARG)) {
             String sourcesPath = processingEnv.getOptions().get(SOURCES_PATH_ARG);
-            logger.info("'" + SOURCES_PATH_ARG + "' parameter passed: " + sourcesPath);
+            logger.info("'" + SOURCES_PATH_ARG + "' parameter passed: '" + sourcesPath + "'");
             return Collections.singletonList(sourcesPath);
         } else {
-            logger.warn("'" + SOURCES_PATH_ARG + "' parameter NOT passed. Searching in: " + DEFAULT_SOURCE_DIRS);
+            logger.warn("'" + SOURCES_PATH_ARG + "' parameter NOT passed. Searching in: '" + DEFAULT_SOURCE_DIRS + "'");
             return DEFAULT_SOURCE_DIRS;
         }
     }
@@ -221,10 +221,10 @@ public class ChangesPreProcessor extends AbstractProcessor {
         final String resourcesDir;
         if (processingEnv.getOptions().containsKey(RESOURCES_PATH_ARG)) {
             resourcesDir = processingEnv.getOptions().get(RESOURCES_PATH_ARG);
-            logger.info("'" + RESOURCES_PATH_ARG + "' parameter passed: " + resourcesDir);
+            logger.info("'" + RESOURCES_PATH_ARG + "' parameter passed: '" + resourcesDir + "'");
         } else {
             resourcesDir = DEFAULT_RESOURCES_PATH;
-            logger.warn("'" + RESOURCES_PATH_ARG + "' parameter NOT passed. Using default " + resourcesDir);
+            logger.warn("'" + RESOURCES_PATH_ARG + "' parameter NOT passed. Using default '" + resourcesDir + "'");
         }
         return resourcesDir;
     }

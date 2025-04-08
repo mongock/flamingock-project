@@ -28,7 +28,6 @@ public final class Deserializer {
      * @throws RuntimeException if neither file is found
      */
     public static PreviewPipeline readPreviewPipelineFromFile() {
-        logger.debug("reading flamingock pipeline preview");
         return readFileIfExists(Constants.FULL_PIPELINE_FILE_PATH)
                 .orElseGet(() -> readFileIfExists(Constants.TEMPLATED_PIPELINE_FILE_PATH)
                         .orElseThrow(() -> new RuntimeException("Flamingock Pipeline file not found")));
@@ -41,16 +40,17 @@ public final class Deserializer {
      * @return An Optional containing the deserialized PreviewPipeline if successful, otherwise empty
      */
     private static Optional<PreviewPipeline> readFileIfExists(String filePath) {
+        logger.debug("Attempting to retrieve Flamingock pipeline from file: '{}'", filePath);
         try (InputStream inputStream = CLASS_LOADER.getResourceAsStream(filePath)) {
             if (inputStream == null) {
-                logger.debug("️Flamingock pipeline file not found at {}", filePath);
+                logger.debug("Flamingock pipeline file not found at the specified path: '{}'", filePath);
                 return Optional.empty();
             }
             PreviewPipeline pipeline = JsonObjectMapper.DEFAULT_INSTANCE.readValue(inputStream, PreviewPipeline.class);
-            logger.debug("Successfully loaded Flamingock pipeline from {}", filePath);
+            logger.debug("Successfully deserialized Flamingock pipeline from file: '{}'", filePath);
             return Optional.of(pipeline);
         } catch (IOException e) {
-            logger.error("Error reading Flamingock pipeline file at {}", filePath, e);
+            logger.error("Failed to read Flamingock pipeline file at '{}'.", filePath, e);
             throw new RuntimeException("Error reading file: " + filePath, e);
         }
     }
