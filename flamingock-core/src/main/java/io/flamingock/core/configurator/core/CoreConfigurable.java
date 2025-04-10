@@ -17,7 +17,7 @@
 package io.flamingock.core.configurator.core;
 
 import io.flamingock.core.configurator.TransactionStrategy;
-import io.flamingock.core.configurator.legacy.LegacyMigration;
+
 import io.flamingock.core.preview.PreviewPipeline;
 
 import java.util.Map;
@@ -38,8 +38,6 @@ public interface CoreConfigurable {
 
     boolean isEnableRefreshDaemon();
 
-    void setTrackIgnored(boolean trackIgnored);
-
     void setEnabled(boolean enabled);
 
     void setStartSystemVersion(String startSystemVersion);
@@ -49,9 +47,7 @@ public interface CoreConfigurable {
     void setServiceIdentifier(String serviceIdentifier);
 
     void setMetadata(Map<String, Object> metadata);
-
-    void setLegacyMigration(LegacyMigration legacyMigration);
-
+    
     void setDefaultAuthor(String defaultAuthor);
 
     void setTransactionStrategy(TransactionStrategy transactionStrategy);
@@ -64,8 +60,6 @@ public interface CoreConfigurable {
 
     boolean isThrowExceptionIfCannotObtainLock();
 
-    boolean isTrackIgnored();
-
     boolean isEnabled();
 
     String getStartSystemVersion();
@@ -75,9 +69,7 @@ public interface CoreConfigurable {
     String getServiceIdentifier();
 
     Map<String, Object> getMetadata();
-
-    LegacyMigration getLegacyMigration();
-
+    
     String getDefaultAuthor();
 
     TransactionStrategy getTransactionStrategy();

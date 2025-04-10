@@ -97,7 +97,7 @@ class Mongo3ImporterTest {
         MongockStandalone.builder()
                 .setDriver(mongock3Driver)
                 .addMigrationClass(_0_mongock_create_authors_collection.class)
-                .setTrackIgnored(true)
+                
                 .setTransactional(false)
                 .buildRunner()
                 .execute();

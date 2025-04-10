@@ -56,7 +56,7 @@ class CouchbaseDriverTest {
 //                .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.couchbase.changes.happyPath"))
 //                .addDependency(cluster)
 //                .addDependency(collection)
-//                .setTrackIgnored(true)
+//                
 //                .disableTransaction()
 //                .build()
 //                .run();
@@ -96,7 +96,7 @@ class CouchbaseDriverTest {
 //                    .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.couchbase.changes.failedWithRollback"))
 //                    .addDependency(cluster)
 //                    .addDependency(collection)
-//                    .setTrackIgnored(true)
+//                    
 //                    .disableTransaction()
 //                    .build()
 //                    .run();
@@ -134,7 +134,7 @@ class CouchbaseDriverTest {
 //                    .addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.couchbase.changes.failedWithoutRollback"))
 //                    .addDependency(cluster)
 //                    .addDependency(collection)
-//                    .setTrackIgnored(true)
+//                    
 //                    .disableTransaction()
 //                    .build();
 //            build

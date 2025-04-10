@@ -24,7 +24,7 @@ import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurator;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
-import io.flamingock.core.configurator.legacy.LegacyMigration;
+
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.model.IPipelineCompletedEvent;
 import io.flamingock.core.event.model.IPipelineFailedEvent;
@@ -126,12 +126,6 @@ abstract class AbstractStandaloneBuilder<
         return coreConfiguratorDelegate().setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
-    @Deprecated
-    @Override
-    public HOLDER setTrackIgnored(boolean trackIgnored) {
-        return coreConfiguratorDelegate().setTrackIgnored(trackIgnored);
-    }
-
     @Override
     public HOLDER setEnabled(boolean enabled) {
         return coreConfiguratorDelegate().setEnabled(enabled);
@@ -155,11 +149,6 @@ abstract class AbstractStandaloneBuilder<
     @Override
     public HOLDER setMetadata(Map<String, Object> metadata) {
         return coreConfiguratorDelegate().setMetadata(metadata);
-    }
-
-    @Override
-    public HOLDER setLegacyMigration(LegacyMigration legacyMigration) {
-        return coreConfiguratorDelegate().setLegacyMigration(legacyMigration);
     }
 
     @Override
@@ -198,11 +187,6 @@ abstract class AbstractStandaloneBuilder<
     }
 
     @Override
-    public boolean isTrackIgnored() {
-        return coreConfiguratorDelegate().isTrackIgnored();
-    }
-
-    @Override
     public boolean isEnabled() {
         return coreConfiguratorDelegate().isEnabled();
     }
@@ -226,12 +210,6 @@ abstract class AbstractStandaloneBuilder<
     public Map<String, Object> getMetadata() {
         return coreConfiguratorDelegate().getMetadata();
     }
-
-    @Override
-    public LegacyMigration getLegacyMigration() {
-        return coreConfiguratorDelegate().getLegacyMigration();
-    }
-
 
     @Override
     public String getDefaultAuthor() {

@@ -20,7 +20,7 @@ package io.flamingock.core.configurator.core;
 import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
-import io.flamingock.core.configurator.legacy.LegacyMigration;
+
 import io.flamingock.core.api.template.TemplateModule;
 
 import java.util.Map;
@@ -40,8 +40,6 @@ public interface CoreConfigurator<
 
     HOLDER setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock);
 
-    HOLDER setTrackIgnored(boolean trackIgnored);
-
     HOLDER setEnabled(boolean enabled);
 
     HOLDER setStartSystemVersion(String startSystemVersion);
@@ -51,9 +49,7 @@ public interface CoreConfigurator<
     HOLDER setServiceIdentifier(String serviceIdentifier);
 
     HOLDER setMetadata(Map<String, Object> metadata);
-
-    HOLDER setLegacyMigration(LegacyMigration legacyMigration);
-
+    
     HOLDER setDefaultAuthor(String defaultMigrationAuthor);
 
     HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy);
@@ -69,8 +65,6 @@ public interface CoreConfigurator<
 
     boolean isThrowExceptionIfCannotObtainLock();
 
-    boolean isTrackIgnored();
-
     boolean isEnabled();
 
     String getStartSystemVersion();
@@ -80,9 +74,7 @@ public interface CoreConfigurator<
     String getServiceIdentifier();
 
     Map<String, Object> getMetadata();
-
-    LegacyMigration getLegacyMigration();
-
+    
     String getDefaultAuthor();
 
     TransactionStrategy getTransactionStrategy();
