@@ -19,6 +19,7 @@ package io.flamingock.core.task.loaded;
 import io.flamingock.core.preview.AbstractPreviewTask;
 import io.flamingock.core.preview.TemplatePreviewChangeUnit;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,6 +30,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     private String id;
     private String order;
     private String source;
+    private List<String> profiles;
     private boolean runAlways;
     private boolean transactional;
     private boolean system;
@@ -65,6 +67,10 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         return this;
     }
 
+    public void setProfiles(List<String> profiles) {
+        this.profiles = profiles;
+    }
+
     public TemplateLoadedTaskBuilder setRunAlways(boolean runAlways) {
         this.runAlways = runAlways;
         return this;
@@ -93,6 +99,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
                     id,
                     order,
                     Class.forName(source),
+                    profiles,
                     transactional,
                     runAlways,
                     system,
@@ -107,6 +114,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         setId(preview.getId());
         setOrder(preview.getOrder().orElse(null));
         setSource(preview.getSource());
+        setProfiles(preview.getProfiles());
         setRunAlways(preview.isRunAlways());
         setTransactional(preview.isTransactional());
         setSystem(preview.isSystem());

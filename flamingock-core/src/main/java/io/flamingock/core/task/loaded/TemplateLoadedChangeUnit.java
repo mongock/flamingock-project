@@ -24,6 +24,7 @@ import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecuti
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,20 +32,27 @@ import java.util.Optional;
 public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
     private final Map<String, Object> templateConfiguration;
+    private final List<String> profiles;
 
     TemplateLoadedChangeUnit(String id,
                              String order,
                              Class<?> templateClass,
+                             List<String> profiles,
                              boolean transactional,
                              boolean runAlways,
                              boolean systemTask,
                              Map<String, Object> templateConfiguration) {
         super(id, order, templateClass, runAlways, transactional, true, systemTask);
+        this.profiles = profiles;
         this.templateConfiguration = templateConfiguration;
     }
 
     public Map<String, Object> getTemplateConfiguration() {
         return templateConfiguration;
+    }
+
+    public List<String> getProfiles() {
+        return profiles;
     }
 
     @Override
