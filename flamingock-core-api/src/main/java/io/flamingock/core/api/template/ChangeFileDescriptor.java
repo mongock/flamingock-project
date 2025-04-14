@@ -25,6 +25,8 @@ public class ChangeFileDescriptor {
 
     private String template;
 
+    private String profiles; //colon-separated list of profiles
+
     private Boolean transactional;
 
     private Map<String, Object> templateConfiguration;
@@ -51,6 +53,14 @@ public class ChangeFileDescriptor {
 
     public void setTemplate(String template) {
         this.template = template;
+    }
+
+    public String getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(String profiles) {
+        this.profiles = profiles;
     }
 
     public Map<String, Object> getTemplateConfiguration() {

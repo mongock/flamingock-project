@@ -16,10 +16,12 @@
 
 package io.flamingock.core.preview;
 
+import java.util.List;
 import java.util.Map;
 
 public class TemplatePreviewChangeUnit extends CodePreviewChangeUnit {
 
+    private List<String> profiles;
     private Map<String, Object> templateConfiguration;
 
     public TemplatePreviewChangeUnit() {}
@@ -29,11 +31,13 @@ public class TemplatePreviewChangeUnit extends CodePreviewChangeUnit {
     public TemplatePreviewChangeUnit(String id,
                                      String order,
                                      String templateClassPath,
+                                     List<String> profiles,
                                      boolean transactional,
                                      boolean runAlways,
                                      boolean system,
                                      Map<String, Object> templateConfiguration) {
         super(id, order, templateClassPath, null, null, runAlways, transactional, true, system);
+        this.profiles = profiles;
         this.templateConfiguration = templateConfiguration;
     }
 
@@ -45,15 +49,25 @@ public class TemplatePreviewChangeUnit extends CodePreviewChangeUnit {
         this.templateConfiguration = templateConfiguration;
     }
 
+    public List<String> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(List<String> profiles) {
+        this.profiles = profiles;
+    }
+
     @Override
     public String toString() {
-        return "TemplatedPreviewChangeUnit{" + "templateConfiguration=" + templateConfiguration +
+        return "TemplatePreviewChangeUnit{" + "profiles=" + profiles +
+                ", templateConfiguration=" + templateConfiguration +
                 ", isNewChangeUnit=" + isNewChangeUnit +
                 ", id='" + id + '\'' +
                 ", order='" + order + '\'' +
                 ", source='" + source + '\'' +
                 ", runAlways=" + runAlways +
                 ", transactional=" + transactional +
+                ", system=" + system +
                 '}';
     }
 }
