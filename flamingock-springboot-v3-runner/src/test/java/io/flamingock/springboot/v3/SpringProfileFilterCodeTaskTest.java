@@ -17,7 +17,7 @@
 package io.flamingock.springboot.v3;
 
 import io.flamingock.core.api.annotations.Change;
-import io.flamingock.core.task.loaded.AbstractLoadedTask;
+import io.flamingock.core.task.loaded.CodeLoadedChangeUnit;
 import io.flamingock.core.task.loaded.LoadedTaskBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Profile;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class SpringProfileFilterTest {
+class SpringProfileFilterCodeTaskTest {
 
     @Test
     @DisplayName("SHOULD return true WHEN activeProfiles=[] and taskProfiles=[]")
@@ -88,7 +88,7 @@ class SpringProfileFilterTest {
         assertFalse(new SpringProfileFilter("P1", "P2").filter(getCodeLoadedChangeUnit(NotP1.class)));
     }
 
-    private AbstractLoadedTask getCodeLoadedChangeUnit(Class<?> sourceClass) {
+    private CodeLoadedChangeUnit getCodeLoadedChangeUnit(Class<?> sourceClass) {
         return LoadedTaskBuilder.getCodeBuilderInstance(sourceClass).build();
     }
 

@@ -31,6 +31,23 @@ public class ChangeFileDescriptor {
 
     private Map<String, Object> templateConfiguration;
 
+    public ChangeFileDescriptor() {
+    }
+
+    public ChangeFileDescriptor(String id,
+                                String order,
+                                String template,
+                                String profiles,
+                                Boolean transactional,
+                                Map<String, Object> templateConfiguration) {
+        this.id = id;
+        this.order = order;
+        this.template = template;
+        this.profiles = profiles;
+        this.transactional = transactional;
+        this.templateConfiguration = templateConfiguration;
+    }
+
     public String getId() {
         return id;
     }
