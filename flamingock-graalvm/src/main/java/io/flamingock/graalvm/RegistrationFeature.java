@@ -13,7 +13,6 @@ import io.flamingock.core.task.loaded.AbstractLoadedTask;
 import io.flamingock.core.task.loaded.AbstractReflectionLoadedTask;
 import io.flamingock.core.task.loaded.CodeLoadedChangeUnit;
 import io.flamingock.core.task.loaded.TemplateLoadedChangeUnit;
-import io.flamingock.core.preview.AbstractCodePreviewTask;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.TemplatePreviewChangeUnit;
 import org.graalvm.nativeimage.hosted.Feature;
@@ -84,7 +83,9 @@ public class RegistrationFeature implements Feature {
     private void registerTemplates() {
         logger.startRegistration("templates");
         for (ChangeTemplate template : ServiceLoader.load(ChangeTemplate.class)) {
-            registerClass(template.getClass());
+            if(template.shouldRegisterSelf()) {
+                registerClass(template.getClass());
+            }
             template.getReflectiveClasses().forEach(RegistrationFeature::registerClass);
         }
         logger.completedRegistration("templates");
@@ -94,10 +95,13 @@ public class RegistrationFeature implements Feature {
         logger.startRegistration("system modules");
         for (SystemModule systemModule : ServiceLoader.load(SystemModule.class)) {
             PreviewStage previewStage = systemModule.getStage();
+            //Only registers code-base change units classes
+            //template-base change units not needed because Template classes
+            //already registered with registerTemplates()
             previewStage.getTasks()
                     .stream()
-                    .filter(task -> AbstractCodePreviewTask.class.isAssignableFrom(task.getClass()))
-                    .map(task -> (AbstractCodePreviewTask) task)
+                    .filter(task -> CodePreviewChangeUnit.class.isAssignableFrom(task.getClass()))
+                    .map(task -> (CodePreviewChangeUnit) task)
                     .map(AbstractTaskDescriptor::getSource)
                     .forEach(RegistrationFeature::registerClass);
             registerClass(systemModule.getClass());

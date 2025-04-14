@@ -16,10 +16,14 @@
 
 package io.flamingock.core.preview;
 
-public class CodePreviewChangeUnit extends AbstractCodePreviewTask {
+import java.beans.Transient;
 
-    protected boolean isNewChangeUnit;
+public class CodePreviewChangeUnit extends AbstractPreviewChangeUnit {
 
+    private PreviewMethod executionMethodName;
+    private PreviewMethod rollbackMethodName;
+
+    private String sourcePackage;
 
     public CodePreviewChangeUnit() {
         super();
@@ -34,19 +38,32 @@ public class CodePreviewChangeUnit extends AbstractCodePreviewTask {
                                  boolean transactional,
                                  boolean isNewChangeUnit,
                                  boolean system) {
-        super(id, order, sourceClassPath, executionMethodPreview, rollbackMethodPreview, runAlways, transactional, system);
-        this.isNewChangeUnit = isNewChangeUnit;
+        super(id, order, sourceClassPath, runAlways, transactional, isNewChangeUnit, system);
+        this.executionMethodName = executionMethodPreview;
+        this.rollbackMethodName = rollbackMethodPreview;
+        this.sourcePackage = sourceClassPath.substring(0, sourceClassPath.lastIndexOf("."));    }
+
+
+    public PreviewMethod getExecutionMethodName() {
+        return executionMethodName;
     }
 
-
-    public boolean isNewChangeUnit() {
-        return isNewChangeUnit;
+    public void setExecutionMethodName(PreviewMethod executionMethodName) {
+        this.executionMethodName = executionMethodName;
     }
 
-    public void setNewChangeUnit(boolean newChangeUnit) {
-        isNewChangeUnit = newChangeUnit;
+    public PreviewMethod getRollbackMethodName() {
+        return rollbackMethodName;
     }
 
+    public void setRollbackMethodName(PreviewMethod rollbackMethodName) {
+        this.rollbackMethodName = rollbackMethodName;
+    }
+
+    @Transient
+    public String getSourcePackage() {
+        return sourcePackage;
+    }
 
     @Override
     public String pretty() {
