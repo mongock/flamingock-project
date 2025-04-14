@@ -20,7 +20,7 @@ package io.flamingock.core.configurator.core;
 import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
-import io.flamingock.core.configurator.legacy.LegacyMigration;
+
 import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.api.template.TemplateModule;
 
@@ -75,12 +75,6 @@ public class CoreConfiguratorDelegate<
     }
 
     @Override
-    public HOLDER setTrackIgnored(boolean trackIgnored) {
-        configuration.setTrackIgnored(trackIgnored);
-        return holderSupplier.get();
-    }
-
-    @Override
     public HOLDER setEnabled(boolean enabled) {
         configuration.setEnabled(enabled);
         return holderSupplier.get();
@@ -107,12 +101,6 @@ public class CoreConfiguratorDelegate<
     @Override
     public HOLDER setMetadata(Map<String, Object> metadata) {
         configuration.setMetadata(metadata);
-        return holderSupplier.get();
-    }
-
-    @Override
-    public HOLDER setLegacyMigration(LegacyMigration legacyMigration) {
-        configuration.setLegacyMigration(legacyMigration);
         return holderSupplier.get();
     }
 
@@ -156,11 +144,6 @@ public class CoreConfiguratorDelegate<
     }
 
     @Override
-    public boolean isTrackIgnored() {
-        return configuration.isTrackIgnored();
-    }
-
-    @Override
     public boolean isEnabled() {
         return configuration.isEnabled();
     }
@@ -183,11 +166,6 @@ public class CoreConfiguratorDelegate<
     @Override
     public Map<String, Object> getMetadata() {
         return configuration.getMetadata();
-    }
-
-    @Override
-    public LegacyMigration getLegacyMigration() {
-        return configuration.getLegacyMigration();
     }
 
     @Override

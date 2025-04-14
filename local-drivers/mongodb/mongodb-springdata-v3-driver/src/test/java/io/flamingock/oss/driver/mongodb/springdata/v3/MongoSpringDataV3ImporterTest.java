@@ -92,7 +92,7 @@ class MongoSpringDataV3ImporterTest {
                 .setDriver(mongo3Driver)
                 .addMigrationClass(_0_mongock_create_authors_collection.class)
                 .addDependency(mongoTemplate)
-                .setTrackIgnored(true)
+                
                 .setTransactional(false)
                 .buildRunner()
                 .execute();

@@ -99,7 +99,7 @@ class MongoSync4ImporterTest {
         MongockStandalone.builder()
                 .setDriver(mongoSync4Driver)
                 .addMigrationClass(io.flamingock.oss.driver.mongodb.sync.v4.changes._0_mongock_create_authors_collection.class)
-                .setTrackIgnored(true)
+                
                 .setTransactional(false)
                 .buildRunner()
                 .execute();

@@ -21,7 +21,7 @@ import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.legacy.LegacyMigration;
+
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.processor.util.Deserializer;
@@ -101,10 +101,6 @@ public class FlamingockConfigurationProperties
         return coreConfiguration.isEnableRefreshDaemon();
     }
 
-    @Override
-    public void setTrackIgnored(boolean trackIgnored) {
-        coreConfiguration.setTrackIgnored(trackIgnored);
-    }
 
     @Override
     public void setEnabled(boolean enabled) {
@@ -129,11 +125,6 @@ public class FlamingockConfigurationProperties
     @Override
     public void setMetadata(Map<String, Object> metadata) {
         coreConfiguration.setMetadata(metadata);
-    }
-
-    @Override
-    public void setLegacyMigration(LegacyMigration legacyMigration) {
-        coreConfiguration.setLegacyMigration(legacyMigration);
     }
 
     @Override
@@ -168,11 +159,6 @@ public class FlamingockConfigurationProperties
     }
 
     @Override
-    public boolean isTrackIgnored() {
-        return coreConfiguration.isTrackIgnored();
-    }
-
-    @Override
     public boolean isEnabled() {
         return coreConfiguration.isEnabled();
     }
@@ -195,11 +181,6 @@ public class FlamingockConfigurationProperties
     @Override
     public Map<String, Object> getMetadata() {
         return coreConfiguration.getMetadata();
-    }
-
-    @Override
-    public LegacyMigration getLegacyMigration() {
-        return coreConfiguration.getLegacyMigration();
     }
 
     @Override

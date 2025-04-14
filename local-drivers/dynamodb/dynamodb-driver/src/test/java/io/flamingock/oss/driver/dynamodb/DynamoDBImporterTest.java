@@ -119,7 +119,6 @@ class DynamoDBImporterTest {
                 .setDriver(mongockDriver)
                 .addMigrationClass(_0_mongock_create_authors_collection.class)
                 .addDependency(client)
-                .setTrackIgnored(true)
                 .setTransactional(false)
                 .buildRunner()
                 .execute();
