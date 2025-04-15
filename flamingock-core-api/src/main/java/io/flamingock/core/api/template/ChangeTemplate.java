@@ -8,4 +8,5 @@ public interface ChangeTemplate extends ReflectionMetadataProvider {
     default boolean shouldRegisterSelf() {
         return true;
     }
+
 }

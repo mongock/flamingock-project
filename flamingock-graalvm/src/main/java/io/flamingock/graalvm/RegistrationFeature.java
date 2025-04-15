@@ -1,6 +1,7 @@
 package io.flamingock.graalvm;
 
 import io.flamingock.core.api.template.ChangeTemplate;
+import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.preview.PreviewPipeline;
@@ -82,6 +83,7 @@ public class RegistrationFeature implements Feature {
 
     private void registerTemplates() {
         logger.startRegistration("templates");
+        registerClass(TemplateFactory.class);
         for (ChangeTemplate template : ServiceLoader.load(ChangeTemplate.class)) {
             if(template.shouldRegisterSelf()) {
                 registerClass(template.getClass());
