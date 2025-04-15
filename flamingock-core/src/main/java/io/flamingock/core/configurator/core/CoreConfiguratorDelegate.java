@@ -21,9 +21,6 @@ import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 
-import io.flamingock.core.api.template.TemplateFactory;
-import io.flamingock.core.api.template.TemplateModule;
-
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -115,13 +112,6 @@ public class CoreConfiguratorDelegate<
         configuration.setTransactionStrategy(transactionStrategy);
         return holderSupplier.get();
     }
-
-    @Override
-    public HOLDER addTemplateModule(TemplateModule templateModule) {
-        TemplateFactory.registerModule(templateModule);
-        return holderSupplier.get();
-    }
-
 
     @Override
     public long getLockAcquiredForMillis() {

@@ -66,7 +66,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
     private CodeLoadedTaskBuilder setPreview(CodePreviewChangeUnit preview) {
         setId(preview.getId());
         setOrder(preview.getOrder().orElse(null));
-        setSource(preview.getSource());
+        setTemplateName(preview.getSource());
         setRunAlways(preview.isRunAlways());
         setTransactional(preview.isTransactional());
         setNewChangeUnit(preview.isNewChangeUnit());
@@ -102,8 +102,8 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
         return this;
     }
 
-    public CodeLoadedTaskBuilder setSource(String source) {
-        this.source = source;
+    public CodeLoadedTaskBuilder setTemplateName(String templateName) {
+        this.source = templateName;
         return this;
     }
 
@@ -157,7 +157,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
                 "io.flamingock.core.api.annotations");
         setId(annotation.id());
         setOrder(annotation.order());
-        setSource(sourceClass.getName());
+        setTemplateName(sourceClass.getName());
         setRunAlways(annotation.runAlways());
         setTransactional(annotation.transactional());
         setNewChangeUnit(false);
@@ -167,7 +167,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
     private void setFromChangeAnnotation(Class<?> sourceClass, Change annotation) {
         setId(annotation.id());
         setOrder(annotation.order());
-        setSource(sourceClass.getName());
+        setTemplateName(sourceClass.getName());
         setRunAlways(annotation.runAlways());
         setTransactional(annotation.transactional());
         setNewChangeUnit(true);

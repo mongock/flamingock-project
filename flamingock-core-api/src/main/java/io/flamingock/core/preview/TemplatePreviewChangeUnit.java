@@ -49,6 +49,10 @@ public class TemplatePreviewChangeUnit extends AbstractPreviewChangeUnit {
         this.templateConfiguration = templateConfiguration;
     }
 
+    public String getTemplateName() {
+        return getSource();
+    }
+
     public List<String> getProfiles() {
         return profiles;
     }
