@@ -85,9 +85,7 @@ public class RegistrationFeature implements Feature {
         logger.startRegistration("templates");
         registerClass(TemplateFactory.class);
         for (ChangeTemplate template : ServiceLoader.load(ChangeTemplate.class)) {
-            if(template.shouldRegisterSelf()) {
-                registerClass(template.getClass());
-            }
+            registerClass(template.getClass());
             template.getReflectiveClasses().forEach(RegistrationFeature::registerClass);
         }
         logger.completedRegistration("templates");
