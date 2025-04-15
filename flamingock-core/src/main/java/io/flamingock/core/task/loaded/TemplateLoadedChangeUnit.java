@@ -17,10 +17,10 @@
 package io.flamingock.core.task.loaded;
 
 import io.flamingock.commons.utils.ReflectionUtil;
-import io.flamingock.core.api.template.annotations.Config;
-import io.flamingock.core.api.template.annotations.ChangeTemplateConfigValidator;
+import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.api.template.annotations.ChangeTemplateExecution;
 import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecution;
+import io.flamingock.core.api.template.annotations.Config;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
     TemplateLoadedChangeUnit(String id,
                              String order,
-                             Class<?> templateClass,
+                             Class<? extends ChangeTemplate> templateClass,
                              List<String> profiles,
                              boolean transactional,
                              boolean runAlways,
@@ -55,6 +55,11 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
         return profiles;
     }
 
+    @SuppressWarnings("unchecked")
+    public Class<? extends ChangeTemplate> getTemplateClass() {
+        return (Class<? extends ChangeTemplate>) this.getSourceClass();
+    }
+
     @Override
     public Method getExecutionMethod() {
         return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), ChangeTemplateExecution.class)
@@ -68,9 +73,6 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
         return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Config.class);
     }
 
-    public Optional<Method> getConfigValidator() {
-        return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), ChangeTemplateConfigValidator.class);
-    }
 
     @Override
     public Optional<Method> getRollbackMethod() {

@@ -17,10 +17,9 @@
 package io.flamingock.template.sql;
 
 import io.flamingock.core.api.template.ChangeTemplate;
-import io.flamingock.core.api.template.annotations.Config;
-import io.flamingock.core.api.template.annotations.ChangeTemplateConfigValidator;
 import io.flamingock.core.api.template.annotations.ChangeTemplateExecution;
 import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecution;
+import io.flamingock.core.api.template.annotations.Config;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,14 +30,25 @@ public class SqlTemplate implements ChangeTemplate {
 
     private SqlTemplateConfiguration configuration;
 
+    private static void execute(Connection connection, String sql) {
+        try {
+            connection.createStatement().executeUpdate(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Config
     public void setConfiguration(SqlTemplateConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    @ChangeTemplateConfigValidator
-    public boolean validateConfiguration() {
-        return configuration.getExecutionSql() != null;
+    @Override
+    public void validateConfiguration() {
+        if (configuration.getExecutionSql() == null) {
+            String message = String.format("Template not found[%s]. Template name is wrong or template library not imported", this.getClass().getSimpleName());
+            throw new IllegalArgumentException(message);
+        }
     }
 
     @ChangeTemplateExecution
@@ -50,15 +60,6 @@ public class SqlTemplate implements ChangeTemplate {
     public void rollback(Connection connection) {
         execute(connection, configuration.getRollbackSql());
     }
-
-    private static void execute(Connection connection, String sql) {
-        try {
-            connection.createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     @Override
     public Collection<Class<?>> getReflectiveClasses() {

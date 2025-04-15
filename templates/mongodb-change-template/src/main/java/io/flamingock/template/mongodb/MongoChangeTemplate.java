@@ -19,10 +19,9 @@ package io.flamingock.template.mongodb;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.template.ChangeTemplate;
-import io.flamingock.core.api.template.annotations.Config;
-import io.flamingock.core.api.template.annotations.ChangeTemplateConfigValidator;
 import io.flamingock.core.api.template.annotations.ChangeTemplateExecution;
 import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecution;
+import io.flamingock.core.api.template.annotations.Config;
 import io.flamingock.template.mongodb.model.MongoOperation;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
@@ -43,8 +42,8 @@ public class MongoChangeTemplate implements ChangeTemplate {
         this.config = config;
     }
 
-    @ChangeTemplateConfigValidator
-    public void validate() {
+    @Override
+    public void validateConfiguration() {
         logger.trace("validating MongoChangeTemplate");
         config.validate();
     }

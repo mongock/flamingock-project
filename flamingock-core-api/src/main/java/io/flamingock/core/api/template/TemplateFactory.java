@@ -13,7 +13,7 @@ public final class TemplateFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(TemplateFactory.class);
 
-    private static final Map<String, Class<?>> templates = new HashMap<>();
+    private static final Map<String, Class<? extends ChangeTemplate>> templates = new HashMap<>();
 
     private TemplateFactory() {
     }
@@ -25,11 +25,11 @@ public final class TemplateFactory {
         }
     }
 
-    public static void addTemplate(String templateName, Class<?> templateClass) {
+    public static void addTemplate(String templateName, Class<? extends ChangeTemplate> templateClass) {
         templates.put(templateName, templateClass);
     }
 
-    public static Optional<Class<?>> getTemplate(String templateName) {
+    public static Optional<Class<? extends ChangeTemplate>> getTemplate(String templateName) {
         return Optional.ofNullable(templates.get(templateName));
     }
 }

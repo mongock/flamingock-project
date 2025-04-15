@@ -17,6 +17,7 @@
 package io.flamingock.core.task.loaded;
 
 import io.flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.preview.AbstractPreviewTask;
 import io.flamingock.core.preview.TemplatePreviewChangeUnit;
@@ -96,7 +97,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     @Override
     public TemplateLoadedChangeUnit build() {
         //            boolean isTaskTransactional = true;//TODO implement this. isTaskTransactionalAccordingTemplate(templateSpec);
-        Class<?> templateClass = TemplateFactory.getTemplate(templateName)
+        Class<? extends ChangeTemplate> templateClass = TemplateFactory.getTemplate(templateName)
                 .orElseThrow(()-> new FlamingockException(String.format("Template[%s] not found. This is probably because template's name is wrong or template's library not imported", templateName)));
         return new TemplateLoadedChangeUnit(
                 id,

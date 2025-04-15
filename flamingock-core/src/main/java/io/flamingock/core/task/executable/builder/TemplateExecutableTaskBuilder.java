@@ -16,6 +16,7 @@
 
 package io.flamingock.core.task.executable.builder;
 
+import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.task.executable.TemplateExecutableTask;
 import io.flamingock.core.task.loaded.AbstractLoadedTask;
@@ -74,15 +75,19 @@ public class TemplateExecutableTaskBuilder implements ExecutableTaskBuilder<Temp
     private TemplateExecutableTask getTasksFromReflection(String stageName,
                                                           TemplateLoadedChangeUnit loadedTask,
                                                           AuditEntry.Status initialState) {
-        return new TemplateExecutableTask(
-                stageName,
-                loadedTask,
-                AuditEntry.Status.isRequiredExecution(initialState),
-                loadedTask.getExecutionMethod(),
-                loadedTask.getRollbackMethod().orElse(null),
-                loadedTask.getConfigSetter().orElse(null),
-                loadedTask.getConfigValidator().orElse(null)
-        );
+        try {
+            return new TemplateExecutableTask(
+                    stageName,
+                    loadedTask,
+                    AuditEntry.Status.isRequiredExecution(initialState),
+                    loadedTask.getExecutionMethod(),
+                    loadedTask.getRollbackMethod().orElse(null),
+                    loadedTask.getConfigSetter().orElse(null),
+                    ChangeTemplate.class.getMethod("validateConfiguration")
+            );
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
