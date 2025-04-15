@@ -17,7 +17,6 @@
 package io.flamingock.core.task.executable;
 
 import io.flamingock.core.runtime.RuntimeManager;
-import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.task.loaded.TemplateLoadedChangeUnit;
 import io.flamingock.commons.utils.FileUtil;
 import io.flamingock.commons.utils.ReflectionUtil;
@@ -44,19 +43,18 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
     protected void executeInternal(RuntimeManager runtimeManager, Method method ) {
         Object instance = runtimeManager.getInstance(descriptor.getConstructor());
         setConfiguration(runtimeManager, instance);
-        runtimeManager.executeMethod(instance, method);
+        runtimeManager.executeMethodWithInjectedDependencies(instance, method);
     }
 
     private void setConfiguration(RuntimeManager runtimeManager, Object instance) {
         if(configSetterMethod != null ) {
             List<Class<?>> parameters = ReflectionUtil.getParameters(configSetterMethod);
             if(!parameters.isEmpty()) {
-                Dependency dependency = new Dependency(
-                        parameters.get(0),
-                        FileUtil.getFromMap(parameters.get(0), descriptor.getTemplateConfiguration()));
-                runtimeManager.addDependency(dependency);
+                Object config = FileUtil.getFromMap(parameters.get(0), descriptor.getTemplateConfiguration());
+                runtimeManager.executeMethodWithParameters(instance, configSetterMethod, config);
+            } else {
+                runtimeManager.executeMethodWithInjectedDependencies(instance, configSetterMethod);
             }
-            runtimeManager.executeMethod(instance, configSetterMethod);
         }
     }
 

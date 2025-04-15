@@ -18,6 +18,7 @@ package io.flamingock.springboot.v3;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.template.ChangeFileDescriptor;
+import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.preview.TemplatePreviewChangeUnit;
 import io.flamingock.core.preview.builder.PreviewTaskBuilder;
@@ -122,7 +123,7 @@ class SpringProfileFilterTemplateTaskTest {
 
     }
 
-    public static class TemplateSimulate {}
+    public static abstract class TemplateSimulate implements ChangeTemplate {}
 
     @Change(id = "not-annotated", order = "0")
     public static class NotAnnotated {
