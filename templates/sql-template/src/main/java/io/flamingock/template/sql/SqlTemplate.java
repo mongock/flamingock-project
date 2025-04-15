@@ -26,7 +26,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SqlTemplate implements ChangeTemplate {
+public class SqlTemplate implements ChangeTemplate<SqlTemplateConfiguration> {
 
     private SqlTemplateConfiguration configuration;
 
@@ -39,6 +39,7 @@ public class SqlTemplate implements ChangeTemplate {
     }
 
     @Config
+    @Override
     public void setConfiguration(SqlTemplateConfiguration configuration) {
         this.configuration = configuration;
     }

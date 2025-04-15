@@ -30,13 +30,14 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class MongoChangeTemplate implements ChangeTemplate {
+public class MongoChangeTemplate implements ChangeTemplate<MongoChangeTemplateConfig> {
     //avoids static loading at building time to keep GraalVM happy
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private MongoChangeTemplateConfig config;
 
     @Config
+    @Override
     public void setConfiguration(MongoChangeTemplateConfig config) {
         logger.trace("setting MongoChangeTemplate config: " + config);
         this.config = config;

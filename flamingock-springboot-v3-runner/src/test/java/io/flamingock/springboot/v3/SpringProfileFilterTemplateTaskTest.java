@@ -123,7 +123,7 @@ class SpringProfileFilterTemplateTaskTest {
 
     }
 
-    public static abstract class TemplateSimulate implements ChangeTemplate {}
+    public static abstract class TemplateSimulate implements ChangeTemplate<Object> {}
 
     @Change(id = "not-annotated", order = "0")
     public static class NotAnnotated {
