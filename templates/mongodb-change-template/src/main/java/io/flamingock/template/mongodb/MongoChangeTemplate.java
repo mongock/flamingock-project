@@ -42,12 +42,6 @@ public class MongoChangeTemplate implements ChangeTemplate {
         this.config = config;
     }
 
-    @Override
-    public void validateConfiguration() {
-        logger.trace("validating MongoChangeTemplate");
-        config.validate();
-    }
-
     @ChangeTemplateExecution
     public void execute(MongoDatabase db, @Nullable ClientSession clientSession) {
         logger.debug("MongoChangeTemplate changes with clientSession[{}]", clientSession != null);

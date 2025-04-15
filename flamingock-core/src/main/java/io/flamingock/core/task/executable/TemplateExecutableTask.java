@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoadedChangeUnit> {
-    private final Method configValidatorMethod;
 
     private final Method configSetterMethod;
 
@@ -36,11 +35,9 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
                                   boolean requiredExecution,
                                   Method executionMethod,
                                   Method rollbackMethod,
-                                  Method configSetterMethod,
-                                  Method configValidatorMethod) {
+                                  Method configSetterMethod) {
         super(stageName, descriptor, requiredExecution, executionMethod, rollbackMethod);
         this.configSetterMethod = configSetterMethod;
-        this.configValidatorMethod = configValidatorMethod;
     }
 
     @Override
@@ -61,15 +58,9 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
             }
             runtimeManager.executeMethod(instance, configSetterMethod);
         }
-
-        validateConfiguration(runtimeManager, instance);
     }
 
-    private void validateConfiguration(RuntimeManager runtimeManager, Object instance) {
-        if(configValidatorMethod != null) {
-            runtimeManager.executeMethod(instance, configValidatorMethod);
-        }
-    }
+
 
 
 }

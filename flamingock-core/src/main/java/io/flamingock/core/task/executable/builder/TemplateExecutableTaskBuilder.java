@@ -75,19 +75,14 @@ public class TemplateExecutableTaskBuilder implements ExecutableTaskBuilder<Temp
     private TemplateExecutableTask getTasksFromReflection(String stageName,
                                                           TemplateLoadedChangeUnit loadedTask,
                                                           AuditEntry.Status initialState) {
-        try {
-            return new TemplateExecutableTask(
-                    stageName,
-                    loadedTask,
-                    AuditEntry.Status.isRequiredExecution(initialState),
-                    loadedTask.getExecutionMethod(),
-                    loadedTask.getRollbackMethod().orElse(null),
-                    loadedTask.getConfigSetter().orElse(null),
-                    ChangeTemplate.class.getMethod("validateConfiguration")
-            );
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        return new TemplateExecutableTask(
+                stageName,
+                loadedTask,
+                AuditEntry.Status.isRequiredExecution(initialState),
+                loadedTask.getExecutionMethod(),
+                loadedTask.getRollbackMethod().orElse(null),
+                loadedTask.getConfigSetter().orElse(null)
+        );
 
     }
 

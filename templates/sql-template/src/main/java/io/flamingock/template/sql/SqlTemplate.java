@@ -43,14 +43,6 @@ public class SqlTemplate implements ChangeTemplate {
         this.configuration = configuration;
     }
 
-    @Override
-    public void validateConfiguration() {
-        if (configuration.getExecutionSql() == null) {
-            String message = String.format("Template not found[%s]. Template name is wrong or template library not imported", this.getClass().getSimpleName());
-            throw new IllegalArgumentException(message);
-        }
-    }
-
     @ChangeTemplateExecution
     public void execution(Connection connection) {
         execute(connection, configuration.getExecutionSql());
