@@ -21,7 +21,6 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.api.template.annotations.ChangeTemplateExecution;
 import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecution;
-import io.flamingock.core.api.template.annotations.Config;
 import io.flamingock.template.mongodb.model.MongoOperation;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
@@ -36,7 +35,6 @@ public class MongoChangeTemplate implements ChangeTemplate<MongoChangeTemplateCo
 
     private MongoChangeTemplateConfig config;
 
-    @Config
     @Override
     public void setConfiguration(MongoChangeTemplateConfig config) {
         logger.trace("setting MongoChangeTemplate config: " + config);

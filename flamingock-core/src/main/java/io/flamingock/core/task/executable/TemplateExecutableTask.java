@@ -16,6 +16,7 @@
 
 package io.flamingock.core.task.executable;
 
+import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.task.loaded.TemplateLoadedChangeUnit;
 import io.flamingock.commons.utils.FileUtil;
@@ -26,35 +27,33 @@ import java.util.List;
 
 public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoadedChangeUnit> {
 
-    private final Method configSetterMethod;
-
 
     public TemplateExecutableTask(String stageName,
                                   TemplateLoadedChangeUnit descriptor,
                                   boolean requiredExecution,
                                   Method executionMethod,
-                                  Method rollbackMethod,
-                                  Method configSetterMethod) {
+                                  Method rollbackMethod) {
         super(stageName, descriptor, requiredExecution, executionMethod, rollbackMethod);
-        this.configSetterMethod = configSetterMethod;
     }
 
+    //TODO cache the instance locally, as it's stateless
     @Override
     protected void executeInternal(RuntimeManager runtimeManager, Method method ) {
         Object instance = runtimeManager.getInstance(descriptor.getConstructor());
-        setConfiguration(runtimeManager, instance);
+        setConfiguration(runtimeManager, (ChangeTemplate<?>) instance);
         runtimeManager.executeMethodWithInjectedDependencies(instance, method);
     }
 
-    private void setConfiguration(RuntimeManager runtimeManager, Object instance) {
-        if(configSetterMethod != null ) {
-            List<Class<?>> parameters = ReflectionUtil.getParameters(configSetterMethod);
-            if(!parameters.isEmpty()) {
-                Object config = FileUtil.getFromMap(parameters.get(0), descriptor.getTemplateConfiguration());
-                runtimeManager.executeMethodWithParameters(instance, configSetterMethod, config);
-            } else {
-                runtimeManager.executeMethodWithInjectedDependencies(instance, configSetterMethod);
-            }
+
+    private void setConfiguration(RuntimeManager runtimeManager, ChangeTemplate<?> instance) {
+        try {
+            Class<?> configClass = instance.getConfigClass();
+            runtimeManager.executeMethodWithParameters(
+                    instance,
+                    ChangeTemplate.class.getMethod("setConfiguration", configClass),
+                    FileUtil.getFromMap(configClass, descriptor.getTemplateConfiguration()));
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
     }
 

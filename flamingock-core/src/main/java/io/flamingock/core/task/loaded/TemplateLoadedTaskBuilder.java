@@ -97,7 +97,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     @Override
     public TemplateLoadedChangeUnit build() {
         //            boolean isTaskTransactional = true;//TODO implement this. isTaskTransactionalAccordingTemplate(templateSpec);
-        Class<? extends ChangeTemplate> templateClass = TemplateFactory.getTemplate(templateName)
+        Class<? extends ChangeTemplate<?>> templateClass = TemplateFactory.getTemplate(templateName)
                 .orElseThrow(()-> new FlamingockException(String.format("Template[%s] not found. This is probably because template's name is wrong or template's library not imported", templateName)));
         return new TemplateLoadedChangeUnit(
                 id,

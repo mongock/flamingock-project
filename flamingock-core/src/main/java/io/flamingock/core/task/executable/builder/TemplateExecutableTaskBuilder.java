@@ -80,8 +80,7 @@ public class TemplateExecutableTaskBuilder implements ExecutableTaskBuilder<Temp
                 loadedTask,
                 AuditEntry.Status.isRequiredExecution(initialState),
                 loadedTask.getExecutionMethod(),
-                loadedTask.getRollbackMethod().orElse(null),
-                loadedTask.getConfigSetter().orElse(null)
+                loadedTask.getRollbackMethod().orElse(null)
         );
 
     }
