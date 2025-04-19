@@ -11,10 +11,6 @@ import java.lang.reflect.Type;
  * This interface is commonly implemented by classes that act as templates for Change Units
  * where a specific configuration needs to be injected and managed independently.
  *
- * <p><strong>Thread safety:</strong> Implementations of this interface are expected to be <strong>stateless</strong>.
- * A single instance may be reused and invoked concurrently across multiple executions, so all methods must be
- * thread-safe and must not rely on internal mutable state.
- *
  * @param <CONFIG> The type of configuration this template works with.
  */
 public interface ChangeTemplate<CONFIG> extends ReflectionMetadataProvider {
@@ -22,9 +18,9 @@ public interface ChangeTemplate<CONFIG> extends ReflectionMetadataProvider {
     /**
      * Injects the configuration for this template.
      *
-     * @param config Configuration instance of type {@code CONFIG}.
+     * @param configuration Configuration instance of type {@code CONFIG}.
      */
-    void setConfiguration(CONFIG config);
+    void setConfiguration(CONFIG configuration);
 
     /**
      * Returns the {@link Class} representing the configuration type {@code CONFIG} that this template is bound to.
