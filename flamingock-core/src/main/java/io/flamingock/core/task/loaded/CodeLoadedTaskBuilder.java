@@ -20,6 +20,7 @@ import io.flamingock.commons.utils.StringUtil;
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.preview.AbstractPreviewTask;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
+import io.flamingock.core.preview.CodePreviewLegacyChangeUnit;
 import io.flamingock.core.utils.ExecutionUtils;
 import io.mongock.api.annotations.ChangeUnit;
 import org.slf4j.Logger;
@@ -69,10 +70,13 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
         setTemplateName(preview.getSource());
         setRunAlways(preview.isRunAlways());
         setTransactional(preview.isTransactional());
-        logger.info("***************PREVIEW ChangeUnit[{}]: {}", preview.getId(), preview.isNewChangeUnit());
-        setNewChangeUnit(preview.isNewChangeUnit());
+        setLegacyChangeUnit(preview instanceof CodePreviewLegacyChangeUnit);
         setSystem(preview.isSystem());
         return this;
+    }
+
+    private void setLegacyChangeUnit(boolean legacyChangeUnit) {
+        setNewChangeUnit(!legacyChangeUnit);
     }
 
     private CodeLoadedTaskBuilder setSourceClass(Class<?> sourceClass) {
@@ -166,7 +170,6 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
     }
 
     private void setFromChangeAnnotation(Class<?> sourceClass, Change annotation) {
-        logger.info("Setting change[{}] from New changeUnit", annotation.id());
         setId(annotation.id());
         setOrder(annotation.order());
         setTemplateName(sourceClass.getName());

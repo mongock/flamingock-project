@@ -30,9 +30,6 @@ import java.util.Optional;
 import java.util.StringJoiner;
 
 public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
-
-    private final Logger logger = LoggerFactory.getLogger("CodeLoadedChangeUnit");
-
     CodeLoadedChangeUnit(String id,
                          String order,
                          Class<?> source,
@@ -45,7 +42,6 @@ public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
     @Override
     public Method getExecutionMethod() {
-        logger.info("Change[{}] new={}", getSourceClass(), isNewChangeUnit());
         if (isNewChangeUnit()) {
             return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class)
                     .orElseThrow(() -> new IllegalArgumentException(String.format(

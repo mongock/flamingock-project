@@ -19,7 +19,7 @@ package io.flamingock.core.preview;
 import java.util.List;
 import java.util.Map;
 
-public class TemplatePreviewChangeUnit extends AbstractPreviewChangeUnit {
+public class TemplatePreviewChangeUnit extends AbstractPreviewTask {
 
     private List<String> profiles;
     private Map<String, Object> templateConfiguration;
@@ -36,7 +36,7 @@ public class TemplatePreviewChangeUnit extends AbstractPreviewChangeUnit {
                                      boolean runAlways,
                                      boolean system,
                                      Map<String, Object> templateConfiguration) {
-        super(id, order, templateName, runAlways, transactional, true, system);
+        super(id, order, templateName, runAlways, transactional, system);
         this.profiles = profiles;
         this.templateConfiguration = templateConfiguration;
     }
@@ -65,7 +65,6 @@ public class TemplatePreviewChangeUnit extends AbstractPreviewChangeUnit {
     public String toString() {
         return "TemplatePreviewChangeUnit{" + "profiles=" + profiles +
                 ", templateConfiguration=" + templateConfiguration +
-                ", isNewChangeUnit=" + isNewChangeUnit +
                 ", id='" + id + '\'' +
                 ", order='" + order + '\'' +
                 ", source='" + source + '\'' +

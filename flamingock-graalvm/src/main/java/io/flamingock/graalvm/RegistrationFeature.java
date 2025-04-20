@@ -5,6 +5,7 @@ import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.pipeline.Pipeline;
+import io.flamingock.core.preview.CodePreviewLegacyChangeUnit;
 import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
@@ -50,6 +51,7 @@ public class RegistrationFeature implements Feature {
         registerClass(PreviewPipeline.class.getName());
         registerClass(PreviewStage.class.getName());
         registerClass(CodePreviewChangeUnit.class.getName());
+        registerClass(CodePreviewLegacyChangeUnit.class.getName());
         registerClass(PreviewMethod.class);
         registerClass(TemplatePreviewChangeUnit.class.getName());
 
@@ -118,6 +120,8 @@ public class RegistrationFeature implements Feature {
     private static void registerClass(Class<?> clazz) {
         logger.initClassRegistration(clazz);
         RuntimeReflection.register(clazz);
+        RuntimeReflection.register(clazz.getFields());
+        RuntimeReflection.register(clazz.getDeclaredFields());
         RuntimeReflection.register(clazz.getDeclaredConstructors());
         RuntimeReflection.register(clazz.getDeclaredMethods());
     }
