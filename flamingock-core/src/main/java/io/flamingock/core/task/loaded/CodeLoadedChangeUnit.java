@@ -21,6 +21,8 @@ import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.RollbackBeforeExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -29,6 +31,7 @@ import java.util.StringJoiner;
 
 public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
+    private final Logger logger = LoggerFactory.getLogger("CodeLoadedChangeUnit");
 
     CodeLoadedChangeUnit(String id,
                          String order,
@@ -42,6 +45,7 @@ public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
     @Override
     public Method getExecutionMethod() {
+        logger.info("Change[{}] new={}", getSourceClass(), isNewChangeUnit());
         if (isNewChangeUnit()) {
             return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class)
                     .orElseThrow(() -> new IllegalArgumentException(String.format(

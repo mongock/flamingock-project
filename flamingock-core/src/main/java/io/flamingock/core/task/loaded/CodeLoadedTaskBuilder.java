@@ -69,6 +69,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
         setTemplateName(preview.getSource());
         setRunAlways(preview.isRunAlways());
         setTransactional(preview.isTransactional());
+        logger.info("***************PREVIEW ChangeUnit[{}]: {}", preview.getId(), preview.isNewChangeUnit());
         setNewChangeUnit(preview.isNewChangeUnit());
         setSystem(preview.isSystem());
         return this;
@@ -165,6 +166,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
     }
 
     private void setFromChangeAnnotation(Class<?> sourceClass, Change annotation) {
+        logger.info("Setting change[{}] from New changeUnit", annotation.id());
         setId(annotation.id());
         setOrder(annotation.order());
         setTemplateName(sourceClass.getName());

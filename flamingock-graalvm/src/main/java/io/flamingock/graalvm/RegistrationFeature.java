@@ -1,9 +1,11 @@
 package io.flamingock.graalvm;
 
+import io.flamingock.core.api.template.AbstractChangeTemplate;
 import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.pipeline.Pipeline;
+import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.system.SystemModule;
@@ -48,6 +50,7 @@ public class RegistrationFeature implements Feature {
         registerClass(PreviewPipeline.class.getName());
         registerClass(PreviewStage.class.getName());
         registerClass(CodePreviewChangeUnit.class.getName());
+        registerClass(PreviewMethod.class);
         registerClass(TemplatePreviewChangeUnit.class.getName());
 
         //Loaded
@@ -84,7 +87,9 @@ public class RegistrationFeature implements Feature {
     private void registerTemplates() {
         logger.startRegistration("templates");
         registerClass(TemplateFactory.class);
-        for (ChangeTemplate template : ServiceLoader.load(ChangeTemplate.class)) {
+        registerClass(ChangeTemplate.class);
+        registerClass(AbstractChangeTemplate.class);
+        for (ChangeTemplate<?> template : ServiceLoader.load(ChangeTemplate.class)) {
             registerClass(template.getClass());
             template.getReflectiveClasses().forEach(RegistrationFeature::registerClass);
         }

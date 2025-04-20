@@ -48,9 +48,10 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
     private void setConfiguration(RuntimeManager runtimeManager, ChangeTemplate<?> instance) {
         try {
             Class<?> configClass = instance.getConfigClass();
+            Method setConfigurationMethod = instance.getClass().getMethod("setConfiguration", Object.class);
             runtimeManager.executeMethodWithParameters(
                     instance,
-                    ChangeTemplate.class.getMethod("setConfiguration", configClass),
+                    setConfigurationMethod,
                     FileUtil.getFromMap(configClass, descriptor.getTemplateConfiguration()));
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);

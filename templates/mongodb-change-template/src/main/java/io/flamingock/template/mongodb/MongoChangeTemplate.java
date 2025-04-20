@@ -32,7 +32,7 @@ public class MongoChangeTemplate extends AbstractChangeTemplate<MongoChangeTempl
     protected final Logger logger = LoggerFactory.getLogger("MongoChangeTemplate");
 
     public MongoChangeTemplate() {
-        super(MongoOperation.class);
+        super(MongoChangeTemplateConfig.class, MongoOperation.class);
     }
 
     @ChangeTemplateExecution
