@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoadedChangeUnit> {
-    protected final Logger logger = LoggerFactory.getLogger("MongoChangeTemplate");
 
     public TemplateExecutableTask(String stageName,
                                   TemplateLoadedChangeUnit descriptor,
@@ -61,7 +60,7 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
         return Arrays.stream(changeTemplateClass.getMethods())
                 .filter(m-> "setConfiguration".equals(m.getName()))
                 .findFirst()
-                .orElseThrow(()-> new RuntimeException("Not founder config setter for template: " + changeTemplateClass.getSimpleName()));
+                .orElseThrow(()-> new RuntimeException("Not found config setter for template: " + changeTemplateClass.getSimpleName()));
 
     }
 
