@@ -20,7 +20,6 @@ import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.api.template.annotations.ChangeTemplateExecution;
 import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecution;
-import io.flamingock.core.api.template.annotations.Config;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

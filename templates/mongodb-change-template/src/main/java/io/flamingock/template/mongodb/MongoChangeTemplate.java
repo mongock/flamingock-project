@@ -38,13 +38,13 @@ public class MongoChangeTemplate extends AbstractChangeTemplate<MongoChangeTempl
     @ChangeTemplateExecution
     public void execute(MongoDatabase db, @Nullable ClientSession clientSession) {
         logger.debug("MongoChangeTemplate changes with transaction[{}]", clientSession != null);
-        configuration.getChanges().forEach(executionOperation -> executeOp(db, executionOperation, clientSession));
+        executeOp(db, configuration.getExecution(), clientSession);
     }
 
     @ChangeTemplateRollbackExecution
     public void rollback(MongoDatabase db, @Nullable ClientSession clientSession) {
         logger.debug("MongoChangeTemplate rollbacks with transaction[{}]", clientSession != null);
-        configuration.getRollbacks().forEach(executionOperation -> executeOp(db, executionOperation, clientSession));
+        executeOp(db, configuration.getRollback(), clientSession);
     }
 
     private void executeOp(MongoDatabase db, MongoOperation op, ClientSession clientSession) {

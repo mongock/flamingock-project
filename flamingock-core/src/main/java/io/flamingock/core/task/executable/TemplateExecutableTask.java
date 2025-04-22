@@ -21,12 +21,16 @@ import io.flamingock.core.runtime.RuntimeManager;
 import io.flamingock.core.task.loaded.TemplateLoadedChangeUnit;
 import io.flamingock.commons.utils.FileUtil;
 import io.flamingock.commons.utils.ReflectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoadedChangeUnit> {
-
+    protected final Logger logger = LoggerFactory.getLogger("MongoChangeTemplate");
 
     public TemplateExecutableTask(String stageName,
                                   TemplateLoadedChangeUnit descriptor,
@@ -36,7 +40,6 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
         super(stageName, descriptor, requiredExecution, executionMethod, rollbackMethod);
     }
 
-    //TODO cache the instance locally, as it's stateless
     @Override
     protected void executeInternal(RuntimeManager runtimeManager, Method method ) {
         Object instance = runtimeManager.getInstance(descriptor.getConstructor());
@@ -44,18 +47,22 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
         runtimeManager.executeMethodWithInjectedDependencies(instance, method);
     }
 
-
     private void setConfiguration(RuntimeManager runtimeManager, ChangeTemplate<?> instance) {
-        try {
-            Class<?> configClass = instance.getConfigClass();
-            Method setConfigurationMethod = instance.getClass().getMethod("setConfiguration", Object.class);
-            runtimeManager.executeMethodWithParameters(
-                    instance,
-                    setConfigurationMethod,
-                    FileUtil.getFromMap(configClass, descriptor.getTemplateConfiguration()));
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        Class<?> configClass = instance.getConfigClass();
+        Method setConfigurationMethod = getConfigMethod(instance.getClass());
+        runtimeManager.executeMethodWithParameters(
+                instance,
+                setConfigurationMethod,
+                FileUtil.getFromMap(configClass, descriptor.getTemplateConfiguration()));
+    }
+
+    private Method getConfigMethod(Class<?> changeTemplateClass) {
+
+        return Arrays.stream(changeTemplateClass.getMethods())
+                .filter(m-> "setConfiguration".equals(m.getName()))
+                .findFirst()
+                .orElseThrow(()-> new RuntimeException("Not founder config setter for template: " + changeTemplateClass.getSimpleName()));
+
     }
 
 

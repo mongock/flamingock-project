@@ -2,6 +2,7 @@ package io.flamingock.graalvm;
 
 import io.flamingock.core.api.template.AbstractChangeTemplate;
 import io.flamingock.core.api.template.ChangeTemplate;
+import io.flamingock.core.api.template.ChangeTemplateConfig;
 import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.pipeline.LoadedStage;
 import io.flamingock.core.pipeline.Pipeline;
@@ -53,6 +54,7 @@ public class RegistrationFeature implements Feature {
         registerClass(CodePreviewChangeUnit.class.getName());
         registerClass(CodePreviewLegacyChangeUnit.class.getName());
         registerClass(PreviewMethod.class);
+        registerClass(ChangeTemplateConfig.class);
         registerClass(TemplatePreviewChangeUnit.class.getName());
 
         //Loaded

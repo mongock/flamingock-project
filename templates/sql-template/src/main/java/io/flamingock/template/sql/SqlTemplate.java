@@ -44,12 +44,12 @@ public class SqlTemplate implements ChangeTemplate<SqlTemplateConfiguration> {
 
     @ChangeTemplateExecution
     public void execution(Connection connection) {
-        execute(connection, configuration.getExecutionSql());
+        execute(connection, configuration.getExecution());
     }
 
     @ChangeTemplateRollbackExecution(conditionalOnAllConfigurationPropertiesNotNull = {"rollbackSql"})
     public void rollback(Connection connection) {
-        execute(connection, configuration.getRollbackSql());
+        execute(connection, configuration.getRollback());
     }
 
     @Override
