@@ -16,9 +16,9 @@
 
 package io.flamingock.template.sql;
 
+import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.api.template.ChangeTemplate;
-import io.flamingock.core.api.template.annotations.ChangeTemplateExecution;
-import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecution;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,12 +42,12 @@ public class SqlTemplate implements ChangeTemplate<SqlTemplateConfiguration> {
         this.configuration = configuration;
     }
 
-    @ChangeTemplateExecution
+    @Execution
     public void execution(Connection connection) {
         execute(connection, configuration.getExecution());
     }
 
-    @ChangeTemplateRollbackExecution(conditionalOnAllConfigurationPropertiesNotNull = {"rollbackSql"})
+    @RollbackExecution
     public void rollback(Connection connection) {
         execute(connection, configuration.getRollback());
     }

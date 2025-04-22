@@ -78,8 +78,6 @@ public class ReflectionExecutableTask<REFLECTION_TASK_DESCRIPTOR extends Abstrac
         runtimeManager.executeMethodWithInjectedDependencies(instance, method);
     }
 
-
-
     @Override
     public String getExecutionMethodName() {
         return executionMethod.getName();

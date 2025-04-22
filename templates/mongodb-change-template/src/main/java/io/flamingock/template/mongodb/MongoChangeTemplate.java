@@ -18,9 +18,9 @@ package io.flamingock.template.mongodb;
 
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.api.template.AbstractChangeTemplate;
-import io.flamingock.core.api.template.annotations.ChangeTemplateExecution;
-import io.flamingock.core.api.template.annotations.ChangeTemplateRollbackExecution;
 import io.flamingock.template.mongodb.model.MongoOperation;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
@@ -35,17 +35,12 @@ public class MongoChangeTemplate extends AbstractChangeTemplate<MongoChangeTempl
         super(MongoChangeTemplateConfig.class, MongoOperation.class);
     }
 
-    @ChangeTemplateExecution
+    @Execution
     public void execute(MongoDatabase db, @Nullable ClientSession clientSession) {
         logger.debug("MongoChangeTemplate changes with transaction[{}]", clientSession != null);
         executeOp(db, configuration.getExecution(), clientSession);
     }
 
-    @ChangeTemplateRollbackExecution
-    public void rollback(MongoDatabase db, @Nullable ClientSession clientSession) {
-        logger.debug("MongoChangeTemplate rollbacks with transaction[{}]", clientSession != null);
-        executeOp(db, configuration.getRollback(), clientSession);
-    }
 
     private void executeOp(MongoDatabase db, MongoOperation op, ClientSession clientSession) {
         op.getOperator(db).apply(clientSession);
