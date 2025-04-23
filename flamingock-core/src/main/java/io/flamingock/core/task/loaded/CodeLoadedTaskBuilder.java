@@ -81,11 +81,11 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
 
     private CodeLoadedTaskBuilder setSourceClass(Class<?> sourceClass) {
         if (sourceClass.isAnnotationPresent(Change.class)) {
-            setFromChangeAnnotation(sourceClass, sourceClass.getAnnotation(Change.class));
+            setFromFlamingockChangeAnnotation(sourceClass, sourceClass.getAnnotation(Change.class));
             return this;
 
         } else if (ExecutionUtils.isLegacyChangeUnit(sourceClass)) {
-            setFromChangeUnitAnnotation(sourceClass, sourceClass.getAnnotation(ChangeUnit.class));
+            setFromLegacyChangeUnitAnnotation(sourceClass, sourceClass.getAnnotation(ChangeUnit.class));
             return this;
 
         } else {
@@ -155,7 +155,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
         }
     }
 
-    private void setFromChangeUnitAnnotation(Class<?> sourceClass, ChangeUnit annotation) {
+    private void setFromLegacyChangeUnitAnnotation(Class<?> sourceClass, ChangeUnit annotation) {
         logger.warn("Detected legacy changeUnit[{}]. If it's an old changeUnit created for Mongock, it's fine. " +
                         "Otherwise, it's highly recommended us the new API[in package {}]",
                 sourceClass.getName(),
@@ -169,7 +169,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
         setSystem(false);
     }
 
-    private void setFromChangeAnnotation(Class<?> sourceClass, Change annotation) {
+    private void setFromFlamingockChangeAnnotation(Class<?> sourceClass, Change annotation) {
         setId(annotation.id());
         setOrder(annotation.order());
         setTemplateName(sourceClass.getName());

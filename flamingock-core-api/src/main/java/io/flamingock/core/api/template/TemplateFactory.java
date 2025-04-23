@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
-//TODO we could store/use objects, rather than Classes
 public final class TemplateFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(TemplateFactory.class);

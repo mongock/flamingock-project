@@ -43,7 +43,8 @@ public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
     @Override
     public Method getExecutionMethod() {
         if (isNewChangeUnit()) {
-            return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class)
+            Optional<Method> firstAnnotatedMethod = ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), Execution.class);
+            return firstAnnotatedMethod
                     .orElseThrow(() -> new IllegalArgumentException(String.format(
                             "Executable changeUnit[%s] without %s method",
                             getSource(),
