@@ -18,11 +18,15 @@ package io.flamingock.core.springboot.v2;
 
 import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.template.ChangeFileDescriptor;
+import io.flamingock.core.api.template.ChangeTemplate;
+import io.flamingock.core.api.template.ChangeTemplateConfig;
+import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.preview.TemplatePreviewChangeUnit;
 import io.flamingock.core.preview.builder.PreviewTaskBuilder;
 import io.flamingock.core.task.loaded.AbstractLoadedTask;
 import io.flamingock.core.task.loaded.LoadedTaskBuilder;
 import io.flamingock.springboot.v2.SpringProfileFilter;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Profile;
@@ -33,6 +37,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpringProfileFilterTemplateTaskTest {
+
+
+
+    @BeforeAll
+    static void beforeAll() {
+        TemplateFactory.addTemplate(TemplateSimulate.class.getSimpleName(), TemplateSimulate.class);
+    }
 
     @Test
     @DisplayName("SHOULD return true WHEN activeProfiles=[] and taskProfiles=[]")
@@ -103,7 +114,7 @@ class SpringProfileFilterTemplateTaskTest {
         ChangeFileDescriptor changeFileDescriptor = new ChangeFileDescriptor(
                 "template-base-change-id",
                 "1",
-                TemplateSimulate.class.getName(),
+                TemplateSimulate.class.getSimpleName(),
                 profiles,
                 true,
                 new HashMap<>()
@@ -115,7 +126,7 @@ class SpringProfileFilterTemplateTaskTest {
 
     }
 
-    public static class TemplateSimulate {}
+    public static abstract class TemplateSimulate implements ChangeTemplate<ChangeTemplateConfig<Object, Object>> {}
 
     @Change(id = "not-annotated", order = "0")
     public static class NotAnnotated {

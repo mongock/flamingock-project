@@ -19,7 +19,7 @@ package io.flamingock.core.preview;
 import java.util.List;
 import java.util.Map;
 
-public class TemplatePreviewChangeUnit extends CodePreviewChangeUnit {
+public class TemplatePreviewChangeUnit extends AbstractPreviewTask {
 
     private List<String> profiles;
     private Map<String, Object> templateConfiguration;
@@ -30,13 +30,13 @@ public class TemplatePreviewChangeUnit extends CodePreviewChangeUnit {
     //TODO add configurationSetter and validation method
     public TemplatePreviewChangeUnit(String id,
                                      String order,
-                                     String templateClassPath,
+                                     String templateName,
                                      List<String> profiles,
                                      boolean transactional,
                                      boolean runAlways,
                                      boolean system,
                                      Map<String, Object> templateConfiguration) {
-        super(id, order, templateClassPath, null, null, runAlways, transactional, true, system);
+        super(id, order, templateName, runAlways, transactional, system);
         this.profiles = profiles;
         this.templateConfiguration = templateConfiguration;
     }
@@ -47,6 +47,10 @@ public class TemplatePreviewChangeUnit extends CodePreviewChangeUnit {
 
     public void setTemplateConfiguration(Map<String, Object> templateConfiguration) {
         this.templateConfiguration = templateConfiguration;
+    }
+
+    public String getTemplateName() {
+        return getSource();
     }
 
     public List<String> getProfiles() {
@@ -61,7 +65,6 @@ public class TemplatePreviewChangeUnit extends CodePreviewChangeUnit {
     public String toString() {
         return "TemplatePreviewChangeUnit{" + "profiles=" + profiles +
                 ", templateConfiguration=" + templateConfiguration +
-                ", isNewChangeUnit=" + isNewChangeUnit +
                 ", id='" + id + '\'' +
                 ", order='" + order + '\'' +
                 ", source='" + source + '\'' +
