@@ -7,7 +7,6 @@ import io.flamingock.core.processor.util.AnnotationFinder;
 import io.flamingock.core.processor.util.LoggerPreProcessor;
 import io.flamingock.core.processor.util.Serializer;
 import io.flamingock.core.preview.AbstractPreviewTask;
-import io.mongock.api.annotations.ChangeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
@@ -67,7 +66,6 @@ import java.util.Set;
  * The processor detects and processes classes annotated with:
  * <ul>
  *     <li>{@link  Change} - Represents a change unit defined within the code.</li>
- *     <li>{@link  ChangeUnit} - Represents a legacy change unit defined within the code.</li>
  * </ul>
  *
  * <h2>Generated Metadata Files</h2>
@@ -136,9 +134,8 @@ public class ChangesPreProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<>(Arrays.asList(
-                Change.class.getName(),
-                ChangeUnit.class.getName()
+        return new HashSet<>(Collections.singletonList(
+                Change.class.getName()
         ));
     }
 

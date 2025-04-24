@@ -24,7 +24,6 @@ import io.flamingock.core.preview.CodePreviewLegacyChangeUnit;
 import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
-import io.mongock.api.annotations.ChangeUnit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -41,10 +40,6 @@ public class PipelineTestHelper {
         return new Trio<>(ann.id(), ann.order(), ann.transactional());
     };
 
-    private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractorLegacy = c -> {
-        ChangeUnit ann = c.getAnnotation(ChangeUnit.class);
-        return new Trio<>("[" + ann.author() + "]" + ann.id(), ann.order(), ann.transactional());
-    };
 
     @NotNull
     private static List<String> getParameterTypes(List<Class<?>> second) {
@@ -59,7 +54,7 @@ public class PipelineTestHelper {
      * <p>
      * Each change unit is derived from a {@link Pair} where:
      * <ul>
-     *   <li>The first item is the {@link Class} annotated with {@link Change} or {@link ChangeUnit}</li>
+     *   <li>The first item is the {@link Class} annotated with {@link Change}</li>
      *   <li>The second item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @Execution}</li>
      *   <li>The third item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @RollbackExecution}</li>
      * </ul>
@@ -73,10 +68,7 @@ public class PipelineTestHelper {
         List<CodePreviewChangeUnit> tasks = Arrays.stream(changeDefinitions)
                 .map(trio -> {
                     boolean isNewChangeUnit = trio.getFirst().isAnnotationPresent(Change.class);
-                    Function<Class<?>, Trio<String, String, Boolean>> extractor = isNewChangeUnit
-                            ? infoExtractor
-                            : infoExtractorLegacy;
-                    Trio<String, String, Boolean> changeInfo = extractor.apply(trio.getFirst());
+                    Trio<String, String, Boolean> changeInfo = infoExtractor.apply(trio.getFirst());
                     PreviewMethod rollback = null;
                     if (trio.getThird() != null) {
                         rollback = new PreviewMethod("rollbackExecution", getParameterTypes(trio.getThird()));

@@ -4,7 +4,6 @@ import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.preview.AbstractPreviewTask;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.builder.PreviewTaskBuilder;
-import io.mongock.api.annotations.ChangeUnit;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.ElementKind;
@@ -31,8 +30,7 @@ public final class AnnotationFinder {
 
     public Map<String, List<AbstractPreviewTask>> getCodedChangeUnitsMapByPackage() {
         logger.info("Searching for code-based changes (Java classes annotated with @Change or legacy @ChangeUnit annotations)");
-        Collection<CodePreviewChangeUnit> allChanges = new LinkedList<>(findAnnotatedChanges(ChangeUnit.class));
-        allChanges.addAll(findAnnotatedChanges(Change.class));
+        Collection<CodePreviewChangeUnit> allChanges = new LinkedList<>(findAnnotatedChanges(Change.class));
         Map<String, List<AbstractPreviewTask>> mapByPackage = new HashMap<>();
         for(CodePreviewChangeUnit item: allChanges) {
             mapByPackage.compute(item.getSourcePackage(), (key, descriptors) -> {
