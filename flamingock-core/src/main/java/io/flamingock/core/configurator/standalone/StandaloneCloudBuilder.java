@@ -16,14 +16,12 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.configurator.BuilderPlugin;
-import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.system.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
+import io.flamingock.core.cloud.CloudEngine;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
+import io.flamingock.core.configurator.BuilderPlugin;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
@@ -31,13 +29,16 @@ import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
-import io.flamingock.core.cloud.CloudEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
+import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.PipelineDescriptor;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
+import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.runtime.dependency.PriorityDependencyContext;
+import io.flamingock.core.system.CloudSystemModule;
 import io.flamingock.core.task.filter.TaskFilter;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
@@ -73,7 +75,8 @@ public class StandaloneCloudBuilder
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
-    ///////////////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected CoreConfiguratorDelegate<StandaloneCloudBuilder, CloudSystemModule, CloudSystemModuleManager> coreConfiguratorDelegate() {
@@ -123,17 +126,30 @@ public class StandaloneCloudBuilder
 
 
         List<TaskFilter> taskFilters = new LinkedList<>();
-        List<EventPublisher> eventPublishers = new LinkedList<>();
-        DependencyContext currentDependencyContext = getDependencyContext();
-        for(BuilderPlugin plugin: ServiceLoader.load(BuilderPlugin.class)) {
-            plugin.initialize(currentDependencyContext);
+        List<EventPublisher> eventPublishersFromPlugins = new LinkedList<>();
+        DependencyContext dependencyContextFromBuilder = getDependencyContext();
 
-            if(plugin.getEventPublisher().isPresent()) {
-                eventPublishers.add(plugin.getEventPublisher().get());
+        List<DependencyContext> dependencyContextsFromPlugins = new LinkedList<>();
+        for (BuilderPlugin plugin : ServiceLoader.load(BuilderPlugin.class)) {
+            plugin.initialize(dependencyContextFromBuilder);
+
+            if (plugin.getEventPublisher().isPresent()) {
+                eventPublishersFromPlugins.add(plugin.getEventPublisher().get());
             }
 
+            if (plugin.getDependencyContext().isPresent()) {
+                dependencyContextsFromPlugins.add(plugin.getDependencyContext().get());
+            }
             taskFilters.addAll(plugin.getTaskFilters());
         }
+
+        DependencyContext mergedContext = dependencyContextsFromPlugins
+                .stream()
+                .filter(Objects::nonNull)
+                .reduce((previous, current) -> new PriorityDependencyContext(current, previous))
+                .<DependencyContext>map(accumulated -> new PriorityDependencyContext(dependencyContextFromBuilder, accumulated))
+                .orElse(dependencyContextFromBuilder);
+
 
         Pipeline pipeline = buildPipeline(
                 taskFilters,
@@ -150,8 +166,8 @@ public class StandaloneCloudBuilder
                 pipeline,
                 engine,
                 coreConfiguration,
-                buildEventPublisher(eventPublishers),
-                currentDependencyContext,
+                buildEventPublisher(eventPublishersFromPlugins),
+                mergedContext,
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
                 engineFactory.getCloser()
         );
