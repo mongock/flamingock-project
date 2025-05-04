@@ -37,6 +37,9 @@ import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+
 public class StandaloneLocalBuilder
         extends AbstractStandaloneBuilder<StandaloneLocalBuilder, LocalSystemModule, LocalSystemModuleManager>
         implements LocalConfigurator<StandaloneLocalBuilder> {
@@ -105,6 +108,7 @@ public class StandaloneLocalBuilder
         CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
 
         Pipeline pipeline = buildPipeline(
+                new ArrayDeque<>(),//WIll be removed
                 coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
                 coreConfiguration.getPreviewPipeline(),
                 coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
@@ -120,7 +124,7 @@ public class StandaloneLocalBuilder
                 pipeline,
                 engine,
                 coreConfiguration,
-                buildEventPublisher(),
+                buildEventPublisher(new ArrayList<>()),
                 getDependencyContext(),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
