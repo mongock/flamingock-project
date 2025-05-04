@@ -21,8 +21,6 @@ import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.preview.AbstractPreviewTask;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.CodePreviewLegacyChangeUnit;
-import io.flamingock.core.utils.ExecutionUtils;
-import io.mongock.api.annotations.ChangeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +57,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
     }
 
     public static boolean supportsSourceClass(Class<?> sourceClass) {
-        return sourceClass.isAnnotationPresent(Change.class) || sourceClass.isAnnotationPresent(ChangeUnit.class);
+        return sourceClass.isAnnotationPresent(Change.class);
 
     }
 
@@ -82,10 +80,6 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
     private CodeLoadedTaskBuilder setSourceClass(Class<?> sourceClass) {
         if (sourceClass.isAnnotationPresent(Change.class)) {
             setFromFlamingockChangeAnnotation(sourceClass, sourceClass.getAnnotation(Change.class));
-            return this;
-
-        } else if (ExecutionUtils.isLegacyChangeUnit(sourceClass)) {
-            setFromLegacyChangeUnitAnnotation(sourceClass, sourceClass.getAnnotation(ChangeUnit.class));
             return this;
 
         } else {
@@ -153,20 +147,6 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void setFromLegacyChangeUnitAnnotation(Class<?> sourceClass, ChangeUnit annotation) {
-        logger.warn("Detected legacy changeUnit[{}]. If it's an old changeUnit created for Mongock, it's fine. " +
-                        "Otherwise, it's highly recommended us the new API[in package {}]",
-                sourceClass.getName(),
-                "io.flamingock.core.api.annotations");
-        setId(annotation.id());
-        setOrder(annotation.order());
-        setTemplateName(sourceClass.getName());
-        setRunAlways(annotation.runAlways());
-        setTransactional(annotation.transactional());
-        setNewChangeUnit(false);
-        setSystem(false);
     }
 
     private void setFromFlamingockChangeAnnotation(Class<?> sourceClass, Change annotation) {

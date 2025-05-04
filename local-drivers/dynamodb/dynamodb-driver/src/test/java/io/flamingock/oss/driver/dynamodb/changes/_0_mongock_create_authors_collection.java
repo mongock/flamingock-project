@@ -1,12 +1,9 @@
 package io.flamingock.oss.driver.dynamodb.changes;
 
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.oss.driver.dynamodb.changes.common.DynamoDBUtil;
 import io.flamingock.oss.driver.dynamodb.changes.common.UserEntity;
-import io.mongock.api.annotations.BeforeExecution;
-import io.mongock.api.annotations.ChangeUnit;
-import io.mongock.api.annotations.Execution;
-import io.mongock.api.annotations.RollbackBeforeExecution;
-import io.mongock.api.annotations.RollbackExecution;
+
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
@@ -18,7 +15,7 @@ import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
 import static java.util.Collections.emptyList;
 
 
-@ChangeUnit(id = "client-initializer", order = "1", author = "mongock")
+@Change(id = "client-initializer", order = "1", author = "mongock")
 public class _0_mongock_create_authors_collection {
 
     public final static int INITIAL_CLIENTS = 10;

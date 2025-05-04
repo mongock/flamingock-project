@@ -22,9 +22,6 @@ import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.CodePreviewLegacyChangeUnit;
 import io.flamingock.core.preview.PreviewMethod;
-import io.mongock.api.annotations.BeforeExecution;
-import io.mongock.api.annotations.ChangeUnit;
-import io.mongock.api.annotations.RollbackBeforeExecution;
 import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.element.Element;
@@ -125,12 +122,6 @@ public class CodePreviewTaskBuilder implements PreviewTaskBuilder<CodePreviewCha
         if (changeAnnotation != null) {
             setFieldsFromChange(typeElement, changeAnnotation);
         }
-
-        ChangeUnit legacyChangeUnitAnnotation = typeElement.getAnnotation(ChangeUnit.class);
-        if (legacyChangeUnitAnnotation != null) {
-
-            setFieldsFromLegacy(typeElement, legacyChangeUnitAnnotation);
-        }
         return this;
     }
 
@@ -151,21 +142,6 @@ public class CodePreviewTaskBuilder implements PreviewTaskBuilder<CodePreviewCha
         setNewChangeUnit(true);
         setSystem(false);
         return getCodePreviewChange();
-    }
-
-
-    private void setFieldsFromLegacy(TypeElement typeElement, ChangeUnit annotation) {
-        setId(annotation.id());
-        setOrder(annotation.order());
-        setSourceClassPath(typeElement.getQualifiedName().toString());
-        setExecutionMethod(getAnnotatedMethodInfo(typeElement, Execution.class).orElse(null));
-        setRollbackMethod(getAnnotatedMethodInfo(typeElement, RollbackExecution.class).orElse(null));
-        setBeforeExecutionMethod(getAnnotatedMethodInfo(typeElement, BeforeExecution.class).orElse(null));
-        setRollbackBeforeExecutionMethod(getAnnotatedMethodInfo(typeElement, RollbackBeforeExecution.class).orElse(null));
-        setTransactional(annotation.transactional());
-        setRunAlways(annotation.runAlways());
-        setNewChangeUnit(false);
-        setSystem(false);
     }
 
     @NotNull
