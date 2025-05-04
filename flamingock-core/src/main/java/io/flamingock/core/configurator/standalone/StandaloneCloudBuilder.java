@@ -18,7 +18,6 @@ package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.core.configurator.BuilderPlugin;
 import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.event.SimpleEventPublisher;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.system.CloudSystemModule;
 import io.flamingock.commons.utils.JsonObjectMapper;
@@ -125,10 +124,14 @@ public class StandaloneCloudBuilder
 
         List<TaskFilter> taskFilters = new LinkedList<>();
         List<EventPublisher> eventPublishers = new LinkedList<>();
-        DependencyContext dependencyContext = getDependencyContext();
+        DependencyContext currentDependencyContext = getDependencyContext();
         for(BuilderPlugin plugin: ServiceLoader.load(BuilderPlugin.class)) {
-            plugin.setFrameworkComponents(dependencyContext);
-            eventPublishers.add(plugin.getEventPublisher());
+            plugin.initialize(currentDependencyContext);
+
+            if(plugin.getEventPublisher().isPresent()) {
+                eventPublishers.add(plugin.getEventPublisher().get());
+            }
+
             taskFilters.addAll(plugin.getTaskFilters());
         }
 
@@ -148,7 +151,7 @@ public class StandaloneCloudBuilder
                 engine,
                 coreConfiguration,
                 buildEventPublisher(eventPublishers),
-                dependencyContext,
+                currentDependencyContext,
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
                 engineFactory.getCloser()
         );
