@@ -16,6 +16,8 @@
 
 package io.flamingock.core.configurator.standalone;
 
+import io.flamingock.core.event.CompositeEventPublisher;
+import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.configurator.SystemModuleManager;
@@ -25,7 +27,7 @@ import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurator;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 
-import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.event.SimpleEventPublisher;
 import io.flamingock.core.event.model.IPipelineCompletedEvent;
 import io.flamingock.core.event.model.IPipelineFailedEvent;
 import io.flamingock.core.event.model.IPipelineIgnoredEvent;
@@ -40,13 +42,15 @@ import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerBuilder;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 
+import io.flamingock.core.task.filter.TaskFilter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-abstract class AbstractStandaloneBuilder<
+public abstract class AbstractStandaloneBuilder<
         HOLDER,
         SYSTEM_MODULE extends SystemModule,
         SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>>
@@ -72,8 +76,8 @@ abstract class AbstractStandaloneBuilder<
     }
 
     @NotNull
-    protected EventPublisher buildEventPublisher() {
-        return new EventPublisher()
+    protected EventPublisher buildEventPublisher(List<EventPublisher> eventPublishers) {
+        SimpleEventPublisher simpleEventPublisher = new SimpleEventPublisher()
                 //pipeline events
                 .addListener(IPipelineStartedEvent.class, getPipelineStartedListener())
                 .addListener(IPipelineCompletedEvent.class, getPipelineCompletedListener())
@@ -83,14 +87,18 @@ abstract class AbstractStandaloneBuilder<
                 .addListener(IStageStartedEvent.class, getStageStartedListener())
                 .addListener(IStageCompletedEvent.class, getStageCompletedListener())
                 .addListener(IStageIgnoredEvent.class, getStageIgnoredListener())
-                .addListener(IStageFailedEvent.class, getStageFailureListener())
-                ;
+                .addListener(IStageFailedEvent.class, getStageFailureListener());
+        //TODO this addition is not good, but it will be refactored, once all the builders merged
+        eventPublishers.add(simpleEventPublisher);
+        return new CompositeEventPublisher(eventPublishers);
     }
 
-    protected Pipeline buildPipeline(Collection<PreviewStage> beforeUserStages,
+    protected Pipeline buildPipeline(Collection<TaskFilter> taskFilters,
+                                     Collection<PreviewStage> beforeUserStages,
                                      PreviewPipeline previewPipeline,
                                      Collection<PreviewStage> afterUserStages) {
         return Pipeline.builder()
+                .addFilters(taskFilters)
                 .addPreviewPipeline(previewPipeline)
                 .addBeforeUserStages(beforeUserStages)
                 .addAfterUserStages(afterUserStages)

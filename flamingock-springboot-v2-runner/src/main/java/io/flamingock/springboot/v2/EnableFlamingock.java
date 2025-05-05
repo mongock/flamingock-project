@@ -14,8 +14,21 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2.configurator;
+package io.flamingock.springboot.v2;
 
-public enum SpringRunnerType {
-    InitializingBean, ApplicationRunner
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Import;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@EnableConfigurationProperties
+@Import({SpringbootV2Context.class, SpringbootV2Properties.class})
+public @interface EnableFlamingock {
 }
