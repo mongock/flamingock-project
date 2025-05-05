@@ -16,21 +16,20 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.commons.utils.http.Http;
-import io.flamingock.core.cloud.CloudEngine;
-import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.FrameworkPlugin;
-import io.flamingock.core.configurator.cloud.CloudConfiguration;
-import io.flamingock.core.configurator.cloud.CloudConfigurator;
-import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
-import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
+import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.configurator.local.LocalConfigurator;
+import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
+import io.flamingock.core.configurator.local.LocalSystemModuleManager;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.local.LocalEngine;
+import io.flamingock.core.local.driver.LocalDriver;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.PipelineDescriptor;
 import io.flamingock.core.runner.PipelineRunnerCreator;
@@ -38,81 +37,77 @@ import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.runtime.dependency.PriorityDependencyContext;
-import io.flamingock.core.system.CloudSystemModule;
+import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.task.filter.TaskFilter;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ServiceLoader;
 
-public class StandaloneCloudBuilder
-        extends AbstractStandaloneBuilder<StandaloneCloudBuilder, CloudSystemModule, CloudSystemModuleManager>
-        implements CloudConfigurator<StandaloneCloudBuilder> {
-    private static final Logger logger = LoggerFactory.getLogger(StandaloneCloudBuilder.class);
+public class FlamingockLocalBuilder
+        extends AbstractFlamingockBuilder<FlamingockLocalBuilder, LocalSystemModule, LocalSystemModuleManager>
+        implements LocalConfigurator<FlamingockLocalBuilder> {
 
-    private final CoreConfiguratorDelegate<StandaloneCloudBuilder, CloudSystemModule, CloudSystemModuleManager> coreConfiguratorDelegate;
+    private static final Logger logger = LoggerFactory.getLogger(FlamingockLocalBuilder.class);
+    private final CoreConfiguratorDelegate<FlamingockLocalBuilder, LocalSystemModule, LocalSystemModuleManager> coreConfiguratorDelegate;
 
-    private final StandaloneConfiguratorDelegate<StandaloneCloudBuilder> standaloneConfiguratorDelegate;
+    private final StandaloneConfiguratorDelegate<FlamingockLocalBuilder> standaloneConfiguratorDelegate;
 
-    private final CloudConfiguratorDelegate<StandaloneCloudBuilder> cloudConfiguratorDelegate;
+    private final LocalConfiguratorDelegate<FlamingockLocalBuilder> localConfiguratorDelegate;
 
 
-    protected StandaloneCloudBuilder(CoreConfiguration coreConfiguration,
-                           CloudConfiguration cloudConfiguration,
-                           DependencyInjectableContext dependencyInjectableContext,
-                           CloudSystemModuleManager systemModuleManager) {
+    protected FlamingockLocalBuilder(CoreConfiguration coreConfiguration,
+                                     LocalConfiguration communityConfiguration,
+                                     DependencyInjectableContext dependencyInjectableContext,
+                                     LocalSystemModuleManager systemModuleManager) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this, systemModuleManager);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
-        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, () -> this);
+        this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
 
     }
 
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
-    //////////////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected CoreConfiguratorDelegate<StandaloneCloudBuilder, CloudSystemModule, CloudSystemModuleManager> coreConfiguratorDelegate() {
+    protected CoreConfiguratorDelegate<FlamingockLocalBuilder, LocalSystemModule, LocalSystemModuleManager> coreConfiguratorDelegate() {
         return coreConfiguratorDelegate;
     }
 
     @Override
-    protected StandaloneConfiguratorDelegate<StandaloneCloudBuilder> standaloneConfiguratorDelegate() {
+    protected StandaloneConfiguratorDelegate<FlamingockLocalBuilder> standaloneConfiguratorDelegate() {
         return standaloneConfiguratorDelegate;
     }
 
     @Override
     public Runner build() {
 
+
         coreConfiguratorDelegate.initialize();
-        cloudConfiguratorDelegate.initialize();
+        localConfiguratorDelegate.initialize();
         standaloneConfiguratorDelegate.initialize();
 
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
 
-
-        CloudEngine.Factory engineFactory = CloudEngine.newFactory(
+        LocalEngine engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
                 coreConfiguratorDelegate.getCoreConfiguration(),
-                cloudConfiguratorDelegate.getCloudConfiguration(),
-                getCloudTransactioner().orElse(null),
-                Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE)
+                localConfiguratorDelegate.getLocalConfiguration()
         );
 
-        CloudEngine engine = engineFactory.initializeAndGet();
+        //adds Mongock legacy importer, if the user has required it
+        engine.getMongockLegacyImporterModule().ifPresent(coreConfiguratorDelegate::addSystemModule);
 
-        CloudSystemModuleManager systemModuleManager = coreConfiguratorDelegate.getSystemModuleManager();
-        systemModuleManager
-                .initialize(engine.getEnvironmentId(), engine.getServiceId(), engine.getJwt(), cloudConfiguratorDelegate.getCloudConfiguration().getHost());
+        getSystemModuleManager().initialize();
 
-        systemModuleManager
+        coreConfiguratorDelegate.getSystemModuleManager()
                 .getDependencies()
                 .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
 
@@ -121,7 +116,7 @@ public class StandaloneCloudBuilder
         CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
 
         //Injecting auditWriter
-        addDependency(AuditWriter.class, engine.getAuditWriter());
+        addDependency(AuditWriter.class, engine.getAuditor());
 
 
         List<TaskFilter> taskFilters = new LinkedList<>();
@@ -142,6 +137,9 @@ public class StandaloneCloudBuilder
             taskFilters.addAll(plugin.getTaskFilters());
         }
 
+
+        // Builds a hierarchical dependency context by chaining all plugin-provided contexts,
+        // placing Flamingock's core context at the top.
         DependencyContext mergedContext = dependencyContextsFromPlugins
                 .stream()
                 .filter(Objects::nonNull)
@@ -149,58 +147,56 @@ public class StandaloneCloudBuilder
                 .<DependencyContext>map(accumulated -> new PriorityDependencyContext(dependencyContextFromBuilder, accumulated))
                 .orElse(dependencyContextFromBuilder);
 
-
         Pipeline pipeline = buildPipeline(
                 taskFilters,
-                systemModuleManager.getSortedSystemStagesBefore(),
+                coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
                 coreConfiguration.getPreviewPipeline(),
-                systemModuleManager.getSortedSystemStagesAfter()
+                coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
         );
 
         //injecting the pipeline descriptor to the dependencies
         addDependency(PipelineDescriptor.class, pipeline);
 
-        return PipelineRunnerCreator.createCloud(
+        return PipelineRunnerCreator.createLocal(
                 runnerId,
                 pipeline,
                 engine,
                 coreConfiguration,
                 buildEventPublisher(eventPublishersFromPlugins),
                 mergedContext,
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
-                engineFactory.getCloser()
+                getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////////////
+    //  LOCAL
+
+    /// ////////////////////////////////////////////////////////////////////////////////
+
     @Override
-    public StandaloneCloudBuilder setHost(String host) {
-        return cloudConfiguratorDelegate.setHost(host);
+    public FlamingockLocalBuilder setDriver(LocalDriver<?> connectionDriver) {
+        return localConfiguratorDelegate.setDriver(connectionDriver);
     }
 
     @Override
-    public StandaloneCloudBuilder setService(String service) {
-        return cloudConfiguratorDelegate.setService(service);
+    public LocalDriver<?> getDriver() {
+        return localConfiguratorDelegate.getDriver();
     }
 
     @Override
-    public StandaloneCloudBuilder setEnvironment(String environment) {
-        return cloudConfiguratorDelegate.setEnvironment(environment);
+    public LocalConfigurable getLocalConfiguration() {
+        return localConfiguratorDelegate.getLocalConfiguration();
     }
 
     @Override
-    public StandaloneCloudBuilder setApiToken(String clientSecret) {
-        return cloudConfiguratorDelegate.setApiToken(clientSecret);
+    public FlamingockLocalBuilder disableTransaction() {
+        return localConfiguratorDelegate.disableTransaction();
     }
 
     @Override
-    public StandaloneCloudBuilder setCloudTransactioner(CloudTransactioner cloudTransactioner) {
-        return cloudConfiguratorDelegate.setCloudTransactioner(cloudTransactioner);
-    }
-
-    @Override
-    public Optional<CloudTransactioner> getCloudTransactioner() {
-        return cloudConfiguratorDelegate.getCloudTransactioner();
+    public boolean isTransactionDisabled() {
+        return localConfiguratorDelegate.isTransactionDisabled();
     }
 
 }
