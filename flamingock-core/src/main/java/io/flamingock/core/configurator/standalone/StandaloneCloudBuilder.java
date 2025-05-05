@@ -62,7 +62,7 @@ public class StandaloneCloudBuilder
     private final CloudConfiguratorDelegate<StandaloneCloudBuilder> cloudConfiguratorDelegate;
 
 
-    StandaloneCloudBuilder(CoreConfiguration coreConfiguration,
+    protected StandaloneCloudBuilder(CoreConfiguration coreConfiguration,
                            CloudConfiguration cloudConfiguration,
                            DependencyInjectableContext dependencyInjectableContext,
                            CloudSystemModuleManager systemModuleManager) {
@@ -75,8 +75,7 @@ public class StandaloneCloudBuilder
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
-
-    /// ////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected CoreConfiguratorDelegate<StandaloneCloudBuilder, CloudSystemModule, CloudSystemModuleManager> coreConfiguratorDelegate() {

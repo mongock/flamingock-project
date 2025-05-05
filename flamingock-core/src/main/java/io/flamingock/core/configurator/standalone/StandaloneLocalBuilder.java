@@ -16,12 +16,8 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.configurator.FrameworkPlugin;
-import io.flamingock.core.event.EventPublisher;
-import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.runtime.dependency.PriorityDependencyContext;
-import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.configurator.FrameworkPlugin;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
@@ -31,19 +27,21 @@ import io.flamingock.core.configurator.local.LocalConfigurator;
 import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
 import io.flamingock.core.engine.audit.AuditWriter;
+import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.local.LocalEngine;
 import io.flamingock.core.local.driver.LocalDriver;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.PipelineDescriptor;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
+import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.runtime.dependency.PriorityDependencyContext;
+import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.task.filter.TaskFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -62,9 +60,9 @@ public class StandaloneLocalBuilder
 
 
     protected StandaloneLocalBuilder(CoreConfiguration coreConfiguration,
-                           LocalConfiguration communityConfiguration,
-                           DependencyInjectableContext dependencyInjectableContext,
-                           LocalSystemModuleManager systemModuleManager) {
+                                     LocalConfiguration communityConfiguration,
+                                     DependencyInjectableContext dependencyInjectableContext,
+                                     LocalSystemModuleManager systemModuleManager) {
         this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this, systemModuleManager);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
         this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
@@ -74,7 +72,8 @@ public class StandaloneLocalBuilder
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
-    ///////////////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected CoreConfiguratorDelegate<StandaloneLocalBuilder, LocalSystemModule, LocalSystemModuleManager> coreConfiguratorDelegate() {
@@ -118,7 +117,6 @@ public class StandaloneLocalBuilder
 
         //Injecting auditWriter
         addDependency(AuditWriter.class, engine.getAuditor());
-
 
 
         List<TaskFilter> taskFilters = new LinkedList<>();
@@ -168,11 +166,10 @@ public class StandaloneLocalBuilder
     }
 
 
-
-
     ///////////////////////////////////////////////////////////////////////////////////
     //  LOCAL
-    ///////////////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public StandaloneLocalBuilder setDriver(LocalDriver<?> connectionDriver) {

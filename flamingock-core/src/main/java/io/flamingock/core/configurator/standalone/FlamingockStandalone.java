@@ -46,17 +46,4 @@ public final class FlamingockStandalone {
                 new LocalSystemModuleManager());
     }
 
-    public static StandaloneLocalBuilder localBuilder(CoreConfiguration coreConfiguration,
-                                                      LocalConfiguration localConfiguration,
-                                                      DependencyInjectableContext dependencyInjectableContext,
-                                                      LocalSystemModuleManager systemModuleManager) {
-        return new StandaloneLocalBuilder(coreConfiguration, localConfiguration, dependencyInjectableContext, systemModuleManager);
-    }
-
-    public static StandaloneCloudBuilder cloudBuilder(CoreConfiguration coreConfiguration,
-                                                      CloudConfiguration cloudConfiguration,
-                                                      DependencyInjectableContext dependencyInjectableContext,
-                                                      CloudSystemModuleManager systemModuleManager) {
-        return new StandaloneCloudBuilder(coreConfiguration, cloudConfiguration, dependencyInjectableContext, systemModuleManager);
-    }
 }

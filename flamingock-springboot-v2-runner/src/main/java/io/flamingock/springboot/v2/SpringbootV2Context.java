@@ -17,11 +17,16 @@
 package io.flamingock.springboot.v2;
 
 import io.flamingock.commons.utils.Constants;
+import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
+import io.flamingock.core.configurator.core.CoreConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
-import io.flamingock.core.configurator.standalone.FlamingockStandalone;
+import io.flamingock.core.configurator.standalone.StandaloneCloudBuilder;
+import io.flamingock.core.configurator.standalone.StandaloneLocalBuilder;
 import io.flamingock.core.local.driver.LocalDriver;
 import io.flamingock.core.runner.RunnerBuilder;
+import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.runtime.dependency.SimpleDependencyInjectableContext;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.ApplicationRunner;
@@ -60,8 +65,7 @@ public class SpringbootV2Context {
                                            ApplicationEventPublisher applicationEventPublisher) {
 
         if (connectionDriverOptional.isPresent() && configurationProperties.isCloudConfigurationEmpty()) {
-            return FlamingockStandalone
-                    .localBuilder(
+            return new SpringbootV2LocalBuilder(
                             configurationProperties.getCoreConfiguration(),
                             configurationProperties.getLocalConfiguration(),
                             new SimpleDependencyInjectableContext(),//
@@ -73,8 +77,7 @@ public class SpringbootV2Context {
                     .addDependency(ApplicationEventPublisher.class, applicationEventPublisher);
 
         } else {
-            return FlamingockStandalone
-                    .cloudBuilder(
+            return new SpringbootV2CloudBuilder(
                             configurationProperties.getCoreConfiguration(),
                             configurationProperties.getCloudProperties(),
                             new SimpleDependencyInjectableContext(),
@@ -85,6 +88,24 @@ public class SpringbootV2Context {
                     .addDependency(ApplicationEventPublisher.class, applicationEventPublisher);
         }
 
+    }
+
+
+
+    private static class SpringbootV2LocalBuilder extends StandaloneLocalBuilder {
+        protected SpringbootV2LocalBuilder(CoreConfiguration coreConfiguration,
+                                           LocalConfiguration communityConfiguration,
+                                           DependencyInjectableContext dependencyInjectableContext,
+                                           LocalSystemModuleManager systemModuleManager) {
+            super(coreConfiguration, communityConfiguration, dependencyInjectableContext, systemModuleManager);
+        }
+    }
+
+    private static class SpringbootV2CloudBuilder extends StandaloneCloudBuilder {
+
+        protected SpringbootV2CloudBuilder(CoreConfiguration coreConfiguration, CloudConfiguration cloudConfiguration, DependencyInjectableContext dependencyInjectableContext, CloudSystemModuleManager systemModuleManager) {
+            super(coreConfiguration, cloudConfiguration, dependencyInjectableContext, systemModuleManager);
+        }
     }
 
 }
