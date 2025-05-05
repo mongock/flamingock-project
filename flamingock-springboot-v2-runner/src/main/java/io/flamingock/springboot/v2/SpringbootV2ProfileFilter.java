@@ -21,7 +21,6 @@ import io.flamingock.core.task.loaded.AbstractLoadedTask;
 import io.flamingock.core.task.loaded.AbstractReflectionLoadedTask;
 import io.flamingock.core.task.loaded.CodeLoadedChangeUnit;
 import io.flamingock.core.task.loaded.TemplateLoadedChangeUnit;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
@@ -74,7 +73,7 @@ public class SpringbootV2ProfileFilter implements TaskFilter {
 
     private boolean filterCodeChangeUnit(CodeLoadedChangeUnit reflectionDescriptor) {
         Class<?> sourceClass = reflectionDescriptor.getSourceClass();
-        if (!sourceClass.isAnnotationPresent(Primary.class)) {
+        if (!sourceClass.isAnnotationPresent(Profile.class)) {
             return true; // no-profiled changeset always matches
         }
         List<String> taskProfile = Arrays.asList(sourceClass.getAnnotation(Profile.class).value());
