@@ -16,6 +16,10 @@
 
 package io.flamingock.core.configurator.standalone;
 
+import io.flamingock.core.configurator.FrameworkPlugin;
+import io.flamingock.core.event.EventPublisher;
+import io.flamingock.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.runtime.dependency.PriorityDependencyContext;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfigurable;
@@ -34,11 +38,16 @@ import io.flamingock.core.pipeline.PipelineDescriptor;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.task.filter.TaskFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.ServiceLoader;
 
 public class StandaloneLocalBuilder
         extends AbstractStandaloneBuilder<StandaloneLocalBuilder, LocalSystemModule, LocalSystemModuleManager>
@@ -52,7 +61,7 @@ public class StandaloneLocalBuilder
     private final LocalConfiguratorDelegate<StandaloneLocalBuilder> localConfiguratorDelegate;
 
 
-    StandaloneLocalBuilder(CoreConfiguration coreConfiguration,
+    protected StandaloneLocalBuilder(CoreConfiguration coreConfiguration,
                            LocalConfiguration communityConfiguration,
                            DependencyInjectableContext dependencyInjectableContext,
                            LocalSystemModuleManager systemModuleManager) {
@@ -107,8 +116,38 @@ public class StandaloneLocalBuilder
 
         CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
 
+        //Injecting auditWriter
+        addDependency(AuditWriter.class, engine.getAuditor());
+
+
+
+        List<TaskFilter> taskFilters = new LinkedList<>();
+        List<EventPublisher> eventPublishersFromPlugins = new LinkedList<>();
+        DependencyContext dependencyContextFromBuilder = getDependencyContext();
+
+        List<DependencyContext> dependencyContextsFromPlugins = new LinkedList<>();
+        for (FrameworkPlugin plugin : ServiceLoader.load(FrameworkPlugin.class)) {
+            plugin.initialize(dependencyContextFromBuilder);
+
+            if (plugin.getEventPublisher().isPresent()) {
+                eventPublishersFromPlugins.add(plugin.getEventPublisher().get());
+            }
+
+            if (plugin.getDependencyContext().isPresent()) {
+                dependencyContextsFromPlugins.add(plugin.getDependencyContext().get());
+            }
+            taskFilters.addAll(plugin.getTaskFilters());
+        }
+
+        DependencyContext mergedContext = dependencyContextsFromPlugins
+                .stream()
+                .filter(Objects::nonNull)
+                .reduce((previous, current) -> new PriorityDependencyContext(current, previous))
+                .<DependencyContext>map(accumulated -> new PriorityDependencyContext(dependencyContextFromBuilder, accumulated))
+                .orElse(dependencyContextFromBuilder);
+
         Pipeline pipeline = buildPipeline(
-                new ArrayDeque<>(),//WIll be removed
+                taskFilters,
                 coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesBefore(),
                 coreConfiguration.getPreviewPipeline(),
                 coreConfiguratorDelegate.getSystemModuleManager().getSortedSystemStagesAfter()
@@ -116,16 +155,14 @@ public class StandaloneLocalBuilder
 
         //injecting the pipeline descriptor to the dependencies
         addDependency(PipelineDescriptor.class, pipeline);
-        //Injecting auditWriter
-        addDependency(AuditWriter.class, engine.getAuditor());
 
         return PipelineRunnerCreator.createLocal(
                 runnerId,
                 pipeline,
                 engine,
                 coreConfiguration,
-                buildEventPublisher(new ArrayList<>()),
-                getDependencyContext(),
+                buildEventPublisher(eventPublishersFromPlugins),
+                mergedContext,
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock()
         );
     }

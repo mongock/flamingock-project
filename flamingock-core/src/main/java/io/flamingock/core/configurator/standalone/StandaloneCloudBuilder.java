@@ -21,7 +21,7 @@ import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.cloud.CloudEngine;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
-import io.flamingock.core.configurator.BuilderPlugin;
+import io.flamingock.core.configurator.FrameworkPlugin;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
@@ -130,7 +130,7 @@ public class StandaloneCloudBuilder
         DependencyContext dependencyContextFromBuilder = getDependencyContext();
 
         List<DependencyContext> dependencyContextsFromPlugins = new LinkedList<>();
-        for (BuilderPlugin plugin : ServiceLoader.load(BuilderPlugin.class)) {
+        for (FrameworkPlugin plugin : ServiceLoader.load(FrameworkPlugin.class)) {
             plugin.initialize(dependencyContextFromBuilder);
 
             if (plugin.getEventPublisher().isPresent()) {
