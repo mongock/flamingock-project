@@ -21,9 +21,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 
-public final class SpringUtil {
+public final class SpringbootUtil {
 
-    private SpringUtil() {
+    private SpringbootUtil() {
     }
 
     public static InitializingBean toInitializingBean(Runner runner) {

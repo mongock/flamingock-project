@@ -46,7 +46,7 @@ public class SpringbootV2Context {
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:ApplicationRunner}'.toLowerCase().equals('applicationrunner')")
     public ApplicationRunner applicationRunner(RunnerBuilder runnerBuilder) {
-        return SpringUtil.toApplicationRunner(runnerBuilder.build());
+        return SpringbootUtil.toApplicationRunner(runnerBuilder.build());
     }
 
 
@@ -54,7 +54,7 @@ public class SpringbootV2Context {
     @Profile(Constants.NON_CLI_PROFILE)
     @ConditionalOnExpression("'${flamingock.runner-type:null}'.toLowerCase().equals('initializingbean')")
     public InitializingBean initializingBeanRunner(RunnerBuilder runnerBuilder) {
-        return SpringUtil.toInitializingBean(runnerBuilder.build());
+        return SpringbootUtil.toInitializingBean(runnerBuilder.build());
     }
 
     @Bean("flamingock-builder")

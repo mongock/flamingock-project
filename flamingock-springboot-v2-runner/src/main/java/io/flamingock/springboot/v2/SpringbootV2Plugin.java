@@ -84,7 +84,7 @@ public class SpringbootV2Plugin implements FrameworkPlugin {
     @Override
     public List<TaskFilter> getTaskFilters() {
         if(applicationContext != null) {
-            String[] activeProfiles = SpringUtil.getActiveProfiles(applicationContext);
+            String[] activeProfiles = SpringbootUtil.getActiveProfiles(applicationContext);
             return Collections.singletonList(new SpringbootV2ProfileFilter(activeProfiles));
         } else {
             return Collections.emptyList();
