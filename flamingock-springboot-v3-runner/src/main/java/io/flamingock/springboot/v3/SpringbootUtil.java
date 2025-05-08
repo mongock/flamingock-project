@@ -16,11 +16,22 @@
 
 package io.flamingock.springboot.v3;
 
+import io.flamingock.core.runner.Runner;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 
-public final class SpringUtil {
+public final class SpringbootUtil {
 
-    private SpringUtil() {
+    private SpringbootUtil() {
+    }
+
+    public static InitializingBean toInitializingBean(Runner runner) {
+        return runner::run;
+    }
+
+    public static ApplicationRunner toApplicationRunner(Runner runner) {
+        return args -> runner.run();
     }
 
     public static String[] getActiveProfiles(ApplicationContext springContext) {

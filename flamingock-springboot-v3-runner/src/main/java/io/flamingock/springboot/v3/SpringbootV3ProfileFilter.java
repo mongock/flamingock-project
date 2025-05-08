@@ -27,11 +27,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SpringProfileFilter implements TaskFilter {
+public class SpringbootV3ProfileFilter implements TaskFilter {
 
     private final List<String> activeProfiles;
 
-    public SpringProfileFilter(String... activeProfiles) {
+    public SpringbootV3ProfileFilter(String... activeProfiles) {
         this.activeProfiles = activeProfiles.length > 0 ? Arrays.asList(activeProfiles) : Collections.emptyList();
     }
 

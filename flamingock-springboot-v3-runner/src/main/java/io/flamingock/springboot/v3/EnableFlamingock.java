@@ -16,20 +16,19 @@
 
 package io.flamingock.springboot.v3;
 
-import io.flamingock.core.runner.Runner;
-import io.flamingock.core.runner.RunnerBuilder;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Import;
 
-public interface SpringRunnerBuilder extends RunnerBuilder {
-    default ApplicationRunner buildApplicationRunner() {
-        Runner runner = build();
-        return args -> runner.execute();
-    }
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    default InitializingBean buildInitializingBeanRunner() {
-        Runner runner = build();
-        return runner::execute;
-    }
-
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@EnableConfigurationProperties
+@Import({SpringbootV3Context.class, SpringbootV3Properties.class})
+public @interface EnableFlamingock {
 }
