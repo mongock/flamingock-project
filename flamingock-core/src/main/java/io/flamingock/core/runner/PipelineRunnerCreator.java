@@ -24,7 +24,6 @@ import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.local.LocalEngine;
-import io.flamingock.core.event.SimpleEventPublisher;
 import io.flamingock.core.pipeline.Pipeline;
 import io.flamingock.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.core.pipeline.execution.StageExecutor;
@@ -45,7 +44,7 @@ public final class PipelineRunnerCreator {
                                      boolean isThrowExceptionIfCannotObtainLock) {
         return create(runnerId,
                 pipeline,
-                connectionEngine.getAuditor(),
+                connectionEngine.getAuditWriter(),
                 connectionEngine.getTransactionWrapper().orElse(null),
                 connectionEngine.getExecutionPlanner(),
                 coreConfiguration,

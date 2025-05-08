@@ -116,7 +116,7 @@ public class FlamingockLocalBuilder
         CoreConfigurable coreConfiguration = coreConfiguratorDelegate().getCoreConfiguration();
 
         //Injecting auditWriter
-        addDependency(AuditWriter.class, engine.getAuditor());
+        addDependency(AuditWriter.class, engine.getAuditWriter());
 
 
         List<TaskFilter> taskFilters = new LinkedList<>();
