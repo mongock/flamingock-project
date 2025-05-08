@@ -64,6 +64,7 @@ public class FlamingockLocalBuilder
 
     @Override
     protected ConnectionEngine getConnectionEngine(RunnerId runnerId) {
+        //TODO get the driver from serviceLoader
         engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
                 coreConfiguratorDelegate.getCoreConfiguration(),
@@ -79,11 +80,13 @@ public class FlamingockLocalBuilder
     }
 
     @Override
+    @Deprecated
     public FlamingockLocalBuilder setDriver(LocalDriver<?> connectionDriver) {
         return localConfiguratorDelegate.setDriver(connectionDriver);
     }
 
     @Override
+    @Deprecated
     public LocalDriver<?> getDriver() {
         return localConfiguratorDelegate.getDriver();
     }

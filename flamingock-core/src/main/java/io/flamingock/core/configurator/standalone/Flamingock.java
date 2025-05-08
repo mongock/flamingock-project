@@ -28,6 +28,19 @@ public final class Flamingock {
     private Flamingock() {
     }
 
+    public static AbstractFlamingockBuilder<?, ?, ?> builder() {
+        if(isCommunityEdition()) {
+            return local();
+        } else {
+            return cloud();
+        }
+    }
+
+    private static boolean isCommunityEdition() {
+        return false;
+    }
+
+
     public static FlamingockCloudBuilder cloud() {
         return new FlamingockCloudBuilder(
                 new CoreConfiguration(),
