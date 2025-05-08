@@ -17,7 +17,6 @@
 package io.flamingock.core.configurator.core;
 
 
-import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.system.SystemModule;
@@ -172,11 +171,6 @@ public class CoreConfiguratorDelegate<
 
 
     @Override
-    public SYSTEM_MODULE_MANAGER getSystemModuleManager() {
-        return systemModuleManager;
-    }
-
-    @Override
     public HOLDER withImporter(CoreConfiguration.ImporterConfiguration mongockImporterConfiguration) {
         configuration.setLegacyMongockChangelogSource(mongockImporterConfiguration.getLegacySourceName());
         return holderSupplier.get();
@@ -187,8 +181,16 @@ public class CoreConfiguratorDelegate<
         return configuration.getMongockImporterConfiguration();
     }
 
-
+    //TODO remove this: SystemModules will retrieved with SystemLoader
     @Override
+    @Deprecated
+    public SYSTEM_MODULE_MANAGER getSystemModuleManager() {
+        return systemModuleManager;
+    }
+
+    //TODO remove this: SystemModules will retrieved with SystemLoader
+    @Override
+    @Deprecated
     public HOLDER addSystemModule(SYSTEM_MODULE systemModule) {
         getSystemModuleManager().add(systemModule);
         return holderSupplier.get();
