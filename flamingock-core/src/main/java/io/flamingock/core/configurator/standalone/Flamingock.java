@@ -16,10 +16,10 @@
 
 package io.flamingock.core.configurator.standalone;
 
-import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
-import io.flamingock.core.configurator.local.LocalConfiguration;
-import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
+import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
+import io.flamingock.core.configurator.core.CoreConfiguration;
+import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
 import io.flamingock.core.runtime.dependency.SimpleDependencyInjectableContext;
 
@@ -29,11 +29,7 @@ public final class Flamingock {
     }
 
     public static AbstractFlamingockBuilder<?, ?, ?> builder() {
-        if(isCommunityEdition()) {
-            return local();
-        } else {
-            return cloud();
-        }
+        return isCommunityEdition() ? local() : cloud();
     }
 
     private static boolean isCommunityEdition() {
