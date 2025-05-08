@@ -21,6 +21,7 @@ import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
+import io.flamingock.core.runner.RunnerBuilder;
 import io.flamingock.core.runtime.dependency.SimpleDependencyInjectableContext;
 
 public final class Flamingock {
@@ -28,9 +29,6 @@ public final class Flamingock {
     private Flamingock() {
     }
 
-    public static AbstractFlamingockBuilder<?, ?, ?> builder() {
-        return isCommunityEdition() ? local() : cloud();
-    }
 
     public static FlamingockCloudBuilder cloud() {
         return new FlamingockCloudBuilder(
