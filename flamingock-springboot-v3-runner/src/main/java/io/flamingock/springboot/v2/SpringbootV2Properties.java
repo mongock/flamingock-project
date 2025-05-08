@@ -14,37 +14,30 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v3.context;
+package io.flamingock.springboot.v2;
 
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
-import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.core.preview.PreviewPipeline;
-import io.flamingock.springboot.v3.configurator.SpringRunnerType;
-import io.flamingock.springboot.v3.configurator.SpringbootConfigurable;
-import io.flamingock.springboot.v3.configurator.SpringbootConfiguration;
+import io.flamingock.core.processor.util.Deserializer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Map;
 
 @ConfigurationProperties("flamingock")
-public class FlamingockConfigurationProperties
+public class SpringbootV2Properties
         implements
         CoreConfigurable,
         LocalConfigurable,
-        CloudConfigurable,
-        SpringbootConfigurable {
+        CloudConfigurable {
     private SpringRunnerType runnerType = SpringRunnerType.ApplicationRunner;
 
     private final CoreConfiguration coreConfiguration = new CoreConfiguration();
-
-    private final SpringbootConfiguration springbootConfiguration = new SpringbootConfiguration();
 
     private final CloudConfiguration cloudConfiguration = new CloudConfiguration();
 
@@ -54,15 +47,12 @@ public class FlamingockConfigurationProperties
         return coreConfiguration;
     }
 
-    public SpringbootConfiguration getSpringbootConfiguration() {
-        return springbootConfiguration;
-    }
 
     public LocalConfiguration getLocalConfiguration() {
         return localConfiguration;
     }
 
-    public CloudConfiguration getCloudConfiguration() {
+    public CloudConfiguration getCloudProperties() {
         return cloudConfiguration;
     }
 
@@ -75,7 +65,6 @@ public class FlamingockConfigurationProperties
     public void setLockAcquiredForMillis(long lockAcquiredForMillis) {
         coreConfiguration.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
-
 
     @Override
     public void setLockQuitTryingAfterMillis(long lockQuitTryingAfterMillis) {
@@ -137,6 +126,7 @@ public class FlamingockConfigurationProperties
     public void setTransactionStrategy(TransactionStrategy transactionStrategy) {
         coreConfiguration.setTransactionStrategy(transactionStrategy);
     }
+
 
     @Override
     public long getLockAcquiredForMillis() {
@@ -203,13 +193,10 @@ public class FlamingockConfigurationProperties
         return coreConfiguration.getLegacyMongockChangelogSource();
     }
 
-
-    @Override
     public SpringRunnerType getRunnerType() {
         return runnerType;
     }
 
-    @Override
     public void setRunnerType(SpringRunnerType runnerType) {
         this.runnerType = runnerType;
     }

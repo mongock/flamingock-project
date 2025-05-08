@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v3.configurator;
+package io.flamingock.springboot.v2;
 
 public enum SpringRunnerType {
     InitializingBean, ApplicationRunner
