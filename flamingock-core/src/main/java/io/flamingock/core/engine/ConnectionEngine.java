@@ -29,4 +29,9 @@ public interface ConnectionEngine {
 
     Optional<? extends TransactionWrapper> getTransactionWrapper();
 
+    default Runnable getCloser() {
+        return () -> {
+        };
+    }
+
 }

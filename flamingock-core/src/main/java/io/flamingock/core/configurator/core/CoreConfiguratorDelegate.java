@@ -18,7 +18,6 @@ package io.flamingock.core.configurator.core;
 
 
 import io.flamingock.core.api.template.TemplateFactory;
-import io.flamingock.core.configurator.ConfigurationDelegate;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.system.SystemModule;
@@ -30,8 +29,7 @@ public class CoreConfiguratorDelegate<
         HOLDER,
         SYSTEM_MODULE extends SystemModule,
         SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>>
-        implements CoreConfigurator<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER>,
-        ConfigurationDelegate {
+        implements CoreConfigurator<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER> {
 
     private final Supplier<HOLDER> holderSupplier;
     private final CoreConfiguration configuration;
@@ -45,9 +43,6 @@ public class CoreConfiguratorDelegate<
         this.systemModuleManager = systemModuleManager;
     }
 
-    public void initialize() {
-        TemplateFactory.loadTemplates();
-    }
 
     @Override
     public CoreConfigurable getCoreConfiguration() {

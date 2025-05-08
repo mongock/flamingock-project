@@ -74,7 +74,8 @@ public final class CloudEngine implements ConnectionEngine {
                         String jwt,
                         AuditWriter auditWriter,
                         ExecutionPlanner executionPlanner,
-                        CloudTransactioner cloudTransactioner) {
+                        CloudTransactioner cloudTransactioner,
+                        Runnable closer) {
         this.environmentId =environmentId;
         this.serviceId = serviceId;
         this.jwt = jwt;
@@ -163,7 +164,8 @@ public final class CloudEngine implements ConnectionEngine {
                     authResponse.getJwt(),
                     auditWriter,
                     getExecutionPlanner(authManager, environmentId, serviceId),
-                    transactioner
+                    transactioner,
+                    getCloser()
             );
         }
 
@@ -204,8 +206,8 @@ public final class CloudEngine implements ConnectionEngine {
             );
         }
 
-
-        public Runnable getCloser() {
+        @NotNull
+        private Runnable getCloser() {
             return () -> {
                 if (requestBuilderFactory != null) {
                     try {
