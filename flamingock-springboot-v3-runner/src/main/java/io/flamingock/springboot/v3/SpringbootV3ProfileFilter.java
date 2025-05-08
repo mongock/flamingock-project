@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2;
+package io.flamingock.springboot.v3;
 
 import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.core.task.loaded.AbstractLoadedTask;
@@ -27,11 +27,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SpringbootV2ProfileFilter implements TaskFilter {
+public class SpringbootV3ProfileFilter implements TaskFilter {
 
     private final List<String> activeProfiles;
 
-    public SpringbootV2ProfileFilter(String... activeProfiles) {
+    public SpringbootV3ProfileFilter(String... activeProfiles) {
         this.activeProfiles = activeProfiles.length > 0 ? Arrays.asList(activeProfiles) : Collections.emptyList();
     }
 

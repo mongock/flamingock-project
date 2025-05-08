@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2;
+package io.flamingock.springboot.v3;
 
 import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.cloud.CloudConfigurable;
@@ -30,7 +30,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Map;
 
 @ConfigurationProperties("flamingock")
-public class SpringbootV2Properties
+public class SpringbootV3Properties
         implements
         CoreConfigurable,
         LocalConfigurable,

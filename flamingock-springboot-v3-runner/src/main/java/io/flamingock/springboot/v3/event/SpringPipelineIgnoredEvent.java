@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2.event;
+package io.flamingock.springboot.v3.event;
 
 
 import io.flamingock.core.event.model.IPipelineIgnoredEvent;
-import io.flamingock.core.event.model.IStageIgnoredEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringStageIgnoredEvent extends ApplicationEvent implements IPipelineIgnoredEvent {
+public class SpringPipelineIgnoredEvent extends ApplicationEvent implements IPipelineIgnoredEvent {
 
-    private final IStageIgnoredEvent event;
+    private final IPipelineIgnoredEvent event;
 
     /**
      * Create a new {@code ApplicationEvent}.
@@ -31,7 +30,7 @@ public class SpringStageIgnoredEvent extends ApplicationEvent implements IPipeli
      * @param source the object on which the event initially occurred or with
      *               which the event is associated (never {@code null})
      */
-    public SpringStageIgnoredEvent(Object source, IStageIgnoredEvent event) {
+    public SpringPipelineIgnoredEvent(Object source, IPipelineIgnoredEvent event) {
         super(source);
         this.event = event;
     }

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2.event;
+package io.flamingock.springboot.v3.event;
 
 import io.flamingock.core.event.model.IPipelineFailedEvent;
+import io.flamingock.core.event.model.IStageFailedEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringPipelineFailedEvent extends ApplicationEvent implements IPipelineFailedEvent {
-    private final IPipelineFailedEvent event;
+public class SpringStageFailedEvent extends ApplicationEvent implements IPipelineFailedEvent {
+    private final IStageFailedEvent event;
 
     /**
      * Create a new {@code ApplicationEvent}.
@@ -28,7 +29,7 @@ public class SpringPipelineFailedEvent extends ApplicationEvent implements IPipe
      * @param source the object on which the event initially occurred or with
      *               which the event is associated (never {@code null})
      */
-    public SpringPipelineFailedEvent(Object source, IPipelineFailedEvent event) {
+    public SpringStageFailedEvent(Object source, IStageFailedEvent event) {
         super(source);
         this.event = event;
     }

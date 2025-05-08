@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2;
+package io.flamingock.springboot.v3;
 
 import io.flamingock.core.runner.Runner;
 import org.springframework.beans.factory.InitializingBean;

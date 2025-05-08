@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2;
+package io.flamingock.springboot.v3;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
@@ -29,6 +29,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @EnableConfigurationProperties
-@Import({SpringbootV2Context.class, SpringbootV2Properties.class})
+@Import({SpringbootV3Context.class, SpringbootV3Properties.class})
 public @interface EnableFlamingock {
 }

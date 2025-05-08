@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package io.flamingock.springboot.v2.event;
+package io.flamingock.springboot.v3.event;
 
 import io.flamingock.core.event.model.IPipelineStartedEvent;
-import io.flamingock.core.event.model.IStageStartedEvent;
 import org.springframework.context.ApplicationEvent;
 
-public class SpringStageStartedEvent extends ApplicationEvent implements IPipelineStartedEvent {
+public class SpringPipelineStartedEvent extends ApplicationEvent implements IPipelineStartedEvent {
 
 
-  private final IStageStartedEvent event;
+  private final IPipelineStartedEvent event;
 
   /**
    * Create a new {@code ApplicationEvent}.
@@ -31,7 +30,7 @@ public class SpringStageStartedEvent extends ApplicationEvent implements IPipeli
    * @param source the object on which the event initially occurred or with
    *               which the event is associated (never {@code null})
    */
-  public SpringStageStartedEvent(Object source, IStageStartedEvent event) {
+  public SpringPipelineStartedEvent(Object source, IPipelineStartedEvent event) {
     super(source);
     this.event = event;
   }
