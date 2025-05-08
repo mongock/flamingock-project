@@ -32,11 +32,6 @@ public final class Flamingock {
         return isCommunityEdition() ? local() : cloud();
     }
 
-    private static boolean isCommunityEdition() {
-        return false;
-    }
-
-
     public static FlamingockCloudBuilder cloud() {
         return new FlamingockCloudBuilder(
                 new CoreConfiguration(),
@@ -51,6 +46,10 @@ public final class Flamingock {
                 new LocalConfiguration(),
                 new SimpleDependencyInjectableContext(),
                 new LocalSystemModuleManager());
+    }
+
+    private static boolean isCommunityEdition() {
+        return false;
     }
 
 }
