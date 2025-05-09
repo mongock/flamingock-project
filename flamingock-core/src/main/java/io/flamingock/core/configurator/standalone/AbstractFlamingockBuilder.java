@@ -81,8 +81,6 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     private Consumer<IStageIgnoredEvent> stageIgnoredListener;
     private Consumer<IStageFailedEvent> stageFailedListener;
 
-    private final Supplier<HOLDER> holderSupplier;
-
 
     ///////////////////////////////////////////////////////////////////////////////////
     //  BUILD
@@ -225,67 +223,67 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     @Override
     public HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis) {
         coreConfiguration.setLockAcquiredForMillis(lockAcquiredForMillis);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
         coreConfiguration.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
         coreConfiguration.setLockTryFrequencyMillis(lockTryFrequencyMillis);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
         coreConfiguration.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setEnabled(boolean enabled) {
         coreConfiguration.setEnabled(enabled);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setStartSystemVersion(String startSystemVersion) {
         coreConfiguration.setStartSystemVersion(startSystemVersion);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setEndSystemVersion(String endSystemVersion) {
         coreConfiguration.setEndSystemVersion(endSystemVersion);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setServiceIdentifier(String serviceIdentifier) {
         coreConfiguration.setServiceIdentifier(serviceIdentifier);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setMetadata(Map<String, Object> metadata) {
         coreConfiguration.setMetadata(metadata);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setDefaultAuthor(String publicMigrationAuthor) {
         coreConfiguration.setDefaultAuthor(publicMigrationAuthor);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy) {
         coreConfiguration.setTransactionStrategy(transactionStrategy);
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
@@ -347,7 +345,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     @Override
     public HOLDER withImporter(CoreConfiguration.ImporterConfiguration mongockImporterConfiguration) {
         coreConfiguration.setLegacyMongockChangelogSource(mongockImporterConfiguration.getLegacySourceName());
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
@@ -364,7 +362,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     @Override
     public HOLDER addDependency(String name, Class<?> type, Object instance) {
         dependencyContext.addDependency(new Dependency(name, type, instance));
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
@@ -385,49 +383,49 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     @Override
     public HOLDER setPipelineStartedListener(Consumer<IPipelineStartedEvent> listener) {
         this.pipelineStartedListener = listener;
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setPipelineCompletedListener(Consumer<IPipelineCompletedEvent> listener) {
         this.pipelineCompletedListener = listener;
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setPipelineIgnoredListener(Consumer<IPipelineIgnoredEvent> listener) {
         this.pipelineIgnoredListener = listener;
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setPipelineFailedListener(Consumer<IPipelineFailedEvent> listener) {
         this.pipelineFailedListener = listener;
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setStageStartedListener(Consumer<IStageStartedEvent> listener) {
         this.stageStartedListener = listener;
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setStageCompletedListener(Consumer<IStageCompletedEvent> listener) {
         this.stageCompletedListener = listener;
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setStageIgnoredListener(Consumer<IStageIgnoredEvent> listener) {
         this.stageIgnoredListener = listener;
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
     public HOLDER setStageFailedListener(Consumer<IStageFailedEvent> listener) {
         this.stageFailedListener = listener;
-        return holderSupplier.get();
+        return getSelf();
     }
 
     @Override
