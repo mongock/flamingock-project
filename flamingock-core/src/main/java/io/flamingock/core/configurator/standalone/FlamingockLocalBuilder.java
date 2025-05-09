@@ -18,10 +18,8 @@ package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.configurator.local.CommunityConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
-import io.flamingock.core.configurator.local.LocalConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.local.LocalEngine;
@@ -34,16 +32,18 @@ public class FlamingockLocalBuilder
 
     private final LocalSystemModuleManager systemModuleManager;
 
-    private final LocalConfiguratorDelegate<FlamingockLocalBuilder> localConfiguratorDelegate;
+    private final CommunityConfiguration communityConfiguration;
+
+    private LocalDriver<?> connectionDriver;
 
     private LocalEngine engine;
 
     protected FlamingockLocalBuilder(CoreConfiguration coreConfiguration,
-                                     LocalConfiguration communityConfiguration,
+                                     CommunityConfiguration communityConfiguration,
                                      DependencyInjectableContext dependencyInjectableContext,
                                      LocalSystemModuleManager systemModuleManager) {
         super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
-        this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
+        this.communityConfiguration = communityConfiguration;
         this.systemModuleManager = systemModuleManager;
     }
 
@@ -55,10 +55,10 @@ public class FlamingockLocalBuilder
     @Override
     protected ConnectionEngine getConnectionEngine(RunnerId runnerId) {
         //TODO get the driver from serviceLoader
-        engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
+        engine = connectionDriver.initializeAndGetEngine(
                 runnerId,
                 coreConfiguration,
-                localConfiguratorDelegate.getLocalConfiguration()
+                communityConfiguration
         );
         return engine;
     }
@@ -73,28 +73,23 @@ public class FlamingockLocalBuilder
     @Override
     @Deprecated
     public FlamingockLocalBuilder setDriver(LocalDriver<?> connectionDriver) {
-        return localConfiguratorDelegate.setDriver(connectionDriver);
+        this.connectionDriver = connectionDriver;
+        return this;
     }
 
     @Override
-    @Deprecated
     public LocalDriver<?> getDriver() {
-        return localConfiguratorDelegate.getDriver();
-    }
-
-    @Override
-    public LocalConfigurable getLocalConfiguration() {
-        return localConfiguratorDelegate.getLocalConfiguration();
+        return connectionDriver;
     }
 
     @Override
     public FlamingockLocalBuilder disableTransaction() {
-        return localConfiguratorDelegate.disableTransaction();
+        communityConfiguration.setTransactionDisabled(true);
+        return this;
     }
 
     @Override
     public boolean isTransactionDisabled() {
-        return localConfiguratorDelegate.isTransactionDisabled();
+        return communityConfiguration.isTransactionDisabled();
     }
-
 }

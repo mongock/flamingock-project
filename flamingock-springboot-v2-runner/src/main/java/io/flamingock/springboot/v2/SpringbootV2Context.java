@@ -20,7 +20,7 @@ import io.flamingock.commons.utils.Constants;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.local.LocalConfiguration;
+import io.flamingock.core.configurator.local.CommunityConfiguration;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
 import io.flamingock.core.configurator.standalone.FlamingockCloudBuilder;
 import io.flamingock.core.configurator.standalone.FlamingockLocalBuilder;
@@ -95,7 +95,7 @@ public class SpringbootV2Context {
      */
     private static class SpringbootV2LocalBuilder extends FlamingockLocalBuilder {
         protected SpringbootV2LocalBuilder(CoreConfiguration coreConfiguration,
-                                           LocalConfiguration communityConfiguration,
+                                           CommunityConfiguration communityConfiguration,
                                            DependencyInjectableContext dependencyInjectableContext,
                                            LocalSystemModuleManager systemModuleManager) {
             super(coreConfiguration, communityConfiguration, dependencyInjectableContext, systemModuleManager);

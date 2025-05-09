@@ -69,8 +69,6 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     private final SystemModuleManager<?> systemModuleManager;
 
-
-
     protected final CoreConfiguration coreConfiguration;
 
     private final DependencyInjectableContext dependencyContext;
