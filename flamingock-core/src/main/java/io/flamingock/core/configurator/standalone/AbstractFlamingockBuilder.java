@@ -95,7 +95,6 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         this.systemModuleManager = systemModuleManager;
         this.dependencyContext = dependencyContext;
         this.coreConfiguration = coreConfiguration;
-        holderSupplier = this::getSelf;
     }
 
     protected abstract ConnectionEngine getConnectionEngine(RunnerId runnerId);
