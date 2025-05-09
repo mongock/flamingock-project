@@ -42,7 +42,9 @@ import io.flamingock.core.pipeline.PipelineDescriptor;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerBuilder;
+import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.runtime.dependency.PriorityDependencyContext;
 import io.flamingock.core.task.filter.TaskFilter;
 import org.jetbrains.annotations.NotNull;
@@ -67,10 +69,19 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     private final SystemModuleManager<?> systemModuleManager;
 
-    protected StandaloneConfigurator<HOLDER> standaloneConfiguratorDelegate;
 
 
     protected final CoreConfiguration coreConfiguration;
+
+    private final DependencyInjectableContext dependencyContext;
+    private Consumer<IPipelineStartedEvent> pipelineStartedListener;
+    private Consumer<IPipelineCompletedEvent> pipelineCompletedListener;
+    private Consumer<IPipelineIgnoredEvent> pipelineIgnoredListener;
+    private Consumer<IPipelineFailedEvent> pipelineFailedListener;
+    private Consumer<IStageStartedEvent> stageStartedListener;
+    private Consumer<IStageCompletedEvent> stageCompletedListener;
+    private Consumer<IStageIgnoredEvent> stageIgnoredListener;
+    private Consumer<IStageFailedEvent> stageFailedListener;
 
     private final Supplier<HOLDER> holderSupplier;
 
@@ -80,9 +91,13 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     /// ////////////////////////////////////////////////////////////////////////////////
 
-    protected AbstractFlamingockBuilder(SystemModuleManager<?> systemModuleManager,
-                                        CoreConfiguration coreConfiguration) {
+    protected AbstractFlamingockBuilder(
+            CoreConfiguration coreConfiguration,
+            DependencyInjectableContext dependencyContext,
+            SystemModuleManager<?> systemModuleManager
+    ) {
         this.systemModuleManager = systemModuleManager;
+        this.dependencyContext = dependencyContext;
         this.coreConfiguration = coreConfiguration;
         holderSupplier = this::getSelf;
     }
@@ -154,13 +169,13 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
                 .stream()
                 .filter(Objects::nonNull)
                 .reduce((previous, current) -> new PriorityDependencyContext(current, previous))
-                .<DependencyContext>map(accumulated -> new PriorityDependencyContext(standaloneConfiguratorDelegate.getDependencyContext(), accumulated))
-                .orElse(standaloneConfiguratorDelegate.getDependencyContext());
+                .<DependencyContext>map(accumulated -> new PriorityDependencyContext(dependencyContext, accumulated))
+                .orElse(dependencyContext);
     }
 
     private void initializeFrameworkPlugins(List<FrameworkPlugin> frameworkPlugins) {
         frameworkPlugins
-                .forEach(plugin -> plugin.initialize(standaloneConfiguratorDelegate.getDependencyContext()));
+                .forEach(plugin -> plugin.initialize(dependencyContext));
 
     }
 
@@ -347,109 +362,113 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     /// ////////////////////////////////////////////////////////////////////////////////
 
+
+    @Override
+    public HOLDER addDependency(String name, Class<?> type, Object instance) {
+        dependencyContext.addDependency(new Dependency(name, type, instance));
+        return holderSupplier.get();
+    }
+
     @Override
     public HOLDER addDependency(Object instance) {
-        return standaloneConfiguratorDelegate.addDependency(instance);
+        return addDependency(Dependency.DEFAULT_NAME, instance.getClass(), instance);
     }
 
     @Override
     public HOLDER addDependency(String name, Object instance) {
-        return standaloneConfiguratorDelegate.addDependency(name, instance);
+        return addDependency(name, instance.getClass(), instance);
     }
 
     @Override
     public HOLDER addDependency(Class<?> type, Object instance) {
-        return standaloneConfiguratorDelegate.addDependency(type, instance);
-    }
-
-    @Override
-    public DependencyContext getDependencyContext() {
-        return standaloneConfiguratorDelegate.getDependencyContext();
-    }
-
-    @Override
-    public HOLDER addDependency(String name, Class<?> type, Object instance) {
-        return standaloneConfiguratorDelegate.addDependency(name, type, instance);
+        return addDependency(Dependency.DEFAULT_NAME, type, instance);
     }
 
     @Override
     public HOLDER setPipelineStartedListener(Consumer<IPipelineStartedEvent> listener) {
-        return standaloneConfiguratorDelegate.setPipelineStartedListener(listener);
+        this.pipelineStartedListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setPipelineCompletedListener(Consumer<IPipelineCompletedEvent> listener) {
-        return standaloneConfiguratorDelegate.setPipelineCompletedListener(listener);
+        this.pipelineCompletedListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setPipelineIgnoredListener(Consumer<IPipelineIgnoredEvent> listener) {
-        return standaloneConfiguratorDelegate.setPipelineIgnoredListener(listener);
+        this.pipelineIgnoredListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setPipelineFailedListener(Consumer<IPipelineFailedEvent> listener) {
-        return standaloneConfiguratorDelegate.setPipelineFailedListener(listener);
+        this.pipelineFailedListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setStageStartedListener(Consumer<IStageStartedEvent> listener) {
-        return standaloneConfiguratorDelegate.setStageStartedListener(listener);
+        this.stageStartedListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setStageCompletedListener(Consumer<IStageCompletedEvent> listener) {
-        return standaloneConfiguratorDelegate.setStageCompletedListener(listener);
+        this.stageCompletedListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setStageIgnoredListener(Consumer<IStageIgnoredEvent> listener) {
-        return standaloneConfiguratorDelegate.setStageIgnoredListener(listener);
+        this.stageIgnoredListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setStageFailedListener(Consumer<IStageFailedEvent> listener) {
-        return standaloneConfiguratorDelegate.setStageFailedListener(listener);
+        this.stageFailedListener = listener;
+        return holderSupplier.get();
     }
 
     @Override
     public Consumer<IPipelineStartedEvent> getPipelineStartedListener() {
-        return standaloneConfiguratorDelegate.getPipelineStartedListener();
+        return pipelineStartedListener;
     }
 
     @Override
     public Consumer<IPipelineCompletedEvent> getPipelineCompletedListener() {
-        return standaloneConfiguratorDelegate.getPipelineCompletedListener();
+        return pipelineCompletedListener;
     }
 
     @Override
     public Consumer<IPipelineIgnoredEvent> getPipelineIgnoredListener() {
-        return standaloneConfiguratorDelegate.getPipelineIgnoredListener();
+        return pipelineIgnoredListener;
     }
-
 
     @Override
     public Consumer<IPipelineFailedEvent> getPipelineFailureListener() {
-        return standaloneConfiguratorDelegate.getPipelineFailureListener();
+        return pipelineFailedListener;
     }
 
     @Override
     public Consumer<IStageStartedEvent> getStageStartedListener() {
-        return standaloneConfiguratorDelegate.getStageStartedListener();
+        return stageStartedListener;
     }
 
     @Override
     public Consumer<IStageCompletedEvent> getStageCompletedListener() {
-        return standaloneConfiguratorDelegate.getStageCompletedListener();
+        return stageCompletedListener;
     }
 
     @Override
     public Consumer<IStageIgnoredEvent> getStageIgnoredListener() {
-        return standaloneConfiguratorDelegate.getStageIgnoredListener();
+        return stageIgnoredListener;
     }
 
     @Override
     public Consumer<IStageFailedEvent> getStageFailureListener() {
-        return standaloneConfiguratorDelegate.getStageFailureListener();
+        return stageFailedListener;
     }
 }

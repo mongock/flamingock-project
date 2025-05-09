@@ -42,8 +42,7 @@ public class FlamingockLocalBuilder
                                      LocalConfiguration communityConfiguration,
                                      DependencyInjectableContext dependencyInjectableContext,
                                      LocalSystemModuleManager systemModuleManager) {
-        super(systemModuleManager, coreConfiguration);
-        this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
+        super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
         this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
         this.systemModuleManager = systemModuleManager;
     }

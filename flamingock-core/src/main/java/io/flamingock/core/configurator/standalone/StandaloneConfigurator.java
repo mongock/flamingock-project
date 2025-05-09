@@ -31,7 +31,6 @@ import java.util.function.Consumer;
 
 public interface StandaloneConfigurator<HOLDER> {
 
-    DependencyContext getDependencyContext();
 
     /**
      * Manually adds a dependency to be used in the  changeUnits, which can be retrieved by its own type

@@ -47,8 +47,7 @@ public class FlamingockCloudBuilder
                                      CloudConfiguration cloudConfiguration,
                                      DependencyInjectableContext dependencyInjectableContext,
                                      CloudSystemModuleManager systemModuleManager) {
-        super(systemModuleManager, coreConfiguration);
-        this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
+        super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
         this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, () -> this);
         this.systemModuleManager = systemModuleManager;
 
