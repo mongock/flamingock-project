@@ -35,10 +35,6 @@ public class FlamingockLocalBuilder
 
     private final LocalSystemModuleManager systemModuleManager;
 
-    private final CoreConfiguratorDelegate<FlamingockLocalBuilder> coreConfiguratorDelegate;
-
-    private final StandaloneConfiguratorDelegate<FlamingockLocalBuilder> standaloneConfiguratorDelegate;
-
     private final LocalConfiguratorDelegate<FlamingockLocalBuilder> localConfiguratorDelegate;
 
     private LocalEngine engine;
@@ -54,15 +50,6 @@ public class FlamingockLocalBuilder
         this.systemModuleManager = systemModuleManager;
     }
 
-    @Override
-    protected CoreConfiguratorDelegate<FlamingockLocalBuilder> coreConfiguratorDelegate() {
-        return coreConfiguratorDelegate;
-    }
-
-    @Override
-    protected StandaloneConfiguratorDelegate<FlamingockLocalBuilder> standaloneConfiguratorDelegate() {
-        return standaloneConfiguratorDelegate;
-    }
 
     @Override
     protected ConnectionEngine getConnectionEngine(RunnerId runnerId) {

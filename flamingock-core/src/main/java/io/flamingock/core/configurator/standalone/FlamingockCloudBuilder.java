@@ -40,10 +40,6 @@ public class FlamingockCloudBuilder
     private final CloudSystemModuleManager systemModuleManager;
 
 
-    private final CoreConfiguratorDelegate<FlamingockCloudBuilder> coreConfiguratorDelegate;
-
-    private final StandaloneConfiguratorDelegate<FlamingockCloudBuilder> standaloneConfiguratorDelegate;
-
     private final CloudConfiguratorDelegate<FlamingockCloudBuilder> cloudConfiguratorDelegate;
 
     private CloudEngine engine;
@@ -60,16 +56,6 @@ public class FlamingockCloudBuilder
 
     }
 
-
-    @Override
-    protected CoreConfiguratorDelegate<FlamingockCloudBuilder> coreConfiguratorDelegate() {
-        return coreConfiguratorDelegate;
-    }
-
-    @Override
-    protected StandaloneConfiguratorDelegate<FlamingockCloudBuilder> standaloneConfiguratorDelegate() {
-        return standaloneConfiguratorDelegate;
-    }
 
 
     @Override

@@ -25,7 +25,6 @@ import io.flamingock.core.configurator.TransactionStrategy;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurator;
-import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.event.CompositeEventPublisher;
@@ -68,9 +67,9 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     private final SystemModuleManager<?> systemModuleManager;
 
-    abstract protected CoreConfiguratorDelegate<HOLDER> coreConfiguratorDelegate();
+    protected CoreConfigurator<HOLDER> coreConfiguratorDelegate;
 
-    abstract protected StandaloneConfiguratorDelegate<HOLDER> standaloneConfiguratorDelegate();
+    protected StandaloneConfigurator<HOLDER> standaloneConfiguratorDelegate;
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +116,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
         Pipeline pipeline = Pipeline.builder()
                 .addFilters(getTaskFiltersFromPlugins(frameworkPlugins))
-                .addPreviewPipeline(coreConfiguratorDelegate().getCoreConfiguration().getPreviewPipeline())
+                .addPreviewPipeline(coreConfiguratorDelegate.getCoreConfiguration().getPreviewPipeline())
                 .addBeforeUserStages(systemModuleManager.getSortedSystemStagesBefore())
                 .addAfterUserStages(systemModuleManager.getSortedSystemStagesAfter())
                 .build();
@@ -130,7 +129,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
                 runnerId,
                 pipeline,
                 engine,
-                coreConfiguratorDelegate().getCoreConfiguration(),
+                coreConfiguratorDelegate.getCoreConfiguration(),
                 buildEventPublisher(frameworkPlugins),
                 getMergedDependencyContext(frameworkPlugins),
                 getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
@@ -147,13 +146,13 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
                 .stream()
                 .filter(Objects::nonNull)
                 .reduce((previous, current) -> new PriorityDependencyContext(current, previous))
-                .<DependencyContext>map(accumulated -> new PriorityDependencyContext(standaloneConfiguratorDelegate().getDependencyContext(), accumulated))
-                .orElse(standaloneConfiguratorDelegate().getDependencyContext());
+                .<DependencyContext>map(accumulated -> new PriorityDependencyContext(standaloneConfiguratorDelegate.getDependencyContext(), accumulated))
+                .orElse(standaloneConfiguratorDelegate.getDependencyContext());
     }
 
     private void initializeFrameworkPlugins(List<FrameworkPlugin> frameworkPlugins) {
         frameworkPlugins
-                .forEach(plugin -> plugin.initialize(standaloneConfiguratorDelegate().getDependencyContext()));
+                .forEach(plugin -> plugin.initialize(standaloneConfiguratorDelegate.getDependencyContext()));
 
     }
 
@@ -202,127 +201,127 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     /// ////////////////////////////////////////////////////////////////////////////////
     @Override
     public CoreConfigurable getCoreConfiguration() {
-        return coreConfiguratorDelegate().getCoreConfiguration();
+        return coreConfiguratorDelegate.getCoreConfiguration();
     }
 
     @Override
     public HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis) {
-        return coreConfiguratorDelegate().setLockAcquiredForMillis(lockAcquiredForMillis);
+        return coreConfiguratorDelegate.setLockAcquiredForMillis(lockAcquiredForMillis);
     }
 
     @Override
     public HOLDER setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
-        return coreConfiguratorDelegate().setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+        return coreConfiguratorDelegate.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
     }
 
     @Override
     public HOLDER setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
-        return coreConfiguratorDelegate().setLockTryFrequencyMillis(lockTryFrequencyMillis);
+        return coreConfiguratorDelegate.setLockTryFrequencyMillis(lockTryFrequencyMillis);
     }
 
     @Override
     public HOLDER setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
-        return coreConfiguratorDelegate().setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+        return coreConfiguratorDelegate.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
     }
 
     @Override
     public HOLDER setEnabled(boolean enabled) {
-        return coreConfiguratorDelegate().setEnabled(enabled);
+        return coreConfiguratorDelegate.setEnabled(enabled);
     }
 
     @Override
     public HOLDER setStartSystemVersion(String startSystemVersion) {
-        return coreConfiguratorDelegate().setStartSystemVersion(startSystemVersion);
+        return coreConfiguratorDelegate.setStartSystemVersion(startSystemVersion);
     }
 
     @Override
     public HOLDER setEndSystemVersion(String endSystemVersion) {
-        return coreConfiguratorDelegate().setEndSystemVersion(endSystemVersion);
+        return coreConfiguratorDelegate.setEndSystemVersion(endSystemVersion);
     }
 
     @Override
     public HOLDER setServiceIdentifier(String serviceIdentifier) {
-        return coreConfiguratorDelegate().setServiceIdentifier(serviceIdentifier);
+        return coreConfiguratorDelegate.setServiceIdentifier(serviceIdentifier);
     }
 
     @Override
     public HOLDER setMetadata(Map<String, Object> metadata) {
-        return coreConfiguratorDelegate().setMetadata(metadata);
+        return coreConfiguratorDelegate.setMetadata(metadata);
     }
 
     @Override
     public HOLDER setDefaultAuthor(String publicMigrationAuthor) {
-        return coreConfiguratorDelegate().setDefaultAuthor(publicMigrationAuthor);
+        return coreConfiguratorDelegate.setDefaultAuthor(publicMigrationAuthor);
     }
 
     @Override
     public HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy) {
-        return coreConfiguratorDelegate().setTransactionStrategy(transactionStrategy);
+        return coreConfiguratorDelegate.setTransactionStrategy(transactionStrategy);
     }
 
     @Override
     public long getLockAcquiredForMillis() {
-        return coreConfiguratorDelegate().getLockAcquiredForMillis();
+        return coreConfiguratorDelegate.getLockAcquiredForMillis();
     }
 
     @Override
     public Long getLockQuitTryingAfterMillis() {
-        return coreConfiguratorDelegate().getLockQuitTryingAfterMillis();
+        return coreConfiguratorDelegate.getLockQuitTryingAfterMillis();
     }
 
     @Override
     public long getLockTryFrequencyMillis() {
-        return coreConfiguratorDelegate().getLockTryFrequencyMillis();
+        return coreConfiguratorDelegate.getLockTryFrequencyMillis();
     }
 
     @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
-        return coreConfiguratorDelegate().isThrowExceptionIfCannotObtainLock();
+        return coreConfiguratorDelegate.isThrowExceptionIfCannotObtainLock();
     }
 
     @Override
     public boolean isEnabled() {
-        return coreConfiguratorDelegate().isEnabled();
+        return coreConfiguratorDelegate.isEnabled();
     }
 
     @Override
     public String getStartSystemVersion() {
-        return coreConfiguratorDelegate().getStartSystemVersion();
+        return coreConfiguratorDelegate.getStartSystemVersion();
     }
 
     @Override
     public String getEndSystemVersion() {
-        return coreConfiguratorDelegate().getEndSystemVersion();
+        return coreConfiguratorDelegate.getEndSystemVersion();
     }
 
     @Override
     public String getServiceIdentifier() {
-        return coreConfiguratorDelegate().getServiceIdentifier();
+        return coreConfiguratorDelegate.getServiceIdentifier();
     }
 
     @Override
     public Map<String, Object> getMetadata() {
-        return coreConfiguratorDelegate().getMetadata();
+        return coreConfiguratorDelegate.getMetadata();
     }
 
     @Override
     public String getDefaultAuthor() {
-        return coreConfiguratorDelegate().getDefaultAuthor();
+        return coreConfiguratorDelegate.getDefaultAuthor();
     }
 
     @Override
     public TransactionStrategy getTransactionStrategy() {
-        return coreConfiguratorDelegate().getTransactionStrategy();
+        return coreConfiguratorDelegate.getTransactionStrategy();
     }
 
     @Override
     public HOLDER withImporter(CoreConfiguration.ImporterConfiguration mongockImporterConfiguration) {
-        return coreConfiguratorDelegate().withImporter(mongockImporterConfiguration);
+        return coreConfiguratorDelegate.withImporter(mongockImporterConfiguration);
     }
 
     @Override
     public CoreConfiguration.ImporterConfiguration getMongockImporterConfiguration() {
-        return coreConfiguratorDelegate().getMongockImporterConfiguration();
+        return coreConfiguratorDelegate.getMongockImporterConfiguration();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -332,107 +331,107 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     @Override
     public HOLDER addDependency(Object instance) {
-        return standaloneConfiguratorDelegate().addDependency(instance);
+        return standaloneConfiguratorDelegate.addDependency(instance);
     }
 
     @Override
     public HOLDER addDependency(String name, Object instance) {
-        return standaloneConfiguratorDelegate().addDependency(name, instance);
+        return standaloneConfiguratorDelegate.addDependency(name, instance);
     }
 
     @Override
     public HOLDER addDependency(Class<?> type, Object instance) {
-        return standaloneConfiguratorDelegate().addDependency(type, instance);
+        return standaloneConfiguratorDelegate.addDependency(type, instance);
     }
 
     @Override
     public DependencyContext getDependencyContext() {
-        return standaloneConfiguratorDelegate().getDependencyContext();
+        return standaloneConfiguratorDelegate.getDependencyContext();
     }
 
     @Override
     public HOLDER addDependency(String name, Class<?> type, Object instance) {
-        return standaloneConfiguratorDelegate().addDependency(name, type, instance);
+        return standaloneConfiguratorDelegate.addDependency(name, type, instance);
     }
 
     @Override
     public HOLDER setPipelineStartedListener(Consumer<IPipelineStartedEvent> listener) {
-        return standaloneConfiguratorDelegate().setPipelineStartedListener(listener);
+        return standaloneConfiguratorDelegate.setPipelineStartedListener(listener);
     }
 
     @Override
     public HOLDER setPipelineCompletedListener(Consumer<IPipelineCompletedEvent> listener) {
-        return standaloneConfiguratorDelegate().setPipelineCompletedListener(listener);
+        return standaloneConfiguratorDelegate.setPipelineCompletedListener(listener);
     }
 
     @Override
     public HOLDER setPipelineIgnoredListener(Consumer<IPipelineIgnoredEvent> listener) {
-        return standaloneConfiguratorDelegate().setPipelineIgnoredListener(listener);
+        return standaloneConfiguratorDelegate.setPipelineIgnoredListener(listener);
     }
 
     @Override
     public HOLDER setPipelineFailedListener(Consumer<IPipelineFailedEvent> listener) {
-        return standaloneConfiguratorDelegate().setPipelineFailedListener(listener);
+        return standaloneConfiguratorDelegate.setPipelineFailedListener(listener);
     }
 
     @Override
     public HOLDER setStageStartedListener(Consumer<IStageStartedEvent> listener) {
-        return standaloneConfiguratorDelegate().setStageStartedListener(listener);
+        return standaloneConfiguratorDelegate.setStageStartedListener(listener);
     }
 
     @Override
     public HOLDER setStageCompletedListener(Consumer<IStageCompletedEvent> listener) {
-        return standaloneConfiguratorDelegate().setStageCompletedListener(listener);
+        return standaloneConfiguratorDelegate.setStageCompletedListener(listener);
     }
 
     @Override
     public HOLDER setStageIgnoredListener(Consumer<IStageIgnoredEvent> listener) {
-        return standaloneConfiguratorDelegate().setStageIgnoredListener(listener);
+        return standaloneConfiguratorDelegate.setStageIgnoredListener(listener);
     }
 
     @Override
     public HOLDER setStageFailedListener(Consumer<IStageFailedEvent> listener) {
-        return standaloneConfiguratorDelegate().setStageFailedListener(listener);
+        return standaloneConfiguratorDelegate.setStageFailedListener(listener);
     }
 
     @Override
     public Consumer<IPipelineStartedEvent> getPipelineStartedListener() {
-        return standaloneConfiguratorDelegate().getPipelineStartedListener();
+        return standaloneConfiguratorDelegate.getPipelineStartedListener();
     }
 
     @Override
     public Consumer<IPipelineCompletedEvent> getPipelineCompletedListener() {
-        return standaloneConfiguratorDelegate().getPipelineCompletedListener();
+        return standaloneConfiguratorDelegate.getPipelineCompletedListener();
     }
 
     @Override
     public Consumer<IPipelineIgnoredEvent> getPipelineIgnoredListener() {
-        return standaloneConfiguratorDelegate().getPipelineIgnoredListener();
+        return standaloneConfiguratorDelegate.getPipelineIgnoredListener();
     }
 
 
     @Override
     public Consumer<IPipelineFailedEvent> getPipelineFailureListener() {
-        return standaloneConfiguratorDelegate().getPipelineFailureListener();
+        return standaloneConfiguratorDelegate.getPipelineFailureListener();
     }
 
     @Override
     public Consumer<IStageStartedEvent> getStageStartedListener() {
-        return standaloneConfiguratorDelegate().getStageStartedListener();
+        return standaloneConfiguratorDelegate.getStageStartedListener();
     }
 
     @Override
     public Consumer<IStageCompletedEvent> getStageCompletedListener() {
-        return standaloneConfiguratorDelegate().getStageCompletedListener();
+        return standaloneConfiguratorDelegate.getStageCompletedListener();
     }
 
     @Override
     public Consumer<IStageIgnoredEvent> getStageIgnoredListener() {
-        return standaloneConfiguratorDelegate().getStageIgnoredListener();
+        return standaloneConfiguratorDelegate.getStageIgnoredListener();
     }
 
     @Override
     public Consumer<IStageFailedEvent> getStageFailureListener() {
-        return standaloneConfiguratorDelegate().getStageFailureListener();
+        return standaloneConfiguratorDelegate.getStageFailureListener();
     }
 }
