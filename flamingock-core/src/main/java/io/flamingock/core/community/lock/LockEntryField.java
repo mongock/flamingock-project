@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.local.driver;
+package io.flamingock.core.community.lock;
 
-//Marker interface for Driver configuration
-public interface DriverConfigurable {
+public class LockEntryField {
+    public static final String KEY_FIELD = "key";
+    public static final String STATUS_FIELD = "status";
+    public static final String OWNER_FIELD = "owner";
+    public static final String EXPIRES_AT_FIELD = "expiresAt";
 }

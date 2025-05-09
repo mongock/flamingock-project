@@ -1,4 +1,4 @@
-package io.flamingock.core.local.lock;
+package io.flamingock.core.community.lock;
 
 import io.flamingock.core.engine.lock.LockAcquisition;
 import io.flamingock.core.engine.lock.LockKey;

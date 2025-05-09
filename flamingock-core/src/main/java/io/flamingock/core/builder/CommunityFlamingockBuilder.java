@@ -22,8 +22,8 @@ import io.flamingock.core.builder.local.CommunityConfiguration;
 import io.flamingock.core.builder.local.CommunityConfigurator;
 import io.flamingock.core.builder.local.LocalSystemModuleManager;
 import io.flamingock.core.engine.ConnectionEngine;
-import io.flamingock.core.local.LocalEngine;
-import io.flamingock.core.local.driver.LocalDriver;
+import io.flamingock.core.community.LocalEngine;
+import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 
 public class CommunityFlamingockBuilder

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.local;
+package io.flamingock.core.community;
 
 
 import io.flamingock.commons.utils.Result;
