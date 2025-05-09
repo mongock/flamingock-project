@@ -17,10 +17,10 @@
 package io.flamingock.oss.driver.dynamodb.driver;
 
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
-import io.flamingock.core.local.LocalEngine;
-import io.flamingock.core.local.driver.LocalDriver;
+import io.flamingock.core.builder.core.CoreConfigurable;
+import io.flamingock.core.builder.local.CommunityConfigurable;
+import io.flamingock.core.community.LocalEngine;
+import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.oss.driver.dynamodb.DynamoDBConfiguration;
 import io.flamingock.oss.driver.dynamodb.internal.DynamoDBEngine;
 import io.flamingock.oss.driver.dynamodb.internal.util.DynamoClients;
@@ -69,7 +69,7 @@ public class DynamoDBDriver implements LocalDriver<DynamoDBConfiguration> {
     }
 
     @Override
-    public LocalEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
+    public LocalEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, CommunityConfigurable localConfiguration) {
         DynamoDBEngine dynamodbEngine = new DynamoDBEngine(
                 client,
                 coreConfiguration,
