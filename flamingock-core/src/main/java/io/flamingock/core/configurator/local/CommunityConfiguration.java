@@ -16,7 +16,7 @@
 
 package io.flamingock.core.configurator.local;
 
-public class CommunityConfiguration implements LocalConfigurable {
+public class CommunityConfiguration implements CommunityConfigurable {
 
     private boolean transactionDisabled = false;
 

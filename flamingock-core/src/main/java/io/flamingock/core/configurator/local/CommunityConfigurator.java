@@ -16,15 +16,15 @@
 
 package io.flamingock.core.configurator.local;
 
+import io.flamingock.core.local.driver.LocalDriver;
 
-/**
- * Interface for potential configuration for local runners.
- * Don't confuse with DriverConfigurable
- */
-public interface LocalConfigurable {
+public interface CommunityConfigurator<HOLDER> {
+    //TODO remove this method and load with ServiceLoader
+    HOLDER setDriver(LocalDriver<?> connectionDriver);
 
-    void setTransactionDisabled(boolean transactionDisabled);
+    LocalDriver<?> getDriver();
+
+    HOLDER disableTransaction();
 
     boolean isTransactionDisabled();
-
 }

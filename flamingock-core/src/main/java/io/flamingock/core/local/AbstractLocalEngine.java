@@ -2,13 +2,13 @@ package io.flamingock.core.local;
 
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 
 public abstract class AbstractLocalEngine implements LocalEngine {
 
-    protected final LocalConfigurable localConfiguration;
+    protected final CommunityConfigurable localConfiguration;
 
-    protected AbstractLocalEngine(LocalConfigurable localConfiguration) {
+    protected AbstractLocalEngine(CommunityConfigurable localConfiguration) {
         this.localConfiguration = localConfiguration;
     }
 

@@ -29,7 +29,7 @@ public final class Flamingock {
     }
 
     public static AbstractFlamingockBuilder<?> builder() {
-        return new FlamingockCloudBuilder(
+        return new CloudFlamingockBuilder(
                 new CoreConfiguration(),
                 new CloudConfiguration(),
                 new SimpleDependencyInjectableContext(),
@@ -37,16 +37,16 @@ public final class Flamingock {
     }
 
 
-    public static FlamingockCloudBuilder cloud() {
-        return new FlamingockCloudBuilder(
+    public static CloudFlamingockBuilder cloud() {
+        return new CloudFlamingockBuilder(
                 new CoreConfiguration(),
                 new CloudConfiguration(),
                 new SimpleDependencyInjectableContext(),
                 new CloudSystemModuleManager());
     }
 
-    public static FlamingockLocalBuilder local() {
-        return new FlamingockLocalBuilder(
+    public static CommunityFlamingockBuilder local() {
+        return new CommunityFlamingockBuilder(
                 new CoreConfiguration(),
                 new CommunityConfiguration(),
                 new SimpleDependencyInjectableContext(),

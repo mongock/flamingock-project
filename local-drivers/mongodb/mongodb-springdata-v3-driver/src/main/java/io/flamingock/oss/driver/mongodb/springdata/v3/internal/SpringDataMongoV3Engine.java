@@ -22,7 +22,7 @@ import io.flamingock.cloud.transaction.mongodb.sync.v4.cofig.ReadWriteConfigurat
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 import io.flamingock.core.local.AbstractLocalEngine;
 import io.flamingock.core.local.LocalAuditor;
 import io.flamingock.core.local.LocalExecutionPlanner;
@@ -48,7 +48,7 @@ public class SpringDataMongoV3Engine extends AbstractLocalEngine {
 
     public SpringDataMongoV3Engine(MongoTemplate mongoTemplate,
                                    CoreConfigurable coreConfiguration,
-                                   LocalConfigurable localConfiguration,
+                                   CommunityConfigurable localConfiguration,
                                    SpringDataMongoV3Configuration driverConfiguration) {
         super(localConfiguration);
         this.mongoTemplate = mongoTemplate;

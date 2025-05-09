@@ -23,42 +23,39 @@ import io.flamingock.core.cloud.CloudEngine;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.cloud.CloudConfigurator;
-import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.apache.http.impl.client.HttpClients;
 
-import java.util.Optional;
-
-public class FlamingockCloudBuilder
-        extends AbstractFlamingockBuilder<FlamingockCloudBuilder>
-        implements CloudConfigurator<FlamingockCloudBuilder> {
+public class CloudFlamingockBuilder
+        extends AbstractFlamingockBuilder<CloudFlamingockBuilder>
+        implements CloudConfigurator<CloudFlamingockBuilder> {
 
     private final CloudSystemModuleManager systemModuleManager;
 
+    private final CloudConfiguration cloudConfiguration;
 
-    private final CloudConfiguratorDelegate<FlamingockCloudBuilder> cloudConfiguratorDelegate;
+    private CloudTransactioner cloudTransactioner;
 
     private CloudEngine engine;
 
-    protected FlamingockCloudBuilder(CoreConfiguration coreConfiguration,
+    protected CloudFlamingockBuilder(CoreConfiguration coreConfiguration,
                                      CloudConfiguration cloudConfiguration,
                                      DependencyInjectableContext dependencyInjectableContext,
                                      CloudSystemModuleManager systemModuleManager) {
         super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
-        this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, () -> this);
+        this.cloudConfiguration = cloudConfiguration;
         this.systemModuleManager = systemModuleManager;
 
     }
 
 
     @Override
-    protected FlamingockCloudBuilder getSelf() {
+    protected CloudFlamingockBuilder getSelf() {
         return this;
     }
-
 
 
     @Override
@@ -67,8 +64,8 @@ public class FlamingockCloudBuilder
         engine = CloudEngine.newFactory(
                 runnerId,
                 coreConfiguration,
-                cloudConfiguratorDelegate.getCloudConfiguration(),
-                getCloudTransactioner().orElse(null),
+                cloudConfiguration,
+                cloudTransactioner,
                 Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE)
         ).initializeAndGet();
 
@@ -79,37 +76,38 @@ public class FlamingockCloudBuilder
     protected void configureSystemModules() {
         //todo change this
         systemModuleManager.initialize(
-                engine.getEnvironmentId(), engine.getServiceId(), engine.getJwt(), cloudConfiguratorDelegate.getCloudConfiguration().getHost());
+                engine.getEnvironmentId(), engine.getServiceId(), engine.getJwt(), cloudConfiguration.getHost());
     }
 
     @Override
-    public FlamingockCloudBuilder setHost(String host) {
-        return cloudConfiguratorDelegate.setHost(host);
+    public CloudFlamingockBuilder setHost(String host) {
+        cloudConfiguration.setHost(host);
+        return this;
     }
 
     @Override
-    public FlamingockCloudBuilder setService(String service) {
-        return cloudConfiguratorDelegate.setService(service);
+    public CloudFlamingockBuilder setService(String service) {
+        cloudConfiguration.setServiceName(service);
+        return this;
     }
 
     @Override
-    public FlamingockCloudBuilder setEnvironment(String environment) {
-        return cloudConfiguratorDelegate.setEnvironment(environment);
+    public CloudFlamingockBuilder setEnvironment(String environment) {
+        cloudConfiguration.setEnvironmentName(environment);
+        return this;
     }
 
     @Override
-    public FlamingockCloudBuilder setApiToken(String clientSecret) {
-        return cloudConfiguratorDelegate.setApiToken(clientSecret);
+    public CloudFlamingockBuilder setApiToken(String clientSecret) {
+        cloudConfiguration.setApiToken(clientSecret);
+        return this;
     }
 
     @Override
-    public FlamingockCloudBuilder setCloudTransactioner(CloudTransactioner cloudTransactioner) {
-        return cloudConfiguratorDelegate.setCloudTransactioner(cloudTransactioner);
+    public CloudFlamingockBuilder setCloudTransactioner(CloudTransactioner cloudTransactioner) {
+        this.cloudTransactioner = cloudTransactioner;
+        return this;
     }
 
-    @Override
-    public Optional<CloudTransactioner> getCloudTransactioner() {
-        return cloudConfiguratorDelegate.getCloudTransactioner();
-    }
 
 }

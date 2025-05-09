@@ -21,7 +21,7 @@ import com.couchbase.client.java.Collection;
 import io.flamingock.core.local.LocalExecutionPlanner;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 import io.flamingock.core.local.AbstractLocalEngine;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.transaction.TransactionWrapper;
@@ -44,7 +44,7 @@ public class CouchbaseEngine extends AbstractLocalEngine {
     public CouchbaseEngine(Cluster cluster,
                            Collection collection,
                            CoreConfigurable coreConfiguration,
-                           LocalConfigurable localConfiguration,
+                           CommunityConfigurable localConfiguration,
                            CouchbaseConfiguration driverConfiguration) {
         super(localConfiguration);
         this.cluster = cluster;

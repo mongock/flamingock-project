@@ -21,7 +21,7 @@ import io.flamingock.commons.utils.TimeService;
 import io.flamingock.core.local.LocalExecutionPlanner;
 import io.flamingock.core.local.TransactionManager;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 import io.flamingock.core.local.AbstractLocalEngine;
 import io.flamingock.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.dynamodb.DynamoDBConfiguration;
@@ -47,7 +47,7 @@ public class DynamoDBEngine extends AbstractLocalEngine {
 
     public DynamoDBEngine(DynamoClients client,
                           CoreConfigurable coreConfiguration,
-                          LocalConfigurable localConfiguration,
+                          CommunityConfigurable localConfiguration,
                           DynamoDBConfiguration driverConfiguration) {
         super(localConfiguration);
         this.client = client;

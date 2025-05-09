@@ -30,7 +30,8 @@ public interface CloudConfigurator<HOLDER> {
 
     HOLDER setApiToken(String clientSecret);
 
+    //TODO remove this method and load with ServiceLoader
     HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner);
-    Optional<CloudTransactioner> getCloudTransactioner();
+
 
 }

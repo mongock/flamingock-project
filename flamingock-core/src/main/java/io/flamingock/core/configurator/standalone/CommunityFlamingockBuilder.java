@@ -19,16 +19,16 @@ package io.flamingock.core.configurator.standalone;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.local.CommunityConfiguration;
-import io.flamingock.core.configurator.local.LocalConfigurator;
+import io.flamingock.core.configurator.local.CommunityConfigurator;
 import io.flamingock.core.configurator.local.LocalSystemModuleManager;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.local.LocalEngine;
 import io.flamingock.core.local.driver.LocalDriver;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 
-public class FlamingockLocalBuilder
-        extends AbstractFlamingockBuilder<FlamingockLocalBuilder>
-        implements LocalConfigurator<FlamingockLocalBuilder> {
+public class CommunityFlamingockBuilder
+        extends AbstractFlamingockBuilder<CommunityFlamingockBuilder>
+        implements CommunityConfigurator<CommunityFlamingockBuilder> {
 
     private final LocalSystemModuleManager systemModuleManager;
 
@@ -38,17 +38,17 @@ public class FlamingockLocalBuilder
 
     private LocalEngine engine;
 
-    protected FlamingockLocalBuilder(CoreConfiguration coreConfiguration,
-                                     CommunityConfiguration communityConfiguration,
-                                     DependencyInjectableContext dependencyInjectableContext,
-                                     LocalSystemModuleManager systemModuleManager) {
+    protected CommunityFlamingockBuilder(CoreConfiguration coreConfiguration,
+                                         CommunityConfiguration communityConfiguration,
+                                         DependencyInjectableContext dependencyInjectableContext,
+                                         LocalSystemModuleManager systemModuleManager) {
         super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
         this.communityConfiguration = communityConfiguration;
         this.systemModuleManager = systemModuleManager;
     }
 
     @Override
-    protected FlamingockLocalBuilder getSelf() {
+    protected CommunityFlamingockBuilder getSelf() {
         return this;
     }
 
@@ -72,7 +72,7 @@ public class FlamingockLocalBuilder
 
     @Override
     @Deprecated
-    public FlamingockLocalBuilder setDriver(LocalDriver<?> connectionDriver) {
+    public CommunityFlamingockBuilder setDriver(LocalDriver<?> connectionDriver) {
         this.connectionDriver = connectionDriver;
         return this;
     }
@@ -83,7 +83,7 @@ public class FlamingockLocalBuilder
     }
 
     @Override
-    public FlamingockLocalBuilder disableTransaction() {
+    public CommunityFlamingockBuilder disableTransaction() {
         communityConfiguration.setTransactionDisabled(true);
         return this;
     }

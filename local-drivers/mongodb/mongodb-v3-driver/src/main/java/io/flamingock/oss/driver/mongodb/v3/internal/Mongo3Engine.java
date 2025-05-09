@@ -23,7 +23,7 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.TimeService;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 import io.flamingock.core.engine.audit.importer.ImporterModule;
 import io.flamingock.core.local.AbstractLocalEngine;
 import io.flamingock.core.local.LocalAuditor;
@@ -52,7 +52,7 @@ public class Mongo3Engine extends AbstractLocalEngine {
     public Mongo3Engine(MongoClient mongoClient,
                         String databaseName,
                         CoreConfigurable coreConfiguration,
-                        LocalConfigurable localConfiguration,
+                        CommunityConfigurable localConfiguration,
                         MongoDB3Configuration driverConfiguration) {
         super(localConfiguration);
         this.mongoClient = mongoClient;

@@ -26,7 +26,7 @@ import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.TimeService;
 import io.flamingock.core.system.LocalSystemModule;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 import io.flamingock.core.local.AbstractLocalEngine;
 import io.flamingock.core.local.LocalAuditor;
 import io.flamingock.core.local.LocalExecutionPlanner;
@@ -53,7 +53,7 @@ public class MongoSync4Engine extends AbstractLocalEngine {
     public MongoSync4Engine(MongoClient mongoClient,
                             String databaseName,
                             CoreConfigurable coreConfiguration,
-                            LocalConfigurable localConfiguration,
+                            CommunityConfigurable localConfiguration,
                             MongoDBSync4Configuration driverConfiguration) {
         super(localConfiguration);
         this.mongoClient = mongoClient;

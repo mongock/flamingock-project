@@ -19,7 +19,7 @@ package io.flamingock.oss.driver.mongodb.sync.v4.driver;
 import com.mongodb.client.MongoClient;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 import io.flamingock.core.local.driver.LocalDriver;
 import io.flamingock.core.local.LocalEngine;
 import io.flamingock.cloud.transaction.mongodb.sync.v4.cofig.MongoDBSync4Configuration;
@@ -69,7 +69,7 @@ public class MongoSync4Driver implements LocalDriver<MongoDBSync4Configuration> 
 
 
     @Override
-    public LocalEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, LocalConfigurable localConfiguration) {
+    public LocalEngine initializeAndGetEngine(RunnerId runnerId, CoreConfigurable coreConfiguration, CommunityConfigurable localConfiguration) {
         MongoSync4Engine engine = new MongoSync4Engine(
                 mongoClient,
                 databaseName,

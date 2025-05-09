@@ -20,7 +20,7 @@ import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 import io.flamingock.core.local.driver.LocalDriver;
 import io.flamingock.core.local.LocalEngine;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
@@ -70,7 +70,7 @@ public class CouchbaseDriver implements LocalDriver<CouchbaseConfiguration> {
     @Override
     public LocalEngine initializeAndGetEngine(RunnerId runnerId, 
                                               CoreConfigurable coreConfiguration, 
-                                              LocalConfigurable localConfiguration) {
+                                              CommunityConfigurable localConfiguration) {
         CouchbaseEngine couchbaseEngine = new CouchbaseEngine(
                 cluster,
                 collection,

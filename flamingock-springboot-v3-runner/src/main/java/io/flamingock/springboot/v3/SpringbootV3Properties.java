@@ -21,7 +21,7 @@ import io.flamingock.core.configurator.cloud.CloudConfigurable;
 import io.flamingock.core.configurator.cloud.CloudConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.local.LocalConfigurable;
+import io.flamingock.core.configurator.local.CommunityConfigurable;
 import io.flamingock.core.configurator.local.CommunityConfiguration;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.processor.util.Deserializer;
@@ -33,7 +33,7 @@ import java.util.Map;
 public class SpringbootV3Properties
         implements
         CoreConfigurable,
-        LocalConfigurable,
+        CommunityConfigurable,
         CloudConfigurable {
     private SpringRunnerType runnerType = SpringRunnerType.ApplicationRunner;
 
