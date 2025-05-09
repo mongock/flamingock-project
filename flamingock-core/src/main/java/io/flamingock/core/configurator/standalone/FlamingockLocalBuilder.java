@@ -18,7 +18,6 @@ package io.flamingock.core.configurator.standalone;
 
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.configurator.local.LocalConfigurable;
 import io.flamingock.core.configurator.local.LocalConfiguration;
 import io.flamingock.core.configurator.local.LocalConfigurator;
@@ -43,20 +42,23 @@ public class FlamingockLocalBuilder
                                      LocalConfiguration communityConfiguration,
                                      DependencyInjectableContext dependencyInjectableContext,
                                      LocalSystemModuleManager systemModuleManager) {
-        super(systemModuleManager);
-        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
+        super(systemModuleManager, coreConfiguration);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
         this.localConfiguratorDelegate = new LocalConfiguratorDelegate<>(communityConfiguration, () -> this);
         this.systemModuleManager = systemModuleManager;
     }
 
+    @Override
+    protected FlamingockLocalBuilder getSelf() {
+        return this;
+    }
 
     @Override
     protected ConnectionEngine getConnectionEngine(RunnerId runnerId) {
         //TODO get the driver from serviceLoader
         engine = localConfiguratorDelegate.getDriver().initializeAndGetEngine(
                 runnerId,
-                coreConfiguratorDelegate.getCoreConfiguration(),
+                coreConfiguration,
                 localConfiguratorDelegate.getLocalConfiguration()
         );
         return engine;

@@ -23,8 +23,6 @@ import java.util.Map;
 
 public interface CoreConfigurator<HOLDER> {
 
-    CoreConfigurable getCoreConfiguration();
-
     HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis);
 
     HOLDER setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis);

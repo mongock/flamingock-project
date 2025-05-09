@@ -22,7 +22,6 @@ import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.configurator.FrameworkPlugin;
 import io.flamingock.core.configurator.SystemModuleManager;
 import io.flamingock.core.configurator.TransactionStrategy;
-import io.flamingock.core.configurator.core.CoreConfigurable;
 import io.flamingock.core.configurator.core.CoreConfiguration;
 import io.flamingock.core.configurator.core.CoreConfigurator;
 import io.flamingock.core.engine.ConnectionEngine;
@@ -55,6 +54,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -67,9 +67,12 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     private final SystemModuleManager<?> systemModuleManager;
 
-    protected CoreConfigurator<HOLDER> coreConfiguratorDelegate;
-
     protected StandaloneConfigurator<HOLDER> standaloneConfiguratorDelegate;
+
+
+    protected final CoreConfiguration coreConfiguration;
+
+    private final Supplier<HOLDER> holderSupplier;
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -77,13 +80,18 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     /// ////////////////////////////////////////////////////////////////////////////////
 
-    protected AbstractFlamingockBuilder(SystemModuleManager<?> systemModuleManager) {
+    protected AbstractFlamingockBuilder(SystemModuleManager<?> systemModuleManager,
+                                        CoreConfiguration coreConfiguration) {
         this.systemModuleManager = systemModuleManager;
+        this.coreConfiguration = coreConfiguration;
+        holderSupplier = this::getSelf;
     }
 
     protected abstract ConnectionEngine getConnectionEngine(RunnerId runnerId);
 
     protected abstract void configureSystemModules();
+
+    protected abstract HOLDER getSelf();
 
     @Override
     public final Runner build() {
@@ -116,7 +124,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
         Pipeline pipeline = Pipeline.builder()
                 .addFilters(getTaskFiltersFromPlugins(frameworkPlugins))
-                .addPreviewPipeline(coreConfiguratorDelegate.getCoreConfiguration().getPreviewPipeline())
+                .addPreviewPipeline(coreConfiguration.getPreviewPipeline())
                 .addBeforeUserStages(systemModuleManager.getSortedSystemStagesBefore())
                 .addAfterUserStages(systemModuleManager.getSortedSystemStagesAfter())
                 .build();
@@ -129,10 +137,10 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
                 runnerId,
                 pipeline,
                 engine,
-                coreConfiguratorDelegate.getCoreConfiguration(),
+                coreConfiguration,
                 buildEventPublisher(frameworkPlugins),
                 getMergedDependencyContext(frameworkPlugins),
-                getCoreConfiguration().isThrowExceptionIfCannotObtainLock(),
+                coreConfiguration.isThrowExceptionIfCannotObtainLock(),
                 engine.getCloser()
         );
     }
@@ -199,129 +207,139 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     //  CORE
 
     /// ////////////////////////////////////////////////////////////////////////////////
-    @Override
-    public CoreConfigurable getCoreConfiguration() {
-        return coreConfiguratorDelegate.getCoreConfiguration();
-    }
+
 
     @Override
     public HOLDER setLockAcquiredForMillis(long lockAcquiredForMillis) {
-        return coreConfiguratorDelegate.setLockAcquiredForMillis(lockAcquiredForMillis);
+        coreConfiguration.setLockAcquiredForMillis(lockAcquiredForMillis);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setLockQuitTryingAfterMillis(Long lockQuitTryingAfterMillis) {
-        return coreConfiguratorDelegate.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+        coreConfiguration.setLockQuitTryingAfterMillis(lockQuitTryingAfterMillis);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setLockTryFrequencyMillis(long lockTryFrequencyMillis) {
-        return coreConfiguratorDelegate.setLockTryFrequencyMillis(lockTryFrequencyMillis);
+        coreConfiguration.setLockTryFrequencyMillis(lockTryFrequencyMillis);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setThrowExceptionIfCannotObtainLock(boolean throwExceptionIfCannotObtainLock) {
-        return coreConfiguratorDelegate.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+        coreConfiguration.setThrowExceptionIfCannotObtainLock(throwExceptionIfCannotObtainLock);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setEnabled(boolean enabled) {
-        return coreConfiguratorDelegate.setEnabled(enabled);
+        coreConfiguration.setEnabled(enabled);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setStartSystemVersion(String startSystemVersion) {
-        return coreConfiguratorDelegate.setStartSystemVersion(startSystemVersion);
+        coreConfiguration.setStartSystemVersion(startSystemVersion);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setEndSystemVersion(String endSystemVersion) {
-        return coreConfiguratorDelegate.setEndSystemVersion(endSystemVersion);
+        coreConfiguration.setEndSystemVersion(endSystemVersion);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setServiceIdentifier(String serviceIdentifier) {
-        return coreConfiguratorDelegate.setServiceIdentifier(serviceIdentifier);
+        coreConfiguration.setServiceIdentifier(serviceIdentifier);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setMetadata(Map<String, Object> metadata) {
-        return coreConfiguratorDelegate.setMetadata(metadata);
+        coreConfiguration.setMetadata(metadata);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setDefaultAuthor(String publicMigrationAuthor) {
-        return coreConfiguratorDelegate.setDefaultAuthor(publicMigrationAuthor);
+        coreConfiguration.setDefaultAuthor(publicMigrationAuthor);
+        return holderSupplier.get();
     }
 
     @Override
     public HOLDER setTransactionStrategy(TransactionStrategy transactionStrategy) {
-        return coreConfiguratorDelegate.setTransactionStrategy(transactionStrategy);
+        coreConfiguration.setTransactionStrategy(transactionStrategy);
+        return holderSupplier.get();
     }
 
     @Override
     public long getLockAcquiredForMillis() {
-        return coreConfiguratorDelegate.getLockAcquiredForMillis();
+        return coreConfiguration.getLockAcquiredForMillis();
     }
 
     @Override
     public Long getLockQuitTryingAfterMillis() {
-        return coreConfiguratorDelegate.getLockQuitTryingAfterMillis();
+        return coreConfiguration.getLockQuitTryingAfterMillis();
     }
 
     @Override
     public long getLockTryFrequencyMillis() {
-        return coreConfiguratorDelegate.getLockTryFrequencyMillis();
+        return coreConfiguration.getLockTryFrequencyMillis();
     }
 
     @Override
     public boolean isThrowExceptionIfCannotObtainLock() {
-        return coreConfiguratorDelegate.isThrowExceptionIfCannotObtainLock();
+        return coreConfiguration.isThrowExceptionIfCannotObtainLock();
     }
 
     @Override
     public boolean isEnabled() {
-        return coreConfiguratorDelegate.isEnabled();
+        return coreConfiguration.isEnabled();
     }
 
     @Override
     public String getStartSystemVersion() {
-        return coreConfiguratorDelegate.getStartSystemVersion();
+        return coreConfiguration.getStartSystemVersion();
     }
 
     @Override
     public String getEndSystemVersion() {
-        return coreConfiguratorDelegate.getEndSystemVersion();
+        return coreConfiguration.getEndSystemVersion();
     }
 
     @Override
     public String getServiceIdentifier() {
-        return coreConfiguratorDelegate.getServiceIdentifier();
+        return coreConfiguration.getServiceIdentifier();
     }
 
     @Override
     public Map<String, Object> getMetadata() {
-        return coreConfiguratorDelegate.getMetadata();
+        return coreConfiguration.getMetadata();
     }
 
     @Override
     public String getDefaultAuthor() {
-        return coreConfiguratorDelegate.getDefaultAuthor();
+        return coreConfiguration.getDefaultAuthor();
     }
 
     @Override
     public TransactionStrategy getTransactionStrategy() {
-        return coreConfiguratorDelegate.getTransactionStrategy();
+        return coreConfiguration.getTransactionStrategy();
     }
+
 
     @Override
     public HOLDER withImporter(CoreConfiguration.ImporterConfiguration mongockImporterConfiguration) {
-        return coreConfiguratorDelegate.withImporter(mongockImporterConfiguration);
+        coreConfiguration.setLegacyMongockChangelogSource(mongockImporterConfiguration.getLegacySourceName());
+        return holderSupplier.get();
     }
 
     @Override
     public CoreConfiguration.ImporterConfiguration getMongockImporterConfiguration() {
-        return coreConfiguratorDelegate.getMongockImporterConfiguration();
+        return coreConfiguration.getMongockImporterConfiguration();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

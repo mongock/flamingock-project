@@ -26,7 +26,6 @@ import io.flamingock.core.configurator.cloud.CloudConfigurator;
 import io.flamingock.core.configurator.cloud.CloudConfiguratorDelegate;
 import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
 import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.core.CoreConfiguratorDelegate;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.apache.http.impl.client.HttpClients;
@@ -48,12 +47,17 @@ public class FlamingockCloudBuilder
                                      CloudConfiguration cloudConfiguration,
                                      DependencyInjectableContext dependencyInjectableContext,
                                      CloudSystemModuleManager systemModuleManager) {
-        super(systemModuleManager);
-        this.coreConfiguratorDelegate = new CoreConfiguratorDelegate<>(coreConfiguration, () -> this);
+        super(systemModuleManager, coreConfiguration);
         this.standaloneConfiguratorDelegate = new StandaloneConfiguratorDelegate<>(dependencyInjectableContext, () -> this);
         this.cloudConfiguratorDelegate = new CloudConfiguratorDelegate<>(cloudConfiguration, () -> this);
         this.systemModuleManager = systemModuleManager;
 
+    }
+
+
+    @Override
+    protected FlamingockCloudBuilder getSelf() {
+        return this;
     }
 
 
@@ -63,7 +67,7 @@ public class FlamingockCloudBuilder
         //TODO get the driver from serviceLoader
         engine = CloudEngine.newFactory(
                 runnerId,
-                coreConfiguratorDelegate.getCoreConfiguration(),
+                coreConfiguration,
                 cloudConfiguratorDelegate.getCloudConfiguration(),
                 getCloudTransactioner().orElse(null),
                 Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE)
