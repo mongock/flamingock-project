@@ -28,7 +28,7 @@ public class CoreConfiguratorDelegate<
         HOLDER,
         SYSTEM_MODULE extends SystemModule,
         SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>>
-        implements CoreConfigurator<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER> {
+        implements CoreConfigurator<HOLDER> {
 
     private final Supplier<HOLDER> holderSupplier;
     private final CoreConfiguration configuration;
@@ -182,14 +182,10 @@ public class CoreConfiguratorDelegate<
     }
 
     //TODO remove this: SystemModules will retrieved with SystemLoader
-    @Override
     @Deprecated
     public SYSTEM_MODULE_MANAGER getSystemModuleManager() {
         return systemModuleManager;
     }
-
-    //TODO remove this: SystemModules will retrieved with SystemLoader
-    @Override
     @Deprecated
     public HOLDER addSystemModule(SYSTEM_MODULE systemModule) {
         getSystemModuleManager().add(systemModule);

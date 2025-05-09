@@ -66,7 +66,7 @@ public abstract class AbstractFlamingockBuilder<
         SYSTEM_MODULE extends SystemModule,
         SYSTEM_MODULE_MANAGER extends SystemModuleManager<SYSTEM_MODULE>>
         implements
-        CoreConfigurator<HOLDER, SYSTEM_MODULE, SYSTEM_MODULE_MANAGER>,
+        CoreConfigurator<HOLDER>,
         StandaloneConfigurator<HOLDER>,
         RunnerBuilder {
     private static final Logger logger = LoggerFactory.getLogger(AbstractFlamingockBuilder.class);
@@ -311,17 +311,6 @@ public abstract class AbstractFlamingockBuilder<
     public TransactionStrategy getTransactionStrategy() {
         return coreConfiguratorDelegate().getTransactionStrategy();
     }
-
-    @Override
-    public HOLDER addSystemModule(SYSTEM_MODULE systemModule) {
-        return coreConfiguratorDelegate().addSystemModule(systemModule);
-    }
-
-    @Override
-    public SYSTEM_MODULE_MANAGER getSystemModuleManager() {
-        return coreConfiguratorDelegate().getSystemModuleManager();
-    }
-
 
     @Override
     public HOLDER withImporter(CoreConfiguration.ImporterConfiguration mongockImporterConfiguration) {

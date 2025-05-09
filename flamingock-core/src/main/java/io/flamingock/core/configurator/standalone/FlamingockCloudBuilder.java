@@ -84,6 +84,7 @@ public class FlamingockCloudBuilder
 
     @Override
     protected void configureSystemModules() {
+        //todo change this
         coreConfiguratorDelegate.getSystemModuleManager().initialize(
                 engine.getEnvironmentId(), engine.getServiceId(), engine.getJwt(), cloudConfiguratorDelegate.getCloudConfiguration().getHost());
     }
