@@ -1,9 +1,9 @@
-package io.flamingock.core.configurator.cloud;
+package io.flamingock.core.builder.cloud;
 
 import io.flamingock.core.system.CloudSystemModule;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;
-import io.flamingock.core.configurator.SystemModuleManager;
+import io.flamingock.core.builder.SystemModuleManager;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

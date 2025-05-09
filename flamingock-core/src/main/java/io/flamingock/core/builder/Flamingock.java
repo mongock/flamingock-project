@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.standalone;
+package io.flamingock.core.builder;
 
-import io.flamingock.core.configurator.cloud.CloudConfiguration;
-import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
-import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.local.CommunityConfiguration;
-import io.flamingock.core.configurator.local.LocalSystemModuleManager;
+import io.flamingock.core.builder.cloud.CloudConfiguration;
+import io.flamingock.core.builder.cloud.CloudSystemModuleManager;
+import io.flamingock.core.builder.core.CoreConfiguration;
+import io.flamingock.core.builder.local.CommunityConfiguration;
+import io.flamingock.core.builder.local.LocalSystemModuleManager;
 import io.flamingock.core.runtime.dependency.SimpleDependencyInjectableContext;
 
 public final class Flamingock {

@@ -24,7 +24,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
 import io.flamingock.commons.utils.Trio;
-import io.flamingock.core.configurator.standalone.Flamingock;
+import io.flamingock.core.builder.Flamingock;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.legacy.MongockLegacyIdGenerator;
 import io.flamingock.core.processor.util.Deserializer;
@@ -50,7 +50,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
-import static io.flamingock.core.configurator.core.CoreConfiguration.ImporterConfiguration;
+import static io.flamingock.core.builder.core.CoreConfiguration.ImporterConfiguration;
 import static io.flamingock.oss.driver.dynamodb.internal.util.DynamoDBConstants.AUDIT_LOG_TABLE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

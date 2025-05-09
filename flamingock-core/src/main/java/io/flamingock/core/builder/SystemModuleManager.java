@@ -1,4 +1,4 @@
-package io.flamingock.core.configurator;
+package io.flamingock.core.builder;
 
 import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;

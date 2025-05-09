@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.standalone;
+package io.flamingock.core.builder;
 
 
 import io.flamingock.core.event.model.IPipelineCompletedEvent;
@@ -25,7 +25,6 @@ import io.flamingock.core.event.model.IStageCompletedEvent;
 import io.flamingock.core.event.model.IStageFailedEvent;
 import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
-import io.flamingock.core.runtime.dependency.DependencyContext;
 
 import java.util.function.Consumer;
 

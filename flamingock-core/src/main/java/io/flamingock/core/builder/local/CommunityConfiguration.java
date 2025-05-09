@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.cloud;
+package io.flamingock.core.builder.local;
 
-import io.flamingock.core.cloud.transaction.CloudTransactioner;
+public class CommunityConfiguration implements CommunityConfigurable {
 
-import java.util.Optional;
+    private boolean transactionDisabled = false;
 
-public interface CloudConfigurator<HOLDER> {
+    @Override
+    public void setTransactionDisabled(boolean transactionDisabled) {
+        this.transactionDisabled = transactionDisabled;
+    }
 
-    HOLDER setHost(String host);
-
-    HOLDER setService(String service);
-
-    HOLDER setEnvironment(String environment);
-
-    HOLDER setApiToken(String clientSecret);
-
-    //TODO remove this method and load with ServiceLoader
-    HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner);
-
-
+    @Override
+    public boolean isTransactionDisabled() {
+        return transactionDisabled;
+    }
 }

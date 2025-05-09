@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator;
+package io.flamingock.core.builder.cloud;
 
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
 
-public enum TransactionStrategy {
+public interface CloudConfigurator<HOLDER> {
 
-  EXECUTION, CHANGE_UNIT;
+    HOLDER setHost(String host);
 
-  public boolean isTransaction() {
-    return this == EXECUTION ||  this == CHANGE_UNIT;
-  }
+    HOLDER setService(String service);
+
+    HOLDER setEnvironment(String environment);
+
+    HOLDER setApiToken(String clientSecret);
+
+    //TODO remove this method and load with ServiceLoader
+    HOLDER setCloudTransactioner(CloudTransactioner cloudTransactioner);
+
 
 }

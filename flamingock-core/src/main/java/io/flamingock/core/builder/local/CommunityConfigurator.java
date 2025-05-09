@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.local;
+package io.flamingock.core.builder.local;
 
 import io.flamingock.core.local.driver.LocalDriver;
 

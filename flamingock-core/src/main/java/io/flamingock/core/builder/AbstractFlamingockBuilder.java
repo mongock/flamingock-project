@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.standalone;
+package io.flamingock.core.builder;
 
 import io.flamingock.commons.utils.CollectionUtil;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.api.template.TemplateFactory;
-import io.flamingock.core.configurator.FrameworkPlugin;
-import io.flamingock.core.configurator.SystemModuleManager;
-import io.flamingock.core.configurator.TransactionStrategy;
-import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.core.CoreConfigurator;
+import io.flamingock.core.builder.core.CoreConfiguration;
+import io.flamingock.core.builder.core.CoreConfigurator;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.event.CompositeEventPublisher;
@@ -56,7 +53,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 

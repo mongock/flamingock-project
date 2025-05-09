@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.local;
+package io.flamingock.core.builder;
 
-public class CommunityConfiguration implements CommunityConfigurable {
 
-    private boolean transactionDisabled = false;
+public enum TransactionStrategy {
 
-    @Override
-    public void setTransactionDisabled(boolean transactionDisabled) {
-        this.transactionDisabled = transactionDisabled;
-    }
+  EXECUTION, CHANGE_UNIT;
 
-    @Override
-    public boolean isTransactionDisabled() {
-        return transactionDisabled;
-    }
+  public boolean isTransaction() {
+    return this == EXECUTION ||  this == CHANGE_UNIT;
+  }
+
 }

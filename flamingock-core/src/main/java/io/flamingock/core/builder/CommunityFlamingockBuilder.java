@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.standalone;
+package io.flamingock.core.builder;
 
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.local.CommunityConfiguration;
-import io.flamingock.core.configurator.local.CommunityConfigurator;
-import io.flamingock.core.configurator.local.LocalSystemModuleManager;
+import io.flamingock.core.builder.core.CoreConfiguration;
+import io.flamingock.core.builder.local.CommunityConfiguration;
+import io.flamingock.core.builder.local.CommunityConfigurator;
+import io.flamingock.core.builder.local.LocalSystemModuleManager;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.local.LocalEngine;
 import io.flamingock.core.local.driver.LocalDriver;

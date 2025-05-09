@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.cloud;
+package io.flamingock.core.builder.cloud;
 
 public class CloudConfiguration implements CloudConfigurable {
 

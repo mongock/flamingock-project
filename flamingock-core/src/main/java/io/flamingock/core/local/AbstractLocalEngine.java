@@ -2,7 +2,7 @@ package io.flamingock.core.local;
 
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.configurator.local.CommunityConfigurable;
+import io.flamingock.core.builder.local.CommunityConfigurable;
 
 public abstract class AbstractLocalEngine implements LocalEngine {
 

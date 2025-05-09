@@ -17,8 +17,8 @@
 package io.flamingock.oss.driver.mongodb.springdata.v3.driver;
 
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.CommunityConfigurable;
+import io.flamingock.core.builder.core.CoreConfigurable;
+import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v3.internal.SpringDataMongoV3Engine;
 import io.flamingock.core.local.driver.LocalDriver;

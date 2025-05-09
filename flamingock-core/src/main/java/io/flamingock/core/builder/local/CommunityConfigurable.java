@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.cloud;
+package io.flamingock.core.builder.local;
 
-public interface CloudConfigurable {
 
-    default String getApiVersion() {
-        return "v1";
-    }
+/**
+ * Interface for potential configuration for local runners.
+ * Don't confuse with DriverConfigurable
+ */
+public interface CommunityConfigurable {
 
-    void setHost(String host);
+    void setTransactionDisabled(boolean transactionDisabled);
 
-    void setServiceName(String serviceName);
-
-    void setEnvironmentName(String environmentName);
-
-    void setApiToken(String apiToken);
-
-    String getApiToken();
-
-    String getHost();
-
-    String getServiceName();
-
-    String getEnvironmentName();
+    boolean isTransactionDisabled();
 
 }

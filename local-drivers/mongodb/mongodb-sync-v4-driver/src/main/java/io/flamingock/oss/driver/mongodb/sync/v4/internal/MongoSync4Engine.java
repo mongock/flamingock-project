@@ -25,8 +25,8 @@ import io.flamingock.cloud.transaction.mongodb.sync.v4.wrapper.MongoSync4Transac
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.TimeService;
 import io.flamingock.core.system.LocalSystemModule;
-import io.flamingock.core.configurator.core.CoreConfigurable;
-import io.flamingock.core.configurator.local.CommunityConfigurable;
+import io.flamingock.core.builder.core.CoreConfigurable;
+import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.local.AbstractLocalEngine;
 import io.flamingock.core.local.LocalAuditor;
 import io.flamingock.core.local.LocalExecutionPlanner;

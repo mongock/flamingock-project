@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.standalone;
+package io.flamingock.core.builder;
 
 import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.http.Http;
 import io.flamingock.core.cloud.CloudEngine;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
-import io.flamingock.core.configurator.cloud.CloudConfiguration;
-import io.flamingock.core.configurator.cloud.CloudConfigurator;
-import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
-import io.flamingock.core.configurator.core.CoreConfiguration;
+import io.flamingock.core.builder.cloud.CloudConfiguration;
+import io.flamingock.core.builder.cloud.CloudConfigurator;
+import io.flamingock.core.builder.cloud.CloudSystemModuleManager;
+import io.flamingock.core.builder.core.CoreConfiguration;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import org.apache.http.impl.client.HttpClients;

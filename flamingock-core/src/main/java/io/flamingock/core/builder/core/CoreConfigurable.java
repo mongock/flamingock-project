@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.configurator.core;
+package io.flamingock.core.builder.core;
 
-import io.flamingock.core.configurator.TransactionStrategy;
+import io.flamingock.core.builder.TransactionStrategy;
 
 import io.flamingock.core.preview.PreviewPipeline;
 

@@ -17,13 +17,13 @@
 package io.flamingock.springboot.v2;
 
 import io.flamingock.commons.utils.Constants;
-import io.flamingock.core.configurator.cloud.CloudConfiguration;
-import io.flamingock.core.configurator.cloud.CloudSystemModuleManager;
-import io.flamingock.core.configurator.core.CoreConfiguration;
-import io.flamingock.core.configurator.local.CommunityConfiguration;
-import io.flamingock.core.configurator.local.LocalSystemModuleManager;
-import io.flamingock.core.configurator.standalone.CloudFlamingockBuilder;
-import io.flamingock.core.configurator.standalone.CommunityFlamingockBuilder;
+import io.flamingock.core.builder.cloud.CloudConfiguration;
+import io.flamingock.core.builder.cloud.CloudSystemModuleManager;
+import io.flamingock.core.builder.core.CoreConfiguration;
+import io.flamingock.core.builder.local.CommunityConfiguration;
+import io.flamingock.core.builder.local.LocalSystemModuleManager;
+import io.flamingock.core.builder.CloudFlamingockBuilder;
+import io.flamingock.core.builder.CommunityFlamingockBuilder;
 import io.flamingock.core.local.driver.LocalDriver;
 import io.flamingock.core.runner.RunnerBuilder;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
