@@ -59,14 +59,14 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public abstract class AbstractFlamingockBuilder<HOLDER>
+public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingockBuilder<HOLDER>>
         implements
         CoreConfigurator<HOLDER>,
         StandaloneConfigurator<HOLDER>,
         RunnerBuilder {
     private static final Logger logger = LoggerFactory.getLogger(AbstractFlamingockBuilder.class);
 
-    private SystemModuleManager<?> systemModuleManager;
+    private final SystemModuleManager<?> systemModuleManager;
 
     abstract protected CoreConfiguratorDelegate<HOLDER> coreConfiguratorDelegate();
 
