@@ -32,7 +32,6 @@ import io.flamingock.oss.driver.dynamodb.changes._0_mongock_create_authors_colle
 import io.flamingock.oss.driver.dynamodb.changes._1_create_client_collection_happy;
 import io.flamingock.oss.driver.dynamodb.changes._2_insert_federico_happy_non_transactional;
 import io.flamingock.oss.driver.dynamodb.changes._3_insert_jorge_happy_non_transactional;
-import io.flamingock.oss.driver.dynamodb.driver.DynamoDBDriver;
 import io.flamingock.oss.driver.dynamodb.internal.mongock.ChangeEntryDynamoDB;
 import io.flamingock.oss.driver.dynamodb.internal.mongock.MongockImporterChangeUnit;
 import io.mongock.runner.standalone.MongockStandalone;
@@ -142,7 +141,6 @@ class DynamoDBImporterTest {
 
             Flamingock.local()
                     .withImporter(ImporterConfiguration.withSource(mongockDriver.getMigrationRepositoryName()))
-                    .setDriver(new DynamoDBDriver(client))
                     //.addStage(new Stage("stage-name")
 //                        .addCodePackage("io.flamingock.oss.driver.dynamodb.changes.happyPathWithTransaction"))
                     .addDependency(client)

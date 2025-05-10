@@ -17,6 +17,7 @@
 package io.flamingock.core.builder;
 
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.builder.core.CoreConfiguration;
 import io.flamingock.core.builder.local.CommunityConfiguration;
 import io.flamingock.core.builder.local.CommunityConfigurator;
@@ -25,6 +26,11 @@ import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.community.LocalEngine;
 import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class CommunityFlamingockBuilder
         extends AbstractFlamingockBuilder<CommunityFlamingockBuilder>
@@ -45,6 +51,7 @@ public class CommunityFlamingockBuilder
         super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
         this.communityConfiguration = communityConfiguration;
         this.systemModuleManager = systemModuleManager;
+        this.connectionDriver = getLocalDriver();
     }
 
     @Override
@@ -52,9 +59,23 @@ public class CommunityFlamingockBuilder
         return this;
     }
 
+    private LocalDriver<?> getLocalDriver() {
+        List<LocalDriver> drivers = StreamSupport
+                .stream(ServiceLoader.load(LocalDriver.class).spliterator(), false)
+                .collect(Collectors.toList());
+        if (drivers.size() == 1) {
+            return drivers.get(0);
+        } else if (drivers.size() > 1) { //TODO: Check Exceptions Messages
+            throw new FlamingockException("Only one driver is permitted");
+        } else {
+            return null;
+            //throw new FlamingockException("No driver dependency found");
+        }
+    }
+
     @Override
     protected ConnectionEngine getConnectionEngine(RunnerId runnerId) {
-        //TODO get the driver from serviceLoader
+        connectionDriver.initialize(dependencyContext);
         engine = connectionDriver.initializeAndGetEngine(
                 runnerId,
                 coreConfiguration,

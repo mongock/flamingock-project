@@ -21,6 +21,7 @@ import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.community.LocalEngine;
 import io.flamingock.core.community.driver.LocalDriver;
+import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.oss.driver.dynamodb.DynamoDBConfiguration;
 import io.flamingock.oss.driver.dynamodb.internal.DynamoDBEngine;
 import io.flamingock.oss.driver.dynamodb.internal.util.DynamoClients;
@@ -32,10 +33,11 @@ public class DynamoDBDriver implements LocalDriver<DynamoDBConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamoDBDriver.class);
 
-    private final DynamoClients client;
+    private DynamoClients client;
 
     private DynamoDBConfiguration driverConfiguration;
 
+    public DynamoDBDriver() {}
 
     public DynamoDBDriver(DynamoDbClient client) {
         this.client = new DynamoClients(client);
@@ -62,10 +64,21 @@ public class DynamoDBDriver implements LocalDriver<DynamoDBConfiguration> {
                 name, value);
     }
 
+    @Deprecated
     @Override
     public DynamoDBDriver setDriverConfiguration(DynamoDBConfiguration driverConfiguration) {
         this.driverConfiguration = driverConfiguration;
         return this;
+    }
+
+    @Override
+    public void initialize(DependencyContext dependencyContext) {
+        dependencyContext.getDependency(DynamoDbClient.class).ifPresent(dependency -> {
+            this.client = new DynamoClients((DynamoDbClient) dependency.getInstance());
+        });
+        dependencyContext.getDependency(DynamoDBConfiguration.class).ifPresent(dependency -> {
+            this.driverConfiguration = (DynamoDBConfiguration) dependency.getInstance();
+        });
     }
 
     @Override

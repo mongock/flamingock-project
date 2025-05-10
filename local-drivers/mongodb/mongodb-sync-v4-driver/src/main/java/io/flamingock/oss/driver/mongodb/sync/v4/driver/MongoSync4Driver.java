@@ -23,6 +23,7 @@ import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.community.LocalEngine;
 import io.flamingock.cloud.transaction.mongodb.sync.v4.cofig.MongoDBSync4Configuration;
+import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4Engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,11 @@ public class MongoSync4Driver implements LocalDriver<MongoDBSync4Configuration> 
     public MongoSync4Driver(MongoClient mongoClient, String databaseName) {
         this.mongoClient = mongoClient;
         this.databaseName = databaseName;
+    }
+
+    @Override
+    public void initialize(DependencyContext dependencyContext) {
+        //TODO: Implement
     }
 
     @Override
