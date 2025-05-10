@@ -23,6 +23,7 @@ import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.community.LocalEngine;
+import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.oss.driver.couchbase.CouchbaseConfiguration;
 import io.flamingock.oss.driver.couchbase.internal.CouchbaseEngine;
 import org.slf4j.Logger;
@@ -59,6 +60,11 @@ public class CouchbaseDriver implements LocalDriver<CouchbaseConfiguration> {
     public CouchbaseDriver(Cluster cluster, Collection collection) {
         this.cluster = cluster;
         this.collection = collection;
+    }
+
+    @Override
+    public void initialize(DependencyContext dependencyContext) {
+        //TODO: Implement
     }
 
     @Override

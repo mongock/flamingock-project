@@ -22,6 +22,7 @@ import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.community.LocalEngine;
 import io.flamingock.core.community.driver.LocalDriver;
+import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.oss.driver.mongodb.v3.MongoDB3Configuration;
 import io.flamingock.oss.driver.mongodb.v3.internal.Mongo3Engine;
 import org.slf4j.Logger;
@@ -59,6 +60,11 @@ public class Mongo3Driver implements LocalDriver<MongoDB3Configuration> {
     public Mongo3Driver(MongoClient mongoClient, String databaseName) {
         this.mongoClient = mongoClient;
         this.databaseName = databaseName;
+    }
+
+    @Override
+    public void initialize(DependencyContext dependencyContext) {
+        //TODO: Implement
     }
 
     @Override

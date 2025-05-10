@@ -67,7 +67,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
     protected final CoreConfiguration coreConfiguration;
 
-    private final DependencyInjectableContext dependencyContext;
+    protected final DependencyInjectableContext dependencyContext;
     private Consumer<IPipelineStartedEvent> pipelineStartedListener;
     private Consumer<IPipelineCompletedEvent> pipelineCompletedListener;
     private Consumer<IPipelineIgnoredEvent> pipelineIgnoredListener;

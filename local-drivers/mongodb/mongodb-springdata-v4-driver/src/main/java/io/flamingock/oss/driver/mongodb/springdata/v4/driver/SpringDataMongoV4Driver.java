@@ -19,6 +19,7 @@ package io.flamingock.oss.driver.mongodb.springdata.v4.driver;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.builder.local.CommunityConfigurable;
+import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v4.internal.SpringDataMongoV4Engine;
 import io.flamingock.core.community.driver.LocalDriver;
@@ -55,6 +56,11 @@ public class SpringDataMongoV4Driver implements LocalDriver<SpringDataMongoV4Con
 
     public SpringDataMongoV4Driver(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public void initialize(DependencyContext dependencyContext) {
+        //TODO: Implement
     }
 
     @Override

@@ -16,7 +16,12 @@
 
 package io.flamingock.core.community.driver;
 
+import io.flamingock.core.runtime.dependency.DependencyContext;
+
 public interface LocalDriver<DRIVER_CONFIGURATION extends DriverConfigurable> extends LocalEngineFactory {
 
+    void initialize(DependencyContext dependencyContext);
+
+    @Deprecated
     LocalDriver<DRIVER_CONFIGURATION> setDriverConfiguration(DRIVER_CONFIGURATION configuration);
 }
