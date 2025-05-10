@@ -17,6 +17,7 @@
 package io.flamingock.oss.driver.dynamodb.driver;
 
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.community.LocalEngine;
@@ -73,9 +74,11 @@ public class DynamoDBDriver implements LocalDriver<DynamoDBConfiguration> {
 
     @Override
     public void initialize(DependencyContext dependencyContext) {
-        dependencyContext.getDependency(DynamoDbClient.class).ifPresent(dependency -> {
-            this.client = new DynamoClients((DynamoDbClient) dependency.getInstance());
-        });
+        this.client = new DynamoClients((DynamoDbClient) dependencyContext
+                        .getDependency(DynamoDbClient.class)
+                        .orElseThrow(() -> new FlamingockException("DynamoDbClient is needed to be added as dependency"))
+                        .getInstance()
+        );
         dependencyContext.getDependency(DynamoDBConfiguration.class).ifPresent(dependency -> {
             this.driverConfiguration = (DynamoDBConfiguration) dependency.getInstance();
         });
