@@ -49,12 +49,9 @@ public interface LocalDriver<DRIVER_CONFIGURATION extends DriverConfigurable> ex
                 precedentClasses = Collections.emptySet();
             }
 
-            if(current == null) {
+            if (current == null || precedentClasses.contains(current.getFirst().getClass())) {
                 current = new Pair<>(driver, precedentClasses);
-
-            } else if(precedentClasses.contains(current.getFirst().getClass())) {
-                current = new Pair<>(driver, precedentClasses);
-            } else if(!current.getSecond().contains(driver.getClass())) {
+            } else if (!current.getSecond().contains(driver.getClass())) {
                 throw new FlamingockException("More than one driver is injected, without a clear hierarchy");
             }
 
