@@ -17,21 +17,14 @@
 package io.flamingock.core.builder;
 
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.builder.core.CoreConfiguration;
 import io.flamingock.core.builder.local.CommunityConfiguration;
 import io.flamingock.core.builder.local.CommunityConfigurator;
 import io.flamingock.core.builder.local.LocalSystemModuleManager;
-import io.flamingock.core.community.driver.SpringdataDriver;
-import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.community.LocalEngine;
 import io.flamingock.core.community.driver.LocalDriver;
+import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
-
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class CommunityFlamingockBuilder
         extends AbstractFlamingockBuilder<CommunityFlamingockBuilder>

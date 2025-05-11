@@ -21,8 +21,8 @@ import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.community.LocalEngine;
+import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.community.driver.OverridesDrivers;
-import io.flamingock.core.community.driver.SpringdataDriver;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.springdata.v3.internal.SpringDataMongoV3Engine;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @OverridesDrivers({MongoSync4Driver.class})
-public class SpringDataMongoV3Driver implements SpringdataDriver<SpringDataMongoV3Configuration> {
+public class SpringDataMongoV3Driver implements LocalDriver<SpringDataMongoV3Configuration> {
     private static final Logger logger = LoggerFactory.getLogger(SpringDataMongoV3Driver.class);
 
 
