@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Precedence {
+public @interface OverridesDrivers {
 
-    Class<?>[] classes() default {};
+    Class<?>[] value() default {};
 
 }

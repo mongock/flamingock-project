@@ -61,27 +61,7 @@ public class CommunityFlamingockBuilder
     }
 
     private LocalDriver<?> getLocalDriver() {
-
-        List<SpringdataDriver> springdataDrivers = StreamSupport
-                .stream(ServiceLoader.load(SpringdataDriver.class).spliterator(), false)
-                .collect(Collectors.toList());
-        if (springdataDrivers.size() == 1) {
-            return springdataDrivers.get(0);
-        } else if (springdataDrivers.size() > 1) { //TODO: Check Exceptions Messages
-            throw new FlamingockException("Only one driver is permitted");
-        }
-
-        List<LocalDriver> drivers = StreamSupport
-                .stream(ServiceLoader.load(LocalDriver.class).spliterator(), false)
-                .collect(Collectors.toList());
-        if (drivers.size() == 1) {
-            return drivers.get(0);
-        } else if (drivers.size() > 1) { //TODO: Check Exceptions Messages
-            throw new FlamingockException("Only one driver is permitted");
-        } else {
-            return null;
-            //throw new FlamingockException("No driver dependency found");
-        }
+        return LocalDriver.getDriver().orElse(null);
     }
 
     @Override

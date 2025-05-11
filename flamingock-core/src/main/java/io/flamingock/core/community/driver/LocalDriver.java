@@ -41,10 +41,10 @@ public interface LocalDriver<DRIVER_CONFIGURATION extends DriverConfigurable> ex
         for(LocalDriver<?> driver : ServiceLoader.load(LocalDriver.class)) {
 
             Set<Class<?>> precedentClasses;
-            Precedence annotation = driver.getClass().getAnnotation(Precedence.class);
+            OverridesDrivers annotation = driver.getClass().getAnnotation(OverridesDrivers.class);
 
-            if(annotation != null && annotation.classes() != null) {
-                precedentClasses = new HashSet<>(Arrays.asList(annotation.classes()));
+            if(annotation != null && annotation.value() != null) {
+                precedentClasses = new HashSet<>(Arrays.asList(annotation.value()));
             } else {
                 precedentClasses = Collections.emptySet();
             }
