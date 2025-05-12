@@ -19,6 +19,7 @@ package io.flamingock.oss.driver.couchbase.driver;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
 import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.community.driver.LocalDriver;
@@ -33,8 +34,8 @@ public class CouchbaseDriver implements LocalDriver<CouchbaseConfiguration> {
     
     private static final Logger logger = LoggerFactory.getLogger(CouchbaseDriver.class);
 
-    private final Collection collection;
-    private final Cluster cluster;
+    private Collection collection;
+    private Cluster cluster;
 
     private CouchbaseConfiguration driverConfiguration;
 
@@ -56,6 +57,8 @@ public class CouchbaseDriver implements LocalDriver<CouchbaseConfiguration> {
         return new CouchbaseDriver(cluster, collection);
     }
 
+    public CouchbaseDriver() {
+    }
 
     public CouchbaseDriver(Cluster cluster, Collection collection) {
         this.cluster = cluster;
@@ -64,9 +67,20 @@ public class CouchbaseDriver implements LocalDriver<CouchbaseConfiguration> {
 
     @Override
     public void initialize(DependencyContext dependencyContext) {
-        //TODO: Implement
+        this.cluster = (Cluster) dependencyContext
+                .getDependency(Cluster.class)
+                .orElseThrow(() -> new FlamingockException("DynamoDbClient is needed to be added as dependency"))
+                .getInstance();
+        this.collection = (Collection) dependencyContext
+                .getDependency(Collection.class)
+                .orElseThrow(() -> new FlamingockException("DynamoDbClient is needed to be added as dependency"))
+                .getInstance();
+        dependencyContext.getDependency(CouchbaseConfiguration.class).ifPresent(dependency -> {
+            this.driverConfiguration = (CouchbaseConfiguration) dependency.getInstance();
+        });
     }
 
+    @Deprecated
     @Override
     public CouchbaseDriver setDriverConfiguration(CouchbaseConfiguration driverConfiguration) {
         this.driverConfiguration = driverConfiguration;
