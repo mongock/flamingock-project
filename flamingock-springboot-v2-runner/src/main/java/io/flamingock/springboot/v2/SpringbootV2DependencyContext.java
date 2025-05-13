@@ -28,7 +28,8 @@ import java.util.Optional;
  * Implementation of {@link DependencyContext} that resolves dependencies and properties
  * using a Spring Boot 2 {@link ApplicationContext}.
  * <p>
- * It supports retrieval of beans by type or name and reads properties from the Spring {@link Environment}.
+ * It supports retrieval of beans by type or name and reads namespaced properties (prefixed with {@code flamingock.})
+ * from the Spring {@link Environment}.
  */
 public class SpringbootV2DependencyContext implements DependencyContext {
 
@@ -76,26 +77,37 @@ public class SpringbootV2DependencyContext implements DependencyContext {
     }
 
     /**
-     * Retrieves a property value as a {@code String} from the Spring {@link Environment}.
+     * Retrieves a property value as a {@code String} from the Spring {@link Environment}, using the {@code flamingock.} prefix.
      *
-     * @param key the property key
+     * @param key the property key (without prefix)
      * @return an {@link Optional} containing the value if present, otherwise empty
      */
     @Override
     public Optional<String> getProperty(String key) {
-        return Optional.ofNullable(environment.getProperty(key));
+        return Optional.ofNullable(environment.getProperty(flamingockKey(key)));
     }
 
     /**
-     * Retrieves a property value and converts it to the specified type using Spring's conversion service.
+     * Retrieves a property value and converts it to the specified type using Spring's conversion service,
+     * using the {@code flamingock.} prefix.
      *
-     * @param key  the property key
+     * @param key  the property key (without prefix)
      * @param type the expected type of the value
      * @param <T>  the type of the returned value
      * @return an {@link Optional} containing the converted value if present, otherwise empty
      */
     @Override
     public <T> Optional<T> getPropertyAs(String key, Class<T> type) {
-        return Optional.ofNullable(environment.getProperty(key, type));
+        return Optional.ofNullable(environment.getProperty(flamingockKey(key), type));
+    }
+
+    /**
+     * Adds the {@code flamingock.} namespace prefix to the property key.
+     *
+     * @param key the raw property key
+     * @return the fully qualified key with the {@code flamingock.} prefix
+     */
+    private static String flamingockKey(String key) {
+        return "flamingock." + key;
     }
 }
