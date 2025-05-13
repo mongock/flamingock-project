@@ -25,6 +25,7 @@ import io.flamingock.core.event.model.IStageCompletedEvent;
 import io.flamingock.core.event.model.IStageFailedEvent;
 import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
+import io.flamingock.core.runtime.dependency.Dependency;
 
 import java.util.function.Consumer;
 
@@ -66,6 +67,31 @@ public interface StandaloneConfigurator<HOLDER> {
      * @return builder for fluent interface
      */
     HOLDER addDependency(String name, Class<?> type, Object instance);
+
+
+    default HOLDER addProperty(String key, String value) {
+        return addDependency(new Dependency(key, String.class, value));
+    }
+
+    default HOLDER addProperty(String key, Boolean value) {
+        return addDependency(new Dependency(key,Boolean.class, value));
+    }
+
+    default HOLDER addProperty(String key, Integer value) {
+        return addDependency(new Dependency(key, Integer.class, value));
+    }
+
+    default HOLDER addProperty(String key, Float value) {
+        return addDependency(new Dependency(key, Float.class, value));
+    }
+
+    default HOLDER addProperty(String key, Long value) {
+        return addDependency(new Dependency(key, Long.class, value));
+    }
+
+    default HOLDER addProperty(String key, Double value) {
+        return addDependency(new Dependency(key, Double.class, value));
+    }
 
     //TODO javadoc
     HOLDER setPipelineStartedListener(Consumer<IPipelineStartedEvent> listener);

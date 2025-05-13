@@ -38,39 +38,27 @@ public interface DependencyInjectable {
     void removeDependencyByRef(Dependency dependency);
 
     default void addProperty(String key, String value) {
-        if(value != null) {
-            addDependency(new Dependency(key, value.getClass(), value));
-        }
+        addDependency(new Dependency(key, String.class, value));
     }
 
     default void addProperty(String key, Boolean value) {
-        if(value != null) {
-            addDependency(new Dependency(key, value.getClass(), value));
-        }
+        addDependency(new Dependency(key,Boolean.class, value));
     }
 
     default void addProperty(String key, Integer value) {
-        if(value != null) {
-            addDependency(new Dependency(key, value.getClass(), value));
-        }
+        addDependency(new Dependency(key, Integer.class, value));
     }
 
     default void addProperty(String key, Float value) {
-        if(value != null) {
-            addDependency(new Dependency(key, value.getClass(), value));
-        }
+        addDependency(new Dependency(key, Float.class, value));
     }
 
     default void addProperty(String key, Long value) {
-        if(value != null) {
-            addDependency(new Dependency(key, value.getClass(), value));
-        }
+        addDependency(new Dependency(key, Long.class, value));
     }
 
     default void addProperty(String key, Double value) {
-        if(value != null) {
-            addDependency(new Dependency(key, value.getClass(), value));
-        }
+        addDependency(new Dependency(key, Double.class, value));
     }
 
 }
