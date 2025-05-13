@@ -43,4 +43,14 @@ public class PriorityDependencyContext implements DependencyContext {
         return priorityDependency.isPresent() ? priorityDependency : baseContext.getDependency(name);
     }
 
+
+    @Override
+    public Optional<String> getProperty(String key) {
+        return getDependencyValue(key, String.class);
+    }
+
+    @Override
+    public <T> Optional<T> getPropertyAs(String key, Class<T> type) {
+        return getDependencyValue(key, type);
+    }
 }
