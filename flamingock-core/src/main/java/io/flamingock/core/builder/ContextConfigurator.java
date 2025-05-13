@@ -27,9 +27,17 @@ import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.runtime.dependency.Dependency;
 
+import java.io.File;
+import java.net.InetAddress;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.util.Currency;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.function.Consumer;
 
-public interface StandaloneConfigurator<HOLDER> {
+public interface ContextConfigurator<HOLDER> {
 
 
     /**
@@ -68,31 +76,6 @@ public interface StandaloneConfigurator<HOLDER> {
      */
     HOLDER addDependency(String name, Class<?> type, Object instance);
 
-
-    default HOLDER addProperty(String key, String value) {
-        return addDependency(new Dependency(key, String.class, value));
-    }
-
-    default HOLDER addProperty(String key, Boolean value) {
-        return addDependency(new Dependency(key,Boolean.class, value));
-    }
-
-    default HOLDER addProperty(String key, Integer value) {
-        return addDependency(new Dependency(key, Integer.class, value));
-    }
-
-    default HOLDER addProperty(String key, Float value) {
-        return addDependency(new Dependency(key, Float.class, value));
-    }
-
-    default HOLDER addProperty(String key, Long value) {
-        return addDependency(new Dependency(key, Long.class, value));
-    }
-
-    default HOLDER addProperty(String key, Double value) {
-        return addDependency(new Dependency(key, Double.class, value));
-    }
-
     //TODO javadoc
     HOLDER setPipelineStartedListener(Consumer<IPipelineStartedEvent> listener);
 
@@ -128,6 +111,7 @@ public interface StandaloneConfigurator<HOLDER> {
     //TODO javadoc
     Consumer<IPipelineFailedEvent> getPipelineFailureListener();
 
+    //TODO javadoc
     Consumer<IStageStartedEvent> getStageStartedListener();
 
     //TODO javadoc
@@ -138,4 +122,61 @@ public interface StandaloneConfigurator<HOLDER> {
 
     //TODO javadoc
     Consumer<IStageFailedEvent> getStageFailureListener();
+
+
+    default HOLDER addProperty(String key, String value) {
+        return addDependency(new Dependency(key, String.class, value));
+    }
+
+    default HOLDER addProperty(String key, Boolean value) {
+        return addDependency(new Dependency(key,Boolean.class, value));
+    }
+
+    default HOLDER addProperty(String key, Integer value) {
+        return addDependency(new Dependency(key, Integer.class, value));
+    }
+
+    default HOLDER addProperty(String key, Float value) {
+        return addDependency(new Dependency(key, Float.class, value));
+    }
+
+    default HOLDER addProperty(String key, Long value) {
+        return addDependency(new Dependency(key, Long.class, value));
+    }
+
+    default HOLDER addProperty(String key, Double value) {
+        return addDependency(new Dependency(key, Double.class, value));
+    }
+
+    default HOLDER addProperty(String key, UUID value) {
+        return addDependency(new Dependency(key, UUID.class, value));
+    }
+
+    default HOLDER addProperty(String key, Currency value) {
+        return addDependency(new Dependency(key, Currency.class, value));
+    }
+
+    default HOLDER addProperty(String key, Locale value) {
+        return addDependency(new Dependency(key, Locale.class, value));
+    }
+
+    default HOLDER addProperty(String key, Charset value) {
+        return addDependency(new Dependency(key, Charset.class, value));
+    }
+
+    default HOLDER addProperty(String key, File value) {
+        return addDependency(new Dependency(key, File.class, value));
+    }
+
+    default HOLDER addProperty(String key, Path value) {
+        return addDependency(new Dependency(key, Path.class, value));
+    }
+
+    default HOLDER addProperty(String key, InetAddress value) {
+        return addDependency(new Dependency(key, InetAddress.class, value));
+    }
+
+    default HOLDER addProperty(String key, URL value) {
+        return addDependency(new Dependency(key, URL.class, value));
+    }
 }

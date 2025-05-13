@@ -59,7 +59,7 @@ import java.util.stream.StreamSupport;
 public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingockBuilder<HOLDER>>
         implements
         CoreConfigurator<HOLDER>,
-        StandaloneConfigurator<HOLDER>,
+        ContextConfigurator<HOLDER>,
         RunnerBuilder {
     private static final Logger logger = LoggerFactory.getLogger(AbstractFlamingockBuilder.class);
 
