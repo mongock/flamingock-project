@@ -11,7 +11,6 @@ import io.flamingock.core.event.model.IStageFailedEvent;
 import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
 import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.runtime.dependency.DependencyContextWrapper;
 import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.springboot.v2.event.SpringPipelineFailedEvent;
 import io.flamingock.springboot.v2.event.SpringPipelineIgnoredEvent;
@@ -70,15 +69,9 @@ public class SpringbootV2Plugin implements FrameworkPlugin {
 
     @Override
     public Optional<DependencyContext> getDependencyContext() {
-        if(applicationContext != null) {
-            DependencyContext springDependencyContext = new DependencyContextWrapper(
-                    type -> applicationContext.getBean(type),
-                    name -> applicationContext.getBean(name)
-            );
-            return Optional.of(springDependencyContext);
-        } else {
-            return Optional.empty();
-        }
+        return applicationContext != null
+                ? Optional.of(new SpringbootV2DependencyContext(applicationContext))
+                : Optional.empty();
     }
 
     @Override

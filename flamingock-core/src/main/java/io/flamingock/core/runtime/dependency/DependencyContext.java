@@ -20,10 +20,24 @@ package io.flamingock.core.runtime.dependency;
 
 import java.util.Optional;
 
-public interface DependencyContext {
+public interface DependencyContext extends PropertyDependencyResolver {
 
     Optional<Dependency> getDependency(Class<?> type);
 
     Optional<Dependency> getDependency(String name);
+
+    default <T> Optional<T> getDependencyValue(Class<T> type) {
+        return getDependency(type)
+                .map(Dependency::getInstance)
+                .map(type::cast);
+    }
+
+    default <T> Optional<T> getDependencyValue(String name, Class<T> type) {
+        return getDependency(name)
+                .map(Dependency::getInstance)
+                .map(type::cast);
+    }
+
+
     
 }

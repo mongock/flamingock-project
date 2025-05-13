@@ -21,7 +21,7 @@ package io.flamingock.core.runtime.dependency;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public abstract class AbstractDependencyContext implements DependencyContext {
+public abstract class AbstractSimpleDependencyContext implements DependencyContext {
 
     @Override
     public Optional<Dependency> getDependency(Class<?> type) {
@@ -47,6 +47,16 @@ public abstract class AbstractDependencyContext implements DependencyContext {
         return DependencyBuildable.class.isAssignableFrom(dependency.getClass())
                 ? getDependency(((DependencyBuildable) dependency).getImplType())
                 : dependencyOptional;
+    }
+
+    @Override
+    public Optional<String> getProperty(String key) {
+        return getDependencyValue(key, String.class);
+    }
+
+    @Override
+    public <T> Optional<T> getPropertyAs(String key, Class<T> type) {
+        return getDependencyValue(key, type);
     }
 
 

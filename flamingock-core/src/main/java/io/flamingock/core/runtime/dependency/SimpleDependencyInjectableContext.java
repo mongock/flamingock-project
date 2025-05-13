@@ -17,12 +17,10 @@
 package io.flamingock.core.runtime.dependency;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-public class SimpleDependencyInjectableContext extends AbstractDependencyContext implements DependencyInjectableContext {
+public class SimpleDependencyInjectableContext extends AbstractSimpleDependencyContext implements DependencyInjectableContext {
 
     private final LinkedHashSet<Dependency> dependencyStore;
 
