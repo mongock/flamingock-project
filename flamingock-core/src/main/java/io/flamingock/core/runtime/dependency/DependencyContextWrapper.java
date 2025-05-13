@@ -1,6 +1,6 @@
 package io.flamingock.core.runtime.dependency;
 
-import io.flamingock.core.runtime.dependency.exception.ForbiddenParameterException;
+
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -16,7 +16,7 @@ public class DependencyContextWrapper implements DependencyContext{
         this.byNameFunc = byNameFunc;
     }
     @Override
-    public Optional<Dependency> getDependency(Class<?> type) throws ForbiddenParameterException {
+    public Optional<Dependency> getDependency(Class<?> type) {
         try {
             return Optional.of(new Dependency(type, byTypeFunc.apply(type)));
         } catch (RuntimeException ex) {
@@ -25,7 +25,7 @@ public class DependencyContextWrapper implements DependencyContext{
     }
 
     @Override
-    public Optional<Dependency> getDependency(String name) throws ForbiddenParameterException {
+    public Optional<Dependency> getDependency(String name) {
         try {
             return Optional.of(new Dependency(byNameFunc.apply(name)));
         } catch (RuntimeException ex) {

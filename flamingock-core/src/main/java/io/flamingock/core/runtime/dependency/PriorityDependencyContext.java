@@ -16,7 +16,7 @@
 
 package io.flamingock.core.runtime.dependency;
 
-import io.flamingock.core.runtime.dependency.exception.ForbiddenParameterException;
+
 
 import java.util.Optional;
 
@@ -31,14 +31,14 @@ public class PriorityDependencyContext implements DependencyContext {
     }
 
     @Override
-    public Optional<Dependency> getDependency(Class<?> type) throws ForbiddenParameterException {
+    public Optional<Dependency> getDependency(Class<?> type) {
         Optional<Dependency> priorityDependency = priorityContext.getDependency(type);
         return priorityDependency.isPresent() ? priorityDependency : baseContext.getDependency(type);
 
     }
 
     @Override
-    public Optional<Dependency> getDependency(String name) throws ForbiddenParameterException {
+    public Optional<Dependency> getDependency(String name) {
         Optional<Dependency> priorityDependency = priorityContext.getDependency(name);
         return priorityDependency.isPresent() ? priorityDependency : baseContext.getDependency(name);
     }
