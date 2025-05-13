@@ -17,6 +17,7 @@
 package io.flamingock.core.runtime.dependency;
 
 import java.util.Collection;
+import java.util.Locale;
 
 public interface DependencyInjectable {
 
@@ -35,4 +36,41 @@ public interface DependencyInjectable {
      * @param dependency the dependency to me removed
      */
     void removeDependencyByRef(Dependency dependency);
+
+    default void addProperty(String key, String value) {
+        if(value != null) {
+            addDependency(new Dependency(key, value.getClass(), value));
+        }
+    }
+
+    default void addProperty(String key, Boolean value) {
+        if(value != null) {
+            addDependency(new Dependency(key, value.getClass(), value));
+        }
+    }
+
+    default void addProperty(String key, Integer value) {
+        if(value != null) {
+            addDependency(new Dependency(key, value.getClass(), value));
+        }
+    }
+
+    default void addProperty(String key, Float value) {
+        if(value != null) {
+            addDependency(new Dependency(key, value.getClass(), value));
+        }
+    }
+
+    default void addProperty(String key, Long value) {
+        if(value != null) {
+            addDependency(new Dependency(key, value.getClass(), value));
+        }
+    }
+
+    default void addProperty(String key, Double value) {
+        if(value != null) {
+            addDependency(new Dependency(key, value.getClass(), value));
+        }
+    }
+
 }
