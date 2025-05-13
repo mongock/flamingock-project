@@ -53,10 +53,6 @@ public class SimpleDependencyInjectableContext extends AbstractSimpleDependencyC
             if(isSafeToRemove) {
                 dependencyStore.remove(dependency);
             }
-
         }
-
     }
-
-
 }

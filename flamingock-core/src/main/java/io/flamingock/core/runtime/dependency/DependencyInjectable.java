@@ -18,23 +18,40 @@ package io.flamingock.core.runtime.dependency;
 
 import java.util.Collection;
 
+/**
+ * Interface for components capable of accepting and managing dependencies dynamically.
+ */
 public interface DependencyInjectable {
 
+    /**
+     * Adds a collection of dependencies to the target.
+     *
+     * @param dependencies the dependencies to add
+     */
     default void addDependencies(Collection<? extends Dependency> dependencies) {
         dependencies.forEach(this::addDependency);
     }
 
+    /**
+     * Adds a dependency by wrapping the given object in a {@link Dependency}.
+     *
+     * @param object the object to register as a dependency
+     */
     default void addDependency(Object object) {
         addDependency(new Dependency(object));
     }
 
+    /**
+     * Adds a fully constructed {@link Dependency} instance to the target.
+     *
+     * @param dependency the dependency to add
+     */
     void addDependency(Dependency dependency);
 
     /**
-     * Idempotent removal by reference
+     * Removes the specified dependency by reference. This operation is idempotent.
      *
-     * @param dependency the dependency to me removed
+     * @param dependency the exact dependency instance to be removed
      */
     void removeDependencyByRef(Dependency dependency);
-
 }
