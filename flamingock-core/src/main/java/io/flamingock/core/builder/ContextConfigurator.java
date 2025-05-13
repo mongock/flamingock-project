@@ -29,9 +29,19 @@ import io.flamingock.core.runtime.dependency.Dependency;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.UUID;
@@ -178,5 +188,45 @@ public interface ContextConfigurator<HOLDER> {
 
     default HOLDER addProperty(String key, URL value) {
         return addDependency(new Dependency(key, URL.class, value));
+    }
+
+    default HOLDER addProperty(String key, URI value) {
+        return addDependency(new Dependency(key, URI.class, value));
+    }
+
+    default HOLDER addProperty(String key, Duration value) {
+        return addDependency(new Dependency(key, Duration.class, value));
+    }
+
+    default HOLDER addProperty(String key, Period value) {
+        return addDependency(new Dependency(key, Period.class, value));
+    }
+
+    default HOLDER addProperty(String key, Instant value) {
+        return addDependency(new Dependency(key, Instant.class, value));
+    }
+
+    default HOLDER addProperty(String key, LocalDate value) {
+        return addDependency(new Dependency(key, LocalDate.class, value));
+    }
+
+    default HOLDER addProperty(String key, LocalTime value) {
+        return addDependency(new Dependency(key, LocalTime.class, value));
+    }
+
+    default HOLDER addProperty(String key, LocalDateTime value) {
+        return addDependency(new Dependency(key, LocalDateTime.class, value));
+    }
+
+    default HOLDER addProperty(String key, ZonedDateTime value) {
+        return addDependency(new Dependency(key, ZonedDateTime.class, value));
+    }
+
+    default HOLDER addProperty(String key, OffsetDateTime value) {
+        return addDependency(new Dependency(key, OffsetDateTime.class, value));
+    }
+
+    default HOLDER addProperty(String key, OffsetTime value) {
+        return addDependency(new Dependency(key, OffsetTime.class, value));
     }
 }
