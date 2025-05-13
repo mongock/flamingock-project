@@ -19,8 +19,6 @@ package io.flamingock.core.task.loaded;
 import io.flamingock.commons.utils.ReflectionUtil;
 import io.flamingock.core.api.annotations.FlamingockConstructor;
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.task.loaded.AbstractReflectionLoadedTask;
-import io.mongock.api.annotations.ChangeUnitConstructor;
 
 import java.lang.reflect.Constructor;
 
@@ -42,42 +40,21 @@ public abstract class AbstractLoadedChangeUnit extends AbstractReflectionLoadedT
 
     @Override
     public Constructor<?> getConstructor() {
-        if (isNewChangeUnit()) {
-            try {
-                return ReflectionUtil.getConstructorWithAnnotationPreference(getSourceClass(), FlamingockConstructor.class);
-            } catch (ReflectionUtil.MultipleAnnotatedConstructorsFound ex) {
-                throw new FlamingockException("Found multiple constructors for class[%s] annotated with %s." +
-                        " Annotate the one you want Flamingock to use to instantiate your changeUnit",
-                        getSource(),
-                        FlamingockConstructor.class.getName());
-            } catch (ReflectionUtil.MultipleConstructorsFound ex) {
-                throw new FlamingockException("Found multiple constructors, please provide at least one  for class[%s].\n" +
-                        "When more than one constructor, exactly one of them must be annotated. And it will be taken as default "
-                        , FlamingockConstructor.class.getSimpleName()
-                        , getSource()
-                );
-            } catch (ReflectionUtil.ConstructorNotFound ex) {
-                throw new FlamingockException("Cannot find a valid constructor for class[%s]", getSource());
-            }
-        } else {
-            try {
-                return ReflectionUtil.getConstructorWithAnnotationPreference(getSourceClass(), ChangeUnitConstructor.class);
-            } catch (ReflectionUtil.MultipleAnnotatedConstructorsFound ex) {
-                throw new FlamingockException("Found multiple LEGACY constructors for class[%s] annotated with %s." +
-                        " Annotate the one you want Flamingock to use to instantiate your changeUnit.\n" +
-                        "Note: It's highly recommended to use the new API(@FlamingockConstructor)",
-                        getSource(),
-                        ChangeUnitConstructor.class.getName());
-            } catch (ReflectionUtil.MultipleConstructorsFound ex) {
-                throw new FlamingockException("Found multiple constructors, please provide at least one for class[%s].\n" +
-                        "When more than one constructor, exactly one of them must be annotated. And it will be taken as default\n" +
-                        "Note: It's highly recommended to use the new API(@FlamingockConstructor)"
-                        , ChangeUnitConstructor.class.getSimpleName()
-                        , getSource()
-                );
-            } catch (ReflectionUtil.ConstructorNotFound ex) {
-                throw new FlamingockException("Cannot find a valid constructor for class[%s]", getSource());
-            }
+        try {
+            return ReflectionUtil.getConstructorWithAnnotationPreference(getSourceClass(), FlamingockConstructor.class);
+        } catch (ReflectionUtil.MultipleAnnotatedConstructorsFound ex) {
+            throw new FlamingockException("Found multiple constructors for class[%s] annotated with %s." +
+                    " Annotate the one you want Flamingock to use to instantiate your changeUnit",
+                    getSource(),
+                    FlamingockConstructor.class.getName());
+        } catch (ReflectionUtil.MultipleConstructorsFound ex) {
+            throw new FlamingockException("Found multiple constructors, please provide at least one  for class[%s].\n" +
+                    "When more than one constructor, exactly one of them must be annotated. And it will be taken as default "
+                    , FlamingockConstructor.class.getSimpleName()
+                    , getSource()
+            );
+        } catch (ReflectionUtil.ConstructorNotFound ex) {
+            throw new FlamingockException("Cannot find a valid constructor for class[%s]", getSource());
         }
     }
 

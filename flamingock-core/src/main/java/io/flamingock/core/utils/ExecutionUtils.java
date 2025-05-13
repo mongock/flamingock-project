@@ -17,15 +17,13 @@ public final class ExecutionUtils {
 
     private static final Class<Change> CHANGE_UNIT_CLASS = Change.class;
 
-    private static final Class<io.mongock.api.annotations.ChangeUnit> LEGACY_CHANGE_UNIT_CLASS = io.mongock.api.annotations.ChangeUnit.class;
-
 
     private ExecutionUtils() {
     }
 
     @SuppressWarnings("unchecked")
     public static Collection<Class<?>> loadExecutionClassesFromPackage(String packagePath) {
-        return ReflectionUtil.loadAnnotatedClassesFromPackage(packagePath, ExecutionUtils.CHANGE_UNIT_CLASS, ExecutionUtils.LEGACY_CHANGE_UNIT_CLASS);
+        return ReflectionUtil.loadAnnotatedClassesFromPackage(packagePath, ExecutionUtils.CHANGE_UNIT_CLASS);
     }
 
     /**
@@ -37,15 +35,11 @@ public final class ExecutionUtils {
     }
 
     public static boolean isChangeUnit(Class<?> clazz) {
-        return clazz.isAnnotationPresent(CHANGE_UNIT_CLASS) || clazz.isAnnotationPresent(LEGACY_CHANGE_UNIT_CLASS);
+        return clazz.isAnnotationPresent(CHANGE_UNIT_CLASS);
     }
 
     public static boolean isNewChangeUnit(Class<?> clazz) {
         return clazz.isAnnotationPresent(CHANGE_UNIT_CLASS);
-    }
-
-    public static boolean isLegacyChangeUnit(Class<?> clazz) {
-        return clazz.isAnnotationPresent(LEGACY_CHANGE_UNIT_CLASS);
     }
 
     public static boolean isNotLockGuardAnnotated(Class<?> type) {

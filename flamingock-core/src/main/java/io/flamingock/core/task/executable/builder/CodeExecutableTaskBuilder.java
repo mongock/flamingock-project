@@ -25,6 +25,7 @@ import io.flamingock.core.task.loaded.CodeLoadedChangeUnit;
 import io.flamingock.core.task.loaded.AbstractReflectionLoadedTask;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -91,46 +92,7 @@ public class CodeExecutableTaskBuilder implements ExecutableTaskBuilder<CodeLoad
                 executionMethod,
                 rollbackMethodOpt.orElse(null));
 
-
-            /*
-            If there is any rollback dependency(@BeforeExecution in ChangeUnits, legacy ChangeSet, etc.) they are added as normal task
-            before the main task and, if it also provides @BeforeExecutionRollback, it's also added to the main task's rollbackChain,
-            so they  are rolled back in case the main task fails.
-             */
-        List<ReflectionExecutableTask<AbstractReflectionLoadedTask>> tasks = new LinkedList<>();
-        getBeforeExecutionOptional(stageName, task, initialState).ifPresent(beforeExecutionTask -> {
-            tasks.add(beforeExecutionTask);
-            beforeExecutionTask.getRollbackChain().forEach(task::addRollback);
-        });
-        tasks.add(task);
-        return tasks;
+        return Collections.singletonList(task);
     }
-
-    private Optional<ReflectionExecutableTask<AbstractReflectionLoadedTask>> getBeforeExecutionOptional(String stageName,
-                                                                                                        ReflectionExecutableTask<AbstractReflectionLoadedTask> baseTask,
-                                                                                                        AuditEntry.Status initialState) {
-        //Creates a new LoadedTask, based on the main one, but with the "beforeExecution id, also based on the main one"
-        CodeLoadedChangeUnit loadedTask = LoadedTaskBuilder
-                .getCodeBuilderInstance(baseTask.getDescriptor().getSourceClass())
-                .setBeforeExecution(true)
-                .setTransactional(false)
-                .setSystem(baseTask.getDescriptor().isSystem())
-                .build();
-        Optional<Method> beforeExecutionMethodOptional = loadedTask.getBeforeExecutionMethod();
-        if (!beforeExecutionMethodOptional.isPresent()) {
-            return Optional.empty();
-        }
-        Method beforeExecutionMethod = beforeExecutionMethodOptional.get();
-        Optional<Method> rollbackBeforeExecution = loadedTask.getRollbackBeforeExecutionMethod();
-
-        return Optional.of(new ReflectionExecutableTask<>(
-                stageName,
-                loadedTask,
-                AuditEntry.Status.isRequiredExecution(initialState),
-                beforeExecutionMethod,
-                rollbackBeforeExecution.orElse(null)));
-
-    }
-
 
 }
