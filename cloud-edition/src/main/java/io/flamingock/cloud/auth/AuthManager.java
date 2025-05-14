@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.auth;
+package io.flamingock.cloud.auth;
 
 import io.flamingock.core.cloud.api.auth.AuthRequest;
 import io.flamingock.core.cloud.api.auth.AuthResponse;

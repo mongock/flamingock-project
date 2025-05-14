@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.planner.client;
-
-import io.flamingock.core.cloud.api.planner.request.ExecutionPlanRequest;
-import io.flamingock.core.cloud.api.planner.response.ExecutionPlanResponse;
-
-public interface ExecutionPlannerClient {
+package io.flamingock.cloud.auth;
 
 
-    ExecutionPlanResponse createExecution(ExecutionPlanRequest request, String lastAcquisitionId, long elapsedMillis);
+import io.flamingock.core.cloud.api.auth.AuthRequest;
+import io.flamingock.core.cloud.api.auth.AuthResponse;
+
+public interface AuthClient {
+    AuthResponse getToken(AuthRequest request);
 }

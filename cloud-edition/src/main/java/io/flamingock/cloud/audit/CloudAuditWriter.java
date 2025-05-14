@@ -1,4 +1,4 @@
-package io.flamingock.core.cloud.audit;
+package io.flamingock.cloud.audit;
 
 import io.flamingock.commons.utils.Result;
 import io.flamingock.core.engine.audit.AuditWriter;

@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.auth;
+package io.flamingock.cloud.lock.client;
 
+import io.flamingock.core.cloud.api.lock.LockExtensionRequest;
+import io.flamingock.core.cloud.api.lock.LockResponse;
+import io.flamingock.core.engine.lock.LockKey;
+import io.flamingock.commons.utils.RunnerId;
 
-import io.flamingock.core.cloud.api.auth.AuthRequest;
-import io.flamingock.core.cloud.api.auth.AuthResponse;
+public interface LockServiceClient {
 
-public interface AuthClient {
-    AuthResponse getToken(AuthRequest request);
+    LockResponse extendLock(LockKey lockKey,
+                            RunnerId runnerId,
+                            LockExtensionRequest lockRequest);
+
+    LockResponse getLock(LockKey lockKey);
+
+    void releaseLock(LockKey lockKey, RunnerId runnerId);
 }

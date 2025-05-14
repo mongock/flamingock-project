@@ -105,7 +105,9 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         TemplateFactory.loadTemplates();
 
         RunnerId runnerId = RunnerId.generate();
+        addDependency("internal.runner.id", RunnerId.class,  runnerId);
         logger.info("Generated runner id:  {}", runnerId);
+
 
         //START SPECIFIC CONFIG BLOCK: Cloud VS Local
         ConnectionEngine engine = getConnectionEngine(runnerId);

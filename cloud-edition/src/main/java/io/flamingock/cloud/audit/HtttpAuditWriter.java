@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.audit;
+package io.flamingock.cloud.audit;
 
 import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
-import io.flamingock.core.cloud.auth.AuthManager;
+import io.flamingock.cloud.auth.AuthManager;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;
 import io.flamingock.core.engine.audit.AuditWriter;

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.runtime.dependency.exception;
+package io.flamingock.core.runtime;
 
 
 import io.flamingock.core.api.exception.FlamingockException;
 
-public class DependencyInjectionException extends FlamingockException {
+public class MissingInjectedParameterException extends FlamingockException {
 
   private final Class<?> wrongParameter;
   private final String name;
 
-  public DependencyInjectionException(Class<?> wrongParameter, String name) {
+  public MissingInjectedParameterException(Class<?> wrongParameter, String name) {
     super();
     this.wrongParameter = wrongParameter;
     this.name = name;
@@ -40,6 +40,8 @@ public class DependencyInjectionException extends FlamingockException {
 
   @Override
   public String getMessage() {
+
+
     StringBuilder sb = new StringBuilder("Wrong parameter[")
         .append(getWrongParameter().getSimpleName())
         .append("]");

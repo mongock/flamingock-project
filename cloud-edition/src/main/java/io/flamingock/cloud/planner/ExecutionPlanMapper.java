@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.planner;
+package io.flamingock.cloud.planner;
 
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.TimeService;
@@ -26,7 +26,7 @@ import io.flamingock.core.cloud.api.planner.response.StageResponse;
 import io.flamingock.core.cloud.api.planner.response.TaskResponse;
 import io.flamingock.core.cloud.api.planner.response.RequiredActionTask;
 import io.flamingock.core.cloud.api.vo.OngoingStatus;
-import io.flamingock.core.cloud.lock.CloudLockService;
+import io.flamingock.cloud.lock.CloudLockService;
 import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.core.engine.lock.Lock;

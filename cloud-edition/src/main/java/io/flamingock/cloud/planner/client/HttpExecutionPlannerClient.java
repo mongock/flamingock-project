@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.planner.client;
+package io.flamingock.cloud.planner.client;
 
-import io.flamingock.core.cloud.auth.AuthManager;
+import io.flamingock.cloud.auth.AuthManager;
 import io.flamingock.core.cloud.api.planner.request.ExecutionPlanRequest;
 import io.flamingock.core.cloud.api.planner.response.ExecutionPlanResponse;
 import io.flamingock.commons.utils.id.EnvironmentId;
