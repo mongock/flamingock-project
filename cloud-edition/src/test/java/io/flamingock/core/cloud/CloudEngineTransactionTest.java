@@ -16,16 +16,16 @@
 
 package io.flamingock.core.cloud;
 
-import io.flamingock.common.test.cloud.deprecated.AuditEntryMatcher;
-import io.flamingock.common.test.cloud.deprecated.MockRunnerServerOld;
-import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
-import io.flamingock.core.cloud.api.vo.OngoingStatus;
 import io.flamingock.core.cloud.changes.CloudChange1;
 import io.flamingock.core.cloud.changes.CloudChange2;
-import io.flamingock.core.cloud.transaction.TaskWithOngoingStatus;
 import io.flamingock.core.cloud.utils.TestCloudTransactioner;
-import io.flamingock.core.builder.Flamingock;
+import io.flamingock.common.test.cloud.deprecated.AuditEntryMatcher;
+import io.flamingock.common.test.cloud.deprecated.MockRunnerServerOld;
 import io.flamingock.core.builder.CloudFlamingockBuilder;
+import io.flamingock.core.builder.Flamingock;
+import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
+import io.flamingock.core.cloud.api.vo.OngoingStatus;
+import io.flamingock.core.cloud.transaction.TaskWithOngoingStatus;
 import io.flamingock.core.runner.Runner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -104,7 +104,7 @@ public class CloudEngineTransactionTest {
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
                 .setEnvironment(environmentName)
-                //.addStage(new Stage("stage-1")
+        //.addStage(new Stage("stage-1")
 //                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
         ;
     }

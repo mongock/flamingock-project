@@ -1,5 +1,6 @@
 package io.flamingock.cloud;
 
+import io.flamingock.commons.utils.JsonObjectMapper;
 import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.commons.utils.TimeService;
 import io.flamingock.commons.utils.http.Http;
@@ -22,6 +23,7 @@ import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.runtime.dependency.DependencyContext;
+import org.apache.http.impl.client.HttpClients;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,25 +39,13 @@ public class CloudDriverImpl  implements CloudDriver {
     private CloudTransactioner transactioner;
     private Http.RequestBuilderFactory requestBuilderFactory;
 
-    public CloudDriverImpl(
-            RunnerId runnerId,
-            CoreConfigurable coreConfiguration,
-            CloudConfigurable cloudConfiguration,
-            CloudTransactioner transactioner,//it should be taken from ServiceLoader
-            Http.RequestBuilderFactory requestBuilderFactory) {
-        this.runnerId = runnerId;
-        this.coreConfiguration = coreConfiguration;
-        this.cloudConfiguration = cloudConfiguration;
-        this.transactioner = transactioner;
-        this.requestBuilderFactory = requestBuilderFactory;
-    }
-
     @Override
     public void initialize(DependencyContext dependencyContext) {
         this.runnerId = dependencyContext.getRequiredDependencyValue(RunnerId.class);
         this.coreConfiguration = dependencyContext.getRequiredDependencyValue(CoreConfigurable.class);
         this.cloudConfiguration = dependencyContext.getRequiredDependencyValue(CloudConfigurable.class);
         this.transactioner = dependencyContext.getDependencyValue(CloudTransactioner.class).orElse(null);
+        this.requestBuilderFactory = Http.builderFactory(HttpClients.createDefault(), JsonObjectMapper.DEFAULT_INSTANCE);
     }
 
     @Override

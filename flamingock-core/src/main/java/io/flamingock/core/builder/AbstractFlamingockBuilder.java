@@ -93,6 +93,8 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         this.coreConfiguration = coreConfiguration;
     }
 
+    protected abstract void injectSpecificDependencies();
+
     protected abstract ConnectionEngine getConnectionEngine(RunnerId runnerId);
 
     protected abstract void configureSystemModules();
@@ -105,9 +107,8 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         TemplateFactory.loadTemplates();
 
         RunnerId runnerId = RunnerId.generate();
-        addDependency("internal.runner.id", RunnerId.class,  runnerId);
         logger.info("Generated runner id:  {}", runnerId);
-
+        injectDependencies(runnerId);
 
         //START SPECIFIC CONFIG BLOCK: Cloud VS Local
         ConnectionEngine engine = getConnectionEngine(runnerId);
@@ -151,6 +152,13 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
                 coreConfiguration.isThrowExceptionIfCannotObtainLock(),
                 engine.getCloser()
         );
+    }
+
+    private void injectDependencies(RunnerId runnerId) {
+        logger.trace("injecting internal configuration");
+        addDependency(runnerId);
+        addDependency(coreConfiguration);
+        injectSpecificDependencies();
     }
 
     private DependencyContext getMergedDependencyContext(List<FrameworkPlugin> frameworkPlugins) {
