@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.dynamodb.internal.util;
+package io.flamingock.commons.utils;
 
 public final class DynamoDBConstants {
     public static final String AUDIT_LOG_TABLE_NAME = "flamingock_audit_log";
