@@ -39,8 +39,7 @@ public class DynamoDBDriver implements LocalDriver {
     @Override
     public void initialize(DependencyContext dependencyContext) {
         this.client = dependencyContext
-                .getDependencyValue(DynamoDbClient.class)
-                .orElseThrow(() -> new FlamingockException("DynamoDbClient is needed to be added as dependency"));
+                .getRequiredDependencyValue(DynamoDbClient.class);
         this.driverConfiguration = new DynamoDBConfiguration();
         this.driverConfiguration.mergeConfig(dependencyContext);
     }
