@@ -68,7 +68,7 @@ class MongoSync4DriverTest {
 
     private static final String CLIENTS_COLLECTION = "clientCollection";
 
-    private static final String CUSTOM_MIGRATION_REPOSITORY_NAME = "testFlamingockAudit";
+    private static final String CUSTOM_AUDIT_REPOSITORY_NAME = "testFlamingockAudit";
     private static final String CUSTOM_LOCK_REPOSITORY_NAME = "testFlamingockLock";
 
     private static MongoClient mongoClient;
@@ -95,7 +95,7 @@ class MongoSync4DriverTest {
     void setupEach() {
         mongoDatabase.getCollection(DEFAULT_MIGRATION_REPOSITORY_NAME).drop();
         mongoDatabase.getCollection(DEFAULT_LOCK_REPOSITORY_NAME).drop();
-        mongoDatabase.getCollection(CUSTOM_MIGRATION_REPOSITORY_NAME).drop();
+        mongoDatabase.getCollection(CUSTOM_AUDIT_REPOSITORY_NAME).drop();
         mongoDatabase.getCollection(CUSTOM_LOCK_REPOSITORY_NAME).drop();
     }
 
@@ -127,7 +127,7 @@ class MongoSync4DriverTest {
         assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_MIGRATION_REPOSITORY_NAME));
         assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_LOCK_REPOSITORY_NAME));
 
-        assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_MIGRATION_REPOSITORY_NAME));
+        assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_AUDIT_REPOSITORY_NAME));
         assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_LOCK_REPOSITORY_NAME));
     }
 
@@ -146,7 +146,7 @@ class MongoSync4DriverTest {
             Flamingock.local()
                     .addDependency(mongoClient)
                     .setProperty("databaseName", DB_NAME)
-                    .setProperty("mongodb.auditRepositoryName", CUSTOM_MIGRATION_REPOSITORY_NAME)
+                    .setProperty("mongodb.auditRepositoryName", CUSTOM_AUDIT_REPOSITORY_NAME)
                     .setProperty("mongodb.lockRepositoryName", CUSTOM_LOCK_REPOSITORY_NAME)
                     //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.mongodb.sync.v4.changes.happyPathWithTransaction"))
                     .addDependency(mongoClient.getDatabase(DB_NAME))
@@ -157,7 +157,7 @@ class MongoSync4DriverTest {
         assertFalse(mongoDBTestHelper.collectionExists(DEFAULT_MIGRATION_REPOSITORY_NAME));
         assertFalse(mongoDBTestHelper.collectionExists(DEFAULT_LOCK_REPOSITORY_NAME));
 
-        assertTrue(mongoDBTestHelper.collectionExists(CUSTOM_MIGRATION_REPOSITORY_NAME));
+        assertTrue(mongoDBTestHelper.collectionExists(CUSTOM_AUDIT_REPOSITORY_NAME));
         assertTrue(mongoDBTestHelper.collectionExists(CUSTOM_LOCK_REPOSITORY_NAME));
     }
 
