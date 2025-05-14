@@ -64,9 +64,17 @@ public class DynamoDBEngine extends AbstractLocalEngine {
         TransactionManager<TransactWriteItemsEnhancedRequest.Builder> transactionManager = new TransactionManager<>(TransactWriteItemsEnhancedRequest::builder);
         transactionWrapper = localConfiguration.isTransactionDisabled() ? null : new DynamoDBTransactionWrapper(client, transactionManager);
         auditor = new DynamoDBAuditor(client, transactionManager);
-        auditor.initialize(driverConfiguration.isIndexCreation());
+        auditor.initialize(
+                driverConfiguration.isAutoCreate(),
+                driverConfiguration.getAuditRepositoryName(),
+                driverConfiguration.getReadCapacityUnits(),
+                driverConfiguration.getWriteCapacityUnits());
         DynamoDBLockService lockService = new DynamoDBLockService(client, TimeService.getDefault());
-        lockService.initialize(driverConfiguration.isIndexCreation());
+        lockService.initialize(
+                driverConfiguration.isAutoCreate(),
+                driverConfiguration.getLockRepositoryName(),
+                driverConfiguration.getReadCapacityUnits(),
+                driverConfiguration.getWriteCapacityUnits());
         executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
         //Mongock importer
         if (coreConfiguration.isMongockImporterEnabled()) {

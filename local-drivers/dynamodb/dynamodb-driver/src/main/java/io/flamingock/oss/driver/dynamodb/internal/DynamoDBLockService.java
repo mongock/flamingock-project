@@ -57,19 +57,18 @@ public class DynamoDBLockService implements LocalLockService {
         this.timeService = timeService;
     }
 
-    protected void initialize(Boolean indexCreation) {
-        if (indexCreation) {
+    protected void initialize(Boolean autoCreate, String tableName, long readCapacityUnits, long writeCapacityUnits) {
+        if (autoCreate) {
             dynamoDBUtil.createTable(
-                    client.getDynamoDbClient(),
                     dynamoDBUtil.getAttributeDefinitions(DynamoDBConstants.LOCK_PK, null),
                     dynamoDBUtil.getKeySchemas(DynamoDBConstants.LOCK_PK, null),
-                    dynamoDBUtil.getProvisionedThroughput(5L, 5L),
-                    DynamoDBConstants.LOCK_TABLE_NAME,
+                    dynamoDBUtil.getProvisionedThroughput(readCapacityUnits, writeCapacityUnits),
+                    tableName,
                     emptyList(),
                     emptyList()
             );
         }
-        table = dynamoDBUtil.getEnhancedClient().table(DynamoDBConstants.LOCK_TABLE_NAME, TableSchema.fromBean(LockEntryEntity.class));
+        table = dynamoDBUtil.getEnhancedClient().table(tableName, TableSchema.fromBean(LockEntryEntity.class));
     }
 
     @Override

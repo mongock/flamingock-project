@@ -41,32 +41,8 @@ public class DynamoDBDriver implements LocalDriver {
         this.client = dependencyContext
                 .getDependencyValue(DynamoDbClient.class)
                 .orElseThrow(() -> new FlamingockException("DynamoDbClient is needed to be added as dependency"));
-        this.driverConfiguration = generateConfig(dependencyContext);
-    }
-
-    public DynamoDBConfiguration generateConfig(DependencyContext dependencyContext) {
-        DynamoDBConfiguration configuration = dependencyContext
-                .getDependencyValue(DynamoDBConfiguration.class)
-                .orElse(DynamoDBConfiguration.getDefault());
-        dependencyContext.getPropertyAs("dynamodb.autoCreate", boolean.class)
-                .ifPresent(configuration::setIndexCreation);
-        dependencyContext.getPropertyAs("dynamodb.auditRepositoryName", String.class)
-                .ifPresent(d -> {
-                    //TODO
-                });
-        dependencyContext.getPropertyAs("dynamodb.lockRepositoryName", String.class)
-                .ifPresent(d -> {
-                    //TODO
-                });
-        dependencyContext.getPropertyAs("dynamodb.readCapacityUnits", int.class)
-                .ifPresent(d -> {
-                    //TODO
-                });
-        dependencyContext.getPropertyAs("dynamodb.writeCapacityUnits", int.class)
-                .ifPresent(d -> {
-                    //TODO
-                });
-        return configuration;
+        this.driverConfiguration = new DynamoDBConfiguration();
+        this.driverConfiguration.mergeConfig(dependencyContext);
     }
 
     @Override

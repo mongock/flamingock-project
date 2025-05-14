@@ -64,6 +64,9 @@ class DynamoDBDriverTest {
     private static DynamoDBProxyServer dynamoDBLocal;
     private static DynamoDbClient client;
 
+    private static final String CUSTOM_AUDIT_REPOSITORY_NAME = "testFlamingockAudit";
+    private static final String CUSTOM_LOCK_REPOSITORY_NAME = "testFlamingockLock";
+
     private static DynamoDBTestHelper dynamoDBTestHelper;
 
     @BeforeEach
@@ -98,8 +101,8 @@ class DynamoDBDriverTest {
 
 
     @Test
-    @DisplayName("When standalone runs the driver related tables should exists")
-    void testTablesExistence() {
+    @DisplayName("When standalone runs the driver with DEFAULT repository names related tables should exists")
+    void happyPathWithDefaultRepositoryNames() {
         //Given-When
         try(MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
             mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
@@ -120,6 +123,37 @@ class DynamoDBDriverTest {
         //Then
         assertTrue(dynamoDBTestHelper.tableExists(DynamoDBConstants.AUDIT_LOG_TABLE_NAME));
         assertTrue(dynamoDBTestHelper.tableExists(DynamoDBConstants.LOCK_TABLE_NAME));
+
+        assertFalse(dynamoDBTestHelper.tableExists(CUSTOM_AUDIT_REPOSITORY_NAME));
+        assertFalse(dynamoDBTestHelper.tableExists(CUSTOM_LOCK_REPOSITORY_NAME));
+    }
+
+    @Test
+    @DisplayName("When standalone runs the driver with CUSTOM repository names related tables should exists")
+    void happyPathWithCustomRepositoryNames() {
+        //Given-When
+
+        try (MockedStatic<Deserializer> mocked = Mockito.mockStatic(Deserializer.class)) {
+            mocked.when(Deserializer::readPreviewPipelineFromFile).thenReturn(PipelineTestHelper.getPreviewPipeline(
+                    new Trio<>(_1_create_client_collection_happy.class, Collections.singletonList(DynamoDbClient.class)),
+                    new Trio<>(_2_insert_federico_happy_transactional.class, Arrays.asList(DynamoDbClient.class, TransactWriteItemsEnhancedRequest.Builder.class)),
+                    new Trio<>(_3_insert_jorge_happy_transactional.class, Arrays.asList(DynamoDbClient.class, TransactWriteItemsEnhancedRequest.Builder.class)))
+            );
+
+            Flamingock.local()
+                    .setProperty("dynamodb.auditRepositoryName", CUSTOM_AUDIT_REPOSITORY_NAME)
+                    .setProperty("dynamodb.lockRepositoryName", CUSTOM_LOCK_REPOSITORY_NAME)
+                    //.addStage(new Stage("stage-name").addCodePackage("io.flamingock.oss.driver.dynamodb.changes.happyPathWithTransaction"))
+                    .addDependency(client)
+                    .build()
+                    .run();
+        }
+
+        assertFalse(dynamoDBTestHelper.tableExists(DynamoDBConstants.AUDIT_LOG_TABLE_NAME));
+        assertFalse(dynamoDBTestHelper.tableExists(DynamoDBConstants.LOCK_TABLE_NAME));
+
+        assertTrue(dynamoDBTestHelper.tableExists(CUSTOM_AUDIT_REPOSITORY_NAME));
+        assertTrue(dynamoDBTestHelper.tableExists(CUSTOM_LOCK_REPOSITORY_NAME));
     }
 
     @Test
