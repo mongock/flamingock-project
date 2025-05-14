@@ -210,151 +210,151 @@ public interface ContextConfigurator<HOLDER> {
 
 
     default HOLDER setProperty(String key, String value) {
-        return addDependency(new Dependency(key, String.class, value));
+        return addDependency(key, String.class, value);
     }
 
     default HOLDER setProperty(String key, Boolean value) {
-        return addDependency(new Dependency(key,Boolean.class, value));
+        return addDependency(key,Boolean.class, value);
     }
 
     default HOLDER setProperty(String key, Integer value) {
-        return addDependency(new Dependency(key, Integer.class, value));
+        return addDependency(key, Integer.class, value);
     }
 
     default HOLDER setProperty(String key, Float value) {
-        return addDependency(new Dependency(key, Float.class, value));
+        return addDependency(key, Float.class, value);
     }
 
     default HOLDER setProperty(String key, Long value) {
-        return addDependency(new Dependency(key, Long.class, value));
+        return addDependency(key, Long.class, value);
     }
 
     default HOLDER setProperty(String key, Double value) {
-        return addDependency(new Dependency(key, Double.class, value));
+        return addDependency(key, Double.class, value);
     }
 
     default HOLDER setProperty(String key, UUID value) {
-        return addDependency(new Dependency(key, UUID.class, value));
+        return addDependency(key, UUID.class, value);
     }
 
     default HOLDER setProperty(String key, Currency value) {
-        return addDependency(new Dependency(key, Currency.class, value));
+        return addDependency(key, Currency.class, value);
     }
 
     default HOLDER setProperty(String key, Locale value) {
-        return addDependency(new Dependency(key, Locale.class, value));
+        return addDependency(key, Locale.class, value);
     }
 
     default HOLDER setProperty(String key, Charset value) {
-        return addDependency(new Dependency(key, Charset.class, value));
+        return addDependency(key, Charset.class, value);
     }
 
     default HOLDER setProperty(String key, File value) {
-        return addDependency(new Dependency(key, File.class, value));
+        return addDependency(key, File.class, value);
     }
 
     default HOLDER setProperty(String key, Path value) {
-        return addDependency(new Dependency(key, Path.class, value));
+        return addDependency(key, Path.class, value);
     }
 
     default HOLDER setProperty(String key, InetAddress value) {
-        return addDependency(new Dependency(key, InetAddress.class, value));
+        return addDependency(key, InetAddress.class, value);
     }
 
     default HOLDER setProperty(String key, URL value) {
-        return addDependency(new Dependency(key, URL.class, value));
+        return addDependency(key, URL.class, value);
     }
 
     default HOLDER setProperty(String key, URI value) {
-        return addDependency(new Dependency(key, URI.class, value));
+        return addDependency(key, URI.class, value);
     }
 
     default HOLDER setProperty(String key, Duration value) {
-        return addDependency(new Dependency(key, Duration.class, value));
+        return addDependency(key, Duration.class, value);
     }
 
     default HOLDER setProperty(String key, Period value) {
-        return addDependency(new Dependency(key, Period.class, value));
+        return addDependency(key, Period.class, value);
     }
 
     default HOLDER setProperty(String key, Instant value) {
-        return addDependency(new Dependency(key, Instant.class, value));
+        return addDependency(key, Instant.class, value);
     }
 
     default HOLDER setProperty(String key, LocalDate value) {
-        return addDependency(new Dependency(key, LocalDate.class, value));
+        return addDependency(key, LocalDate.class, value);
     }
 
     default HOLDER setProperty(String key, LocalTime value) {
-        return addDependency(new Dependency(key, LocalTime.class, value));
+        return addDependency(key, LocalTime.class, value);
     }
 
     default HOLDER setProperty(String key, LocalDateTime value) {
-        return addDependency(new Dependency(key, LocalDateTime.class, value));
+        return addDependency(key, LocalDateTime.class, value);
     }
 
     default HOLDER setProperty(String key, ZonedDateTime value) {
-        return addDependency(new Dependency(key, ZonedDateTime.class, value));
+        return addDependency(key, ZonedDateTime.class, value);
     }
 
     default HOLDER setProperty(String key, OffsetDateTime value) {
-        return addDependency(new Dependency(key, OffsetDateTime.class, value));
+        return addDependency(key, OffsetDateTime.class, value);
     }
 
     default HOLDER setProperty(String key, OffsetTime value) {
-        return addDependency(new Dependency(key, OffsetTime.class, value));
+        return addDependency(key, OffsetTime.class, value);
     }
 
     default HOLDER setProperty(String key, java.util.Date value) {
-        return addDependency(new Dependency(key, java.util.Date.class, value));
+        return addDependency(key, java.util.Date.class, value);
     }
 
     default HOLDER setProperty(String key, java.sql.Date value) {
-        return addDependency(new Dependency(key, java.sql.Date.class, value));
+        return addDependency(key, java.sql.Date.class, value);
     }
 
     default HOLDER setProperty(String key, Time value) {
-        return addDependency(new Dependency(key, Time.class, value));
+        return addDependency(key, Time.class, value);
     }
 
     default HOLDER setProperty(String key, Timestamp value) {
-        return addDependency(new Dependency(key, Timestamp.class, value));
+        return addDependency(key, Timestamp.class, value);
     }
 
     default HOLDER setProperty(String key, String[] value) {
-        return addDependency(new Dependency(key, String[].class, value));
+        return addDependency(key, String[].class, value);
     }
 
     default HOLDER setProperty(String key, Integer[] value) {
-        return addDependency(new Dependency(key, Integer[].class, value));
+        return addDependency(key, Integer[].class, value);
     }
 
     default HOLDER setProperty(String key, Long[] value) {
-        return addDependency(new Dependency(key, Long[].class, value));
+        return addDependency(key, Long[].class, value);
     }
 
     default HOLDER setProperty(String key, Double[] value) {
-        return addDependency(new Dependency(key, Double[].class, value));
+        return addDependency(key, Double[].class, value);
     }
 
     default HOLDER setProperty(String key, Float[] value) {
-        return addDependency(new Dependency(key, Float[].class, value));
+        return addDependency(key, Float[].class, value);
     }
 
     default HOLDER setProperty(String key, Boolean[] value) {
-        return addDependency(new Dependency(key, Boolean[].class, value));
+        return addDependency(key, Boolean[].class, value);
     }
 
     default HOLDER setProperty(String key, Byte[] value) {
-        return addDependency(new Dependency(key, Byte[].class, value));
+        return addDependency(key, Byte[].class, value);
     }
 
     default HOLDER setProperty(String key, Short[] value) {
-        return addDependency(new Dependency(key, Short[].class, value));
+        return addDependency(key, Short[].class, value);
     }
 
     default HOLDER setProperty(String key, Character[] value) {
-        return addDependency(new Dependency(key, Character[].class, value));
+        return addDependency(key, Character[].class, value);
     }
 
     /**

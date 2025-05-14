@@ -38,7 +38,12 @@ public interface DependencyInjectable {
      * @param object the object to register as a dependency
      */
     default void addDependency(Object object) {
-        addDependency(new Dependency(object));
+        if (object instanceof Dependency) {
+            addDependency((Dependency) object);
+        } else {
+            addDependency(new Dependency(object));
+        }
+
     }
 
     /**
