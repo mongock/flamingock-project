@@ -22,9 +22,8 @@ import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.core.community.LocalAuditor;
 import io.flamingock.oss.driver.dynamodb.internal.entities.AuditEntryEntity;
-import io.flamingock.oss.driver.dynamodb.internal.util.DynamoClients;
-import io.flamingock.oss.driver.dynamodb.internal.util.DynamoDBConstants;
-import io.flamingock.oss.driver.dynamodb.internal.util.DynamoDBUtil;
+import io.flamingock.commons.utils.DynamoDBConstants;
+import io.flamingock.commons.utils.DynamoDBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -32,6 +31,7 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedException;
 
 import java.util.stream.Collectors;
@@ -42,14 +42,13 @@ public class DynamoDBAuditor implements LocalAuditor {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamoDBAuditor.class);
 
-    protected final DynamoClients client;
-    private final DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
+    private final DynamoDBUtil dynamoDBUtil;
     protected DynamoDbTable<AuditEntryEntity> table;
     protected final TransactionManager<TransactWriteItemsEnhancedRequest.Builder> transactionManager;
 
-    protected DynamoDBAuditor(DynamoClients client,
+    protected DynamoDBAuditor(DynamoDbClient client,
                               TransactionManager<TransactWriteItemsEnhancedRequest.Builder> transactionManager) {
-        this.client = client;
+        this.dynamoDBUtil = new DynamoDBUtil(client);
         this.transactionManager = transactionManager;
     }
 
@@ -65,15 +64,7 @@ public class DynamoDBAuditor implements LocalAuditor {
                     emptyList()
             );
         }
-        table = client.getEnhancedClient().table(DynamoDBConstants.AUDIT_LOG_TABLE_NAME, TableSchema.fromBean(AuditEntryEntity.class));
-    }
-
-    /**
-     * Only for testing
-     */
-    public void deleteAll() {
-        table.deleteTable();
-        initialize(true);
+        table = dynamoDBUtil.getEnhancedClient().table(DynamoDBConstants.AUDIT_LOG_TABLE_NAME, TableSchema.fromBean(AuditEntryEntity.class));
     }
 
     @Override

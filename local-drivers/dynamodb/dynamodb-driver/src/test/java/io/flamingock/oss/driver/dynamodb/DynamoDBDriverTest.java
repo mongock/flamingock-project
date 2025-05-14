@@ -32,7 +32,7 @@ import io.flamingock.oss.driver.dynamodb.changes._3_insert_jorge_failed_transact
 import io.flamingock.oss.driver.dynamodb.changes._3_insert_jorge_happy_non_transactional;
 import io.flamingock.oss.driver.dynamodb.changes._3_insert_jorge_happy_transactional;
 import io.flamingock.oss.driver.dynamodb.changes.common.UserEntity;
-import io.flamingock.oss.driver.dynamodb.internal.util.DynamoDBConstants;
+import io.flamingock.commons.utils.DynamoDBConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -154,7 +154,7 @@ class DynamoDBDriverTest {
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(2).getState());
 
         //Checking user table
-        List<String> rows = dynamoDBTestHelper.client.getEnhancedClient()
+        List<String> rows = dynamoDBTestHelper.dynamoDBUtil.getEnhancedClient()
                 .table("test_table", TableSchema.fromBean(UserEntity.class))
                 .scan().items().stream()
                 .map(UserEntity::getPartitionKey)
@@ -196,7 +196,7 @@ class DynamoDBDriverTest {
         assertEquals(AuditEntry.Status.EXECUTED, auditLog.get(2).getState());
 
         //Checking user table
-        List<String> rows = dynamoDBTestHelper.client.getEnhancedClient()
+        List<String> rows = dynamoDBTestHelper.dynamoDBUtil.getEnhancedClient()
                 .table("test_table", TableSchema.fromBean(UserEntity.class))
                 .scan().items().stream()
                 .map(UserEntity::getPartitionKey)
@@ -241,7 +241,7 @@ class DynamoDBDriverTest {
         assertEquals(AuditEntry.Status.ROLLED_BACK, auditLog.get(2).getState());
 
         //Checking user table
-        List<String> rows = dynamoDBTestHelper.client.getEnhancedClient()
+        List<String> rows = dynamoDBTestHelper.dynamoDBUtil.getEnhancedClient()
                 .table("test_table", TableSchema.fromBean(UserEntity.class))
                 .scan().items().stream()
                 .map(UserEntity::getPartitionKey)
@@ -285,7 +285,7 @@ class DynamoDBDriverTest {
         assertEquals(AuditEntry.Status.ROLLED_BACK, auditLog.get(3).getState());
 
         //Checking user table
-        List<String> rows = dynamoDBTestHelper.client.getEnhancedClient()
+        List<String> rows = dynamoDBTestHelper.dynamoDBUtil.getEnhancedClient()
                 .table("test_table", TableSchema.fromBean(UserEntity.class))
                 .scan().items().stream()
                 .map(UserEntity::getPartitionKey)
@@ -329,7 +329,7 @@ class DynamoDBDriverTest {
         assertEquals(AuditEntry.Status.EXECUTION_FAILED, auditLog.get(2).getState());
 
         //Checking user table
-        List<String> rows = dynamoDBTestHelper.client.getEnhancedClient()
+        List<String> rows = dynamoDBTestHelper.dynamoDBUtil.getEnhancedClient()
                 .table("test_table", TableSchema.fromBean(UserEntity.class))
                 .scan().items().stream()
                 .map(UserEntity::getPartitionKey)

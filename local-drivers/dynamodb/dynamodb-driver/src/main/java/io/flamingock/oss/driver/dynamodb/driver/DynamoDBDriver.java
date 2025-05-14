@@ -25,12 +25,11 @@ import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.oss.driver.dynamodb.DynamoDBConfiguration;
 import io.flamingock.oss.driver.dynamodb.internal.DynamoDBEngine;
-import io.flamingock.oss.driver.dynamodb.internal.util.DynamoClients;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 public class DynamoDBDriver implements LocalDriver {
 
-    private DynamoClients client;
+    private DynamoDbClient client;
 
     private DynamoDBConfiguration driverConfiguration;
 
@@ -39,9 +38,9 @@ public class DynamoDBDriver implements LocalDriver {
 
     @Override
     public void initialize(DependencyContext dependencyContext) {
-        this.client = new DynamoClients(dependencyContext
+        this.client = dependencyContext
                 .getDependencyValue(DynamoDbClient.class)
-                .orElseThrow(() -> new FlamingockException("DynamoDbClient is needed to be added as dependency")));
+                .orElseThrow(() -> new FlamingockException("DynamoDbClient is needed to be added as dependency"));
         this.driverConfiguration = generateConfig(dependencyContext);
     }
 
