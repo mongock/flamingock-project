@@ -25,9 +25,9 @@ import io.flamingock.core.cloud.CloudDriver;
 import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.runtime.dependency.SimpleDependencyInjectableContext;
 
-public final class Flamingock {
+public class Flamingock {
 
-    private Flamingock() {
+    protected Flamingock() {
     }
 
     public static AbstractFlamingockBuilder<?> builder() {
@@ -43,6 +43,27 @@ public final class Flamingock {
             return new CommunityFlamingockBuilder(
                     new CoreConfiguration(),
                     new CommunityConfiguration(),
+                    new SimpleDependencyInjectableContext(),
+                    new LocalSystemModuleManager(),
+                    (LocalDriver) driver);
+        }
+    }
+
+    protected static AbstractFlamingockBuilder<?> builder(CoreConfiguration coreConfiguration,
+                                                          CloudConfiguration cloudConfiguration,
+                                                          CommunityConfiguration communityConfiguration) {
+        Driver driver = Driver.getDriver();
+        if(driver.isCloud()) {
+            return new CloudFlamingockBuilder(
+                    coreConfiguration,
+                    cloudConfiguration,
+                    new SimpleDependencyInjectableContext(),
+                    new CloudSystemModuleManager(),
+                    (CloudDriver) driver);
+        } else {
+            return new CommunityFlamingockBuilder(
+                    coreConfiguration,
+                    communityConfiguration,
                     new SimpleDependencyInjectableContext(),
                     new LocalSystemModuleManager(),
                     (LocalDriver) driver);
