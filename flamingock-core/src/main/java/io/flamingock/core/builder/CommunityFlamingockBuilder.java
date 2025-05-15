@@ -16,11 +16,9 @@
 
 package io.flamingock.core.builder;
 
-import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.builder.core.CoreConfiguration;
 import io.flamingock.core.builder.local.CommunityConfiguration;
 import io.flamingock.core.builder.local.CommunityConfigurator;
-import io.flamingock.core.builder.local.LocalSystemModuleManager;
 import io.flamingock.core.community.LocalEngine;
 import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.engine.ConnectionEngine;
@@ -30,7 +28,7 @@ public class CommunityFlamingockBuilder
         extends AbstractFlamingockBuilder<CommunityFlamingockBuilder>
         implements CommunityConfigurator<CommunityFlamingockBuilder> {
 
-    private final LocalSystemModuleManager systemModuleManager;
+    private final DefaultSystemModuleManager systemModuleManager;
 
     private final CommunityConfiguration communityConfiguration;
 
@@ -41,7 +39,7 @@ public class CommunityFlamingockBuilder
     protected CommunityFlamingockBuilder(CoreConfiguration coreConfiguration,
                                          CommunityConfiguration communityConfiguration,
                                          DependencyInjectableContext dependencyInjectableContext,
-                                         LocalSystemModuleManager systemModuleManager,
+                                         DefaultSystemModuleManager systemModuleManager,
                                          LocalDriver driver) {
         super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
         this.communityConfiguration = communityConfiguration;
