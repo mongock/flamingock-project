@@ -34,7 +34,7 @@ public class CommunityFlamingockBuilder
 
     private final CommunityConfiguration communityConfiguration;
 
-    private LocalDriver driver;
+    private final LocalDriver driver;
 
     private LocalEngine engine;
 
@@ -60,14 +60,10 @@ public class CommunityFlamingockBuilder
     }
 
     @Override
-    protected ConnectionEngine getConnectionEngine(RunnerId runnerId) {
+    protected ConnectionEngine getConnectionEngine() {
         driver.initialize(dependencyContext);
-        engine = driver.initializeAndGetEngine(
-                runnerId,
-                coreConfiguration,
-                communityConfiguration
-        );
-        return engine;
+        return driver.getEngine();
+
     }
 
     @Override

@@ -63,18 +63,20 @@ public class CloudFlamingockBuilder
     @Override
     protected void injectSpecificDependencies() {
         addDependency(cloudConfiguration);
-    }
 
-    @Override
-    protected ConnectionEngine getConnectionEngine(RunnerId runnerId) {
         //TODO get transactioner from ServiceLoader
         // currently injecting it into the context for the driver to pick it up
         if(cloudTransactioner != null) {
-            dependencyContext.addDependency(new Dependency(CloudTransactioner.class, cloudTransactioner));
+            addDependency(new Dependency(CloudTransactioner.class, cloudTransactioner));
         }
-        driver.initialize(dependencyContext);
-        engine = driver.initializeAndGet();
+    }
 
+    @Override
+    protected ConnectionEngine getConnectionEngine() {
+        //TODO get transactioner from ServiceLoader
+        // currently injecting it into the context for the driver to pick it up
+        driver.initialize(dependencyContext);
+        engine = driver.getEngine();
         return engine;
     }
 
