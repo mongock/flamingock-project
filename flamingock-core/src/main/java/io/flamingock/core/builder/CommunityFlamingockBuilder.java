@@ -54,10 +54,6 @@ public class CommunityFlamingockBuilder
         return this;
     }
 
-    private LocalDriver getLocalDriver() {
-        return LocalDriver.getDriver().orElse(null);
-    }
-
     @Override
     protected void injectSpecificDependencies() {
         addDependency(communityConfiguration);
@@ -79,11 +75,6 @@ public class CommunityFlamingockBuilder
         //TODO change this
         engine.getMongockLegacyImporterModule().ifPresent(systemModuleManager::add);
         systemModuleManager.initialize();
-    }
-
-    @Override
-    public LocalDriver getDriver() {
-        return driver;
     }
 
     @Override
