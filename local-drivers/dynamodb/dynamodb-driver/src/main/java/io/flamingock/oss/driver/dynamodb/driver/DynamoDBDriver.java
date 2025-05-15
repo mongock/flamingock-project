@@ -17,8 +17,6 @@
 package io.flamingock.oss.driver.dynamodb.driver;
 
 import io.flamingock.commons.utils.RunnerId;
-import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.builder.cloud.CloudConfigurable;
 import io.flamingock.core.builder.core.CoreConfigurable;
 import io.flamingock.core.builder.local.CommunityConfigurable;
 import io.flamingock.core.community.LocalEngine;
@@ -31,12 +29,10 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 public class DynamoDBDriver implements LocalDriver {
 
     private DynamoDbClient client;
-
     private RunnerId runnerId;
-    private DynamoDBConfiguration driverConfiguration;
     private CoreConfigurable coreConfiguration;
     private CommunityConfigurable communityConfiguration;
-
+    private DynamoDBConfiguration driverConfiguration;
 
     public DynamoDBDriver() {
     }
@@ -49,7 +45,9 @@ public class DynamoDBDriver implements LocalDriver {
         communityConfiguration = dependencyContext.getRequiredDependencyValue(CommunityConfigurable.class);
 
         this.client = dependencyContext.getRequiredDependencyValue(DynamoDbClient.class);
-        this.driverConfiguration = new DynamoDBConfiguration();
+
+        this.driverConfiguration = dependencyContext.getDependencyValue(DynamoDBConfiguration.class)
+                .orElse(new DynamoDBConfiguration());
         this.driverConfiguration.mergeConfig(dependencyContext);
     }
 
