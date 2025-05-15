@@ -34,18 +34,19 @@ public class CommunityFlamingockBuilder
 
     private final CommunityConfiguration communityConfiguration;
 
-    private LocalDriver connectionDriver;
+    private LocalDriver driver;
 
     private LocalEngine engine;
 
     protected CommunityFlamingockBuilder(CoreConfiguration coreConfiguration,
                                          CommunityConfiguration communityConfiguration,
                                          DependencyInjectableContext dependencyInjectableContext,
-                                         LocalSystemModuleManager systemModuleManager) {
+                                         LocalSystemModuleManager systemModuleManager,
+                                         LocalDriver driver) {
         super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
         this.communityConfiguration = communityConfiguration;
         this.systemModuleManager = systemModuleManager;
-        this.connectionDriver = getLocalDriver();
+        this.driver = driver;
     }
 
     @Override
@@ -64,8 +65,8 @@ public class CommunityFlamingockBuilder
 
     @Override
     protected ConnectionEngine getConnectionEngine(RunnerId runnerId) {
-        connectionDriver.initialize(dependencyContext);
-        engine = connectionDriver.initializeAndGetEngine(
+        driver.initialize(dependencyContext);
+        engine = driver.initializeAndGetEngine(
                 runnerId,
                 coreConfiguration,
                 communityConfiguration
@@ -82,7 +83,7 @@ public class CommunityFlamingockBuilder
 
     @Override
     public LocalDriver getDriver() {
-        return connectionDriver;
+        return driver;
     }
 
     @Override
