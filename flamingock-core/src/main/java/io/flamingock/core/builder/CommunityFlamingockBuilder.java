@@ -62,7 +62,8 @@ public class CommunityFlamingockBuilder
     @Override
     protected ConnectionEngine getConnectionEngine() {
         driver.initialize(dependencyContext);
-        return driver.getEngine();
+        engine = driver.getEngine();
+        return engine;
 
     }
 
