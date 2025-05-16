@@ -16,6 +16,10 @@
 
 package io.flamingock.core.context;
 
+import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.id.EnvironmentId;
+import io.flamingock.commons.utils.id.ServiceId;
+
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URI;
@@ -90,6 +94,21 @@ public class PriorityContext extends PriorityContextResolver implements Context 
     @Override
     public void removeDependencyByRef(Dependency dependency) {
         priorityInjectableContext.removeDependencyByRef(dependency);
+    }
+
+    @Override
+    public void setProperty(String key, EnvironmentId value) {
+        priorityInjectableContext.setProperty(key, value);
+    }
+
+    @Override
+    public void setProperty(String key, ServiceId value) {
+        priorityInjectableContext.setProperty(key, value);
+    }
+
+    @Override
+    public void setProperty(String key, RunnerId value) {
+        priorityInjectableContext.setProperty(key, value);
     }
 
     @Override

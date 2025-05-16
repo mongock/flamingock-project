@@ -1,5 +1,6 @@
 package io.flamingock.core.system;
 
+import io.flamingock.core.context.ContextInjectable;
 import io.flamingock.core.context.ContextResolver;
 import io.flamingock.core.context.DependencyInjectable;
 
@@ -26,7 +27,7 @@ public class DefaultSystemModuleManager implements SystemModuleManager {
     }
 
     @Override
-    public void contributeToContext(DependencyInjectable dependencyInjectable) {
+    public void contributeToContext(ContextInjectable dependencyInjectable) {
         systemModules.forEach(module -> module.contributeToContext(dependencyInjectable));
     }
 }

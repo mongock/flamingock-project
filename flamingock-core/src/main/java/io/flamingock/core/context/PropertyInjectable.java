@@ -1,5 +1,9 @@
 package io.flamingock.core.context;
 
+import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.id.EnvironmentId;
+import io.flamingock.commons.utils.id.ServiceId;
+
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URI;
@@ -22,6 +26,12 @@ import java.util.Locale;
 import java.util.UUID;
 
 public interface PropertyInjectable {
+
+    void setProperty(String key, EnvironmentId value);
+
+    void setProperty(String key, ServiceId value);
+
+    void setProperty(String key, RunnerId value);
 
     void setProperty(String key, String value);
 
