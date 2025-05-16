@@ -22,7 +22,6 @@ import io.flamingock.core.api.template.TemplateFactory;
 import io.flamingock.core.builder.core.CoreConfiguration;
 import io.flamingock.core.builder.core.CoreConfigurator;
 import io.flamingock.core.engine.ConnectionEngine;
-import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.event.CompositeEventPublisher;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.SimpleEventPublisher;
@@ -112,23 +111,13 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         driver.initialize(dependencyContext);
         ConnectionEngine engine = driver.getEngine();
         engine.contributeToSystemModules(systemModuleManager);
-        
+        engine.contributeToContext(dependencyContext);
+
         systemModuleManager.initialize(dependencyContext);
         systemModuleManager.contributeToContext(dependencyContext);
-//        systemModuleManager
-//                .getDependencies()
-//                .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
-
-        //Injecting auditWriter
-        //TODO make the Engine ContextContributor
-        addDependency(AuditWriter.class, engine.getAuditWriter());
 
         List<FrameworkPlugin> frameworkPlugins = getPluginList();
         initializeFrameworkPlugins(frameworkPlugins);
-
-
-        // Builds a hierarchical dependency context by chaining all plugin-provided contexts,
-        // placing Flamingock's core context at the top.
 
         Pipeline pipeline = Pipeline.builder()
                 .addFilters(getTaskFiltersFromPlugins(frameworkPlugins))
@@ -147,7 +136,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
                 engine,
                 coreConfiguration,
                 buildEventPublisher(frameworkPlugins),
-                getMergedDependencyContext(frameworkPlugins),
+                buildHierarchicalContext(frameworkPlugins),
                 coreConfiguration.isThrowExceptionIfCannotObtainLock(),
                 engine.getCloser()
         );
@@ -160,7 +149,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         doInjectDependencies();
     }
 
-    private DependencyContext getMergedDependencyContext(List<FrameworkPlugin> frameworkPlugins) {
+    private DependencyContext buildHierarchicalContext(List<FrameworkPlugin> frameworkPlugins) {
         List<DependencyContext> dependencyContextsFromPlugins = frameworkPlugins.stream()
                 .map(FrameworkPlugin::getDependencyContext)
                 .flatMap(CollectionUtil::optionalToStream)

@@ -16,6 +16,9 @@
 
 package io.flamingock.core.engine;
 
+import io.flamingock.core.context.ContextContributor;
+import io.flamingock.core.context.Dependency;
+import io.flamingock.core.context.DependencyInjectable;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
 import io.flamingock.core.system.SystemModuleContributor;
@@ -23,12 +26,16 @@ import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 
-public interface ConnectionEngine extends SystemModuleContributor {
+public interface ConnectionEngine extends SystemModuleContributor, ContextContributor {
     AuditWriter getAuditWriter();
 
     ExecutionPlanner getExecutionPlanner();
 
     Optional<? extends TransactionWrapper> getTransactionWrapper();
+
+    default void contributeToContext(DependencyInjectable dependencyInjectable) {
+        dependencyInjectable.addDependency(new Dependency(AuditWriter.class, getAuditWriter()));
+    }
 
     default Runnable getCloser() {
         return () -> {
