@@ -16,7 +16,8 @@
 
 package io.flamingock.core.context;
 
-import io.flamingock.commons.utils.RunnerId;
+import io.flamingock.commons.utils.Property;
+import io.flamingock.commons.utils.id.RunnerId;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;
 
@@ -82,19 +83,8 @@ public class SimpleContext extends AbstractContextResolver implements Context {
     }
 
     @Override
-    public void setProperty(String key, EnvironmentId value) {
-        addDependency(new Dependency(key, EnvironmentId.class, value));
-
-    }
-
-    @Override
-    public void setProperty(String key, ServiceId value) {
-        addDependency(new Dependency(key, ServiceId.class, value));
-    }
-
-    @Override
-    public void setProperty(String key, RunnerId value) {
-        addDependency(new Dependency(key, RunnerId.class, value));
+    public void setProperty(Property value) {
+        addDependency(new Dependency(value.getKey(), value.getClass(), value));
     }
 
     @Override
