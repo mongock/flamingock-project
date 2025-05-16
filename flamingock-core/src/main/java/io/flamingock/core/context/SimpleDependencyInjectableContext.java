@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.runtime.dependency;
+package io.flamingock.core.context;
 
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -48,7 +48,7 @@ public class SimpleDependencyInjectableContext extends AbstractSimpleDependencyC
             boolean isSafeToRemove = dependencyStore.stream()
                     .filter(dependency::equals)//it only can return one at max
                     .map(Dependency::getInstance)
-                    .anyMatch(storedRef -> storedRef == dependency.instance);//if it's also the same reference
+                    .anyMatch(storedRef -> storedRef == dependency.getInstance());//if it's also the same reference
 
             if(isSafeToRemove) {
                 dependencyStore.remove(dependency);
