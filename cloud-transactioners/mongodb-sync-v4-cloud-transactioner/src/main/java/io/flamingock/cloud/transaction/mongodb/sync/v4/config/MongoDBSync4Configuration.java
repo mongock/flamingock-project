@@ -105,6 +105,8 @@ public class MongoDBSync4Configuration extends MongoDBDriverConfiguration {
 
         dependencyContext.getPropertyAs("mongodb.readPreference", String.class)
                 .ifPresent(this::setReadPreference);
+        dependencyContext.getPropertyAs("mongodb.readPreference", ReadPreferenceLevel.class)
+                .ifPresent(this::setReadPreference);
     }
 
     public enum ReadPreferenceLevel {
