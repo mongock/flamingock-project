@@ -16,40 +16,34 @@
 
 package io.flamingock.core.builder;
 
-import io.flamingock.core.cloud.CloudEngine;
-import io.flamingock.core.cloud.CloudDriver;
-import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.builder.cloud.CloudConfiguration;
 import io.flamingock.core.builder.cloud.CloudConfigurator;
 import io.flamingock.core.builder.core.CoreConfiguration;
+import io.flamingock.core.cloud.CloudDriver;
+import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.context.Dependency;
 import io.flamingock.core.context.DependencyInjectableContext;
-import io.flamingock.core.system.DefaultSystemModuleManager;
+import io.flamingock.core.plugin.PluginManager;
+import io.flamingock.core.system.SystemModuleManager;
 
 public class CloudFlamingockBuilder
         extends AbstractFlamingockBuilder<CloudFlamingockBuilder>
         implements CloudConfigurator<CloudFlamingockBuilder> {
 
-    private final DefaultSystemModuleManager systemModuleManager;
 
     private final CloudConfiguration cloudConfiguration;
 
-    private final CloudDriver driver;
-
     private CloudTransactioner cloudTransactioner;
 
-    private CloudEngine engine;
 
     protected CloudFlamingockBuilder(CoreConfiguration coreConfiguration,
                                      CloudConfiguration cloudConfiguration,
                                      DependencyInjectableContext dependencyInjectableContext,
-                                     DefaultSystemModuleManager systemModuleManager,
+                                     PluginManager pluginManager,
+                                     SystemModuleManager systemModuleManager,
                                      CloudDriver driver) {
-        super(coreConfiguration, dependencyInjectableContext, systemModuleManager, driver);
+        super(coreConfiguration, dependencyInjectableContext, pluginManager, systemModuleManager, driver);
         this.cloudConfiguration = cloudConfiguration;
-        this.systemModuleManager = systemModuleManager;
-        this.driver = driver;
-
     }
 
     @Override
@@ -59,12 +53,12 @@ public class CloudFlamingockBuilder
 
 
     @Override
-    protected void doInjectDependencies() {
+    protected void doUpdateContext() {
         addDependency(cloudConfiguration);
 
         //TODO get transactioner from ServiceLoader
         // currently injecting it into the context for the driver to pick it up
-        if(cloudTransactioner != null) {
+        if (cloudTransactioner != null) {
             addDependency(new Dependency(CloudTransactioner.class, cloudTransactioner));
         }
     }

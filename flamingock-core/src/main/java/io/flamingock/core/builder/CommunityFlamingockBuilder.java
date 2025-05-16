@@ -22,29 +22,25 @@ import io.flamingock.core.builder.local.CommunityConfigurator;
 import io.flamingock.core.community.LocalEngine;
 import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.context.DependencyInjectableContext;
+import io.flamingock.core.plugin.PluginManager;
 import io.flamingock.core.system.DefaultSystemModuleManager;
+import io.flamingock.core.system.SystemModuleManager;
 
 public class CommunityFlamingockBuilder
         extends AbstractFlamingockBuilder<CommunityFlamingockBuilder>
         implements CommunityConfigurator<CommunityFlamingockBuilder> {
 
-    private final DefaultSystemModuleManager systemModuleManager;
-
     private final CommunityConfiguration communityConfiguration;
 
-    private final LocalDriver driver;
-
-    private LocalEngine engine;
 
     protected CommunityFlamingockBuilder(CoreConfiguration coreConfiguration,
                                          CommunityConfiguration communityConfiguration,
                                          DependencyInjectableContext dependencyInjectableContext,
-                                         DefaultSystemModuleManager systemModuleManager,
+                                         PluginManager pluginManager,
+                                         SystemModuleManager systemModuleManager,
                                          LocalDriver driver) {
-        super(coreConfiguration, dependencyInjectableContext, systemModuleManager, driver);
+        super(coreConfiguration, dependencyInjectableContext, pluginManager, systemModuleManager, driver);
         this.communityConfiguration = communityConfiguration;
-        this.systemModuleManager = systemModuleManager;
-        this.driver = driver;
     }
 
     @Override
@@ -64,7 +60,7 @@ public class CommunityFlamingockBuilder
     }
 
     @Override
-    protected void doInjectDependencies() {
+    protected void doUpdateContext() {
         addDependency(communityConfiguration);
     }
 

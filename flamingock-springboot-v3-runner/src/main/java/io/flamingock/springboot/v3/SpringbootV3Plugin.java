@@ -16,7 +16,7 @@
 
 package io.flamingock.springboot.v3;
 
-import io.flamingock.core.builder.FrameworkPlugin;
+import io.flamingock.core.plugin.Plugin;
 import io.flamingock.core.event.EventPublisher;
 import io.flamingock.core.event.SimpleEventPublisher;
 import io.flamingock.core.event.model.IPipelineFailedEvent;
@@ -42,7 +42,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class SpringbootV3Plugin implements FrameworkPlugin {
+public class SpringbootV3Plugin implements Plugin {
 
     private ApplicationContext applicationContext;
     private ApplicationEventPublisher eventPublisher;

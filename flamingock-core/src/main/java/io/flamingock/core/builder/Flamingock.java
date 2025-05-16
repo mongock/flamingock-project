@@ -22,6 +22,7 @@ import io.flamingock.core.builder.local.CommunityConfiguration;
 import io.flamingock.core.cloud.CloudDriver;
 import io.flamingock.core.community.driver.LocalDriver;
 import io.flamingock.core.context.SimpleDependencyInjectableContext;
+import io.flamingock.core.plugin.DefaultPluginManager;
 import io.flamingock.core.system.DefaultSystemModuleManager;
 
 public class Flamingock {
@@ -36,6 +37,7 @@ public class Flamingock {
                     new CoreConfiguration(),
                     new CloudConfiguration(),
                     new SimpleDependencyInjectableContext(),
+                    new DefaultPluginManager(),
                     new DefaultSystemModuleManager(),
                     (CloudDriver) driver);
         } else {
@@ -43,6 +45,7 @@ public class Flamingock {
                     new CoreConfiguration(),
                     new CommunityConfiguration(),
                     new SimpleDependencyInjectableContext(),
+                    new DefaultPluginManager(),
                     new DefaultSystemModuleManager(),
                     (LocalDriver) driver);
         }
@@ -57,6 +60,7 @@ public class Flamingock {
                     coreConfiguration,
                     cloudConfiguration,
                     new SimpleDependencyInjectableContext(),
+                    new DefaultPluginManager(),
                     new DefaultSystemModuleManager(),
                     (CloudDriver) driver);
         } else {
@@ -64,6 +68,7 @@ public class Flamingock {
                     coreConfiguration,
                     communityConfiguration,
                     new SimpleDependencyInjectableContext(),
+                    new DefaultPluginManager(),
                     new DefaultSystemModuleManager(),
                     (LocalDriver) driver);
         }
@@ -75,6 +80,7 @@ public class Flamingock {
                 new CoreConfiguration(),
                 new CloudConfiguration(),
                 new SimpleDependencyInjectableContext(),
+                new DefaultPluginManager(),
                 new DefaultSystemModuleManager(),
                 CloudDriver.getDriver().orElseThrow(() -> new RuntimeException("No Cloud edition detected")));
     }
@@ -85,6 +91,7 @@ public class Flamingock {
                 new CoreConfiguration(),
                 new CommunityConfiguration(),
                 new SimpleDependencyInjectableContext(),
+                new DefaultPluginManager(),
                 new DefaultSystemModuleManager(),
                 LocalDriver.getDriver().orElseThrow(() -> new RuntimeException("No compatible Community edition detected")));
     }
