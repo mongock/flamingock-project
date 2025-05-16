@@ -18,7 +18,6 @@ package io.flamingock.core.builder;
 
 
 import io.flamingock.commons.utils.Property;
-import io.flamingock.core.context.Dependency;
 import io.flamingock.core.event.model.IPipelineCompletedEvent;
 import io.flamingock.core.event.model.IPipelineFailedEvent;
 import io.flamingock.core.event.model.IPipelineIgnoredEvent;
@@ -284,7 +283,7 @@ public interface ContextConfigurator<HOLDER> {
 
     HOLDER setProperty(String key, Character[] value);
 
-    HOLDER setEnumProperty(String key, Object value);
+    <T extends Enum<T>> HOLDER setProperty(String key, T value);
 
 
 }

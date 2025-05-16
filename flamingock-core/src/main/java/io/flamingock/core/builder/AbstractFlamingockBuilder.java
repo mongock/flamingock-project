@@ -707,8 +707,8 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     }
 
     @Override
-    public HOLDER setEnumProperty(String key, Object value) {
-        context.setEnumProperty(key, value);
+    public <T extends Enum<T>> HOLDER setProperty(String key, T value) {
+        context.setProperty(key, value);
         return getSelf();
     }
 

@@ -273,13 +273,8 @@ public class SimpleContext extends AbstractContextResolver implements Context {
     }
 
     @Override
-    public void setEnumProperty(String key, Object value) {
-        if (!(value instanceof Enum)) {
-            throw new IllegalArgumentException("setEnumProperty requires an enum value or null for: " + value);
-        }
-
-        Enum<?> enumValue = (Enum<?>) value;
-        addDependency(new Dependency(key, enumValue.getClass(), enumValue));
+    public <T extends Enum<T>> void setProperty(String key, T value) {
+        addDependency(new Dependency(key, value.getClass(), value));
     }
 
 }
