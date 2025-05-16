@@ -33,6 +33,12 @@ public interface PropertyDependencyResolver {
      */
     Optional<String> getProperty(String key);
 
+    default String getRequiredProperty(String key) {
+        return getProperty(key).orElseThrow(() ->
+                new NotFoundDependencyException(key)
+        );
+    }
+
     /**
      * Retrieves the property value associated with the given key and converts it to the specified type.
      *
@@ -42,4 +48,10 @@ public interface PropertyDependencyResolver {
      * @return an {@link Optional} containing the converted value if present and successfully converted, otherwise empty
      */
     <T> Optional<T> getPropertyAs(String key, Class<T> type);
+
+    default <T> T getRequiredPropertyAs(String key, Class<T> type) {
+        return getPropertyAs(key, type).orElseThrow(() ->
+                new NotFoundDependencyException(key, type)
+        );
+    }
 }
