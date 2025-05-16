@@ -18,11 +18,12 @@ package io.flamingock.core.engine;
 
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.engine.execution.ExecutionPlanner;
+import io.flamingock.core.system.SystemModuleContributor;
 import io.flamingock.core.transaction.TransactionWrapper;
 
 import java.util.Optional;
 
-public interface ConnectionEngine {
+public interface ConnectionEngine extends SystemModuleContributor {
     AuditWriter getAuditWriter();
 
     ExecutionPlanner getExecutionPlanner();

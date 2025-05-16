@@ -21,8 +21,8 @@ import io.flamingock.core.builder.local.CommunityConfiguration;
 import io.flamingock.core.builder.local.CommunityConfigurator;
 import io.flamingock.core.community.LocalEngine;
 import io.flamingock.core.community.driver.LocalDriver;
-import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.system.DefaultSystemModuleManager;
 
 public class CommunityFlamingockBuilder
         extends AbstractFlamingockBuilder<CommunityFlamingockBuilder>
@@ -41,7 +41,7 @@ public class CommunityFlamingockBuilder
                                          DependencyInjectableContext dependencyInjectableContext,
                                          DefaultSystemModuleManager systemModuleManager,
                                          LocalDriver driver) {
-        super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
+        super(coreConfiguration, dependencyInjectableContext, systemModuleManager, driver);
         this.communityConfiguration = communityConfiguration;
         this.systemModuleManager = systemModuleManager;
         this.driver = driver;
@@ -66,20 +66,6 @@ public class CommunityFlamingockBuilder
     @Override
     protected void doInjectDependencies() {
         addDependency(communityConfiguration);
-    }
-
-    @Override
-    protected ConnectionEngine getConnectionEngine() {
-        driver.initialize(dependencyContext);
-        engine = driver.getEngine();
-        return engine;
-    }
-
-    @Override
-    protected void configureSystemModules() {
-        //TODO change this
-        engine.getMongockLegacyImporterModule().ifPresent(systemModuleManager::add);
-        systemModuleManager.initialize();
     }
 
 }

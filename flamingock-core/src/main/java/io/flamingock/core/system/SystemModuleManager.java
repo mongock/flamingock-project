@@ -1,8 +1,7 @@
-package io.flamingock.core.builder;
+package io.flamingock.core.system;
 
 import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.runtime.dependency.Dependency;
-import io.flamingock.core.system.SystemModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,11 +14,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public interface SystemModuleManager<T extends SystemModule> {
+public interface SystemModuleManager {
 
-    void add(T module);
+    void add(SystemModule module);
 
-    Iterable<T> getModules();
+    Iterable<SystemModule> getModules();
+
+    void initialize();
 
     default Iterable<Dependency> getDependencies() {
         Set<Dependency> dependencies = new HashSet<>();
@@ -40,10 +41,10 @@ public interface SystemModuleManager<T extends SystemModule> {
         private Helper() {
         }
 
-        private static <T extends SystemModule> List<PreviewStage> getSortedSystemStages(Iterable<T> modulesIterable, boolean isBefore) {
+        private static List<PreviewStage> getSortedSystemStages(Iterable<SystemModule> modulesIterable, boolean isBefore) {
 
-            Collection<T> modules = Collection.class.isAssignableFrom(modulesIterable.getClass())
-                    ? (Collection<T>) modulesIterable
+            Collection<SystemModule> modules = Collection.class.isAssignableFrom(modulesIterable.getClass())
+                    ? (Collection<SystemModule>) modulesIterable
                     : fromIterableToCollection(modulesIterable);
 
             List<SystemModule> sortedModules = new ArrayList<>(modules);
@@ -54,7 +55,7 @@ public interface SystemModuleManager<T extends SystemModule> {
             return stream.map(SystemModule::getStage).collect(Collectors.toList());
         }
 
-        private static <T extends SystemModule> ArrayList<T> fromIterableToCollection(Iterable<T> modulesIterable) {
+        private static  ArrayList<SystemModule> fromIterableToCollection(Iterable<SystemModule> modulesIterable) {
             return StreamSupport.stream(modulesIterable.spliterator(), false).collect(Collectors.toCollection(ArrayList::new));
         }
     }

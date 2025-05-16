@@ -16,7 +16,6 @@
 
 package io.flamingock.core.builder;
 
-import io.flamingock.commons.utils.RunnerId;
 import io.flamingock.core.cloud.CloudEngine;
 import io.flamingock.core.cloud.CloudDriver;
 import io.flamingock.core.cloud.transaction.CloudTransactioner;
@@ -26,6 +25,7 @@ import io.flamingock.core.builder.core.CoreConfiguration;
 import io.flamingock.core.engine.ConnectionEngine;
 import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.system.DefaultSystemModuleManager;
 
 public class CloudFlamingockBuilder
         extends AbstractFlamingockBuilder<CloudFlamingockBuilder>
@@ -46,7 +46,7 @@ public class CloudFlamingockBuilder
                                      DependencyInjectableContext dependencyInjectableContext,
                                      DefaultSystemModuleManager systemModuleManager,
                                      CloudDriver driver) {
-        super(coreConfiguration, dependencyInjectableContext, systemModuleManager);
+        super(coreConfiguration, dependencyInjectableContext, systemModuleManager, driver);
         this.cloudConfiguration = cloudConfiguration;
         this.systemModuleManager = systemModuleManager;
         this.driver = driver;
@@ -68,18 +68,6 @@ public class CloudFlamingockBuilder
         if(cloudTransactioner != null) {
             addDependency(new Dependency(CloudTransactioner.class, cloudTransactioner));
         }
-    }
-
-    @Override
-    protected ConnectionEngine getConnectionEngine() {
-        driver.initialize(dependencyContext);
-        engine = driver.getEngine();
-        return engine;
-    }
-
-    @Override
-    protected void configureSystemModules() {
-
     }
 
     @Override

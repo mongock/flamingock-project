@@ -1,14 +1,13 @@
-package io.flamingock.core.builder;
-
-import io.flamingock.core.system.SystemModule;
+package io.flamingock.core.system;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class DefaultSystemModuleManager implements SystemModuleManager<SystemModule> {
+public class DefaultSystemModuleManager implements SystemModuleManager {
 
     private final Set<SystemModule> systemModules = new LinkedHashSet<>();
 
+    @Override
     public void initialize() {
         systemModules.forEach(SystemModule::initialise);
     }

@@ -43,6 +43,7 @@ import io.flamingock.core.runtime.dependency.Dependency;
 import io.flamingock.core.runtime.dependency.DependencyContext;
 import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
 import io.flamingock.core.runtime.dependency.PriorityDependencyContext;
+import io.flamingock.core.system.SystemModuleManager;
 import io.flamingock.core.task.filter.TaskFilter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -63,11 +64,12 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         RunnerBuilder {
     private static final Logger logger = LoggerFactory.getLogger(AbstractFlamingockBuilder.class);
 
-    private final SystemModuleManager<?> systemModuleManager;
+    private final SystemModuleManager systemModuleManager;
 
     protected final CoreConfiguration coreConfiguration;
 
     protected final DependencyInjectableContext dependencyContext;
+    private final Driver<?> driver;
     private Consumer<IPipelineStartedEvent> pipelineStartedListener;
     private Consumer<IPipelineCompletedEvent> pipelineCompletedListener;
     private Consumer<IPipelineIgnoredEvent> pipelineIgnoredListener;
@@ -86,18 +88,15 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     protected AbstractFlamingockBuilder(
             CoreConfiguration coreConfiguration,
             DependencyInjectableContext dependencyContext,
-            SystemModuleManager<?> systemModuleManager
-    ) {
+            SystemModuleManager systemModuleManager,
+            Driver<?> driver) {
         this.systemModuleManager = systemModuleManager;
         this.dependencyContext = dependencyContext;
         this.coreConfiguration = coreConfiguration;
+        this.driver = driver;
     }
 
     protected abstract void doInjectDependencies();
-
-    protected abstract ConnectionEngine getConnectionEngine();
-
-    protected abstract void configureSystemModules();
 
     protected abstract HOLDER getSelf();
 
@@ -110,18 +109,19 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         logger.info("Generated runner id:  {}", runnerId);
         injectDependencies(runnerId);
 
-        //START SPECIFIC CONFIG BLOCK: Cloud VS Local
-        ConnectionEngine engine = getConnectionEngine();
-        configureSystemModules();
-        /*
-         * FINISHED SPECIFIC CONFIG BLOCK
-         */
+        driver.initialize(dependencyContext);
+        ConnectionEngine engine = driver.getEngine();
+        engine.contributeToSystemModules(systemModuleManager);
+
+        //TODO make the SystemModule ContextContributor
         systemModuleManager
                 .getDependencies()
                 .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
 
+        systemModuleManager.initialize();
 
         //Injecting auditWriter
+        //TODO make the Engine ContextContributor
         addDependency(AuditWriter.class, engine.getAuditWriter());
 
         List<FrameworkPlugin> frameworkPlugins = getPluginList();

@@ -18,7 +18,7 @@ public interface Driver<ENGINE extends ConnectionEngine> {
 
     ENGINE getEngine();
 
-    static Driver getDriver() {
+    static Driver<?> getDriver() {
         Optional<CloudDriver> cloudDriver = CloudDriver.getDriver();
         if(cloudDriver.isPresent()) {
             return cloudDriver.get();
