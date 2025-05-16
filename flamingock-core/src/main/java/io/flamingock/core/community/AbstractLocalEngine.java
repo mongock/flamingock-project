@@ -18,7 +18,7 @@ public abstract class AbstractLocalEngine implements LocalEngine {
 
     abstract protected void doInitialize(RunnerId runnerId);
 
-    abstract protected Optional<SystemModule> getMongockLegacyImporterModule();
+    abstract protected Optional<? extends SystemModule> getMongockLegacyImporterModule();
 
     public void initialize(RunnerId runnerId) {
         doInitialize(runnerId);
