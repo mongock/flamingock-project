@@ -39,10 +39,10 @@ import io.flamingock.core.pipeline.PipelineDescriptor;
 import io.flamingock.core.runner.PipelineRunnerCreator;
 import io.flamingock.core.runner.Runner;
 import io.flamingock.core.runner.RunnerBuilder;
-import io.flamingock.core.runtime.dependency.Dependency;
-import io.flamingock.core.runtime.dependency.DependencyContext;
-import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
-import io.flamingock.core.runtime.dependency.PriorityDependencyContext;
+import io.flamingock.core.context.Dependency;
+import io.flamingock.core.context.DependencyContext;
+import io.flamingock.core.context.DependencyInjectableContext;
+import io.flamingock.core.context.PriorityDependencyContext;
 import io.flamingock.core.system.SystemModuleManager;
 import io.flamingock.core.task.filter.TaskFilter;
 import org.jetbrains.annotations.NotNull;
@@ -112,13 +112,12 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         driver.initialize(dependencyContext);
         ConnectionEngine engine = driver.getEngine();
         engine.contributeToSystemModules(systemModuleManager);
-
-        //TODO make the SystemModule ContextContributor
-
-        systemModuleManager.initialize();
-        systemModuleManager
-                .getDependencies()
-                .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
+        
+        systemModuleManager.initialize(dependencyContext);
+        systemModuleManager.contributeToContext(dependencyContext);
+//        systemModuleManager
+//                .getDependencies()
+//                .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
 
         //Injecting auditWriter
         //TODO make the Engine ContextContributor

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.runtime.dependency;
+package io.flamingock.core.context;
 
 import java.util.function.Function;
 

@@ -26,7 +26,7 @@ import io.flamingock.core.event.model.IStageCompletedEvent;
 import io.flamingock.core.event.model.IStageFailedEvent;
 import io.flamingock.core.event.model.IStageIgnoredEvent;
 import io.flamingock.core.event.model.IStageStartedEvent;
-import io.flamingock.core.runtime.dependency.DependencyContext;
+import io.flamingock.core.context.DependencyContext;
 import io.flamingock.core.task.filter.TaskFilter;
 import io.flamingock.springboot.v3.event.SpringPipelineFailedEvent;
 import io.flamingock.springboot.v3.event.SpringPipelineIgnoredEvent;

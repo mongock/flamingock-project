@@ -1,7 +1,10 @@
 package io.flamingock.core.system;
 
+import io.flamingock.core.context.ContextContributor;
+import io.flamingock.core.context.ContextInitializable;
+import io.flamingock.core.context.DependencyContext;
 import io.flamingock.core.preview.PreviewStage;
-import io.flamingock.core.runtime.dependency.Dependency;
+import io.flamingock.core.context.Dependency;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,13 +17,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public interface SystemModuleManager {
+public interface SystemModuleManager extends ContextInitializable, ContextContributor {
 
     void add(SystemModule module);
 
     Iterable<SystemModule> getModules();
 
-    void initialize();
+    void initialize(DependencyContext dependencyContext);
 
     default Iterable<Dependency> getDependencies() {
         Set<Dependency> dependencies = new HashSet<>();

@@ -21,7 +21,7 @@ import io.flamingock.core.builder.core.CoreConfiguration;
 import io.flamingock.core.builder.local.CommunityConfiguration;
 import io.flamingock.core.cloud.CloudDriver;
 import io.flamingock.core.community.driver.LocalDriver;
-import io.flamingock.core.runtime.dependency.SimpleDependencyInjectableContext;
+import io.flamingock.core.context.SimpleDependencyInjectableContext;
 import io.flamingock.core.system.DefaultSystemModuleManager;
 
 public class Flamingock {

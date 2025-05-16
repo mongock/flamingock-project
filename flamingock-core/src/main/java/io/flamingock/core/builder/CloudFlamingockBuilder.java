@@ -22,9 +22,8 @@ import io.flamingock.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.core.builder.cloud.CloudConfiguration;
 import io.flamingock.core.builder.cloud.CloudConfigurator;
 import io.flamingock.core.builder.core.CoreConfiguration;
-import io.flamingock.core.engine.ConnectionEngine;
-import io.flamingock.core.runtime.dependency.Dependency;
-import io.flamingock.core.runtime.dependency.DependencyInjectableContext;
+import io.flamingock.core.context.Dependency;
+import io.flamingock.core.context.DependencyInjectableContext;
 import io.flamingock.core.system.DefaultSystemModuleManager;
 
 public class CloudFlamingockBuilder
