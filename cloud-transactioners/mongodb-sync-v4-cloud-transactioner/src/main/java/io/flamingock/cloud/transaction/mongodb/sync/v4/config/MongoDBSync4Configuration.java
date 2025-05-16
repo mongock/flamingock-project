@@ -58,26 +58,6 @@ public class MongoDBSync4Configuration extends MongoDBDriverConfiguration {
         this.readPreference = readPreference;
     }
 
-    public void setReadPreference(String readPreference) {
-        switch (readPreference) {
-            case "PRIMARY":
-                this.readPreference = ReadPreferenceLevel.PRIMARY;
-                break;
-            case "PRIMARY_PREFERRED":
-                this.readPreference = ReadPreferenceLevel.PRIMARY_PREFERRED;
-                break;
-            case "SECONDARY":
-                this.readPreference = ReadPreferenceLevel.SECONDARY;
-                break;
-            case "SECONDARY_PREFERRED":
-                this.readPreference = ReadPreferenceLevel.SECONDARY_PREFERRED;
-                break;
-            case "NEAREST":
-                this.readPreference = ReadPreferenceLevel.NEAREST;
-                break;
-        }
-    }
-
     public WriteConcern getBuiltMongoDBWriteConcern() {
         WriteConcern wc = new WriteConcern(writeConcern.w).withJournal(writeConcern.journal);
         return writeConcern.getwTimeoutMs() == null
@@ -103,8 +83,6 @@ public class MongoDBSync4Configuration extends MongoDBDriverConfiguration {
         dependencyContext.getPropertyAs("mongodb.writeConcern.wTimeout", Duration.class)
                 .ifPresent(this.writeConcern::setwTimeoutMs);
 
-        dependencyContext.getPropertyAs("mongodb.readPreference", String.class)
-                .ifPresent(this::setReadPreference);
         dependencyContext.getPropertyAs("mongodb.readPreference", ReadPreferenceLevel.class)
                 .ifPresent(this::setReadPreference);
     }
