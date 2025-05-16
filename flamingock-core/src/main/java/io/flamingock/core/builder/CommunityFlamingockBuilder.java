@@ -48,31 +48,6 @@ public class CommunityFlamingockBuilder
     }
 
     @Override
-    protected CommunityFlamingockBuilder getSelf() {
-        return this;
-    }
-
-    @Override
-    protected void injectSpecificDependencies() {
-        addDependency(communityConfiguration);
-    }
-
-    @Override
-    protected ConnectionEngine getConnectionEngine() {
-        driver.initialize(dependencyContext);
-        engine = driver.getEngine();
-        return engine;
-
-    }
-
-    @Override
-    protected void configureSystemModules() {
-        //TODO change this
-        engine.getMongockLegacyImporterModule().ifPresent(systemModuleManager::add);
-        systemModuleManager.initialize();
-    }
-
-    @Override
     public CommunityFlamingockBuilder disableTransaction() {
         communityConfiguration.setTransactionDisabled(true);
         return this;
@@ -82,4 +57,29 @@ public class CommunityFlamingockBuilder
     public boolean isTransactionDisabled() {
         return communityConfiguration.isTransactionDisabled();
     }
+
+    @Override
+    protected CommunityFlamingockBuilder getSelf() {
+        return this;
+    }
+
+    @Override
+    protected void doInjectDependencies() {
+        addDependency(communityConfiguration);
+    }
+
+    @Override
+    protected ConnectionEngine getConnectionEngine() {
+        driver.initialize(dependencyContext);
+        engine = driver.getEngine();
+        return engine;
+    }
+
+    @Override
+    protected void configureSystemModules() {
+        //TODO change this
+        engine.getMongockLegacyImporterModule().ifPresent(systemModuleManager::add);
+        systemModuleManager.initialize();
+    }
+
 }

@@ -93,7 +93,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         this.coreConfiguration = coreConfiguration;
     }
 
-    protected abstract void injectSpecificDependencies();
+    protected abstract void doInjectDependencies();
 
     protected abstract ConnectionEngine getConnectionEngine();
 
@@ -158,7 +158,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         logger.trace("injecting internal configuration");
         addDependency(runnerId);
         addDependency(coreConfiguration);
-        injectSpecificDependencies();
+        doInjectDependencies();
     }
 
     private DependencyContext getMergedDependencyContext(List<FrameworkPlugin> frameworkPlugins) {
@@ -195,7 +195,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     }
 
     @NotNull
-    protected EventPublisher buildEventPublisher(List<FrameworkPlugin> frameworkPlugins) {
+    private EventPublisher buildEventPublisher(List<FrameworkPlugin> frameworkPlugins) {
 
 
         SimpleEventPublisher simpleEventPublisher = new SimpleEventPublisher()

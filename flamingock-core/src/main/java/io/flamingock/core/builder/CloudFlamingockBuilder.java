@@ -60,7 +60,7 @@ public class CloudFlamingockBuilder
 
 
     @Override
-    protected void injectSpecificDependencies() {
+    protected void doInjectDependencies() {
         addDependency(cloudConfiguration);
 
         //TODO get transactioner from ServiceLoader
