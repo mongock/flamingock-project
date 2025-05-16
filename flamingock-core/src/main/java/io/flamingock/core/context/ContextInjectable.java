@@ -17,10 +17,11 @@
 package io.flamingock.core.context;
 
 /**
- * A composite interface that combines {@link ContextResolver} (for resolving dependencies)
- * and {@link DependencyInjectable} (for injecting dependencies).
+ * Represents a container for runtime dependencies.
+ * Allows retrieval of registered {@link Dependency} instances by type or name.
  * <p>
- * Implementations are both capable of providing and accepting dependencies at runtime.
+ * Also provides typed access to the instance values directly via {@code getDependencyValue}.
  */
-public interface Context extends ContextResolver, ContextInjectable {
+public interface ContextInjectable extends DependencyInjectable, PropertyInjectable {
+
 }
