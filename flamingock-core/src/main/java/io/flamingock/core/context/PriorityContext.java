@@ -285,8 +285,8 @@ public class PriorityContext extends PriorityContextResolver implements Context 
     }
 
     @Override
-    public void setEnumProperty(String key, Object value) {
-        priorityContext.setEnumProperty(key, value);
+    public <T extends Enum<T>> void setProperty(String key, T value) {
+        priorityContext.setProperty(key, value);
     }
 
 }
