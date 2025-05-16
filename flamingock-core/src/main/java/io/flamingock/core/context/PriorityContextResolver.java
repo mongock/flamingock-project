@@ -21,15 +21,15 @@ package io.flamingock.core.context;
 import java.util.Optional;
 
 /**
- * A {@link DependencyContext} that prioritizes resolution from one context over another.
+ * A {@link ContextResolver} that prioritizes resolution from one context over another.
  * <p>
  * It delegates to a "priority" context first, and falls back to a "base" context if the dependency or property
  * is not found in the first.
  */
-public class PriorityDependencyContext implements DependencyContext {
+public class PriorityContextResolver implements ContextResolver {
 
-    private final DependencyContext priorityContext;
-    private final DependencyContext baseContext;
+    private final ContextResolver priorityContext;
+    private final ContextResolver baseContext;
 
     /**
      * Creates a composite dependency context where the given priority context takes precedence
@@ -38,7 +38,7 @@ public class PriorityDependencyContext implements DependencyContext {
      * @param priorityContext the preferred context to check first
      * @param baseContext     the fallback context used if the dependency is not found in the priority context
      */
-    public PriorityDependencyContext(DependencyContext priorityContext, DependencyContext baseContext) {
+    public PriorityContextResolver(ContextResolver priorityContext, ContextResolver baseContext) {
         this.priorityContext = priorityContext;
         this.baseContext = baseContext;
     }

@@ -24,7 +24,7 @@ import java.util.Optional;
  * <p>
  * Also provides typed access to the instance values directly via {@code getDependencyValue}.
  */
-public interface DependencyContext extends PropertyDependencyResolver {
+public interface DependencyResolver {
 
     /**
      * Retrieves an optional dependency by its type.

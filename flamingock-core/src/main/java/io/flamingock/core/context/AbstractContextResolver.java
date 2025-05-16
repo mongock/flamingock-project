@@ -21,7 +21,7 @@ package io.flamingock.core.context;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public abstract class AbstractSimpleDependencyContext implements DependencyContext {
+public abstract class AbstractContextResolver implements ContextResolver {
 
     @Override
     public Optional<Dependency> getDependency(Class<?> type) {
