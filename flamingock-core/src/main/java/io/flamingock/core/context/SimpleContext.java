@@ -20,11 +20,11 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class SimpleDependencyInjectableContext extends AbstractSimpleDependencyContext implements DependencyInjectableContext {
+public class SimpleContext extends AbstractContextResolver implements Context {
 
     private final LinkedHashSet<Dependency> dependencyStore;
 
-    public SimpleDependencyInjectableContext() {
+    public SimpleContext() {
         dependencyStore = new LinkedHashSet<>();
     }
 

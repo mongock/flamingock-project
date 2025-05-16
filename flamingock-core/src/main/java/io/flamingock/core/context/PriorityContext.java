@@ -17,24 +17,24 @@
 package io.flamingock.core.context;
 
 /**
- * A {@link DependencyInjectableContext} that combines a writable priority context
+ * A {@link Context} that combines a writable priority context
  * with a read-only fallback context.
  * <p>
  * Dependency resolution prioritizes the {@code priorityInjectableContext}, but dependency
  * injection operations (add/remove) only affect the priority context.
  */
-public class PriorityDependencyInjectableContext extends PriorityDependencyContext implements DependencyInjectableContext {
+public class PriorityContext extends PriorityContextResolver implements Context {
 
-    private final DependencyInjectableContext priorityInjectableContext;
+    private final Context priorityInjectableContext;
 
     /**
-     * Creates a context that combines a writable {@link SimpleDependencyInjectableContext}
+     * Creates a context that combines a writable {@link SimpleContext}
      * with a read-only fallback base context.
      *
      * @param baseContext the fallback context to be used when the dependency is not found in the priority context
      */
-    public PriorityDependencyInjectableContext(DependencyContext baseContext) {
-        this(new SimpleDependencyInjectableContext(), baseContext);
+    public PriorityContext(ContextResolver baseContext) {
+        this(new SimpleContext(), baseContext);
     }
 
     /**
@@ -44,7 +44,7 @@ public class PriorityDependencyInjectableContext extends PriorityDependencyConte
      * @param priorityInjectableContext the context where dependencies are added or removed
      * @param baseContext               the fallback context used only for resolution
      */
-    public PriorityDependencyInjectableContext(DependencyInjectableContext priorityInjectableContext, DependencyContext baseContext) {
+    public PriorityContext(Context priorityInjectableContext, ContextResolver baseContext) {
         super(priorityInjectableContext, baseContext);
         this.priorityInjectableContext = priorityInjectableContext;
     }

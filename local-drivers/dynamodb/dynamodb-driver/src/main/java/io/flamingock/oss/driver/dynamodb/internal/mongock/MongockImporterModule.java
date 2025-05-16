@@ -16,7 +16,7 @@
 
 package io.flamingock.oss.driver.dynamodb.internal.mongock;
 
-import io.flamingock.core.context.DependencyContext;
+import io.flamingock.core.context.ContextResolver;
 import io.flamingock.core.context.DependencyInjectable;
 import io.flamingock.core.engine.audit.AuditWriter;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
@@ -55,7 +55,7 @@ public class MongockImporterModule implements SystemModule {
     }
 
     @Override
-    public void initialize(DependencyContext dependencyContext) {
+    public void initialize(ContextResolver dependencyContext) {
 
     }
 
