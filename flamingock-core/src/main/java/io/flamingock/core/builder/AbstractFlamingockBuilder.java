@@ -114,11 +114,11 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         engine.contributeToSystemModules(systemModuleManager);
 
         //TODO make the SystemModule ContextContributor
+
+        systemModuleManager.initialize();
         systemModuleManager
                 .getDependencies()
                 .forEach(d -> addDependency(d.getName(), d.getType(), d.getInstance()));
-
-        systemModuleManager.initialize();
 
         //Injecting auditWriter
         //TODO make the Engine ContextContributor
