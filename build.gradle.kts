@@ -48,7 +48,7 @@ val coreProjects = setOf(
 
 val localDriverProjects = setOf(
     "driver-common", "couchbase-driver", "couchbase-springboot-v2-driver",
-    "flamingock-ce-dynamodb", "mongodb-facade", "mongodb-springdata-v2-driver",
+    "flamingock-ce-dynamodb", "mongodb-facade", "flamingock-ce-mongodb-springdata-v2",
     "mongodb-springdata-v3-driver", "mongodb-springdata-v4-driver",
     "mongodb-sync-v4-driver", "mongodb-v3-driver", "mongodb-importer"
 )

@@ -54,9 +54,9 @@ include("community:mongodb-springdata-v3-driver")
 project(":community:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
 project(":community:mongodb-springdata-v3-driver").projectDir = file("community/mongodb-springdata-v3-driver")
 
-include("community:mongodb-springdata-v2-driver")
-project(":community:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
-project(":community:mongodb-springdata-v2-driver").projectDir = file("community/mongodb-springdata-v2-driver")
+include("community:flamingock-ce-mongodb-springdata-v2")
+project(":community:flamingock-ce-mongodb-springdata-v2").name = "flamingock-ce-mongodb-springdata-v2"
+project(":community:flamingock-ce-mongodb-springdata-v2").projectDir = file("community/flamingock-ce-mongodb-springdata-v2")
 
 include("community:mongodb-springdata-v4-driver")
 project(":community:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
