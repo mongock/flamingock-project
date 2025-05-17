@@ -16,19 +16,13 @@ include("flamingock-core-api")
 //////////////////////////////////////
 // CLOUD
 //////////////////////////////////////
-include("flamingock-cloud-edition")
+include("cloud:flamingock-cloud")
+project(":cloud:flamingock-cloud").name = "flamingock-cloud"
+project(":cloud:flamingock-cloud").projectDir = file("cloud/flamingock-cloud")
 
-include("cloud-transactioners:sql-cloud-transactioner")
-project(":cloud-transactioners:sql-cloud-transactioner").projectDir = file("cloud-transactioners/sql-cloud-transactioner")
-project(":cloud-transactioners:sql-cloud-transactioner").name = "sql-cloud-transactioner"
-
-include("cloud-transactioners:mongodb-sync-v4-cloud-transactioner")
-project(":cloud-transactioners:mongodb-sync-v4-cloud-transactioner").projectDir = file("cloud-transactioners/mongodb-sync-v4-cloud-transactioner")
-project(":cloud-transactioners:mongodb-sync-v4-cloud-transactioner").name = "mongodb-sync-v4-cloud-transactioner"
-
-include("cloud-transactioners:dynamodb-cloud-transactioner")
-project(":cloud-transactioners:dynamodb-cloud-transactioner").projectDir = file("cloud-transactioners/dynamodb-cloud-transactioner")
-project(":cloud-transactioners:dynamodb-cloud-transactioner").name = "dynamodb-cloud-transactioner"
+include("cloud:flamingock-cloud-bom")
+project(":cloud:flamingock-cloud-bom").name = "flamingock-cloud-bom"
+project(":cloud:flamingock-cloud-bom").projectDir = file("cloud/flamingock-cloud-bom")
 
 //////////////////////////////////////
 // COMMUNITY
@@ -70,6 +64,26 @@ include("community:flamingock-ce-dynamodb")
 project(":community:flamingock-ce-dynamodb").name = "flamingock-ce-dynamodb"
 project(":community:flamingock-ce-dynamodb").projectDir = file("community/flamingock-ce-dynamodb")
 
+
+
+//////////////////////////////////////
+// TRANSACTIONERS
+//////////////////////////////////////
+
+include("transactioners:sql-cloud-transactioner")
+project(":transactioners:sql-cloud-transactioner").projectDir = file("transactioners/sql-cloud-transactioner")
+project(":transactioners:sql-cloud-transactioner").name = "sql-cloud-transactioner"
+
+include("transactioners:mongodb-sync-v4-cloud-transactioner")
+project(":transactioners:mongodb-sync-v4-cloud-transactioner").projectDir = file("transactioners/mongodb-sync-v4-cloud-transactioner")
+project(":transactioners:mongodb-sync-v4-cloud-transactioner").name = "mongodb-sync-v4-cloud-transactioner"
+
+include("transactioners:dynamodb-cloud-transactioner")
+project(":transactioners:dynamodb-cloud-transactioner").projectDir = file("transactioners/dynamodb-cloud-transactioner")
+project(":transactioners:dynamodb-cloud-transactioner").name = "dynamodb-cloud-transactioner"
+
+
+
 //////////////////////////////////////
 // TEMPLATES
 //////////////////////////////////////
@@ -97,6 +111,7 @@ project(":importers:mongodb-importer-sync-v4").projectDir = file("importers/mong
 include("importers:mongodb-importer-v3")
 project(":importers:mongodb-importer-v3").name = "mongodb-importer-v3"
 project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-importer-v3")
+
 
 //////////////////////////////////////
 // UTILS
