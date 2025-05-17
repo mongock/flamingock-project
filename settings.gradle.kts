@@ -34,7 +34,7 @@ project(":cloud-transactioners:dynamodb-cloud-transactioner").name = "dynamodb-c
 // COMMUNITY
 //////////////////////////////////////
 
-include("flamingock-community-bom")
+include("flamingock-ce-bom")
 include("community-edition-commons")
 
 include("commons:mongodb-facade")
