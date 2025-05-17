@@ -22,7 +22,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.commons.utils.Trio;
-import io.flamingock.core.builder.Flamingock;
+import io.flamingock.core.builder.FlamingockFactory;
 import io.flamingock.core.engine.audit.importer.changeunit.MongockImporterChangeUnit;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.legacy.MongockLegacyIdGenerator;
@@ -118,7 +118,7 @@ class MongoSync4ImporterTest {
                     new Trio<>(_3_insert_jorge_happy_non_transactional.class, Collections.singletonList(MongoDatabase.class), Collections.singletonList(MongoDatabase.class)))
             );
 
-            Flamingock.local()
+            FlamingockFactory.getCommunityBuilder()
                     .addDependency(mongoClient)
                     .setProperty("mongodb.databaseName", DB_NAME)
                     .withImporter(withSource("mongockChangeLog"))

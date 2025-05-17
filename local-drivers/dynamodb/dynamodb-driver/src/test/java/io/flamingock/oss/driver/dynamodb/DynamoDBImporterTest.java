@@ -24,7 +24,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
 import io.flamingock.commons.utils.Trio;
-import io.flamingock.core.builder.Flamingock;
+import io.flamingock.core.builder.FlamingockFactory;
 import io.flamingock.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.legacy.MongockLegacyIdGenerator;
 import io.flamingock.core.processor.util.Deserializer;
@@ -139,7 +139,7 @@ class DynamoDBImporterTest {
                     new Trio<>(_3_insert_jorge_happy_non_transactional.class, Collections.singletonList(DynamoDbClient.class), Collections.singletonList(DynamoDbClient.class)))
             );
 
-            Flamingock.local()
+            FlamingockFactory.getCommunityBuilder()
                     .withImporter(ImporterConfiguration.withSource(mongockDriver.getMigrationRepositoryName()))
                     //.addStage(new Stage("stage-name")
 //                        .addCodePackage("io.flamingock.oss.driver.dynamodb.changes.happyPathWithTransaction"))

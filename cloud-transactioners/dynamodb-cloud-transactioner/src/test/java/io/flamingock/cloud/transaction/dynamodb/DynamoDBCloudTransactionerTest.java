@@ -32,7 +32,7 @@ import io.flamingock.common.test.cloud.prototype.PrototypeClientSubmission;
 import io.flamingock.common.test.cloud.prototype.PrototypeStage;
 import io.flamingock.commons.utils.Trio;
 import io.flamingock.core.cloud.api.vo.OngoingStatus;
-import io.flamingock.core.builder.Flamingock;
+import io.flamingock.core.builder.FlamingockFactory;
 import io.flamingock.core.builder.CloudFlamingockBuilder;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.core.runner.PipelineExecutionException;
@@ -112,7 +112,7 @@ public class DynamoDBCloudTransactionerTest {
                 .setApiToken(apiToken)
                 .setJwt(jwt);
 
-        flamingockBuilder = Flamingock.cloud()
+        flamingockBuilder = FlamingockFactory.getCloudBuilder()
                 .setApiToken(apiToken)
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
