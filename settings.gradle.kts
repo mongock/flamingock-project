@@ -34,12 +34,13 @@ project(":cloud-transactioners:dynamodb-cloud-transactioner").name = "dynamodb-c
 // COMMUNITY
 //////////////////////////////////////
 
-include("flamingock-ce-bom")
-include("flamingock-ce-commons")
+include("community:flamingock-ce-commons")
+project(":community:flamingock-ce-commons").name = "flamingock-ce-commons"
+project(":community:flamingock-ce-commons").projectDir = file("community/flamingock-ce-commons")
 
-include("commons:mongodb-facade")
-project(":commons:mongodb-facade").name = "mongodb-facade"
-project(":commons:mongodb-facade").projectDir = file("commons/mongodb-facade")
+include("community:flamingock-ce-bom")
+project(":community:flamingock-ce-bom").name = "flamingock-ce-bom"
+project(":community:flamingock-ce-bom").projectDir = file("community/flamingock-ce-bom")
 
 include("community:mongodb-sync-v4-driver")
 project(":community:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
@@ -65,10 +66,6 @@ include("community:couchbase-driver")
 project(":community:couchbase-driver").name = "couchbase-driver"
 project(":community:couchbase-driver").projectDir = file("community/couchbase-driver")
 
-include("commons:dynamodb-utils")
-project(":commons:dynamodb-utils").name = "dynamodb-utils"
-project(":commons:dynamodb-utils").projectDir = file("commons/dynamodb-utils")
-
 include("community:dynamodb-driver")
 project(":community:dynamodb-driver").name = "dynamodb-driver"
 project(":community:dynamodb-driver").projectDir = file("community/dynamodb-driver")
@@ -88,13 +85,6 @@ include("templates:mongodb-change-template")
 project(":templates:mongodb-change-template").name = "mongodb-change-template"
 project(":templates:mongodb-change-template").projectDir = file("templates/mongodb-change-template")
 
-//////////////////////////////////////
-// UTILS
-//////////////////////////////////////
-include("utils-test")
-include("utils")
-
-
 
 //////////////////////////////////////
 // INTERNAL
@@ -108,3 +98,17 @@ include("importers:mongodb-importer-v3")
 project(":importers:mongodb-importer-v3").name = "mongodb-importer-v3"
 project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-importer-v3")
 
+//////////////////////////////////////
+// UTILS
+//////////////////////////////////////
+include("utils-test")
+include("utils")
+
+include("commons:mongodb-facade")
+project(":commons:mongodb-facade").name = "mongodb-facade"
+project(":commons:mongodb-facade").projectDir = file("commons/mongodb-facade")
+
+
+include("commons:dynamodb-utils")
+project(":commons:dynamodb-utils").name = "dynamodb-utils"
+project(":commons:dynamodb-utils").projectDir = file("commons/dynamodb-utils")
