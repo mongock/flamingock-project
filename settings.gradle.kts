@@ -42,25 +42,25 @@ include("community:flamingock-ce-bom")
 project(":community:flamingock-ce-bom").name = "flamingock-ce-bom"
 project(":community:flamingock-ce-bom").projectDir = file("community/flamingock-ce-bom")
 
-include("community:mongodb-sync-v4-driver")
-project(":community:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
-project(":community:mongodb-sync-v4-driver").projectDir = file("community/mongodb-sync-v4-driver")
+include("community:flamingock-ce-mongodb-sync-v4")
+project(":community:flamingock-ce-mongodb-sync-v4").name = "flamingock-ce-mongodb-sync-v4"
+project(":community:flamingock-ce-mongodb-sync-v4").projectDir = file("community/flamingock-ce-mongodb-sync-v4")
 
 include("community:mongodb-v3-driver")
 project(":community:mongodb-v3-driver").name = "mongodb-v3-driver"
 project(":community:mongodb-v3-driver").projectDir = file("community/mongodb-v3-driver")
 
-include("community:mongodb-springdata-v3-driver")
-project(":community:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
-project(":community:mongodb-springdata-v3-driver").projectDir = file("community/mongodb-springdata-v3-driver")
+include("community:flamingock-ce-mongodb-springdata-v3")
+project(":community:flamingock-ce-mongodb-springdata-v3").name = "flamingock-ce-mongodb-springdata-v3"
+project(":community:flamingock-ce-mongodb-springdata-v3").projectDir = file("community/flamingock-ce-mongodb-springdata-v3")
 
 include("community:flamingock-ce-mongodb-springdata-v2")
 project(":community:flamingock-ce-mongodb-springdata-v2").name = "flamingock-ce-mongodb-springdata-v2"
 project(":community:flamingock-ce-mongodb-springdata-v2").projectDir = file("community/flamingock-ce-mongodb-springdata-v2")
 
-include("community:mongodb-springdata-v4-driver")
-project(":community:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
-project(":community:mongodb-springdata-v4-driver").projectDir = file("community/mongodb-springdata-v4-driver")
+include("community:flamingock-ce-mongodb-springdata-v4")
+project(":community:flamingock-ce-mongodb-springdata-v4").name = "flamingock-ce-mongodb-springdata-v4"
+project(":community:flamingock-ce-mongodb-springdata-v4").projectDir = file("community/flamingock-ce-mongodb-springdata-v4")
 
 include("community:flamingock-ce-couchbase")
 project(":community:flamingock-ce-couchbase").name = "flamingock-ce-couchbase"
