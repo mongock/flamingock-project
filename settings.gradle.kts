@@ -16,7 +16,9 @@ include("flamingock-core-api")
 //////////////////////////////////////
 // CLOUD
 //////////////////////////////////////
-include("flamingock-cloud-edition")
+include("cloud:flamingock-cloud-edition")
+project(":cloud:flamingock-cloud-edition").name = "flamingock-cloud-edition"
+project(":cloud:flamingock-cloud-edition").projectDir = file("cloud/flamingock-cloud-edition")
 
 include("cloud-transactioners:sql-cloud-transactioner")
 project(":cloud-transactioners:sql-cloud-transactioner").projectDir = file("cloud-transactioners/sql-cloud-transactioner")
