@@ -41,37 +41,37 @@ include("commons:mongodb-facade")
 project(":commons:mongodb-facade").name = "mongodb-facade"
 project(":commons:mongodb-facade").projectDir = file("commons/mongodb-facade")
 
-include("local-drivers:mongodb:mongodb-sync-v4-driver")
-project(":local-drivers:mongodb:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
-project(":local-drivers:mongodb:mongodb-sync-v4-driver").projectDir = file("local-drivers/mongodb/mongodb-sync-v4-driver")
+include("community:mongodb:mongodb-sync-v4-driver")
+project(":community:mongodb:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
+project(":community:mongodb:mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
 
-include("local-drivers:mongodb:mongodb-v3-driver")
-project(":local-drivers:mongodb:mongodb-v3-driver").name = "mongodb-v3-driver"
-project(":local-drivers:mongodb:mongodb-v3-driver").projectDir = file("local-drivers/mongodb/mongodb-v3-driver")
+include("community:mongodb:mongodb-v3-driver")
+project(":community:mongodb:mongodb-v3-driver").name = "mongodb-v3-driver"
+project(":community:mongodb:mongodb-v3-driver").projectDir = file("community/mongodb/mongodb-v3-driver")
 
-include("local-drivers:mongodb:mongodb-springdata-v3-driver")
-project(":local-drivers:mongodb:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
-project(":local-drivers:mongodb:mongodb-springdata-v3-driver").projectDir = file("local-drivers/mongodb/mongodb-springdata-v3-driver")
+include("community:mongodb:mongodb-springdata-v3-driver")
+project(":community:mongodb:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
+project(":community:mongodb:mongodb-springdata-v3-driver").projectDir = file("community/mongodb/mongodb-springdata-v3-driver")
 
-include("local-drivers:mongodb:mongodb-springdata-v2-driver")
-project(":local-drivers:mongodb:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
-project(":local-drivers:mongodb:mongodb-springdata-v2-driver").projectDir = file("local-drivers/mongodb/mongodb-springdata-v2-driver")
+include("community:mongodb:mongodb-springdata-v2-driver")
+project(":community:mongodb:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
+project(":community:mongodb:mongodb-springdata-v2-driver").projectDir = file("community/mongodb/mongodb-springdata-v2-driver")
 
-include("local-drivers:mongodb:mongodb-springdata-v4-driver")
-project(":local-drivers:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
-project(":local-drivers:mongodb:mongodb-springdata-v4-driver").projectDir = file("local-drivers/mongodb/mongodb-springdata-v4-driver")
+include("community:mongodb:mongodb-springdata-v4-driver")
+project(":community:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
+project(":community:mongodb:mongodb-springdata-v4-driver").projectDir = file("community/mongodb/mongodb-springdata-v4-driver")
 
-include("local-drivers:couchbase:couchbase-driver")
-project(":local-drivers:couchbase:couchbase-driver").name = "couchbase-driver"
-project(":local-drivers:couchbase:couchbase-driver").projectDir = file("local-drivers/couchbase/couchbase-driver")
+include("community:couchbase:couchbase-driver")
+project(":community:couchbase:couchbase-driver").name = "couchbase-driver"
+project(":community:couchbase:couchbase-driver").projectDir = file("community/couchbase/couchbase-driver")
 
 include("commons:dynamodb-utils")
 project(":commons:dynamodb-utils").name = "dynamodb-utils"
 project(":commons:dynamodb-utils").projectDir = file("commons/dynamodb-utils")
 
-include("local-drivers:dynamodb:dynamodb-driver")
-project(":local-drivers:dynamodb:dynamodb-driver").name = "dynamodb-driver"
-project(":local-drivers:dynamodb:dynamodb-driver").projectDir = file("local-drivers/dynamodb/dynamodb-driver")
+include("community:dynamodb-driver")
+project(":community:dynamodb-driver").name = "dynamodb-driver"
+project(":community:dynamodb-driver").projectDir = file("community/dynamodb-driver")
 
 //////////////////////////////////////
 // TEMPLATES

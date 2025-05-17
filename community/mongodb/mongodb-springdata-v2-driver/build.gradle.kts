@@ -4,7 +4,7 @@ dependencies {
 
 
     implementation(project(":flamingock-core"))
-    api(project(":local-drivers:mongodb:mongodb-v3-driver"))
+    api(project(":community:mongodb:mongodb-v3-driver"))
 
     implementation("org.springframework.data:spring-data-mongodb:2.2.13.RELEASE")
     implementation("org.mongodb:mongo-java-driver:3.12.8")
