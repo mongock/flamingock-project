@@ -61,9 +61,9 @@ include("community:mongodb:mongodb-springdata-v4-driver")
 project(":community:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
 project(":community:mongodb:mongodb-springdata-v4-driver").projectDir = file("community/mongodb/mongodb-springdata-v4-driver")
 
-include("community:couchbase:couchbase-driver")
-project(":community:couchbase:couchbase-driver").name = "couchbase-driver"
-project(":community:couchbase:couchbase-driver").projectDir = file("community/couchbase/couchbase-driver")
+include("community:couchbase-driver")
+project(":community:couchbase-driver").name = "couchbase-driver"
+project(":community:couchbase-driver").projectDir = file("community/couchbase-driver")
 
 include("commons:dynamodb-utils")
 project(":commons:dynamodb-utils").name = "dynamodb-utils"
