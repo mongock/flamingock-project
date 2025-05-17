@@ -18,7 +18,7 @@ dependencies {
 
 //    Mongock
     testImplementation("io.mongock:mongock-standalone:5.5.0")
-    testImplementation("io.mongock:flamingock-ce-mongodb-sync-v4:5.5.0")
+    testImplementation("io.mongock:mongodb-sync-v4-driver:5.5.0")
 }
 
 description = "${project.name}'s description"
