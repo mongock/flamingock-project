@@ -45,9 +45,9 @@ project(":flamingock-graalvm").name = "flamingock-graalvm"
 //////////////////////////////////////
 // CLOUD
 //////////////////////////////////////
-include("cloud-edition")
-project(":cloud-edition").name = "cloud-edition"
-project(":cloud-edition").projectDir = file("cloud-edition")
+include("flamingock-cloud-edition")
+project(":flamingock-cloud-edition").name = "flamingock-cloud-edition"
+project(":flamingock-cloud-edition").projectDir = file("flamingock-cloud-edition")
 
 //////////////////////////////////////
 // DRIVERS
