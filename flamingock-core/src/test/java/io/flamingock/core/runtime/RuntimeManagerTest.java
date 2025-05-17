@@ -2,7 +2,9 @@ package io.flamingock.core.runtime;
 
 
 import io.flamingock.core.api.annotations.Nullable;
-import io.flamingock.core.context.SimpleContext;
+import io.flamingock.internal.core.context.SimpleContext;
+import io.flamingock.internal.core.runtime.MissingInjectedParameterException;
+import io.flamingock.internal.core.runtime.RuntimeManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

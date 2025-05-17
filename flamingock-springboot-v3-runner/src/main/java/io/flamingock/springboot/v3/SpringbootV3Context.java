@@ -17,8 +17,8 @@
 package io.flamingock.springboot.v3;
 
 import io.flamingock.commons.utils.Constants;
-import io.flamingock.core.builder.FlamingockFactory;
-import io.flamingock.core.runner.RunnerBuilder;
+import io.flamingock.internal.core.builder.FlamingockFactory;
+import io.flamingock.internal.core.runner.RunnerBuilder;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;

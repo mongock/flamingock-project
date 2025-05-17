@@ -1,7 +1,7 @@
 package io.flamingock.cloud;
 
-import io.flamingock.core.builder.CloudFlamingockBuilder;
-import io.flamingock.core.builder.FlamingockFactory;
+import io.flamingock.internal.core.builder.CloudFlamingockBuilder;
+import io.flamingock.internal.core.builder.FlamingockFactory;
 
 public class Flamingock {
     public static CloudFlamingockBuilder builder() {
