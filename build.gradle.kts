@@ -50,7 +50,7 @@ val localDriverProjects = setOf(
     "driver-common", "couchbase-driver", "couchbase-springboot-v2-driver",
     "flamingock-ce-dynamodb", "mongodb-facade", "flamingock-ce-mongodb-springdata-v2",
     "flamingock-ce-mongodb-springdata-v3", "flamingock-ce-mongodb-springdata-v4",
-    "flamingock-ce-mongodb-sync-v4", "mongodb-v3-driver", "mongodb-importer"
+    "flamingock-ce-mongodb-sync-v4", "flamingock-ce-mongodb-v3", "mongodb-importer"
 )
 
 val templateProjects = setOf("sql-template", "mongodb-change-template")

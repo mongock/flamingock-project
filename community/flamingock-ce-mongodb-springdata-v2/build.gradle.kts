@@ -4,7 +4,7 @@ dependencies {
 
 
     implementation(project(":flamingock-core"))
-    api(project(":community:mongodb-v3-driver"))
+    api(project(":community:flamingock-ce-mongodb-v3"))
 
     implementation("org.springframework.data:spring-data-mongodb:2.2.13.RELEASE")
     implementation("org.mongodb:mongo-java-driver:3.12.8")
@@ -19,7 +19,7 @@ dependencies {
 
 //    Mongock
     testImplementation("io.mongock:mongock-standalone:5.5.0")
-    testImplementation("io.mongock:mongodb-v3-driver:5.5.0")
+    testImplementation("io.mongock:flamingock-ce-mongodb-v3:5.5.0")
 }
 
 description = "${project.name}'s description"

@@ -46,9 +46,9 @@ include("community:flamingock-ce-mongodb-sync-v4")
 project(":community:flamingock-ce-mongodb-sync-v4").name = "flamingock-ce-mongodb-sync-v4"
 project(":community:flamingock-ce-mongodb-sync-v4").projectDir = file("community/flamingock-ce-mongodb-sync-v4")
 
-include("community:mongodb-v3-driver")
-project(":community:mongodb-v3-driver").name = "mongodb-v3-driver"
-project(":community:mongodb-v3-driver").projectDir = file("community/mongodb-v3-driver")
+include("community:flamingock-ce-mongodb-v3")
+project(":community:flamingock-ce-mongodb-v3").name = "flamingock-ce-mongodb-v3"
+project(":community:flamingock-ce-mongodb-v3").projectDir = file("community/flamingock-ce-mongodb-v3")
 
 include("community:flamingock-ce-mongodb-springdata-v3")
 project(":community:flamingock-ce-mongodb-springdata-v3").name = "flamingock-ce-mongodb-springdata-v3"
