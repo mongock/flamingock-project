@@ -70,17 +70,17 @@ project(":community:flamingock-ce-dynamodb").projectDir = file("community/flamin
 // TRANSACTIONERS
 //////////////////////////////////////
 
-include("cloud-transactioners:sql-cloud-transactioner")
-project(":cloud-transactioners:sql-cloud-transactioner").projectDir = file("cloud-transactioners/sql-cloud-transactioner")
-project(":cloud-transactioners:sql-cloud-transactioner").name = "sql-cloud-transactioner"
+include("transactioners:sql-cloud-transactioner")
+project(":transactioners:sql-cloud-transactioner").projectDir = file("transactioners/sql-cloud-transactioner")
+project(":transactioners:sql-cloud-transactioner").name = "sql-cloud-transactioner"
 
-include("cloud-transactioners:mongodb-sync-v4-cloud-transactioner")
-project(":cloud-transactioners:mongodb-sync-v4-cloud-transactioner").projectDir = file("cloud-transactioners/mongodb-sync-v4-cloud-transactioner")
-project(":cloud-transactioners:mongodb-sync-v4-cloud-transactioner").name = "mongodb-sync-v4-cloud-transactioner"
+include("transactioners:mongodb-sync-v4-cloud-transactioner")
+project(":transactioners:mongodb-sync-v4-cloud-transactioner").projectDir = file("transactioners/mongodb-sync-v4-cloud-transactioner")
+project(":transactioners:mongodb-sync-v4-cloud-transactioner").name = "mongodb-sync-v4-cloud-transactioner"
 
-include("cloud-transactioners:dynamodb-cloud-transactioner")
-project(":cloud-transactioners:dynamodb-cloud-transactioner").projectDir = file("cloud-transactioners/dynamodb-cloud-transactioner")
-project(":cloud-transactioners:dynamodb-cloud-transactioner").name = "dynamodb-cloud-transactioner"
+include("transactioners:dynamodb-cloud-transactioner")
+project(":transactioners:dynamodb-cloud-transactioner").projectDir = file("transactioners/dynamodb-cloud-transactioner")
+project(":transactioners:dynamodb-cloud-transactioner").name = "dynamodb-cloud-transactioner"
 
 
 
