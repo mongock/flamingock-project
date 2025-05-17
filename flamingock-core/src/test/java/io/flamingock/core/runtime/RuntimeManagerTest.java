@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RuntimeManagerTest {
+public class RuntimeManagerTest {
 
     @Test
     @DisplayName("should throw exception when executing method if no dependency and not annotated with @Nullable")
