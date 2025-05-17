@@ -41,25 +41,25 @@ include("commons:mongodb-facade")
 project(":commons:mongodb-facade").name = "mongodb-facade"
 project(":commons:mongodb-facade").projectDir = file("commons/mongodb-facade")
 
-include("community:mongodb:mongodb-sync-v4-driver")
-project(":community:mongodb:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
-project(":community:mongodb:mongodb-sync-v4-driver").projectDir = file("community/mongodb/mongodb-sync-v4-driver")
+include("community:mongodb-sync-v4-driver")
+project(":community:mongodb-sync-v4-driver").name = "mongodb-sync-v4-driver"
+project(":community:mongodb-sync-v4-driver").projectDir = file("community/mongodb-sync-v4-driver")
 
-include("community:mongodb:mongodb-v3-driver")
-project(":community:mongodb:mongodb-v3-driver").name = "mongodb-v3-driver"
-project(":community:mongodb:mongodb-v3-driver").projectDir = file("community/mongodb/mongodb-v3-driver")
+include("community:mongodb-v3-driver")
+project(":community:mongodb-v3-driver").name = "mongodb-v3-driver"
+project(":community:mongodb-v3-driver").projectDir = file("community/mongodb-v3-driver")
 
-include("community:mongodb:mongodb-springdata-v3-driver")
-project(":community:mongodb:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
-project(":community:mongodb:mongodb-springdata-v3-driver").projectDir = file("community/mongodb/mongodb-springdata-v3-driver")
+include("community:mongodb-springdata-v3-driver")
+project(":community:mongodb-springdata-v3-driver").name = "mongodb-springdata-v3-driver"
+project(":community:mongodb-springdata-v3-driver").projectDir = file("community/mongodb-springdata-v3-driver")
 
-include("community:mongodb:mongodb-springdata-v2-driver")
-project(":community:mongodb:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
-project(":community:mongodb:mongodb-springdata-v2-driver").projectDir = file("community/mongodb/mongodb-springdata-v2-driver")
+include("community:mongodb-springdata-v2-driver")
+project(":community:mongodb-springdata-v2-driver").name = "mongodb-springdata-v2-driver"
+project(":community:mongodb-springdata-v2-driver").projectDir = file("community/mongodb-springdata-v2-driver")
 
-include("community:mongodb:mongodb-springdata-v4-driver")
-project(":community:mongodb:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
-project(":community:mongodb:mongodb-springdata-v4-driver").projectDir = file("community/mongodb/mongodb-springdata-v4-driver")
+include("community:mongodb-springdata-v4-driver")
+project(":community:mongodb-springdata-v4-driver").name = "mongodb-springdata-v4-driver"
+project(":community:mongodb-springdata-v4-driver").projectDir = file("community/mongodb-springdata-v4-driver")
 
 include("community:couchbase-driver")
 project(":community:couchbase-driver").name = "couchbase-driver"
