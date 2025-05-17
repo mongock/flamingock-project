@@ -66,9 +66,9 @@ include("community:flamingock-ce-couchbase")
 project(":community:flamingock-ce-couchbase").name = "flamingock-ce-couchbase"
 project(":community:flamingock-ce-couchbase").projectDir = file("community/flamingock-ce-couchbase")
 
-include("community:dynamodb-driver")
-project(":community:dynamodb-driver").name = "dynamodb-driver"
-project(":community:dynamodb-driver").projectDir = file("community/dynamodb-driver")
+include("community:flamingock-ce-dynamodb")
+project(":community:flamingock-ce-dynamodb").name = "flamingock-ce-dynamodb"
+project(":community:flamingock-ce-dynamodb").projectDir = file("community/flamingock-ce-dynamodb")
 
 //////////////////////////////////////
 // TEMPLATES
