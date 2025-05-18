@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":flamingock-core"))
+    implementation(project(":core:flamingock-core"))
 }
 
 java {

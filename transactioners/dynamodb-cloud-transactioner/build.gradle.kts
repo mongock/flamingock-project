@@ -1,7 +1,7 @@
 dependencies {
 
-    implementation(project(":commons:dynamodb-utils"))
-    api(project(":flamingock-core"))
+    implementation(project(":utils:dynamodb-util"))
+    api(project(":core:flamingock-core"))
 
     implementation("software.amazon.awssdk:dynamodb-enhanced:2.25.28")
 
@@ -9,7 +9,7 @@ dependencies {
     testImplementation("com.amazonaws:DynamoDBLocal:1.25.0")
 
     testImplementation(project(":cloud:flamingock-cloud"))
-    testImplementation(project(":utils-test"))
+    testImplementation(project(":utils:test-util"))
 }
 
 description = "${project.name}'s description"

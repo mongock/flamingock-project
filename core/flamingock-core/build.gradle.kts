@@ -1,9 +1,9 @@
 val jacksonVersion = "2.16.0"
 
 dependencies {
-    api(project(":flamingock-core-api"))
-    api(project(":flamingock-processor"))
-    api(project(":utils"))
+    api(project(":core:flamingock-core-api"))
+    api(project(":core:flamingock-processor"))
+    api(project(":utils:general-util"))
     api("javax.inject:javax.inject:1")
     api("org.reflections:reflections:0.10.1")//TODO remove
     api("org.objenesis:objenesis:3.2")
@@ -14,8 +14,8 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 
 
-//    testAnnotationProcessor(project(":flamingock-processor"))
-    testImplementation(project(":utils-test"))
+//    testAnnotationProcessor(project(":core:flamingock-processor"))
+    testImplementation(project(":utils:test-util"))
 }
 
 description = "${project.name}'s description"
