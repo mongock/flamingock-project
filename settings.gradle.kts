@@ -125,11 +125,11 @@ project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-i
 include("test-util")
 include("general-util")
 
-include("commons:mongodb-util")
-project(":commons:mongodb-util").name = "mongodb-util"
-project(":commons:mongodb-util").projectDir = file("commons/mongodb-util")
+include("utils:mongodb-util")
+project(":utils:mongodb-util").name = "mongodb-util"
+project(":utils:mongodb-util").projectDir = file("utils/mongodb-util")
 
 
-include("commons:dynamodb-util")
-project(":commons:dynamodb-util").name = "dynamodb-util"
-project(":commons:dynamodb-util").projectDir = file("commons/dynamodb-util")
+include("utils:dynamodb-util")
+project(":utils:dynamodb-util").name = "dynamodb-util"
+project(":utils:dynamodb-util").projectDir = file("utils/dynamodb-util")

@@ -1,6 +1,6 @@
 dependencies {
 
-    implementation(project(":commons:dynamodb-util"))
+    implementation(project(":utils:dynamodb-util"))
     api(project(":flamingock-core"))
 
     implementation("software.amazon.awssdk:dynamodb-enhanced:2.25.28")
