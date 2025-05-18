@@ -9,7 +9,7 @@ dependencies {
     testImplementation("com.amazonaws:DynamoDBLocal:1.25.0")
 
     testImplementation(project(":cloud:flamingock-cloud"))
-    testImplementation(project(":utils-test"))
+    testImplementation(project(":test-util"))
 }
 
 description = "${project.name}'s description"

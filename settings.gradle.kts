@@ -122,7 +122,7 @@ project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-i
 //////////////////////////////////////
 // UTILS
 //////////////////////////////////////
-include("utils-test")
+include("test-util")
 include("utils")
 
 include("commons:mongodb-facade")
