@@ -89,17 +89,17 @@ project(":platform-plugins:flamingock-springboot-v3-integration").projectDir = f
 // TRANSACTIONERS
 //////////////////////////////////////
 
-include("transactioners:sql-transactioner")
-project(":transactioners:sql-transactioner").projectDir = file("transactioners/sql-transactioner")
-project(":transactioners:sql-transactioner").name = "sql-transactioner"
+include("transactioners:flamingock-sql-transactioner")
+project(":transactioners:flamingock-sql-transactioner").projectDir = file("transactioners/flamingock-sql-transactioner")
+project(":transactioners:flamingock-sql-transactioner").name = "flamingock-sql-transactioner"
 
-include("transactioners:mongodb-sync-v4-transactioner")
-project(":transactioners:mongodb-sync-v4-transactioner").projectDir = file("transactioners/mongodb-sync-v4-transactioner")
-project(":transactioners:mongodb-sync-v4-transactioner").name = "mongodb-sync-v4-transactioner"
+include("transactioners:flamingock-mongodb-sync-v4-transactioner")
+project(":transactioners:flamingock-mongodb-sync-v4-transactioner").projectDir = file("transactioners/flamingock-mongodb-sync-v4-transactioner")
+project(":transactioners:flamingock-mongodb-sync-v4-transactioner").name = "flamingock-mongodb-sync-v4-transactioner"
 
-include("transactioners:dynamodb-transactioner")
-project(":transactioners:dynamodb-transactioner").projectDir = file("transactioners/dynamodb-transactioner")
-project(":transactioners:dynamodb-transactioner").name = "dynamodb-transactioner"
+include("transactioners:flamingock-dynamodb-transactioner")
+project(":transactioners:flamingock-dynamodb-transactioner").projectDir = file("transactioners/flamingock-dynamodb-transactioner")
+project(":transactioners:flamingock-dynamodb-transactioner").name = "flamingock-dynamodb-transactioner"
 
 
 
@@ -122,14 +122,14 @@ project(":templates:flamingock-mongodb-change-template").projectDir = file("temp
 //////////////////////////////////////
 // INTERNAL
 //////////////////////////////////////
-include("importers:mongodb-importer-sync-v4")
-project(":importers:mongodb-importer-sync-v4").name = "mongodb-importer-sync-v4"
-project(":importers:mongodb-importer-sync-v4").projectDir = file("importers/mongodb-importer-sync-v4")
+include("importers:flamingock-mongodb-importer-sync-v4")
+project(":importers:flamingock-mongodb-importer-sync-v4").name = "flamingock-mongodb-importer-sync-v4"
+project(":importers:flamingock-mongodb-importer-sync-v4").projectDir = file("importers/flamingock-mongodb-importer-sync-v4")
 
 
-include("importers:mongodb-importer-v3")
-project(":importers:mongodb-importer-v3").name = "mongodb-importer-v3"
-project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-importer-v3")
+include("importers:flamingock-mongodb-importer-v3")
+project(":importers:flamingock-mongodb-importer-v3").name = "flamingock-mongodb-importer-v3"
+project(":importers:flamingock-mongodb-importer-v3").projectDir = file("importers/flamingock-mongodb-importer-v3")
 
 
 //////////////////////////////////////
