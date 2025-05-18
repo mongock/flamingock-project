@@ -7,11 +7,8 @@ rootProject.name = "flamingock-project"
 //////////////////////////////////////
 include("flamingock-core")
 include("flamingock-processor")
-include("flamingock-springboot-v2-runner")
-include("flamingock-springboot-v3-runner")
 include("flamingock-graalvm")
 include("flamingock-core-api")
-
 
 //////////////////////////////////////
 // CLOUD
@@ -64,7 +61,16 @@ include("community:flamingock-ce-dynamodb")
 project(":community:flamingock-ce-dynamodb").name = "flamingock-ce-dynamodb"
 project(":community:flamingock-ce-dynamodb").projectDir = file("community/flamingock-ce-dynamodb")
 
+//////////////////////////////////////
+// PLUGINS
+//////////////////////////////////////
+include("platform-plugins:flamingock-springboot-v2-runner")
+project(":platform-plugins:flamingock-springboot-v2-runner").name = "flamingock-springboot-v2-runner"
+project(":platform-plugins:flamingock-springboot-v2-runner").projectDir = file("platform-plugins/flamingock-springboot-v2-runner")
 
+include("platform-plugins:flamingock-springboot-v3-runner")
+project(":platform-plugins:flamingock-springboot-v3-runner").name = "flamingock-springboot-v3-runner"
+project(":platform-plugins:flamingock-springboot-v3-runner").projectDir = file("platform-plugins/flamingock-springboot-v3-runner")
 
 //////////////////////////////////////
 // TRANSACTIONERS
