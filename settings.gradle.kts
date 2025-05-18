@@ -89,17 +89,17 @@ project(":platform-plugins:flamingock-springboot-v3-integration").projectDir = f
 // TRANSACTIONERS
 //////////////////////////////////////
 
-include("transactioners:sql-cloud-transactioner")
-project(":transactioners:sql-cloud-transactioner").projectDir = file("transactioners/sql-cloud-transactioner")
-project(":transactioners:sql-cloud-transactioner").name = "sql-cloud-transactioner"
+include("transactioners:sql-transactioner")
+project(":transactioners:sql-transactioner").projectDir = file("transactioners/sql-transactioner")
+project(":transactioners:sql-transactioner").name = "sql-transactioner"
 
-include("transactioners:mongodb-sync-v4-cloud-transactioner")
-project(":transactioners:mongodb-sync-v4-cloud-transactioner").projectDir = file("transactioners/mongodb-sync-v4-cloud-transactioner")
-project(":transactioners:mongodb-sync-v4-cloud-transactioner").name = "mongodb-sync-v4-cloud-transactioner"
+include("transactioners:mongodb-sync-v4-transactioner")
+project(":transactioners:mongodb-sync-v4-transactioner").projectDir = file("transactioners/mongodb-sync-v4-transactioner")
+project(":transactioners:mongodb-sync-v4-transactioner").name = "mongodb-sync-v4-transactioner"
 
-include("transactioners:dynamodb-cloud-transactioner")
-project(":transactioners:dynamodb-cloud-transactioner").projectDir = file("transactioners/dynamodb-cloud-transactioner")
-project(":transactioners:dynamodb-cloud-transactioner").name = "dynamodb-cloud-transactioner"
+include("transactioners:dynamodb-transactioner")
+project(":transactioners:dynamodb-transactioner").projectDir = file("transactioners/dynamodb-transactioner")
+project(":transactioners:dynamodb-transactioner").name = "dynamodb-transactioner"
 
 
 
@@ -108,15 +108,15 @@ project(":transactioners:dynamodb-cloud-transactioner").name = "dynamodb-cloud-t
 //////////////////////////////////////
 
 //SQL
-include("templates:sql-template")
-project(":templates:sql-template").name = "sql-template"
-project(":templates:sql-template").projectDir = file("templates/sql-template")
+include("templates:flamingock-sql-template")
+project(":templates:flamingock-sql-template").name = "flamingock-sql-template"
+project(":templates:flamingock-sql-template").projectDir = file("templates/flamingock-sql-template")
 
 
 //MONGODB
-include("templates:mongodb-change-template")
-project(":templates:mongodb-change-template").name = "mongodb-change-template"
-project(":templates:mongodb-change-template").projectDir = file("templates/mongodb-change-template")
+include("templates:flamingock-mongodb-change-template")
+project(":templates:flamingock-mongodb-change-template").name = "flamingock-mongodb-change-template"
+project(":templates:flamingock-mongodb-change-template").projectDir = file("templates/flamingock-mongodb-change-template")
 
 
 //////////////////////////////////////
