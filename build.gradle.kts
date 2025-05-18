@@ -53,10 +53,10 @@ val localDriverProjects = setOf(
     "flamingock-ce-mongodb-sync-v4", "flamingock-ce-mongodb-v3", "mongodb-importer"
 )
 
-val templateProjects = setOf("sql-template", "mongodb-change-template")
+val templateProjects = setOf("flamingock-sql-template", "flamingock-mongodb-change-template")
 
 val transactionerProjects = setOf(
-    "sql-cloud-transactioner", "mongodb-sync-v4-cloud-transactioner", "dynamodb-cloud-transactioner"
+    "sql-transactioner", "mongodb-sync-v4-transactioner", "dynamodb-transactioner"
 )
 
 val allProjects = coreProjects + localDriverProjects + templateProjects + transactionerProjects
