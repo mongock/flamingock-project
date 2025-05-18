@@ -4,7 +4,7 @@ dependencies {
 
     implementation(project(":core:flamingock-core"))
 
-    api(project(":transactioners:mongodb-sync-v4-transactioner"))
+    api(project(":transactioners:flamingock-mongodb-sync-v4-transactioner"))
 
     implementation("org.mongodb:mongodb-driver-sync:4.3.3")
     testImplementation("org.testcontainers:mongodb:1.18.3")
