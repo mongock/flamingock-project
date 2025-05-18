@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":commons:mongodb-facade"))
+    implementation(project(":commons:mongodb-util"))
     implementation(project(":importers:mongodb-importer-v3"))
 
 

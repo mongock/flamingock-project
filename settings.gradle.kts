@@ -125,9 +125,9 @@ project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-i
 include("test-util")
 include("utils")
 
-include("commons:mongodb-facade")
-project(":commons:mongodb-facade").name = "mongodb-facade"
-project(":commons:mongodb-facade").projectDir = file("commons/mongodb-facade")
+include("commons:mongodb-util")
+project(":commons:mongodb-util").name = "mongodb-util"
+project(":commons:mongodb-util").projectDir = file("commons/mongodb-util")
 
 
 include("commons:dynamodb-util")
