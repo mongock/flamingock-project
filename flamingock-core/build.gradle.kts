@@ -3,7 +3,7 @@ val jacksonVersion = "2.16.0"
 dependencies {
     api(project(":flamingock-core-api"))
     api(project(":flamingock-processor"))
-    api(project(":utils"))
+    api(project(":general-util"))
     api("javax.inject:javax.inject:1")
     api("org.reflections:reflections:0.10.1")//TODO remove
     api("org.objenesis:objenesis:3.2")

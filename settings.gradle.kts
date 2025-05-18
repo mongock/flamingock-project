@@ -123,7 +123,7 @@ project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-i
 // UTILS
 //////////////////////////////////////
 include("test-util")
-include("utils")
+include("general-util")
 
 include("commons:mongodb-util")
 project(":commons:mongodb-util").name = "mongodb-util"
