@@ -5,10 +5,23 @@ rootProject.name = "flamingock-project"
 //////////////////////////////////////
 // CORE
 //////////////////////////////////////
-include("flamingock-core")
-include("flamingock-processor")
-include("flamingock-graalvm")
-include("flamingock-core-api")
+include("core:flamingock-core")
+project(":core:flamingock-core").name = "flamingock-core"
+project(":core:flamingock-core").projectDir = file("core/flamingock-core")
+
+include("core:flamingock-processor")
+project(":core:flamingock-processor").name = "flamingock-processor"
+project(":core:flamingock-processor").projectDir = file("core/flamingock-processor")
+
+include("core:flamingock-graalvm")
+project(":core:flamingock-graalvm").name = "flamingock-graalvm"
+project(":core:flamingock-graalvm").projectDir = file("core/flamingock-graalvm")
+
+
+include("core:flamingock-core-api")
+project(":core:flamingock-core-api").name = "flamingock-core-api"
+project(":core:flamingock-core-api").projectDir = file("core/flamingock-core-api")
+
 
 //////////////////////////////////////
 // CLOUD

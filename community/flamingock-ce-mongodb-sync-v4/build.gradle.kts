@@ -2,7 +2,7 @@ dependencies {
     implementation(project(":utils:mongodb-util"))
     implementation(project(":importers:mongodb-importer-sync-v4"))
 
-    implementation(project(":flamingock-core"))
+    implementation(project(":core:flamingock-core"))
 
     api(project(":transactioners:mongodb-sync-v4-cloud-transactioner"))
 

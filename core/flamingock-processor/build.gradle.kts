@@ -1,6 +1,6 @@
 val jacksonVersion = "2.16.0"
 dependencies {
-    api(project(":flamingock-core-api"))
+    api(project(":core:flamingock-core-api"))
     api(project(":utils:general-util"))
     api("org.yaml:snakeyaml:2.2")
     api("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")

@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":flamingock-core-api"))
+    implementation(project(":core:flamingock-core-api"))
 }
 
 description = "${project.name}'s description"

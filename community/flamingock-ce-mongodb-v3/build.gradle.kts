@@ -2,7 +2,7 @@ dependencies {
     implementation(project(":utils:mongodb-util"))
     implementation(project(":importers:mongodb-importer-sync-v4"))
 
-    implementation(project(":flamingock-core"))
+    implementation(project(":core:flamingock-core"))
 
     implementation("org.mongodb:mongo-java-driver:3.12.8")
     implementation("org.mongodb:bson:3.12.8")
