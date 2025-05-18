@@ -122,14 +122,14 @@ project(":templates:flamingock-mongodb-change-template").projectDir = file("temp
 //////////////////////////////////////
 // INTERNAL
 //////////////////////////////////////
-include("importers:mongodb-importer-sync-v4")
-project(":importers:mongodb-importer-sync-v4").name = "mongodb-importer-sync-v4"
-project(":importers:mongodb-importer-sync-v4").projectDir = file("importers/mongodb-importer-sync-v4")
+include("importers:flamingock-mongodb-importer-sync-v4")
+project(":importers:flamingock-mongodb-importer-sync-v4").name = "flamingock-mongodb-importer-sync-v4"
+project(":importers:flamingock-mongodb-importer-sync-v4").projectDir = file("importers/flamingock-mongodb-importer-sync-v4")
 
 
-include("importers:mongodb-importer-v3")
-project(":importers:mongodb-importer-v3").name = "mongodb-importer-v3"
-project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-importer-v3")
+include("importers:flamingock-mongodb-importer-v3")
+project(":importers:flamingock-mongodb-importer-v3").name = "flamingock-mongodb-importer-v3"
+project(":importers:flamingock-mongodb-importer-v3").projectDir = file("importers/flamingock-mongodb-importer-v3")
 
 
 //////////////////////////////////////

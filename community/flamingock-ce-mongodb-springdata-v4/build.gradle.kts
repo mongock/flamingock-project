@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":utils:mongodb-util"))
-    implementation(project(":importers:mongodb-importer-sync-v4"))
+    implementation(project(":importers:flamingock-mongodb-importer-sync-v4"))
 
     implementation(project(":core:flamingock-core"))
     api(project(":community:flamingock-ce-mongodb-sync-v4"))
