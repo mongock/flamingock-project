@@ -122,8 +122,14 @@ project(":importers:mongodb-importer-v3").projectDir = file("importers/mongodb-i
 //////////////////////////////////////
 // UTILS
 //////////////////////////////////////
-include("test-util")
-include("general-util")
+include("utils:general-util")
+project(":utils:general-util").name = "general-util"
+project(":utils:general-util").projectDir = file("utils/general-util")
+
+include("utils:test-util")
+project(":utils:test-util").name = "test-util"
+project(":utils:test-util").projectDir = file("utils/test-util")
+
 
 include("utils:mongodb-util")
 project(":utils:mongodb-util").name = "mongodb-util"

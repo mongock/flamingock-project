@@ -1,7 +1,7 @@
 val jacksonVersion = "2.16.0"
 dependencies {
 
-    api(project(":general-util"))
+    api(project(":utils:general-util"))
     api(project(":flamingock-core"))
     api(project(":flamingock-core-api"))
 

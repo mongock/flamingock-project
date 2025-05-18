@@ -2,7 +2,7 @@ dependencies {
     api(project(":flamingock-core"))
 
     testAnnotationProcessor(project(":flamingock-processor"))
-    testImplementation(project(":test-util"))
+    testImplementation(project(":utils:test-util"))
 }
 
 description = "${project.name}'s description"

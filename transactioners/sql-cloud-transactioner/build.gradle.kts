@@ -5,7 +5,7 @@ dependencies {
     testImplementation("org.testcontainers:mysql:1.19.3")
 
     testImplementation(project(":cloud:flamingock-cloud"))
-    testImplementation(project(":test-util"))
+    testImplementation(project(":utils:test-util"))
 }
 
 description = "${project.name}'s description"
