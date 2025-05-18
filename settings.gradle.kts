@@ -64,13 +64,13 @@ project(":community:flamingock-ce-dynamodb").projectDir = file("community/flamin
 //////////////////////////////////////
 // PLUGINS
 //////////////////////////////////////
-include("platform-plugins:flamingock-springboot-v2-runner")
-project(":platform-plugins:flamingock-springboot-v2-runner").name = "flamingock-springboot-v2-runner"
-project(":platform-plugins:flamingock-springboot-v2-runner").projectDir = file("platform-plugins/flamingock-springboot-v2-runner")
+include("platform-plugins:flamingock-springboot-v2-integration")
+project(":platform-plugins:flamingock-springboot-v2-integration").name = "flamingock-springboot-v2-integration"
+project(":platform-plugins:flamingock-springboot-v2-integration").projectDir = file("platform-plugins/flamingock-springboot-v2-integration")
 
-include("platform-plugins:flamingock-springboot-v3-runner")
-project(":platform-plugins:flamingock-springboot-v3-runner").name = "flamingock-springboot-v3-runner"
-project(":platform-plugins:flamingock-springboot-v3-runner").projectDir = file("platform-plugins/flamingock-springboot-v3-runner")
+include("platform-plugins:flamingock-springboot-v3-integration")
+project(":platform-plugins:flamingock-springboot-v3-integration").name = "flamingock-springboot-v3-integration"
+project(":platform-plugins:flamingock-springboot-v3-integration").projectDir = file("platform-plugins/flamingock-springboot-v3-integration")
 
 //////////////////////////////////////
 // TRANSACTIONERS
