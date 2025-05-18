@@ -130,6 +130,6 @@ project(":commons:mongodb-facade").name = "mongodb-facade"
 project(":commons:mongodb-facade").projectDir = file("commons/mongodb-facade")
 
 
-include("commons:dynamodb-utils")
-project(":commons:dynamodb-utils").name = "dynamodb-utils"
-project(":commons:dynamodb-utils").projectDir = file("commons/dynamodb-utils")
+include("commons:dynamodb-util")
+project(":commons:dynamodb-util").name = "dynamodb-util"
+project(":commons:dynamodb-util").projectDir = file("commons/dynamodb-util")
