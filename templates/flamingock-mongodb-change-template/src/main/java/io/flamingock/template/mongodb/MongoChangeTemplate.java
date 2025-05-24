@@ -20,6 +20,8 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.Nullable;
+import io.flamingock.core.api.annotations.RollbackExecution;
+import io.flamingock.core.api.exception.FlamingockException;
 import io.flamingock.core.api.template.AbstractChangeTemplate;
 import io.flamingock.template.mongodb.model.MongoOperation;
 import org.slf4j.Logger;
@@ -27,19 +29,25 @@ import org.slf4j.LoggerFactory;
 
 public class MongoChangeTemplate extends AbstractChangeTemplate<MongoChangeTemplateConfig> {
 
-    //avoids static loading at building time to keep GraalVM happy
-    protected final Logger logger = LoggerFactory.getLogger("MongoChangeTemplate");
-
     public MongoChangeTemplate() {
         super(MongoChangeTemplateConfig.class, MongoOperation.class);
     }
 
     @Execution
     public void execute(MongoDatabase db, @Nullable ClientSession clientSession) {
-        logger.debug("MongoChangeTemplate changes with transaction[{}]", clientSession != null);
+        if(this.isTransactional && clientSession == null) {
+            throw new IllegalArgumentException(String.format("Transactional changeUnit[%s] requires transactional ecosystem with ClientSession", changeId));
+        }
         executeOp(db, configuration.getExecution(), clientSession);
     }
 
+    @RollbackExecution
+    public void rollback(MongoDatabase db, @Nullable ClientSession clientSession) {
+        if(this.isTransactional && clientSession == null) {
+            throw new IllegalArgumentException(String.format("Transactional changeUnit[%s] requires transactional ecosystem with ClientSession", changeId));
+        }
+        executeOp(db, configuration.getRollback(), clientSession);
+    }
 
     private void executeOp(MongoDatabase db, MongoOperation op, ClientSession clientSession) {
         op.getOperator(db).apply(clientSession);
