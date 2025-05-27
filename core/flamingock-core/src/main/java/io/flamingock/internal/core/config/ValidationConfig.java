@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.changes;
+package io.flamingock.internal.core.config;
 
-import io.flamingock.core.api.annotations.Change;
-import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.utils.TaskExecutionChecker;
+public class ValidationConfig {
 
-@Change(id = "create-persons-table-from-template", order = "001")
-public class CloudChange1 {
-    public static final TaskExecutionChecker checker = new TaskExecutionChecker();
+    /**
+     * Regex pattern for validating the order field in ChangeUnits.
+     * The pattern matches strings like "001", "999", "0010", "9999".
+     * It requires at least 3 digits with leading zeros.
+     * Empty is allowed
+     */
+    private static String ORDER_FIELD_PATTERN = "^$|^\\d{3,}$";
 
-    @Execution
-    public void execution() {
-        checker.markExecution();
+    public static String getOrderFieldPattern() {
+        return ORDER_FIELD_PATTERN;
     }
 
-
+    public static void setOrderFieldPattern(String pattern) {
+        ORDER_FIELD_PATTERN = pattern;
+    }
 }

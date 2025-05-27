@@ -17,6 +17,7 @@
 package io.flamingock.internal.core.pipeline;
 
 import io.flamingock.core.api.exception.FlamingockException;
+import io.flamingock.internal.core.config.ValidationConfig;
 import io.flamingock.internal.core.context.ContextInjectable;
 import io.flamingock.core.context.Dependency;
 import io.flamingock.core.preview.PreviewPipeline;
@@ -32,6 +33,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Pipeline implements PipelineDescriptor {
@@ -55,18 +57,54 @@ public class Pipeline implements PipelineDescriptor {
     }
 
     public void validateStages() {
-        if(loadedStages == null || loadedStages.size() == 0) {
+        if(loadedStages == null || loadedStages.isEmpty()) {
             throw new FlamingockException("Pipeline must contain at least one stage");
         }
 
         List<String> emptyLoadedStages= loadedStages
                 .stream()
-                .filter(stage-> stage.getLoadedTasks().size() == 0)
+                .filter(stage-> stage.getLoadedTasks().isEmpty())
                 .map(LoadedStage::getName)
                 .collect(Collectors.toList());
-        if(emptyLoadedStages.size() > 0) {
+        if(!emptyLoadedStages.isEmpty()) {
             String emptyLoadedStagesString = String.join(",", emptyLoadedStages);
             throw new FlamingockException("There are empty stages: " + emptyLoadedStagesString);
+        }
+
+        // Validate that ChangeUnit IDs are unique across all stages
+        List<AbstractLoadedTask> allTasks = loadedStages.stream()
+                .map(LoadedStage::getLoadedTasks)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        List<String> duplicateIds = allTasks.stream()
+                .map(AbstractLoadedTask::getId)
+                .collect(Collectors.groupingBy(id -> id, Collectors.counting()))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .map(java.util.Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        if (!duplicateIds.isEmpty()) {
+            String duplicateIdsString = String.join(", ", duplicateIds);
+            throw new FlamingockException("Duplicate ChangeUnit IDs found across stages: " + duplicateIdsString);
+        }
+
+        // Validate that order is well-formed in each stage
+        Pattern orderPattern = Pattern.compile(ValidationConfig.getOrderFieldPattern());
+        for (LoadedStage stage : loadedStages) {
+            // Validate that order matches the required pattern
+            List<String> tasksWithInvalidOrder = stage.getLoadedTasks().stream()
+                    .filter(task -> task.getOrder().isPresent())
+                    .filter(task -> !orderPattern.matcher(task.getOrder().get()).matches())
+                    .map(task -> task.getId() + " (order: " + task.getOrder().get() + ")")
+                    .collect(Collectors.toList());
+
+            if (!tasksWithInvalidOrder.isEmpty()) {
+                String tasksWithInvalidOrderString = String.join(", ", tasksWithInvalidOrder);
+                throw new FlamingockException("Invalid 'order' field format in ChangeUnits: " + tasksWithInvalidOrderString +
+                        " in stage: " + stage.getName() + ". Order must match pattern: " + ValidationConfig.getOrderFieldPattern());
+            }
         }
     }
 
