@@ -24,7 +24,7 @@ public class ValidationConfig {
      * It requires at least 3 digits with leading zeros.
      * Empty is allowed
      */
-    private static String ORDER_FIELD_PATTERN = "^$|^\\d{3,}$";
+    private static String ORDER_FIELD_PATTERN = "^\\d{3,}$";
 
     public static String getOrderFieldPattern() {
         return ORDER_FIELD_PATTERN;
