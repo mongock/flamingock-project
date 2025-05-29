@@ -28,8 +28,6 @@ import java.util.Collections;
 
 public class SqlTemplate extends AbstractChangeTemplate<SqlTemplateConfiguration> {
 
-    private SqlTemplateConfiguration configuration;
-
     public SqlTemplate() {
         super(SqlTemplateConfiguration.class);
     }
