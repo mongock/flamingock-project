@@ -22,7 +22,6 @@ import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
-import io.flamingock.internal.core.config.ValidationConfig;
 import io.flamingock.internal.core.pipeline.Pipeline;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +48,8 @@ public class PipelineTest {
 
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, emptyPipeline::validateAndGetLoadedStages);
 
-        Assertions.assertEquals("Pipeline must contain at least one stage", exception.getMessage());
+        Assertions.assertTrue(exception.getMessage().contains("Pipeline must contain at least one stage"), 
+                "Error message should mention that pipeline must contain at least one stage");
 
     }
 
@@ -66,7 +66,10 @@ public class PipelineTest {
 
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
 
-        Assertions.assertEquals("There are empty stages: failing-stage-1", exception.getMessage());
+        Assertions.assertTrue(exception.getMessage().contains("failing-stage-1"), 
+                "Error message should mention the empty stage name");
+        Assertions.assertTrue(exception.getMessage().contains("Stage must contain at least one task"), 
+                "Error message should mention that stage must contain at least one task");
     }
 
 
@@ -84,7 +87,12 @@ public class PipelineTest {
 
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
 
-        Assertions.assertEquals("There are empty stages: failing-stage-1,failing-stage-2", exception.getMessage());
+        Assertions.assertTrue(exception.getMessage().contains("failing-stage-1"), 
+                "Error message should mention the first empty stage name");
+        Assertions.assertTrue(exception.getMessage().contains("failing-stage-2"), 
+                "Error message should mention the second empty stage name");
+        Assertions.assertTrue(exception.getMessage().contains("Stage must contain at least one task"), 
+                "Error message should mention that stage must contain at least one task");
     }
 
 
@@ -132,8 +140,10 @@ public class PipelineTest {
                 .build();
 
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
-        Assertions.assertTrue(exception.getMessage().contains("Invalid 'order' field format in ChangeUnits"));
-        Assertions.assertTrue(exception.getMessage().contains("task-with-invalid-order-1"));
+        Assertions.assertTrue(exception.getMessage().contains("Invalid order field format"), 
+                "Error message should mention invalid order field format");
+        Assertions.assertTrue(exception.getMessage().contains("task-with-invalid-order-1"), 
+                "Error message should mention the task with invalid order");
     }
 
     @Test
@@ -248,7 +258,10 @@ public class PipelineTest {
                 .build();
 
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
-        Assertions.assertEquals("Duplicate ChangeUnit IDs found across stages: duplicate-id", exception.getMessage());
+        Assertions.assertTrue(exception.getMessage().contains("Duplicate task IDs found across stages"), 
+                "Error message should mention duplicate task IDs");
+        Assertions.assertTrue(exception.getMessage().contains("duplicate-id"), 
+                "Error message should mention the duplicate ID");
     }
 
 }

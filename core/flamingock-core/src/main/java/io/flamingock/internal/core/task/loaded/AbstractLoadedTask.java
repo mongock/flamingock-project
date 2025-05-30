@@ -16,16 +16,42 @@
 
 package io.flamingock.internal.core.task.loaded;
 
+import io.flamingock.core.api.validation.Validatable;
+import io.flamingock.core.api.validation.ValidationError;
 import io.flamingock.core.task.AbstractTaskDescriptor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
-public abstract class AbstractLoadedTask extends AbstractTaskDescriptor {
+public abstract class AbstractLoadedTask extends AbstractTaskDescriptor implements Validatable {
 
+    /**
+     * Regex pattern for validating the order field in ChangeUnits.
+     * The pattern matches strings like "001", "999", "0010", "9999".
+     * It requires at least 3 digits with leading zeros.
+     * Empty is not allowed
+     */
+    private static String ORDER_FIELD_PATTERN = "^\\d{3,}$";
 
+    public static String getOrderFieldPattern() {
+        return ORDER_FIELD_PATTERN;
+    }
+
+    public static void setOrderFieldPattern(String pattern) {
+        ORDER_FIELD_PATTERN = pattern;
+    }
+
+    public static boolean isValidOrder(String order) {
+        if (order == null || order.trim().isEmpty()) {
+            return false; // Empty order is not allowed
+        }
+        return Pattern.compile(ORDER_FIELD_PATTERN).matcher(order).matches();
+    }
 
     public AbstractLoadedTask(String id,
                               String order,
@@ -42,4 +68,41 @@ public abstract class AbstractLoadedTask extends AbstractTaskDescriptor {
 
     public abstract Optional<Method> getRollbackMethod();
 
+    @Override
+    public List<ValidationError> getValidationErrors() {
+        List<ValidationError> errors = new ArrayList<>();
+
+        // Validate ID is not null or empty
+        if (id == null || id.trim().isEmpty()) {
+            errors.add(new ValidationError("ID cannot be null or empty", "unknown", "task"));
+        }
+
+        // Validate order is not null or empty
+        if (order == null || order.trim().isEmpty()) {
+            errors.add(new ValidationError(
+                "Order cannot be null or empty",
+                id != null ? id : "unknown",
+                "task"
+            ));
+        } 
+        // Validate order field format if present
+        else if (!isValidOrder(order)) {
+            errors.add(new ValidationError(
+                "Invalid order field format. Order must match pattern: " + getOrderFieldPattern(),
+                id != null ? id : "unknown",
+                "task"
+            ));
+        }
+
+        // Validate source is not null or empty
+        if (source == null || source.trim().isEmpty()) {
+            errors.add(new ValidationError(
+                "Source cannot be null or empty",
+                id != null ? id : "unknown",
+                "task"
+            ));
+        }
+
+        return errors;
+    }
 }

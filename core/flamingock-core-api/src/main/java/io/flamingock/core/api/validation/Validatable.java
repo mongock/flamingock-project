@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.config;
+package io.flamingock.core.api.validation;
 
-public class ValidationConfig {
+import java.util.List;
 
-    /**
-     * Regex pattern for validating the order field in ChangeUnits.
-     * The pattern matches strings like "001", "999", "0010", "9999".
-     * It requires at least 3 digits with leading zeros.
-     * Empty is allowed
-     */
-    private static String ORDER_FIELD_PATTERN = "^\\d{3,}$";
+public interface Validatable {
 
-    public static String getOrderFieldPattern() {
-        return ORDER_FIELD_PATTERN;
-    }
+    List<ValidationError> getValidationErrors();
 
-    public static void setOrderFieldPattern(String pattern) {
-        ORDER_FIELD_PATTERN = pattern;
+    default boolean isValid() {
+        return getValidationErrors().isEmpty();
     }
 }

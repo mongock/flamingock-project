@@ -17,7 +17,8 @@
 package io.flamingock.internal.core.pipeline;
 
 import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.internal.core.config.ValidationConfig;
+import io.flamingock.core.api.validation.Validatable;
+import io.flamingock.core.api.validation.ValidationError;
 import io.flamingock.internal.core.context.ContextInjectable;
 import io.flamingock.core.context.Dependency;
 import io.flamingock.core.preview.PreviewPipeline;
@@ -27,16 +28,20 @@ import io.flamingock.internal.core.task.filter.TaskFilter;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Pipeline implements PipelineDescriptor {
+public class Pipeline implements PipelineDescriptor, Validatable {
 
     private final Collection<TaskFilter> taskFilters;
 
@@ -56,55 +61,65 @@ public class Pipeline implements PipelineDescriptor {
         return loadedStages;
     }
 
-    public void validateStages() {
+    /**
+     * Validates the pipeline and returns a list of validation errors.
+     * This includes validating that:
+     * 1. at least one stage
+     * 2. no empty stages
+     * 3. no duplicate task IDs across all stages
+     * 4. all stages in the pipeline are valid
+     * 
+     * @return list of validation errors, or empty list if the pipeline is valid
+     */
+    @Override
+    public List<ValidationError> getValidationErrors() {
+        List<ValidationError> errors = new ArrayList<>();
+
+        // Validate pipeline has stages
         if(loadedStages == null || loadedStages.isEmpty()) {
-            throw new FlamingockException("Pipeline must contain at least one stage");
+            errors.add(new ValidationError("Pipeline must contain at least one stage", "pipeline", "pipeline"));
+            return errors;
         }
 
-        List<String> emptyLoadedStages= loadedStages
-                .stream()
-                .filter(stage-> stage.getLoadedTasks().isEmpty())
-                .map(LoadedStage::getName)
-                .collect(Collectors.toList());
-        if(!emptyLoadedStages.isEmpty()) {
-            String emptyLoadedStagesString = String.join(",", emptyLoadedStages);
-            throw new FlamingockException("There are empty stages: " + emptyLoadedStagesString);
+        // Collect all stage validation errors
+        for (LoadedStage stage : loadedStages) {
+            errors.addAll(stage.getValidationErrors());
         }
 
-        // Validate that ChangeUnit IDs are unique across all stages
-        List<AbstractLoadedTask> allTasks = loadedStages.stream()
-                .map(LoadedStage::getLoadedTasks)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        // Check for duplicate task IDs across all stages
+        Map<String, Set<String>> taskIdToStages = new HashMap<>();
 
-        List<String> duplicateIds = allTasks.stream()
-                .map(AbstractLoadedTask::getId)
-                .collect(Collectors.groupingBy(id -> id, Collectors.counting()))
-                .entrySet().stream()
-                .filter(entry -> entry.getValue() > 1)
-                .map(java.util.Map.Entry::getKey)
+        for (LoadedStage stage : loadedStages) {
+            for (AbstractLoadedTask task : stage.getLoadedTasks()) {
+                String taskId = task.getId();
+                if (!taskIdToStages.containsKey(taskId)) {
+                    taskIdToStages.put(taskId, new HashSet<>());
+                }
+                taskIdToStages.get(taskId).add(stage.getName());
+            }
+        }
+
+        List<String> duplicateIds = taskIdToStages.entrySet().stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .map(entry -> entry.getKey() + " (in stages: " + String.join(", ", entry.getValue()) + ")")
                 .collect(Collectors.toList());
 
         if (!duplicateIds.isEmpty()) {
-            String duplicateIdsString = String.join(", ", duplicateIds);
-            throw new FlamingockException("Duplicate ChangeUnit IDs found across stages: " + duplicateIdsString);
+            String duplicateIdsString = String.join("; ", duplicateIds);
+            errors.add(new ValidationError(
+                "Duplicate task IDs found across stages: " + duplicateIdsString,
+                "pipeline",
+                "pipeline"
+            ));
         }
 
-        // Validate that order is well-formed in each stage
-        Pattern orderPattern = Pattern.compile(ValidationConfig.getOrderFieldPattern());
-        for (LoadedStage stage : loadedStages) {
-            // Validate that order matches the required pattern
-            List<String> tasksWithInvalidOrder = stage.getLoadedTasks().stream()
-                    .filter(task -> task.getOrder().isPresent())
-                    .filter(task -> !orderPattern.matcher(task.getOrder().get()).matches())
-                    .map(task -> task.getId() + " (order: " + task.getOrder().get() + ")")
-                    .collect(Collectors.toList());
+        return errors;
+    }
 
-            if (!tasksWithInvalidOrder.isEmpty()) {
-                String tasksWithInvalidOrderString = String.join(", ", tasksWithInvalidOrder);
-                throw new FlamingockException("Invalid 'order' field format in ChangeUnits: " + tasksWithInvalidOrderString +
-                        " in stage: " + stage.getName() + ". Order must match pattern: " + ValidationConfig.getOrderFieldPattern());
-            }
+    public void validateStages() {
+        List<ValidationError> errors = getValidationErrors();
+        if (!errors.isEmpty()) {
+            throw new FlamingockException(errors);
         }
     }
 
