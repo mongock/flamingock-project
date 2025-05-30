@@ -30,6 +30,7 @@ import io.flamingock.internal.core.task.loaded.LoadedTaskBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -123,8 +124,8 @@ public class LoadedStage implements Validatable {
 
         // Check if stage is empty
         if (loadedTasks == null || loadedTasks.isEmpty()) {
-            errors.add(new ValidationError("Stage must contain at least one task", name, "stage"));
-            return errors;
+            String message = String.format("Stage[%s] must contain at least one task", name);
+            return Collections.singletonList(new ValidationError(message, name, "stage"));
         }
         getTaskIdDuplicationError().ifPresent(errors::add);
         getLoadedTasks().stream().map(AbstractLoadedTask::getValidationErrors).forEach(errors::addAll);

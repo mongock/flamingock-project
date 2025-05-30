@@ -102,10 +102,10 @@ public class Pipeline implements PipelineDescriptor {
         } else {
             loadedStages.stream().map(LoadedStage::getValidationErrors).forEach(errors::addAll);
             getStagesIdDuplicationError().ifPresent(errors::add);
+        }
 
-            if (errors.hasErrors()) {
-                throw new FlamingockException(errors.formatMessage());
-            }
+        if (errors.hasErrors()) {
+            throw new FlamingockException(errors.formatMessage());
         }
     }
 

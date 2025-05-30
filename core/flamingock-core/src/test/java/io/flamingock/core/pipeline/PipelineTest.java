@@ -65,10 +65,8 @@ public class PipelineTest {
 
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
 
-        Assertions.assertTrue(exception.getMessage().contains("failing-stage-1"), 
-                "Error message should mention the empty stage name");
-        Assertions.assertTrue(exception.getMessage().contains("Stage must contain at least one task"), 
-                "Error message should mention that stage must contain at least one task");
+        Assertions.assertTrue(exception.getMessage().contains("Stage[failing-stage-1] must contain at least one task"));
+
     }
 
 
@@ -86,12 +84,9 @@ public class PipelineTest {
 
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
 
-        Assertions.assertTrue(exception.getMessage().contains("failing-stage-1"), 
-                "Error message should mention the first empty stage name");
-        Assertions.assertTrue(exception.getMessage().contains("failing-stage-2"), 
-                "Error message should mention the second empty stage name");
-        Assertions.assertTrue(exception.getMessage().contains("Stage must contain at least one task"), 
-                "Error message should mention that stage must contain at least one task");
+        Assertions.assertTrue(exception.getMessage().contains("Stage[failing-stage-1] must contain at least one task"));
+        Assertions.assertTrue(exception.getMessage().contains("Stage[failing-stage-2] must contain at least one task"));
+
     }
 
 
@@ -257,10 +252,8 @@ public class PipelineTest {
                 .build();
 
         FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
-        Assertions.assertTrue(exception.getMessage().contains("Duplicate task IDs found across stages"), 
-                "Error message should mention duplicate task IDs");
-        Assertions.assertTrue(exception.getMessage().contains("duplicate-id"), 
-                "Error message should mention the duplicate ID");
+        Assertions.assertTrue(exception.getMessage().contains("Duplicate changeUnit IDs found across stages"));
+        Assertions.assertTrue(exception.getMessage().contains("Duplicate changeUnit IDs found across stages: duplicate-id"));
     }
 
 }
