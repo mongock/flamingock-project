@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.cloud.changes;
+package io.flamingock.core.api.error.validation;
 
-import io.flamingock.core.api.annotations.Change;
-import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.utils.TaskExecutionChecker;
+import java.util.List;
 
-@Change(id = "create-persons-table-from-template", order = "001")
-public class CloudChange1 {
-    public static final TaskExecutionChecker checker = new TaskExecutionChecker();
+public interface Validatable {
 
-    @Execution
-    public void execution() {
-        checker.markExecution();
+    List<ValidationError> getValidationErrors();
+
+    default boolean isValid() {
+        return getValidationErrors().isEmpty();
     }
-
-
 }

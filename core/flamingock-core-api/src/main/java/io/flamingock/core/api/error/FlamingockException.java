@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.api.exception;
+package io.flamingock.core.api.error;
+
 
 /**
- *
+ * Exception thrown when a Flamingock operation fails.
  */
 public class FlamingockException extends RuntimeException {
+
 
   public FlamingockException() {
     super();
@@ -44,4 +46,5 @@ public class FlamingockException extends RuntimeException {
   public FlamingockException(Throwable cause, String message) {
     super(message, cause);
   }
+
 }
