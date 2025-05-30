@@ -89,7 +89,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
 
         } else {
             throw new IllegalArgumentException(String.format(
-                    "Change class[%s] should be annotate with %s",
+                    "Change unit class[%s] should be annotate with %s",
                     sourceClass.getName(),
                     ChangeUnit.class.getName()
             ));
