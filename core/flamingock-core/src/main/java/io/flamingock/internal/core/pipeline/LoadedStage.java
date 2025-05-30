@@ -96,8 +96,8 @@ public class LoadedStage implements Validatable {
     /**
      * Validates the stage and returns a list of validation errors
      * Validations:
-     * 1. has a name
-     * 2. no duplicate task IDs within the stage
+     * 1. has name
+     * 2. no duplicate task IDs within stage
      * 3. all tasks in the stage are valid
      * 
      * @return list of validation errors, or empty list if the stage is valid

@@ -48,7 +48,7 @@ public abstract class AbstractLoadedTask extends AbstractTaskDescriptor implemen
 
     public static boolean isValidOrder(String order) {
         if (order == null || order.trim().isEmpty()) {
-            return false; // Empty order is not allowed
+            return false;
         }
         return Pattern.compile(ORDER_FIELD_PATTERN).matcher(order).matches();
     }
