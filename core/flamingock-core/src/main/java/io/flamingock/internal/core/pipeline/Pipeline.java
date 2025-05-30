@@ -16,32 +16,29 @@
 
 package io.flamingock.internal.core.pipeline;
 
-import io.flamingock.core.api.exception.FlamingockException;
-import io.flamingock.core.api.validation.Validatable;
-import io.flamingock.core.api.validation.ValidationError;
-import io.flamingock.internal.core.context.ContextInjectable;
+import io.flamingock.core.api.error.FlamingockException;
+import io.flamingock.core.api.error.validation.ValidationError;
+import io.flamingock.core.api.error.validation.ValidationResult;
 import io.flamingock.core.context.Dependency;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.internal.core.context.ContextInjectable;
 import io.flamingock.internal.core.task.filter.TaskFilter;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Pipeline implements PipelineDescriptor, Validatable {
+public class Pipeline implements PipelineDescriptor {
 
     private final Collection<TaskFilter> taskFilters;
 
@@ -57,70 +54,8 @@ public class Pipeline implements PipelineDescriptor, Validatable {
     }
 
     public List<LoadedStage> validateAndGetLoadedStages() {
-        validateStages();
+        validate();
         return loadedStages;
-    }
-
-    /**
-     * Validates the pipeline and returns a list of validation errors.
-     * This includes validating that:
-     * 1. at least one stage
-     * 2. no empty stages
-     * 3. no duplicate task IDs across all stages
-     * 4. all stages in the pipeline are valid
-     * 
-     * @return list of validation errors, or empty list if the pipeline is valid
-     */
-    @Override
-    public List<ValidationError> getValidationErrors() {
-        List<ValidationError> errors = new ArrayList<>();
-
-        // Validate pipeline has stages
-        if(loadedStages == null || loadedStages.isEmpty()) {
-            errors.add(new ValidationError("Pipeline must contain at least one stage", "pipeline", "pipeline"));
-            return errors;
-        }
-
-        // Collect all stage validation errors
-        for (LoadedStage stage : loadedStages) {
-            errors.addAll(stage.getValidationErrors());
-        }
-
-        // Check for duplicate task IDs across all stages
-        Map<String, Set<String>> taskIdToStages = new HashMap<>();
-
-        for (LoadedStage stage : loadedStages) {
-            for (AbstractLoadedTask task : stage.getLoadedTasks()) {
-                String taskId = task.getId();
-                if (!taskIdToStages.containsKey(taskId)) {
-                    taskIdToStages.put(taskId, new HashSet<>());
-                }
-                taskIdToStages.get(taskId).add(stage.getName());
-            }
-        }
-
-        List<String> duplicateIds = taskIdToStages.entrySet().stream()
-                .filter(entry -> entry.getValue().size() > 1)
-                .map(entry -> entry.getKey() + " (in stages: " + String.join(", ", entry.getValue()) + ")")
-                .collect(Collectors.toList());
-
-        if (!duplicateIds.isEmpty()) {
-            String duplicateIdsString = String.join("; ", duplicateIds);
-            errors.add(new ValidationError(
-                "Duplicate task IDs found across stages: " + duplicateIdsString,
-                "pipeline",
-                "pipeline"
-            ));
-        }
-
-        return errors;
-    }
-
-    public void validateStages() {
-        List<ValidationError> errors = getValidationErrors();
-        if (!errors.isEmpty()) {
-            throw new FlamingockException(errors);
-        }
     }
 
     @Override
@@ -134,9 +69,9 @@ public class Pipeline implements PipelineDescriptor, Validatable {
 
     @Override
     public Optional<String> getStageByTask(String taskId) {
-        for(LoadedStage loadedStage: loadedStages) {
-            for(TaskDescriptor loadedTask: loadedStage.getLoadedTasks()) {
-                if(loadedTask.getId().equals(taskId)) {
+        for (LoadedStage loadedStage : loadedStages) {
+            for (TaskDescriptor loadedTask : loadedStage.getLoadedTasks()) {
+                if (loadedTask.getId().equals(taskId)) {
                     return Optional.of(loadedStage.getName());
                 }
             }
@@ -147,6 +82,57 @@ public class Pipeline implements PipelineDescriptor, Validatable {
     @Override
     public void contributeToContext(ContextInjectable contextInjectable) {
         contextInjectable.addDependency(new Dependency(PipelineDescriptor.class, this));
+    }
+
+    /**
+     * Validates the pipeline and returns a list of validation errors.
+     * This includes validating that:
+     * 1. at least one stage
+     * 2. no empty stages
+     * 3. no duplicate task IDs across all stages
+     * 4. all stages in the pipeline are valid
+     */
+    private void validate() {
+        ValidationResult errors = new ValidationResult("Pipeline validation error");
+
+        // Validate pipeline has stages
+        if (loadedStages == null || loadedStages.isEmpty()) {
+            errors.add(new ValidationError("Pipeline must contain at least one stage", "pipeline", "pipeline"));
+
+        } else {
+            loadedStages.stream().map(LoadedStage::getValidationErrors).forEach(errors::addAll);
+            getStagesIdDuplicationError().ifPresent(errors::add);
+
+            if (errors.hasErrors()) {
+                throw new FlamingockException(errors.formatMessage());
+            }
+        }
+    }
+
+
+    private Optional<ValidationError> getStagesIdDuplicationError() {
+        Set<String> seenIds = new HashSet<>();
+        Set<String> duplicateIds = new HashSet<>();
+
+        for (LoadedStage stage : loadedStages) {
+            for (String id : stage.getTaskIds()) {
+                if (!seenIds.add(id)) {
+                    duplicateIds.add(id);
+                }
+            }
+        }
+
+        if (!duplicateIds.isEmpty()) {
+            String duplicateIdsString = String.join(", ", duplicateIds);
+            return Optional.of(new ValidationError(
+                    "Duplicate changeUnit IDs found across stages: " + duplicateIdsString,
+                    "pipeline",
+                    "pipeline"
+            ));
+
+        } else {
+            return Optional.empty();
+        }
     }
 
 
@@ -169,6 +155,7 @@ public class Pipeline implements PipelineDescriptor, Validatable {
             this.previewPipeline = previewPipeline;
             return this;
         }
+
         public PipelineBuilder addAfterUserStages(Collection<PreviewStage> stages) {
             this.afterUserStages = stages;
             return this;
@@ -190,7 +177,7 @@ public class Pipeline implements PipelineDescriptor, Validatable {
 
         @NotNull
         private static List<LoadedStage> transformToLoadedStages(Collection<PreviewStage> stages) {
-            if(stages == null) {
+            if (stages == null) {
                 return Collections.emptyList();
             }
             return stages

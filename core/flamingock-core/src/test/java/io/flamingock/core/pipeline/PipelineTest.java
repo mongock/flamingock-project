@@ -17,7 +17,7 @@
 package io.flamingock.core.pipeline;
 
 import io.flamingock.common.test.cloud.deprecated.MockRunnerServerOld;
-import io.flamingock.core.api.exception.FlamingockException;
+import io.flamingock.core.api.error.FlamingockException;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
@@ -31,7 +31,6 @@ import org.mockito.Mockito;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 
 public class PipelineTest {

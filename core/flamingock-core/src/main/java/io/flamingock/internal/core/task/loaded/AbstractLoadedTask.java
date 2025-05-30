@@ -16,19 +16,21 @@
 
 package io.flamingock.internal.core.task.loaded;
 
-import io.flamingock.core.api.validation.Validatable;
-import io.flamingock.core.api.validation.ValidationError;
+import io.flamingock.core.api.error.validation.Validatable;
+import io.flamingock.core.api.error.validation.ValidationError;
+
 import io.flamingock.core.task.AbstractTaskDescriptor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 public abstract class AbstractLoadedTask extends AbstractTaskDescriptor implements Validatable {
+
 
     /**
      * Regex pattern for validating the order field in ChangeUnits.
@@ -36,22 +38,8 @@ public abstract class AbstractLoadedTask extends AbstractTaskDescriptor implemen
      * It requires at least 3 digits with leading zeros.
      * Empty is not allowed
      */
-    private static String ORDER_FIELD_PATTERN = "^\\d{3,}$";
-
-    public static String getOrderFieldPattern() {
-        return ORDER_FIELD_PATTERN;
-    }
-
-    public static void setOrderFieldPattern(String pattern) {
-        ORDER_FIELD_PATTERN = pattern;
-    }
-
-    public static boolean isValidOrder(String order) {
-        if (order == null || order.trim().isEmpty()) {
-            return false;
-        }
-        return Pattern.compile(ORDER_FIELD_PATTERN).matcher(order).matches();
-    }
+    private final static String ORDER_REG_EXP = "^\\d{3,}$";
+    private final static Pattern ORDER_PATTERN = Pattern.compile(ORDER_REG_EXP);
 
     public AbstractLoadedTask(String id,
                               String order,
@@ -68,41 +56,35 @@ public abstract class AbstractLoadedTask extends AbstractTaskDescriptor implemen
 
     public abstract Optional<Method> getRollbackMethod();
 
+
     @Override
     public List<ValidationError> getValidationErrors() {
         List<ValidationError> errors = new ArrayList<>();
+        final String entityType = "task";
 
         // Validate ID is not null or empty
         if (id == null || id.trim().isEmpty()) {
-            errors.add(new ValidationError("ID cannot be null or empty", "unknown", "task"));
+            errors.add(new ValidationError("ID cannot be null or empty", "unknown", entityType));
         }
 
-        // Validate order is not null or empty
-        if (order == null || order.trim().isEmpty()) {
-            errors.add(new ValidationError(
-                "Order cannot be null or empty",
-                id != null ? id : "unknown",
-                "task"
-            ));
-        } 
-        // Validate order field format if present
-        else if (!isValidOrder(order)) {
-            errors.add(new ValidationError(
-                "Invalid order field format. Order must match pattern: " + getOrderFieldPattern(),
-                id != null ? id : "unknown",
-                "task"
-            ));
-        }
+
+        getOrder().ifPresent(orderValue -> {
+            if (!ORDER_PATTERN.matcher(orderValue).matches()) {
+                String message = String.format("Invalid order field format in changeUnit[%s]. Order must match pattern: %s", id, ORDER_REG_EXP);
+                errors.add(new ValidationError(message, id, entityType
+                ));
+            }
+        });
+
 
         // Validate source is not null or empty
         if (source == null || source.trim().isEmpty()) {
-            errors.add(new ValidationError(
-                "Source cannot be null or empty",
-                id != null ? id : "unknown",
-                "task"
-            ));
+            errors.add(new ValidationError("Source cannot be null or empty", id, entityType));
         }
 
         return errors;
     }
+
+
+
 }

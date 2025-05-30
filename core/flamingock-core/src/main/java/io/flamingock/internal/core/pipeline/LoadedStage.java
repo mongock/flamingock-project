@@ -16,8 +16,10 @@
 
 package io.flamingock.internal.core.pipeline;
 
-import io.flamingock.core.api.validation.Validatable;
-import io.flamingock.core.api.validation.ValidationError;
+
+import io.flamingock.core.api.error.validation.Validatable;
+import io.flamingock.core.api.error.validation.ValidationError;
+
 import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
 import io.flamingock.internal.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.core.preview.PreviewStage;
@@ -28,10 +30,12 @@ import io.flamingock.internal.core.task.loaded.LoadedTaskBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -85,12 +89,17 @@ public class LoadedStage implements Validatable {
         return parallel;
     }
 
-    @Override
-    public String toString() {
-        return "LoadedStage{" + "name='" + name + '\'' +
-                ", loadedTasks=" + loadedTasks +
-                ", parallel=" + parallel +
-                '}';
+
+    /**
+     * Returns a set of all task IDs defined within this stage.
+     * <p>
+     * It is assumed that task IDs within a stage are unique,
+     * so the returned {@code Set} will not contain duplicates.
+     */
+    public Set<String> getTaskIds() {
+        return getLoadedTasks().stream()
+                .map(AbstractLoadedTask::getId)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -112,38 +121,42 @@ public class LoadedStage implements Validatable {
             return errors; // Return early as we need the name for further error reporting
         }
 
-        // Check if there are any tasks
+        // Check if stage is empty
         if (loadedTasks == null || loadedTasks.isEmpty()) {
             errors.add(new ValidationError("Stage must contain at least one task", name, "stage"));
             return errors;
         }
-
-        // Check for duplicate task IDs within the stage
-        Map<String, Integer> idCounts = new HashMap<>();
-        for (AbstractLoadedTask task : loadedTasks) {
-            String taskId = task.getId();
-            idCounts.put(taskId, idCounts.getOrDefault(taskId, 0) + 1);
-        }
-
-        List<String> duplicateIds = idCounts.entrySet().stream()
-                .filter(entry -> entry.getValue() > 1)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-
-        if (!duplicateIds.isEmpty()) {
-            String duplicateIdsString = String.join(", ", duplicateIds);
-            errors.add(new ValidationError(
-                "Duplicate task IDs found in stage: " + duplicateIdsString,
-                name,
-                "stage"
-            ));
-        }
-
-        for (AbstractLoadedTask task : loadedTasks) {
-            errors.addAll(task.getValidationErrors());
-        }
-
+        getTaskIdDuplicationError().ifPresent(errors::add);
+        getLoadedTasks().stream().map(AbstractLoadedTask::getValidationErrors).forEach(errors::addAll);
         return errors;
+    }
+
+    @Override
+    public String toString() {
+        return "LoadedStage{" + "name='" + name + '\'' +
+                ", loadedTasks=" + loadedTasks +
+                ", parallel=" + parallel +
+                '}';
+    }
+
+    private Optional<ValidationError> getTaskIdDuplicationError() {
+        Set<String> seen = new HashSet<>();
+        Set<String> duplicates = new HashSet<>();
+
+        for (AbstractLoadedTask task : getLoadedTasks()) {
+            String id = task.getId();
+            if (!seen.add(id)) {
+                duplicates.add(id);
+            }
+        }
+
+        if (!duplicates.isEmpty()) {
+            String duplicateIdsString = String.join(", ", duplicates);
+            String message = String.format("Duplicate changeUnit IDs found in stage: %s", duplicateIdsString);
+            return Optional.of(new ValidationError(message, name, "stage"));
+        } else {
+            return Optional.empty();
+        }
     }
 
     public static class Builder {

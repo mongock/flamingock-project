@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.api.validation;
+package io.flamingock.core.api.error.validation;
 
 import java.util.List;
 
