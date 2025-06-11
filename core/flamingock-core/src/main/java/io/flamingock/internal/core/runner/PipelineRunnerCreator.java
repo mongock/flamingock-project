@@ -36,30 +36,6 @@ public final class PipelineRunnerCreator {
     private PipelineRunnerCreator() {
     }
 
-//    public static Runner create(RunnerId runnerId,
-//                                Pipeline pipeline,
-//                                ConnectionEngine connectionEngine,
-//                                CoreConfigurable coreConfiguration,
-//                                EventPublisher eventPublisher,
-//                                ContextResolver dependencyContext,
-//                                Set<Class<?>> nonGuardedTypes,
-//                                boolean isThrowExceptionIfCannotObtainLock) {
-//        return create(runnerId,
-//                pipeline,
-//                connectionEngine.getAuditWriter(),
-//                connectionEngine.getTransactionWrapper().orElse(null),
-//                connectionEngine.getExecutionPlanner(),
-//                coreConfiguration,
-//                eventPublisher,
-//                dependencyContext,
-//                nonGuardedTypes,
-//                isThrowExceptionIfCannotObtainLock,
-//                () -> {
-//                }
-//        );
-//    }
-
-
     public static Runner createWithFinalizer(RunnerId runnerId,
                                              Pipeline pipeline,
                                              ConnectionEngine engine,
