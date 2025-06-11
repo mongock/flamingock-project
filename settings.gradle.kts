@@ -46,9 +46,9 @@ include("community:flamingock-ce-bom")
 project(":community:flamingock-ce-bom").name = "flamingock-ce-bom"
 project(":community:flamingock-ce-bom").projectDir = file("community/flamingock-ce-bom")
 
-include("community:flamingock-ce-mongodb-sync-v4")
-project(":community:flamingock-ce-mongodb-sync-v4").name = "flamingock-ce-mongodb-sync-v4"
-project(":community:flamingock-ce-mongodb-sync-v4").projectDir = file("community/flamingock-ce-mongodb-sync-v4")
+include("community:flamingock-ce-mongodb-sync")
+project(":community:flamingock-ce-mongodb-sync").name = "flamingock-ce-mongodb-sync"
+project(":community:flamingock-ce-mongodb-sync").projectDir = file("community/flamingock-ce-mongodb-sync")
 
 include("community:flamingock-ce-mongodb-v3")
 project(":community:flamingock-ce-mongodb-v3").name = "flamingock-ce-mongodb-v3"
