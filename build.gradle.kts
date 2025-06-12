@@ -42,24 +42,54 @@ allprojects {
 }
 
 val coreProjects = setOf(
-    "flamingock-core", "flamingock-core-api", "flamingock-springboot-v2-integration",
-    "flamingock-springboot-v3-integration", "flamingock-graalvm", "utils"
+    "flamingock-core",
+    "flamingock-core-api",
+    "flamingock-processor",
+    "flamingock-graalvm"
 )
 
-val localDriverProjects = setOf(
-    "driver-common", "couchbase-driver", "couchbase-springboot-v2-driver",
-    "flamingock-ce-dynamodb", "mongodb-util", "flamingock-ce-mongodb-springdata-v2",
-    "flamingock-ce-mongodb-springdata-v3", "flamingock-ce-mongodb-springdata-v4",
-    "flamingock-ce-mongodb-sync", "flamingock-ce-mongodb-v3", "mongodb-importer"
+val cloudProjects = setOf(
+    "flamingock-cloud",
+    "flamingock-cloud-bom"
 )
 
-val templateProjects = setOf("flamingock-sql-template", "flamingock-mongodb-change-template")
+val communityProjects = setOf(
+    "flamingock-ce-bom",
+    "flamingock-ce-commons",
+    "flamingock-ce-mongodb-sync",
+    "flamingock-ce-mongodb-springdata-v3",
+    "flamingock-ce-mongodb-springdata-v4",
+    "flamingock-ce-couchbase",
+    "flamingock-ce-dynamodb",
+
+    "mongodb-importer-sync-v4"
+//    "mongodb-importer-sync"
+)
+
+val pluginProjects = setOf(
+    "flamingock-springboot-v2-integration",
+    "flamingock-springboot-v3-integration"
+)
 
 val transactionerProjects = setOf(
-    "sql-transactioner", "mongodb-sync-v4-transactioner", "dynamodb-transactioner"
+    "sql-transactioner",
+    "mongodb-sync-transactioner",
+    "dynamodb-transactioner"
 )
 
-val allProjects = coreProjects + localDriverProjects + templateProjects + transactionerProjects
+val templateProjects = setOf(
+    "flamingock-sql-template",
+    "flamingock-mongodb-sync-template"
+)
+
+val utilProjects = setOf(
+    "general-util",
+    "test-util",
+    "mongodb-util",
+    "dynamodb-util"
+)
+
+val allProjects = coreProjects + cloudProjects + communityProjects + pluginProjects + transactionerProjects + templateProjects + utilProjects
 
 val projectNameMaxLength = coreProjects.maxOf { it.length }
 val tabWidth = 8
@@ -79,9 +109,12 @@ val projectsToRelease = if (module != null) {
 } else {
     when (releaseBundle) {
         "core" -> coreProjects
-        "driver" -> localDriverProjects
-        "template" -> templateProjects
-        "transactioner" -> transactionerProjects
+        "cloud" -> cloudProjects
+        "community" -> communityProjects
+        "plugins" -> pluginProjects
+        "transactioners" -> transactionerProjects
+        "templates" -> templateProjects
+        "utils" -> utilProjects
         "all" -> allProjects
         else -> setOf()
     }
