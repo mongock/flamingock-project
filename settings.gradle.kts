@@ -106,9 +106,9 @@ project(":templates:flamingock-sql-template").projectDir = file("templates/flami
 
 
 //MONGODB
-include("templates:flamingock-mongodb-change-template")
-project(":templates:flamingock-mongodb-change-template").name = "flamingock-mongodb-change-template"
-project(":templates:flamingock-mongodb-change-template").projectDir = file("templates/flamingock-mongodb-change-template")
+include("templates:flamingock-mongodb-sync-template")
+project(":templates:flamingock-mongodb-sync-template").name = "flamingock-mongodb-sync-template"
+project(":templates:flamingock-mongodb-sync-template").projectDir = file("templates/flamingock-mongodb-sync-template")
 
 
 //////////////////////////////////////
