@@ -7,6 +7,7 @@ dependencies {
 
 
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb:[2.0.0,3.0.0)")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:[2.0.0,3.0.0)")
 
     testImplementation(project(":core:flamingock-core"))
     testImplementation("org.testcontainers:mongodb:1.18.3")
