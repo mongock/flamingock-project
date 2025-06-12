@@ -63,7 +63,7 @@ public class IndexOptionsMapper {
             indexOptions.max(getDouble(options, "max"));
         }
         if (options.containsKey("bucketSize")) {
-            indexOptions.bucketSize(getDouble(options, "bucketSize"));
+            throw new UnsupportedOperationException("bulkSize option is not supported in MongoDB driver versions 4.4.0 and above");
         }
         if (options.containsKey("storageEngine")) {
             indexOptions.storageEngine(getBson(options, "storageEngine"));

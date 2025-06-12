@@ -16,7 +16,6 @@ dependencies {
     testImplementation("io.mongock:mongock-standalone:5.5.0")
     testImplementation("io.mongock:mongodb-sync-v4-driver:5.5.0")
     testImplementation("org.mockito:mockito-inline:4.11.0")
-    testImplementation("org.mongodb:mongodb-driver-sync:5.5.1")
 }
 
 description = "${project.name}'s description"
