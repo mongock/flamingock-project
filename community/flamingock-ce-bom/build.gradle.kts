@@ -33,7 +33,6 @@ dependencies {
     constraints {
         api("io.flamingock:flamingock-core:${project.version}")
         api("io.flamingock:flamingock-core-api:${project.version}")
-        api("io.flamingock:flamingock-commons:${project.version}")
 
         // Database modules
         api("io.flamingock:flamingock-ce-mongodb-v3:${project.version}")
@@ -43,6 +42,7 @@ dependencies {
         api("io.flamingock:flamingock-ce-mongodb-springdata-v4:${project.version}")
         api("io.flamingock:flamingock-ce-couchbase:${project.version}")
         api("io.flamingock:flamingock-ce-dynamodb:${project.version}")
+        api("io.flamingock:flamingock-ce-commons:${project.version}")  // Added this line
 
         // Templates
         api("io.flamingock:flamingock-sql-template:${project.version}")
