@@ -245,7 +245,7 @@ jobs:
     needs: [ build ]
     uses: ./.github/workflows/module-release-graalvm.yml
     with:
-      module: mongodb-sync-v4-transactioner
+      module: mongodb-sync-transactioner
     secrets:
       FLAMINGOCK_JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
