@@ -6,7 +6,7 @@ dependencies {
 
     implementation(project(":core:flamingock-core"))
 
-    api(project(":transactioners:mongodb-sync-v4-transactioner"))
+    api(project(":transactioners:mongodb-sync-transactioner"))
 
     compileOnly("org.mongodb:mongodb-driver-sync:[3.7.0,6.0.0)")
     testImplementation("org.testcontainers:mongodb:1.18.3")
@@ -16,7 +16,6 @@ dependencies {
     testImplementation("io.mongock:mongock-standalone:5.5.0")
     testImplementation("io.mongock:mongodb-sync-v4-driver:5.5.0")
     testImplementation("org.mockito:mockito-inline:4.11.0")
-    testImplementation("org.mongodb:mongodb-driver-sync:5.5.1")
 }
 
 description = "${project.name}'s description"
