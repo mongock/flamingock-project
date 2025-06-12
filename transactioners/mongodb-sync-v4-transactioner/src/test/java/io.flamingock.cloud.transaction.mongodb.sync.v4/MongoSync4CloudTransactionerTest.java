@@ -83,7 +83,7 @@ public class MongoSync4CloudTransactionerTest {
     private CloudFlamingockBuilder flamingockBuilder;
 
     @Container
-    public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
+    public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6"));
 
     @BeforeAll
     static void beforeAll() {
