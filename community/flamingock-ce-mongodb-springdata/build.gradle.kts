@@ -7,7 +7,7 @@ val versions = mapOf(
 )
 dependencies {
     implementation(project(":utils:mongodb-util"))
-    implementation(project(":importers:mongodb-importer-sync-v4"))
+    implementation(project(":importers:flamingock-mongodb-sync-importer"))
     implementation(project(":core:flamingock-core"))
     api(project(":community:flamingock-ce-mongodb-sync"))
 
