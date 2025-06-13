@@ -57,18 +57,17 @@ val communityProjects = setOf(
     "flamingock-ce-bom",
     "flamingock-ce-commons",
     "flamingock-ce-mongodb-sync",
-    "flamingock-ce-mongodb-springdata-v3",
-    "flamingock-ce-mongodb-springdata-v4",
+    "flamingock-ce-mongodb-springdata-v3-legacy",
+    "flamingock-ce-mongodb-springdata",
     "flamingock-ce-couchbase",
     "flamingock-ce-dynamodb",
 
-    "mongodb-importer-sync-v4"
-//    "mongodb-importer-sync"
+    "flamingock-mongodb-sync-importer"
 )
 
 val pluginProjects = setOf(
-    "flamingock-springboot-v2-integration",
-    "flamingock-springboot-v3-integration"
+    "flamingock-springboot-integration-v2-legacy",
+    "flamingock-springboot-integration"
 )
 
 val transactionerProjects = setOf(

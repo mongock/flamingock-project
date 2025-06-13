@@ -137,11 +137,11 @@ jobs:
       FLAMINGOCK_JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
       FLAMINGOCK_JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
 
-  flamingock-ce-mongodb-springdata-v3:
+  flamingock-ce-mongodb-springdata-v3-legacy:
     needs: [ build ]
     uses: ./.github/workflows/module-release-graalvm.yml
     with:
-      module: flamingock-ce-mongodb-springdata-v3
+      module: flamingock-ce-mongodb-springdata-v3-legacy
     secrets:
       FLAMINGOCK_JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
@@ -150,11 +150,11 @@ jobs:
       FLAMINGOCK_JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
       FLAMINGOCK_JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
 
-  flamingock-ce-mongodb-springdata-v4:
+  flamingock-ce-mongodb-springdata:
     needs: [ build ]
     uses: ./.github/workflows/module-release-graalvm.yml
     with:
-      module: flamingock-ce-mongodb-springdata-v4
+      module: flamingock-ce-mongodb-springdata
     secrets:
       FLAMINGOCK_JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
@@ -189,11 +189,11 @@ jobs:
       FLAMINGOCK_JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
       FLAMINGOCK_JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
 
-  mongodb-importer-sync-v4:
+  flamingock-mongodb-sync-importer:
     needs: [ build ]
     uses: ./.github/workflows/module-release-graalvm.yml
     with:
-      module: mongodb-importer-sync-v4
+      module: flamingock-mongodb-sync-importer
     secrets:
       FLAMINGOCK_JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
@@ -202,11 +202,11 @@ jobs:
       FLAMINGOCK_JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
       FLAMINGOCK_JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
 
-  flamingock-springboot-v2-integration:
+  flamingock-springboot-integration-v2-legacy:
     needs: [ build ]
     uses: ./.github/workflows/module-release-graalvm.yml
     with:
-      module: flamingock-springboot-v2-integration
+      module: flamingock-springboot-integration-v2-legacy
     secrets:
       FLAMINGOCK_JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
@@ -215,11 +215,11 @@ jobs:
       FLAMINGOCK_JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
       FLAMINGOCK_JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
 
-  flamingock-springboot-v3-integration:
+  flamingock-springboot-integration:
     needs: [ build ]
     uses: ./.github/workflows/module-release-graalvm.yml
     with:
-      module: flamingock-springboot-v3-integration
+      module: flamingock-springboot-integration
     secrets:
       FLAMINGOCK_JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
@@ -357,13 +357,13 @@ jobs:
       flamingock-ce-commons,
       flamingock-ce-bom,
       flamingock-ce-mongodb-sync,
-      flamingock-ce-mongodb-springdata-v3,
-      flamingock-ce-mongodb-springdata-v4,
+      flamingock-ce-mongodb-springdata-v3-legacy,
+      flamingock-ce-mongodb-springdata,
       flamingock-ce-couchbase,
       flamingock-ce-dynamodb,
-      mongodb-importer-sync-v4,
-      flamingock-springboot-v2-integration,
-      flamingock-springboot-v3-integration,
+      flamingock-mongodb-sync-importer,
+      flamingock-springboot-integration-v2-legacy,
+      flamingock-springboot-integration,
       sql-transactioner,
       mongodb-sync-transactioner,
       dynamodb-transactioner,
