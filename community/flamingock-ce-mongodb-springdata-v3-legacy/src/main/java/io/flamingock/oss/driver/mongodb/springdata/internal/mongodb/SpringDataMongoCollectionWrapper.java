@@ -22,12 +22,12 @@ import io.flamingock.oss.driver.common.mongodb.CollectionWrapper;
 import io.flamingock.oss.driver.common.mongodb.DocumentWrapper;
 import org.bson.Document;
 
-public class SpringDataMongoV3CollectionWrapper implements CollectionWrapper<SpringDataMongoV3DocumentWrapper> {
+public class SpringDataMongoCollectionWrapper implements CollectionWrapper<SpringDataMongoDocumentWrapper> {
 
     private final MongoCollection<Document> collection;
 
 
-    public SpringDataMongoV3CollectionWrapper(MongoCollection<Document> collection) {
+    public SpringDataMongoCollectionWrapper(MongoCollection<Document> collection) {
         this.collection = collection;
     }
 
@@ -38,11 +38,11 @@ public class SpringDataMongoV3CollectionWrapper implements CollectionWrapper<Spr
 
     @Override
     public Iterable<DocumentWrapper> listIndexes() {
-        return collection.listIndexes().map(SpringDataMongoV3DocumentWrapper::new);
+        return collection.listIndexes().map(SpringDataMongoDocumentWrapper::new);
     }
 
     @Override
-    public String createUniqueIndex(SpringDataMongoV3DocumentWrapper uniqueIndexDocument) {
+    public String createUniqueIndex(SpringDataMongoDocumentWrapper uniqueIndexDocument) {
         return collection.createIndex(uniqueIndexDocument.getDocument(), new IndexOptions().unique(true));
     }
 
@@ -52,7 +52,7 @@ public class SpringDataMongoV3CollectionWrapper implements CollectionWrapper<Spr
     }
 
     @Override
-    public void deleteMany(SpringDataMongoV3DocumentWrapper documentWrapper) {
+    public void deleteMany(SpringDataMongoDocumentWrapper documentWrapper) {
         collection.deleteMany(documentWrapper.getDocument());
     }
 }

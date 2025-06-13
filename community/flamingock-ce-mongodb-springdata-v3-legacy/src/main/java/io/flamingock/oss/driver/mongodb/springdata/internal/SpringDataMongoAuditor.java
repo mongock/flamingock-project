@@ -26,8 +26,8 @@ import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
 import io.flamingock.internal.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
-import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoV3CollectionWrapper;
-import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoV3DocumentWrapper;
+import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoCollectionWrapper;
+import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoDocumentWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.ReadWriteConfiguration;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -43,16 +43,16 @@ import static io.flamingock.internal.core.community.AuditEntryField.KEY_CHANGE_I
 import static io.flamingock.internal.core.community.AuditEntryField.KEY_EXECUTION_ID;
 import static io.flamingock.internal.core.community.AuditEntryField.KEY_STATE;
 
-public class SpringDataMongoV3Auditor implements LocalAuditor {
+public class SpringDataMongoAuditor implements LocalAuditor {
 
-    private static final Logger logger = LoggerFactory.getLogger(SpringDataMongoV3Auditor.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpringDataMongoAuditor.class);
 
     private final MongoCollection<Document> collection;
-    private final MongoDBAuditMapper<SpringDataMongoV3DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new SpringDataMongoV3DocumentWrapper(new Document()));
+    private final MongoDBAuditMapper<SpringDataMongoDocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new SpringDataMongoDocumentWrapper(new Document()));
 
-    SpringDataMongoV3Auditor(MongoTemplate mongoTemplate,
-                             String collectionName,
-                             ReadWriteConfiguration readWriteConfiguration) {
+    SpringDataMongoAuditor(MongoTemplate mongoTemplate,
+                           String collectionName,
+                           ReadWriteConfiguration readWriteConfiguration) {
         this.collection = mongoTemplate.getCollection(collectionName)
                 .withReadConcern(readWriteConfiguration.getReadConcern())
                 .withReadPreference(readWriteConfiguration.getReadPreference())
@@ -60,9 +60,9 @@ public class SpringDataMongoV3Auditor implements LocalAuditor {
     }
 
     protected void initialize(boolean indexCreation) {
-        CollectionInitializator<SpringDataMongoV3DocumentWrapper> initializer = new CollectionInitializator<>(
-                new SpringDataMongoV3CollectionWrapper(collection),
-                () -> new SpringDataMongoV3DocumentWrapper(new Document()),
+        CollectionInitializator<SpringDataMongoDocumentWrapper> initializer = new CollectionInitializator<>(
+                new SpringDataMongoCollectionWrapper(collection),
+                () -> new SpringDataMongoDocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_CHANGE_ID, KEY_STATE}
         );
         if (indexCreation) {
@@ -98,7 +98,7 @@ public class SpringDataMongoV3Auditor implements LocalAuditor {
         collection.find()
                 .into(new LinkedList<>())
                 .stream()
-                .map(SpringDataMongoV3DocumentWrapper::new)
+                .map(SpringDataMongoDocumentWrapper::new)
                 .map(mapper::fromDocument)
                 .collect(Collectors.toList())
                 .forEach(builder::addEntry);

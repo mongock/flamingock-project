@@ -22,5 +22,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties("flamingock.mongodb")
-public class SpringDataMongoV3Configuration extends MongoDBSync4Configuration {
+public class SpringDataMongoConfiguration extends MongoDBSync4Configuration {
 }

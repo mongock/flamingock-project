@@ -19,11 +19,11 @@ package io.flamingock.oss.driver.mongodb.springdata.internal.mongodb;
 import io.flamingock.oss.driver.common.mongodb.DocumentWrapper;
 import org.bson.Document;
 
-public class SpringDataMongoV3DocumentWrapper implements DocumentWrapper {
+public class SpringDataMongoDocumentWrapper implements DocumentWrapper {
 
     private final Document document;
 
-    public SpringDataMongoV3DocumentWrapper(Document document) {
+    public SpringDataMongoDocumentWrapper(Document document) {
         this.document = document;
     }
 
@@ -68,6 +68,6 @@ public class SpringDataMongoV3DocumentWrapper implements DocumentWrapper {
 
     @Override
     public DocumentWrapper getWithWrapper(String key) {
-        return new SpringDataMongoV3DocumentWrapper((Document) get(key));
+        return new SpringDataMongoDocumentWrapper((Document) get(key));
     }
 }

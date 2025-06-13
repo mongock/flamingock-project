@@ -29,7 +29,7 @@ import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
-import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoV3DocumentWrapper;
+import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoDocumentWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ import static io.flamingock.internal.core.community.AuditEntryField.KEY_TIMESTAM
 
 public class MongoDBTestHelper {
     public final MongoDatabase mongoDatabase;
-    private final MongoDBAuditMapper<SpringDataMongoV3DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new SpringDataMongoV3DocumentWrapper(new Document()));
+    private final MongoDBAuditMapper<SpringDataMongoDocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new SpringDataMongoDocumentWrapper(new Document()));
 
     private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractor = c-> {
         ChangeUnit ann = c.getAnnotation(ChangeUnit.class);
@@ -76,7 +76,7 @@ public class MongoDBTestHelper {
         return mongoDatabase.getCollection(auditLogCollection).find()
                 .into(new LinkedList<>())
                 .stream()
-                .map(SpringDataMongoV3DocumentWrapper::new)
+                .map(SpringDataMongoDocumentWrapper::new)
                 .map(mapper::fromDocument)
                 .collect(Collectors.toList());
     }

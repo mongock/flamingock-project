@@ -28,28 +28,28 @@ import io.flamingock.internal.core.engine.audit.importer.ImporterModule;
 import io.flamingock.internal.core.system.SystemModule;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
 import io.flamingock.importer.mongodb.sync.v4.MongoImporterReader;
-import io.flamingock.oss.driver.mongodb.springdata.config.SpringDataMongoV3Configuration;
+import io.flamingock.oss.driver.mongodb.springdata.config.SpringDataMongoConfiguration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.ReadWriteConfiguration;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Optional;
 
-public class SpringDataMongoV3Engine extends AbstractLocalEngine {
+public class SpringDataMongoEngine extends AbstractLocalEngine {
 
     private final MongoTemplate mongoTemplate;
-    private final SpringDataMongoV3Configuration driverConfiguration;
+    private final SpringDataMongoConfiguration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
-    private SpringDataMongoV3Auditor auditor;
+    private SpringDataMongoAuditor auditor;
     private LocalExecutionPlanner executionPlanner;
     private TransactionWrapper transactionWrapper;
     private SystemModule mongockImporter = null;
 
 
-    public SpringDataMongoV3Engine(MongoTemplate mongoTemplate,
-                                   CoreConfigurable coreConfiguration,
-                                   CommunityConfigurable localConfiguration,
-                                   SpringDataMongoV3Configuration driverConfiguration) {
+    public SpringDataMongoEngine(MongoTemplate mongoTemplate,
+                                 CoreConfigurable coreConfiguration,
+                                 CommunityConfigurable localConfiguration,
+                                 SpringDataMongoConfiguration driverConfiguration) {
         super(localConfiguration);
         this.mongoTemplate = mongoTemplate;
         this.driverConfiguration = driverConfiguration;
@@ -63,14 +63,14 @@ public class SpringDataMongoV3Engine extends AbstractLocalEngine {
                 driverConfiguration.getReadPreference().getValue());
         transactionWrapper = localConfiguration.isTransactionDisabled()
                 ? null
-                : new SpringDataMongoV3TransactionWrapper(mongoTemplate, readWriteConfiguration);
+                : new SpringDataMongoTransactionWrapper(mongoTemplate, readWriteConfiguration);
 
-        auditor = new SpringDataMongoV3Auditor(
+        auditor = new SpringDataMongoAuditor(
                 mongoTemplate,
                 driverConfiguration.getAuditRepositoryName(),
                 readWriteConfiguration);
         auditor.initialize(driverConfiguration.isAutoCreate());
-        SpringDataMongoV3LockService lockService = new SpringDataMongoV3LockService(
+        SpringDataMongoLockService lockService = new SpringDataMongoLockService(
                 mongoTemplate.getDb(),
                 driverConfiguration.getLockRepositoryName(),
                 readWriteConfiguration);
