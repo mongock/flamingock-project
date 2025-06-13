@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.internal;
+package io.flamingock.oss.driver.mongodb.springdata.internal;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -26,8 +26,8 @@ import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
 import io.flamingock.internal.core.engine.audit.writer.AuditStageStatus;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
-import io.flamingock.oss.driver.mongodb.springdata.v4.internal.mongodb.SpringDataMongoV4CollectionWrapper;
-import io.flamingock.oss.driver.mongodb.springdata.v4.internal.mongodb.SpringDataMongoV4DocumentWrapper;
+import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoCollectionWrapper;
+import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoDocumentWrapper;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.ReadWriteConfiguration;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -42,16 +42,16 @@ import static io.flamingock.internal.core.community.AuditEntryField.KEY_CHANGE_I
 import static io.flamingock.internal.core.community.AuditEntryField.KEY_EXECUTION_ID;
 import static io.flamingock.internal.core.community.AuditEntryField.KEY_STATE;
 
-public class SpringDataMongoV4Auditor implements LocalAuditor {
+public class SpringDataMongoAuditor implements LocalAuditor {
 
-    private static final Logger logger = LoggerFactory.getLogger(SpringDataMongoV4Auditor.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpringDataMongoAuditor.class);
 
     private final MongoCollection<Document> collection;
-    private final MongoDBAuditMapper<SpringDataMongoV4DocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new SpringDataMongoV4DocumentWrapper(new Document()));
+    private final MongoDBAuditMapper<SpringDataMongoDocumentWrapper> mapper = new MongoDBAuditMapper<>(() -> new SpringDataMongoDocumentWrapper(new Document()));
 
-    SpringDataMongoV4Auditor(MongoTemplate mongoTemplate,
-                             String collectionName,
-                             ReadWriteConfiguration readWriteConfiguration) {
+    SpringDataMongoAuditor(MongoTemplate mongoTemplate,
+                           String collectionName,
+                           ReadWriteConfiguration readWriteConfiguration) {
         this.collection = mongoTemplate.getCollection(collectionName)
                 .withReadConcern(readWriteConfiguration.getReadConcern())
                 .withReadPreference(readWriteConfiguration.getReadPreference())
@@ -59,9 +59,9 @@ public class SpringDataMongoV4Auditor implements LocalAuditor {
     }
 
     protected void initialize(boolean indexCreation) {
-        CollectionInitializator<SpringDataMongoV4DocumentWrapper> initializer = new CollectionInitializator<>(
-                new SpringDataMongoV4CollectionWrapper(collection),
-                () -> new SpringDataMongoV4DocumentWrapper(new Document()),
+        CollectionInitializator<SpringDataMongoDocumentWrapper> initializer = new CollectionInitializator<>(
+                new SpringDataMongoCollectionWrapper(collection),
+                () -> new SpringDataMongoDocumentWrapper(new Document()),
                 new String[]{KEY_EXECUTION_ID, KEY_CHANGE_ID, KEY_STATE}
         );
         if (indexCreation) {
@@ -97,7 +97,7 @@ public class SpringDataMongoV4Auditor implements LocalAuditor {
         collection.find()
                 .into(new LinkedList<>())
                 .stream()
-                .map(SpringDataMongoV4DocumentWrapper::new)
+                .map(SpringDataMongoDocumentWrapper::new)
                 .map(mapper::fromDocument)
                 .toList()
                 .forEach(builder::addEntry);

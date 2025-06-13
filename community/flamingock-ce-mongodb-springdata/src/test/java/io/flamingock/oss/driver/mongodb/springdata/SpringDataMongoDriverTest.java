@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4;
+package io.flamingock.oss.driver.mongodb.springdata;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -26,14 +26,14 @@ import io.flamingock.internal.core.builder.FlamingockFactory;
 import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.internal.core.runner.PipelineExecutionException;
-import io.flamingock.oss.driver.mongodb.springdata.v4.changes._1_create_client_collection_happy;
-import io.flamingock.oss.driver.mongodb.springdata.v4.changes._2_insert_federico_happy_non_transactional;
-import io.flamingock.oss.driver.mongodb.springdata.v4.changes._2_insert_federico_happy_transactional;
-import io.flamingock.oss.driver.mongodb.springdata.v4.changes._3_insert_jorge_failed_non_transactional_non_rollback;
-import io.flamingock.oss.driver.mongodb.springdata.v4.changes._3_insert_jorge_failed_non_transactional_rollback;
-import io.flamingock.oss.driver.mongodb.springdata.v4.changes._3_insert_jorge_failed_transactional_non_rollback;
-import io.flamingock.oss.driver.mongodb.springdata.v4.changes._3_insert_jorge_happy_non_transactional;
-import io.flamingock.oss.driver.mongodb.springdata.v4.changes._3_insert_jorge_happy_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.changes._1_create_client_collection_happy;
+import io.flamingock.oss.driver.mongodb.springdata.changes._2_insert_federico_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.changes._2_insert_federico_happy_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.changes._3_insert_jorge_failed_non_transactional_non_rollback;
+import io.flamingock.oss.driver.mongodb.springdata.changes._3_insert_jorge_failed_non_transactional_rollback;
+import io.flamingock.oss.driver.mongodb.springdata.changes._3_insert_jorge_failed_transactional_non_rollback;
+import io.flamingock.oss.driver.mongodb.springdata.changes._3_insert_jorge_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.changes._3_insert_jorge_happy_transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +60,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
-class SpringDataMongoV4DriverTest {
+class SpringDataMongoDriverTest {
 
     @Container
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6"));

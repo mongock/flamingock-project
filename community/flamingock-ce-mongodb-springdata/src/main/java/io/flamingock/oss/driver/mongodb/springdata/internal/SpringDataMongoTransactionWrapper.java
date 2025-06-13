@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.internal;
+package io.flamingock.oss.driver.mongodb.springdata.internal;
 
 import com.mongodb.TransactionOptions;
 import io.flamingock.internal.core.context.DependencyInjectable;
@@ -31,11 +31,11 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.function.Supplier;
 
-public class SpringDataMongoV4TransactionWrapper implements TransactionWrapper {
+public class SpringDataMongoTransactionWrapper implements TransactionWrapper {
 
     private final MongoTransactionManager txManager;
 
-    SpringDataMongoV4TransactionWrapper(MongoTemplate mongoTemplate, ReadWriteConfiguration readWriteConfiguration) {
+    SpringDataMongoTransactionWrapper(MongoTemplate mongoTemplate, ReadWriteConfiguration readWriteConfiguration) {
         this.txManager = new MongoTransactionManager(mongoTemplate.getMongoDatabaseFactory(),
                 TransactionOptions.builder()
                         .readConcern(readWriteConfiguration.getReadConcern())

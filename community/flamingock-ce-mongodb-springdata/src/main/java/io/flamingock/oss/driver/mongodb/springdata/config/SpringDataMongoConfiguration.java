@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.config;
+package io.flamingock.oss.driver.mongodb.springdata.config;
 
 import io.flamingock.cloud.transaction.mongodb.sync.config.MongoDBSync4Configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -22,5 +22,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties("flamingock.mongodb")
-public class SpringDataMongoV4Configuration extends MongoDBSync4Configuration {
+public class SpringDataMongoConfiguration extends MongoDBSync4Configuration {
 }

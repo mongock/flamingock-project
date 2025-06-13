@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.changes;
+package io.flamingock.oss.driver.mongodb.springdata.changes;
 
 import com.mongodb.client.MongoCollection;
 import io.flamingock.core.api.annotations.ChangeUnit;
@@ -22,12 +22,12 @@ import io.flamingock.core.api.annotations.Execution;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-@ChangeUnit( id="insert-jorge-document" , order = "003")
-public class _3_insert_jorge_happy_transactional {
+@ChangeUnit( id="insert-federico-document" , order = "002")
+public class _2_insert_federico_happy_transactional {
 
     @Execution
     public void execution(MongoTemplate mongoDatabase) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(new Document().append("name", "Jorge"));
+        collection.insertOne(new Document().append("name", "Federico"));
     }
 }

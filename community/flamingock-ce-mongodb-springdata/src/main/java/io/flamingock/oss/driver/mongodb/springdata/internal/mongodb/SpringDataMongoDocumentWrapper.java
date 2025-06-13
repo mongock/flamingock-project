@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.internal.mongodb;
+package io.flamingock.oss.driver.mongodb.springdata.internal.mongodb;
 
 import io.flamingock.oss.driver.common.mongodb.DocumentWrapper;
 import org.bson.Document;
 
-public class SpringDataMongoV4DocumentWrapper implements DocumentWrapper {
+public class SpringDataMongoDocumentWrapper implements DocumentWrapper {
 
     private final Document document;
 
-    public SpringDataMongoV4DocumentWrapper(Document document) {
+    public SpringDataMongoDocumentWrapper(Document document) {
         this.document = document;
     }
 
@@ -68,6 +68,6 @@ public class SpringDataMongoV4DocumentWrapper implements DocumentWrapper {
 
     @Override
     public DocumentWrapper getWithWrapper(String key) {
-        return new SpringDataMongoV4DocumentWrapper((Document) get(key));
+        return new SpringDataMongoDocumentWrapper((Document) get(key));
     }
 }

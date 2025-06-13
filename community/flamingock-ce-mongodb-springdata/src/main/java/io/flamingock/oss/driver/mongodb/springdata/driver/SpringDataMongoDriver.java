@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.driver;
+package io.flamingock.oss.driver.mongodb.springdata.driver;
 
 import io.flamingock.commons.utils.id.RunnerId;
 import io.flamingock.internal.core.builder.core.CoreConfigurable;
@@ -22,21 +22,21 @@ import io.flamingock.internal.core.builder.local.CommunityConfigurable;
 import io.flamingock.internal.core.community.LocalEngine;
 import io.flamingock.internal.core.community.driver.OverridesDrivers;
 import io.flamingock.internal.core.context.ContextResolver;
-import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
-import io.flamingock.oss.driver.mongodb.springdata.v4.internal.SpringDataMongoV4Engine;
+import io.flamingock.oss.driver.mongodb.springdata.config.SpringDataMongoConfiguration;
+import io.flamingock.oss.driver.mongodb.springdata.internal.SpringDataMongoEngine;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @OverridesDrivers({MongoSync4Driver.class})
-public class SpringDataMongoV4Driver extends MongoSync4Driver {
+public class SpringDataMongoDriver extends MongoSync4Driver {
 
     private MongoTemplate mongoTemplate;
     private RunnerId runnerId;
     private CoreConfigurable coreConfiguration;
     private CommunityConfigurable communityConfiguration;
-    private SpringDataMongoV4Configuration driverConfiguration;
+    private SpringDataMongoConfiguration driverConfiguration;
 
-    public SpringDataMongoV4Driver() {
+    public SpringDataMongoDriver() {
     }
 
     @Override
@@ -48,14 +48,14 @@ public class SpringDataMongoV4Driver extends MongoSync4Driver {
 
         this.mongoTemplate = dependencyContext.getRequiredDependencyValue(MongoTemplate.class);
 
-        this.driverConfiguration = dependencyContext.getDependencyValue(SpringDataMongoV4Configuration.class)
-                .orElse(new SpringDataMongoV4Configuration());
+        this.driverConfiguration = dependencyContext.getDependencyValue(SpringDataMongoConfiguration.class)
+                .orElse(new SpringDataMongoConfiguration());
         this.driverConfiguration.mergeConfig(dependencyContext);
     }
 
     @Override
     public LocalEngine getEngine() {
-        SpringDataMongoV4Engine engine = new SpringDataMongoV4Engine(
+        SpringDataMongoEngine engine = new SpringDataMongoEngine(
                 mongoTemplate,
                 coreConfiguration,
                 communityConfiguration,

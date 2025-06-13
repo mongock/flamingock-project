@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.internal;
+package io.flamingock.oss.driver.mongodb.springdata.internal;
 
 import com.mongodb.ReadConcern;
 import com.mongodb.client.MongoCollection;
@@ -28,28 +28,28 @@ import io.flamingock.internal.core.engine.audit.importer.ImporterModule;
 import io.flamingock.internal.core.system.SystemModule;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
 import io.flamingock.importer.mongodb.sync.v4.MongoImporterReader;
-import io.flamingock.oss.driver.mongodb.springdata.v4.config.SpringDataMongoV4Configuration;
+import io.flamingock.oss.driver.mongodb.springdata.config.SpringDataMongoConfiguration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.ReadWriteConfiguration;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Optional;
 
-public class SpringDataMongoV4Engine extends AbstractLocalEngine {
+public class SpringDataMongoEngine extends AbstractLocalEngine {
 
     private final MongoTemplate mongoTemplate;
-    private final SpringDataMongoV4Configuration driverConfiguration;
+    private final SpringDataMongoConfiguration driverConfiguration;
     private final CoreConfigurable coreConfiguration;
-    private SpringDataMongoV4Auditor auditor;
+    private SpringDataMongoAuditor auditor;
     private LocalExecutionPlanner executionPlanner;
     private TransactionWrapper transactionWrapper;
     private SystemModule mongockImporter = null;
 
 
-    public SpringDataMongoV4Engine(MongoTemplate mongoTemplate,
-                                   CoreConfigurable coreConfiguration,
-                                   CommunityConfigurable localConfiguration,
-                                   SpringDataMongoV4Configuration driverConfiguration) {
+    public SpringDataMongoEngine(MongoTemplate mongoTemplate,
+                                 CoreConfigurable coreConfiguration,
+                                 CommunityConfigurable localConfiguration,
+                                 SpringDataMongoConfiguration driverConfiguration) {
         super(localConfiguration);
         this.mongoTemplate = mongoTemplate;
         this.driverConfiguration = driverConfiguration;
@@ -63,13 +63,13 @@ public class SpringDataMongoV4Engine extends AbstractLocalEngine {
                 driverConfiguration.getReadPreference().getValue());
         transactionWrapper = localConfiguration.isTransactionDisabled()
                 ? null
-                : new SpringDataMongoV4TransactionWrapper(mongoTemplate, readWriteConfiguration);
-        auditor = new SpringDataMongoV4Auditor(
+                : new SpringDataMongoTransactionWrapper(mongoTemplate, readWriteConfiguration);
+        auditor = new SpringDataMongoAuditor(
                 mongoTemplate,
                 driverConfiguration.getAuditRepositoryName(),
                 readWriteConfiguration);
         auditor.initialize(driverConfiguration.isAutoCreate());
-        SpringDataMongoV4LockService lockService = new SpringDataMongoV4LockService(
+        SpringDataMongoLockService lockService = new SpringDataMongoLockService(
                 mongoTemplate.getDb(),
                 driverConfiguration.getLockRepositoryName(),
                 readWriteConfiguration);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.internal.mongodb;
+package io.flamingock.oss.driver.mongodb.springdata.internal.mongodb;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.IndexOptions;
@@ -22,12 +22,12 @@ import io.flamingock.oss.driver.common.mongodb.CollectionWrapper;
 import io.flamingock.oss.driver.common.mongodb.DocumentWrapper;
 import org.bson.Document;
 
-public class SpringDataMongoV4CollectionWrapper implements CollectionWrapper<SpringDataMongoV4DocumentWrapper> {
+public class SpringDataMongoCollectionWrapper implements CollectionWrapper<SpringDataMongoDocumentWrapper> {
 
     private final MongoCollection<Document> collection;
 
 
-    public SpringDataMongoV4CollectionWrapper(MongoCollection<Document> collection) {
+    public SpringDataMongoCollectionWrapper(MongoCollection<Document> collection) {
         this.collection = collection;
     }
 
@@ -38,11 +38,11 @@ public class SpringDataMongoV4CollectionWrapper implements CollectionWrapper<Spr
 
     @Override
     public Iterable<DocumentWrapper> listIndexes() {
-        return collection.listIndexes().map(SpringDataMongoV4DocumentWrapper::new);
+        return collection.listIndexes().map(SpringDataMongoDocumentWrapper::new);
     }
 
     @Override
-    public String createUniqueIndex(SpringDataMongoV4DocumentWrapper uniqueIndexDocument) {
+    public String createUniqueIndex(SpringDataMongoDocumentWrapper uniqueIndexDocument) {
         return collection.createIndex(uniqueIndexDocument.getDocument(), new IndexOptions().unique(true));
     }
 
@@ -52,7 +52,7 @@ public class SpringDataMongoV4CollectionWrapper implements CollectionWrapper<Spr
     }
 
     @Override
-    public void deleteMany(SpringDataMongoV4DocumentWrapper documentWrapper) {
+    public void deleteMany(SpringDataMongoDocumentWrapper documentWrapper) {
         collection.deleteMany(documentWrapper.getDocument());
     }
 }

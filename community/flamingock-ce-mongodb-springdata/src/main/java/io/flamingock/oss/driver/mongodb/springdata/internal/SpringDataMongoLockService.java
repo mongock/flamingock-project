@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v4.internal;
+package io.flamingock.oss.driver.mongodb.springdata.internal;
 
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.commons.utils.TimeService;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.MongoSync4LockService;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.ReadWriteConfiguration;
 
-public class SpringDataMongoV4LockService extends MongoSync4LockService {
+public class SpringDataMongoLockService extends MongoSync4LockService {
 
-    protected SpringDataMongoV4LockService(MongoDatabase mongoDatabase, String lockCollectionName, ReadWriteConfiguration readWriteConfiguration) {
+    protected SpringDataMongoLockService(MongoDatabase mongoDatabase, String lockCollectionName, ReadWriteConfiguration readWriteConfiguration) {
         super(mongoDatabase, lockCollectionName, readWriteConfiguration, TimeService.getDefault());
     }
 }
