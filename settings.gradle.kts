@@ -54,9 +54,9 @@ include("community:flamingock-ce-mongodb-springdata-v3")
 project(":community:flamingock-ce-mongodb-springdata-v3").name = "flamingock-ce-mongodb-springdata-v3"
 project(":community:flamingock-ce-mongodb-springdata-v3").projectDir = file("community/flamingock-ce-mongodb-springdata-v3")
 
-include("community:flamingock-ce-mongodb-springdata-v4")
-project(":community:flamingock-ce-mongodb-springdata-v4").name = "flamingock-ce-mongodb-springdata-v4"
-project(":community:flamingock-ce-mongodb-springdata-v4").projectDir = file("community/flamingock-ce-mongodb-springdata-v4")
+include("community:flamingock-ce-mongodb-springdata")
+project(":community:flamingock-ce-mongodb-springdata").name = "flamingock-ce-mongodb-springdata"
+project(":community:flamingock-ce-mongodb-springdata").projectDir = file("community/flamingock-ce-mongodb-springdata")
 
 include("community:flamingock-ce-couchbase")
 project(":community:flamingock-ce-couchbase").name = "flamingock-ce-couchbase"
