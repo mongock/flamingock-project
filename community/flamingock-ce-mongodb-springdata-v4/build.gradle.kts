@@ -1,16 +1,21 @@
 import org.gradle.kotlin.dsl.invoke
 
+val versions = mapOf(
+    "mongodb" to "[4.8.0, 5.5.0]",
+    "spring-data" to "[4.0.0, 5.0.0)",
+    "springboot" to "[3.0.0, 4.0.0)"
+)
 dependencies {
     implementation(project(":utils:mongodb-util"))
     implementation(project(":importers:mongodb-importer-sync-v4"))
     implementation(project(":core:flamingock-core"))
     api(project(":community:flamingock-ce-mongodb-sync"))
 
-    compileOnly("org.mongodb:mongodb-driver-sync:[4.8.0, 5.5.0]")//this filters the broader range in flamingock-ce-mongodb-sync
-    compileOnly("org.springframework.data:spring-data-mongodb:[4.0.0, 5.0.0)")
+    compileOnly("org.mongodb:mongodb-driver-sync:${versions["mongodb"]}")//this filters the broader range in flamingock-ce-mongodb-sync
+    compileOnly("org.springframework.data:spring-data-mongodb:${versions["spring-data"]}")
 
-    compileOnly("org.springframework.boot:spring-boot-autoconfigure:[3.0.0, 4.0.0)")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:[3.0.0,4.0.0)")
+    compileOnly("org.springframework.boot:spring-boot-autoconfigure:${versions["springboot"]}")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:${versions["springboot"]}")
 
     /*********************************************************
      * TEST
