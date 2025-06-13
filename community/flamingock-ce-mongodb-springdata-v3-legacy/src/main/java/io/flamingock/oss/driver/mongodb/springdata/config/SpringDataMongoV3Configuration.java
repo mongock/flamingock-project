@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v3.changes;
+package io.flamingock.oss.driver.mongodb.springdata.config;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import io.flamingock.cloud.transaction.mongodb.sync.config.MongoDBSync4Configuration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@ChangeUnit( id="create-client-collection" , order = "001", transactional = false)
-public class _1_create_client_collection_happy {
-
-    @Execution
-    public void execution(MongoTemplate mongoTemplate) {
-        mongoTemplate.createCollection("clientCollection");
-    }
+@Configuration
+@ConfigurationProperties("flamingock.mongodb")
+public class SpringDataMongoV3Configuration extends MongoDBSync4Configuration {
 }

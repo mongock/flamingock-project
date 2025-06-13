@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v3.driver;
+package io.flamingock.oss.driver.mongodb.springdata.driver;
 
 import io.flamingock.commons.utils.id.RunnerId;
 import io.flamingock.internal.core.builder.core.CoreConfigurable;
@@ -22,8 +22,8 @@ import io.flamingock.internal.core.builder.local.CommunityConfigurable;
 import io.flamingock.internal.core.community.LocalEngine;
 import io.flamingock.internal.core.community.driver.OverridesDrivers;
 import io.flamingock.internal.core.context.ContextResolver;
-import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
-import io.flamingock.oss.driver.mongodb.springdata.v3.internal.SpringDataMongoV3Engine;
+import io.flamingock.oss.driver.mongodb.springdata.config.SpringDataMongoV3Configuration;
+import io.flamingock.oss.driver.mongodb.springdata.internal.SpringDataMongoV3Engine;
 import io.flamingock.oss.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import org.springframework.data.mongodb.core.MongoTemplate;
 

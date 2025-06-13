@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v3.internal;
+package io.flamingock.oss.driver.mongodb.springdata.internal;
 
 import com.mongodb.TransactionOptions;
 import io.flamingock.internal.core.context.DependencyInjectable;

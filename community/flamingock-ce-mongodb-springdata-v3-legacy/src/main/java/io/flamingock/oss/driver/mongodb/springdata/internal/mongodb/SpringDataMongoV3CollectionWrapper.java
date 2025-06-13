@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v3.internal.mongodb;
+package io.flamingock.oss.driver.mongodb.springdata.internal.mongodb;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.IndexOptions;

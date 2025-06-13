@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v3;
+package io.flamingock.oss.driver.mongodb.springdata;
 
 import java.util.function.Function;
 import com.mongodb.client.MongoDatabase;
@@ -29,7 +29,7 @@ import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
-import io.flamingock.oss.driver.mongodb.springdata.v3.internal.mongodb.SpringDataMongoV3DocumentWrapper;
+import io.flamingock.oss.driver.mongodb.springdata.internal.mongodb.SpringDataMongoV3DocumentWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

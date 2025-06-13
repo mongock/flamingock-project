@@ -1,4 +1,4 @@
-package io.flamingock.oss.driver.mongodb.springdata.v3.changes;
+package io.flamingock.oss.driver.mongodb.springdata.changes;
 
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;

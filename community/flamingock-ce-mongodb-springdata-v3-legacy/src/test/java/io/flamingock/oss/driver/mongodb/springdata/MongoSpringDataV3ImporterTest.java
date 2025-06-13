@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v3;
+package io.flamingock.oss.driver.mongodb.springdata;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -25,10 +25,10 @@ import io.flamingock.internal.core.builder.FlamingockFactory;
 import io.flamingock.internal.core.engine.audit.importer.changeunit.MongockImporterChangeUnit;
 import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.processor.util.Deserializer;
-import io.flamingock.oss.driver.mongodb.springdata.v3.changes._0_mongock_create_authors_collection;
-import io.flamingock.oss.driver.mongodb.springdata.v3.changes._1_create_client_collection_happy;
-import io.flamingock.oss.driver.mongodb.springdata.v3.changes._2_insert_federico_happy_non_transactional;
-import io.flamingock.oss.driver.mongodb.springdata.v3.changes._3_insert_jorge_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.changes._0_mongock_create_authors_collection;
+import io.flamingock.oss.driver.mongodb.springdata.changes._1_create_client_collection_happy;
+import io.flamingock.oss.driver.mongodb.springdata.changes._2_insert_federico_happy_non_transactional;
+import io.flamingock.oss.driver.mongodb.springdata.changes._3_insert_jorge_happy_non_transactional;
 import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import io.mongock.runner.standalone.MongockStandalone;
 import org.bson.Document;

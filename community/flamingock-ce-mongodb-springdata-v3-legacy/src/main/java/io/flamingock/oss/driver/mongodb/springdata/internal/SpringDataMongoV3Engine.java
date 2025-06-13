@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.springdata.v3.internal;
+package io.flamingock.oss.driver.mongodb.springdata.internal;
 
 import com.mongodb.ReadConcern;
 import com.mongodb.client.MongoCollection;
@@ -28,7 +28,7 @@ import io.flamingock.internal.core.engine.audit.importer.ImporterModule;
 import io.flamingock.internal.core.system.SystemModule;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
 import io.flamingock.importer.mongodb.sync.v4.MongoImporterReader;
-import io.flamingock.oss.driver.mongodb.springdata.v3.config.SpringDataMongoV3Configuration;
+import io.flamingock.oss.driver.mongodb.springdata.config.SpringDataMongoV3Configuration;
 import io.flamingock.oss.driver.mongodb.sync.v4.internal.ReadWriteConfiguration;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
