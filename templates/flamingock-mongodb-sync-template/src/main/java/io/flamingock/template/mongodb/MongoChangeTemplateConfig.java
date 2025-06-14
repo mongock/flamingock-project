@@ -22,8 +22,6 @@ import io.flamingock.core.api.annotations.NonLockGuardedType;
 import io.flamingock.core.api.template.ChangeTemplateConfig;
 import io.flamingock.template.mongodb.model.MongoOperation;
 
-import java.util.List;
-
 @NonLockGuarded(NonLockGuardedType.NONE)
 public class MongoChangeTemplateConfig  extends ChangeTemplateConfig<MongoOperation, MongoOperation> {
     private MongoOperation execution;

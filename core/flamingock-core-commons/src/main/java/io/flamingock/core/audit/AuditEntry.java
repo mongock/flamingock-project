@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.writer;
+package io.flamingock.core.audit;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
@@ -25,10 +25,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static io.flamingock.internal.core.engine.audit.writer.AuditEntry.Status.EXECUTED;
-import static io.flamingock.internal.core.engine.audit.writer.AuditEntry.Status.EXECUTION_FAILED;
-import static io.flamingock.internal.core.engine.audit.writer.AuditEntry.Status.ROLLBACK_FAILED;
-import static io.flamingock.internal.core.engine.audit.writer.AuditEntry.Status.ROLLED_BACK;
+import static io.flamingock.core.audit.AuditEntry.Status.EXECUTED;
+import static io.flamingock.core.audit.AuditEntry.Status.EXECUTION_FAILED;
+import static io.flamingock.core.audit.AuditEntry.Status.ROLLBACK_FAILED;
+import static io.flamingock.core.audit.AuditEntry.Status.ROLLED_BACK;
 
 public class AuditEntry {
 

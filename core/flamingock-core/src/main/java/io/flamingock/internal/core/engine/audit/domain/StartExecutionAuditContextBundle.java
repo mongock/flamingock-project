@@ -19,9 +19,9 @@ package io.flamingock.internal.core.engine.audit.domain;
 import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.task.TaskDescriptor;
 
-public class ExecutionAuditItem extends AuditItem{
+public class StartExecutionAuditContextBundle extends AuditContextBundle {
 
-    public ExecutionAuditItem(TaskDescriptor loadedTask, ExecutionContext executionContext, RuntimeContext runtimeContext) {
-        super(Operation.EXECUTION, loadedTask, executionContext, runtimeContext);
+    public StartExecutionAuditContextBundle(TaskDescriptor loadedTask, ExecutionContext executionContext, RuntimeContext runtimeContext) {
+        super(Operation.START_EXECUTION, loadedTask, executionContext, runtimeContext);
     }
 }

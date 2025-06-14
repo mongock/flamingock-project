@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.domain;
+package io.flamingock.internal.core.importer.model;
 
-import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
-import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.core.audit.AuditEntry;
 
-public class RollbackAuditItem extends AuditItem{
+public enum ChangeState {
+  EXECUTED, FAILED, ROLLED_BACK, ROLLBACK_FAILED, IGNORED;
 
-    public RollbackAuditItem(TaskDescriptor loadedTask, ExecutionContext executionContext, RuntimeContext runtimeContext) {
-        super(Operation.ROLLBACK, loadedTask, executionContext, runtimeContext);
+  public AuditEntry.Status toAuditStatus() {
+    switch (this) {
+      case FAILED: return AuditEntry.Status.EXECUTION_FAILED;
+      case ROLLED_BACK: return AuditEntry.Status.ROLLED_BACK;
+      case ROLLBACK_FAILED: return AuditEntry.Status.ROLLBACK_FAILED;
+      default: return AuditEntry.Status.EXECUTED;
     }
+  }
+
 }

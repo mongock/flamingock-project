@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.domain;
+package io.flamingock.internal.core.importer;
 
-import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
-import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.core.audit.AuditEntry;
 
-public class StartExecutionAuditItem extends AuditItem{
+import java.util.List;
 
-    public StartExecutionAuditItem(TaskDescriptor loadedTask, ExecutionContext executionContext, RuntimeContext runtimeContext) {
-        super(Operation.START_EXECUTION, loadedTask, executionContext, runtimeContext);
-    }
+public interface ImporterReader {
+
+    List<AuditEntry> getAuditEntries();
+
+    String getSourceDescription();
+
+    boolean isFromMongock();
+
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.importer.model;
+package io.flamingock.internal.core.importer.model;
 
 import java.util.Date;
 
 //TODO rename to MongockLegacyAuditEntry
-public class ChangeEntry {
+public class MongockChangeEntry {
 
     protected String executionId;
     protected String changeId;
@@ -39,20 +39,20 @@ public class ChangeEntry {
 //    public ChangeEntry() {
 //    }
 
-    public ChangeEntry(String executionId,
-                       String changeId,
-                       String author,
-                       Date timestamp,
-                       ChangeState state,
-                       ChangeType type,
-                       String changeLogClass,
-                       String changeSetMethod,
-                       Object metadata,
-                       long executionMillis,
-                       String executionHostname,
-                       String errorTrace,
-                       Boolean systemChange,
-                       Date originalTimestamp) {
+    public MongockChangeEntry(String executionId,
+                              String changeId,
+                              String author,
+                              Date timestamp,
+                              ChangeState state,
+                              ChangeType type,
+                              String changeLogClass,
+                              String changeSetMethod,
+                              Object metadata,
+                              long executionMillis,
+                              String executionHostname,
+                              String errorTrace,
+                              Boolean systemChange,
+                              Date originalTimestamp) {
         this.executionId = executionId;
         this.changeId = changeId;
         this.author = author;

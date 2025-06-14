@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.importer.model;
+package io.flamingock.internal.core.engine.audit.domain;
 
-import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
+import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
+import io.flamingock.core.task.TaskDescriptor;
 
-public enum ChangeType {
-  EXECUTION, BEFORE_EXECUTION;
+public class RollbackAuditContextBundle extends AuditContextBundle {
 
-  public AuditEntry.ExecutionType toAuditType() {
-    if (this == ChangeType.BEFORE_EXECUTION) {
-      return AuditEntry.ExecutionType.BEFORE_EXECUTION;
+    public RollbackAuditContextBundle(TaskDescriptor loadedTask, ExecutionContext executionContext, RuntimeContext runtimeContext) {
+        super(Operation.ROLLBACK, loadedTask, executionContext, runtimeContext);
     }
-    return AuditEntry.ExecutionType.EXECUTION;
-  }
 }

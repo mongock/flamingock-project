@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.importer;
+package io.flamingock.internal.core.importer.model;
 
-import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
+import io.flamingock.core.audit.AuditEntry;
 
-import java.util.List;
+public enum ChangeType {
+  EXECUTION, BEFORE_EXECUTION;
 
-public interface ImporterReader {
-
-    List<AuditEntry> getAuditEntries();
-
-    String getSourceDescription();
-
-    boolean isFromMongock();
-
+  public AuditEntry.ExecutionType toAuditType() {
+    if (this == ChangeType.BEFORE_EXECUTION) {
+      return AuditEntry.ExecutionType.BEFORE_EXECUTION;
+    }
+    return AuditEntry.ExecutionType.EXECUTION;
+  }
 }
