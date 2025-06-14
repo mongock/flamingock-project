@@ -30,7 +30,7 @@ plugins {
 
 allprojects {
     group = "io.flamingock"
-    version = "0.0.34-beta"
+    version = "0.0.35-beta"
 
     if (isLibraryModule()) {
         apply(plugin = "org.jetbrains.kotlin.jvm")
