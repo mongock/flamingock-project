@@ -34,7 +34,7 @@ import io.flamingock.internal.core.community.TransactionManager;
 import io.flamingock.internal.core.importer.ImporterModule;
 import io.flamingock.internal.core.system.SystemModule;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
-import io.flamingock.importer.mongodb.sync.v4.MongoImporterReader;
+import io.flamingock.importer.mongodb.MongoImporterReader;
 import org.bson.Document;
 
 import java.util.Collections;
