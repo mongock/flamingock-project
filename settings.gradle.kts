@@ -1,7 +1,6 @@
 rootProject.name = "flamingock-project"
 
 
-
 //////////////////////////////////////
 // CORE
 //////////////////////////////////////
@@ -52,7 +51,8 @@ project(":community:flamingock-ce-mongodb-sync").projectDir = file("community/fl
 
 include("community:flamingock-ce-mongodb-springdata-v3-legacy")
 project(":community:flamingock-ce-mongodb-springdata-v3-legacy").name = "flamingock-ce-mongodb-springdata-v3-legacy"
-project(":community:flamingock-ce-mongodb-springdata-v3-legacy").projectDir = file("community/flamingock-ce-mongodb-springdata-v3-legacy")
+project(":community:flamingock-ce-mongodb-springdata-v3-legacy").projectDir =
+    file("community/flamingock-ce-mongodb-springdata-v3-legacy")
 
 include("community:flamingock-ce-mongodb-springdata")
 project(":community:flamingock-ce-mongodb-springdata").name = "flamingock-ce-mongodb-springdata"
@@ -70,12 +70,15 @@ project(":community:flamingock-ce-dynamodb").projectDir = file("community/flamin
 // PLUGINS
 //////////////////////////////////////
 include("platform-plugins:flamingock-springboot-integration-v2-legacy")
-project(":platform-plugins:flamingock-springboot-integration-v2-legacy").name = "flamingock-springboot-integration-v2-legacy"
-project(":platform-plugins:flamingock-springboot-integration-v2-legacy").projectDir = file("platform-plugins/flamingock-springboot-integration-v2-legacy")
+project(":platform-plugins:flamingock-springboot-integration-v2-legacy").name =
+    "flamingock-springboot-integration-v2-legacy"
+project(":platform-plugins:flamingock-springboot-integration-v2-legacy").projectDir =
+    file("platform-plugins/flamingock-springboot-integration-v2-legacy")
 
 include("platform-plugins:flamingock-springboot-integration")
 project(":platform-plugins:flamingock-springboot-integration").name = "flamingock-springboot-integration"
-project(":platform-plugins:flamingock-springboot-integration").projectDir = file("platform-plugins/flamingock-springboot-integration")
+project(":platform-plugins:flamingock-springboot-integration").projectDir =
+    file("platform-plugins/flamingock-springboot-integration")
 
 //////////////////////////////////////
 // TRANSACTIONERS
@@ -92,7 +95,6 @@ project(":transactioners:mongodb-sync-transactioner").name = "mongodb-sync-trans
 include("transactioners:dynamodb-transactioner")
 project(":transactioners:dynamodb-transactioner").projectDir = file("transactioners/dynamodb-transactioner")
 project(":transactioners:dynamodb-transactioner").name = "dynamodb-transactioner"
-
 
 
 //////////////////////////////////////
@@ -139,3 +141,4 @@ project(":utils:mongodb-util").projectDir = file("utils/mongodb-util")
 include("utils:dynamodb-util")
 project(":utils:dynamodb-util").name = "dynamodb-util"
 project(":utils:dynamodb-util").projectDir = file("utils/dynamodb-util")
+include("core:flamingock-core-api")

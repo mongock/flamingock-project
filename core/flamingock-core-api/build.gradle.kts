@@ -1,6 +1,5 @@
 val jacksonVersion = "2.16.0"
 dependencies {
-    api(project(":core:flamingock-core-api"))
     implementation(project(":utils:general-util"))
     api("jakarta.annotation:jakarta.annotation-api:2.1.1")//todo can this be implementation?
 
