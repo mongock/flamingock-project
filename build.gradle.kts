@@ -43,7 +43,7 @@ allprojects {
 
 val coreProjects = setOf(
     "flamingock-core",
-    "flamingock-core-api",
+    "flamingock-core-commons",
     "flamingock-processor",
     "flamingock-graalvm"
 )

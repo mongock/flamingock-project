@@ -33,11 +33,11 @@ jobs:
       FLAMINGOCK_JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
       FLAMINGOCK_JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
 
-  flamingock-core-api:
+  flamingock-core-commons:
     needs: [ build ]
     uses: ./.github/workflows/module-release-graalvm.yml
     with:
-      module: flamingock-core-api
+      module: flamingock-core-commons
     secrets:
       FLAMINGOCK_JRELEASER_GITHUB_TOKEN: ${{ secrets.FLAMINGOCK_JRELEASER_GITHUB_TOKEN }}
       FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.FLAMINGOCK_JRELEASER_MAVENCENTRAL_USERNAME }}
@@ -349,7 +349,7 @@ jobs:
 #  run-examples-with-released-version:
 #    needs: [
 #      flamingock-core,
-#      flamingock-core-api,
+#      flamingock-core-commons,
 #      flamingock-processor,
 #      flamingock-graalvm,
 #      flamingock-cloud,
@@ -401,7 +401,7 @@ jobs:
       FLAMINGOCK_JRELEASER_GPG_SECRET_KEY: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_SECRET_KEY }}
       FLAMINGOCK_JRELEASER_GPG_PASSPHRASE: ${{ secrets.FLAMINGOCK_JRELEASER_GPG_PASSPHRASE }}
 #  test-examples:
-#    needs: [ flamingock-core,flamingock-core-api,flamingock-springboot-v2-integration,flamingock-springboot-v3-integration,utils,driver-common,couchbase-driver,couchbase-springboot-v2-driver,flamingock-ce-dynamodb,mongodb-util,flamingock-ce-mongodb-springdata-v2,flamingock-ce-mongodb-springdata-v3,flamingock-ce-mongodb-springdata-v4,flamingock-ce-mongodb-sync,flamingock-ce-mongodb-v3,flamingock-sql-template,sql-transactioner ]
+#    needs: [ flamingock-core,flamingock-core-commons,flamingock-springboot-v2-integration,flamingock-springboot-v3-integration,utils,driver-common,couchbase-driver,couchbase-springboot-v2-driver,flamingock-ce-dynamodb,mongodb-util,flamingock-ce-mongodb-springdata-v2,flamingock-ce-mongodb-springdata-v3,flamingock-ce-mongodb-springdata-v4,flamingock-ce-mongodb-sync,flamingock-ce-mongodb-v3,flamingock-sql-template,sql-transactioner ]
 #    run: |
 #        curl -X POST \
 #             -H "Accept: application/vnd.github+json" \

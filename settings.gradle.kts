@@ -18,9 +18,9 @@ project(":core:flamingock-graalvm").name = "flamingock-graalvm"
 project(":core:flamingock-graalvm").projectDir = file("core/flamingock-graalvm")
 
 
-include("core:flamingock-core-api")
-project(":core:flamingock-core-api").name = "flamingock-core-api"
-project(":core:flamingock-core-api").projectDir = file("core/flamingock-core-api")
+include("core:flamingock-core-commons")
+project(":core:flamingock-core-commons").name = "flamingock-core-commons"
+project(":core:flamingock-core-commons").projectDir = file("core/flamingock-core-commons")
 
 
 //////////////////////////////////////
