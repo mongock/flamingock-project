@@ -3,9 +3,9 @@ package io.flamingock.core.annotations;
 import io.flamingock.commons.utils.Result;
 import io.flamingock.internal.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.internal.core.engine.audit.AuditWriter;
-import io.flamingock.internal.core.engine.audit.domain.ExecutionAuditItem;
-import io.flamingock.internal.core.engine.audit.domain.RollbackAuditItem;
-import io.flamingock.internal.core.engine.audit.domain.StartExecutionAuditItem;
+import io.flamingock.internal.core.engine.audit.domain.ExecutionAuditContextBundle;
+import io.flamingock.internal.core.engine.audit.domain.RollbackAuditContextBundle;
+import io.flamingock.internal.core.engine.audit.domain.StartExecutionAuditContextBundle;
 import io.flamingock.internal.core.engine.lock.Lock;
 import io.flamingock.internal.core.task.executable.builder.ExecutableTaskBuilder;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
@@ -56,9 +56,9 @@ public class TestRunner {
     ) {
         checker.reset();
         AuditWriter auditWriterMock = mock(AuditWriter.class);
-        when(auditWriterMock.writeStartExecution(any(StartExecutionAuditItem.class))).thenReturn(Result.OK());
-        when(auditWriterMock.writeExecution(any(ExecutionAuditItem.class))).thenReturn(Result.OK());
-        when(auditWriterMock.writeRollback(any(RollbackAuditItem.class))).thenReturn(Result.OK());
+        when(auditWriterMock.writeStartExecution(any(StartExecutionAuditContextBundle.class))).thenReturn(Result.OK());
+        when(auditWriterMock.writeExecution(any(ExecutionAuditContextBundle.class))).thenReturn(Result.OK());
+        when(auditWriterMock.writeRollback(any(RollbackAuditContextBundle.class))).thenReturn(Result.OK());
 
         TaskSummarizer stepSummarizerMock = new TaskSummarizer("taskId");
         RuntimeManager runtimeManagerMock = RuntimeManager.builder()

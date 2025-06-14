@@ -23,7 +23,7 @@ import io.flamingock.internal.core.engine.audit.AuditWriter;
 import io.flamingock.internal.core.importer.model.MongockChangeEntry;
 import io.flamingock.internal.core.importer.model.ChangeState;
 import io.flamingock.internal.core.importer.model.ChangeType;
-import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
+import io.flamingock.internal.core.engine.audit.domain.AuditEntry;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 

@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.task.executable.builder;
 
-import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
+import io.flamingock.internal.core.engine.audit.domain.AuditEntry;
 import io.flamingock.internal.core.task.executable.ReflectionExecutableTask;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
 import io.flamingock.internal.core.task.loaded.LoadedTaskBuilder;

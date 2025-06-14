@@ -19,9 +19,9 @@ package io.flamingock.internal.core.engine.audit.domain;
 import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
 import io.flamingock.core.task.TaskDescriptor;
 
-public class RollbackAuditItem extends AuditItem{
+public class RollbackAuditContextBundle extends AuditContextBundle {
 
-    public RollbackAuditItem(TaskDescriptor loadedTask, ExecutionContext executionContext, RuntimeContext runtimeContext) {
+    public RollbackAuditContextBundle(TaskDescriptor loadedTask, ExecutionContext executionContext, RuntimeContext runtimeContext) {
         super(Operation.ROLLBACK, loadedTask, executionContext, runtimeContext);
     }
 }

@@ -25,7 +25,7 @@ import com.mongodb.client.MongoClients;
 import io.flamingock.commons.utils.Trio;
 import io.flamingock.internal.core.builder.FlamingockFactory;
 import io.flamingock.internal.core.importer.changeunit.MongockImporterChangeUnit;
-import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
+import io.flamingock.internal.core.engine.audit.domain.AuditEntry;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.oss.driver.mongodb.springdata.changes._0_mongock_create_authors_collection;
 import io.flamingock.oss.driver.mongodb.springdata.changes._1_create_client_collection_happy;

@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.importer.model;
 
-import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
+import io.flamingock.internal.core.engine.audit.domain.AuditEntry;
 
 public enum ChangeState {
   EXECUTED, FAILED, ROLLED_BACK, ROLLBACK_FAILED, IGNORED;

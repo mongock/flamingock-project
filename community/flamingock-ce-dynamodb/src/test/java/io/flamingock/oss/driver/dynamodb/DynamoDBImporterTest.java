@@ -25,7 +25,7 @@ import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
 import io.flamingock.commons.utils.Trio;
 import io.flamingock.internal.core.builder.FlamingockFactory;
-import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
+import io.flamingock.internal.core.engine.audit.domain.AuditEntry;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.oss.driver.dynamodb.changes._0_mongock_create_authors_collection;
 import io.flamingock.oss.driver.dynamodb.changes._1_create_client_collection_happy;
