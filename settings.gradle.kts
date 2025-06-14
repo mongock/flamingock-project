@@ -22,6 +22,12 @@ project(":core:flamingock-core-commons").name = "flamingock-core-commons"
 project(":core:flamingock-core-commons").projectDir = file("core/flamingock-core-commons")
 
 
+
+include("core:flamingock-core-api")
+project(":core:flamingock-core-api").name = "flamingock-core-api"
+project(":core:flamingock-core-api").projectDir = file("core/flamingock-core-api")
+
+
 //////////////////////////////////////
 // CLOUD
 //////////////////////////////////////
@@ -141,4 +147,3 @@ project(":utils:mongodb-util").projectDir = file("utils/mongodb-util")
 include("utils:dynamodb-util")
 project(":utils:dynamodb-util").name = "dynamodb-util"
 project(":utils:dynamodb-util").projectDir = file("utils/dynamodb-util")
-include("core:flamingock-core-api")
