@@ -2,9 +2,6 @@ plugins {
     id("java")
 }
 
-group = "io.flamingock"
-version = "0.0.31-beta"
-
 repositories {
     mavenCentral()
 }
