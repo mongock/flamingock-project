@@ -34,8 +34,6 @@ public abstract class AbstractLocalEngine implements LocalEngine {
 
     abstract protected void doInitialize(RunnerId runnerId);
 
-    abstract protected Optional<? extends SystemModule> getMongockLegacyImporterModule();
-
     public void initialize(RunnerId runnerId) {
         doInitialize(runnerId);
         validate();
@@ -47,8 +45,4 @@ public abstract class AbstractLocalEngine implements LocalEngine {
         }
     }
 
-    @Override
-    public void contributeToSystemModules(SystemModuleManager systemModuleManager) {
-        getMongockLegacyImporterModule().ifPresent(systemModuleManager::add);
-    }
 }

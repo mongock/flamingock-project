@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.importer.model;
+package io.flamingock.importer.model;
 
 import java.util.Date;
 

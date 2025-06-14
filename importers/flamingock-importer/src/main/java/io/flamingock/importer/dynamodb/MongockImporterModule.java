@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.dynamodb.internal.mongock;
+package io.flamingock.importer.dynamodb;
 
 import io.flamingock.internal.core.context.ContextInjectable;
 import io.flamingock.internal.core.context.ContextResolver;

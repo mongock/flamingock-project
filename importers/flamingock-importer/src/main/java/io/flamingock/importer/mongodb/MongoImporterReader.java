@@ -1,10 +1,10 @@
 package io.flamingock.importer.mongodb;
 
 import com.mongodb.client.MongoCollection;
-import io.flamingock.internal.core.importer.ImporterReader;
-import io.flamingock.internal.core.importer.model.MongockChangeEntry;
-import io.flamingock.internal.core.importer.model.ChangeState;
-import io.flamingock.internal.core.importer.model.ChangeType;
+import io.flamingock.importer.ImporterReader;
+import io.flamingock.importer.model.MongockChangeEntry;
+import io.flamingock.importer.model.ChangeState;
+import io.flamingock.importer.model.ChangeType;
 import io.flamingock.core.audit.AuditEntry;
 import org.bson.Document;
 

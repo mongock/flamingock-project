@@ -17,5 +17,6 @@
 package io.flamingock.internal.core.system;
 
 public interface SystemModuleContributor {
-    void contributeToSystemModules(SystemModuleManager systemModuleManager);
+    default void contributeToSystemModules(SystemModuleManager systemModuleManager) {
+    }
 }

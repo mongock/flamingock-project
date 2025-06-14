@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.importer.changeunit;
+package io.flamingock.importer.changeunit;
 
 
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.internal.core.engine.audit.AuditWriter;
-import io.flamingock.internal.core.importer.ImporterReader;
+import io.flamingock.importer.ImporterReader;
 import io.flamingock.internal.core.pipeline.PipelineDescriptor;
 
 /**

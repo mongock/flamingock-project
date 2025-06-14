@@ -94,8 +94,4 @@ public final class CloudEngineImpl implements CloudEngine {
         contextInjectable.setProperty(serviceId);
     }
 
-    @Override
-    public void contributeToSystemModules(SystemModuleManager systemModuleManager) {
-        //TODO it will need to inject the SystemModule for Mongock importer
-    }
 }

@@ -68,11 +68,6 @@ public class CouchbaseEngine extends AbstractLocalEngine {
     }
 
     @Override
-    protected Optional<SystemModule> getMongockLegacyImporterModule() {
-        return Optional.empty(); // TODO Implement
-    }
-
-    @Override
     public LocalExecutionPlanner getExecutionPlanner() {
         return executionPlanner;
     }

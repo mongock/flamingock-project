@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.dynamodb.internal.mongock;
+package io.flamingock.importer.dynamodb;
 
 import io.flamingock.core.api.annotations.NonLockGuarded;
 import io.flamingock.internal.core.engine.audit.AuditWriter;

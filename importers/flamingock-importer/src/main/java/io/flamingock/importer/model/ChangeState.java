@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.importer.model;
+package io.flamingock.importer.model;
 
 import io.flamingock.core.audit.AuditEntry;
 
-public enum ChangeType {
-  EXECUTION, BEFORE_EXECUTION;
+public enum ChangeState {
+  EXECUTED, FAILED, ROLLED_BACK, ROLLBACK_FAILED, IGNORED;
 
-  public AuditEntry.ExecutionType toAuditType() {
-    if (this == ChangeType.BEFORE_EXECUTION) {
-      return AuditEntry.ExecutionType.BEFORE_EXECUTION;
+  public AuditEntry.Status toAuditStatus() {
+    switch (this) {
+      case FAILED: return AuditEntry.Status.EXECUTION_FAILED;
+      case ROLLED_BACK: return AuditEntry.Status.ROLLED_BACK;
+      case ROLLBACK_FAILED: return AuditEntry.Status.ROLLBACK_FAILED;
+      default: return AuditEntry.Status.EXECUTED;
     }
-    return AuditEntry.ExecutionType.EXECUTION;
   }
+
 }
