@@ -20,7 +20,7 @@ package io.flamingock.oss.driver.dynamodb.internal.mongock;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.internal.core.engine.audit.AuditWriter;
-import io.flamingock.internal.core.importer.model.ChangeEntry;
+import io.flamingock.internal.core.importer.model.MongockChangeEntry;
 import io.flamingock.internal.core.importer.model.ChangeState;
 import io.flamingock.internal.core.importer.model.ChangeType;
 import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
@@ -38,10 +38,10 @@ import java.util.stream.Collectors;
 public class MongockImporterChangeUnit {
 
 
-    private static ChangeEntry toChangeEntry(ChangeEntryDynamoDB changeEntryDynamoDB) {
+    private static MongockChangeEntry toChangeEntry(ChangeEntryDynamoDB changeEntryDynamoDB) {
         Date timestamp = Date.from(Instant.ofEpochMilli(changeEntryDynamoDB.getTimestamp()));
 
-        return new ChangeEntry(
+        return new MongockChangeEntry(
                 changeEntryDynamoDB.getExecutionId(),
                 changeEntryDynamoDB.getChangeId(),
                 changeEntryDynamoDB.getAuthor(),
@@ -59,7 +59,7 @@ public class MongockImporterChangeUnit {
         );
     }
 
-    private static AuditEntry toAuditEntry(ChangeEntry changeEntry) {
+    private static AuditEntry toAuditEntry(MongockChangeEntry changeEntry) {
         LocalDateTime timestamp = Instant.ofEpochMilli(changeEntry.getTimestamp().getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
