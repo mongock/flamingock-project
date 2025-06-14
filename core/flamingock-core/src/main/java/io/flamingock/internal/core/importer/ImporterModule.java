@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.importer;
+package io.flamingock.internal.core.importer;
 
 import io.flamingock.internal.core.context.ContextInjectable;
 import io.flamingock.internal.core.context.ContextResolver;
 import io.flamingock.internal.core.engine.audit.AuditWriter;
-import io.flamingock.internal.core.engine.audit.importer.changeunit.FlamingockLocalImporterChangeUnit;
-import io.flamingock.internal.core.engine.audit.importer.changeunit.MongockImporterChangeUnit;
+import io.flamingock.internal.core.importer.changeunit.FlamingockLocalImporterChangeUnit;
+import io.flamingock.internal.core.importer.changeunit.MongockImporterChangeUnit;
 import io.flamingock.internal.core.pipeline.PipelineDescriptor;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
 import io.flamingock.core.preview.PreviewMethod;

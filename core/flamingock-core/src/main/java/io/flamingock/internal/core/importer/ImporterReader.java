@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.importer.model;
+package io.flamingock.internal.core.importer;
 
 import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
 
-public enum ChangeState {
-  EXECUTED, FAILED, ROLLED_BACK, ROLLBACK_FAILED, IGNORED;
+import java.util.List;
 
-  public AuditEntry.Status toAuditStatus() {
-    switch (this) {
-      case FAILED: return AuditEntry.Status.EXECUTION_FAILED;
-      case ROLLED_BACK: return AuditEntry.Status.ROLLED_BACK;
-      case ROLLBACK_FAILED: return AuditEntry.Status.ROLLBACK_FAILED;
-      default: return AuditEntry.Status.EXECUTED;
-    }
-  }
+public interface ImporterReader {
+
+    List<AuditEntry> getAuditEntries();
+
+    String getSourceDescription();
+
+    boolean isFromMongock();
 
 }

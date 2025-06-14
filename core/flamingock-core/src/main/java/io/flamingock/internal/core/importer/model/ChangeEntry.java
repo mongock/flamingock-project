@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit.importer.model;
+package io.flamingock.internal.core.importer.model;
 
 import java.util.Date;
 

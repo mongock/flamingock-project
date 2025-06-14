@@ -23,7 +23,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.commons.utils.Trio;
 import io.flamingock.internal.core.builder.FlamingockFactory;
-import io.flamingock.internal.core.engine.audit.importer.changeunit.MongockImporterChangeUnit;
+import io.flamingock.internal.core.importer.changeunit.MongockImporterChangeUnit;
 import io.flamingock.internal.core.engine.audit.writer.AuditEntry;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.oss.driver.mongodb.sync.v4.changes._0_mongock_create_authors_collection;
