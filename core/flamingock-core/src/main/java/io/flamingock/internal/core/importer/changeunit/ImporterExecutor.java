@@ -19,7 +19,7 @@ package io.flamingock.internal.core.importer.changeunit;
 
 import io.flamingock.internal.core.engine.audit.AuditWriter;
 import io.flamingock.internal.core.importer.ImporterReader;
-import io.flamingock.internal.core.engine.audit.domain.AuditEntry;
+import io.flamingock.core.audit.AuditEntry;
 import io.flamingock.internal.core.pipeline.PipelineDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.importer.model;
 
-import io.flamingock.internal.core.engine.audit.domain.AuditEntry;
+import io.flamingock.core.audit.AuditEntry;
 
 public enum ChangeType {
   EXECUTION, BEFORE_EXECUTION;

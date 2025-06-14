@@ -16,6 +16,8 @@
 
 package io.flamingock.internal.core.engine.audit.domain;
 
+import io.flamingock.core.audit.AuditEntry;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;

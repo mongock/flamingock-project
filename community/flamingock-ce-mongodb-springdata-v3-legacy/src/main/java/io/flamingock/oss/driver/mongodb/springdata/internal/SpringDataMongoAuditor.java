@@ -22,7 +22,7 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import io.flamingock.commons.utils.Result;
 import io.flamingock.internal.core.community.LocalAuditor;
-import io.flamingock.internal.core.engine.audit.domain.AuditEntry;
+import io.flamingock.core.audit.AuditEntry;
 import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
