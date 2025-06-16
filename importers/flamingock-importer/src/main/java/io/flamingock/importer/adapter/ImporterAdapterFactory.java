@@ -37,7 +37,7 @@ public class ImporterAdapterFactory {
         } else if (isCouchbaseAdapter()) {
             className = COUCHBASE_ADAPTER_CLASS;
         } else {
-            throw new FlamingockException("Compatible importer adapter not found. You must import your importing origin native library(MongoDB, DynamoDB or Couchbase");
+            throw new FlamingockException("No compatible database driver detected. Please include a supported database dependency (MongoDB, DynamoDB, or Couchbase) in your project classpath.");
         }
         return className;
     }
