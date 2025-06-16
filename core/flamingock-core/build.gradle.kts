@@ -1,7 +1,7 @@
 val jacksonVersion = "2.16.0"
 
 dependencies {
-    api(project(":core:flamingock-core-api"))
+    api(project(":core:flamingock-core-commons"))
     api(project(":core:flamingock-processor"))
     api(project(":utils:general-util"))
     api("javax.inject:javax.inject:1")

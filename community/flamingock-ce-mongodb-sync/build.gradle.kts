@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.utils.extendsFrom
 
 dependencies {
     implementation(project(":utils:mongodb-util"))
-    implementation(project(":importers:mongodb-importer-sync-v4"))
+    implementation(project(":importers:flamingock-mongodb-sync-importer"))
 
     implementation(project(":core:flamingock-core"))
 
@@ -26,6 +26,6 @@ java {
     }
 }
 
-configurations {
-    testImplementation.extendsFrom(compileOnly)
+configurations.testImplementation {
+    extendsFrom(configurations.compileOnly.get())
 }
