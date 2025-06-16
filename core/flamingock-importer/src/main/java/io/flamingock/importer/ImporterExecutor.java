@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package io.flamingock.importer.changeunit;
+package io.flamingock.importer;
 
 
 import io.flamingock.core.audit.AuditWriter;
-import io.flamingock.importer.ImporterAdapter;
 import io.flamingock.core.audit.AuditEntry;
 import io.flamingock.core.pipeline.PipelineDescriptor;
 import org.slf4j.Logger;

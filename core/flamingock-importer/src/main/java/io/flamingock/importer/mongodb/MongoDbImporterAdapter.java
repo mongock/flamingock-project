@@ -1,10 +1,10 @@
-package io.flamingock.importer.adapter.mongodb;
+package io.flamingock.importer.mongodb;
 
 import com.mongodb.client.MongoCollection;
 import io.flamingock.importer.ImporterAdapter;
 import io.flamingock.importer.model.MongockChangeEntry;
-import io.flamingock.importer.model.ChangeState;
-import io.flamingock.importer.model.ChangeType;
+import io.flamingock.importer.model.MongockChangeState;
+import io.flamingock.importer.model.MongockChangeType;
 import io.flamingock.core.audit.AuditEntry;
 import org.bson.Document;
 
@@ -41,7 +41,7 @@ public class MongoDbImporterAdapter implements ImporterAdapter {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
 
-        if (changeEntry.getState() == ChangeState.IGNORED) {
+        if (changeEntry.getState() == MongockChangeState.IGNORED) {
             return null;
         }
         return new AuditEntry(
@@ -69,8 +69,8 @@ public class MongoDbImporterAdapter implements ImporterAdapter {
                 document.getString("changeId"),
                 document.getString("author"),
                 timestamp,
-                ChangeState.valueOf(document.getString("state")),
-                ChangeType.valueOf(document.getString("type")),
+                MongockChangeState.valueOf(document.getString("state")),
+                MongockChangeType.valueOf(document.getString("type")),
                 document.getString("changeLogClass"),
                 document.getString("changeSetMethod"),
                 document.get("metadata"),

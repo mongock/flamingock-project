@@ -14,36 +14,39 @@
  * limitations under the License.
  */
 
-package io.flamingock.importer.changeunit;
+package io.flamingock.importer.mongodb;
 
-
-import io.flamingock.core.api.annotations.ChangeUnit;
+import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.NonLockGuarded;
+import io.flamingock.core.api.annotations.Nullable;
+import io.flamingock.core.api.annotations.RollbackExecution;
+import io.flamingock.core.api.template.AbstractChangeTemplate;
 import io.flamingock.core.audit.AuditWriter;
-import io.flamingock.importer.ImporterAdapter;
 import io.flamingock.core.pipeline.PipelineDescriptor;
-import io.flamingock.importer.ImporterExecutor;
+import io.flamingock.importer.ImporterTemplateConfiguration;
 
-/**
- * This changeUnit imports the Mongock data in the database to Flamingock(local or cloud).
- * Although we could have just one ChangeUnit for importing
- * - Mongock            to Flamingock-ce
- * - Mongock            to Flamingock Cloud
- * - Flamingock-ce      to Flamingock Cloud
- * We need to differentiate it, as we can have two steps(Mongock to Flamingock local to Flamingock Cloud)
- */
-@ChangeUnit(id = FlamingockLocalImporterChangeUnit.IMPORTER_FROM_FLAMINGOCK_LOCAL, order = "002")
-public class FlamingockLocalImporterChangeUnit {
-    public static final String IMPORTER_FROM_FLAMINGOCK_LOCAL = "importer-from-flamingock-local";
+import java.sql.Connection;
 
-    @Execution
-    public void execution(@NonLockGuarded ImporterAdapter importerReader,
-                          @NonLockGuarded AuditWriter auditWriter,
-                          @NonLockGuarded PipelineDescriptor pipelineDescriptor) {
-        ImporterExecutor.runImport(importerReader, auditWriter, pipelineDescriptor);
+public class MongoDbImporterChangeTemplate extends AbstractChangeTemplate<ImporterTemplateConfiguration> {
 
+    public MongoDbImporterChangeTemplate() {
+        super(ImporterTemplateConfiguration.class);
     }
 
+    @Execution
+    public void execution(MongoDatabase db,
+                          @Nullable ClientSession clientSession,
+                          @NonLockGuarded AuditWriter auditWriter,
+                          @NonLockGuarded PipelineDescriptor pipelineDescriptor) {
+        String origin = configuration.getExecution().getOrigin();
+//        execute(connection, configuration.getExecution());
+    }
+
+    @RollbackExecution
+    public void rollback(Connection connection) {
+//        execute(connection, configuration.getRollback());
+    }
 
 }

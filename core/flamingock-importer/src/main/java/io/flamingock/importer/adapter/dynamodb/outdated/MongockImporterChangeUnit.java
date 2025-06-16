@@ -21,8 +21,8 @@ import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.importer.model.MongockChangeEntry;
-import io.flamingock.importer.model.ChangeState;
-import io.flamingock.importer.model.ChangeType;
+import io.flamingock.importer.model.MongockChangeState;
+import io.flamingock.importer.model.MongockChangeType;
 import io.flamingock.core.audit.AuditEntry;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
@@ -46,8 +46,8 @@ public class MongockImporterChangeUnit {
                 changeEntryDynamoDB.getChangeId(),
                 changeEntryDynamoDB.getAuthor(),
                 timestamp,
-                ChangeState.valueOf(changeEntryDynamoDB.getState()),
-                ChangeType.valueOf(changeEntryDynamoDB.getType()),
+                MongockChangeState.valueOf(changeEntryDynamoDB.getState()),
+                MongockChangeType.valueOf(changeEntryDynamoDB.getType()),
                 changeEntryDynamoDB.getChangeLogClass(),
                 changeEntryDynamoDB.getChangeSetMethod(),
                 changeEntryDynamoDB.getMetadata(),
@@ -64,7 +64,7 @@ public class MongockImporterChangeUnit {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
 
-        if (changeEntry.getState() == ChangeState.IGNORED) {
+        if (changeEntry.getState() == MongockChangeState.IGNORED) {
             return null;
         }
         return new AuditEntry(

@@ -25,8 +25,8 @@ public class MongockChangeEntry {
     protected String changeId;
     protected String author;
     protected Date timestamp;
-    protected ChangeState state;
-    protected ChangeType type;
+    protected MongockChangeState state;
+    protected MongockChangeType type;
     protected String changeLogClass;
     protected String changeSetMethod;
     protected Object metadata;
@@ -43,8 +43,8 @@ public class MongockChangeEntry {
                               String changeId,
                               String author,
                               Date timestamp,
-                              ChangeState state,
-                              ChangeType type,
+                              MongockChangeState state,
+                              MongockChangeType type,
                               String changeLogClass,
                               String changeSetMethod,
                               Object metadata,
@@ -101,19 +101,19 @@ public class MongockChangeEntry {
         this.timestamp = timestamp;
     }
 
-    public ChangeState getState() {
+    public MongockChangeState getState() {
         return state;
     }
 
-    public void setState(ChangeState state) {
+    public void setState(MongockChangeState state) {
         this.state = state;
     }
 
-    public ChangeType getType() {
+    public MongockChangeType getType() {
         return type;
     }
 
-    public void setType(ChangeType type) {
+    public void setType(MongockChangeType type) {
         this.type = type;
     }
 

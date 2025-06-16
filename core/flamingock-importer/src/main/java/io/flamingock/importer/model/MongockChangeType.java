@@ -18,11 +18,11 @@ package io.flamingock.importer.model;
 
 import io.flamingock.core.audit.AuditEntry;
 
-public enum ChangeType {
+public enum MongockChangeType {
   EXECUTION, BEFORE_EXECUTION;
 
   public AuditEntry.ExecutionType toAuditType() {
-    if (this == ChangeType.BEFORE_EXECUTION) {
+    if (this == MongockChangeType.BEFORE_EXECUTION) {
       return AuditEntry.ExecutionType.BEFORE_EXECUTION;
     }
     return AuditEntry.ExecutionType.EXECUTION;
