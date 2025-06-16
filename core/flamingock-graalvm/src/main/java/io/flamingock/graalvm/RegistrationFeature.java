@@ -4,6 +4,8 @@ import io.flamingock.core.api.template.AbstractChangeTemplate;
 import io.flamingock.core.api.template.ChangeTemplate;
 import io.flamingock.core.api.template.ChangeTemplateConfig;
 import io.flamingock.core.api.template.TemplateFactory;
+import io.flamingock.importer.ImporterAdapter;
+import io.flamingock.importer.adapter.ImporterAdapterFactory;
 import io.flamingock.internal.core.pipeline.LoadedStage;
 import io.flamingock.internal.core.pipeline.Pipeline;
 import io.flamingock.core.preview.PreviewMethod;
@@ -64,26 +66,22 @@ public class RegistrationFeature implements Feature {
         registerClass(CodeLoadedChangeUnit.class.getName());
         registerClass(TemplateLoadedChangeUnit.class.getName());
 
+        //Importer adapter
+        registerClass(ImporterAdapterFactory.getImporterAdapter().getClass());
+
         //others
         registerClass(CoderResult.class.getName());
 
+
         logger.completedRegistration("internal classes");
     }
+
 
     private static void registerUserClasses() {
         logger.startRegistration("user classes");
         List<String> classesToRegister = FileUtil.getClassesForRegistration();
         classesToRegister.forEach(RegistrationFeature::registerClass);
         logger.completedRegistration("user classes");
-    }
-
-    private static void registerClass(String className) {
-        try {
-            registerClass(Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
     private void registerTemplates() {
@@ -116,6 +114,13 @@ public class RegistrationFeature implements Feature {
         logger.completedRegistration("system modules");
     }
 
+    private static void registerClass(String className) {
+        try {
+            registerClass(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static void registerClass(Class<?> clazz) {
         logger.initClassRegistration(clazz);

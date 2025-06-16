@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ImporterAdapterFactory {
+public final class ImporterAdapterFactory {
 
     private static final Logger logger = LoggerFactory.getLogger("ImporterAdapterFactory");
 
@@ -14,7 +14,9 @@ public class ImporterAdapterFactory {
     private static final String DYNAMO_ADAPTER_CLASS = "io.flamingock.importer.adapter.dynamodb.DynamoDbImporterAdapter";
     private static final String COUCHBASE_ADAPTER_CLASS = "io.flamingock.importer.adapter.couchbase.CouchbaseImporterAdapter";
 
-    public ImporterAdapter getImporterAdapter() {
+    private ImporterAdapterFactory() {}
+
+    public static ImporterAdapter getImporterAdapter() {
         String className = getClassName();
         try {
             Class<?> adapterClass = Class.forName(className);
