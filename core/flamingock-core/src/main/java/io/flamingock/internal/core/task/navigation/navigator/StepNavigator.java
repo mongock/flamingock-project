@@ -18,7 +18,7 @@ package io.flamingock.internal.core.task.navigation.navigator;
 
 import io.flamingock.commons.utils.Result;
 import io.flamingock.internal.core.cloud.transaction.OngoingStatusRepository;
-import io.flamingock.internal.core.engine.audit.AuditWriter;
+import io.flamingock.internal.core.engine.audit.ExecutionAuditWriter;
 import io.flamingock.internal.core.engine.audit.domain.ExecutionAuditContextBundle;
 import io.flamingock.internal.core.engine.audit.domain.RollbackAuditContextBundle;
 import io.flamingock.internal.core.engine.audit.domain.RuntimeContext;
@@ -27,7 +27,7 @@ import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
 import io.flamingock.internal.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.internal.core.pipeline.execution.TaskSummary;
 import io.flamingock.internal.core.runtime.RuntimeManager;
-import io.flamingock.internal.core.context.DependencyInjectable;
+import io.flamingock.core.context.DependencyInjectable;
 import io.flamingock.internal.core.task.executable.ExecutableTask;
 import io.flamingock.internal.core.task.navigation.step.ExecutableStep;
 import io.flamingock.internal.core.task.navigation.step.RollableFailedStep;
@@ -62,13 +62,13 @@ public class StepNavigator {
 
     private TaskSummarizer summarizer;
 
-    private AuditWriter auditWriter;
+    private ExecutionAuditWriter auditWriter;
 
     private RuntimeManager runtimeManager;
 
     private TransactionWrapper transactionWrapper;
 
-    public StepNavigator(AuditWriter auditWriter,
+    public StepNavigator(ExecutionAuditWriter auditWriter,
                          TaskSummarizer summarizer,
                          RuntimeManager runtimeManager,
                          TransactionWrapper transactionWrapper,
@@ -90,7 +90,7 @@ public class StepNavigator {
         this.summarizer = summarizer;
     }
 
-    void setAuditWriter(AuditWriter auditWriter) {
+    void setAuditWriter(ExecutionAuditWriter auditWriter) {
         this.auditWriter = auditWriter;
     }
 

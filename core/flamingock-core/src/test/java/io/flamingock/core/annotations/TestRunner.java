@@ -2,7 +2,7 @@ package io.flamingock.core.annotations;
 
 import io.flamingock.commons.utils.Result;
 import io.flamingock.internal.core.cloud.transaction.CloudTransactioner;
-import io.flamingock.internal.core.engine.audit.AuditWriter;
+import io.flamingock.internal.core.engine.audit.ExecutionAuditWriter;
 import io.flamingock.internal.core.engine.audit.domain.ExecutionAuditContextBundle;
 import io.flamingock.internal.core.engine.audit.domain.RollbackAuditContextBundle;
 import io.flamingock.internal.core.engine.audit.domain.StartExecutionAuditContextBundle;
@@ -16,7 +16,7 @@ import io.flamingock.core.utils.TestTaskExecution;
 import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
 import io.flamingock.internal.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.internal.core.runtime.RuntimeManager;
-import io.flamingock.internal.core.context.Context;
+import io.flamingock.core.context.Context;
 import io.flamingock.internal.core.task.executable.ExecutableTask;
 import io.flamingock.internal.core.task.navigation.navigator.StepNavigator;
 import org.junit.jupiter.api.Assertions;
@@ -55,7 +55,7 @@ public class TestRunner {
                         TestTaskExecution... executionSteps
     ) {
         checker.reset();
-        AuditWriter auditWriterMock = mock(AuditWriter.class);
+        ExecutionAuditWriter auditWriterMock = mock(ExecutionAuditWriter.class);
         when(auditWriterMock.writeStartExecution(any(StartExecutionAuditContextBundle.class))).thenReturn(Result.OK());
         when(auditWriterMock.writeExecution(any(ExecutionAuditContextBundle.class))).thenReturn(Result.OK());
         when(auditWriterMock.writeRollback(any(RollbackAuditContextBundle.class))).thenReturn(Result.OK());

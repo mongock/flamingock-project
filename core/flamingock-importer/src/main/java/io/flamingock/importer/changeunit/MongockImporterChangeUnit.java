@@ -20,9 +20,9 @@ package io.flamingock.importer.changeunit;
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.NonLockGuarded;
-import io.flamingock.internal.core.engine.audit.AuditWriter;
+import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.importer.ImporterAdapter;
-import io.flamingock.internal.core.pipeline.PipelineDescriptor;
+import io.flamingock.core.pipeline.PipelineDescriptor;
 
 /**
  * This changeUnit imports the Mongock data in the database to Flamingock(local or cloud).

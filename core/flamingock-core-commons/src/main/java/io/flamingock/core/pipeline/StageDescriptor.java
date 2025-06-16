@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.system;
+package io.flamingock.core.pipeline;
 
-public interface SystemModuleContributor {
-    default void contributeToSystemModules(SystemModuleManager systemModuleManager) {
-    }
+import io.flamingock.core.task.TaskDescriptor;
+
+import java.util.Collection;
+
+public interface StageDescriptor {
+
+    String getName();
+
+    Collection<TaskDescriptor> getLoadedTasks();
 }

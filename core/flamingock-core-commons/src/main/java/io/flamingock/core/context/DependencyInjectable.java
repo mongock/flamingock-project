@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.context;
-
-import io.flamingock.core.context.Dependency;
+package io.flamingock.core.context;
 
 import java.util.Collection;
 

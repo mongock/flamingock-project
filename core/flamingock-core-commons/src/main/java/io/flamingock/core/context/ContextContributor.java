@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.context;
+package io.flamingock.core.context;
 
-/**
- * A composite interface that combines {@link ContextResolver} (for resolving dependencies)
- * and {@link DependencyInjectable} (for injecting dependencies).
- * <p>
- * Implementations are both capable of providing and accepting dependencies at runtime.
- */
-public interface Context extends ContextResolver, ContextInjectable {
+public interface ContextContributor {
+    void contributeToContext(ContextInjectable contextInjectable);
 }

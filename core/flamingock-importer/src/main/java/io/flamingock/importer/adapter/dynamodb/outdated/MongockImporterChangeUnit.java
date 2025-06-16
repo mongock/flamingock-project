@@ -19,7 +19,7 @@ package io.flamingock.importer.adapter.dynamodb.outdated;
 
 import io.flamingock.core.api.annotations.ChangeUnit;
 import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.internal.core.engine.audit.AuditWriter;
+import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.importer.model.MongockChangeEntry;
 import io.flamingock.importer.model.ChangeState;
 import io.flamingock.importer.model.ChangeType;

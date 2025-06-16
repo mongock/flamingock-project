@@ -17,10 +17,10 @@
 package io.flamingock.importer.changeunit;
 
 
-import io.flamingock.internal.core.engine.audit.AuditWriter;
+import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.importer.ImporterAdapter;
 import io.flamingock.core.audit.AuditEntry;
-import io.flamingock.internal.core.pipeline.PipelineDescriptor;
+import io.flamingock.core.pipeline.PipelineDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

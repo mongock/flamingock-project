@@ -14,31 +14,9 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.system;
+package io.flamingock.core.system;
 
-
-import io.flamingock.internal.core.context.ContextContributor;
-import io.flamingock.internal.core.context.ContextInitializable;
-import io.flamingock.core.preview.PreviewStage;
-
-public interface SystemModule extends Comparable<SystemModule>, ContextInitializable, ContextContributor {
-
-    PreviewStage getStage();
-
-    /**
-     * Modules order
-     */
-    int getOrder();
-
-    /**
-     * Indicates if this should
-     */
-    boolean isBeforeUserStages();
-
-    @Override
-    default int compareTo(SystemModule o) {
-        return Integer.compare(this.getOrder(), o.getOrder());
+public interface SystemModuleContributor {
+    default void contributeToSystemModules(SystemModuleManager systemModuleManager) {
     }
-
-
 }

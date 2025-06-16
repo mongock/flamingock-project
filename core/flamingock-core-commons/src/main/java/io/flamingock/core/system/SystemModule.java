@@ -14,16 +14,31 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.context;
+package io.flamingock.core.system;
 
-import io.flamingock.core.context.Dependency;
 
-/**
- * Represents a container for runtime dependencies.
- * Allows retrieval of registered {@link Dependency} instances by type or name.
- * <p>
- * Also provides typed access to the instance values directly via {@code getDependencyValue}.
- */
-public interface ContextResolver extends DependencyResolver, PropertyResolver {
+import io.flamingock.core.context.ContextContributor;
+import io.flamingock.core.context.ContextInitializable;
+import io.flamingock.core.preview.PreviewStage;
+
+public interface SystemModule extends Comparable<SystemModule>, ContextInitializable, ContextContributor {
+
+    PreviewStage getStage();
+
+    /**
+     * Modules order
+     */
+    int getOrder();
+
+    /**
+     * Indicates if this should
+     */
+    boolean isBeforeUserStages();
+
+    @Override
+    default int compareTo(SystemModule o) {
+        return Integer.compare(this.getOrder(), o.getOrder());
+    }
+
 
 }

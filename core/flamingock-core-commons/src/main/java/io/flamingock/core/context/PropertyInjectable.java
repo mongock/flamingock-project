@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.context;
+package io.flamingock.core.context;
 
 import io.flamingock.commons.utils.Property;
 

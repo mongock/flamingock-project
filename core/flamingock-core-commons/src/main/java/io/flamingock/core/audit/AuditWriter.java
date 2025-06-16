@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.engine.audit;
+package io.flamingock.core.audit;
 
-import io.flamingock.internal.core.engine.audit.domain.ExecutionAuditContextBundle;
-import io.flamingock.internal.core.engine.audit.domain.RollbackAuditContextBundle;
-import io.flamingock.internal.core.engine.audit.domain.StartExecutionAuditContextBundle;
-import io.flamingock.core.audit.AuditEntry;
 import io.flamingock.commons.utils.Result;
 
 /**
@@ -30,12 +26,6 @@ import io.flamingock.commons.utils.Result;
  * to the developer implementing this abstract class.
  */
 public interface AuditWriter {
-
-    Result writeStartExecution(StartExecutionAuditContextBundle auditContextBundle);
-
-    Result writeExecution(ExecutionAuditContextBundle auditContextBundle);
-
-    Result writeRollback(RollbackAuditContextBundle auditContextBundle);
 
     Result writeEntry(AuditEntry auditEntry);
 

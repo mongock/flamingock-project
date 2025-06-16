@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.system;
+package io.flamingock.core.system;
 
-import io.flamingock.internal.core.context.ContextContributor;
-import io.flamingock.internal.core.context.ContextInitializable;
-import io.flamingock.internal.core.context.ContextResolver;
+import io.flamingock.core.context.ContextContributor;
+import io.flamingock.core.context.ContextInitializable;
+import io.flamingock.core.context.ContextResolver;
 import io.flamingock.core.preview.PreviewStage;
 
 import java.util.ArrayList;

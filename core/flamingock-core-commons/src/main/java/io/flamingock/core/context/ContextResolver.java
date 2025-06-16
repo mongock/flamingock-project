@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.pipeline;
+package io.flamingock.core.context;
 
-import io.flamingock.internal.core.context.ContextContributor;
-import io.flamingock.core.task.TaskDescriptor;
+/**
+ * Represents a container for runtime dependencies.
+ * Allows retrieval of registered {@link Dependency} instances by type or name.
+ * <p>
+ * Also provides typed access to the instance values directly via {@code getDependencyValue}.
+ */
+public interface ContextResolver extends DependencyResolver, PropertyResolver {
 
-import java.util.Optional;
-
-public interface PipelineDescriptor extends ContextContributor {
-
-    Optional<? extends TaskDescriptor> getLoadedTask(String taskId);
-
-    Optional<String> getStageByTask(String taskId);
 }

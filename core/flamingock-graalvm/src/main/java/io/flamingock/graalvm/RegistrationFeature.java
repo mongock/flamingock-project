@@ -9,7 +9,7 @@ import io.flamingock.internal.core.pipeline.Pipeline;
 import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
-import io.flamingock.internal.core.system.SystemModule;
+import io.flamingock.core.system.SystemModule;
 import io.flamingock.core.task.AbstractTaskDescriptor;
 import io.flamingock.core.task.TaskDescriptor;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedChangeUnit;
