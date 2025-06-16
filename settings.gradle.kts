@@ -122,9 +122,9 @@ project(":templates:flamingock-mongodb-sync-template").projectDir = file("templa
 //////////////////////////////////////
 // INTERNAL
 //////////////////////////////////////
-include("importers:flamingock-importer")
-project(":importers:flamingock-importer").name = "flamingock-importer"
-project(":importers:flamingock-importer").projectDir = file("importers/flamingock-importer")
+include("core:flamingock-importer")
+project(":core:flamingock-importer").name = "flamingock-importer"
+project(":core:flamingock-importer").projectDir = file("core/flamingock-importer")
 
 
 //////////////////////////////////////

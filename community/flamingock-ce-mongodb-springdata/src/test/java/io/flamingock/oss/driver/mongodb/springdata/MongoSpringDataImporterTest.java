@@ -18,44 +18,44 @@ package io.flamingock.oss.driver.mongodb.springdata;
 
 
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import io.flamingock.commons.utils.Trio;
-import io.flamingock.internal.core.builder.FlamingockFactory;
-import io.flamingock.importer.changeunit.MongockImporterChangeUnit;
-import io.flamingock.core.audit.AuditEntry;
-import io.flamingock.core.processor.util.Deserializer;
-import io.flamingock.oss.driver.mongodb.springdata.changes._0_mongock_create_authors_collection;
-import io.flamingock.oss.driver.mongodb.springdata.changes._1_create_client_collection_happy;
-import io.flamingock.oss.driver.mongodb.springdata.changes._2_insert_federico_happy_non_transactional;
-import io.flamingock.oss.driver.mongodb.springdata.changes._3_insert_jorge_happy_non_transactional;
-import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
-import io.mongock.runner.standalone.MongockStandalone;
-import org.bson.Document;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static io.flamingock.commons.utils.Constants.DEFAULT_MIGRATION_AUTHOR;
-import static io.flamingock.internal.core.builder.core.CoreConfiguration.ImporterConfiguration.withSource;
-import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_LOCK_REPOSITORY_NAME;
-import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_AUDIT_REPOSITORY_NAME;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+//import com.mongodb.ConnectionString;
+//import com.mongodb.MongoClientSettings;
+//import com.mongodb.client.MongoClient;
+//import com.mongodb.client.MongoClients;
+//import io.flamingock.commons.utils.Trio;
+//import io.flamingock.internal.core.builder.FlamingockFactory;
+//import io.flamingock.importer.changeunit.MongockImporterChangeUnit;
+//import io.flamingock.core.audit.AuditEntry;
+//import io.flamingock.core.processor.util.Deserializer;
+//import io.flamingock.oss.driver.mongodb.springdata.changes._0_mongock_create_authors_collection;
+//import io.flamingock.oss.driver.mongodb.springdata.changes._1_create_client_collection_happy;
+//import io.flamingock.oss.driver.mongodb.springdata.changes._2_insert_federico_happy_non_transactional;
+//import io.flamingock.oss.driver.mongodb.springdata.changes._3_insert_jorge_happy_non_transactional;
+//import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+//import io.mongock.runner.standalone.MongockStandalone;
+//import org.bson.Document;
+//import org.junit.jupiter.api.Assertions;
+//import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
+//import org.mockito.MockedStatic;
+//import org.mockito.Mockito;
+//import org.springframework.data.mongodb.core.MongoTemplate;
+//import org.testcontainers.containers.MongoDBContainer;
+//import org.testcontainers.junit.jupiter.Container;
+//import org.testcontainers.junit.jupiter.Testcontainers;
+//import org.testcontainers.utility.DockerImageName;
+//
+//import java.util.ArrayList;
+//import java.util.Collections;
+//import java.util.List;
+//
+//import static io.flamingock.commons.utils.Constants.DEFAULT_MIGRATION_AUTHOR;
+//import static io.flamingock.internal.core.builder.core.CoreConfiguration.ImporterConfiguration.withSource;
+//import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_LOCK_REPOSITORY_NAME;
+//import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_AUDIT_REPOSITORY_NAME;
+//import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 //@Testcontainers
