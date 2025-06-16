@@ -1,4 +1,4 @@
-package io.flamingock.core.api.metadata;
+package io.flamingock.core.api.template;
 
 import java.util.Collection;
 

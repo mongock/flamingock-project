@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.core.api.error.validation;
+package io.flamingock.core.error.validation;
 
 public class ValidationError {
     private final String message;

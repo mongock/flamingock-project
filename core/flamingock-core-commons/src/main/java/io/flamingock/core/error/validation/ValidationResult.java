@@ -1,4 +1,4 @@
-package io.flamingock.core.api.error.validation;
+package io.flamingock.core.error.validation;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package io.flamingock.core.api.metadata;
+package io.flamingock.core.metadata;
 
 public final class Constants {
 

@@ -1,7 +1,5 @@
 package io.flamingock.core.api.template;
 
-import io.flamingock.core.api.metadata.ReflectionMetadataProvider;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 

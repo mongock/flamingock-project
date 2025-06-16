@@ -16,9 +16,9 @@
 
 package io.flamingock.internal.core.pipeline;
 
-import io.flamingock.core.api.error.FlamingockException;
-import io.flamingock.core.api.error.validation.ValidationError;
-import io.flamingock.core.api.error.validation.ValidationResult;
+import io.flamingock.core.error.FlamingockException;
+import io.flamingock.core.error.validation.ValidationError;
+import io.flamingock.core.error.validation.ValidationResult;
 import io.flamingock.core.context.Dependency;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;

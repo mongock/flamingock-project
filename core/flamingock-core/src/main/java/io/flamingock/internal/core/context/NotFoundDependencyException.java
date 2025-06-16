@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.context;
 
-import io.flamingock.core.api.error.FlamingockException;
+import io.flamingock.core.error.FlamingockException;
 
 public class NotFoundDependencyException extends FlamingockException {
 
