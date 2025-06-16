@@ -1,4 +1,4 @@
-package io.flamingock.importer.dynamodb;
+package io.flamingock.importer.adapter.dynamodb.outdated;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;

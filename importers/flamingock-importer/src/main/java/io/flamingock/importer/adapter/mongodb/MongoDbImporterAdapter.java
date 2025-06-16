@@ -1,7 +1,7 @@
-package io.flamingock.importer.mongodb;
+package io.flamingock.importer.adapter.mongodb;
 
 import com.mongodb.client.MongoCollection;
-import io.flamingock.importer.ImporterReader;
+import io.flamingock.importer.ImporterAdapter;
 import io.flamingock.importer.model.MongockChangeEntry;
 import io.flamingock.importer.model.ChangeState;
 import io.flamingock.importer.model.ChangeType;
@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 //TODO implement reading from Flamingock
-public class MongoImporterReader implements ImporterReader {
+public class MongoDbImporterAdapter implements ImporterAdapter {
 
     private final MongoCollection<Document> sourceCollection;
 
-    public MongoImporterReader(MongoCollection<Document> sourceCollection) {
+    public MongoDbImporterAdapter(MongoCollection<Document> sourceCollection) {
         this.sourceCollection = sourceCollection;
     }
 
@@ -30,7 +30,7 @@ public class MongoImporterReader implements ImporterReader {
         return sourceCollection.find()
                 .into(new ArrayList<>())
                 .stream()
-                .map(MongoImporterReader::toAuditEntry)
+                .map(MongoDbImporterAdapter::toAuditEntry)
                 .collect(Collectors.toList());
     }
 

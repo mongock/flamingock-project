@@ -45,7 +45,7 @@ public class ImporterModule implements SystemModule {
                     .setOrder("001")
                     .setSourceClassPath(MongockImporterChangeUnit.class.getName())
                     .setExecutionMethod(new PreviewMethod("execution", Arrays.asList(
-                            ImporterReader.class.getName(),
+                            ImporterAdapter.class.getName(),
                             AuditWriter.class.getName(),
                             PipelineDescriptor.class.getName())))
                     .setRunAlways(false)
@@ -61,7 +61,7 @@ public class ImporterModule implements SystemModule {
                     .setOrder("002")
                     .setSourceClassPath(MongockImporterChangeUnit.class.getName())
                     .setExecutionMethod(new PreviewMethod("execution", Arrays.asList(
-                            ImporterReader.class.getName(),
+                            ImporterAdapter.class.getName(),
                             AuditWriter.class.getName(),
                             PipelineDescriptor.class.getName())))
                     .setRunAlways(false)
@@ -72,13 +72,13 @@ public class ImporterModule implements SystemModule {
     private static final String FROM_MONGOCK_DESC = "Importer from Mongock";
     private static final String FROM_FLAMINGOCK_LITE_DESC = "Importer from Flamingock lite";
 
-    private ImporterReader importReader;
+    private ImporterAdapter importReader;
     private boolean fromMongock;
 
     public ImporterModule() {
     }
 
-    public ImporterModule(ImporterReader importerReader) {
+    public ImporterModule(ImporterAdapter importerReader) {
         this.fromMongock = importerReader.isFromMongock();
         this.importReader = importerReader;
     }
@@ -89,7 +89,7 @@ public class ImporterModule implements SystemModule {
 
     @Override
     public void contributeToContext(ContextInjectable contextInjectable) {
-        contextInjectable.addDependency(new Dependency(ImporterReader.class, importReader));
+        contextInjectable.addDependency(new Dependency(ImporterAdapter.class, importReader));
     }
 
     @Override

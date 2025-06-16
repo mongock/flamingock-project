@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.importer.dynamodb;
+package io.flamingock.importer.adapter.dynamodb.outdated;
 
 import io.flamingock.internal.core.context.ContextInjectable;
 import io.flamingock.internal.core.context.ContextResolver;

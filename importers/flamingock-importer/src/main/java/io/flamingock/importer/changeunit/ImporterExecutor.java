@@ -18,7 +18,7 @@ package io.flamingock.importer.changeunit;
 
 
 import io.flamingock.internal.core.engine.audit.AuditWriter;
-import io.flamingock.importer.ImporterReader;
+import io.flamingock.importer.ImporterAdapter;
 import io.flamingock.core.audit.AuditEntry;
 import io.flamingock.internal.core.pipeline.PipelineDescriptor;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public final class ImporterExecutor {
      * @param auditWriter        Destination writer.
      * @param pipelineDescriptor Structure containing all information about the changes and tasks to execute.
      */
-    public static void runImport(ImporterReader importerReader,
+    public static void runImport(ImporterAdapter importerReader,
                                  AuditWriter auditWriter,
                                  PipelineDescriptor pipelineDescriptor) {
 

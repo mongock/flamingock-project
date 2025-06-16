@@ -20,7 +20,7 @@ import io.flamingock.core.audit.AuditEntry;
 
 import java.util.List;
 
-public interface ImporterReader {
+public interface ImporterAdapter {
 
     List<AuditEntry> getAuditEntries();
 
