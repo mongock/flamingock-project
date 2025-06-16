@@ -24,8 +24,4 @@ public interface ImporterAdapter {
 
     List<AuditEntry> getAuditEntries();
 
-    String getSourceDescription();
-
-    boolean isFromMongock();
-
 }

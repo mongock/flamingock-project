@@ -34,16 +34,6 @@ public class MongoDbImporterAdapter implements ImporterAdapter {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public String getSourceDescription() {
-        return sourceCollection.getNamespace().toString();
-    }
-
-    @Override
-    public boolean isFromMongock() {
-        //TODO this will know if it's from mongock or flamingock, based on the data struture
-        return true;
-    }
 
     private static AuditEntry toAuditEntry(Document document) {
         MongockChangeEntry changeEntry = toChangeEntry(document);

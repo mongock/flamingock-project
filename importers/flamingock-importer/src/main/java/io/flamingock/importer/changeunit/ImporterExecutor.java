@@ -42,36 +42,36 @@ public final class ImporterExecutor {
     /**
      * Reads from a database (either Mongock or Flamingock local) and writes to Flamingock (either local or cloud).
      * The supported migration paths are:
-     * - Mongock            to Flamingock local
+     * - Mongock            to Flamingock-ce
      * - Mongock            to Flamingock Cloud
-     * - Flamingock local   to Flamingock Cloud
-     * @param importerReader     Database log reader.
+     * - Flamingock-ce     to Flamingock Cloud
+     * @param importerAdapter     Database log reader.
      * @param auditWriter        Destination writer.
      * @param pipelineDescriptor Structure containing all information about the changes and tasks to execute.
      */
-    public static void runImport(ImporterAdapter importerReader,
+    public static void runImport(ImporterAdapter importerAdapter,
                                  AuditWriter auditWriter,
                                  PipelineDescriptor pipelineDescriptor) {
 
-        boolean fromMongockDb = importerReader.isFromMongock();
+        logger.info("Importing audit log from [ {}] to Flamingock[{}]",
+                importerAdapter.getClass().getSimpleName(),
+                auditWriter.isCloud() ? "Cloud" : "CE");
 
-        logStarting(fromMongockDb, importerReader.getSourceDescription(), auditWriter.isCloud());
-
-        importerReader.getAuditEntries().forEach(auditEntryFomDb -> {
-            //This is the taskId present in the pipeline(if it's a system change), as '..._before' won't appear
-            String taskIdInPipeline = getTaskIdToLookForInPipeline(auditEntryFomDb, fromMongockDb);
-            String transformedTaskIdToBeStored = getTransformedTaskIdToBeStored(auditEntryFomDb, fromMongockDb);
-            String stageId = getStageId(pipelineDescriptor, auditEntryFomDb, taskIdInPipeline);
-            AuditEntry auditEntryWithStageId = auditEntryFomDb.copyWithNewIdAndStageId(transformedTaskIdToBeStored, stageId);
+        importerAdapter.getAuditEntries().forEach(auditEntryFromOrigin -> {
+            //This is the taskId present in the pipeline. If it's a system change or '..._before' won't appear
+            AuditEntry auditEntryWithStageId = auditEntryFromOrigin.copyWithNewIdAndStageId(
+                    getStorableTaskId(auditEntryFromOrigin),
+                    getStageId(pipelineDescriptor, auditEntryFromOrigin));
             auditWriter.writeEntry(auditEntryWithStageId);
         });
     }
 
-    private static String getStageId(PipelineDescriptor pipelineDescriptor, AuditEntry auditEntryFomDb, String taskId) {
-        if (Boolean.TRUE.equals(auditEntryFomDb.getSystemChange())) {
+    private static String getStageId(PipelineDescriptor pipelineDescriptor, AuditEntry auditEntryFromOrigin) {
+        if (Boolean.TRUE.equals(auditEntryFromOrigin.getSystemChange())) {
             return "mongock-legacy-system-changes";
         } else {
-            return pipelineDescriptor.getStageByTask(taskId).orElseThrow(() -> new IllegalArgumentException(String.format(errorTemplate, getBaseTaskId(auditEntryFomDb))));
+            String taskIdInPipeline = getBaseTaskId(auditEntryFromOrigin);
+            return pipelineDescriptor.getStageByTask(taskIdInPipeline).orElseThrow(() -> new IllegalArgumentException(String.format(errorTemplate, getBaseTaskId(auditEntryFromOrigin))));
         }
     }
 
@@ -81,19 +81,8 @@ public final class ImporterExecutor {
         return index >= 0 ? originalTaskId.substring(0, index) : originalTaskId;
     }
 
-    private static String getTaskIdToLookForInPipeline(AuditEntry auditEntry, boolean fromMongockDb) {
-        return getBaseTaskId(auditEntry);
-    }
-
-
-    private static String getTransformedTaskIdToBeStored(AuditEntry auditEntry, boolean fromMongockDb) {
+    private static String getStorableTaskId(AuditEntry auditEntry) {
         return auditEntry.getTaskId();
     }
 
-    private static void logStarting(boolean fromMongockDb, String sourceDescription, boolean isCloud) {
-        logger.info("Importing audit log from {}'s database[[source= {} ]] to Flamingock[{}]",
-                fromMongockDb ? "Mongock" : "Flamingock local",
-                sourceDescription,
-                isCloud ? "Cloud" : "local");
-    }
 }

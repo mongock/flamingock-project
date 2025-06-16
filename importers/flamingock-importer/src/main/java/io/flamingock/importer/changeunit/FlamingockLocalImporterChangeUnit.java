@@ -27,9 +27,9 @@ import io.flamingock.internal.core.pipeline.PipelineDescriptor;
 /**
  * This changeUnit imports the Mongock data in the database to Flamingock(local or cloud).
  * Although we could have just one ChangeUnit for importing
- * - Mongock            to Flamingock local
- * - Mongock            to Flamingock CLoud
- * - Flamingock local   to Flamingock cloud
+ * - Mongock            to Flamingock-ce
+ * - Mongock            to Flamingock Cloud
+ * - Flamingock-ce      to Flamingock Cloud
  * We need to differentiate it, as we can have two steps(Mongock to Flamingock local to Flamingock Cloud)
  */
 @ChangeUnit(id = FlamingockLocalImporterChangeUnit.IMPORTER_FROM_FLAMINGOCK_LOCAL, order = "002")
