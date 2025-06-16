@@ -79,7 +79,7 @@ public class ImporterModule implements SystemModule {
     }
 
     public ImporterModule(ImporterAdapter importerReader) {
-        this.fromMongock = importerReader.isFromMongock();
+        this.fromMongock = true;//importerReader.isFromMongock();
         this.importReader = importerReader;
     }
 
