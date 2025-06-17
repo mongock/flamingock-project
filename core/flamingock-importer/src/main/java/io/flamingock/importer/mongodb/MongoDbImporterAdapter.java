@@ -1,6 +1,7 @@
 package io.flamingock.importer.mongodb;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import io.flamingock.importer.ImporterAdapter;
 import io.flamingock.importer.model.MongockChangeEntry;
 import io.flamingock.importer.model.MongockChangeState;
@@ -21,8 +22,8 @@ public class MongoDbImporterAdapter implements ImporterAdapter {
 
     private final MongoCollection<Document> sourceCollection;
 
-    public MongoDbImporterAdapter(MongoCollection<Document> sourceCollection) {
-        this.sourceCollection = sourceCollection;
+    public MongoDbImporterAdapter(MongoDatabase mongoDatabase, String collectionName) {
+        this.sourceCollection = mongoDatabase.getCollection(collectionName);
     }
 
     @Override

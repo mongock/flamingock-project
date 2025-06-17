@@ -16,18 +16,15 @@
 
 package io.flamingock.importer.mongodb;
 
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.core.api.annotations.Execution;
 import io.flamingock.core.api.annotations.NonLockGuarded;
-import io.flamingock.core.api.annotations.Nullable;
 import io.flamingock.core.api.annotations.RollbackExecution;
 import io.flamingock.core.api.template.AbstractChangeTemplate;
 import io.flamingock.core.audit.AuditWriter;
 import io.flamingock.core.pipeline.PipelineDescriptor;
+import io.flamingock.importer.ImporterExecutor;
 import io.flamingock.importer.ImporterTemplateConfiguration;
-
-import java.sql.Connection;
 
 public class MongoDbImporterChangeTemplate extends AbstractChangeTemplate<ImporterTemplateConfiguration> {
 
@@ -37,16 +34,16 @@ public class MongoDbImporterChangeTemplate extends AbstractChangeTemplate<Import
 
     @Execution
     public void execution(MongoDatabase db,
-                          @Nullable ClientSession clientSession,
                           @NonLockGuarded AuditWriter auditWriter,
                           @NonLockGuarded PipelineDescriptor pipelineDescriptor) {
-        String origin = configuration.getExecution().getOrigin();
-//        execute(connection, configuration.getExecution());
+        String collectionName = configuration.getShared().getOrigin();
+        MongoDbImporterAdapter adapter = new MongoDbImporterAdapter(db, collectionName);
+        ImporterExecutor.runImport(adapter, auditWriter, pipelineDescriptor);
     }
 
     @RollbackExecution
-    public void rollback(Connection connection) {
-//        execute(connection, configuration.getRollback());
+    public void rollback() {
+        //TODO
     }
 
 }

@@ -22,5 +22,5 @@ import io.flamingock.core.api.annotations.NonLockGuardedType;
 import io.flamingock.core.api.template.ChangeTemplateConfig;
 
 @NonLockGuarded(NonLockGuardedType.NONE)
-public class ImporterTemplateConfiguration extends ChangeTemplateConfig<OriginConfiguration, OriginConfiguration> {
+public class ImporterTemplateConfiguration extends ChangeTemplateConfig<OriginConfiguration, Void, Void> {
 }
