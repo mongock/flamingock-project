@@ -28,6 +28,16 @@ public class CodeChangeUnitTestDefinition extends ChangeUnitTestDefinition {
         );
     }
 
+    public CodeChangeUnitTestDefinition(Class<?> changeUnitClass,
+                                        List<Class<?>> executionParameters) {
+        this(
+                changeUnitClass.getAnnotation(ChangeUnit.class),
+                changeUnitClass.getName(),
+                executionParameters,
+                null
+        );
+    }
+
     private CodeChangeUnitTestDefinition(ChangeUnit ann,
                                          String className,
                                          List<Class<?>> executionParameters,
