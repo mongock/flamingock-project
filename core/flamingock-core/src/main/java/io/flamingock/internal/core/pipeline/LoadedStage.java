@@ -17,8 +17,8 @@
 package io.flamingock.internal.core.pipeline;
 
 
-import io.flamingock.core.api.error.validation.Validatable;
-import io.flamingock.core.api.error.validation.ValidationError;
+import io.flamingock.core.error.validation.Validatable;
+import io.flamingock.core.error.validation.ValidationError;
 
 import io.flamingock.core.audit.AuditEntry;
 import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;

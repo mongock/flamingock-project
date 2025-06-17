@@ -1,12 +1,12 @@
 package io.flamingock.cloud.audit;
 
 import io.flamingock.commons.utils.Result;
-import io.flamingock.internal.core.engine.audit.AuditWriter;
+import io.flamingock.internal.core.engine.audit.ExecutionAuditWriter;
 import io.flamingock.internal.core.engine.audit.domain.ExecutionAuditContextBundle;
 import io.flamingock.internal.core.engine.audit.domain.RollbackAuditContextBundle;
 import io.flamingock.internal.core.engine.audit.domain.StartExecutionAuditContextBundle;
 
-public interface CloudAuditWriter extends AuditWriter {
+public interface CloudAuditWriter extends ExecutionAuditWriter {
 
     default Result writeStartExecution(StartExecutionAuditContextBundle auditContextBundle) {
         return Result.OK();//TODO remove this
