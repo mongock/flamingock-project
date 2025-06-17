@@ -12,6 +12,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.18.3")
 
 
+    testImplementation(project(":utils:test-util"))
     testImplementation("io.mongock:mongock-standalone:5.5.0")
     testImplementation("io.mongock:mongodb-sync-v4-driver:5.5.0")
     testImplementation("org.mockito:mockito-inline:4.11.0")

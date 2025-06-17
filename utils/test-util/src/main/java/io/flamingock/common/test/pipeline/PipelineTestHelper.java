@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package io.flamingock.oss.driver.mongodb.sync.v4;
+package io.flamingock.common.test.pipeline;
 
 import io.flamingock.commons.utils.Pair;
-import io.flamingock.commons.utils.Trio;
 import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.preview.AbstractPreviewTask;
 import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.PreviewMethod;
 import io.flamingock.core.preview.PreviewPipeline;
 import io.flamingock.core.preview.PreviewStage;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PipelineTestHelper {
 
-    private static final Function<Class<?>, Trio<String, String, Boolean>> infoExtractor = c -> {
-        ChangeUnit ann = c.getAnnotation(ChangeUnit.class);
-        return new Trio<>(ann.id(), ann.order(), ann.transactional());
-    };
 
     @NotNull
     private static List<String> getParameterTypes(List<Class<?>> second) {
@@ -52,7 +45,7 @@ public class PipelineTestHelper {
      * <p>
      * Each change unit is derived from a {@link Pair} where:
      * <ul>
-     *   <li>The first item is the {@link Class} annotated with {@link ChangeUnit} or {@link io.mongock.api.annotations.ChangeUnit}</li>
+     *   <li>The first item is the {@link Class} annotated with {@link ChangeUnit}</li>
      *   <li>The second item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @Execution}</li>
      *   <li>The third item is a {@link List} of parameter types (as {@link Class}) expected by the method annotated with {@code @RollbackExecution}</li>
      * </ul>
@@ -60,36 +53,10 @@ public class PipelineTestHelper {
      * @param changeDefinitions varargs of pairs containing change classes and their execution method parameters
      * @return a {@link PreviewPipeline} ready for preview or testing
      */
-    @SafeVarargs
-    public static PreviewPipeline getPreviewPipeline(String stageName, Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
+    public static PreviewPipeline getPreviewPipeline(String stageName, ChangeUnitTestDefinition... changeDefinitions) {
 
-        List<CodePreviewChangeUnit> tasks = Arrays.stream(changeDefinitions)
-                .map(trio -> {
-                    Function<Class<?>, Trio<String, String, Boolean>> extractor = infoExtractor;
-                    Trio<String, String, Boolean> changeInfo = extractor.apply(trio.getFirst());
-                    PreviewMethod rollback = null;
-                    PreviewMethod rollbackBeforeExecution = null;
-                    if (trio.getThird() != null) {
-                        rollback = new PreviewMethod("rollbackExecution", getParameterTypes(trio.getThird()));
-                        rollbackBeforeExecution = new PreviewMethod("rollbackBeforeExecution", getParameterTypes(trio.getThird()));
-                    }
-
-                    List<CodePreviewChangeUnit> changes = new ArrayList<>();
-                    changes.add(new CodePreviewChangeUnit(
-                            changeInfo.getFirst(),
-                            changeInfo.getSecond(),
-                            trio.getFirst().getName(),
-                            new PreviewMethod("execution", getParameterTypes(trio.getSecond())),
-                            rollback,
-                            new PreviewMethod("beforeExecution", getParameterTypes(trio.getSecond())),
-                            rollbackBeforeExecution,
-                            false,
-                            changeInfo.getThird(),
-                            false
-                    ));
-                    return changes;
-                })
-                .flatMap(List::stream)
+        List<AbstractPreviewTask> tasks = Arrays.stream(changeDefinitions)
+                .map(ChangeUnitTestDefinition::toPreview)
                 .collect(Collectors.toList());
 
         PreviewStage stage = new PreviewStage(
@@ -104,8 +71,7 @@ public class PipelineTestHelper {
         return new PreviewPipeline(Collections.singletonList(stage));
     }
 
-    @SafeVarargs
-    public static PreviewPipeline getPreviewPipeline(Trio<Class<?>, List<Class<?>>, List<Class<?>>>... changeDefinitions) {
+    public static PreviewPipeline getPreviewPipeline(ChangeUnitTestDefinition... changeDefinitions) {
         return getPreviewPipeline("default-stage-name", changeDefinitions);
     }
 }
