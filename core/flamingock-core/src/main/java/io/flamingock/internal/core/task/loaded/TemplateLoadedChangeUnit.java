@@ -34,7 +34,7 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
     TemplateLoadedChangeUnit(String id,
                              String order,
-                             Class<? extends ChangeTemplate<?>> templateClass,
+                             Class<? extends ChangeTemplate<?,?,?>> templateClass,
                              List<String> profiles,
                              boolean transactional,
                              boolean runAlways,
@@ -54,8 +54,8 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
     }
 
     @SuppressWarnings("unchecked")
-    public Class<? extends ChangeTemplate<?>> getTemplateClass() {
-        return (Class<? extends ChangeTemplate<?>>) this.getSourceClass();
+    public Class<? extends ChangeTemplate<?,?,?>> getTemplateClass() {
+        return (Class<? extends ChangeTemplate<?,?,?>>) this.getSourceClass();
     }
 
     @Override

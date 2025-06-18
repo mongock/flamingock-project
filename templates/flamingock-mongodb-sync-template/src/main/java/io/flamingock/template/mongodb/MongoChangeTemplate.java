@@ -22,12 +22,13 @@ import io.flamingock.api.annotations.Execution;
 import io.flamingock.api.annotations.Nullable;
 import io.flamingock.api.annotations.RollbackExecution;
 import io.flamingock.api.template.AbstractChangeTemplate;
+import io.flamingock.api.template.ChangeTemplateConfig;
 import io.flamingock.template.mongodb.model.MongoOperation;
 
-public class MongoChangeTemplate extends AbstractChangeTemplate<MongoChangeTemplateConfig> {
+public class MongoChangeTemplate extends AbstractChangeTemplate<Void, MongoOperation, MongoOperation> {
 
     public MongoChangeTemplate() {
-        super(MongoChangeTemplateConfig.class, MongoOperation.class);
+        super(MongoOperation.class);
     }
 
     @Execution

@@ -9,9 +9,8 @@ import java.lang.reflect.Type;
  * This interface is commonly implemented by classes that act as templates for Change Units
  * where a specific configuration needs to be injected and managed independently.
  *
- * @param <CONFIG> The type of configuration this template works with.
  */
-public interface ChangeTemplate<CONFIG extends ChangeTemplateConfig<?, ?, ?>> extends ReflectionMetadataProvider {
+public interface ChangeTemplate<SHARED, EXECUTION, ROLLBACK> extends ReflectionMetadataProvider {
 
     void setChangeId(String changeId);
 
@@ -22,7 +21,7 @@ public interface ChangeTemplate<CONFIG extends ChangeTemplateConfig<?, ?, ?>> ex
      *
      * @param configuration Configuration instance of type {@code CONFIG}.
      */
-    void setConfiguration(CONFIG configuration);
+    <CONFIG extends ChangeTemplateConfig<SHARED, EXECUTION, ROLLBACK>> void setConfiguration(CONFIG configuration);
 
     /**
      * Returns the {@link Class} representing the configuration type {@code CONFIG} that this template is bound to.
@@ -36,7 +35,7 @@ public interface ChangeTemplate<CONFIG extends ChangeTemplateConfig<?, ?, ?>> ex
      * class MyTemplate implements ChangeTemplate<MyConfig> {
      *     ...
      * }
-     * ChangeTemplate<?> template = new MyTemplate();
+     * ChangeTemplate<?, ?, ?> template = new MyTemplate();
      * Class<?> configClass = template.getConfigClass(); // returns MyConfig.class
      * }</pre>
      *
@@ -60,16 +59,10 @@ public interface ChangeTemplate<CONFIG extends ChangeTemplateConfig<?, ?, ?>> ex
      * @throws IllegalStateException if the configuration type cannot be determined.
      */
     @SuppressWarnings("unchecked")
-    default Class<CONFIG> getConfigClass() {
-        for (Type type : this.getClass().getGenericInterfaces()) {
-            if (type instanceof ParameterizedType) {
-                ParameterizedType pType = (ParameterizedType) type;
-                if (pType.getRawType() instanceof Class &&
-                        ChangeTemplate.class.isAssignableFrom((Class<?>) pType.getRawType())) {
-                    return (Class<CONFIG>) pType.getActualTypeArguments()[0];
-                }
-            }
-        }
-        throw new IllegalStateException("Cannot determine generic type");
+    default Class<ChangeTemplateConfig<SHARED, EXECUTION, ROLLBACK>> getConfigClass() {
+        return (Class<ChangeTemplateConfig<SHARED, EXECUTION, ROLLBACK>>)
+                (Class<?>) ChangeTemplateConfig.class;
     }
+
+
 }

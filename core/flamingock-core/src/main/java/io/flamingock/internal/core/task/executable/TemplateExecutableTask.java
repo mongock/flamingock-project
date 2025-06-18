@@ -17,6 +17,7 @@
 package io.flamingock.internal.core.task.executable;
 
 import io.flamingock.api.template.ChangeTemplate;
+import io.flamingock.api.template.ChangeTemplateConfig;
 import io.flamingock.internal.core.runtime.RuntimeManager;
 import io.flamingock.internal.core.task.loaded.TemplateLoadedChangeUnit;
 import io.flamingock.internal.util.FileUtil;
@@ -42,14 +43,14 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
         logger.debug("Starting execution of changeUnit[{}] with template: {}", descriptor.getId(), descriptor.getTemplateClass());
         logger.debug("changeUnit[{}] transactional: {}", descriptor.getId(), descriptor.isTransactional());
         Object instance = runtimeManager.getInstance(descriptor.getConstructor());
-        ChangeTemplate<?> changeTemplateInstance = (ChangeTemplate<?>) instance;
+        ChangeTemplate<?,?,?> changeTemplateInstance = (ChangeTemplate<?,?,?>) instance;
         changeTemplateInstance.setTransactional(descriptor.isTransactional());
         setConfiguration(runtimeManager, changeTemplateInstance);
         runtimeManager.executeMethodWithInjectedDependencies(instance, method);
     }
 
-    private void setConfiguration(RuntimeManager runtimeManager, ChangeTemplate<?> instance) {
-        Class<?> configClass = instance.getConfigClass();
+    private void setConfiguration(RuntimeManager runtimeManager, ChangeTemplate<?,?,?> instance) {
+        Class<? extends ChangeTemplateConfig<?, ?, ?>> configClass = instance.getConfigClass();
         Method setConfigurationMethod = getConfigMethod(instance.getClass());
         runtimeManager.executeMethodWithParameters(
                 instance,

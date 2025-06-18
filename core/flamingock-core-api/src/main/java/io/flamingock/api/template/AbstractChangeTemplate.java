@@ -9,27 +9,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public abstract class AbstractChangeTemplate<CONFIG extends ChangeTemplateConfig<?, ?, ?>> implements ChangeTemplate<CONFIG> {
+public abstract class AbstractChangeTemplate<SHARED, EXECUTION, ROLLBACK> implements ChangeTemplate<SHARED, EXECUTION, ROLLBACK> {
 
     private final Logger logger = LoggerFactory.getLogger("AbstractChangeTemplate");
 
-
-    private final Class<CONFIG> configClass;
-
     protected String changeId;
     protected boolean isTransactional;
-    protected CONFIG configuration;
+    protected ChangeTemplateConfig<SHARED, EXECUTION, ROLLBACK> configuration;
 
     private final Set<Class<?>> reflectiveClasses;
 
 
-    public AbstractChangeTemplate(Class<CONFIG> configClass, Class<?>... additionalReflectiveClass) {
-        if (configClass == null || additionalReflectiveClass == null) {
-            throw new IllegalArgumentException("additionalReflectiveClass must not be null");
-        }
-        this.configClass = configClass;
+    public AbstractChangeTemplate(Class<?>... additionalReflectiveClass) {
         reflectiveClasses = new HashSet<>(Arrays.asList(additionalReflectiveClass));
-        reflectiveClasses.add( this.configClass);
+        reflectiveClasses.add(ChangeTemplateConfig.class);
 
     }
 
@@ -42,15 +35,11 @@ public abstract class AbstractChangeTemplate<CONFIG extends ChangeTemplateConfig
     public void setChangeId(String changeId) {
         this.changeId = changeId;
     }
-    @Override
-    public void setConfiguration(CONFIG configuration) {
-        logger.trace("setting {} config[{}]: {}", getClass(), getConfigClass(), configuration);
-        this.configuration = configuration;
-    }
 
     @Override
-    public Class<CONFIG> getConfigClass() {
-        return configClass;
+    public <CONFIG extends ChangeTemplateConfig<SHARED, EXECUTION, ROLLBACK>> void setConfiguration(CONFIG configuration) {
+        logger.trace("setting {} config[{}]: {}", getClass(), getConfigClass(), configuration);
+        this.configuration = configuration;
     }
 
     @Override
