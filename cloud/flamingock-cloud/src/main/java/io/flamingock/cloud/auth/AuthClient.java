@@ -17,8 +17,8 @@
 package io.flamingock.cloud.auth;
 
 
-import io.flamingock.internal.commons.cloud.auth.AuthRequest;
-import io.flamingock.internal.commons.cloud.auth.AuthResponse;
+import io.flamingock.internal.common.cloud.auth.AuthRequest;
+import io.flamingock.internal.common.cloud.auth.AuthResponse;
 
 public interface AuthClient {
     AuthResponse getToken(AuthRequest request);

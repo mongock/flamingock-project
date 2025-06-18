@@ -16,8 +16,8 @@
 
 package io.flamingock.springboot;
 
-import io.flamingock.internal.commons.core.context.Dependency;
-import io.flamingock.internal.commons.core.context.ContextResolver;
+import io.flamingock.internal.common.core.context.Dependency;
+import io.flamingock.internal.common.core.context.ContextResolver;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 

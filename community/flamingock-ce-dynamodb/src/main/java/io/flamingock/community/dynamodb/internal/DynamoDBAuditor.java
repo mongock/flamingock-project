@@ -16,14 +16,14 @@
 
 package io.flamingock.community.dynamodb.internal;
 
-import io.flamingock.commons.utils.Result;
+import io.flamingock.internal.util.Result;
 import io.flamingock.internal.core.community.TransactionManager;
-import io.flamingock.internal.commons.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.audit.AuditEntry;
 import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;
 import io.flamingock.internal.core.community.LocalAuditor;
 import io.flamingock.community.dynamodb.internal.entities.AuditEntryEntity;
-import io.flamingock.commons.utils.DynamoDBConstants;
-import io.flamingock.commons.utils.DynamoDBUtil;
+import io.flamingock.internal.util.dynamodb.DynamoDBConstants;
+import io.flamingock.internal.util.dynamodb.DynamoDBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;

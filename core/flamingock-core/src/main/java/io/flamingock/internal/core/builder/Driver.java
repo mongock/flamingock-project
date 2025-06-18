@@ -16,10 +16,10 @@
 
 package io.flamingock.internal.core.builder;
 
-import io.flamingock.internal.commons.core.error.FlamingockException;
+import io.flamingock.internal.common.core.error.FlamingockException;
 import io.flamingock.internal.core.cloud.CloudDriver;
 import io.flamingock.internal.core.community.driver.LocalDriver;
-import io.flamingock.internal.commons.core.context.ContextInitializable;
+import io.flamingock.internal.common.core.context.ContextInitializable;
 import io.flamingock.internal.core.engine.ConnectionEngine;
 
 import java.util.Optional;

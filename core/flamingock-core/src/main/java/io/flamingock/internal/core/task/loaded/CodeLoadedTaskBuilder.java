@@ -16,10 +16,10 @@
 
 package io.flamingock.internal.core.task.loaded;
 
-import io.flamingock.commons.utils.StringUtil;
+import io.flamingock.internal.util.StringUtil;
 import io.flamingock.api.annotations.ChangeUnit;
-import io.flamingock.internal.commons.core.preview.AbstractPreviewTask;
-import io.flamingock.internal.commons.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.common.core.preview.AbstractPreviewTask;
+import io.flamingock.internal.common.core.preview.CodePreviewChangeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -32,8 +32,8 @@ import io.flamingock.common.test.cloud.execution.ExecutionPlanRequestResponseMoc
 import io.flamingock.common.test.cloud.mock.MockRequestResponseTask;
 import io.flamingock.common.test.cloud.prototype.PrototypeClientSubmission;
 import io.flamingock.common.test.cloud.prototype.PrototypeStage;
-import io.flamingock.commons.utils.Trio;
-import io.flamingock.internal.commons.cloud.vo.OngoingStatus;
+import io.flamingock.internal.util.Trio;
+import io.flamingock.internal.common.cloud.vo.OngoingStatus;
 import io.flamingock.internal.core.builder.FlamingockFactory;
 import io.flamingock.internal.core.builder.CloudFlamingockBuilder;
 import io.flamingock.core.processor.util.Deserializer;
@@ -52,9 +52,9 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.Collections;
 import java.util.UUID;
 
-import static io.flamingock.internal.commons.cloud.audit.AuditEntryRequest.Status.EXECUTED;
-import static io.flamingock.internal.commons.cloud.audit.AuditEntryRequest.Status.EXECUTION_FAILED;
-import static io.flamingock.internal.commons.cloud.audit.AuditEntryRequest.Status.ROLLED_BACK;
+import static io.flamingock.internal.common.cloud.audit.AuditEntryRequest.Status.EXECUTED;
+import static io.flamingock.internal.common.cloud.audit.AuditEntryRequest.Status.EXECUTION_FAILED;
+import static io.flamingock.internal.common.cloud.audit.AuditEntryRequest.Status.ROLLED_BACK;
 
 @Testcontainers
 public class MongoSync4CloudTransactionerTest {

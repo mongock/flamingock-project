@@ -1,10 +1,10 @@
 package io.flamingock.common.test.pipeline;
 
-import io.flamingock.commons.utils.CollectionUtil;
+import io.flamingock.internal.util.CollectionUtil;
 import io.flamingock.api.annotations.ChangeUnit;
-import io.flamingock.internal.commons.core.preview.AbstractPreviewTask;
-import io.flamingock.internal.commons.core.preview.CodePreviewChangeUnit;
-import io.flamingock.internal.commons.core.preview.PreviewMethod;
+import io.flamingock.internal.common.core.preview.AbstractPreviewTask;
+import io.flamingock.internal.common.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.common.core.preview.PreviewMethod;
 
 import java.util.List;
 

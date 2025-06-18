@@ -16,10 +16,10 @@
 
 package io.flamingock.community.dynamodb;
 
-import io.flamingock.internal.commons.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.audit.AuditEntry;
 import io.flamingock.community.dynamodb.internal.entities.AuditEntryEntity;
 //import io.flamingock.oss.driver.dynamodb.internal.mongock.ChangeEntryDynamoDB;
-import io.flamingock.commons.utils.DynamoDBUtil;
+import io.flamingock.internal.util.dynamodb.DynamoDBUtil;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;

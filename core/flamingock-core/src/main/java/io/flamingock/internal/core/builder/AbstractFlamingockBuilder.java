@@ -16,9 +16,9 @@
 
 package io.flamingock.internal.core.builder;
 
-import io.flamingock.commons.utils.CollectionUtil;
-import io.flamingock.commons.utils.Property;
-import io.flamingock.commons.utils.id.RunnerId;
+import io.flamingock.internal.util.CollectionUtil;
+import io.flamingock.internal.util.Property;
+import io.flamingock.internal.util.id.RunnerId;
 import io.flamingock.api.template.TemplateFactory;
 import io.flamingock.internal.core.builder.core.CoreConfiguration;
 import io.flamingock.internal.core.builder.core.CoreConfigurator;
@@ -40,11 +40,11 @@ import io.flamingock.internal.core.plugin.PluginManager;
 import io.flamingock.internal.core.runner.PipelineRunnerCreator;
 import io.flamingock.internal.core.runner.Runner;
 import io.flamingock.internal.core.runner.RunnerBuilder;
-import io.flamingock.internal.commons.core.context.Dependency;
-import io.flamingock.internal.commons.core.context.ContextResolver;
-import io.flamingock.internal.commons.core.context.Context;
+import io.flamingock.internal.common.core.context.Dependency;
+import io.flamingock.internal.common.core.context.ContextResolver;
+import io.flamingock.internal.common.core.context.Context;
 import io.flamingock.internal.core.context.PriorityContextResolver;
-import io.flamingock.internal.commons.core.system.SystemModuleManager;
+import io.flamingock.internal.common.core.system.SystemModuleManager;
 import io.flamingock.internal.core.task.filter.TaskFilter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

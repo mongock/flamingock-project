@@ -1,7 +1,7 @@
 package io.flamingock.common.test.cloud.mock;
 
-import io.flamingock.internal.commons.cloud.planner.response.RequiredActionTask;
-import io.flamingock.internal.commons.cloud.vo.OngoingStatus;
+import io.flamingock.internal.common.cloud.planner.response.RequiredActionTask;
+import io.flamingock.internal.common.cloud.vo.OngoingStatus;
 
 public class MockRequestResponseTask {
     private final String taskId;

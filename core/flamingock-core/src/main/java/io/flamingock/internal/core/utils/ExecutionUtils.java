@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.utils;
 
-import io.flamingock.commons.utils.ReflectionUtil;
+import io.flamingock.internal.util.ReflectionUtil;
 import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.NonLockGuarded;
 import io.flamingock.api.annotations.NonLockGuardedType;

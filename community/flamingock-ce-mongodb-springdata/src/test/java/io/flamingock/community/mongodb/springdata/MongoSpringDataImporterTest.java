@@ -22,7 +22,7 @@ package io.flamingock.community.mongodb.springdata;
 //import com.mongodb.MongoClientSettings;
 //import com.mongodb.client.MongoClient;
 //import com.mongodb.client.MongoClients;
-//import io.flamingock.commons.utils.Trio;
+//import io.flamingock.common.utils.Trio;
 //import io.flamingock.internal.core.builder.FlamingockFactory;
 //import io.flamingock.importer.changeunit.MongockImporterChangeUnit;
 //import io.flamingock.core.audit.AuditEntry;
@@ -51,7 +51,7 @@ package io.flamingock.community.mongodb.springdata;
 //import java.util.Collections;
 //import java.util.List;
 //
-//import static io.flamingock.commons.utils.Constants.DEFAULT_MIGRATION_AUTHOR;
+//import static io.flamingock.common.utils.Constants.DEFAULT_MIGRATION_AUTHOR;
 //import static io.flamingock.internal.core.builder.core.CoreConfiguration.ImporterConfiguration.withSource;
 //import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_LOCK_REPOSITORY_NAME;
 //import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_AUDIT_REPOSITORY_NAME;

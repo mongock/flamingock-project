@@ -3,11 +3,11 @@ package io.flamingock.community.dynamodb.internal;
 
 import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
-import io.flamingock.commons.utils.id.RunnerId;
-import io.flamingock.commons.utils.TimeService;
+import io.flamingock.internal.util.id.RunnerId;
+import io.flamingock.internal.util.TimeService;
 import io.flamingock.internal.core.engine.lock.LockAcquisition;
 import io.flamingock.internal.core.engine.lock.LockKey;
-import io.flamingock.commons.utils.DynamoDBConstants;
+import io.flamingock.internal.util.dynamodb.DynamoDBConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

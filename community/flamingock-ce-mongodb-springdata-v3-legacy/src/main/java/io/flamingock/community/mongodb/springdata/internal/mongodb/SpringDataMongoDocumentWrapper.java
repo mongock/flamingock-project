@@ -16,7 +16,7 @@
 
 package io.flamingock.community.mongodb.springdata.internal.mongodb;
 
-import io.flamingock.oss.driver.common.mongodb.DocumentWrapper;
+import io.flamingock.internal.common.mongodb.DocumentWrapper;
 import org.bson.Document;
 
 public class SpringDataMongoDocumentWrapper implements DocumentWrapper {

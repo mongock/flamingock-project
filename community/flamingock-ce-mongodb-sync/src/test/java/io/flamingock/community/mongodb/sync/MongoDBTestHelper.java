@@ -17,9 +17,9 @@
 package io.flamingock.community.mongodb.sync;
 
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.internal.commons.core.audit.AuditEntry;
-import io.flamingock.commons.utils.TimeUtil;
-import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
+import io.flamingock.internal.common.core.audit.AuditEntry;
+import io.flamingock.internal.util.TimeUtil;
+import io.flamingock.internal.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.cloud.transaction.mongodb.sync.wrapper.MongoSync4DocumentWrapper;
 import org.bson.Document;
 

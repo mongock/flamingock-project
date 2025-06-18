@@ -18,8 +18,8 @@ package io.flamingock.internal.core.context;
 
 
 
-import io.flamingock.internal.commons.core.context.ContextResolver;
-import io.flamingock.internal.commons.core.context.Dependency;
+import io.flamingock.internal.common.core.context.ContextResolver;
+import io.flamingock.internal.common.core.context.Dependency;
 
 import java.util.Optional;
 

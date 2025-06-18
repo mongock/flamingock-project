@@ -16,18 +16,18 @@
 
 package io.flamingock.importer;
 
-import io.flamingock.internal.commons.core.audit.AuditWriter;
-import io.flamingock.internal.commons.core.context.ContextInjectable;
-import io.flamingock.internal.commons.core.context.ContextResolver;
+import io.flamingock.internal.common.core.audit.AuditWriter;
+import io.flamingock.internal.common.core.context.ContextInjectable;
+import io.flamingock.internal.common.core.context.ContextResolver;
 import io.flamingock.importer.changeunit.FlamingockLocalImporterChangeUnit;
 import io.flamingock.importer.changeunit.MongockImporterChangeUnit;
-import io.flamingock.internal.commons.core.pipeline.PipelineDescriptor;
-import io.flamingock.internal.commons.core.preview.CodePreviewChangeUnit;
-import io.flamingock.internal.commons.core.preview.PreviewMethod;
-import io.flamingock.internal.commons.core.preview.PreviewStage;
-import io.flamingock.internal.commons.core.preview.builder.PreviewTaskBuilder;
-import io.flamingock.internal.commons.core.context.Dependency;
-import io.flamingock.internal.commons.core.system.SystemModule;
+import io.flamingock.internal.common.core.pipeline.PipelineDescriptor;
+import io.flamingock.internal.common.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.common.core.preview.PreviewMethod;
+import io.flamingock.internal.common.core.preview.PreviewStage;
+import io.flamingock.internal.common.core.preview.builder.PreviewTaskBuilder;
+import io.flamingock.internal.common.core.context.Dependency;
+import io.flamingock.internal.common.core.system.SystemModule;
 
 import java.util.Arrays;
 import java.util.Collections;

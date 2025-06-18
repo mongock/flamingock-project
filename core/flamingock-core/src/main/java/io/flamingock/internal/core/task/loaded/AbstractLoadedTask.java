@@ -16,10 +16,10 @@
 
 package io.flamingock.internal.core.task.loaded;
 
-import io.flamingock.internal.commons.core.error.validation.Validatable;
-import io.flamingock.internal.commons.core.error.validation.ValidationError;
+import io.flamingock.internal.common.core.error.validation.Validatable;
+import io.flamingock.internal.common.core.error.validation.ValidationError;
 
-import io.flamingock.internal.commons.core.task.AbstractTaskDescriptor;
+import io.flamingock.internal.common.core.task.AbstractTaskDescriptor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

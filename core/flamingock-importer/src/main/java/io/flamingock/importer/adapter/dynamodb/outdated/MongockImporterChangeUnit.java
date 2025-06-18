@@ -19,11 +19,11 @@ package io.flamingock.importer.adapter.dynamodb.outdated;
 
 import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.Execution;
-import io.flamingock.internal.commons.core.audit.AuditWriter;
+import io.flamingock.internal.common.core.audit.AuditWriter;
 import io.flamingock.importer.model.MongockChangeEntry;
 import io.flamingock.importer.model.MongockChangeState;
 import io.flamingock.importer.model.MongockChangeType;
-import io.flamingock.internal.commons.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.audit.AuditEntry;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 

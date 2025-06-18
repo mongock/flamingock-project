@@ -1,11 +1,11 @@
 package io.flamingock.common.test.cloud.prototype;
 
 import io.flamingock.common.test.cloud.deprecated.AuditEntryMatcher;
-import io.flamingock.internal.commons.cloud.audit.AuditEntryRequest;
-import io.flamingock.internal.commons.cloud.planner.request.TaskRequest;
-import io.flamingock.internal.commons.cloud.planner.response.RequiredActionTask;
-import io.flamingock.internal.commons.cloud.planner.response.TaskResponse;
-import io.flamingock.internal.commons.cloud.vo.OngoingStatus;
+import io.flamingock.internal.common.cloud.audit.AuditEntryRequest;
+import io.flamingock.internal.common.cloud.planner.request.TaskRequest;
+import io.flamingock.internal.common.cloud.planner.response.RequiredActionTask;
+import io.flamingock.internal.common.cloud.planner.response.TaskResponse;
+import io.flamingock.internal.common.cloud.vo.OngoingStatus;
 
 public class PrototypeTask {
     private final String taskId;

@@ -1,6 +1,6 @@
 package io.flamingock.importer.adapter.couchbase;
 
-import io.flamingock.internal.commons.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.audit.AuditEntry;
 import io.flamingock.importer.ImporterAdapter;
 
 import java.util.Collections;

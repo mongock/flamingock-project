@@ -16,8 +16,8 @@
 
 package io.flamingock.community.dynamodb.internal;
 
-import io.flamingock.commons.utils.id.RunnerId;
-import io.flamingock.commons.utils.TimeService;
+import io.flamingock.internal.util.id.RunnerId;
+import io.flamingock.internal.util.TimeService;
 import io.flamingock.internal.core.community.lock.LocalLockService;
 import io.flamingock.internal.core.community.lock.LockEntry;
 import io.flamingock.internal.core.engine.lock.LockAcquisition;
@@ -25,8 +25,8 @@ import io.flamingock.internal.core.engine.lock.LockKey;
 import io.flamingock.internal.core.engine.lock.LockServiceException;
 import io.flamingock.internal.core.engine.lock.LockStatus;
 import io.flamingock.community.dynamodb.internal.entities.LockEntryEntity;
-import io.flamingock.commons.utils.DynamoDBConstants;
-import io.flamingock.commons.utils.DynamoDBUtil;
+import io.flamingock.internal.util.dynamodb.DynamoDBConstants;
+import io.flamingock.internal.util.dynamodb.DynamoDBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;

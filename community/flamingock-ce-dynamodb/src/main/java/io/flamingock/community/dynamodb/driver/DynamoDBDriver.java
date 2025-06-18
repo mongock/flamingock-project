@@ -16,12 +16,12 @@
 
 package io.flamingock.community.dynamodb.driver;
 
-import io.flamingock.commons.utils.id.RunnerId;
+import io.flamingock.internal.util.id.RunnerId;
 import io.flamingock.internal.core.builder.core.CoreConfigurable;
 import io.flamingock.internal.core.builder.local.CommunityConfigurable;
 import io.flamingock.internal.core.community.LocalEngine;
 import io.flamingock.internal.core.community.driver.LocalDriver;
-import io.flamingock.internal.commons.core.context.ContextResolver;
+import io.flamingock.internal.common.core.context.ContextResolver;
 import io.flamingock.community.dynamodb.DynamoDBConfiguration;
 import io.flamingock.community.dynamodb.internal.DynamoDBEngine;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;

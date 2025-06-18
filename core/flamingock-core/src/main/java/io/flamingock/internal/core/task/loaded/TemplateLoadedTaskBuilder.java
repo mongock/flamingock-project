@@ -16,11 +16,11 @@
 
 package io.flamingock.internal.core.task.loaded;
 
-import io.flamingock.internal.commons.core.error.FlamingockException;
+import io.flamingock.internal.common.core.error.FlamingockException;
 import io.flamingock.api.template.ChangeTemplate;
 import io.flamingock.api.template.TemplateFactory;
-import io.flamingock.internal.commons.core.preview.AbstractPreviewTask;
-import io.flamingock.internal.commons.core.preview.TemplatePreviewChangeUnit;
+import io.flamingock.internal.common.core.preview.AbstractPreviewTask;
+import io.flamingock.internal.common.core.preview.TemplatePreviewChangeUnit;
 
 import java.util.List;
 import java.util.Map;

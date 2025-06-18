@@ -21,8 +21,8 @@ import io.flamingock.api.annotations.Execution;
 import io.flamingock.api.annotations.NonLockGuarded;
 import io.flamingock.api.annotations.RollbackExecution;
 import io.flamingock.api.template.AbstractChangeTemplate;
-import io.flamingock.internal.commons.core.audit.AuditWriter;
-import io.flamingock.internal.commons.core.pipeline.PipelineDescriptor;
+import io.flamingock.internal.common.core.audit.AuditWriter;
+import io.flamingock.internal.common.core.pipeline.PipelineDescriptor;
 import io.flamingock.importer.ImporterExecutor;
 import io.flamingock.importer.ImporterTemplateConfiguration;
 

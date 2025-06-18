@@ -17,7 +17,7 @@
 package io.flamingock.community.mongodb.springdata.internal;
 
 import com.mongodb.ReadConcern;
-import io.flamingock.commons.utils.id.RunnerId;
+import io.flamingock.internal.util.id.RunnerId;
 import io.flamingock.internal.core.builder.core.CoreConfigurable;
 import io.flamingock.internal.core.builder.local.CommunityConfigurable;
 import io.flamingock.internal.core.community.AbstractLocalEngine;

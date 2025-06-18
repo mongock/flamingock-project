@@ -16,7 +16,7 @@
 
 package io.flamingock.importer.model;
 
-import io.flamingock.internal.commons.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.audit.AuditEntry;
 
 public enum MongockChangeType {
   EXECUTION, BEFORE_EXECUTION;

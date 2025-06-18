@@ -19,16 +19,16 @@ package io.flamingock.community.mongodb.springdata;
 import java.util.function.Function;
 import com.mongodb.client.MongoDatabase;
 
-import io.flamingock.commons.utils.Pair;
-import io.flamingock.commons.utils.Trio;
+import io.flamingock.internal.util.Pair;
+import io.flamingock.internal.util.Trio;
 import io.flamingock.api.annotations.ChangeUnit;
-import io.flamingock.internal.commons.core.audit.AuditEntry;
-import io.flamingock.commons.utils.TimeUtil;
-import io.flamingock.internal.commons.core.preview.CodePreviewChangeUnit;
-import io.flamingock.internal.commons.core.preview.PreviewMethod;
-import io.flamingock.internal.commons.core.preview.PreviewPipeline;
-import io.flamingock.internal.commons.core.preview.PreviewStage;
-import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
+import io.flamingock.internal.common.core.audit.AuditEntry;
+import io.flamingock.internal.util.TimeUtil;
+import io.flamingock.internal.common.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.common.core.preview.PreviewMethod;
+import io.flamingock.internal.common.core.preview.PreviewPipeline;
+import io.flamingock.internal.common.core.preview.PreviewStage;
+import io.flamingock.internal.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.community.mongodb.springdata.internal.mongodb.SpringDataMongoDocumentWrapper;
 
 import java.util.ArrayList;

@@ -18,8 +18,8 @@ package io.flamingock.community.mongodb.springdata.internal.mongodb;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.IndexOptions;
-import io.flamingock.oss.driver.common.mongodb.CollectionWrapper;
-import io.flamingock.oss.driver.common.mongodb.DocumentWrapper;
+import io.flamingock.internal.common.mongodb.CollectionWrapper;
+import io.flamingock.internal.common.mongodb.DocumentWrapper;
 import org.bson.Document;
 
 public class SpringDataMongoCollectionWrapper implements CollectionWrapper<SpringDataMongoDocumentWrapper> {

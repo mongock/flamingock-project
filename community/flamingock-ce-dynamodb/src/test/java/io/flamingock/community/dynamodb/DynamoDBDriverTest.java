@@ -18,10 +18,10 @@ package io.flamingock.community.dynamodb;
 
 import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
-import io.flamingock.commons.utils.DynamoDBUtil;
-import io.flamingock.commons.utils.Trio;
+import io.flamingock.internal.util.dynamodb.DynamoDBUtil;
+import io.flamingock.internal.util.Trio;
 import io.flamingock.internal.core.builder.FlamingockFactory;
-import io.flamingock.internal.commons.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.audit.AuditEntry;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.internal.core.runner.PipelineExecutionException;
 import io.flamingock.community.dynamodb.changes._1_create_client_collection_happy;
@@ -33,7 +33,7 @@ import io.flamingock.community.dynamodb.changes._3_insert_jorge_failed_transacti
 import io.flamingock.community.dynamodb.changes._3_insert_jorge_happy_non_transactional;
 import io.flamingock.community.dynamodb.changes._3_insert_jorge_happy_transactional;
 import io.flamingock.community.dynamodb.changes.common.UserEntity;
-import io.flamingock.commons.utils.DynamoDBConstants;
+import io.flamingock.internal.util.dynamodb.DynamoDBConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

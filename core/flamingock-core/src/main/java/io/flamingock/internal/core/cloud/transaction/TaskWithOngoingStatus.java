@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.cloud.transaction;
 
-import io.flamingock.internal.commons.cloud.vo.OngoingStatus;
+import io.flamingock.internal.common.cloud.vo.OngoingStatus;
 
 public class TaskWithOngoingStatus {
 

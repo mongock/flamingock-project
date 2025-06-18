@@ -16,11 +16,11 @@
 
 package io.flamingock.internal.core.engine.audit.domain;
 
-import io.flamingock.commons.utils.ThrowableUtil;
-import io.flamingock.internal.commons.core.audit.AuditEntry;
-import io.flamingock.internal.commons.cloud.vo.OngoingStatus;
+import io.flamingock.internal.util.ThrowableUtil;
+import io.flamingock.internal.common.core.audit.AuditEntry;
+import io.flamingock.internal.common.cloud.vo.OngoingStatus;
 import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
-import io.flamingock.internal.commons.core.task.TaskDescriptor;
+import io.flamingock.internal.common.core.task.TaskDescriptor;
 
 public abstract class AuditContextBundle {
 

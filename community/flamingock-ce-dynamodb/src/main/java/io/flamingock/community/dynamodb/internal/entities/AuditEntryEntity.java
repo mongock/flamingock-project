@@ -17,8 +17,8 @@
 package io.flamingock.community.dynamodb.internal.entities;
 
 import io.flamingock.internal.core.community.AuditEntryField;
-import io.flamingock.internal.commons.core.audit.AuditEntry;
-import io.flamingock.commons.utils.DynamoDBConstants;
+import io.flamingock.internal.common.core.audit.AuditEntry;
+import io.flamingock.internal.util.dynamodb.DynamoDBConstants;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;

@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.task.loaded;
 
-import io.flamingock.commons.utils.ReflectionUtil;
+import io.flamingock.internal.util.ReflectionUtil;
 import io.flamingock.api.annotations.Execution;
 import io.flamingock.api.annotations.RollbackExecution;
 import io.mongock.api.annotations.BeforeExecution;

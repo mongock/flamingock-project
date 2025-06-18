@@ -17,9 +17,9 @@
 package io.flamingock.importer;
 
 
-import io.flamingock.internal.commons.core.audit.AuditWriter;
-import io.flamingock.internal.commons.core.audit.AuditEntry;
-import io.flamingock.internal.commons.core.pipeline.PipelineDescriptor;
+import io.flamingock.internal.common.core.audit.AuditWriter;
+import io.flamingock.internal.common.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.pipeline.PipelineDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

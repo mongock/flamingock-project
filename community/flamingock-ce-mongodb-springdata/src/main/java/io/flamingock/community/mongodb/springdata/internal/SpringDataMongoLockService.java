@@ -17,7 +17,7 @@
 package io.flamingock.community.mongodb.springdata.internal;
 
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.commons.utils.TimeService;
+import io.flamingock.internal.util.TimeService;
 import io.flamingock.community.mongodb.sync.internal.MongoSync4LockService;
 import io.flamingock.community.mongodb.sync.internal.ReadWriteConfiguration;
 
