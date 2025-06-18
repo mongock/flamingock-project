@@ -23,7 +23,11 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
+
+import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_LOCK_REPOSITORY_NAME;
+import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_AUDIT_REPOSITORY_NAME;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +36,12 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
 class MongoChangeTemplateTest {
@@ -83,11 +93,28 @@ class MongoChangeTemplateTest {
                 .run();
 
 
-//        assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_AUDIT_REPOSITORY_NAME));
-//        assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_LOCK_REPOSITORY_NAME));
-//
-//        assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_AUDIT_REPOSITORY_NAME));
-//        assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_LOCK_REPOSITORY_NAME));
+        List<Document> auditLog = mongoDatabase.getCollection(DEFAULT_AUDIT_REPOSITORY_NAME)
+                .find()
+                .into(new ArrayList<>());
+
+        assertEquals(2, auditLog.size());
+        Document createCollectionAudit = auditLog.get(0);
+
+        assertEquals("create-users-collection-with-index", createCollectionAudit.getString("changeId"));
+        assertEquals("EXECUTED", createCollectionAudit.getString("state"));
+        assertEquals(MongoChangeTemplate.class.getName(), createCollectionAudit.getString("changeLogClass"));
+
+        Document seedAudit = auditLog.get(1);
+        assertEquals("seed-users", seedAudit.getString("changeId"));
+        assertEquals("EXECUTED", seedAudit.getString("state"));
+        assertEquals(MongoChangeTemplate.class.getName(), seedAudit.getString("changeLogClass"));
+
+    }
+
+
+    //TODO move to a mongodb util to be reused
+    private static boolean collectionExists(String collectionName) {
+        return mongoDatabase.listCollectionNames().into(new ArrayList()).contains(collectionName);
     }
 
 
