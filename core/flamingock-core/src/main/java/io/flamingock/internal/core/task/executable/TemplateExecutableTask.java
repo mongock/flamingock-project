@@ -56,24 +56,28 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
                                   String setterName) {
         Class<?> parameterClass;
         String field;
+        Object data;
         switch (setterName) {
             case "setSharedConfiguration":
                 parameterClass = instance.getSharedConfigurationClass();
                 field = "shared";
+                data = descriptor.getSharedConfiguration();
                 break;
             case "setExecution":
                 parameterClass = instance.getExecutionClass();
                 field = "execution";
+                data = descriptor.getExecution();
                 break;
             case "setRollback":
                 parameterClass = instance.getRollbackClass();
                 field = "rollback";
+                data = descriptor.getRollback();
                 break;
             default:
                 throw new RuntimeException("Not found config setter for template: " + instance.getClass().getSimpleName());
         }
         Method setConfigurationMethod = getSetterMethod(instance.getClass(), setterName);
-        Object data = descriptor.getTemplateConfiguration().get(field);
+
         if(data != null && Void.class != parameterClass) {
             runtimeManager.executeMethodWithParameters(
                     instance,

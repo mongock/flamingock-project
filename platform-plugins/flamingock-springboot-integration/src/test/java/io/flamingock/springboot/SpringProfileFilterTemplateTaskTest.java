@@ -116,7 +116,9 @@ class SpringProfileFilterTemplateTaskTest {
                 TemplateSimulate.class.getSimpleName(),
                 profiles,
                 true,
-                new HashMap<>()
+                null,
+                null,
+                null
         );
 
         TemplatePreviewChangeUnit preview = PreviewTaskBuilder.getTemplateBuilder(changeFileDescriptor).build();

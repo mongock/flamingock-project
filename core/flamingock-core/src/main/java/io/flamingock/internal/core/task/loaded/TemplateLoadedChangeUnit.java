@@ -29,8 +29,10 @@ import java.util.Optional;
 
 public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
-    private final Map<String, Object> templateConfiguration;
     private final List<String> profiles;
+    private final Object sharedConfiguration;
+    private final Object execution;
+    private final Object rollback;
 
     TemplateLoadedChangeUnit(String id,
                              String order,
@@ -39,14 +41,27 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
                              boolean transactional,
                              boolean runAlways,
                              boolean systemTask,
-                             Map<String, Object> templateConfiguration) {
+                             Object sharedConfiguration,
+                             Object execution,
+                             Object rollback) {
         super(id, order, templateClass, runAlways, transactional, systemTask);
         this.profiles = profiles;
-        this.templateConfiguration = templateConfiguration;
+        this.transactional = transactional;
+        this.sharedConfiguration = sharedConfiguration;
+        this.execution = execution;
+        this.rollback = rollback;
     }
 
-    public Map<String, Object> getTemplateConfiguration() {
-        return templateConfiguration;
+    public Object getSharedConfiguration() {
+        return sharedConfiguration;
+    }
+
+    public Object getExecution() {
+        return execution;
+    }
+
+    public Object getRollback() {
+        return rollback;
     }
 
     public List<String> getProfiles() {

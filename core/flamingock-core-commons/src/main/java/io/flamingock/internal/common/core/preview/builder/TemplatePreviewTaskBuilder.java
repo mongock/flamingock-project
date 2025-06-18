@@ -36,7 +36,10 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
     private String profilesString;
     private boolean runAlways;
     private Boolean transactional;
-    private Map<String, Object> templateConfiguration;
+    private Object sharedConfiguration;
+    private Object execution;
+    private Object rollback;
+
 
     private TemplatePreviewTaskBuilder() {
     }
@@ -78,9 +81,16 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
         return this;
     }
 
-    public TemplatePreviewTaskBuilder setTemplateConfiguration(Map<String, Object> templateConfiguration) {
-        this.templateConfiguration = templateConfiguration;
-        return this;
+    public void setRollback(Object rollback) {
+        this.rollback = rollback;
+    }
+
+    public void setExecution(Object execution) {
+        this.execution = execution;
+    }
+
+    public void setSharedConfiguration(Object sharedConfiguration) {
+        this.sharedConfiguration = sharedConfiguration;
     }
 
     @Override
@@ -95,7 +105,9 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
                 transactional,
                 runAlways,
                 false,
-                templateConfiguration);
+                sharedConfiguration,
+                execution,
+                rollback);
     }
 
     @NotNull
@@ -110,13 +122,15 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
     }
 
 
-    TemplatePreviewTaskBuilder setFromDefinition(ChangeFileDescriptor templateTaskDefinition) {
-        setId(templateTaskDefinition.getId());
-        setOrder(templateTaskDefinition.getOrder());
-        setTemplate(templateTaskDefinition.getTemplate());
-        setProfilesString(templateTaskDefinition.getProfiles());
-        setTemplateConfiguration(templateTaskDefinition.getTemplateConfiguration());
-        setTransactional(templateTaskDefinition.getTransactional());
+    TemplatePreviewTaskBuilder setFromDefinition(ChangeFileDescriptor templateTaskDescriptor) {
+        setId(templateTaskDescriptor.getId());
+        setOrder(templateTaskDescriptor.getOrder());
+        setTemplate(templateTaskDescriptor.getTemplate());
+        setProfilesString(templateTaskDescriptor.getProfiles());
+        setSharedConfiguration(templateTaskDescriptor.getSharedConfiguration());
+        setExecution(templateTaskDescriptor.getExecution());
+        setRollback(templateTaskDescriptor.getRollback());
+        setTransactional(templateTaskDescriptor.getTransactional());
         setRunAlways(false);
         return this;
     }

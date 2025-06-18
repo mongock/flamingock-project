@@ -81,7 +81,7 @@ public class TemplateExecutableTaskBuilder implements ExecutableTaskBuilder<Temp
                                                           TemplateLoadedChangeUnit loadedTask,
                                                           AuditEntry.Status initialState) {
         Method rollbackMethod = null;
-        if (loadedTask.getTemplateConfiguration().containsKey("rollback")) {
+        if (loadedTask.getRollback() != null) {
             rollbackMethod = loadedTask.getRollbackMethod().orElse(null);
             if (rollbackMethod != null) {
                 logger.trace("ChangeUnit[{}] provides rollback in configuration", loadedTask.getId());
@@ -108,10 +108,5 @@ public class TemplateExecutableTaskBuilder implements ExecutableTaskBuilder<Temp
         );
 
     }
-
-    private <T extends ChangeTemplateConfig<?, ?, ?>> T getConfig(Class<T> configClass, TemplateLoadedChangeUnit loadedTask) {
-        return FileUtil.getFromMap(configClass, loadedTask.getTemplateConfiguration());
-    }
-
-
+    
 }

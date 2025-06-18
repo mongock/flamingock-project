@@ -10,17 +10,23 @@ public class TemplateChangeUnitTestDefinition extends ChangeUnitTestDefinition {
 
 
     private final String templateName;
-    private final Map<String, Object> templateConfiguration;
+    private final Object sharedConfiguration;
+    private final Object execution;
+    private final Object rollback;
 
 
     public TemplateChangeUnitTestDefinition(String id,
                                             String order,
                                             String templateName,
                                             boolean transactional,
-                                            Map<String, Object> templateConfiguration) {
+                                            Object sharedConfiguration,
+                                            Object execution,
+                                            Object rollback) {
         super(id, order, transactional);
         this.templateName = templateName;
-        this.templateConfiguration = templateConfiguration;
+        this.sharedConfiguration = sharedConfiguration;
+        this.execution = execution;
+        this.rollback = rollback;
     }
 
 
@@ -34,7 +40,9 @@ public class TemplateChangeUnitTestDefinition extends ChangeUnitTestDefinition {
                 isTransactional(),
                 false,
                 false,
-                templateConfiguration
+                sharedConfiguration,
+                execution,
+                rollback
         );
     }
 

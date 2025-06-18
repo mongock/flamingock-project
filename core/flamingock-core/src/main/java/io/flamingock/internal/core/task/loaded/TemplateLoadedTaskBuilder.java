@@ -37,7 +37,9 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     private boolean runAlways;
     private boolean transactional;
     private boolean system;
-    private Map<String, Object> templateConfiguration;
+    private Object sharedConfiguration;
+    private Object execution;
+    private Object rollback;
 
     private TemplateLoadedTaskBuilder() {
     }
@@ -89,8 +91,18 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         return this;
     }
 
-    public TemplateLoadedTaskBuilder setTemplateConfiguration(Map<String, Object> templateConfiguration) {
-        this.templateConfiguration = templateConfiguration;
+    public TemplateLoadedTaskBuilder setSharedConfiguration(Object sharedConfiguration) {
+        this.sharedConfiguration = sharedConfiguration;
+        return this;
+    }
+
+    public TemplateLoadedTaskBuilder setExecution(Object execution) {
+        this.execution = execution;
+        return this;
+    }
+
+    public TemplateLoadedTaskBuilder setRollback(Object rollback) {
+        this.rollback = rollback;
         return this;
     }
 
@@ -107,7 +119,9 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
                 transactional,
                 runAlways,
                 system,
-                templateConfiguration);
+                sharedConfiguration,
+                execution,
+                rollback);
 
     }
 
@@ -119,7 +133,9 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         setRunAlways(preview.isRunAlways());
         setTransactional(preview.isTransactional());
         setSystem(preview.isSystem());
-        setTemplateConfiguration(preview.getTemplateConfiguration());
+        setSharedConfiguration(preview.getSharedConfiguration());
+        setExecution(preview.getExecution());
+        setRollback(preview.getRollback());
         return this;
     }
 
