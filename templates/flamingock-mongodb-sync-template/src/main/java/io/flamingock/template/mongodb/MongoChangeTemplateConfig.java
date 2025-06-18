@@ -17,9 +17,9 @@
 package io.flamingock.template.mongodb;
 
 
-import io.flamingock.core.api.annotations.NonLockGuarded;
-import io.flamingock.core.api.annotations.NonLockGuardedType;
-import io.flamingock.core.api.template.ChangeTemplateConfig;
+import io.flamingock.api.annotations.NonLockGuarded;
+import io.flamingock.api.annotations.NonLockGuardedType;
+import io.flamingock.api.template.ChangeTemplateConfig;
 import io.flamingock.template.mongodb.model.MongoOperation;
 
 @NonLockGuarded(NonLockGuardedType.NONE)
@@ -28,7 +28,7 @@ public class MongoChangeTemplateConfig  extends ChangeTemplateConfig<MongoOperat
     private MongoOperation rollback;
 
     public MongoChangeTemplateConfig(MongoOperation execution, MongoOperation rollback) {
-        super(execution, rollback);
+        super( execution, rollback);
     }
 
     public MongoChangeTemplateConfig() {
@@ -54,8 +54,8 @@ public class MongoChangeTemplateConfig  extends ChangeTemplateConfig<MongoOperat
 
     @Override
     public String toString() {
-        return "MongoChangeTemplateConfig{" + "changes=" + execution +
-                ", rollbacks=" + rollback +
+        return "MongoChangeTemplateConfig{" + "execution=" + execution +
+                ", rollback=" + rollback +
                 '}';
     }
 }

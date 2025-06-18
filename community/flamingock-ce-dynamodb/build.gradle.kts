@@ -1,10 +1,12 @@
 dependencies {
     implementation(project(":utils:dynamodb-util"))
-    api(project(":core:flamingock-core"))
-
-    implementation("software.amazon.awssdk:dynamodb-enhanced:2.25.28")
+    implementation(project(":core:flamingock-core"))
+    api(project(":community:flamingock-ce-commons"))
 
     api(project(":transactioners:dynamodb-transactioner"))
+
+    compileOnly("software.amazon.awssdk:dynamodb-enhanced:[2.0.0,3.0.0)")
+
 
     testImplementation("software.amazon.awssdk:url-connection-client:2.24.11")
     testImplementation("com.amazonaws:DynamoDBLocal:1.25.0")
@@ -20,4 +22,8 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(8))
     }
+}
+
+configurations.testImplementation {
+    extendsFrom(configurations.compileOnly.get())
 }

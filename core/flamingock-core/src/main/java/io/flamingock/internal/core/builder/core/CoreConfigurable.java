@@ -18,7 +18,7 @@ package io.flamingock.internal.core.builder.core;
 
 import io.flamingock.internal.core.builder.TransactionStrategy;
 
-import io.flamingock.core.preview.PreviewPipeline;
+import io.flamingock.internal.common.core.preview.PreviewPipeline;
 
 import java.util.Map;
 
@@ -74,6 +74,10 @@ public interface CoreConfigurable {
 
     TransactionStrategy getTransactionStrategy();
 
+
+
+
+    //TODO
     void setLegacyMongockChangelogSource(String legacyMongockChangelogSource);
 
     String getLegacyMongockChangelogSource();
