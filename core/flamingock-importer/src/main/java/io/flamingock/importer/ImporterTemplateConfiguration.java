@@ -17,10 +17,8 @@
 package io.flamingock.importer;
 
 
-import io.flamingock.api.annotations.NonLockGuarded;
-import io.flamingock.api.annotations.NonLockGuardedType;
 import io.flamingock.api.template.ChangeTemplateConfig;
 
-@NonLockGuarded(NonLockGuardedType.NONE)
-public class ImporterTemplateConfiguration extends ChangeTemplateConfig<OriginConfiguration, Void> {
+
+public class ImporterTemplateConfiguration extends ChangeTemplateConfig<OriginConfiguration, Void, Void> {
 }

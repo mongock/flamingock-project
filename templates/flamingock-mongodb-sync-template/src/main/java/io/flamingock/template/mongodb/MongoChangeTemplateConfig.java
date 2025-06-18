@@ -23,23 +23,29 @@ import io.flamingock.api.template.ChangeTemplateConfig;
 import io.flamingock.template.mongodb.model.MongoOperation;
 
 @NonLockGuarded(NonLockGuardedType.NONE)
-public class MongoChangeTemplateConfig  extends ChangeTemplateConfig<MongoOperation, MongoOperation> {
+public class MongoChangeTemplateConfig extends ChangeTemplateConfig<Void, MongoOperation, MongoOperation> {
     private MongoOperation execution;
     private MongoOperation rollback;
 
     public MongoChangeTemplateConfig(MongoOperation execution, MongoOperation rollback) {
-        super( execution, rollback);
+        super(null, execution, rollback);
     }
 
     public MongoChangeTemplateConfig() {
         super();
     }
 
-    public MongoOperation getExecution() { return execution; }
+    public MongoOperation getExecution() {
+        return execution;
+    }
 
-    public void setExecution(MongoOperation execution) { this.execution = execution; }
+    public void setExecution(MongoOperation execution) {
+        this.execution = execution;
+    }
 
-    public MongoOperation getRollback() { return rollback; }
+    public MongoOperation getRollback() {
+        return rollback;
+    }
 
     public void setRollback(MongoOperation rollback) {
         this.rollback = rollback;
