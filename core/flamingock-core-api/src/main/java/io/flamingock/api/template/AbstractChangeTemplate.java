@@ -1,11 +1,7 @@
 package io.flamingock.api.template;
 
 import io.flamingock.internal.util.ReflectionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,18 +26,18 @@ public class AbstractChangeTemplate<SHARED, EXECUTION, ROLLBACK> implements Chan
     @SuppressWarnings("unchecked")
     public AbstractChangeTemplate(Class<?>... additionalReflectiveClass) {
         reflectiveClasses = new HashSet<>(Arrays.asList(additionalReflectiveClass));
-        
+
         try {
             Class<?>[] typeArgs = ReflectionUtil.getActualTypeArguments(this.getClass());
-            
+
             if (typeArgs.length < 3) {
                 throw new IllegalStateException("Expected 3 generic type arguments for a Template, but found " + typeArgs.length);
             }
-            
+
             this.sharedConfigurationClass = (Class<SHARED>) typeArgs[0];
             this.executionClass = (Class<EXECUTION>) typeArgs[1];
             this.rollbackClass = (Class<ROLLBACK>) typeArgs[2];
-            
+
             reflectiveClasses.add(sharedConfigurationClass);
             reflectiveClasses.add(executionClass);
             reflectiveClasses.add(rollbackClass);
