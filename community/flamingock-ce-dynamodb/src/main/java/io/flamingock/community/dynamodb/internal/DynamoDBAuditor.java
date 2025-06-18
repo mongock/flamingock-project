@@ -18,7 +18,7 @@ package io.flamingock.community.dynamodb.internal;
 
 import io.flamingock.commons.utils.Result;
 import io.flamingock.internal.core.community.TransactionManager;
-import io.flamingock.core.audit.AuditEntry;
+import io.flamingock.internal.commons.core.audit.AuditEntry;
 import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;
 import io.flamingock.internal.core.community.LocalAuditor;
 import io.flamingock.community.dynamodb.internal.entities.AuditEntryEntity;

@@ -18,7 +18,7 @@ import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
 import static java.util.Collections.emptyList;
 
 
-@io.flamingock.core.api.annotations.ChangeUnit(id = "client-initializer", order = "001", author = "mongock")
+@io.flamingock.api.annotations.ChangeUnit(id = "client-initializer", order = "001", author = "mongock")
 @ChangeUnit(id = "client-initializer", order = "001", author = "mongock")
 public class _0_mongock_create_authors_collection {
 
@@ -61,7 +61,7 @@ public class _0_mongock_create_authors_collection {
         );
     }
 
-    @io.flamingock.core.api.annotations.Execution
+    @io.flamingock.api.annotations.Execution
     @Execution
     public void execution(DynamoDbClient client) {
         final TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder = TransactWriteItemsEnhancedRequest.builder();
@@ -72,7 +72,7 @@ public class _0_mongock_create_authors_collection {
         enhancedClient.transactWriteItems(writeRequestBuilder.build());
     }
 
-    @io.flamingock.core.api.annotations.RollbackExecution
+    @io.flamingock.api.annotations.RollbackExecution
     @RollbackExecution
     public void rollbackExecution(DynamoDbClient client) {
         final TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder = TransactWriteItemsEnhancedRequest.builder();

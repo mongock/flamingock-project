@@ -17,11 +17,11 @@
 package io.flamingock.common.test.pipeline;
 
 import io.flamingock.commons.utils.Pair;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.preview.AbstractPreviewTask;
-import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.PreviewPipeline;
-import io.flamingock.core.preview.PreviewStage;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.internal.commons.core.preview.AbstractPreviewTask;
+import io.flamingock.internal.commons.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.commons.core.preview.PreviewPipeline;
+import io.flamingock.internal.commons.core.preview.PreviewStage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

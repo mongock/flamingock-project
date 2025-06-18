@@ -18,10 +18,10 @@ package io.flamingock.cloud.transaction.mongodb.sync.wrapper;
 
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
-import io.flamingock.core.context.Dependency;
+import io.flamingock.internal.commons.core.context.Dependency;
 import io.flamingock.internal.core.task.navigation.step.FailedStep;
-import io.flamingock.core.context.DependencyInjectable;
-import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.internal.commons.core.context.DependencyInjectable;
+import io.flamingock.internal.commons.core.task.TaskDescriptor;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
 import io.flamingock.internal.core.community.TransactionManager;
 import org.slf4j.Logger;

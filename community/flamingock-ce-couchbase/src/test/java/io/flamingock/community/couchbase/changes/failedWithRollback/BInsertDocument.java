@@ -18,8 +18,8 @@ package io.flamingock.community.couchbase.changes.failedWithRollback;
 
 import com.couchbase.client.java.Collection;
 import com.couchbase.client.java.json.JsonObject;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.api.annotations.Execution;
 
 @ChangeUnit( id="insert-document" , order = "002")
 public class BInsertDocument {

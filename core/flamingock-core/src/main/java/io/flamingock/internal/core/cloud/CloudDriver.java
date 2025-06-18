@@ -17,7 +17,7 @@
 package io.flamingock.internal.core.cloud;
 
 import io.flamingock.commons.utils.Pair;
-import io.flamingock.core.error.FlamingockException;
+import io.flamingock.internal.commons.core.error.FlamingockException;
 import io.flamingock.internal.core.builder.Driver;
 import io.flamingock.internal.core.community.driver.OverridesDrivers;
 

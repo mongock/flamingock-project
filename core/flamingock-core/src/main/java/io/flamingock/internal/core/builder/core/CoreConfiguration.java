@@ -16,11 +16,11 @@
 
 package io.flamingock.internal.core.builder.core;
 
-import io.flamingock.core.system.SystemModule;
+import io.flamingock.internal.commons.core.system.SystemModule;
 import io.flamingock.internal.core.builder.TransactionStrategy;
 
 import io.flamingock.core.processor.util.Deserializer;
-import io.flamingock.core.preview.PreviewPipeline;
+import io.flamingock.internal.commons.core.preview.PreviewPipeline;
 
 import java.util.ArrayList;
 import java.util.HashMap;

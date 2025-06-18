@@ -16,8 +16,8 @@
 
 package io.flamingock.cloud.planner.client;
 
-import io.flamingock.core.cloud.api.planner.request.ExecutionPlanRequest;
-import io.flamingock.core.cloud.api.planner.response.ExecutionPlanResponse;
+import io.flamingock.internal.commons.cloud.planner.request.ExecutionPlanRequest;
+import io.flamingock.internal.commons.cloud.planner.response.ExecutionPlanResponse;
 
 public interface ExecutionPlannerClient {
 

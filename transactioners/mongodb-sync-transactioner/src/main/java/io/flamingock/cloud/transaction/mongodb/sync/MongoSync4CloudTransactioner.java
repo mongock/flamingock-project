@@ -26,12 +26,12 @@ import io.flamingock.cloud.transaction.mongodb.sync.config.MongoDBSync4Configura
 import io.flamingock.cloud.transaction.mongodb.sync.wrapper.MongoSync4CollectionWrapper;
 import io.flamingock.cloud.transaction.mongodb.sync.wrapper.MongoSync4DocumentWrapper;
 import io.flamingock.cloud.transaction.mongodb.sync.wrapper.MongoSync4TransactionWrapper;
-import io.flamingock.core.cloud.api.vo.OngoingStatus;
+import io.flamingock.internal.commons.cloud.vo.OngoingStatus;
 import io.flamingock.internal.core.cloud.transaction.TaskWithOngoingStatus;
 import io.flamingock.internal.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.internal.core.community.TransactionManager;
-import io.flamingock.core.context.DependencyInjectable;
-import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.internal.commons.core.context.DependencyInjectable;
+import io.flamingock.internal.commons.core.task.TaskDescriptor;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
 import io.flamingock.oss.driver.common.mongodb.CollectionInitializator;
 import org.bson.Document;

@@ -1,7 +1,7 @@
 package io.flamingock.common.test.cloud.deprecated;
 
 
-import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
+import io.flamingock.internal.commons.cloud.audit.AuditEntryRequest;
 
 import java.beans.Transient;
 

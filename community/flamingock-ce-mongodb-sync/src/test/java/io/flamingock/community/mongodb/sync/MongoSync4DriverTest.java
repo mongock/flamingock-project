@@ -27,7 +27,7 @@ import io.flamingock.cloud.transaction.mongodb.sync.config.MongoDBSync4Configura
 import io.flamingock.common.test.pipeline.CodeChangeUnitTestDefinition;
 import io.flamingock.common.test.pipeline.PipelineTestHelper;
 import io.flamingock.internal.core.builder.FlamingockFactory;
-import io.flamingock.core.audit.AuditEntry;
+import io.flamingock.internal.commons.core.audit.AuditEntry;
 import io.flamingock.core.processor.util.Deserializer;
 import io.flamingock.internal.core.runner.PipelineExecutionException;
 import io.flamingock.community.mongodb.sync.changes._1_create_client_collection_happy;

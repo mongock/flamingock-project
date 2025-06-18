@@ -19,7 +19,7 @@ package io.flamingock.community.couchbase.internal.util;
 import com.couchbase.client.java.json.JsonObject;
 import io.flamingock.internal.core.engine.lock.LockAcquisition;
 import io.flamingock.internal.core.community.lock.LockEntry;
-import io.flamingock.core.audit.AuditEntry;
+import io.flamingock.internal.commons.core.audit.AuditEntry;
 import io.flamingock.internal.core.engine.lock.LockStatus;
 import io.flamingock.commons.utils.id.RunnerId;
 import io.flamingock.commons.utils.TimeUtil;

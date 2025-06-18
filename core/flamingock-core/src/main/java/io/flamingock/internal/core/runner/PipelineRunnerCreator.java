@@ -26,7 +26,7 @@ import io.flamingock.internal.core.event.EventPublisher;
 import io.flamingock.internal.core.pipeline.Pipeline;
 import io.flamingock.internal.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.internal.core.pipeline.execution.StageExecutor;
-import io.flamingock.core.context.ContextResolver;
+import io.flamingock.internal.commons.core.context.ContextResolver;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
 
 import java.util.Set;

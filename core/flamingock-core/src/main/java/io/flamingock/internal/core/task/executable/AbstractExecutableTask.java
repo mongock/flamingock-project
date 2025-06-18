@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.task.executable;
 
-import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.internal.commons.core.task.TaskDescriptor;
 
 import java.util.Objects;
 import java.util.Optional;

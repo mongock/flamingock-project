@@ -23,7 +23,7 @@ import io.flamingock.internal.core.builder.core.CoreConfigurable;
 import io.flamingock.internal.core.builder.local.CommunityConfigurable;
 import io.flamingock.internal.core.community.LocalEngine;
 import io.flamingock.internal.core.community.driver.LocalDriver;
-import io.flamingock.core.context.ContextResolver;
+import io.flamingock.internal.commons.core.context.ContextResolver;
 import io.flamingock.community.mongodb.sync.internal.MongoSync4Engine;
 
 public class MongoSync4Driver implements LocalDriver {

@@ -27,7 +27,7 @@ import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.query.QueryScanConsistency;
 import io.flamingock.internal.core.community.LocalAuditor;
-import io.flamingock.core.audit.AuditEntry;
+import io.flamingock.internal.commons.core.audit.AuditEntry;
 import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;
 import io.flamingock.commons.utils.Result;
 import io.flamingock.commons.utils.TimeUtil;

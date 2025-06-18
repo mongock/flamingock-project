@@ -16,8 +16,8 @@
 
 package io.flamingock.cloud.lock;
 
-import io.flamingock.core.cloud.api.lock.LockExtensionRequest;
-import io.flamingock.core.cloud.api.lock.LockResponse;
+import io.flamingock.internal.commons.cloud.lock.LockExtensionRequest;
+import io.flamingock.internal.commons.cloud.lock.LockResponse;
 import io.flamingock.cloud.lock.client.LockServiceClient;
 import io.flamingock.internal.core.engine.lock.LockAcquisition;
 import io.flamingock.internal.core.engine.lock.LockKey;

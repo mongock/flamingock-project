@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.engine.audit;
 
-import io.flamingock.core.audit.AuditWriter;
+import io.flamingock.internal.commons.core.audit.AuditWriter;
 import io.flamingock.internal.core.engine.audit.domain.ExecutionAuditContextBundle;
 import io.flamingock.internal.core.engine.audit.domain.RollbackAuditContextBundle;
 import io.flamingock.internal.core.engine.audit.domain.StartExecutionAuditContextBundle;

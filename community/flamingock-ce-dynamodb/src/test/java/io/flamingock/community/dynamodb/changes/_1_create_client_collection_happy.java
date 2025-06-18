@@ -16,8 +16,8 @@
 
 package io.flamingock.community.dynamodb.changes;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.api.annotations.Execution;
 import io.flamingock.community.dynamodb.changes.common.DynamoDBUtil;
 import io.flamingock.community.dynamodb.changes.common.UserEntity;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;

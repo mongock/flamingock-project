@@ -21,13 +21,13 @@ import com.mongodb.client.MongoDatabase;
 
 import io.flamingock.commons.utils.Pair;
 import io.flamingock.commons.utils.Trio;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.audit.AuditEntry;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.internal.commons.core.audit.AuditEntry;
 import io.flamingock.commons.utils.TimeUtil;
-import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.PreviewMethod;
-import io.flamingock.core.preview.PreviewPipeline;
-import io.flamingock.core.preview.PreviewStage;
+import io.flamingock.internal.commons.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.commons.core.preview.PreviewMethod;
+import io.flamingock.internal.commons.core.preview.PreviewPipeline;
+import io.flamingock.internal.commons.core.preview.PreviewStage;
 import io.flamingock.oss.driver.common.mongodb.MongoDBAuditMapper;
 import io.flamingock.community.mongodb.springdata.internal.mongodb.SpringDataMongoDocumentWrapper;
 

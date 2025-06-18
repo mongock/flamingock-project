@@ -2,11 +2,11 @@ package io.flamingock.core.processor.util;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.flamingock.commons.utils.JsonObjectMapper;
-import io.flamingock.core.metadata.Constants;
-import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.PreviewPipeline;
-import io.flamingock.core.preview.PreviewStage;
-import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.internal.commons.core.metadata.Constants;
+import io.flamingock.internal.commons.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.commons.core.preview.PreviewPipeline;
+import io.flamingock.internal.commons.core.preview.PreviewStage;
+import io.flamingock.internal.commons.core.task.TaskDescriptor;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;

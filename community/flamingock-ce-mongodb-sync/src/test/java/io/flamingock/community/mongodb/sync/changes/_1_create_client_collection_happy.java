@@ -17,8 +17,8 @@
 package io.flamingock.community.mongodb.sync.changes;
 
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.api.annotations.Execution;
 
 @ChangeUnit( id="create-client-collection" , order = "001", transactional = false)
 public class _1_create_client_collection_happy {

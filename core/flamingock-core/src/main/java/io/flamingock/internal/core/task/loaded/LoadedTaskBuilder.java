@@ -16,9 +16,9 @@
 
 package io.flamingock.internal.core.task.loaded;
 
-import io.flamingock.core.preview.AbstractPreviewTask;
-import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.TemplatePreviewChangeUnit;
+import io.flamingock.internal.commons.core.preview.AbstractPreviewTask;
+import io.flamingock.internal.commons.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.commons.core.preview.TemplatePreviewChangeUnit;
 
 public interface LoadedTaskBuilder<LOADED_TASK extends AbstractLoadedTask> {
 

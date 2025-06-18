@@ -17,8 +17,8 @@
 package io.flamingock.community.couchbase.changes.failedWithRollback;
 
 import com.couchbase.client.java.Cluster;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.api.annotations.Execution;
 
 import java.util.Arrays;
 

@@ -17,8 +17,8 @@
 package io.flamingock.community.mongodb.springdata.changes;
 
 import com.mongodb.client.MongoCollection;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.api.annotations.Execution;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 

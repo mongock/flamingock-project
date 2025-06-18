@@ -18,7 +18,7 @@ package io.flamingock.internal.core.builder.core;
 
 import io.flamingock.internal.core.builder.TransactionStrategy;
 
-import io.flamingock.core.preview.PreviewPipeline;
+import io.flamingock.internal.commons.core.preview.PreviewPipeline;
 
 import java.util.Map;
 

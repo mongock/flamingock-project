@@ -1,8 +1,8 @@
 package io.flamingock.core.processor.util;
 
 import io.flamingock.commons.utils.JsonObjectMapper;
-import io.flamingock.core.metadata.Constants;
-import io.flamingock.core.preview.PreviewPipeline;
+import io.flamingock.internal.commons.core.metadata.Constants;
+import io.flamingock.internal.commons.core.preview.PreviewPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

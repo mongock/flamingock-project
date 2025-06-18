@@ -16,7 +16,7 @@
 
 package io.flamingock.internal.core.pipeline.execution;
 
-import io.flamingock.core.error.FlamingockException;
+import io.flamingock.internal.commons.core.error.FlamingockException;
 
 public class StageExecutionException extends FlamingockException {
 

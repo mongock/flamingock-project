@@ -16,7 +16,7 @@ import io.flamingock.core.utils.TestTaskExecution;
 import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
 import io.flamingock.internal.core.pipeline.execution.TaskSummarizer;
 import io.flamingock.internal.core.runtime.RuntimeManager;
-import io.flamingock.core.context.Context;
+import io.flamingock.internal.commons.core.context.Context;
 import io.flamingock.internal.core.task.executable.ExecutableTask;
 import io.flamingock.internal.core.task.navigation.navigator.StepNavigator;
 import org.junit.jupiter.api.Assertions;

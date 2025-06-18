@@ -30,7 +30,7 @@ import io.flamingock.common.test.cloud.mock.MockRequestResponseTask;
 import io.flamingock.common.test.cloud.prototype.PrototypeClientSubmission;
 import io.flamingock.common.test.cloud.prototype.PrototypeStage;
 import io.flamingock.commons.utils.Trio;
-import io.flamingock.core.cloud.api.vo.OngoingStatus;
+import io.flamingock.internal.commons.cloud.vo.OngoingStatus;
 import io.flamingock.internal.core.builder.FlamingockFactory;
 import io.flamingock.internal.core.builder.CloudFlamingockBuilder;
 import io.flamingock.core.processor.util.Deserializer;
@@ -53,9 +53,9 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.UUID;
 
-import static io.flamingock.core.cloud.api.audit.AuditEntryRequest.Status.EXECUTED;
-import static io.flamingock.core.cloud.api.audit.AuditEntryRequest.Status.EXECUTION_FAILED;
-import static io.flamingock.core.cloud.api.audit.AuditEntryRequest.Status.ROLLED_BACK;
+import static io.flamingock.internal.commons.cloud.audit.AuditEntryRequest.Status.EXECUTED;
+import static io.flamingock.internal.commons.cloud.audit.AuditEntryRequest.Status.EXECUTION_FAILED;
+import static io.flamingock.internal.commons.cloud.audit.AuditEntryRequest.Status.ROLLED_BACK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MysqlSqlCloudTransactionerTest {

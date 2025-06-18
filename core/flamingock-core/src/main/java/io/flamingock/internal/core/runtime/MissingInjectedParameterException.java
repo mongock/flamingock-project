@@ -17,7 +17,7 @@
 package io.flamingock.internal.core.runtime;
 
 
-import io.flamingock.core.error.FlamingockException;
+import io.flamingock.internal.commons.core.error.FlamingockException;
 
 public class MissingInjectedParameterException extends FlamingockException {
 

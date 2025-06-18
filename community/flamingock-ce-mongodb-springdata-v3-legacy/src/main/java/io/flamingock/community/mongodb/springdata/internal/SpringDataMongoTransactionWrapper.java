@@ -17,8 +17,8 @@
 package io.flamingock.community.mongodb.springdata.internal;
 
 import com.mongodb.TransactionOptions;
-import io.flamingock.core.context.DependencyInjectable;
-import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.internal.commons.core.context.DependencyInjectable;
+import io.flamingock.internal.commons.core.task.TaskDescriptor;
 import io.flamingock.internal.core.task.navigation.step.FailedStep;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
 import io.flamingock.community.mongodb.sync.internal.ReadWriteConfiguration;

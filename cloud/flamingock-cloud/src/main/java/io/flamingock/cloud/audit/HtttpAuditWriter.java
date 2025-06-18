@@ -16,11 +16,11 @@
 
 package io.flamingock.cloud.audit;
 
-import io.flamingock.core.cloud.api.audit.AuditEntryRequest;
+import io.flamingock.internal.commons.cloud.audit.AuditEntryRequest;
 import io.flamingock.cloud.auth.AuthManager;
 import io.flamingock.commons.utils.id.EnvironmentId;
 import io.flamingock.commons.utils.id.ServiceId;
-import io.flamingock.core.audit.AuditEntry;
+import io.flamingock.internal.commons.core.audit.AuditEntry;
 import io.flamingock.commons.utils.id.RunnerId;
 import io.flamingock.commons.utils.Result;
 import io.flamingock.commons.utils.http.Http;

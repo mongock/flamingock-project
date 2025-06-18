@@ -18,8 +18,8 @@ package io.flamingock.community.mongodb.sync.changes;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.annotations.Execution;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.api.annotations.Execution;
 import org.bson.Document;
 
 @ChangeUnit( id="insert-federico-document" , order = "002")
