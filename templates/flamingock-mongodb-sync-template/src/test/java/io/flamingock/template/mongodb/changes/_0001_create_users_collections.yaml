@@ -1,14 +1,8 @@
 id: create-users-collection-with-index
-order: 1
+order: 0001
 transactional: false
-templateName: mongo-change-template
+template: MongoChangeTemplate
 templateConfiguration:
-  changes:
-    - type: createCollectionAdd commentMore actions
-      collection: users
-
-    - type: createIndex
-      collection: users
-      parameters:
-        keys: { email: 1 }
-        options: { unique: true }
+  execution:
+    type: createCollection
+    collection: users
