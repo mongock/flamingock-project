@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.utils.extendsFrom
 
 dependencies {
     implementation(project(":utils:mongodb-util"))
-
     implementation(project(":core:flamingock-core"))
 
     api(project(":transactioners:mongodb-sync-transactioner"))
+    api(project(":community:flamingock-ce-commons"))
 
     compileOnly("org.mongodb:mongodb-driver-sync:[3.7.0,6.0.0)")
     testImplementation("org.testcontainers:mongodb:1.18.3")

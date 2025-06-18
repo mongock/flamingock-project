@@ -16,12 +16,13 @@
 
 package io.flamingock.template.mongodb;
 
+import io.flamingock.community.Flamingock;
+
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.internal.core.builder.FlamingockFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,10 +32,6 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
 class MongoChangeTemplateTest {
@@ -65,8 +62,6 @@ class MongoChangeTemplateTest {
 
     @BeforeEach
     void setupEach() {
-//        mongoDatabase.getCollection(DEFAULT_AUDIT_REPOSITORY_NAME).drop();
-//        mongoDatabase.getCollection(DEFAULT_LOCK_REPOSITORY_NAME).drop();
         mongoDatabase.getCollection(CUSTOM_AUDIT_REPOSITORY_NAME).drop();
         mongoDatabase.getCollection(CUSTOM_LOCK_REPOSITORY_NAME).drop();
     }
@@ -77,16 +72,15 @@ class MongoChangeTemplateTest {
     }
 
     @Test
-    @DisplayName("When standalone runs the driver with DEFAULT repository names related collections should exists")
-    void happyPathWithDefaultRepositoryNames() {
-        //Given-When
+    @DisplayName("WHEN mongodb template THEN runs fine IF Flamingock mongodb sync ce")
+    void happyPath() {
 
-            FlamingockFactory.getCommunityBuilder()
-                    .addDependency(mongoClient)
-                    .addDependency(mongoClient.getDatabase(DB_NAME))
-                    .setProperty("mongodb.databaseName", DB_NAME)
-                    .build()
-                    .run();
+        Flamingock.builder()
+                .addDependency(mongoClient)
+                .addDependency(mongoClient.getDatabase(DB_NAME))
+                .setProperty("mongodb.databaseName", DB_NAME)
+                .build()
+                .run();
 
 
 //        assertTrue(mongoDBTestHelper.collectionExists(DEFAULT_AUDIT_REPOSITORY_NAME));
@@ -95,7 +89,6 @@ class MongoChangeTemplateTest {
 //        assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_AUDIT_REPOSITORY_NAME));
 //        assertFalse(mongoDBTestHelper.collectionExists(CUSTOM_LOCK_REPOSITORY_NAME));
     }
-
 
 
 }
