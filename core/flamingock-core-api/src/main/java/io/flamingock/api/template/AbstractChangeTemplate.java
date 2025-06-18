@@ -30,13 +30,26 @@ public class AbstractChangeTemplate<SHARED, EXECUTION, ROLLBACK> implements Chan
     @SuppressWarnings("unchecked")
     public AbstractChangeTemplate(Class<?>... additionalReflectiveClass) {
         reflectiveClasses = new HashSet<>(Arrays.asList(additionalReflectiveClass));
-        Type[] typeArgs = ReflectionUtil.getActualTypeArguments(this.getClass());
-        this.sharedConfigurationClass = (Class<SHARED>) typeArgs[0];
-        this.executionClass = (Class<EXECUTION>) typeArgs[1];
-        this.rollbackClass = (Class<ROLLBACK>) typeArgs[2];
-        reflectiveClasses.add(sharedConfigurationClass);
-        reflectiveClasses.add(executionClass);
-        reflectiveClasses.add(rollbackClass);
+        
+        try {
+            Class<?>[] typeArgs = ReflectionUtil.getActualTypeArguments(this.getClass());
+            
+            if (typeArgs.length < 3) {
+                throw new IllegalStateException("Expected 3 generic type arguments for a Template, but found " + typeArgs.length);
+            }
+            
+            this.sharedConfigurationClass = (Class<SHARED>) typeArgs[0];
+            this.executionClass = (Class<EXECUTION>) typeArgs[1];
+            this.rollbackClass = (Class<ROLLBACK>) typeArgs[2];
+            
+            reflectiveClasses.add(sharedConfigurationClass);
+            reflectiveClasses.add(executionClass);
+            reflectiveClasses.add(rollbackClass);
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("Generic type arguments for a Template must be concrete types (classes, interfaces, or primitive wrappers like String, Integer, etc.): " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialize template: " + e.getMessage(), e);
+        }
     }
 
     @Override
