@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     constraints {
-        // Add constraints for BOM-managed modules
+        // Add constraints for BOM managed modules
         api("io.flamingock:flamingock-ce-mongodb-v3:$version")
         api("io.flamingock:flamingock-ce-mongodb-sync-v4:$version")
         api("io.flamingock:flamingock-ce-mongodb-springdata-v2:$version")
