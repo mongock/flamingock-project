@@ -17,12 +17,11 @@
 package io.flamingock.internal.common.core.preview;
 
 import java.util.List;
-import java.util.Map;
 
 public class TemplatePreviewChangeUnit extends AbstractPreviewTask {
 
     private List<String> profiles;
-    private Object sharedConfiguration;
+    private Object configuration;
     private Object execution;
     private Object rollback;
 
@@ -37,13 +36,13 @@ public class TemplatePreviewChangeUnit extends AbstractPreviewTask {
                                      boolean transactional,
                                      boolean runAlways,
                                      boolean system,
-                                     Object sharedConfiguration,
+                                     Object configuration,
                                      Object execution,
                                      Object rollback
                                      ) {
         super(id, order, templateName, runAlways, transactional, system);
         this.profiles = profiles;
-        this.sharedConfiguration = sharedConfiguration;
+        this.configuration = configuration;
         this.execution = execution;
         this.rollback = rollback;
     }
@@ -60,12 +59,12 @@ public class TemplatePreviewChangeUnit extends AbstractPreviewTask {
         this.profiles = profiles;
     }
 
-    public Object getSharedConfiguration() {
-        return sharedConfiguration;
+    public Object getConfiguration() {
+        return configuration;
     }
 
-    public void setSharedConfiguration(Object sharedConfiguration) {
-        this.sharedConfiguration = sharedConfiguration;
+    public void setConfiguration(Object configuration) {
+        this.configuration = configuration;
     }
 
     public Object getExecution() {
@@ -87,7 +86,7 @@ public class TemplatePreviewChangeUnit extends AbstractPreviewTask {
     @Override
     public String toString() {
         return "TemplatePreviewChangeUnit{" + "profiles=" + profiles +
-                ", sharedConfiguration=" + sharedConfiguration +
+                ", configuration=" + configuration +
                 ", execution=" + execution +
                 ", rollback=" + rollback +
                 ", id='" + id + '\'' +

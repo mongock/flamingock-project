@@ -44,9 +44,9 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
         Object instance = runtimeManager.getInstance(descriptor.getConstructor());
         ChangeTemplate<?,?,?> changeTemplateInstance = (ChangeTemplate<?,?,?>) instance;
         changeTemplateInstance.setTransactional(descriptor.isTransactional());
-        setExecutionData(runtimeManager, changeTemplateInstance, "setSharedConfiguration");
-        setExecutionData(runtimeManager, changeTemplateInstance, "setExecution");
-        setExecutionData(runtimeManager, changeTemplateInstance, "setRollback");
+        setExecutionData(runtimeManager, changeTemplateInstance, "Configuration");
+        setExecutionData(runtimeManager, changeTemplateInstance, "Execution");
+        setExecutionData(runtimeManager, changeTemplateInstance, "Rollback");
         runtimeManager.executeMethodWithInjectedDependencies(instance, method);
     }
 
@@ -55,28 +55,24 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
                                   ChangeTemplate<?, ?, ?> instance,
                                   String setterName) {
         Class<?> parameterClass;
-        String field;
         Object data;
         switch (setterName) {
-            case "setSharedConfiguration":
-                parameterClass = instance.getSharedConfigurationClass();
-                field = "shared";
-                data = descriptor.getSharedConfiguration();
+            case "Configuration":
+                parameterClass = instance.getConfigurationClass();
+                data = descriptor.getConfiguration();
                 break;
-            case "setExecution":
+            case "Execution":
                 parameterClass = instance.getExecutionClass();
-                field = "execution";
                 data = descriptor.getExecution();
                 break;
-            case "setRollback":
+            case "Rollback":
                 parameterClass = instance.getRollbackClass();
-                field = "rollback";
                 data = descriptor.getRollback();
                 break;
             default:
                 throw new RuntimeException("Not found config setter for template: " + instance.getClass().getSimpleName());
         }
-        Method setConfigurationMethod = getSetterMethod(instance.getClass(), setterName);
+        Method setConfigurationMethod = getSetterMethod(instance.getClass(), "set" + setterName);
 
         if(data != null && Void.class != parameterClass) {
             runtimeManager.executeMethodWithParameters(
@@ -84,7 +80,7 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
                     setConfigurationMethod,
                     FileUtil.getFromMap(parameterClass, data));
         } else if(Void.class != parameterClass ) {
-            logger.warn("No '{}' section provided for template-based changeUnit[{}] of type[{}]", field, descriptor.getId(), descriptor.getTemplateClass().getName());
+            logger.warn("No '{}' section provided for template-based changeUnit[{}] of type[{}]", setterName, descriptor.getId(), descriptor.getTemplateClass().getName());
         }
 
     }

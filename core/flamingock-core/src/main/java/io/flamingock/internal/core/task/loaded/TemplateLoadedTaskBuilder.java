@@ -23,7 +23,6 @@ import io.flamingock.internal.common.core.preview.AbstractPreviewTask;
 import io.flamingock.internal.common.core.preview.TemplatePreviewChangeUnit;
 
 import java.util.List;
-import java.util.Map;
 
 
 //TODO how to set transactional and runAlways
@@ -37,7 +36,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     private boolean runAlways;
     private boolean transactional;
     private boolean system;
-    private Object sharedConfiguration;
+    private Object configuration;
     private Object execution;
     private Object rollback;
 
@@ -91,8 +90,8 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         return this;
     }
 
-    public TemplateLoadedTaskBuilder setSharedConfiguration(Object sharedConfiguration) {
-        this.sharedConfiguration = sharedConfiguration;
+    public TemplateLoadedTaskBuilder setConfiguration(Object configuration) {
+        this.configuration = configuration;
         return this;
     }
 
@@ -119,7 +118,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
                 transactional,
                 runAlways,
                 system,
-                sharedConfiguration,
+                configuration,
                 execution,
                 rollback);
 
@@ -133,7 +132,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         setRunAlways(preview.isRunAlways());
         setTransactional(preview.isTransactional());
         setSystem(preview.isSystem());
-        setSharedConfiguration(preview.getSharedConfiguration());
+        setConfiguration(preview.getConfiguration());
         setExecution(preview.getExecution());
         setRollback(preview.getRollback());
         return this;

@@ -8,14 +8,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class AbstractChangeTemplate<SHARED, EXECUTION, ROLLBACK> implements ChangeTemplate<SHARED, EXECUTION, ROLLBACK> {
+public class AbstractChangeTemplate<CONFIGURATION, EXECUTION, ROLLBACK> implements ChangeTemplate<CONFIGURATION, EXECUTION, ROLLBACK> {
 
-    private final Class<SHARED> sharedConfigurationClass;
+    private final Class<CONFIGURATION> configurationClass;
     private final Class<EXECUTION> executionClass;
     private final Class<ROLLBACK> rollbackClass;
     protected String changeId;
     protected boolean isTransactional;
-    protected SHARED sharedConfiguration;
+    protected CONFIGURATION configuration;
     protected EXECUTION execution;
     protected ROLLBACK rollback;
 
@@ -34,11 +34,11 @@ public class AbstractChangeTemplate<SHARED, EXECUTION, ROLLBACK> implements Chan
                 throw new IllegalStateException("Expected 3 generic type arguments for a Template, but found " + typeArgs.length);
             }
 
-            this.sharedConfigurationClass = (Class<SHARED>) typeArgs[0];
+            this.configurationClass = (Class<CONFIGURATION>) typeArgs[0];
             this.executionClass = (Class<EXECUTION>) typeArgs[1];
             this.rollbackClass = (Class<ROLLBACK>) typeArgs[2];
 
-            reflectiveClasses.add(sharedConfigurationClass);
+            reflectiveClasses.add(configurationClass);
             reflectiveClasses.add(executionClass);
             reflectiveClasses.add(rollbackClass);
         } catch (ClassCastException e) {
@@ -64,8 +64,8 @@ public class AbstractChangeTemplate<SHARED, EXECUTION, ROLLBACK> implements Chan
     }
 
     @Override
-    public void setSharedConfiguration(SHARED configuration) {
-        this.sharedConfiguration = configuration;
+    public void setConfiguration(CONFIGURATION configuration) {
+        this.configuration = configuration;
     }
 
     @Override
@@ -79,8 +79,8 @@ public class AbstractChangeTemplate<SHARED, EXECUTION, ROLLBACK> implements Chan
     }
 
     @Override
-    public Class<SHARED> getSharedConfigurationClass() {
-        return sharedConfigurationClass;
+    public Class<CONFIGURATION> getConfigurationClass() {
+        return configurationClass;
     }
 
     @Override

@@ -12,13 +12,13 @@ public interface ChangeTemplate<SHARED_CONFIG, EXECUTION, ROLLBACK> extends Refl
 
     void setTransactional(boolean isTransactional);
 
-    void setSharedConfiguration(SHARED_CONFIG configuration);
+    void setConfiguration(SHARED_CONFIG configuration);
 
     void setExecution(EXECUTION execution);
 
     void setRollback(ROLLBACK rollback);
 
-    Class<SHARED_CONFIG> getSharedConfigurationClass();
+    Class<SHARED_CONFIG> getConfigurationClass();
 
     Class<EXECUTION> getExecutionClass();
 

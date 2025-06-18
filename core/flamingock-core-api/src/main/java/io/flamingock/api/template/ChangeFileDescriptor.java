@@ -16,15 +16,13 @@
 
 package io.flamingock.api.template;
 
-import java.util.Map;
-
 public class ChangeFileDescriptor {
     private String id;
     private String order;
     private String template;
     private String profiles; //colon-separated list of profiles
     private Boolean transactional;
-    private Object sharedConfiguration;
+    private Object configuration;
     private Object execution;
     private Object rollback;
 
@@ -37,7 +35,7 @@ public class ChangeFileDescriptor {
                                 String template,
                                 String profiles,
                                 Boolean transactional,
-                                Object sharedConfiguration,
+                                Object configuration,
                                 Object execution,
                                 Object rollback) {
         this.id = id;
@@ -45,7 +43,7 @@ public class ChangeFileDescriptor {
         this.template = template;
         this.profiles = profiles;
         this.transactional = transactional;
-        this.sharedConfiguration = sharedConfiguration;
+        this.configuration = configuration;
         this.execution = execution;
         this.rollback = rollback;
     }
@@ -92,12 +90,12 @@ public class ChangeFileDescriptor {
         this.transactional = transactional;
     }
 
-    public Object getSharedConfiguration() {
-        return sharedConfiguration;
+    public Object getConfiguration() {
+        return configuration;
     }
 
-    public void setSharedConfiguration(Object sharedConfiguration) {
-        this.sharedConfiguration = sharedConfiguration;
+    public void setConfiguration(Object configuration) {
+        this.configuration = configuration;
     }
 
     public Object getExecution() {

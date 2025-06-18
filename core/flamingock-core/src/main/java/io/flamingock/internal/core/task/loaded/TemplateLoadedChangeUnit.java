@@ -23,14 +23,13 @@ import io.flamingock.api.template.ChangeTemplate;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
 public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
 
     private final List<String> profiles;
-    private final Object sharedConfiguration;
+    private final Object configuration;
     private final Object execution;
     private final Object rollback;
 
@@ -41,19 +40,19 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
                              boolean transactional,
                              boolean runAlways,
                              boolean systemTask,
-                             Object sharedConfiguration,
+                             Object configuration,
                              Object execution,
                              Object rollback) {
         super(id, order, templateClass, runAlways, transactional, systemTask);
         this.profiles = profiles;
         this.transactional = transactional;
-        this.sharedConfiguration = sharedConfiguration;
+        this.configuration = configuration;
         this.execution = execution;
         this.rollback = rollback;
     }
 
-    public Object getSharedConfiguration() {
-        return sharedConfiguration;
+    public Object getConfiguration() {
+        return configuration;
     }
 
     public Object getExecution() {

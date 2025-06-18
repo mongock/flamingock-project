@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -36,7 +35,7 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
     private String profilesString;
     private boolean runAlways;
     private Boolean transactional;
-    private Object sharedConfiguration;
+    private Object configuration;
     private Object execution;
     private Object rollback;
 
@@ -89,8 +88,8 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
         this.execution = execution;
     }
 
-    public void setSharedConfiguration(Object sharedConfiguration) {
-        this.sharedConfiguration = sharedConfiguration;
+    public void setConfiguration(Object configuration) {
+        this.configuration = configuration;
     }
 
     @Override
@@ -105,7 +104,7 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
                 transactional,
                 runAlways,
                 false,
-                sharedConfiguration,
+                configuration,
                 execution,
                 rollback);
     }
@@ -127,7 +126,7 @@ class TemplatePreviewTaskBuilder implements PreviewTaskBuilder<TemplatePreviewCh
         setOrder(templateTaskDescriptor.getOrder());
         setTemplate(templateTaskDescriptor.getTemplate());
         setProfilesString(templateTaskDescriptor.getProfiles());
-        setSharedConfiguration(templateTaskDescriptor.getSharedConfiguration());
+        setConfiguration(templateTaskDescriptor.getConfiguration());
         setExecution(templateTaskDescriptor.getExecution());
         setRollback(templateTaskDescriptor.getRollback());
         setTransactional(templateTaskDescriptor.getTransactional());
