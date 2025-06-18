@@ -22,6 +22,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +35,27 @@ import java.util.stream.Stream;
 
 public final class ReflectionUtil {
     private ReflectionUtil() {}
+
+    public static Type[] getActualTypeArguments(Class<?> clazz) {
+        Class<?> currentClass = clazz;
+        while (currentClass != null && currentClass != Object.class) {
+            Type genericSuperclass = currentClass.getGenericSuperclass();
+
+            if (genericSuperclass instanceof ParameterizedType) {
+                ParameterizedType pt = (ParameterizedType) genericSuperclass;
+                Type rawType = pt.getRawType();
+
+                if (rawType instanceof Class) {
+                    return pt.getActualTypeArguments();
+
+                }
+            }
+
+            currentClass = currentClass.getSuperclass();
+        }
+
+        throw new IllegalStateException("Unable to determine ROLLBACK class from type hierarchy");
+    }
 
 
     @SuppressWarnings("unchecked")

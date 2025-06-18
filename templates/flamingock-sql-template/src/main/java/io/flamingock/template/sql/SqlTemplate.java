@@ -31,12 +31,12 @@ public class SqlTemplate extends AbstractChangeTemplate<Void, String, String> {
 
     @Execution
     public void execution(Connection connection) {
-        execute(connection, configuration.getExecution());
+        execute(connection, execution);
     }
 
     @RollbackExecution
     public void rollback(Connection connection) {
-        execute(connection, configuration.getRollback());
+        execute(connection, rollback);
     }
 
     private static void execute(Connection connection, String sql) {

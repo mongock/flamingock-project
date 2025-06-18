@@ -17,7 +17,6 @@
 package io.flamingock.internal.core.task.executable;
 
 import io.flamingock.api.template.ChangeTemplate;
-import io.flamingock.api.template.ChangeTemplateConfig;
 import io.flamingock.internal.core.runtime.RuntimeManager;
 import io.flamingock.internal.core.task.loaded.TemplateLoadedChangeUnit;
 import io.flamingock.internal.util.FileUtil;
@@ -45,23 +44,52 @@ public class TemplateExecutableTask extends ReflectionExecutableTask<TemplateLoa
         Object instance = runtimeManager.getInstance(descriptor.getConstructor());
         ChangeTemplate<?,?,?> changeTemplateInstance = (ChangeTemplate<?,?,?>) instance;
         changeTemplateInstance.setTransactional(descriptor.isTransactional());
-        setConfiguration(runtimeManager, changeTemplateInstance);
+        setExecutionData(runtimeManager, changeTemplateInstance, "setSharedConfiguration");
+        setExecutionData(runtimeManager, changeTemplateInstance, "setExecution");
+        setExecutionData(runtimeManager, changeTemplateInstance, "setRollback");
         runtimeManager.executeMethodWithInjectedDependencies(instance, method);
     }
 
-    private void setConfiguration(RuntimeManager runtimeManager, ChangeTemplate<?,?,?> instance) {
-        Class<? extends ChangeTemplateConfig<?, ?, ?>> configClass = instance.getConfigClass();
-        Method setConfigurationMethod = getConfigMethod(instance.getClass());
-        runtimeManager.executeMethodWithParameters(
-                instance,
-                setConfigurationMethod,
-                FileUtil.getFromMap(configClass, descriptor.getTemplateConfiguration()));
+
+    private void setExecutionData(RuntimeManager runtimeManager,
+                                  ChangeTemplate<?, ?, ?> instance,
+                                  String setterName) {
+        Class<?> parameterClass;
+        String field;
+        switch (setterName) {
+            case "setSharedConfiguration":
+                parameterClass = instance.getSharedConfigurationClass();
+                field = "shared";
+                break;
+            case "setExecution":
+                parameterClass = instance.getExecutionClass();
+                field = "execution";
+                break;
+            case "setRollback":
+                parameterClass = instance.getRollbackClass();
+                field = "rollback";
+                break;
+            default:
+                throw new RuntimeException("Not found config setter for template: " + instance.getClass().getSimpleName());
+        }
+        Method setConfigurationMethod = getSetterMethod(instance.getClass(), setterName);
+        Object data = descriptor.getTemplateConfiguration().get(field);
+        if(data != null && Void.class != parameterClass) {
+            runtimeManager.executeMethodWithParameters(
+                    instance,
+                    setConfigurationMethod,
+                    FileUtil.getFromMap(parameterClass, data));
+        } else if(Void.class != parameterClass ) {
+            logger.warn("No '{}' section provided for template-based changeUnit[{}] of type[{}]", field, descriptor.getId(), descriptor.getTemplateClass().getName());
+        }
+
     }
 
-    private Method getConfigMethod(Class<?> changeTemplateClass) {
+
+    private Method getSetterMethod(Class<?> changeTemplateClass, String methodName) {
 
         return Arrays.stream(changeTemplateClass.getMethods())
-                .filter(m-> "setConfiguration".equals(m.getName()))
+                .filter(m-> methodName.equals(m.getName()))
                 .findFirst()
                 .orElseThrow(()-> new RuntimeException("Not found config setter for template: " + changeTemplateClass.getSimpleName()));
 
