@@ -12,7 +12,6 @@ dependencies {
         api("io.flamingock:flamingock-ce-mongodb-springdata-v4:$version")
         api("io.flamingock:flamingock-ce-couchbase:$version")
         api("io.flamingock:flamingock-ce-dynamodb:$version")
-        api("io.flamingock:flamingock-ce-commons:$version")
         api("io.flamingock:flamingock-sql-template:$version")
         api("io.flamingock:flamingock-mongodb-change-template:$version")
     }
