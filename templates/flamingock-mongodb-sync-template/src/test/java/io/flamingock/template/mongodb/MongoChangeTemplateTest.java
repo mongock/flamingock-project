@@ -26,7 +26,7 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 
-import static io.flamingock.internal.common.mongodb.MongoDBDriverConfiguration.DEFAULT_AUDIT_REPOSITORY_NAME;
+import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STORE_NAME;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -92,7 +92,7 @@ class MongoChangeTemplateTest {
                 .run();
 
 
-        List<Document> auditLog = mongoDatabase.getCollection(DEFAULT_AUDIT_REPOSITORY_NAME)
+        List<Document> auditLog = mongoDatabase.getCollection(DEFAULT_AUDIT_STORE_NAME)
                 .find()
                 .into(new ArrayList<>());
 

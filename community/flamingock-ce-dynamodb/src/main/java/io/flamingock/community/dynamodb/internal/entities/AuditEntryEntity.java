@@ -16,9 +16,9 @@
 
 package io.flamingock.community.dynamodb.internal.entities;
 
-import io.flamingock.internal.core.community.AuditEntryField;
 import io.flamingock.internal.common.core.audit.AuditEntry;
-import io.flamingock.internal.util.dynamodb.DynamoDBConstants;
+import io.flamingock.internal.core.community.AuditEntryField;
+import io.flamingock.internal.core.community.Constants;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
@@ -72,7 +72,7 @@ public class AuditEntryEntity {
     }
 
     @DynamoDbPartitionKey
-    @DynamoDbAttribute(DynamoDBConstants.AUDIT_LOG_PK)
+    @DynamoDbAttribute(Constants.AUDIT_LOG_PK)
     public String getPartitionKey() {
         return partitionKey;
     }
@@ -90,7 +90,7 @@ public class AuditEntryEntity {
         this.taskId = taskId;
     }
 
-    @DynamoDbAttribute(DynamoDBConstants.AUDIT_LOG_STAGE_ID)
+    @DynamoDbAttribute(Constants.AUDIT_LOG_STAGE_ID)
     public String getStageId() {
         return stageId;
     }
