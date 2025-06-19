@@ -1,7 +1,8 @@
 dependencies {
-    api(project(":core:flamingock-core"))
+    implementation(project(":core:flamingock-core"))
+    api(project(":community:flamingock-ce-commons"))
     
-    implementation("com.couchbase.client:java-client:3.4.4")
+    compileOnly("com.couchbase.client:java-client:[3.0.0,4.0.0)")
 
     testImplementation("org.testcontainers:couchbase:1.18.3")
     testImplementation("org.testcontainers:junit-jupiter:1.18.3")
@@ -13,4 +14,8 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(8))
     }
+}
+
+configurations.testImplementation {
+    extendsFrom(configurations.compileOnly.get())
 }

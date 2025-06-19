@@ -63,7 +63,7 @@ val communityProjects = setOf(
     "flamingock-ce-couchbase",
     "flamingock-ce-dynamodb",
 
-    "flamingock-mongodb-sync-importer"
+    "flamingock-importer"
 )
 
 val pluginProjects = setOf(

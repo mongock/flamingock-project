@@ -18,32 +18,32 @@ package io.flamingock.template.mongodb;
 
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.api.annotations.Execution;
-import io.flamingock.core.api.annotations.Nullable;
-import io.flamingock.core.api.annotations.RollbackExecution;
-import io.flamingock.core.api.template.AbstractChangeTemplate;
+import io.flamingock.api.annotations.Execution;
+import io.flamingock.api.annotations.Nullable;
+import io.flamingock.api.annotations.RollbackExecution;
+import io.flamingock.api.template.AbstractChangeTemplate;
 import io.flamingock.template.mongodb.model.MongoOperation;
 
-public class MongoChangeTemplate extends AbstractChangeTemplate<MongoChangeTemplateConfig> {
+public class MongoChangeTemplate extends AbstractChangeTemplate<Void, MongoOperation, MongoOperation> {
 
     public MongoChangeTemplate() {
-        super(MongoChangeTemplateConfig.class, MongoOperation.class);
+        super(MongoOperation.class);
     }
 
     @Execution
     public void execute(MongoDatabase db, @Nullable ClientSession clientSession) {
-        if(this.isTransactional && clientSession == null) {
+        if (this.isTransactional && clientSession == null) {
             throw new IllegalArgumentException(String.format("Transactional changeUnit[%s] requires transactional ecosystem with ClientSession", changeId));
         }
-        executeOp(db, configuration.getExecution(), clientSession);
+        executeOp(db, execution, clientSession);
     }
 
     @RollbackExecution
     public void rollback(MongoDatabase db, @Nullable ClientSession clientSession) {
-        if(this.isTransactional && clientSession == null) {
+        if (this.isTransactional && clientSession == null) {
             throw new IllegalArgumentException(String.format("Transactional changeUnit[%s] requires transactional ecosystem with ClientSession", changeId));
         }
-        executeOp(db, configuration.getRollback(), clientSession);
+        executeOp(db, rollback, clientSession);
     }
 
     private void executeOp(MongoDatabase db, MongoOperation op, ClientSession clientSession) {

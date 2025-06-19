@@ -1,24 +1,25 @@
 package io.flamingock.graalvm;
 
-import io.flamingock.core.api.template.AbstractChangeTemplate;
-import io.flamingock.core.api.template.ChangeTemplate;
-import io.flamingock.core.api.template.ChangeTemplateConfig;
-import io.flamingock.core.api.template.TemplateFactory;
+import io.flamingock.api.template.AbstractChangeTemplate;
+import io.flamingock.api.template.ChangeTemplate;
+import io.flamingock.api.template.ChangeTemplateConfig;
+import io.flamingock.api.template.TemplateFactory;
+import io.flamingock.importer.adapter.ImporterAdapterFactory;
 import io.flamingock.internal.core.pipeline.LoadedStage;
 import io.flamingock.internal.core.pipeline.Pipeline;
-import io.flamingock.core.preview.PreviewMethod;
-import io.flamingock.core.preview.PreviewPipeline;
-import io.flamingock.core.preview.PreviewStage;
-import io.flamingock.internal.core.system.SystemModule;
-import io.flamingock.core.task.AbstractTaskDescriptor;
-import io.flamingock.core.task.TaskDescriptor;
+import io.flamingock.internal.common.core.preview.PreviewMethod;
+import io.flamingock.internal.common.core.preview.PreviewPipeline;
+import io.flamingock.internal.common.core.preview.PreviewStage;
+import io.flamingock.internal.common.core.system.SystemModule;
+import io.flamingock.internal.common.core.task.AbstractTaskDescriptor;
+import io.flamingock.internal.common.core.task.TaskDescriptor;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedChangeUnit;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
 import io.flamingock.internal.core.task.loaded.AbstractReflectionLoadedTask;
 import io.flamingock.internal.core.task.loaded.CodeLoadedChangeUnit;
 import io.flamingock.internal.core.task.loaded.TemplateLoadedChangeUnit;
-import io.flamingock.core.preview.CodePreviewChangeUnit;
-import io.flamingock.core.preview.TemplatePreviewChangeUnit;
+import io.flamingock.internal.common.core.preview.CodePreviewChangeUnit;
+import io.flamingock.internal.common.core.preview.TemplatePreviewChangeUnit;
 import org.graalvm.nativeimage.hosted.Feature;
 import org.graalvm.nativeimage.hosted.RuntimeReflection;
 
@@ -64,11 +65,16 @@ public class RegistrationFeature implements Feature {
         registerClass(CodeLoadedChangeUnit.class.getName());
         registerClass(TemplateLoadedChangeUnit.class.getName());
 
+        //Importer adapter
+        registerClass(ImporterAdapterFactory.getImporterAdapter().getClass());
+
         //others
         registerClass(CoderResult.class.getName());
 
+
         logger.completedRegistration("internal classes");
     }
+
 
     private static void registerUserClasses() {
         logger.startRegistration("user classes");
@@ -77,21 +83,12 @@ public class RegistrationFeature implements Feature {
         logger.completedRegistration("user classes");
     }
 
-    private static void registerClass(String className) {
-        try {
-            registerClass(Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     private void registerTemplates() {
         logger.startRegistration("templates");
         registerClass(TemplateFactory.class);
         registerClass(ChangeTemplate.class);
         registerClass(AbstractChangeTemplate.class);
-        for (ChangeTemplate<?> template : ServiceLoader.load(ChangeTemplate.class)) {
+        for (ChangeTemplate<?, ?, ?> template : ServiceLoader.load(ChangeTemplate.class)) {
             registerClass(template.getClass());
             template.getReflectiveClasses().forEach(RegistrationFeature::registerClass);
         }
@@ -116,6 +113,13 @@ public class RegistrationFeature implements Feature {
         logger.completedRegistration("system modules");
     }
 
+    private static void registerClass(String className) {
+        try {
+            registerClass(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static void registerClass(Class<?> clazz) {
         logger.initClassRegistration(clazz);

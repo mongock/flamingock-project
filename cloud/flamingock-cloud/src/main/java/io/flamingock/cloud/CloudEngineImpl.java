@@ -16,15 +16,14 @@
 
 package io.flamingock.cloud;
 
-import io.flamingock.commons.utils.id.EnvironmentId;
-import io.flamingock.commons.utils.id.JwtProperty;
-import io.flamingock.commons.utils.id.ServiceId;
+import io.flamingock.internal.util.id.EnvironmentId;
+import io.flamingock.internal.util.id.JwtProperty;
+import io.flamingock.internal.util.id.ServiceId;
 import io.flamingock.internal.core.cloud.transaction.CloudTransactioner;
 import io.flamingock.internal.core.cloud.CloudEngine;
-import io.flamingock.internal.core.context.ContextInjectable;
-import io.flamingock.internal.core.engine.audit.AuditWriter;
+import io.flamingock.internal.common.core.context.ContextInjectable;
+import io.flamingock.internal.core.engine.audit.ExecutionAuditWriter;
 import io.flamingock.internal.core.engine.execution.ExecutionPlanner;
-import io.flamingock.internal.core.system.SystemModuleManager;
 
 import java.util.Optional;
 
@@ -36,7 +35,7 @@ public final class CloudEngineImpl implements CloudEngine {
 
     private final CloudTransactioner cloudTransactioner;
 
-    private final AuditWriter auditWriter;
+    private final ExecutionAuditWriter auditWriter;
 
     private final ExecutionPlanner executionPlanner;
     private final String jwt;
@@ -44,7 +43,7 @@ public final class CloudEngineImpl implements CloudEngine {
     CloudEngineImpl(EnvironmentId environmentId,
                     ServiceId serviceId,
                     String jwt,
-                    AuditWriter auditWriter,
+                    ExecutionAuditWriter auditWriter,
                     ExecutionPlanner executionPlanner,
                     CloudTransactioner cloudTransactioner,
                     Runnable closer) {
@@ -72,7 +71,7 @@ public final class CloudEngineImpl implements CloudEngine {
     }
 
     @Override
-    public AuditWriter getAuditWriter() {
+    public ExecutionAuditWriter getAuditWriter() {
         return auditWriter;
     }
 
@@ -94,8 +93,4 @@ public final class CloudEngineImpl implements CloudEngine {
         contextInjectable.setProperty(serviceId);
     }
 
-    @Override
-    public void contributeToSystemModules(SystemModuleManager systemModuleManager) {
-        //TODO it will need to inject the SystemModule for Mongock importer
-    }
 }

@@ -16,13 +16,13 @@
 
 package io.flamingock.core.springboot;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
-import io.flamingock.core.api.template.ChangeFileDescriptor;
-import io.flamingock.core.api.template.ChangeTemplate;
-import io.flamingock.core.api.template.ChangeTemplateConfig;
-import io.flamingock.core.api.template.TemplateFactory;
-import io.flamingock.core.preview.TemplatePreviewChangeUnit;
-import io.flamingock.core.preview.builder.PreviewTaskBuilder;
+import io.flamingock.api.annotations.ChangeUnit;
+import io.flamingock.api.template.ChangeFileDescriptor;
+import io.flamingock.api.template.ChangeTemplate;
+import io.flamingock.api.template.ChangeTemplateConfig;
+import io.flamingock.api.template.TemplateFactory;
+import io.flamingock.internal.common.core.preview.TemplatePreviewChangeUnit;
+import io.flamingock.internal.common.core.preview.builder.PreviewTaskBuilder;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
 import io.flamingock.internal.core.task.loaded.LoadedTaskBuilder;
 import io.flamingock.springboot.SpringbootProfileFilter;
@@ -117,7 +117,9 @@ class SpringProfileFilterTemplateTaskTest {
                 TemplateSimulate.class.getSimpleName(),
                 profiles,
                 true,
-                new HashMap<>()
+                null,
+                null,
+                null
         );
 
         TemplatePreviewChangeUnit preview = PreviewTaskBuilder.getTemplateBuilder(changeFileDescriptor).build();
@@ -126,7 +128,7 @@ class SpringProfileFilterTemplateTaskTest {
 
     }
 
-    public static abstract class TemplateSimulate implements ChangeTemplate<ChangeTemplateConfig<Object, Object>> {}
+    public static abstract class TemplateSimulate implements ChangeTemplate<Void, Object, Object> {}
 
     @ChangeUnit(id = "not-annotated", order = "000")
     public static class NotAnnotated {

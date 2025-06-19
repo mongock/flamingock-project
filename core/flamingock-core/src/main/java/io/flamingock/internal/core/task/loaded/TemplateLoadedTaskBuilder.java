@@ -16,14 +16,13 @@
 
 package io.flamingock.internal.core.task.loaded;
 
-import io.flamingock.core.api.error.FlamingockException;
-import io.flamingock.core.api.template.ChangeTemplate;
-import io.flamingock.core.api.template.TemplateFactory;
-import io.flamingock.core.preview.AbstractPreviewTask;
-import io.flamingock.core.preview.TemplatePreviewChangeUnit;
+import io.flamingock.internal.common.core.error.FlamingockException;
+import io.flamingock.api.template.ChangeTemplate;
+import io.flamingock.api.template.TemplateFactory;
+import io.flamingock.internal.common.core.preview.AbstractPreviewTask;
+import io.flamingock.internal.common.core.preview.TemplatePreviewChangeUnit;
 
 import java.util.List;
-import java.util.Map;
 
 
 //TODO how to set transactional and runAlways
@@ -37,7 +36,9 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     private boolean runAlways;
     private boolean transactional;
     private boolean system;
-    private Map<String, Object> templateConfiguration;
+    private Object configuration;
+    private Object execution;
+    private Object rollback;
 
     private TemplateLoadedTaskBuilder() {
     }
@@ -89,15 +90,25 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         return this;
     }
 
-    public TemplateLoadedTaskBuilder setTemplateConfiguration(Map<String, Object> templateConfiguration) {
-        this.templateConfiguration = templateConfiguration;
+    public TemplateLoadedTaskBuilder setConfiguration(Object configuration) {
+        this.configuration = configuration;
+        return this;
+    }
+
+    public TemplateLoadedTaskBuilder setExecution(Object execution) {
+        this.execution = execution;
+        return this;
+    }
+
+    public TemplateLoadedTaskBuilder setRollback(Object rollback) {
+        this.rollback = rollback;
         return this;
     }
 
     @Override
     public TemplateLoadedChangeUnit build() {
         //            boolean isTaskTransactional = true;//TODO implement this. isTaskTransactionalAccordingTemplate(templateSpec);
-        Class<? extends ChangeTemplate<?>> templateClass = TemplateFactory.getTemplate(templateName)
+        Class<? extends ChangeTemplate<?, ?, ?>> templateClass = TemplateFactory.getTemplate(templateName)
                 .orElseThrow(()-> new FlamingockException(String.format("Template[%s] not found. This is probably because template's name is wrong or template's library not imported", templateName)));
         return new TemplateLoadedChangeUnit(
                 id,
@@ -107,7 +118,9 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
                 transactional,
                 runAlways,
                 system,
-                templateConfiguration);
+                configuration,
+                execution,
+                rollback);
 
     }
 
@@ -119,7 +132,9 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         setRunAlways(preview.isRunAlways());
         setTransactional(preview.isTransactional());
         setSystem(preview.isSystem());
-        setTemplateConfiguration(preview.getTemplateConfiguration());
+        setConfiguration(preview.getConfiguration());
+        setExecution(preview.getExecution());
+        setRollback(preview.getRollback());
         return this;
     }
 
