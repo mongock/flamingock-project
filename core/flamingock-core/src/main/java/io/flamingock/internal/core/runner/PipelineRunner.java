@@ -46,7 +46,7 @@ import static io.flamingock.internal.util.ObjectUtils.requireNonNull;
 
 public class PipelineRunner implements Runner {
 
-    private static final Logger logger = LoggerFactory.getLogger(PipelineRunner.class);
+    private static final Logger logger = LoggerFactory.getLogger("Flamingock-PipelineRunner");
 
     private final RunnerId runnerId;
 

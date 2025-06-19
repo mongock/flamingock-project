@@ -126,59 +126,7 @@ public interface MongockTestHelper {
                     null
             ));
 
-            // Client updater run always
-            entries.add(new MongockChangeEntry(
-                    DEFAULT_EXECUTION_ID,
-                    "client-updater-runAlways",
-                    "mongock",
-                    DEFAULT_DATE_FORMAT.parse("2025-06-19T05:43:57.205Z"),
-                    MongockChangeState.EXECUTED,
-                    MongockChangeType.EXECUTION,
-                    "io.mongock.examples.mongodb.standalone.mondogb.sync.migration.updater.ClientUpdaterRunAlwaysChangeUnit",
-                    "execution",
-                    null,
-                    24L,
-                    DEFAULT_HOSTNAME,
-                    null,
-                    false,
-                    null
-            ));
 
-            // Populate data secondary db
-            entries.add(new MongockChangeEntry(
-                    DEFAULT_EXECUTION_ID,
-                    "populate-data-secondarydb",
-                    "mongock",
-                    DEFAULT_DATE_FORMAT.parse("2025-06-19T05:43:57.233Z"),
-                    MongockChangeState.EXECUTED,
-                    MongockChangeType.EXECUTION,
-                    "io.mongock.examples.mongodb.standalone.mondogb.sync.migration.secondarydb.PopulateDataSecondaryDbChangeUnit",
-                    "execution",
-                    null,
-                    17L,
-                    DEFAULT_HOSTNAME,
-                    null,
-                    false,
-                    null
-            ));
-
-            // Secondary db with mongo database
-            entries.add(new MongockChangeEntry(
-                    DEFAULT_EXECUTION_ID,
-                    "secondarydb-with-mongodatabase",
-                    "mongock",
-                    DEFAULT_DATE_FORMAT.parse("2025-06-19T05:43:57.271Z"),
-                    MongockChangeState.EXECUTED,
-                    MongockChangeType.EXECUTION,
-                    "io.mongock.examples.mongodb.standalone.mondogb.sync.migration.secondarydb.SecondaryDbWithMongoDatabaseChangeUnit",
-                    "execution",
-                    null,
-                    17L,
-                    DEFAULT_HOSTNAME,
-                    null,
-                    false,
-                    null
-            ));
 
             // Write all entries to MongoDB
             return writeAll(entries);

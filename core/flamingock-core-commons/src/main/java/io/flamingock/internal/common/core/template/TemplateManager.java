@@ -45,6 +45,9 @@ public final class TemplateManager {
 
     private static final Map<String, Class<? extends ChangeTemplate<?, ?, ?>>> templates = new HashMap<>();
 
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
     private TemplateManager() {
     }
 
@@ -111,11 +114,32 @@ public final class TemplateManager {
     }
 
 
+    /**
+     * Adds a template to the internal registry for testing purposes.
+     * <p>
+     * This method is intended for use in test environments only to register mock or test templates.
+     * It directly modifies the internal template registry and is not thread-safe.
+     *
+     * @param templateName The name to register the template under (typically the simple class name)
+     * @param templateClass The template class to register
+     */
     @TestOnly
     public static void addTemplate(String templateName, Class<? extends ChangeTemplate<?, ?, ?>> templateClass) {
         templates.put(templateName, templateClass);
     }
 
+    /**
+     * Retrieves a template class by name from the internal registry.
+     * <p>
+     * This method is used during runtime to look up template classes by their simple name.
+     * It returns an {@link Optional} that will be empty if no template with the specified
+     * name has been registered.
+     * <p>
+     * This method is thread-safe after initialization (after {@link #loadTemplates()} has been called).
+     *
+     * @param templateName The simple class name of the template to retrieve
+     * @return An Optional containing the template class if found, or empty if not found
+     */
     public static Optional<Class<? extends ChangeTemplate<?, ?, ?>>> getTemplate(String templateName) {
         return Optional.ofNullable(templates.get(templateName));
     }

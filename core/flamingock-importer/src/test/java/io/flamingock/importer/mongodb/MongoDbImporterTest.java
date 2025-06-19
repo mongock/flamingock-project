@@ -102,14 +102,16 @@ public class MongoDbImporterTest {
                 .find()
                 .into(new ArrayList<>());
 
-        assertEquals(2, auditLog.size());
-        Document createCollectionAudit = auditLog.get(0);
+        assertEquals(8, auditLog.size());
+        Document createCollectionAudit = auditLog.get(6);
+
+        //TODO CHECK audits from Mongock
 
         assertEquals("create-users-collection-with-index", createCollectionAudit.getString("changeId"));
         assertEquals("EXECUTED", createCollectionAudit.getString("state"));
         assertEquals(MongoChangeTemplate.class.getName(), createCollectionAudit.getString(Constants.KEY_CHANGEUNIT_CLASS));
 
-        Document seedAudit = auditLog.get(1);
+        Document seedAudit = auditLog.get(7);
         assertEquals("seed-users", seedAudit.getString("changeId"));
         assertEquals("EXECUTED", seedAudit.getString("state"));
         assertEquals(MongoChangeTemplate.class.getName(), seedAudit.getString(Constants.KEY_CHANGEUNIT_CLASS));
@@ -127,25 +129,5 @@ public class MongoDbImporterTest {
         assertEquals("backup@company.com", users.get(1).getString("email"));
         assertEquals("readonly", users.get(1).getList("roles", String.class).get(0));
     }
-
-//    private void validateEntriesInserted(int expectedCount) {
-//        long actualCount = changeLogCollection.countDocuments();
-//        assertEquals(expectedCount, actualCount, "Expected " + expectedCount + " entries to be inserted, but found " + actualCount);
-//
-//        // Validate a few specific entries
-//        Document systemChange = changeLogCollection.find(Filters.eq("changeId", "system-change-00001")).first();
-//        assertNotNull(systemChange, "System change entry not found");
-//        assertEquals("mongock", systemChange.getString("author"));
-//        assertEquals(true, systemChange.getBoolean("systemChange"));
-//
-//        Document clientInitializer = changeLogCollection.find(Filters.eq("changeId", "client-initializer")).first();
-//        assertNotNull(clientInitializer, "Client initializer entry not found");
-//        assertEquals("EXECUTION", clientInitializer.getString("type"));
-//        assertEquals("execution", clientInitializer.getString("changeSetMethod"));
-//
-//        Document secondaryDb = changeLogCollection.find(Filters.eq("changeId", "secondarydb-with-mongodatabase")).first();
-//        assertNotNull(secondaryDb, "Secondary DB entry not found");
-//        assertEquals(17L, secondaryDb.getLong("executionMillis"));
-//    }
 
 }

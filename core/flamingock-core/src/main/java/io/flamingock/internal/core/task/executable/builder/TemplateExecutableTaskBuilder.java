@@ -32,7 +32,7 @@ import java.util.List;
  * Factory for ChangeUnit classes
  */
 public class TemplateExecutableTaskBuilder implements ExecutableTaskBuilder<TemplateLoadedChangeUnit> {
-    private final static Logger logger = LoggerFactory.getLogger("TemplateExecutableTaskBuilder");
+    private final static Logger logger = LoggerFactory.getLogger("Flamingock-TemplateExecutableTaskBuilder");
 
     private static final TemplateExecutableTaskBuilder instance = new TemplateExecutableTaskBuilder();
     private String stageName;
