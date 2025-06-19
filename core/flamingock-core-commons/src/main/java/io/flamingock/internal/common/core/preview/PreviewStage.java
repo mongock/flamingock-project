@@ -18,7 +18,7 @@ package io.flamingock.internal.common.core.preview;
 
 import io.flamingock.internal.util.FileUtil;
 import io.flamingock.internal.common.core.preview.builder.PreviewTaskBuilder;
-import io.flamingock.api.template.ChangeFileDescriptor;
+import io.flamingock.internal.common.core.template.ChangeFileDescriptor;
 
 import java.io.File;
 import java.util.Collection;

@@ -1,30 +1,38 @@
-package io.flamingock.importer.adapter;
+package io.flamingock.importer;
 
+import io.flamingock.api.template.ChangeTemplate;
 import io.flamingock.internal.common.core.error.FlamingockException;
-import io.flamingock.importer.ImporterAdapter;
+import io.flamingock.internal.common.core.template.ChangeTemplateFactory;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class ImporterAdapterFactory {
+import java.util.Collection;
+import java.util.Collections;
+
+public class ImporterTemplateFactory implements ChangeTemplateFactory {
 
     private static final Logger logger = LoggerFactory.getLogger("ImporterAdapterFactory");
 
-    private static final String MONGO_ADAPTER_CLASS = "io.flamingock.importer.adapter.mongodb.MongoDbImporterAdapter";
-    private static final String DYNAMO_ADAPTER_CLASS = "io.flamingock.importer.adapter.dynamodb.DynamoDbImporterAdapter";
-    private static final String COUCHBASE_ADAPTER_CLASS = "io.flamingock.importer.adapter.couchbase.CouchbaseImporterAdapter";
+    private static final String MONGO_TEMPLATE_CLASS = "io.flamingock.importer.mongodb.MongoDbImporterChangeTemplate";
+    private static final String DYNAMO_TEMPLATE_CLASS = "io.flamingock.importer.dynamodb.DynamoDbImporterChangeTemplate";
+    private static final String COUCHBASE_TEMPLATE_CLASS = "io.flamingock.importer.couchbase.CouchbaseImporterChangeTemplate";
 
-    private ImporterAdapterFactory() {}
 
-    public static ImporterAdapter getImporterAdapter() {
-        String className = getClassName();
+    @Override
+    public Collection<ChangeTemplate<?, ?, ?>> getTemplates() {
         try {
-            Class<?> adapterClass = Class.forName(className);
-            return (ImporterAdapter) adapterClass.getDeclaredConstructor().newInstance();
+            String className = getClassName();
+            logger.info("Loading importer template: {}", className);
+            Class<?> changeTemplateClass = Class.forName(className);
+            return Collections.singletonList(
+                    (ChangeTemplate<?, ?, ?>) changeTemplateClass.getDeclaredConstructor().newInstance()
+            );
+
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Importer adapter implementation not found: " + className, e);
+            throw new RuntimeException("Importer importer template class not found" , e);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to instantiate importer adapter: " + className, e);
+            throw new RuntimeException("Failed to instantiate importer class ", e);
         }
     }
 
@@ -33,11 +41,11 @@ public final class ImporterAdapterFactory {
         String className;
 
         if (isMongoDbAdapter()) {
-            className = MONGO_ADAPTER_CLASS;
+            className = MONGO_TEMPLATE_CLASS;
         } else if (isDynamoDbAdapter()) {
-            className = DYNAMO_ADAPTER_CLASS;
+            className = DYNAMO_TEMPLATE_CLASS;
         } else if (isCouchbaseAdapter()) {
-            className = COUCHBASE_ADAPTER_CLASS;
+            className = COUCHBASE_TEMPLATE_CLASS;
         } else {
             throw new FlamingockException("No compatible database driver detected. Please include a supported database dependency (MongoDB, DynamoDB, or Couchbase) in your project classpath.");
         }

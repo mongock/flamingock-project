@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package io.flamingock.template.mongodb;
-
-import io.flamingock.community.Flamingock;
+package io.flamingock.importer.mongodb;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.community.Flamingock;
 import io.flamingock.internal.core.community.Constants;
+import io.flamingock.internal.core.runner.Runner;
+import io.flamingock.template.mongodb.MongoChangeTemplate;
 import org.bson.Document;
-import org.junit.jupiter.api.AfterEach;
-
-import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STORE_NAME;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -40,22 +38,23 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STORE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
-class MongoChangeTemplateTest {
-
-    private static final String DB_NAME = "test";
-
-
-    private static MongoClient mongoClient;
-
-    private static MongoDatabase mongoDatabase;
-
+public class MongoDbImporterTest {
 
     @Container
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6"));
+
+    private static final String DB_NAME = "test";
+    public static final String MONGOCK_CHANGE_LOGS = "mongockChangeLogs";
+
+    private static MongoClient mongoClient;
+    private static MongoDatabase mongoDatabase;
+    private MongoCollection<Document> changeLogCollection;
+    private MongoDbMongockTestHelper mongockTestHelper;
+
 
     @BeforeAll
     static void beforeAll() {
@@ -67,24 +66,37 @@ class MongoChangeTemplateTest {
     }
 
     @BeforeEach
-    void setupEach() {
+    void setUp() {
+        System.out.println("Setting up test environment...");
         mongoDatabase.getCollection(DEFAULT_AUDIT_STORE_NAME).drop();
         mongoDatabase.getCollection(DEFAULT_AUDIT_STORE_NAME).drop();
+        mongoDatabase.getCollection(MONGOCK_CHANGE_LOGS).drop();
+
+        changeLogCollection = mongoDatabase.getCollection(MONGOCK_CHANGE_LOGS);
+        mongockTestHelper = new MongoDbMongockTestHelper(changeLogCollection);
+        
+        // Print available templates for debugging
+        System.out.println("MongoDbImporterChangeTemplate class: " + 
+            io.flamingock.importer.mongodb.MongoDbImporterChangeTemplate.class.getName());
     }
-
-
-
+    
     @Test
-    @DisplayName("WHEN mongodb template THEN runs fine IF Flamingock mongodb sync ce")
-    void happyPath() {
-
-        Flamingock.builder()
+    void testImportMongockChangeLogs() {
+        System.out.println("Setting up test scenario...");
+        //adds the Mongock
+        mongockTestHelper.setupBasicScenario();
+        System.out.println("Mongock setup complete");
+        
+        System.out.println("Building Flamingock...");
+        Runner flamingock = Flamingock.builder()
                 .addDependency(mongoClient)
                 .addDependency(mongoClient.getDatabase(DB_NAME))
                 .setProperty("mongodb.databaseName", DB_NAME)
-                .build()
-                .run();
-
+                .build();
+        System.out.println("Flamingock built successfully");
+        
+        System.out.println("Running Flamingock...");
+        flamingock.run();
 
         List<Document> auditLog = mongoDatabase.getCollection(DEFAULT_AUDIT_STORE_NAME)
                 .find()
@@ -116,5 +128,24 @@ class MongoChangeTemplateTest {
         assertEquals("readonly", users.get(1).getList("roles", String.class).get(0));
     }
 
+//    private void validateEntriesInserted(int expectedCount) {
+//        long actualCount = changeLogCollection.countDocuments();
+//        assertEquals(expectedCount, actualCount, "Expected " + expectedCount + " entries to be inserted, but found " + actualCount);
+//
+//        // Validate a few specific entries
+//        Document systemChange = changeLogCollection.find(Filters.eq("changeId", "system-change-00001")).first();
+//        assertNotNull(systemChange, "System change entry not found");
+//        assertEquals("mongock", systemChange.getString("author"));
+//        assertEquals(true, systemChange.getBoolean("systemChange"));
+//
+//        Document clientInitializer = changeLogCollection.find(Filters.eq("changeId", "client-initializer")).first();
+//        assertNotNull(clientInitializer, "Client initializer entry not found");
+//        assertEquals("EXECUTION", clientInitializer.getString("type"));
+//        assertEquals("execution", clientInitializer.getString("changeSetMethod"));
+//
+//        Document secondaryDb = changeLogCollection.find(Filters.eq("changeId", "secondarydb-with-mongodatabase")).first();
+//        assertNotNull(secondaryDb, "Secondary DB entry not found");
+//        assertEquals(17L, secondaryDb.getLong("executionMillis"));
+//    }
 
 }

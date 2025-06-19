@@ -1,0 +1,6 @@
+id: other_id
+order: 0001
+transactional: false
+template: MongoDbImporterChangeTemplate
+configuration:
+  origin: mongockChangeLogs

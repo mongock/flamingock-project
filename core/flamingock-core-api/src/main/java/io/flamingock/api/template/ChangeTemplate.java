@@ -24,4 +24,5 @@ public interface ChangeTemplate<SHARED_CONFIG, EXECUTION, ROLLBACK> extends Refl
 
     Class<ROLLBACK> getRollbackClass();
 
+
 }

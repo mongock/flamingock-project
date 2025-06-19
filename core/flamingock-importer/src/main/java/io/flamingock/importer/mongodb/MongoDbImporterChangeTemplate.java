@@ -29,15 +29,14 @@ import io.flamingock.internal.common.core.pipeline.PipelineDescriptor;
 public class MongoDbImporterChangeTemplate extends AbstractChangeTemplate<OriginConfiguration, Void, Void> {
 
     public MongoDbImporterChangeTemplate() {
-        super();
+        super(OriginConfiguration.class);
     }
 
     @Execution
     public void execution(MongoDatabase db,
                           @NonLockGuarded AuditWriter auditWriter,
                           @NonLockGuarded PipelineDescriptor pipelineDescriptor) {
-        String collectionName = "";//configuration.getShared().getOrigin();
-        MongoDbImporterAdapter adapter = new MongoDbImporterAdapter(db, collectionName);
+        MongoDbImporterAdapter adapter = new MongoDbImporterAdapter(db, configuration.getOrigin());
         ImporterExecutor.runImport(adapter, auditWriter, pipelineDescriptor);
     }
 

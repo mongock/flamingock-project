@@ -1,0 +1,8 @@
+pipeline:
+  stages:
+    - name: "Flamingock System Changes"
+      description: "Stage with all the changeUnits related to Flamingock System"
+      sourcesPackage: "io.flamingock.importer.mongodb.flamingock.otherpackage"
+    - name: "MongoDB Changes"
+      description: "With templates"
+      sourcesPackage: "io.flamingock.importer.mongodb.flamingock.changes"
