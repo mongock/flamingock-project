@@ -29,26 +29,17 @@ import java.util.List;
 /**
  * It's the result of adding the loaded task to the ProcessDefinition
  */
-public class DefaultLoadedStage extends AbstractLoadedStage {
+public class ImporterLoadedStage extends AbstractLoadedStage {
 
-    public DefaultLoadedStage(String name,
-                              StageType type,
-                              Collection<AbstractLoadedTask> loadedTasks,
-                              boolean parallel) {
+    public ImporterLoadedStage(String name,
+                               StageType type,
+                               Collection<AbstractLoadedTask> loadedTasks,
+                               boolean parallel) {
         super(name, type, loadedTasks, parallel);
 
     }
 
 
-    /**
-     * Validates the stage and returns a list of validation errors
-     * Validations:
-     * 1. has name
-     * 2. no duplicate task IDs within stage
-     * 3. all tasks in the stage are valid
-     *
-     * @return list of validation errors, or empty list if the stage is valid
-     */
     @Override
     public List<ValidationError> getValidationErrors() {
         List<ValidationError> errors = new ArrayList<>();

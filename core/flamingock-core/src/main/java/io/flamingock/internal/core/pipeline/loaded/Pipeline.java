@@ -43,18 +43,18 @@ public class Pipeline implements PipelineDescriptor {
 
     private final Collection<TaskFilter> taskFilters;
 
-    private final List<LoadedStage> loadedStages;
+    private final List<AbstractLoadedStage> loadedStages;
 
     public static PipelineBuilder builder() {
         return new PipelineBuilder();
     }
 
-    private Pipeline(List<LoadedStage> loadedStages, Collection<TaskFilter> taskFilters) {
+    private Pipeline(List<AbstractLoadedStage> loadedStages, Collection<TaskFilter> taskFilters) {
         this.loadedStages = loadedStages;
         this.taskFilters = taskFilters;
     }
 
-    public List<LoadedStage> validateAndGetLoadedStages() {
+    public List<AbstractLoadedStage> validateAndGetLoadedStages() {
         validate();
         return loadedStages;
     }
@@ -62,7 +62,7 @@ public class Pipeline implements PipelineDescriptor {
     @Override
     public Optional<AbstractLoadedTask> getLoadedTask(String taskId) {
         return loadedStages.stream()
-                .map(LoadedStage::getLoadedTasks)
+                .map(AbstractLoadedStage::getLoadedTasks)
                 .flatMap(Collection::stream)
                 .filter(loadedTask -> loadedTask.getId().equals(taskId))
                 .findFirst();
@@ -70,7 +70,7 @@ public class Pipeline implements PipelineDescriptor {
 
     @Override
     public Optional<String> getStageByTask(String taskId) {
-        for (LoadedStage loadedStage : loadedStages) {
+        for (AbstractLoadedStage loadedStage : loadedStages) {
             for (TaskDescriptor loadedTask : loadedStage.getLoadedTasks()) {
                 if (loadedTask.getId().equals(taskId)) {
                     return Optional.of(loadedStage.getName());
@@ -101,7 +101,7 @@ public class Pipeline implements PipelineDescriptor {
             errors.add(new ValidationError("Pipeline must contain at least one stage", "pipeline", "pipeline"));
 
         } else {
-            loadedStages.stream().map(LoadedStage::getValidationErrors).forEach(errors::addAll);
+            loadedStages.stream().map(AbstractLoadedStage::getValidationErrors).forEach(errors::addAll);
             getStagesIdDuplicationError().ifPresent(errors::add);
         }
 
@@ -115,7 +115,7 @@ public class Pipeline implements PipelineDescriptor {
         Set<String> seenIds = new HashSet<>();
         Set<String> duplicateIds = new HashSet<>();
 
-        for (LoadedStage stage : loadedStages) {
+        for (AbstractLoadedStage stage : loadedStages) {
             for (String id : stage.getTaskIds()) {
                 if (!seenIds.add(id)) {
                     duplicateIds.add(id);
@@ -169,7 +169,7 @@ public class Pipeline implements PipelineDescriptor {
 
 
         public Pipeline build() {
-            List<LoadedStage> allSortedStages = new LinkedList<>(transformToLoadedStages(beforeUserStages));
+            List<AbstractLoadedStage> allSortedStages = new LinkedList<>(transformToLoadedStages(beforeUserStages));
             allSortedStages.addAll(transformToLoadedStages(previewPipeline.getStages()));
             allSortedStages.addAll(transformToLoadedStages(afterUserStages));
 
@@ -177,14 +177,14 @@ public class Pipeline implements PipelineDescriptor {
         }
 
         @NotNull
-        private static List<LoadedStage> transformToLoadedStages(Collection<PreviewStage> stages) {
+        private static List<AbstractLoadedStage> transformToLoadedStages(Collection<PreviewStage> stages) {
             if (stages == null) {
                 return Collections.emptyList();
             }
             return stages
                     .stream()
-                    .map(LoadedStage.builder()::setPreviewStage)
-                    .map(LoadedStage.Builder::build)
+                    .map(AbstractLoadedStage.builder()::setPreviewStage)
+                    .map(AbstractLoadedStage.Builder::build)
                     .collect(Collectors.toList());
         }
 

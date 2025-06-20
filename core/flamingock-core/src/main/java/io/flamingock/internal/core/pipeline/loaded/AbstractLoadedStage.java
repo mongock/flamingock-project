@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 /**
  * It's the result of adding the loaded task to the ProcessDefinition
  */
-public abstract class LoadedStage implements Validatable {
+public abstract class AbstractLoadedStage implements Validatable {
 
     public static Builder builder() {
         return new Builder();
@@ -59,10 +59,10 @@ public abstract class LoadedStage implements Validatable {
     private final boolean parallel;
 
 
-    public LoadedStage(String name,
-                       StageType type,
-                       Collection<AbstractLoadedTask> loadedTasks,
-                       boolean parallel) {
+    public AbstractLoadedStage(String name,
+                               StageType type,
+                               Collection<AbstractLoadedTask> loadedTasks,
+                               boolean parallel) {
         this.name = name;
         this.type = type;
         this.loadedTasks = loadedTasks;
@@ -181,16 +181,16 @@ public abstract class LoadedStage implements Validatable {
             return this;
         }
 
-        public LoadedStage build() {
+        public AbstractLoadedStage build() {
             List<AbstractLoadedTask> loadedTasks = previewStage.getTasks()
                     .stream()
                     .map(LoadedTaskBuilder::build)
                     .collect(Collectors.toList());
             switch(previewStage.getType()) {
                 case MONGOCK_LEGACY:
-                    return null;
+                    return new MongockLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
                 case IMPORTER:
-                    return null;
+                    return new ImporterLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
                 case DEFAULT:
                 default:
                     return new DefaultLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
