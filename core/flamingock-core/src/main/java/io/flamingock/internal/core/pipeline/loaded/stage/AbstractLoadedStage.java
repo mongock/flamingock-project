@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.pipeline.loaded;
+package io.flamingock.internal.core.pipeline.loaded.stage;
 
 
 import io.flamingock.internal.common.core.error.validation.Validatable;
@@ -25,6 +25,7 @@ import io.flamingock.internal.common.core.preview.StageType;
 import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;
 import io.flamingock.internal.common.core.preview.PreviewStage;
 import io.flamingock.internal.core.pipeline.execution.ExecutableStage;
+import io.flamingock.internal.core.pipeline.loaded.PipelineValidationContext;
 import io.flamingock.internal.core.task.executable.ExecutableTask;
 import io.flamingock.internal.core.task.executable.builder.ExecutableTaskBuilder;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
@@ -44,11 +45,14 @@ import java.util.stream.Collectors;
 /**
  * It's the result of adding the loaded task to the ProcessDefinition
  */
-public abstract class AbstractLoadedStage implements Validatable {
+public abstract class AbstractLoadedStage implements Validatable<PipelineValidationContext> {
 
     public static Builder builder() {
         return new Builder();
     }
+
+
+    private final StageValidationContext validationContext;
 
     private final String name;
 
@@ -62,13 +66,15 @@ public abstract class AbstractLoadedStage implements Validatable {
     public AbstractLoadedStage(String name,
                                StageType type,
                                Collection<AbstractLoadedTask> loadedTasks,
-                               boolean parallel) {
+                               boolean parallel,
+                               StageValidationContext validationContext) {
         this.name = name;
         this.type = type;
         this.loadedTasks = loadedTasks;
         this.parallel = parallel;
-
+        this.validationContext = validationContext;
     }
+
 
     public ExecutableStage applyState(AuditStageStatus state) {
 
@@ -122,7 +128,7 @@ public abstract class AbstractLoadedStage implements Validatable {
      * @return list of validation errors, or empty list if the stage is valid
      */
     @Override
-    public List<ValidationError> getValidationErrors() {
+    public List<ValidationError> getValidationErrors(PipelineValidationContext context) {
         List<ValidationError> errors = new ArrayList<>();
 
         // Validate stage name
@@ -137,7 +143,7 @@ public abstract class AbstractLoadedStage implements Validatable {
             return Collections.singletonList(new ValidationError(message, name, "stage"));
         }
         getTaskIdDuplicationError().ifPresent(errors::add);
-        getLoadedTasks().stream().map(AbstractLoadedTask::getValidationErrors).forEach(errors::addAll);
+        getLoadedTasks().stream().map(task -> task.getValidationErrors(validationContext)).forEach(errors::addAll);
         return errors;
     }
 
@@ -187,10 +193,10 @@ public abstract class AbstractLoadedStage implements Validatable {
                     .map(LoadedTaskBuilder::build)
                     .collect(Collectors.toList());
             switch(previewStage.getType()) {
-                case MONGOCK_LEGACY:
-                    return new MongockLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
+                case LEGACY:
+                    return new LegacyLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
                 case IMPORTER:
-                    return new ImporterLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
+                    return new SystemLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
                 case DEFAULT:
                 default:
                     return new DefaultLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());

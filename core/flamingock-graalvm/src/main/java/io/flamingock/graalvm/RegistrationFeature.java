@@ -11,7 +11,7 @@ import io.flamingock.internal.common.core.system.SystemModule;
 import io.flamingock.internal.common.core.task.AbstractTaskDescriptor;
 import io.flamingock.internal.common.core.task.TaskDescriptor;
 import io.flamingock.internal.common.core.template.TemplateManager;
-import io.flamingock.internal.core.pipeline.loaded.AbstractLoadedStage;
+import io.flamingock.internal.core.pipeline.loaded.stage.AbstractLoadedStage;
 import io.flamingock.internal.core.pipeline.loaded.Pipeline;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedChangeUnit;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;

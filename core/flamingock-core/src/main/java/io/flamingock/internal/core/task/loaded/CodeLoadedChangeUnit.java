@@ -16,17 +16,15 @@
 
 package io.flamingock.internal.core.task.loaded;
 
-import io.flamingock.api.task.TaskCategory;
-import io.flamingock.internal.util.ReflectionUtil;
 import io.flamingock.api.annotations.Execution;
 import io.flamingock.api.annotations.RollbackExecution;
+import io.flamingock.api.task.ChangeCategory;
+import io.flamingock.internal.util.ReflectionUtil;
 import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.RollbackBeforeExecution;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.StringJoiner;
 
@@ -56,8 +54,8 @@ public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
     }
 
     @Override
-    public Collection<TaskCategory> getCategories() {
-        return Collections.emptyList();
+    public boolean hasCategory(ChangeCategory property) {
+        return false;
     }
 
     public Optional<Method> getBeforeExecutionMethod() {

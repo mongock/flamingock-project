@@ -32,7 +32,7 @@ import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;
 import io.flamingock.internal.core.engine.lock.Lock;
 import io.flamingock.internal.core.engine.lock.LockKey;
 import io.flamingock.internal.core.pipeline.execution.ExecutableStage;
-import io.flamingock.internal.core.pipeline.loaded.AbstractLoadedStage;
+import io.flamingock.internal.core.pipeline.loaded.stage.AbstractLoadedStage;
 import io.flamingock.internal.common.core.task.TaskDescriptor;
 
 import java.util.ArrayList;

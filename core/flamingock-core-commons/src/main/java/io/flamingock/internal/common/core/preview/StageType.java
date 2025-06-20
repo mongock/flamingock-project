@@ -1,26 +1,26 @@
 package io.flamingock.internal.common.core.preview;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 public enum StageType {
     DEFAULT,
-    MONGOCK_LEGACY("mongock-legacy"),
+    LEGACY("legacy"),
     IMPORTER("importer");
 
-    private final Set<String> aliases;
+    private final String alias;
 
-    StageType(String... aliases) {
-        this.aliases = new HashSet<>(Arrays.asList(aliases));
+    StageType(String alias) {
+        this.alias = alias;
+    }
+
+    StageType() {
+        this.alias = null;
     }
 
     public static StageType from(String name) {
-        if(name == null || name.isEmpty()) {
+        if (name == null || name.isEmpty()) {
             return DEFAULT;
         }
         for (StageType stageType : StageType.values()) {
-            if (stageType.aliases.contains(name)) {
+            if (name.equals(stageType.alias)) {
                 return stageType;
             }
         }

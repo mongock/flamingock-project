@@ -30,7 +30,7 @@ import io.flamingock.internal.core.event.model.impl.StageCompletedEvent;
 import io.flamingock.internal.core.event.model.impl.StageFailedEvent;
 import io.flamingock.internal.core.event.model.impl.StageStartedEvent;
 import io.flamingock.internal.core.pipeline.execution.ExecutableStage;
-import io.flamingock.internal.core.pipeline.loaded.AbstractLoadedStage;
+import io.flamingock.internal.core.pipeline.loaded.stage.AbstractLoadedStage;
 import io.flamingock.internal.core.pipeline.loaded.Pipeline;
 import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
 import io.flamingock.internal.core.pipeline.execution.OrphanExecutionContext;

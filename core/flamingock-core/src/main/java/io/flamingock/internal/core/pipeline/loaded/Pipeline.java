@@ -25,6 +25,7 @@ import io.flamingock.internal.common.core.preview.PreviewPipeline;
 import io.flamingock.internal.common.core.preview.PreviewStage;
 import io.flamingock.internal.common.core.task.TaskDescriptor;
 import io.flamingock.internal.common.core.context.ContextInjectable;
+import io.flamingock.internal.core.pipeline.loaded.stage.AbstractLoadedStage;
 import io.flamingock.internal.core.task.filter.TaskFilter;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Pipeline implements PipelineDescriptor {
+
+    private static final PipelineValidationContext CONTEXT = new PipelineValidationContext();
+
 
     private final Collection<TaskFilter> taskFilters;
 
@@ -101,7 +105,7 @@ public class Pipeline implements PipelineDescriptor {
             errors.add(new ValidationError("Pipeline must contain at least one stage", "pipeline", "pipeline"));
 
         } else {
-            loadedStages.stream().map(AbstractLoadedStage::getValidationErrors).forEach(errors::addAll);
+            loadedStages.stream().map(stage -> stage.getValidationErrors(CONTEXT)).forEach(errors::addAll);
             getStagesIdDuplicationError().ifPresent(errors::add);
         }
 
