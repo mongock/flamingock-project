@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.pipeline;
+package io.flamingock.internal.core.pipeline.loaded;
 
 
 import io.flamingock.internal.common.core.error.validation.Validatable;
 import io.flamingock.internal.common.core.error.validation.ValidationError;
 
 import io.flamingock.internal.common.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.preview.StageType;
 import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;
 import io.flamingock.internal.common.core.preview.PreviewStage;
+import io.flamingock.internal.core.pipeline.execution.ExecutableStage;
 import io.flamingock.internal.core.task.executable.ExecutableTask;
 import io.flamingock.internal.core.task.executable.builder.ExecutableTaskBuilder;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
@@ -42,7 +44,7 @@ import java.util.stream.Collectors;
 /**
  * It's the result of adding the loaded task to the ProcessDefinition
  */
-public class LoadedStage implements Validatable {
+public abstract class LoadedStage implements Validatable {
 
     public static Builder builder() {
         return new Builder();
@@ -50,15 +52,19 @@ public class LoadedStage implements Validatable {
 
     private final String name;
 
+    private final StageType type;
+
     private final Collection<AbstractLoadedTask> loadedTasks;
 
     private final boolean parallel;
 
 
     public LoadedStage(String name,
+                       StageType type,
                        Collection<AbstractLoadedTask> loadedTasks,
                        boolean parallel) {
         this.name = name;
+        this.type = type;
         this.loadedTasks = loadedTasks;
         this.parallel = parallel;
 
@@ -81,6 +87,9 @@ public class LoadedStage implements Validatable {
         return name;
     }
 
+    public StageType getType() {
+        return type;
+    }
 
     public Collection<AbstractLoadedTask> getLoadedTasks() {
         return loadedTasks;
@@ -140,7 +149,7 @@ public class LoadedStage implements Validatable {
                 '}';
     }
 
-    private Optional<ValidationError> getTaskIdDuplicationError() {
+    protected Optional<ValidationError> getTaskIdDuplicationError() {
         Set<String> seen = new HashSet<>();
         Set<String> duplicates = new HashSet<>();
 
@@ -177,7 +186,16 @@ public class LoadedStage implements Validatable {
                     .stream()
                     .map(LoadedTaskBuilder::build)
                     .collect(Collectors.toList());
-            return new LoadedStage(previewStage.getName(), loadedTasks, previewStage.isParallel());
+            switch(previewStage.getType()) {
+                case MONGOCK_LEGACY:
+                    return null;
+                case IMPORTER:
+                    return null;
+                case DEFAULT:
+                default:
+                    return new DefaultLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
+            }
+
         }
     }
 }

@@ -17,7 +17,7 @@
 package io.flamingock.internal.core.engine.execution;
 
 import io.flamingock.internal.core.engine.lock.LockException;
-import io.flamingock.internal.core.pipeline.LoadedStage;
+import io.flamingock.internal.core.pipeline.loaded.LoadedStage;
 
 import java.util.List;
 

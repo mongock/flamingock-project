@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.pipeline;
+package io.flamingock.internal.core.pipeline.execution;
 
 import java.util.List;
 
