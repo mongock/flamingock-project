@@ -16,12 +16,15 @@
 
 package io.flamingock.internal.core.task.loaded;
 
+import io.flamingock.api.task.TaskCategory;
 import io.flamingock.internal.util.ReflectionUtil;
 import io.flamingock.api.annotations.Execution;
 import io.flamingock.api.annotations.RollbackExecution;
 import io.flamingock.api.template.ChangeTemplate;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,5 +87,10 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
     @Override
     public Optional<Method> getRollbackMethod() {
         return ReflectionUtil.findFirstAnnotatedMethod(getSourceClass(), RollbackExecution.class);
+    }
+
+    @Override
+    public Collection<TaskCategory> getCategories() {
+        return Collections.emptyList();
     }
 }

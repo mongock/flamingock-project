@@ -20,11 +20,13 @@ import io.flamingock.internal.common.core.error.validation.Validatable;
 import io.flamingock.internal.common.core.error.validation.ValidationError;
 
 import io.flamingock.internal.common.core.task.AbstractTaskDescriptor;
+import io.flamingock.api.task.TaskCategory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -56,9 +58,11 @@ public abstract class AbstractLoadedTask extends AbstractTaskDescriptor implemen
 
     public abstract Optional<Method> getRollbackMethod();
 
+    public abstract Collection<TaskCategory> getCategories();
+
 
     @Override
-    public List<ValidationError> getValidationErrors() {
+    public List<ValidationError>  getValidationErrors() {
         List<ValidationError> errors = new ArrayList<>();
         final String entityType = "task";
 

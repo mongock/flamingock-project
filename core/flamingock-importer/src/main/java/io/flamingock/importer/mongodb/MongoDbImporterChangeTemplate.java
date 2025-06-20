@@ -20,17 +20,13 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.api.annotations.Execution;
 import io.flamingock.api.annotations.NonLockGuarded;
 import io.flamingock.api.annotations.RollbackExecution;
-import io.flamingock.api.template.AbstractChangeTemplate;
+import io.flamingock.importer.AbstractImporterChangeTemplate;
 import io.flamingock.importer.ImporterExecutor;
-import io.flamingock.importer.OriginConfiguration;
 import io.flamingock.internal.common.core.audit.AuditWriter;
 import io.flamingock.internal.common.core.pipeline.PipelineDescriptor;
 
-public class MongoDbImporterChangeTemplate extends AbstractChangeTemplate<OriginConfiguration, Void, Void> {
+public class MongoDbImporterChangeTemplate extends AbstractImporterChangeTemplate {
 
-    public MongoDbImporterChangeTemplate() {
-        super(OriginConfiguration.class);
-    }
 
     @Execution
     public void execution(MongoDatabase db,

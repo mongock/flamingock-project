@@ -1,5 +1,9 @@
 package io.flamingock.api.template;
 
+import io.flamingock.api.task.TaskCategory;
+
+import java.util.Collection;
+
 /**
  * Interface representing a reusable change template with configuration of type {@code CONFIG}.
  * <p>
@@ -24,5 +28,6 @@ public interface ChangeTemplate<SHARED_CONFIG, EXECUTION, ROLLBACK> extends Refl
 
     Class<ROLLBACK> getRollbackClass();
 
+    Collection<TaskCategory> getCategories();
 
 }

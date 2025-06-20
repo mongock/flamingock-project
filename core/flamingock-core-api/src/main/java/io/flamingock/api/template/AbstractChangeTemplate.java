@@ -1,14 +1,16 @@
 package io.flamingock.api.template;
 
+import io.flamingock.api.task.TaskCategory;
 import io.flamingock.internal.util.ReflectionUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 
-public class AbstractChangeTemplate<CONFIGURATION, EXECUTION, ROLLBACK> implements ChangeTemplate<CONFIGURATION, EXECUTION, ROLLBACK> {
+public abstract class AbstractChangeTemplate<CONFIGURATION, EXECUTION, ROLLBACK> implements ChangeTemplate<CONFIGURATION, EXECUTION, ROLLBACK> {
 
     private final Class<CONFIGURATION> configurationClass;
     private final Class<EXECUTION> executionClass;
@@ -91,6 +93,11 @@ public class AbstractChangeTemplate<CONFIGURATION, EXECUTION, ROLLBACK> implemen
     @Override
     public Class<ROLLBACK> getRollbackClass() {
         return rollbackClass;
+    }
+
+    @Override
+    public Collection<TaskCategory> getCategories() {
+        return Collections.emptyList();
     }
 
 }
