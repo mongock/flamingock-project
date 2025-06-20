@@ -14,28 +14,20 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.pipeline;
+package io.flamingock.api.annotations;
 
-import java.util.List;
+import io.flamingock.api.task.ChangeCategory;
 
-public class ExecutablePipeline {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 
-    private final List<ExecutableStage> stages;
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Categories {
 
-    public ExecutablePipeline(List<ExecutableStage> stages) {
-        this.stages = stages;
-    }
-
-    public Iterable<ExecutableStage> getExecutableStages() {
-        return stages;
-    }
-
-    public boolean isExecutionRequired() {
-        return stages
-                .stream()
-                .anyMatch(ExecutableStage::isExecutionRequired);
-    }
-
+    ChangeCategory[] value();
 
 }

@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.common.core.error.validation;
+package io.flamingock.api.annotations;
 
-import java.util.List;
 
-public interface Validatable<VALIDATION_CONTEXT> {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    List<ValidationError> getValidationErrors(VALIDATION_CONTEXT context);
+@Inherited
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ChangeTemplate {
 
-    default boolean isValid(VALIDATION_CONTEXT context) {
-        return getValidationErrors(context).isEmpty();
-    }
+
+    String name();
+
+
 }

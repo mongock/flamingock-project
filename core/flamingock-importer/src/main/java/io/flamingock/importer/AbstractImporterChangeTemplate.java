@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.common.core.error.validation;
+package io.flamingock.importer;
 
-import java.util.List;
+import io.flamingock.api.annotations.Categories;
+import io.flamingock.api.task.ChangeCategory;
+import io.flamingock.api.template.AbstractChangeTemplate;
 
-public interface Validatable<VALIDATION_CONTEXT> {
 
-    List<ValidationError> getValidationErrors(VALIDATION_CONTEXT context);
+@Categories(ChangeCategory.IMPORT)
+public class AbstractImporterChangeTemplate extends AbstractChangeTemplate<OriginConfiguration, Void, Void> {
 
-    default boolean isValid(VALIDATION_CONTEXT context) {
-        return getValidationErrors(context).isEmpty();
+    public AbstractImporterChangeTemplate() {
+        super(OriginConfiguration.class);
     }
+
 }

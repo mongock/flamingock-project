@@ -14,15 +14,28 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.common.core.error.validation;
+package io.flamingock.internal.core.pipeline.execution;
 
 import java.util.List;
 
-public interface Validatable<VALIDATION_CONTEXT> {
+public class ExecutablePipeline {
 
-    List<ValidationError> getValidationErrors(VALIDATION_CONTEXT context);
 
-    default boolean isValid(VALIDATION_CONTEXT context) {
-        return getValidationErrors(context).isEmpty();
+    private final List<ExecutableStage> stages;
+
+    public ExecutablePipeline(List<ExecutableStage> stages) {
+        this.stages = stages;
     }
+
+    public Iterable<ExecutableStage> getExecutableStages() {
+        return stages;
+    }
+
+    public boolean isExecutionRequired() {
+        return stages
+                .stream()
+                .anyMatch(ExecutableStage::isExecutionRequired);
+    }
+
+
 }

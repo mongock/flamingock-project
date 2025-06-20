@@ -34,7 +34,7 @@ import io.flamingock.internal.core.event.model.IStageCompletedEvent;
 import io.flamingock.internal.core.event.model.IStageFailedEvent;
 import io.flamingock.internal.core.event.model.IStageIgnoredEvent;
 import io.flamingock.internal.core.event.model.IStageStartedEvent;
-import io.flamingock.internal.core.pipeline.Pipeline;
+import io.flamingock.internal.core.pipeline.loaded.Pipeline;
 import io.flamingock.internal.core.plugin.Plugin;
 import io.flamingock.internal.core.plugin.PluginManager;
 import io.flamingock.internal.core.runner.PipelineRunnerCreator;

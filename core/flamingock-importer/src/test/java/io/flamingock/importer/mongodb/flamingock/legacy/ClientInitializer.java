@@ -1,10 +1,10 @@
-package io.flamingock.importer.mongodb.flamingock.mongodb;
+package io.flamingock.importer.mongodb.flamingock.legacy;
 
 import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.Execution;
 import io.mongock.api.annotations.BeforeExecution;
 
-@ChangeUnit(id = "client-initializer", order = "0001", author = "mongock")
+@ChangeUnit(id = "client-initializer", order = "1", author = "mongock")
 public class ClientInitializer {
 
     @BeforeExecution

@@ -29,9 +29,9 @@ import io.flamingock.internal.core.event.model.impl.PipelineStartedEvent;
 import io.flamingock.internal.core.event.model.impl.StageCompletedEvent;
 import io.flamingock.internal.core.event.model.impl.StageFailedEvent;
 import io.flamingock.internal.core.event.model.impl.StageStartedEvent;
-import io.flamingock.internal.core.pipeline.ExecutableStage;
-import io.flamingock.internal.core.pipeline.LoadedStage;
-import io.flamingock.internal.core.pipeline.Pipeline;
+import io.flamingock.internal.core.pipeline.execution.ExecutableStage;
+import io.flamingock.internal.core.pipeline.loaded.stage.AbstractLoadedStage;
+import io.flamingock.internal.core.pipeline.loaded.Pipeline;
 import io.flamingock.internal.core.pipeline.execution.ExecutionContext;
 import io.flamingock.internal.core.pipeline.execution.OrphanExecutionContext;
 import io.flamingock.internal.core.pipeline.execution.StageExecutionException;
@@ -88,7 +88,7 @@ public class PipelineRunner implements Runner {
         eventPublisher.publish(new PipelineStartedEvent());
         PipelineSummary pipelineSummary = null;
         do {
-            List<LoadedStage> loadedStages = pipeline.validateAndGetLoadedStages();
+            List<AbstractLoadedStage> loadedStages = pipeline.validateAndGetLoadedStages();
             try (ExecutionPlan execution = executionPlanner.getNextExecution(loadedStages)) {
                 if (pipelineSummary == null) {
                     pipelineSummary = new PipelineSummary(execution.getPipeline());
