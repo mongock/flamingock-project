@@ -1,14 +1,15 @@
 package io.flamingock.importer;
 
 import io.flamingock.api.template.ChangeTemplate;
-import io.flamingock.internal.common.core.error.FlamingockException;
 import io.flamingock.internal.common.core.template.ChangeTemplateFactory;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 public class ImporterTemplateFactory implements ChangeTemplateFactory {
 
@@ -22,38 +23,42 @@ public class ImporterTemplateFactory implements ChangeTemplateFactory {
     @Override
     public Collection<ChangeTemplate<?, ?, ?>> getTemplates() {
         try {
-            String className = getClassName();
-            logger.info("Loading importer template: {}", className);
-            Class<?> changeTemplateClass = Class.forName(className);
-            return Collections.singletonList(
-                    (ChangeTemplate<?, ?, ?>) changeTemplateClass.getDeclaredConstructor().newInstance()
-            );
+            Optional<String> className = getClassName();
+            if (className.isPresent()) {
+                logger.info("Loading importer template: {}", className);
+                Class<?> changeTemplateClass = Class.forName(className.get());
+                return Collections.singletonList(
+                        (ChangeTemplate<?, ?, ?>) changeTemplateClass.getDeclaredConstructor().newInstance()
+                );
+            } else {
+                return Collections.emptyList();
+            }
+
 
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Importer importer template class not found" , e);
+            throw new RuntimeException("Importer importer template class not found", e);
         } catch (Exception e) {
             throw new RuntimeException("Failed to instantiate importer class ", e);
         }
     }
 
     @NotNull
-    private static String getClassName() {
-        String className;
+    private static Optional<String> getClassName() {
 
         if (isMongoDbAdapter()) {
-            className = MONGO_TEMPLATE_CLASS;
+            return Optional.of(MONGO_TEMPLATE_CLASS);
         } else if (isDynamoDbAdapter()) {
-            className = DYNAMO_TEMPLATE_CLASS;
+            return Optional.empty();//Optional.of(DYNAMO_TEMPLATE_CLASS);
         } else if (isCouchbaseAdapter()) {
-            className = COUCHBASE_TEMPLATE_CLASS;
+            return Optional.empty();//Optional.of(COUCHBASE_TEMPLATE_CLASS);
         } else {
-            throw new FlamingockException("No compatible database driver detected. Please include a supported database dependency (MongoDB, DynamoDB, or Couchbase) in your project classpath.");
+            logger.debug("No compatible database driver detected. Please include a supported database dependency (MongoDB, DynamoDB, or Couchbase) in your project classpath.");
         }
-        return className;
+        return Optional.empty();
     }
 
     private static boolean isMongoDbAdapter() {
-        try{
+        try {
             Class.forName("com.mongodb.client.MongoCollection");
             return true;
         } catch (ClassNotFoundException e) {
@@ -63,7 +68,7 @@ public class ImporterTemplateFactory implements ChangeTemplateFactory {
     }
 
     private static boolean isDynamoDbAdapter() {
-        try{
+        try {
             Class.forName("software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable");
             return true;
         } catch (ClassNotFoundException e) {
@@ -76,6 +81,26 @@ public class ImporterTemplateFactory implements ChangeTemplateFactory {
         //TODO implement
         logger.warn("Couchbase adapter not implemented, skipping");
         return false;
+    }
+
+    private static Class<?> loadClass(String className) {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Importer importer template class not found", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to instantiate importer class ", e);
+        }
+    }
+
+    @NotNull
+    private static ChangeTemplate<?, ?, ?> getInstance(Class<?> changeTemplateClass) {
+        try {
+            return (ChangeTemplate<?, ?, ?>) changeTemplateClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException("Failed to instantiate importer class ", e);
+        }
     }
 }
 
