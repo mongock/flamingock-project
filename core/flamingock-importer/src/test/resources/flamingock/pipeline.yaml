@@ -1,7 +1,7 @@
 pipeline:
   stages:
-    - name: "Flamingock System Changes"
-      sourcesPackage: "io.flamingock.importer.mongodb.flamingock.system"
+    - name: "Flamingock importer"
+      sourcesPackage: "io.flamingock.importer.mongodb.flamingock.importer"
     - name: "MongoDB Changes"
       description: "Changes to MongoDB"
       sourcesPackage: "io.flamingock.importer.mongodb.flamingock.mongodb"
