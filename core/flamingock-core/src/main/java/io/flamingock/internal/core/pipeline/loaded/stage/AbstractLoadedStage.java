@@ -195,7 +195,7 @@ public abstract class AbstractLoadedStage implements Validatable<PipelineValidat
             switch(previewStage.getType()) {
                 case LEGACY:
                     return new LegacyLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
-                case IMPORTER:
+                case SYSTEM:
                     return new SystemLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
                 case DEFAULT:
                 default:
