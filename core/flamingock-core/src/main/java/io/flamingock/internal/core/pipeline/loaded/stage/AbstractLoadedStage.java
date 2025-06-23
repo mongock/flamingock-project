@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package io.flamingock.internal.core.pipeline;
+package io.flamingock.internal.core.pipeline.loaded.stage;
 
 
 import io.flamingock.internal.common.core.error.validation.Validatable;
 import io.flamingock.internal.common.core.error.validation.ValidationError;
 
 import io.flamingock.internal.common.core.audit.AuditEntry;
+import io.flamingock.internal.common.core.preview.StageType;
 import io.flamingock.internal.core.engine.audit.domain.AuditStageStatus;
 import io.flamingock.internal.common.core.preview.PreviewStage;
+import io.flamingock.internal.core.pipeline.execution.ExecutableStage;
+import io.flamingock.internal.core.pipeline.loaded.PipelineValidationContext;
 import io.flamingock.internal.core.task.executable.ExecutableTask;
 import io.flamingock.internal.core.task.executable.builder.ExecutableTaskBuilder;
 import io.flamingock.internal.core.task.loaded.AbstractLoadedTask;
@@ -42,33 +45,42 @@ import java.util.stream.Collectors;
 /**
  * It's the result of adding the loaded task to the ProcessDefinition
  */
-public class LoadedStage implements Validatable {
+public abstract class AbstractLoadedStage implements Validatable<PipelineValidationContext> {
 
     public static Builder builder() {
         return new Builder();
     }
 
+
+    private final StageValidationContext validationContext;
+
     private final String name;
 
-    private final Collection<AbstractLoadedTask> loadedTasks;
+    private final StageType type;
+
+    private final Collection<AbstractLoadedTask> tasks;
 
     private final boolean parallel;
 
 
-    public LoadedStage(String name,
-                       Collection<AbstractLoadedTask> loadedTasks,
-                       boolean parallel) {
+    public AbstractLoadedStage(String name,
+                               StageType type,
+                               Collection<AbstractLoadedTask> tasks,
+                               boolean parallel,
+                               StageValidationContext validationContext) {
         this.name = name;
-        this.loadedTasks = loadedTasks;
+        this.type = type;
+        this.tasks = tasks;
         this.parallel = parallel;
-
+        this.validationContext = validationContext;
     }
+
 
     public ExecutableStage applyState(AuditStageStatus state) {
 
         Map<String, AuditEntry.Status> statesMap = state.getEntryStatesMap();
 
-        List<ExecutableTask> tasks = loadedTasks
+        List<ExecutableTask> tasks = this.tasks
                 .stream()
                 .map(loadedTask -> ExecutableTaskBuilder.build(loadedTask, name, statesMap.get(loadedTask.getId())))
                 .flatMap(List::stream)
@@ -81,9 +93,12 @@ public class LoadedStage implements Validatable {
         return name;
     }
 
+    public StageType getType() {
+        return type;
+    }
 
-    public Collection<AbstractLoadedTask> getLoadedTasks() {
-        return loadedTasks;
+    public Collection<AbstractLoadedTask> getTasks() {
+        return tasks;
     }
 
     public boolean isParallel() {
@@ -98,7 +113,7 @@ public class LoadedStage implements Validatable {
      * so the returned {@code Set} will not contain duplicates.
      */
     public Set<String> getTaskIds() {
-        return getLoadedTasks().stream()
+        return getTasks().stream()
                 .map(AbstractLoadedTask::getId)
                 .collect(Collectors.toSet());
     }
@@ -113,7 +128,7 @@ public class LoadedStage implements Validatable {
      * @return list of validation errors, or empty list if the stage is valid
      */
     @Override
-    public List<ValidationError> getValidationErrors() {
+    public List<ValidationError> getValidationErrors(PipelineValidationContext context) {
         List<ValidationError> errors = new ArrayList<>();
 
         // Validate stage name
@@ -123,28 +138,28 @@ public class LoadedStage implements Validatable {
         }
 
         // Check if stage is empty
-        if (loadedTasks == null || loadedTasks.isEmpty()) {
+        if (tasks == null || tasks.isEmpty()) {
             String message = String.format("Stage[%s] must contain at least one task", name);
             return Collections.singletonList(new ValidationError(message, name, "stage"));
         }
         getTaskIdDuplicationError().ifPresent(errors::add);
-        getLoadedTasks().stream().map(AbstractLoadedTask::getValidationErrors).forEach(errors::addAll);
+        getTasks().stream().map(task -> task.getValidationErrors(validationContext)).forEach(errors::addAll);
         return errors;
     }
 
     @Override
     public String toString() {
         return "LoadedStage{" + "name='" + name + '\'' +
-                ", loadedTasks=" + loadedTasks +
+                ", loadedTasks=" + tasks +
                 ", parallel=" + parallel +
                 '}';
     }
 
-    private Optional<ValidationError> getTaskIdDuplicationError() {
+    protected Optional<ValidationError> getTaskIdDuplicationError() {
         Set<String> seen = new HashSet<>();
         Set<String> duplicates = new HashSet<>();
 
-        for (AbstractLoadedTask task : getLoadedTasks()) {
+        for (AbstractLoadedTask task : getTasks()) {
             String id = task.getId();
             if (!seen.add(id)) {
                 duplicates.add(id);
@@ -172,12 +187,21 @@ public class LoadedStage implements Validatable {
             return this;
         }
 
-        public LoadedStage build() {
+        public AbstractLoadedStage build() {
             List<AbstractLoadedTask> loadedTasks = previewStage.getTasks()
                     .stream()
                     .map(LoadedTaskBuilder::build)
                     .collect(Collectors.toList());
-            return new LoadedStage(previewStage.getName(), loadedTasks, previewStage.isParallel());
+            switch(previewStage.getType()) {
+                case LEGACY:
+                    return new LegacyLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
+                case SYSTEM:
+                    return new SystemLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
+                case DEFAULT:
+                default:
+                    return new DefaultLoadedStage(previewStage.getName(), previewStage.getType(), loadedTasks, previewStage.isParallel());
+            }
+
         }
     }
 }

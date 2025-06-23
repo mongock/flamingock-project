@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-package io.flamingock.importer.model;
+package io.flamingock.internal.core.pipeline.execution;
 
-import io.flamingock.internal.common.core.audit.AuditEntry;
+import java.util.List;
 
-public enum MongockChangeState {
-  EXECUTED, FAILED, ROLLED_BACK, ROLLBACK_FAILED, IGNORED;
+public class ExecutablePipeline {
 
-  public AuditEntry.Status toAuditStatus() {
-    switch (this) {
-      case FAILED: return AuditEntry.Status.EXECUTION_FAILED;
-      case ROLLED_BACK: return AuditEntry.Status.ROLLED_BACK;
-      case ROLLBACK_FAILED: return AuditEntry.Status.ROLLBACK_FAILED;
-      default: return AuditEntry.Status.EXECUTED;
+
+    private final List<ExecutableStage> stages;
+
+    public ExecutablePipeline(List<ExecutableStage> stages) {
+        this.stages = stages;
     }
-  }
+
+    public Iterable<ExecutableStage> getExecutableStages() {
+        return stages;
+    }
+
+    public boolean isExecutionRequired() {
+        return stages
+                .stream()
+                .anyMatch(ExecutableStage::isExecutionRequired);
+    }
+
 
 }

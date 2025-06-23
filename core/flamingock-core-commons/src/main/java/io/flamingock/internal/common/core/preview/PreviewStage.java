@@ -16,9 +16,10 @@
 
 package io.flamingock.internal.common.core.preview;
 
-import io.flamingock.internal.util.FileUtil;
 import io.flamingock.internal.common.core.preview.builder.PreviewTaskBuilder;
-import io.flamingock.api.template.ChangeFileDescriptor;
+import io.flamingock.internal.common.core.template.ChangeFileDescriptor;
+import io.flamingock.internal.util.FileUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Collection;
@@ -37,6 +38,8 @@ public class PreviewStage {
 
     private String name;
 
+    private StageType type;
+
     private String description;
 
     private String sourcesPackage;
@@ -52,12 +55,14 @@ public class PreviewStage {
 
     //TODO it shouldn't be public
     public PreviewStage(String name,
+                        StageType type,
                         String description,
                         String sourcesPackage,
                         String resourcesDir,
                         Collection<? extends AbstractPreviewTask> tasks,
                         boolean parallel) {
         this.name = name;
+        this.type = type;
         this.description = description;
         this.sourcesPackage = sourcesPackage;
         this.resourcesDir = resourcesDir;
@@ -65,8 +70,12 @@ public class PreviewStage {
         this.parallel = parallel;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static DefaultBuilder defaultBuilder(StageType type) {
+        return new DefaultBuilder(type);
+    }
+
+    public static SystemPreviewStage.SystemBuilder systemBuilder() {
+        return new SystemPreviewStage.SystemBuilder();
     }
 
     public String getName() {
@@ -75,6 +84,14 @@ public class PreviewStage {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public StageType getType() {
+        return type;
+    }
+
+    public void setType(StageType type) {
+        this.type = type;
     }
 
     public String getDescription() {
@@ -133,11 +150,36 @@ public class PreviewStage {
     @Override
     public String toString() {
         return "PreviewStage{" + "name='" + name + '\'' +
+                ", type=" + type +
+                ", description='" + description + '\'' +
+                ", sourcesPackage='" + sourcesPackage + '\'' +
+                ", resourcesDir='" + resourcesDir + '\'' +
                 ", tasks=" + tasks +
                 ", parallel=" + parallel +
                 '}';
     }
 
+
+    public static class DefaultBuilder extends AbstractBuilder<PreviewStage> {
+
+        private final StageType type;
+
+        protected DefaultBuilder(StageType type) {
+            this.type = type;
+        }
+
+
+        @NotNull
+        @Override
+        protected PreviewStage buildInstance(String name,
+                                             String description,
+                                             String sourcesPackage,
+                                             String resourcesDir,
+                                             Collection<AbstractPreviewTask> allDescriptors,
+                                             boolean parallel) {
+            return new PreviewStage(name, type, description, sourcesPackage, resourcesDir, allDescriptors, parallel);
+        }
+    }
 
     /**
      * Builder for constructing {@link PreviewStage} instances.
@@ -156,7 +198,7 @@ public class PreviewStage {
      * The builder enforces consistency in task ordering: if all tasks are {@link AbstractPreviewTask#isSortable() sortable},
      * they will be sorted; if only some are sortable, an exception will be thrown.
      */
-    public static class Builder {
+    public abstract static class AbstractBuilder<T extends PreviewStage> {
 
         private String name;
         private String description;
@@ -167,7 +209,7 @@ public class PreviewStage {
         private Collection<? extends AbstractPreviewTask> changes;
         private boolean parallel = false;
 
-        private Builder() {
+        protected AbstractBuilder() {
         }
 
         /**
@@ -176,10 +218,11 @@ public class PreviewStage {
          * @param name the name of the stage
          * @return this builder instance
          */
-        public Builder setName(String name) {
+        public AbstractBuilder<T> setName(String name) {
             this.name = name;
             return this;
         }
+
 
         /**
          * Sets the description of the stage.
@@ -187,7 +230,7 @@ public class PreviewStage {
          * @param description the description of the stage
          * @return this builder instance
          */
-        public Builder setDescription(String description) {
+        public AbstractBuilder<T> setDescription(String description) {
             this.description = description;
             return this;
         }
@@ -199,7 +242,7 @@ public class PreviewStage {
          * @param sourcesRoots collection of source root paths
          * @return this builder instance
          */
-        public Builder setSourcesRoots(Collection<String> sourcesRoots) {
+        public AbstractBuilder<T> setSourcesRoots(Collection<String> sourcesRoots) {
             this.sourcesRoots = sourcesRoots;
             return this;
         }
@@ -211,7 +254,7 @@ public class PreviewStage {
          * @param sourcesPackage the package name
          * @return this builder instance
          */
-        public Builder setSourcesPackage(String sourcesPackage) {
+        public AbstractBuilder<T> setSourcesPackage(String sourcesPackage) {
             this.sourcesPackage = sourcesPackage;
             return this;
         }
@@ -223,7 +266,7 @@ public class PreviewStage {
          * @param resourcesRoot the root directory
          * @return this builder instance
          */
-        public Builder setResourcesRoot(String resourcesRoot) {
+        public AbstractBuilder<T> setResourcesRoot(String resourcesRoot) {
             this.resourcesRoot = resourcesRoot;
             return this;
         }
@@ -234,7 +277,7 @@ public class PreviewStage {
          * @param resourcesDir the directory inside the resources root
          * @return this builder instance
          */
-        public Builder setResourcesDir(String resourcesDir) {
+        public AbstractBuilder<T> setResourcesDir(String resourcesDir) {
             this.resourcesDir = resourcesDir;
             return this;
         }
@@ -245,7 +288,7 @@ public class PreviewStage {
          * @param changes the collection of change unit task classes
          * @return this builder instance
          */
-        public Builder setChanges(Collection<? extends AbstractPreviewTask> changes) {
+        public AbstractBuilder<T> setChanges(Collection<? extends AbstractPreviewTask> changes) {
             this.changes = changes;
             return this;
         }
@@ -256,7 +299,7 @@ public class PreviewStage {
          * @param parallel {@code true} to enable parallel execution; {@code false} otherwise
          * @return this builder instance
          */
-        public Builder setParallel(boolean parallel) {
+        public AbstractBuilder<T> setParallel(boolean parallel) {
             this.parallel = parallel;
             return this;
         }
@@ -267,7 +310,7 @@ public class PreviewStage {
          * @return a new {@code PreviewStage}
          * @throws RuntimeException if the name is not set or no change units are provided
          */
-        public PreviewStage build() {
+        public T build() {
 
             Collection<File> resourcesDirectories = new LinkedList<>();
 
@@ -301,15 +344,24 @@ public class PreviewStage {
             Collection<AbstractPreviewTask> templatedTasksDescriptors = getTemplatedTaskDescriptors(resourcesDirectories);
             Collection<AbstractPreviewTask> allDescriptors = mergeDescriptors(templatedTasksDescriptors, changeUnitClassesList);
 
-            return new PreviewStage(name, description, sourcesPackage, resourcesDir, allDescriptors, parallel);
+
+            return buildInstance(name, description, sourcesPackage, resourcesDir, allDescriptors, parallel);
         }
+
+        @NotNull
+        abstract protected T buildInstance(String name,
+                                           String description,
+                                           String sourcesPackage,
+                                           String resourcesDir,
+                                           Collection<AbstractPreviewTask> allDescriptors,
+                                           boolean parallel);
 
         /**
          * Merges and returns a single collection of task descriptors from both templated files and provided classes.
          * Ensures all tasks are consistently ordered if applicable.
          *
-         * @param templatedDescriptors     tasks parsed from YAML files
-         * @param descriptorsFromClasses   tasks provided directly
+         * @param templatedDescriptors   tasks parsed from YAML files
+         * @param descriptorsFromClasses tasks provided directly
          * @return merged collection of {@link AbstractPreviewTask}
          * @throws IllegalArgumentException if only some tasks are sortable
          */
@@ -350,8 +402,8 @@ public class PreviewStage {
                     .map(PreviewTaskBuilder::build)
                     .collect(Collectors.toList());
         }
-    }
 
+    }
 
 
 }

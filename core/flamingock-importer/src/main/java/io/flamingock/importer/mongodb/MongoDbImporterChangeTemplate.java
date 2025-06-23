@@ -20,24 +20,19 @@ import com.mongodb.client.MongoDatabase;
 import io.flamingock.api.annotations.Execution;
 import io.flamingock.api.annotations.NonLockGuarded;
 import io.flamingock.api.annotations.RollbackExecution;
-import io.flamingock.api.template.AbstractChangeTemplate;
+import io.flamingock.importer.AbstractImporterChangeTemplate;
+import io.flamingock.importer.ImporterExecutor;
 import io.flamingock.internal.common.core.audit.AuditWriter;
 import io.flamingock.internal.common.core.pipeline.PipelineDescriptor;
-import io.flamingock.importer.ImporterExecutor;
-import io.flamingock.importer.ImporterTemplateConfiguration;
 
-public class MongoDbImporterChangeTemplate extends AbstractChangeTemplate<ImporterTemplateConfiguration> {
+public class MongoDbImporterChangeTemplate extends AbstractImporterChangeTemplate {
 
-    public MongoDbImporterChangeTemplate() {
-        super(ImporterTemplateConfiguration.class);
-    }
 
     @Execution
     public void execution(MongoDatabase db,
                           @NonLockGuarded AuditWriter auditWriter,
                           @NonLockGuarded PipelineDescriptor pipelineDescriptor) {
-        String collectionName = "";//configuration.getShared().getOrigin();
-        MongoDbImporterAdapter adapter = new MongoDbImporterAdapter(db, collectionName);
+        MongoDbImporterAdapter adapter = new MongoDbImporterAdapter(db, configuration.getOrigin());
         ImporterExecutor.runImport(adapter, auditWriter, pipelineDescriptor);
     }
 

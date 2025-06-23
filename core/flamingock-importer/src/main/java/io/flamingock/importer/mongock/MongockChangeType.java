@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package io.flamingock.template.sql;
+package io.flamingock.importer.mongock;
 
+import io.flamingock.internal.common.core.audit.AuditEntry;
 
-import io.flamingock.api.annotations.NonLockGuarded;
-import io.flamingock.api.annotations.NonLockGuardedType;
-import io.flamingock.api.template.ChangeTemplateConfig;
+public enum MongockChangeType {
+  EXECUTION, BEFORE_EXECUTION;
 
-@NonLockGuarded(NonLockGuardedType.NONE)
-public class SqlTemplateConfiguration extends ChangeTemplateConfig<String, String> {
+  public AuditEntry.ExecutionType toAuditType() {
+    if (this == MongockChangeType.BEFORE_EXECUTION) {
+      return AuditEntry.ExecutionType.BEFORE_EXECUTION;
+    }
+    return AuditEntry.ExecutionType.EXECUTION;
+  }
 }

@@ -22,7 +22,8 @@ import io.flamingock.internal.common.core.preview.CodePreviewChangeUnit;
 import io.flamingock.internal.common.core.preview.PreviewMethod;
 import io.flamingock.internal.common.core.preview.PreviewPipeline;
 import io.flamingock.internal.common.core.preview.PreviewStage;
-import io.flamingock.internal.core.pipeline.Pipeline;
+import io.flamingock.internal.common.core.preview.StageType;
+import io.flamingock.internal.core.pipeline.loaded.LoadedPipeline;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,11 +42,11 @@ public class PipelineTest {
     void shouldThrowExceptionWhenPipelineDoesNotContainStages() {
 
 
-        Pipeline emptyPipeline = Pipeline.builder()
+        LoadedPipeline emptyPipeline = LoadedPipeline.builder()
                 .addPreviewPipeline(new PreviewPipeline())
                 .build();
 
-        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, emptyPipeline::validateAndGetLoadedStages);
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, emptyPipeline::validate);
 
         Assertions.assertTrue(exception.getMessage().contains("Pipeline must contain at least one stage"), 
                 "Error message should mention that pipeline must contain at least one stage");
@@ -59,11 +60,11 @@ public class PipelineTest {
         PreviewPipeline previewPipeline = new PreviewPipeline();
         previewPipeline.setStages(Collections.singletonList(getPreviewStage("failing-stage-1")));
 
-        Pipeline pipeline = Pipeline.builder()
+        LoadedPipeline pipeline = LoadedPipeline.builder()
                 .addPreviewPipeline(previewPipeline)
                 .build();
 
-        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validate);
 
         Assertions.assertTrue(exception.getMessage().contains("Stage[failing-stage-1] must contain at least one task"));
 
@@ -78,11 +79,11 @@ public class PipelineTest {
                 getPreviewStage("failing-stage-1"),
                 getPreviewStage("failing-stage-2")));
 
-        Pipeline pipeline = Pipeline.builder()
+        LoadedPipeline pipeline = LoadedPipeline.builder()
                 .addPreviewPipeline(previewPipeline)
                 .build();
 
-        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validate);
 
         Assertions.assertTrue(exception.getMessage().contains("Stage[failing-stage-1] must contain at least one task"));
         Assertions.assertTrue(exception.getMessage().contains("Stage[failing-stage-2] must contain at least one task"));
@@ -92,6 +93,7 @@ public class PipelineTest {
 
     private static PreviewStage getPreviewStage(String name) {
         PreviewStage stage = Mockito.mock(PreviewStage.class);
+        Mockito.when(stage.getType()).thenReturn(StageType.DEFAULT);
         Mockito.when(stage.getName()).thenReturn(name);
         Mockito.when(stage.getTasks()).thenReturn(Collections.emptyList());
         return stage;
@@ -127,17 +129,18 @@ public class PipelineTest {
                 false);
 
         PreviewStage stage = Mockito.mock(PreviewStage.class);
+        Mockito.when(stage.getType()).thenReturn(StageType.DEFAULT);
         Mockito.when(stage.getName()).thenReturn("stage-with-invalid-order-tasks");
         Mockito.when(stage.getTasks()).thenReturn((Collection) Arrays.asList(taskWithInvalidOrder1, taskWithInvalidOrder2));
 
         PreviewPipeline previewPipeline = new PreviewPipeline();
         previewPipeline.setStages(Collections.singletonList(stage));
 
-        Pipeline pipeline = Pipeline.builder()
+        LoadedPipeline pipeline = LoadedPipeline.builder()
                 .addPreviewPipeline(previewPipeline)
                 .build();
 
-        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validate);
         Assertions.assertTrue(exception.getMessage().contains("Invalid order field format"), 
                 "Error message should mention invalid order field format");
         Assertions.assertTrue(exception.getMessage().contains("task-with-invalid-order-1"), 
@@ -198,6 +201,7 @@ public class PipelineTest {
                 false);
 
         PreviewStage stage = Mockito.mock(PreviewStage.class);
+        Mockito.when(stage.getType()).thenReturn(StageType.DEFAULT);
         Mockito.when(stage.getName()).thenReturn("stage-with-valid-order-tasks");
         Mockito.when(stage.getTasks()).thenReturn((Collection) Arrays.asList(
                 taskWithValidOrder1, taskWithValidOrder2, taskWithValidOrder3, taskWithValidOrder4));
@@ -205,11 +209,11 @@ public class PipelineTest {
         PreviewPipeline previewPipeline = new PreviewPipeline();
         previewPipeline.setStages(Collections.singletonList(stage));
 
-        Pipeline pipeline = Pipeline.builder()
+        LoadedPipeline pipeline = LoadedPipeline.builder()
                 .addPreviewPipeline(previewPipeline)
                 .build();
 
-        Assertions.assertDoesNotThrow(pipeline::validateAndGetLoadedStages);
+        Assertions.assertDoesNotThrow(pipeline::validate);
     }
 
     @Test
@@ -255,21 +259,23 @@ public class PipelineTest {
                 false);
 
         PreviewStage stage1 = Mockito.mock(PreviewStage.class);
+        Mockito.when(stage1.getType()).thenReturn(StageType.DEFAULT);
         Mockito.when(stage1.getName()).thenReturn("stage1");
         Mockito.when(stage1.getTasks()).thenReturn((Collection) Arrays.asList(task1, task2));
 
         PreviewStage stage2 = Mockito.mock(PreviewStage.class);
+        Mockito.when(stage2.getType()).thenReturn(StageType.DEFAULT);
         Mockito.when(stage2.getName()).thenReturn("stage2");
         Mockito.when(stage2.getTasks()).thenReturn((Collection) Collections.singletonList(task3));
 
         PreviewPipeline previewPipeline = new PreviewPipeline();
         previewPipeline.setStages(Arrays.asList(stage1, stage2));
 
-        Pipeline pipeline = Pipeline.builder()
+        LoadedPipeline pipeline = LoadedPipeline.builder()
                 .addPreviewPipeline(previewPipeline)
                 .build();
 
-        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validateAndGetLoadedStages);
+        FlamingockException exception = Assertions.assertThrows(FlamingockException.class, pipeline::validate);
         Assertions.assertTrue(exception.getMessage().contains("Duplicate changeUnit IDs found across stages"));
         Assertions.assertTrue(exception.getMessage().contains("Duplicate changeUnit IDs found across stages: duplicate-id"));
     }

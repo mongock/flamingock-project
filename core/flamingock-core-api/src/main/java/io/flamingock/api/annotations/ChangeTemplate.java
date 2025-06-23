@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package io.flamingock.importer;
+package io.flamingock.api.annotations;
 
 
-import io.flamingock.api.annotations.NonLockGuarded;
-import io.flamingock.api.annotations.NonLockGuardedType;
-import io.flamingock.api.template.ChangeTemplateConfig;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@NonLockGuarded(NonLockGuardedType.NONE)
-public class ImporterTemplateConfiguration extends ChangeTemplateConfig<OriginConfiguration, Void> {
+@Inherited
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ChangeTemplate {
+
+
+    String name();
+
+
 }

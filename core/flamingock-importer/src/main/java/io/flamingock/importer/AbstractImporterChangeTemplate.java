@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package io.flamingock.importer.model;
+package io.flamingock.importer;
 
-import io.flamingock.internal.common.core.audit.AuditEntry;
+import io.flamingock.api.annotations.Categories;
+import io.flamingock.api.task.ChangeCategory;
+import io.flamingock.api.template.AbstractChangeTemplate;
 
-public enum MongockChangeType {
-  EXECUTION, BEFORE_EXECUTION;
 
-  public AuditEntry.ExecutionType toAuditType() {
-    if (this == MongockChangeType.BEFORE_EXECUTION) {
-      return AuditEntry.ExecutionType.BEFORE_EXECUTION;
+@Categories(ChangeCategory.IMPORT)
+public class AbstractImporterChangeTemplate extends AbstractChangeTemplate<OriginConfiguration, Void, Void> {
+
+    public AbstractImporterChangeTemplate() {
+        super(OriginConfiguration.class);
     }
-    return AuditEntry.ExecutionType.EXECUTION;
-  }
+
 }
