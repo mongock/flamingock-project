@@ -83,6 +83,11 @@ public class LoadedPipeline implements PipelineDescriptor {
     public void validate() {
         ValidationResult errors = new ValidationResult("Pipeline validation error");
 
+
+        if(systemStage != null) {
+            errors.addAll(systemStage.getValidationErrors(DEFAULT_CONTEXT));
+        }
+
         // Validate pipeline has stages
         if (loadedStages == null || loadedStages.isEmpty()) {
             errors.add(new ValidationError("Pipeline must contain at least one stage", "pipeline", "pipeline"));
@@ -110,7 +115,7 @@ public class LoadedPipeline implements PipelineDescriptor {
     @Override
     public Optional<AbstractLoadedTask> getLoadedTask(String taskId) {
         return loadedStages.stream()
-                .map(AbstractLoadedStage::getLoadedTasks)
+                .map(AbstractLoadedStage::getTasks)
                 .flatMap(Collection::stream)
                 .filter(loadedTask -> loadedTask.getId().equals(taskId))
                 .findFirst();
@@ -119,7 +124,7 @@ public class LoadedPipeline implements PipelineDescriptor {
     @Override
     public Optional<String> getStageByTask(String taskId) {
         for (AbstractLoadedStage loadedStage : loadedStages) {
-            for (TaskDescriptor loadedTask : loadedStage.getLoadedTasks()) {
+            for (TaskDescriptor loadedTask : loadedStage.getTasks()) {
                 if (loadedTask.getId().equals(taskId)) {
                     return Optional.of(loadedStage.getName());
                 }

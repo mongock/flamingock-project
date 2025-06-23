@@ -21,7 +21,7 @@ import io.flamingock.api.task.ChangeCategory;
 import io.flamingock.api.template.AbstractChangeTemplate;
 
 
-@Categories(ChangeCategory.IMPORT)
+//@Categories(ChangeCategory.IMPORT)
 public class AbstractImporterChangeTemplate extends AbstractChangeTemplate<OriginConfiguration, Void, Void> {
 
     public AbstractImporterChangeTemplate() {
