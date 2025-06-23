@@ -80,7 +80,7 @@ public class LoadedPipeline implements PipelineDescriptor {
      * @throws FlamingockException if any validation errors are found, containing a formatted
      *         message with all validation issues discovered
      */
-    public void validate() {
+    public void validate() throws FlamingockException{
         ValidationResult errors = new ValidationResult("Pipeline validation error");
 
 

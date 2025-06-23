@@ -121,10 +121,6 @@ public class PipelineRunner implements Runner {
                 //execution, therefor the pipelinesSummary is initialised
                 requireNonNull(pipelineSummary).merge(e.getSummary());
                 throw new PipelineExecutionException(pipelineSummary);
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Throwable throwable) {
-                throw processAndGetFlamingockException(throwable);
             }
         } while (true);
 
@@ -180,6 +176,8 @@ public class PipelineRunner implements Runner {
     public void run() {
         try {
             this.run(pipeline);
+        } catch (Throwable throwable) {
+            throw processAndGetFlamingockException(throwable);
         } finally {
             finalizer.run();
         }
