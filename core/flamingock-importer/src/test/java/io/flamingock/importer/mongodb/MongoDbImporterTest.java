@@ -22,6 +22,9 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.api.annotations.Pipeline;
+import io.flamingock.api.annotations.Stage;
+import io.flamingock.api.annotations.SystemStage;
 import io.flamingock.community.Flamingock;
 import io.flamingock.internal.common.core.error.FlamingockException;
 import io.flamingock.internal.core.community.Constants;
@@ -40,16 +43,17 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.flamingock.api.StageType.LEGACY;
 import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STORE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//@Pipeline(
-//    systemStage = @SystemStage(sourcesPackage = "io.flamingock.importer.mongodb.flamingock.system"),
-//    stages = {
-//        @Stage(name = "Legacy stage", type = LEGACY, sourcesPackage = "io.flamingock.importer.mongodb.flamingock.legacy"),
-//        @Stage(name = "MongoDB Changes", sourcesPackage = "io.flamingock.importer.mongodb.flamingock.mongodb")
-//    }
-//)
+@Pipeline(
+    systemStage = @SystemStage(sourcesPackage = "io.flamingock.importer.mongodb.flamingock.system"),
+    stages = {
+        @Stage(name = "Legacy stage", type = LEGACY, sourcesPackage = "io.flamingock.importer.mongodb.flamingock.legacy"),
+        @Stage(name = "MongoDB Changes", sourcesPackage = "io.flamingock.importer.mongodb.flamingock.mongodb")
+    }
+)
 @Testcontainers
 public class MongoDbImporterTest {
 
