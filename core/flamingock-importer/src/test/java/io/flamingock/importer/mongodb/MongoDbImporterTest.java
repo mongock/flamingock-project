@@ -16,10 +16,6 @@
 
 package io.flamingock.importer.mongodb;
 
-import io.flamingock.api.annotations.Pipeline;
-import io.flamingock.api.annotations.Stage;
-import io.flamingock.api.annotations.StageType;
-import io.flamingock.api.annotations.SystemStage;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -44,7 +40,6 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.flamingock.api.annotations.StageType.LEGACY;
 import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STORE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

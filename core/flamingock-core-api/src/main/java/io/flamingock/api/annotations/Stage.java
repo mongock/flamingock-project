@@ -16,6 +16,8 @@
 
 package io.flamingock.api.annotations;
 
+import io.flamingock.api.StageType;
+
 public @interface Stage {
     
     String name();

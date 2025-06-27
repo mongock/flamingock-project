@@ -10,7 +10,7 @@ import io.flamingock.core.processor.util.AnnotationFinder;
 import io.flamingock.core.processor.util.LoggerPreProcessor;
 import io.flamingock.core.processor.util.Serializer;
 import io.flamingock.internal.common.core.preview.AbstractPreviewTask;
-import io.flamingock.api.annotations.StageType;
+import io.flamingock.api.StageType;
 import io.flamingock.internal.common.core.preview.SystemPreviewStage;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;

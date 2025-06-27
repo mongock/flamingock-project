@@ -2,7 +2,7 @@ package io.flamingock.core.processor;
 
 import io.flamingock.api.annotations.Pipeline;
 import io.flamingock.api.annotations.Stage;
-import io.flamingock.api.annotations.StageType;
+import io.flamingock.api.StageType;
 import io.flamingock.api.annotations.SystemStage;
 import io.flamingock.core.processor.util.LoggerPreProcessor;
 import io.flamingock.internal.common.core.preview.AbstractPreviewTask;
@@ -11,13 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;

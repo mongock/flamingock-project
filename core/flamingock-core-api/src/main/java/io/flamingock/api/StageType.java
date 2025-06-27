@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.flamingock.api.annotations;
+package io.flamingock.api;
 
 public enum StageType {
     DEFAULT,
