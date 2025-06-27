@@ -129,9 +129,16 @@ public class PipelinePreProcessor extends AbstractProcessor {
         sourceRoots = getSourcesPathList();
         serializer = new Serializer(processingEnv, logger);
         pipelineFile = getFlamingockPipelineFile();
-        PreviewPipeline pipeline = getPipelineFromTemplatedChanges();
-        serializer.serializeTemplatedPipeline(pipeline);
-        logger.info("Initialization completed. Processed templated-based changes.");
+        
+        if (pipelineFile.exists()) {
+            PreviewPipeline pipeline = getPipelineFromTemplatedChanges();
+            serializer.serializeTemplatedPipeline(pipeline);
+            logger.info("Initialization completed. Processed templated-based changes.");
+        } else {
+            // Create empty templated pipeline - will be populated in process phase with annotation config
+            serializer.serializeTemplatedPipeline(new PreviewPipeline(Collections.emptyList()));
+            logger.info("No pipeline.yaml file found. Templated pipeline will be processed with @Pipeline annotation.");
+        }
     }
 
     @Override
