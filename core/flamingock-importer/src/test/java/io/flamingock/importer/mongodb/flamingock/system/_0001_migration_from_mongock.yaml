@@ -4,4 +4,3 @@ transactional: false
 template: MongoDbImporterChangeTemplate
 configuration:
   origin: mongockChangeLogs
-  failOnEmptyOrigin: true
