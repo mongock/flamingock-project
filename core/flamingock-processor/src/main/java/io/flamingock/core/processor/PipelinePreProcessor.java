@@ -137,7 +137,7 @@ public class PipelinePreProcessor extends AbstractProcessor {
         } else {
             // Create empty templated pipeline - will be populated in process phase with annotation config
             serializer.serializeTemplatedPipeline(new PreviewPipeline(Collections.emptyList()));
-            logger.info("No pipeline.yaml file found. Templated pipeline will be processed with @Pipeline annotation.");
+            logger.info("No pipeline.yaml file found. Pipeline will be processed with @Pipeline annotation.");
         }
     }
 
