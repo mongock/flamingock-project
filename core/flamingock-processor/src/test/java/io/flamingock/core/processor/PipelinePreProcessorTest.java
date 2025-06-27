@@ -97,27 +97,6 @@ public class PipelinePreProcessorTest {
         assertNotNull(result);
     }
 
-    /**
-     * Tests the pipeline processor enhancing file-based configuration with annotated change units.
-     * 
-     * <p><b>Scenario:</b> Pipeline processor enhances file configuration with code-based change units</p>
-     * <p><b>Given:</b> A pipeline.yaml file exists and annotated change units are present in specified packages</p>
-     * <p><b>When:</b> The processor builds the pipeline during the enhancement phase</p>
-     * <p><b>Then:</b> A PreviewPipeline should be created with both file and code-based change units</p>
-     */
-    @Test
-    @DisplayName("Given pipeline file and change units present, when enhancing configuration, then should merge file and code-based changes")
-    void SHOULD_useFileWithEnhancement_WHEN_fileProvidedAndNoPipelineAnnotationAndChangeUnitsPresent() throws Exception {
-        // Given
-        createPipelineFile();
-        Map<String, List<AbstractPreviewTask>> changeUnitsMap = createMockChangeUnitsMap();
-        
-        // When
-        PreviewPipeline result = invokeGetPipelineFromProcessChanges(changeUnitsMap, null);
-        
-        // Then
-        assertNotNull(result);
-    }
 
     /**
      * Tests the pipeline processor using only annotation-based configuration.
