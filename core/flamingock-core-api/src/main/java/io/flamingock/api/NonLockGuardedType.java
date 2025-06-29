@@ -1,4 +1,4 @@
-package io.flamingock.api.annotations;
+package io.flamingock.api;
 
 public enum NonLockGuardedType {
   /**
