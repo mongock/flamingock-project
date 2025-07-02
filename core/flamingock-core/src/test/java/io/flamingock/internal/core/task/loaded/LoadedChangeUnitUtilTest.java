@@ -29,7 +29,7 @@ class LoadedChangeUnitUtilTest {
         // Given
         String changeUnitId = "test-id";
         String orderInContent = "001";
-        String fileName = "test-file_001_.yml";
+        String fileName = "_001_test-file.yml";
 
         // When
         String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
@@ -44,7 +44,7 @@ class LoadedChangeUnitUtilTest {
         // Given
         String changeUnitId = "test-id";
         String orderInContent = "001";
-        String fileName = "test-file_002_.yml";
+        String fileName = "_002_test-file.yml";
 
         // When & Then
         FlamingockException exception = assertThrows(FlamingockException.class, () ->
@@ -62,7 +62,7 @@ class LoadedChangeUnitUtilTest {
         // Given
         String changeUnitId = "test-id";
         String orderInContent = null;
-        String fileName = "test-file_003_.yml";
+        String fileName = "_003_test-file.yml";
 
         // When
         String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
@@ -77,7 +77,7 @@ class LoadedChangeUnitUtilTest {
         // Given
         String changeUnitId = "test-id";
         String orderInContent = "";
-        String fileName = "test-file_004_.yml";
+        String fileName = "_004_test-file.yml";
 
         // When
         String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
@@ -92,7 +92,7 @@ class LoadedChangeUnitUtilTest {
         // Given
         String changeUnitId = "test-id";
         String orderInContent = "   ";
-        String fileName = "test-file_005_.yml";
+        String fileName = "_005_test-file.yml";
 
         // When
         String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
@@ -135,30 +135,61 @@ class LoadedChangeUnitUtilTest {
     }
 
     @Test
-    @DisplayName("Should extract order from fileName with various formats")
-    void shouldExtractOrderFromFileNameWithVariousFormats() {
-        // Test different file name formats
+    @DisplayName("Should extract order from fileName with template format (order at beginning)")
+    void shouldExtractOrderFromFileNameWithTemplateFormat() {
+        // Test template file name formats - order must be at the beginning
         String changeUnitId = "test-id";
         
-        // With extension
-        String result1 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "migration_001_.sql");
+        // Template format - order at beginning
+        String result1 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "_001_migration.sql");
         assertEquals("001", result1);
         
-        // Without extension
-        String result2 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "migration_002_");
+        // Template format with extension
+        String result2 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "_002_create-users.yaml");
         assertEquals("002", result2);
         
-        // With prefix - note: regex extracts first match between underscores
-        String result3 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "prefix_migration_.yaml");
-        assertEquals("migration", result3);
+        // Non-numeric order at beginning
+        String result3 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "_alpha_migration.yml");
+        assertEquals("alpha", result3);
+        
+        // Complex order at beginning
+        String result4 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "_v1.2.3_update-schema.yml");
+        assertEquals("v1.2.3", result4);
+    }
+
+    @Test
+    @DisplayName("Should NOT extract order from fileName when order is not at beginning")
+    void shouldNotExtractOrderFromFileNameWhenOrderIsNotAtBeginning() {
+        // Test cases where order is not at the beginning - should not match
+        String changeUnitId = "test-id";
+        String orderInContent = "001";
+        
+        // Order in middle - should use orderInContent
+        String result1 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, "migration_002_something.sql");
+        assertEquals("001", result1);
+        
+        // Order at end - should use orderInContent  
+        String result2 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, "migration_something_003_.sql");
+        assertEquals("001", result2);
+    }
+
+    @Test
+    @DisplayName("Should extract order from className with package format")
+    void shouldExtractOrderFromClassNameWithPackageFormat() {
+        // Test class name formats - order must be at the beginning of class name after package
+        String changeUnitId = "test-id";
+        
+        // Class format with package
+        String result1 = LoadedChangeUnitUtil.getOrderFromContentOrClassName(changeUnitId, null, "com.mycompany.mypackage._001_MyChangeUnit");
+        assertEquals("001", result1);
+        
+        // Class format with deeper package
+        String result2 = LoadedChangeUnitUtil.getOrderFromContentOrClassName(changeUnitId, null, "com.example.migrations.v1._002_CreateUsersTable");
+        assertEquals("002", result2);
         
         // Non-numeric order
-        String result4 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "migration_alpha_.yml");
-        assertEquals("alpha", result4);
-        
-        // Complex order
-        String result5 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "migration_v1.2.3_.yml");
-        assertEquals("v1.2.3", result5);
+        String result3 = LoadedChangeUnitUtil.getOrderFromContentOrClassName(changeUnitId, null, "com.mycompany._alpha_Migration");
+        assertEquals("alpha", result3);
     }
 
     @Test
@@ -193,18 +224,18 @@ class LoadedChangeUnitUtilTest {
     }
 
     @Test
-    @DisplayName("Should handle multiple underscores in fileName - extract first match")
+    @DisplayName("Should handle multiple underscores in fileName correctly")
     void shouldHandleMultipleUnderscoresInFileName() {
         // Given
         String changeUnitId = "test-id";
         String orderInContent = null;
-        String fileName = "migration_001__002_.yml";
+        String fileName = "_001_migration_with_underscores.yml";
 
         // When
         String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
 
         // Then
-        assertEquals("001", result); // Should extract the first match
+        assertEquals("001", result); // Should extract order from beginning
     }
 
     @Test

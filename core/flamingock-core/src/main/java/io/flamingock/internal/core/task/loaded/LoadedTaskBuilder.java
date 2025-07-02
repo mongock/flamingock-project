@@ -50,8 +50,6 @@ public interface LoadedTaskBuilder<LOADED_TASK extends AbstractLoadedTask> {
 
     LoadedTaskBuilder<LOADED_TASK> setOrderInContent(String order);
 
-    LoadedTaskBuilder<LOADED_TASK> setTemplateName(String templateName);
-
     LoadedTaskBuilder<LOADED_TASK> setRunAlways(boolean runAlways);
 
     LoadedTaskBuilder<LOADED_TASK> setTransactional(boolean transactional);

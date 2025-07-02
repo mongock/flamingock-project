@@ -105,7 +105,7 @@ class TemplateLoadedTaskBuilderTest {
 
             builder.setId("test-id")
                     .setOrderInContent(null)
-                    .setFileName("test-file_002_.yml")
+                    .setFileName("_002_test-file.yml")
                     .setTemplateName("test-template")
                     .setRunAlways(false)
                     .setTransactional(true)
@@ -121,7 +121,7 @@ class TemplateLoadedTaskBuilderTest {
             // Then
             assertEquals("002", result.getOrder().orElse(null));
             assertEquals("test-id", result.getId());
-            assertEquals("test-file_002_.yml", result.getFileName());
+            assertEquals("_002_test-file.yml", result.getFileName());
         }
     }
 
@@ -135,7 +135,7 @@ class TemplateLoadedTaskBuilderTest {
 
             builder.setId("test-id")
                     .setOrderInContent("003")
-                    .setFileName("test-file_003_.yml")
+                    .setFileName("_003_test-file.yml")
                     .setTemplateName("test-template")
                     .setRunAlways(false);
             builder.setProfiles(Arrays.asList("test"));
@@ -151,7 +151,7 @@ class TemplateLoadedTaskBuilderTest {
             // Then
             assertEquals("003", result.getOrder().orElse(null));
             assertEquals("test-id", result.getId());
-            assertEquals("test-file_003_.yml", result.getFileName());
+            assertEquals("_003_test-file.yml", result.getFileName());
         }
     }
 
@@ -165,7 +165,7 @@ class TemplateLoadedTaskBuilderTest {
 
             builder.setId("test-id")
                     .setOrderInContent("001")
-                    .setFileName("test-file_002_.yml")
+                    .setFileName("_002_test-file.yml")
                     .setTemplateName("test-template")
                     .setRunAlways(false);
             builder.setProfiles(Arrays.asList("test"));
@@ -222,7 +222,7 @@ class TemplateLoadedTaskBuilderTest {
 
             builder.setId("test-id")
                     .setOrderInContent("")
-                    .setFileName("test-file_004_.yml")
+                    .setFileName("_004_test-file.yml")
                     .setTemplateName("test-template")
                     .setRunAlways(false);
             builder.setProfiles(Arrays.asList("test"));

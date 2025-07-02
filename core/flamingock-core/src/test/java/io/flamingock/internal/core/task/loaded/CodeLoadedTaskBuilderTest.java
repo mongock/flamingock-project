@@ -23,7 +23,7 @@ class CodeLoadedTaskBuilderTest {
         // Given
         builder.setId("test-id")
                 .setOrderInContent("001")
-                .setTemplateName("java.lang.String") // Using existing class for simplicity
+                .setChangeUnitClass("java.lang.String") // Using existing class for simplicity
                 .setRunAlways(false)
                 .setTransactional(true)
                 .setSystem(false);
@@ -43,7 +43,7 @@ class CodeLoadedTaskBuilderTest {
         // Given
         builder.setId("test-id")
                 .setOrderInContent(null)
-                .setTemplateName("package.MyClass_002_")
+                .setChangeUnitClass("com.mypackage._002_MyClass")
                 .setRunAlways(false)
                 .setTransactional(true)
                 .setSystem(false);
@@ -60,8 +60,8 @@ class CodeLoadedTaskBuilderTest {
     void shouldBuildWithOrderInContentWhenOrderInContentMatchesOrderInSource() {
         // Given
         builder.setId("test-id")
-                .setOrderInContent("String")
-                .setTemplateName("java.lang_String_") // This will extract "String" from between underscores
+                .setOrderInContent("002")
+                .setChangeUnitClass("java.lang._002_Test") // This will extract "002" from class name
                 .setRunAlways(false)
                 .setTransactional(true)
                 .setSystem(false);
@@ -78,7 +78,7 @@ class CodeLoadedTaskBuilderTest {
         // Given
         builder.setId("test-id")
                 .setOrderInContent("001")
-                .setTemplateName("package.MyClass_002_")
+                .setChangeUnitClass("com.mypackage._002_MyClass")
                 .setRunAlways(false)
                 .setTransactional(true)
                 .setSystem(false);
@@ -88,7 +88,7 @@ class CodeLoadedTaskBuilderTest {
 
         assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order mismatch"));
         assertTrue(exception.getMessage().contains("orderInContent='001'"));
-        assertTrue(exception.getMessage().contains("order in fileName='002'"));
+        assertTrue(exception.getMessage().contains("order in className='002'"));
     }
 
     @Test
@@ -97,7 +97,7 @@ class CodeLoadedTaskBuilderTest {
         // Given
         builder.setId("test-id")
                 .setOrderInContent(null)
-                .setTemplateName("java.lang.String")
+                .setChangeUnitClass("java.lang.String")
                 .setRunAlways(false)
                 .setTransactional(true)
                 .setSystem(false);
@@ -106,7 +106,7 @@ class CodeLoadedTaskBuilderTest {
         FlamingockException exception = assertThrows(FlamingockException.class, () -> builder.build());
 
         assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order is required"));
-        assertTrue(exception.getMessage().contains("neither orderInContent nor order in fileName is provided"));
+        assertTrue(exception.getMessage().contains("neither orderInContent nor order in className is provided"));
     }
 
     @Test
@@ -115,7 +115,7 @@ class CodeLoadedTaskBuilderTest {
         // Given
         builder.setId("test-id")
                 .setOrderInContent("")
-                .setTemplateName("package.MyClass_004_")
+                .setChangeUnitClass("com.mypackage._004_MyClass")
                 .setRunAlways(false)
                 .setTransactional(true)
                 .setSystem(false);
@@ -132,7 +132,7 @@ class CodeLoadedTaskBuilderTest {
         // Given
         builder.setId("test-id")
                 .setOrderInContent("   ")
-                .setTemplateName("package.MyClass_005_")
+                .setChangeUnitClass("com.mypackage._005_MyClass")
                 .setRunAlways(false)
                 .setTransactional(true)
                 .setSystem(false);
@@ -149,7 +149,7 @@ class CodeLoadedTaskBuilderTest {
         // Given - using a real class that exists
         builder.setId("test-id")
                 .setOrderInContent("001")
-                .setTemplateName("java.lang.String")
+                .setChangeUnitClass("java.lang.String")
                 .setRunAlways(false)
                 .setTransactional(true)
                 .setSystem(false);
@@ -172,7 +172,7 @@ class CodeLoadedTaskBuilderTest {
         // Given
         builder.setId("test-id")
                 .setOrderInContent("001")
-                .setTemplateName("java.lang.String")
+                .setChangeUnitClass("java.lang.String")
                 .setBeforeExecution(true)
                 .setRunAlways(false)
                 .setTransactional(true)
