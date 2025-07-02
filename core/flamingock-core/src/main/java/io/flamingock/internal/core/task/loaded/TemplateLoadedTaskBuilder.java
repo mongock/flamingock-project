@@ -18,7 +18,7 @@ package io.flamingock.internal.core.task.loaded;
 
 import io.flamingock.internal.common.core.error.FlamingockException;
 import io.flamingock.api.template.ChangeTemplate;
-import io.flamingock.internal.common.core.template.TemplateManager;
+import io.flamingock.internal.common.core.template.ChangeTemplateManager;
 import io.flamingock.internal.common.core.preview.AbstractPreviewTask;
 import io.flamingock.internal.common.core.preview.TemplatePreviewChangeUnit;
 
@@ -28,6 +28,7 @@ import java.util.List;
 //TODO how to set transactional and runAlways
 public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoadedChangeUnit> {
 
+    private String fileName;
     private String id;
     private String order;
     private String templateName;
@@ -53,7 +54,6 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     public static boolean supportsPreview(AbstractPreviewTask previewTask) {
         return TemplatePreviewChangeUnit.class.isAssignableFrom(previewTask.getClass());
     }
-
 
     public TemplateLoadedTaskBuilder setId(String id) {
         this.id = id;
@@ -89,6 +89,11 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         return this;
     }
 
+    public TemplateLoadedTaskBuilder setFileName(String fileName) {
+        this.fileName = fileName;
+        return this;
+    }
+
     public TemplateLoadedTaskBuilder setConfiguration(Object configuration) {
         this.configuration = configuration;
         return this;
@@ -107,9 +112,10 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     @Override
     public TemplateLoadedChangeUnit build() {
         //            boolean isTaskTransactional = true;//TODO implement this. isTaskTransactionalAccordingTemplate(templateSpec);
-        Class<? extends ChangeTemplate<?, ?, ?>> templateClass = TemplateManager.getTemplate(templateName)
+        Class<? extends ChangeTemplate<?, ?, ?>> templateClass = ChangeTemplateManager.getTemplate(templateName)
                 .orElseThrow(()-> new FlamingockException(String.format("Template[%s] not found. This is probably because template's name is wrong or template's library not imported", templateName)));
         return new TemplateLoadedChangeUnit(
+                fileName,
                 id,
                 order,
                 templateClass,
@@ -124,6 +130,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     }
 
     private TemplateLoadedTaskBuilder setPreview(TemplatePreviewChangeUnit preview) {
+        setFileName(preview.getFileName());
         setId(preview.getId());
         setOrder(preview.getOrder().orElse(null));
         setTemplateName(preview.getTemplateName());

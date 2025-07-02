@@ -23,18 +23,24 @@ import java.util.Optional;
 
 public abstract class AbstractReflectionLoadedTask extends AbstractLoadedTask {
 
+    private final String fileName;
     protected final Class<?> sourceClass;
 
-    public AbstractReflectionLoadedTask(String id,
+    public AbstractReflectionLoadedTask(String fileName,
+                                        String id,
                                         String order,
                                         Class<?> sourceClass,
                                         boolean runAlways,
                                         boolean transactional,
                                         boolean system) {
         super(id, order, sourceClass.getName(), runAlways, transactional, system);
+        this.fileName = fileName;
         this.sourceClass = sourceClass;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
 
     public Class<?> getSourceClass() {
         return sourceClass;

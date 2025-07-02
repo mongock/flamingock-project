@@ -35,7 +35,7 @@ public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
                          boolean runAlways,
                          boolean transactional,
                          boolean systemTask) {
-        super(id, order, source, runAlways, transactional, systemTask);
+        super(source.getSimpleName(), id, order, source, runAlways, transactional, systemTask);
     }
 
     @Override
