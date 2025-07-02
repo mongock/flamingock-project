@@ -31,11 +31,11 @@ import java.util.StringJoiner;
 public class CodeLoadedChangeUnit extends AbstractLoadedChangeUnit {
     CodeLoadedChangeUnit(String id,
                          String order,
-                         Class<?> source,
+                         Class<?> changeUnitClass,
                          boolean runAlways,
                          boolean transactional,
                          boolean systemTask) {
-        super(source.getSimpleName(), id, order, source, runAlways, transactional, systemTask);
+        super(changeUnitClass.getSimpleName(), id, order, changeUnitClass, runAlways, transactional, systemTask);
     }
 
     @Override

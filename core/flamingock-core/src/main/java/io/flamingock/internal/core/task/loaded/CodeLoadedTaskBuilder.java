@@ -25,10 +25,8 @@ import org.slf4j.LoggerFactory;
 
 public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChangeUnit> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CodeLoadedTaskBuilder.class);
-
     private String id;
-    private String order;
+    private String orderInContent;
     private String source;
     private boolean isRunAlways;
     private boolean isTransactional;
@@ -62,7 +60,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
 
     private CodeLoadedTaskBuilder setPreview(CodePreviewChangeUnit preview) {
         setId(preview.getId());
-        setOrder(preview.getOrder().orElse(null));
+        setOrderInContent(preview.getOrder().orElse(null));
         setTemplateName(preview.getSource());
         setRunAlways(preview.isRunAlways());
         setTransactional(preview.isTransactional());
@@ -89,8 +87,8 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
         return this;
     }
 
-    public CodeLoadedTaskBuilder setOrder(String order) {
-        this.order = order;
+    public CodeLoadedTaskBuilder setOrderInContent(String orderInContent) {
+        this.orderInContent = orderInContent;
         return this;
     }
 
@@ -123,6 +121,8 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
     public CodeLoadedChangeUnit build() {
 
         try {
+
+            String order = LoadedChangeUnitUtil.getOrderFromContentOrFileName(id, orderInContent, source);
             return new CodeLoadedChangeUnit(
                     isBeforeExecution ? StringUtil.getBeforeExecutionId(id) : id,
                     order,
@@ -138,7 +138,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
 
     private void setFromFlamingockChangeAnnotation(Class<?> sourceClass, ChangeUnit annotation) {
         setId(annotation.id());
-        setOrder(annotation.order());
+        setOrderInContent(annotation.order());
         setTemplateName(sourceClass.getName());
         setRunAlways(annotation.runAlways());
         setTransactional(annotation.transactional());
