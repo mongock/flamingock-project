@@ -14,8 +14,8 @@ public final class LoadedChangeUnitUtil {
     private static final String SIMPLE_FILE_ORDER_REGEX = "^_([^_]+)_";
     
     // For class names: must have _order_ at the beginning of the class name after package 
-    // (e.g., com.mycompany.mypackage._002_mychange)
-    private static final String FILE_WITH_PACKAGE_ORDER_REGEX = "\\._([^_]+)_[^.]*$";
+    // (e.g., com.mycompany.mypackage._002_mychange or com.mycompany.OuterClass$_002_innerchange)
+    private static final String FILE_WITH_PACKAGE_ORDER_REGEX = "[.$]_([^_]+)_";
 
     private LoadedChangeUnitUtil() {
     }

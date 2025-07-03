@@ -204,8 +204,8 @@ class CodeLoadedTaskBuilderTest {
         assertEquals("annotation-test", result.getId());
         assertEquals("100", result.getOrder().orElse(null));
         assertEquals(TestChangeUnitClass.class, result.getImplementationClass());
-        assertTrue(result.isRunAlways());
-        assertFalse(result.isTransactional());
+        assertFalse(result.isRunAlways()); // Default is false since not specified in annotation
+        assertFalse(result.isTransactional()); // Explicitly set to false in annotation
         assertFalse(result.isSystem());
     }
 
@@ -217,7 +217,6 @@ class CodeLoadedTaskBuilderTest {
         assertFalse(CodeLoadedTaskBuilder.supportsSourceClass(String.class));
     }
 
-    // Test class with ChangeUnit annotation for testing setFromFlamingockChangeAnnotation
     @ChangeUnit(id = "no-order-in_annotation")
     static class _100_noOrderInAnnotation {
     }
@@ -235,7 +234,6 @@ class CodeLoadedTaskBuilderTest {
         assertEquals("no-order-in_annotation", result.getId());
         assertEquals("100", result.getOrder().orElse(null));
         assertEquals(_100_noOrderInAnnotation.class, result.getImplementationClass());
-
     }
 
 }
