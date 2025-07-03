@@ -1,11 +1,14 @@
 package io.flamingock.internal.core.task.loaded;
 
+import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.internal.common.core.error.FlamingockException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class LoadedChangeUnitUtil {
+
+
 
     // For template files: must start with _order_ (e.g., _002_whatever.yaml)
     private static final String SIMPLE_FILE_ORDER_REGEX = "^_([^_]+)_";
@@ -27,8 +30,9 @@ public final class LoadedChangeUnitUtil {
     /**
      * For CodeLoadedChangeUnit - validates order from class name
      */
-    public static String getMatchedOrderFromClassName(String changeUnitId, String orderInContent, String className) {
-        return getMatchedOrder(changeUnitId, orderInContent, className, true);
+    public static String getMatchedOrderFromClassName(String changeUnitId, String orderInAnnotation, String className) {
+        String orderInAnnotationFiltered = ChangeUnit.NULL_ORDER.equals(orderInAnnotation) ? null : orderInAnnotation;
+        return getMatchedOrder(changeUnitId, orderInAnnotationFiltered, className, true);
     }
 
     /**
