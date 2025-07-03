@@ -51,9 +51,8 @@ class LoadedChangeUnitUtilTest {
             LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName)
         );
 
-        assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order mismatch"));
-        assertTrue(exception.getMessage().contains("orderInContent='001'"));
-        assertTrue(exception.getMessage().contains("order in fileName='002'"));
+        assertEquals("ChangeUnit[test-id] Order mismatch: value in template order field='001' does not match order in fileName='002'",
+                exception.getMessage());
     }
 
     @Test
@@ -114,8 +113,8 @@ class LoadedChangeUnitUtilTest {
             LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName)
         );
 
-        assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order is required"));
-        assertTrue(exception.getMessage().contains("neither orderInContent nor order in fileName is provided"));
+        assertEquals("ChangeUnit[test-id] Order is required: order must be present in the template order field or in the fileName(e.g. _0001_test-id.yaml). If present in both, they must have the same value.",
+                exception.getMessage());
     }
 
     @Test
