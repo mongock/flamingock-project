@@ -17,7 +17,7 @@ class LoadedChangeUnitUtilTest {
         String fileName = "test-file.yml";
 
         // When
-        String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
+        String result = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName);
 
         // Then
         assertEquals("001", result);
@@ -32,7 +32,7 @@ class LoadedChangeUnitUtilTest {
         String fileName = "_001_test-file.yml";
 
         // When
-        String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
+        String result = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName);
 
         // Then
         assertEquals("001", result);
@@ -48,7 +48,7 @@ class LoadedChangeUnitUtilTest {
 
         // When & Then
         FlamingockException exception = assertThrows(FlamingockException.class, () ->
-            LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName)
+            LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName)
         );
 
         assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order mismatch"));
@@ -65,7 +65,7 @@ class LoadedChangeUnitUtilTest {
         String fileName = "_003_test-file.yml";
 
         // When
-        String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
+        String result = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName);
 
         // Then
         assertEquals("003", result);
@@ -80,7 +80,7 @@ class LoadedChangeUnitUtilTest {
         String fileName = "_004_test-file.yml";
 
         // When
-        String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
+        String result = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName);
 
         // Then
         assertEquals("004", result);
@@ -95,7 +95,7 @@ class LoadedChangeUnitUtilTest {
         String fileName = "_005_test-file.yml";
 
         // When
-        String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
+        String result = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName);
 
         // Then
         assertEquals("005", result);
@@ -111,7 +111,7 @@ class LoadedChangeUnitUtilTest {
 
         // When & Then
         FlamingockException exception = assertThrows(FlamingockException.class, () ->
-            LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName)
+            LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName)
         );
 
         assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order is required"));
@@ -128,7 +128,7 @@ class LoadedChangeUnitUtilTest {
 
         // When & Then
         FlamingockException exception = assertThrows(FlamingockException.class, () ->
-            LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName)
+            LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName)
         );
 
         assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order is required"));
@@ -141,19 +141,19 @@ class LoadedChangeUnitUtilTest {
         String changeUnitId = "test-id";
         
         // Template format - order at beginning
-        String result1 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "_001_migration.sql");
+        String result1 = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, null, "_001_migration.sql");
         assertEquals("001", result1);
         
         // Template format with extension
-        String result2 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "_002_create-users.yaml");
+        String result2 = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, null, "_002_create-users.yaml");
         assertEquals("002", result2);
         
         // Non-numeric order at beginning
-        String result3 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "_alpha_migration.yml");
+        String result3 = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, null, "_alpha_migration.yml");
         assertEquals("alpha", result3);
         
         // Complex order at beginning
-        String result4 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, null, "_v1.2.3_update-schema.yml");
+        String result4 = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, null, "_v1.2.3_update-schema.yml");
         assertEquals("v1.2.3", result4);
     }
 
@@ -165,11 +165,11 @@ class LoadedChangeUnitUtilTest {
         String orderInContent = "001";
         
         // Order in middle - should use orderInContent
-        String result1 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, "migration_002_something.sql");
+        String result1 = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, "migration_002_something.sql");
         assertEquals("001", result1);
         
         // Order at end - should use orderInContent  
-        String result2 = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, "migration_something_003_.sql");
+        String result2 = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, "migration_something_003_.sql");
         assertEquals("001", result2);
     }
 
@@ -180,15 +180,15 @@ class LoadedChangeUnitUtilTest {
         String changeUnitId = "test-id";
         
         // Class format with package
-        String result1 = LoadedChangeUnitUtil.getOrderFromContentOrClassName(changeUnitId, null, "com.mycompany.mypackage._001_MyChangeUnit");
+        String result1 = LoadedChangeUnitUtil.getMatchedOrderFromClassName(changeUnitId, null, "com.mycompany.mypackage._001_MyChangeUnit");
         assertEquals("001", result1);
         
         // Class format with deeper package
-        String result2 = LoadedChangeUnitUtil.getOrderFromContentOrClassName(changeUnitId, null, "com.example.migrations.v1._002_CreateUsersTable");
+        String result2 = LoadedChangeUnitUtil.getMatchedOrderFromClassName(changeUnitId, null, "com.example.migrations.v1._002_CreateUsersTable");
         assertEquals("002", result2);
         
         // Non-numeric order
-        String result3 = LoadedChangeUnitUtil.getOrderFromContentOrClassName(changeUnitId, null, "com.mycompany._alpha_Migration");
+        String result3 = LoadedChangeUnitUtil.getMatchedOrderFromClassName(changeUnitId, null, "com.mycompany._alpha_Migration");
         assertEquals("alpha", result3);
     }
 
@@ -201,7 +201,7 @@ class LoadedChangeUnitUtilTest {
         String fileName = null;
 
         // When
-        String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
+        String result = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName);
 
         // Then
         assertEquals("001", result);
@@ -217,7 +217,7 @@ class LoadedChangeUnitUtilTest {
 
         // When & Then
         FlamingockException exception = assertThrows(FlamingockException.class, () ->
-            LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName)
+            LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName)
         );
 
         assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order is required"));
@@ -232,7 +232,7 @@ class LoadedChangeUnitUtilTest {
         String fileName = "_001_migration_with_underscores.yml";
 
         // When
-        String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
+        String result = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName);
 
         // Then
         assertEquals("001", result); // Should extract order from beginning
@@ -247,7 +247,7 @@ class LoadedChangeUnitUtilTest {
         String fileName = "migration_incomplete";
 
         // When
-        String result = LoadedChangeUnitUtil.getOrderFromContentOrFileName(changeUnitId, orderInContent, fileName);
+        String result = LoadedChangeUnitUtil.getMatchedOrderFromFile(changeUnitId, orderInContent, fileName);
 
         // Then
         assertEquals("001", result); // Should return orderInContent since no valid pattern in fileName

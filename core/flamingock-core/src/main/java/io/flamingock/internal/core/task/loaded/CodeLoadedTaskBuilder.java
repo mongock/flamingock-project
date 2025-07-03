@@ -120,7 +120,7 @@ public class CodeLoadedTaskBuilder implements LoadedTaskBuilder<CodeLoadedChange
 
         try {
 
-            String order = LoadedChangeUnitUtil.getOrderFromContentOrClassName(id, orderInContent, changeUnitClass);
+            String order = LoadedChangeUnitUtil.getMatchedOrderFromClassName(id, orderInContent, changeUnitClass);
             return new CodeLoadedChangeUnit(
                     isBeforeExecution ? StringUtil.getBeforeExecutionId(id) : id,
                     order,

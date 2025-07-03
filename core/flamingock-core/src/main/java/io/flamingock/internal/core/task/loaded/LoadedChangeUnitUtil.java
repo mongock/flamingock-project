@@ -2,15 +2,13 @@ package io.flamingock.internal.core.task.loaded;
 
 import io.flamingock.internal.common.core.error.FlamingockException;
 
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class LoadedChangeUnitUtil {
 
     // For template files: must start with _order_ (e.g., _002_whatever.yaml)
-    private static final String TEMPLATE_FILE_ORDER_REGEX = "^_([^_]+)_";
+    private static final String SIMPLE_FILE_ORDER_REGEX = "^_([^_]+)_";
     
     // For class names: must have _order_ at the beginning of the class name after package 
     // (e.g., com.mycompany.mypackage._002_mychange)
@@ -22,84 +20,95 @@ public final class LoadedChangeUnitUtil {
     /**
      * For TemplateLoadedChangeUnit - validates order from template file name
      */
-    public static String getOrderFromContentOrFileName(String changeUnitId, String orderInContent, String fileName) {
-        return validateAndGetOrder(changeUnitId, orderInContent, fileName, 
-            LoadedChangeUnitUtil::getOrderFromTemplateFileName, "fileName");
+    public static String getMatchedOrderFromFile(String changeUnitId, String orderInContent, String fileName) {
+        return getMatchedOrder(changeUnitId, orderInContent, fileName, false);
     }
 
     /**
      * For CodeLoadedChangeUnit - validates order from class name
      */
-    public static String getOrderFromContentOrClassName(String changeUnitId, String orderInContent, String className) {
-        return validateAndGetOrder(changeUnitId, orderInContent, className, 
-            LoadedChangeUnitUtil::getOrderFromClassName, "className");
+    public static String getMatchedOrderFromClassName(String changeUnitId, String orderInContent, String className) {
+        return getMatchedOrder(changeUnitId, orderInContent, className, true);
     }
 
     /**
      * Common validation logic for both template files and class names
      */
-    private static String validateAndGetOrder(String changeUnitId, String orderInContent, String source, 
-                                            Function<String, Optional<String>> orderExtractor, 
-                                            String sourceType) {
+    private static String getMatchedOrder(String changeUnitId,
+                                          String orderInContent,
+                                          String fileName,
+                                          boolean isCodeBased) {
         boolean hasOrderInContent = orderInContent != null && !orderInContent.trim().isEmpty();
-        Optional<String> orderFromSource = orderExtractor.apply(source);
-        
+        String orderFromFileName = getOrderFromFileName(fileName, isCodeBased);
+
         if (hasOrderInContent) {
-            if (orderFromSource.isPresent()) {
-                if (orderInContent.equals(orderFromSource.get())) {
+            if (orderFromFileName != null) {
+                if (orderInContent.equals(orderFromFileName)) {
                     return orderInContent;
                 } else {
-                    throw new FlamingockException(String.format("ChangeUnit[%s] Order mismatch: orderInContent='%s' does not match order in %s='%s'",
-                        changeUnitId, orderInContent, sourceType, orderFromSource.get()));
+                    throw mismatchOrderException(changeUnitId, orderInContent, isCodeBased, orderFromFileName);
                 }
             } else {
                 return orderInContent;
             }
         } else {
-            if (orderFromSource.isPresent()) {
-                return orderFromSource.get();
+            if (orderFromFileName != null) {
+                return orderFromFileName;
             } else {
-                throw new FlamingockException(String.format("ChangeUnit[%s] Order is required: neither orderInContent nor order in %s is provided", 
-                    changeUnitId, sourceType));
+                throw missingOrderException(changeUnitId, isCodeBased);
             }
         }
     }
 
+    private static FlamingockException mismatchOrderException(String changeUnitId, String orderInContent, boolean isCodeBased, String orderInFileName) {
 
-
-    /**
-     * Extracts order from template file name - must start with _order_
-     */
-    private static Optional<String> getOrderFromTemplateFileName(String fileName) {
-        if (fileName == null) {
-            return Optional.empty();
+        String orderInContentText;
+        String fileType;
+        if(isCodeBased) {
+            orderInContentText = String.format("@ChangeUnit(order='%s')", orderInContent);
+            fileType = "className";
+        } else {
+            orderInContentText = String.format("value in template order field='%s'", orderInContent);
+            fileType = "fileName";
         }
 
-        Pattern pattern = Pattern.compile(TEMPLATE_FILE_ORDER_REGEX);
+        return new FlamingockException(String.format("ChangeUnit[%s] Order mismatch: %s does not match order in %s='%s'",
+                changeUnitId, orderInContentText, fileType, orderInFileName));
+    }
+
+    private static FlamingockException missingOrderException(String changeUnitId, boolean isCodeBased) {
+
+        String contentType;
+        String fileType;
+        String fileExt;
+        if(isCodeBased) {
+            contentType = "@ChangeUnit annotation";
+            fileType = "className";
+            fileExt = "java";
+        } else {
+            contentType = "template order field";
+            fileType = "fileName";
+            fileExt = "yaml";
+        }
+
+        return new FlamingockException(String.format("ChangeUnit[%s] Order is required: order must be present in the %s or in the %s(e.g. _0001_%s.%s). If present in both, they must have the same value.",
+                changeUnitId, contentType, fileType, changeUnitId, fileExt));
+    }
+
+    private static String getOrderFromFileName(String fileName, boolean withPackage) {
+        if (fileName == null) {
+            return null;
+        }
+        String patternToUse = withPackage ? FILE_WITH_PACKAGE_ORDER_REGEX : SIMPLE_FILE_ORDER_REGEX;
+
+        Pattern pattern = Pattern.compile(patternToUse);
         Matcher matcher = pattern.matcher(fileName);
 
         if (matcher.find()) {
-            return Optional.of(matcher.group(1));
+            return matcher.group(1);
         }
 
-        return Optional.empty();
+        return null;
     }
 
-    /**
-     * Extracts order from class name - must have _order_ at the beginning of class name after package
-     */
-    private static Optional<String> getOrderFromClassName(String className) {
-        if (className == null) {
-            return Optional.empty();
-        }
-
-        Pattern pattern = Pattern.compile(FILE_WITH_PACKAGE_ORDER_REGEX);
-        Matcher matcher = pattern.matcher(className);
-
-        if (matcher.find()) {
-            return Optional.of(matcher.group(1));
-        }
-
-        return Optional.empty();
-    }
 }

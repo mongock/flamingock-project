@@ -115,7 +115,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         Class<? extends ChangeTemplate<?, ?, ?>> templateClass = ChangeTemplateManager.getTemplate(templateName)
                 .orElseThrow(()-> new FlamingockException(String.format("Template[%s] not found. This is probably because template's name is wrong or template's library not imported", templateName)));
         
-        String order = LoadedChangeUnitUtil.getOrderFromContentOrFileName(id, orderInContent, fileName);
+        String order = LoadedChangeUnitUtil.getMatchedOrderFromFile(id, orderInContent, fileName);
         
         return new TemplateLoadedChangeUnit(
                 fileName,
