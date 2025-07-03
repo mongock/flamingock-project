@@ -68,7 +68,7 @@ public abstract class AbstractReflectionLoadedTask extends AbstractLoadedTask {
      * <p>Note: This may differ from the {@link #implementationClass} in template-based scenarios
      * where the template references a separate implementation class.</p>
      */
-    private final String fileName;
+    protected  final String fileName;
 
     /**
      * The Java class that contains the actual changeUnit execution logic.

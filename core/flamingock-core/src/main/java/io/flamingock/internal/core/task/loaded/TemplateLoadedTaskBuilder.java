@@ -30,7 +30,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
 
     private String fileName;
     private String id;
-    private String order;
+    private String orderInContent;
     private String templateName;
     private List<String> profiles;
     private boolean runAlways;
@@ -60,8 +60,8 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         return this;
     }
 
-    public TemplateLoadedTaskBuilder setOrder(String order) {
-        this.order = order;
+    public TemplateLoadedTaskBuilder setOrderInContent(String order) {
+        this.orderInContent = order;
         return this;
     }
 
@@ -114,6 +114,9 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
         //            boolean isTaskTransactional = true;//TODO implement this. isTaskTransactionalAccordingTemplate(templateSpec);
         Class<? extends ChangeTemplate<?, ?, ?>> templateClass = ChangeTemplateManager.getTemplate(templateName)
                 .orElseThrow(()-> new FlamingockException(String.format("Template[%s] not found. This is probably because template's name is wrong or template's library not imported", templateName)));
+        
+        String order = LoadedChangeUnitUtil.getMatchedOrderFromFile(id, orderInContent, fileName);
+        
         return new TemplateLoadedChangeUnit(
                 fileName,
                 id,
@@ -132,7 +135,7 @@ public class TemplateLoadedTaskBuilder implements LoadedTaskBuilder<TemplateLoad
     private TemplateLoadedTaskBuilder setPreview(TemplatePreviewChangeUnit preview) {
         setFileName(preview.getFileName());
         setId(preview.getId());
-        setOrder(preview.getOrder().orElse(null));
+        setOrderInContent(preview.getOrder().orElse(null));
         setTemplateName(preview.getTemplateName());
         setProfiles(preview.getProfiles());
         setRunAlways(preview.isRunAlways());

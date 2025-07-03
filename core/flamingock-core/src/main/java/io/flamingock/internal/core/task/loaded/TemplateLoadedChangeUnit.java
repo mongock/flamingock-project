@@ -33,7 +33,7 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
     private final Object execution;
     private final Object rollback;
 
-    TemplateLoadedChangeUnit(String fileName,
+    TemplateLoadedChangeUnit(String changeUnitFileName,
                              String id,
                              String order,
                              Class<? extends ChangeTemplate<?, ?, ?>> templateClass,
@@ -44,7 +44,7 @@ public class TemplateLoadedChangeUnit extends AbstractLoadedChangeUnit {
                              Object configuration,
                              Object execution,
                              Object rollback) {
-        super(fileName, id, order, templateClass, runAlways, transactional, systemTask);
+        super(changeUnitFileName, id, order, templateClass, runAlways, transactional, systemTask);
         this.profiles = profiles;
         this.transactional = transactional;
         this.configuration = configuration;
