@@ -24,7 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @ChangeUnit(id = "unhappy-insert-clients", order = "002")
-public class _1_insert_client_unhappy {
+public class _002_insert_client_unhappy {
 
     @Execution
     public void execution(Connection connection) throws SQLException {
