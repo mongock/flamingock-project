@@ -14,28 +14,24 @@
  * limitations under the License.
  */
 
-package io.flamingock.community.mongodb.springdata.changes;
+package io.flamingock.community.mongodb.sync.changes;
 
+import org.bson.Document;
+
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.Execution;
-import io.flamingock.api.annotations.RollbackExecution;
-import org.bson.Document;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
 @ChangeUnit( id="insert-jorge-document" , order = "003")
-public class _3_insert_jorge_failed_non_transactional_rollback {
+public class _003_insert_jorge_failed_transactional_non_rollback {
 
     @Execution
-    public void execution(MongoTemplate mongoDatabase) {
+    public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(new Document().append("name", "Jorge"));
+        collection.insertOne(clientSession, new Document().append("name", "Jorge"));
         throw new RuntimeException("test");
     }
 
-    @RollbackExecution
-    public void rollbackExecution(MongoTemplate mongoDatabase) {
-        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.deleteOne(new Document().append("name", "Jorge"));
-    }
 }

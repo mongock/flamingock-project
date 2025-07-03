@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package io.flamingock.community.mongodb.springdata.changes;
+package io.flamingock.community.mongodb.sync.changes;
 
-import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.Execution;
-import org.bson.Document;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
-@ChangeUnit( id="insert-federico-document" , order = "002")
-public class _2_insert_federico_happy_non_transactional {
+@ChangeUnit( id="create-client-collection" , order = "001", transactional = false)
+public class _001_create_client_collection_happy {
 
     @Execution
-    public void execution(MongoTemplate mongoDatabase) {
-        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(new Document().append("name", "Federico"));
+    public void execution(MongoDatabase mongoDatabase) {
+        mongoDatabase.createCollection("clientCollection");
     }
 }

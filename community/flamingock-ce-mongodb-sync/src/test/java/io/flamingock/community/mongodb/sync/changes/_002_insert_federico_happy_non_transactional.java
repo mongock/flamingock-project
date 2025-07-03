@@ -16,15 +16,18 @@
 
 package io.flamingock.community.mongodb.sync.changes;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.Execution;
+import org.bson.Document;
 
-@ChangeUnit( id="create-client-collection" , order = "001", transactional = false)
-public class _1_create_client_collection_happy {
+@ChangeUnit( id="insert-federico-document" , order = "002")
+public class _002_insert_federico_happy_non_transactional {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {
-        mongoDatabase.createCollection("clientCollection");
+        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
+        collection.insertOne(new Document().append("name", "Federico"));
     }
 }

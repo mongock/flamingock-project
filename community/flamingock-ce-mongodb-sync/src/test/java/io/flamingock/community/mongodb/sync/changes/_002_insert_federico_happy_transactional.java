@@ -16,22 +16,19 @@
 
 package io.flamingock.community.mongodb.sync.changes;
 
-import org.bson.Document;
-
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.Execution;
+import org.bson.Document;
 
-@ChangeUnit( id="insert-jorge-document" , order = "003")
-public class _3_insert_jorge_failed_transactional_non_rollback {
+@ChangeUnit( id="insert-federico-document" , order = "002")
+public class _002_insert_federico_happy_transactional {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.insertOne(clientSession, new Document().append("name", "Jorge"));
-        throw new RuntimeException("test");
+        collection.insertOne(clientSession, new Document().append("name", "Federico"));
     }
-
 }

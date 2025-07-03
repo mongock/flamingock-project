@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 @io.flamingock.api.annotations.ChangeUnit(id = "create-author-collection", order = "000", author = "mongock")
 @ChangeUnit(id = "create-author-collection", order = "000", author = "mongock")
-public class _0_mongock_create_authors_collection {
+public class _000_mongock_create_authors_collection {
 
     public final static int INITIAL_CLIENTS = 10;
     public final static String CLIENTS_COLLECTION_NAME = "mongockClientCollection";
@@ -37,7 +37,7 @@ public class _0_mongock_create_authors_collection {
 
         mongoTemplate.getCollection(CLIENTS_COLLECTION_NAME)
                 .insertMany(IntStream.range(0, INITIAL_CLIENTS)
-                        .mapToObj(_0_mongock_create_authors_collection::getClient)
+                        .mapToObj(_000_mongock_create_authors_collection::getClient)
                         .collect(Collectors.toList()));
     }
 

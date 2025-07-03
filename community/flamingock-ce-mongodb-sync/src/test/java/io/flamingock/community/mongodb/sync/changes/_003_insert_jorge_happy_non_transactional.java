@@ -16,27 +16,18 @@
 
 package io.flamingock.community.mongodb.sync.changes;
 
-import org.bson.Document;
-
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.Execution;
-import io.flamingock.api.annotations.RollbackExecution;
+import org.bson.Document;
 
 @ChangeUnit( id="insert-jorge-document" , order = "003")
-public class _3_insert_jorge_failed_non_transactional_rollback {
+public class _003_insert_jorge_happy_non_transactional {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {
         MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
         collection.insertOne(new Document().append("name", "Jorge"));
-        throw new RuntimeException("test");
-    }
-
-    @RollbackExecution
-    public void rollbackExecution(MongoDatabase mongoDatabase) {
-        MongoCollection<Document> collection = mongoDatabase.getCollection("clientCollection");
-        collection.deleteOne(new Document().append("name", "Jorge"));
     }
 }
