@@ -14,7 +14,7 @@ public final class LoadedChangeUnitUtil {
     
     // For class names: must have _order_ at the beginning of the class name after package 
     // (e.g., com.mycompany.mypackage._002_mychange)
-    private static final String CLASS_NAME_ORDER_REGEX = "\\._([^_]+)_[^.]*$";
+    private static final String FILE_WITH_PACKAGE_ORDER_REGEX = "\\._([^_]+)_[^.]*$";
 
     private LoadedChangeUnitUtil() {
     }
@@ -65,6 +65,8 @@ public final class LoadedChangeUnitUtil {
         }
     }
 
+
+
     /**
      * Extracts order from template file name - must start with _order_
      */
@@ -91,7 +93,7 @@ public final class LoadedChangeUnitUtil {
             return Optional.empty();
         }
 
-        Pattern pattern = Pattern.compile(CLASS_NAME_ORDER_REGEX);
+        Pattern pattern = Pattern.compile(FILE_WITH_PACKAGE_ORDER_REGEX);
         Matcher matcher = pattern.matcher(className);
 
         if (matcher.find()) {

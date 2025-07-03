@@ -23,7 +23,7 @@ import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @ChangeUnit( id="insert-federico-document" , order = "002")
-public class _2_insert_federico_happy_non_transactional {
+public class _002_insert_federico_happy_transactional {
 
     @Execution
     public void execution(MongoTemplate mongoDatabase) {

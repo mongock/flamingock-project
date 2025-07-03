@@ -26,7 +26,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhanced
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @ChangeUnit(id = "execution-with-exception", order = "003")
-public class _3_insert_jorge_failed_transactional_non_rollback {
+public class _003_insert_jorge_failed_transactional_non_rollback {
 
     @Execution
     public void execution(DynamoDbClient client, TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder) {

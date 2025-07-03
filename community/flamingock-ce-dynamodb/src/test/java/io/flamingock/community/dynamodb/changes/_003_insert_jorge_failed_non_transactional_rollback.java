@@ -29,7 +29,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @ChangeUnit(id = "execution-with-exception", order = "003", transactional = false)
-public class _3_insert_jorge_failed_non_transactional_rollback {
+public class _003_insert_jorge_failed_non_transactional_rollback {
 
     @Execution
     public void execution(DynamoDbClient client) {

@@ -23,7 +23,7 @@ import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @ChangeUnit( id="insert-jorge-document" , order = "003")
-public class _3_insert_jorge_failed_transactional_non_rollback {
+public class _003_insert_jorge_failed_transactional_non_rollback {
 
     @Execution
     public void execution(MongoTemplate mongoDatabase) {

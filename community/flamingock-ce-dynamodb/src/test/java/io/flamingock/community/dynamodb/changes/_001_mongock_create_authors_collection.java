@@ -20,7 +20,7 @@ import static java.util.Collections.emptyList;
 
 @io.flamingock.api.annotations.ChangeUnit(id = "client-initializer", order = "001", author = "mongock")
 @ChangeUnit(id = "client-initializer", order = "001", author = "mongock")
-public class _0_mongock_create_authors_collection {
+public class _001_mongock_create_authors_collection {
 
     public final static int INITIAL_CLIENTS = 10;
     public final static String CLIENTS_TABLE_NAME = "mongockClientTable";

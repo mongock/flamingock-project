@@ -25,8 +25,8 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@ChangeUnit(id = "insert-another-user", order = "004", transactional = false)
-public class _3_insert_jorge_happy_non_transactional {
+@ChangeUnit(id = "insert-user", order = "002", transactional = false)
+public class _002_insert_federico_happy_non_transactional {
 
     @Execution
     public void execution(DynamoDbClient client) {
@@ -37,7 +37,7 @@ public class _3_insert_jorge_happy_non_transactional {
 
         table.putItem(
                 PutItemEnhancedRequest.builder(UserEntity.class)
-                        .item(new UserEntity("Pablo", "López"))
+                        .item(new UserEntity("Pepe", "Pérez"))
                         .build()
         );
     }

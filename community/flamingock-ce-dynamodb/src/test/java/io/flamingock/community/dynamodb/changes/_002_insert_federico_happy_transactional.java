@@ -25,8 +25,8 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-@ChangeUnit(id = "insert-another-user", order = "004")
-public class _3_insert_jorge_happy_transactional {
+@ChangeUnit(id = "insert-user", order = "002")
+public class _002_insert_federico_happy_transactional {
 
     @Execution
     public void execution(DynamoDbClient client, TransactWriteItemsEnhancedRequest.Builder writeRequestBuilder) {
@@ -35,6 +35,6 @@ public class _3_insert_jorge_happy_transactional {
                 .build()
                 .table(UserEntity.tableName, TableSchema.fromBean(UserEntity.class));
 
-        writeRequestBuilder.addPutItem(table, new UserEntity("Pablo", "López"));
+        writeRequestBuilder.addPutItem(table, new UserEntity("Pepe", "Pérez"));
     }
 }
