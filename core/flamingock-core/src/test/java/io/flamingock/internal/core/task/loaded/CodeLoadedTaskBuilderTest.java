@@ -86,9 +86,8 @@ class CodeLoadedTaskBuilderTest {
         // When & Then
         FlamingockException exception = assertThrows(FlamingockException.class, () -> builder.build());
 
-        assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order mismatch"));
-        assertTrue(exception.getMessage().contains("orderInContent='001'"));
-        assertTrue(exception.getMessage().contains("order in className='002'"));
+        assertEquals("ChangeUnit[test-id] Order mismatch: @ChangeUnit(order='001') does not match order in className='002'",
+                exception.getMessage());
     }
 
     @Test
@@ -105,8 +104,8 @@ class CodeLoadedTaskBuilderTest {
         // When & Then
         FlamingockException exception = assertThrows(FlamingockException.class, () -> builder.build());
 
-        assertTrue(exception.getMessage().contains("ChangeUnit[test-id] Order is required"));
-        assertTrue(exception.getMessage().contains("neither orderInContent nor order in className is provided"));
+        assertEquals("ChangeUnit[test-id] Order is required: order must be present in the @ChangeUnit annotation or in the className(e.g. _0001_test-id.java). If present in both, they must have the same value.",
+                exception.getMessage());
     }
 
     @Test
