@@ -198,10 +198,7 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         
         if (hasFileInAnnotation) {
             logger.info("Reading flamingock pipeline from file specified in @Flamingock annotation: '" + pipelineAnnotation.pipelineFile() + "'");
-            File specifiedPipelineFile = new File(pipelineAnnotation.pipelineFile());
-            if (!specifiedPipelineFile.exists()) {
-                throw new RuntimeException("Pipeline file specified in @Flamingock annotation does not exist: " + pipelineAnnotation.pipelineFile());
-            }
+            File specifiedPipelineFile = resolvePipelineFile(pipelineAnnotation.pipelineFile());
             return buildPipelineFromSpecifiedFile(specifiedPipelineFile, codedChangeUnitsByPackage);
         } else {
             logger.info("Reading flamingock pipeline from @Flamingock annotation stages configuration");
@@ -260,6 +257,81 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         return Optional.of(stage);
     }
 
+    /**
+     * Resolves a pipeline file path from the @Flamingock annotation, supporting both absolute file paths
+     * and classpath resources. This method provides resource resolution for the Flamingock library.
+     *
+     * @param pipelineFilePath the file path specified in the @Flamingock annotation
+     * @return a File object representing the resolved pipeline file
+     * @throws RuntimeException if the file cannot be found in any of the supported locations
+     */
+    private File resolvePipelineFile(String pipelineFilePath) {
+        // Try direct file path first (absolute or relative to current working directory)
+        File directFile = new File(pipelineFilePath);
+        if (directFile.exists()) {
+            logger.info("Pipeline file resolved as direct file path: " + directFile.getAbsolutePath());
+            return directFile;
+        }
+        
+        // Try as classpath resource in main resources
+        File mainResourceFile = new File(resourcesRoot + "/" + pipelineFilePath);
+        if (mainResourceFile.exists()) {
+            logger.info("Pipeline file resolved in main resources: " + mainResourceFile.getAbsolutePath());
+            return mainResourceFile;
+        }
+        
+        // Try as classpath resource in test resources (for annotation processing during tests)
+        String testResourcesRoot = resourcesRoot.replace("src/main/resources", "src/test/resources");
+        File testResourceFile = new File(testResourcesRoot + "/" + pipelineFilePath);
+        if (testResourceFile.exists()) {
+            logger.info("Pipeline file resolved in test resources: " + testResourceFile.getAbsolutePath());
+            return testResourceFile;
+        }
+        
+        // Try with "resources/" prefix stripped (handle cases like "resources/flamingock/pipeline.yaml")
+        if (pipelineFilePath.startsWith("resources/")) {
+            String pathWithoutResourcesPrefix = pipelineFilePath.substring("resources/".length());
+            
+            // Try in main resources without "resources/" prefix
+            File mainResourceFileAlt = new File(resourcesRoot + "/" + pathWithoutResourcesPrefix);
+            if (mainResourceFileAlt.exists()) {
+                logger.info("Pipeline file resolved in main resources (stripped resources/ prefix): " + mainResourceFileAlt.getAbsolutePath());
+                return mainResourceFileAlt;
+            }
+            
+            // Try in test resources without "resources/" prefix
+            File testResourceFileAlt = new File(testResourcesRoot + "/" + pathWithoutResourcesPrefix);
+            if (testResourceFileAlt.exists()) {
+                logger.info("Pipeline file resolved in test resources (stripped resources/ prefix): " + testResourceFileAlt.getAbsolutePath());
+                return testResourceFileAlt;
+            }
+        }
+        
+        // If all resolution attempts failed, provide helpful error message
+        String searchedLocations = String.format(
+            "Searched locations:\n" +
+            "  1. Direct file path: %s\n" +
+            "  2. Main resources: %s\n" +
+            "  3. Test resources: %s",
+            directFile.getAbsolutePath(),
+            mainResourceFile.getAbsolutePath(),
+            testResourceFile.getAbsolutePath()
+        );
+        
+        if (pipelineFilePath.startsWith("resources/")) {
+            searchedLocations += String.format(
+                "\n  4. Main resources (no prefix): %s\n" +
+                "  5. Test resources (no prefix): %s",
+                new File(resourcesRoot + "/" + pipelineFilePath.substring("resources/".length())).getAbsolutePath(),
+                new File(testResourcesRoot + "/" + pipelineFilePath.substring("resources/".length())).getAbsolutePath()
+            );
+        }
+        
+        throw new RuntimeException(
+            "Pipeline file specified in @Flamingock annotation does not exist: " + pipelineFilePath + "\n" +
+            searchedLocations
+        );
+    }
 
     private PreviewPipeline buildPipelineFromSpecifiedFile(File file, Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
 
