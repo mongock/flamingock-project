@@ -195,6 +195,25 @@ public class PipelinePreProcessorTest {
         assertNotNull(result);
     }
 
+    /**
+     * Tests that systemStage with pipelineFile throws exception.
+     */
+    @Test
+    @DisplayName("Given @Flamingock with systemStage and pipelineFile, when processing pipeline, then should throw RuntimeException")
+    void SHOULD_throwException_WHEN_systemStageWithPipelineFile() throws Exception {
+        // Given
+        createPipelineFile();
+        Map<String, List<AbstractPreviewTask>> emptyMap = new HashMap<>();
+        Flamingock invalidAnnotation = createMockAnnotationWithSystemStageAndPipelineFile();
+        
+        // When & Then
+        Exception exception = assertThrows(Exception.class, () -> 
+            invokeGetPipelineFromProcessChanges(emptyMap, invalidAnnotation));
+        
+        assertInstanceOf(RuntimeException.class, exception.getCause());
+        assertTrue(exception.getCause().getMessage().contains("SystemStage can only be configured when stages are provided"));
+    }
+
     private void createPipelineFile() throws IOException {
         String yamlContent = "pipeline:\n" +
                 "  systemStage:\n" +
@@ -347,6 +366,37 @@ public class PipelinePreProcessorTest {
                 return new SystemStage() {
                     @Override
                     public String sourcesPackage() { return ""; }
+                    @Override
+                    public String resourcesDir() { return ""; }
+                    @Override
+                    public Class<? extends java.lang.annotation.Annotation> annotationType() {
+                        return SystemStage.class;
+                    }
+                };
+            }
+
+            @Override
+            public Stage[] stages() {
+                return new Stage[0]; // Empty array
+            }
+
+            @Override
+            public String pipelineFile() { return pipelineFile.getAbsolutePath(); }
+
+            @Override
+            public Class<? extends java.lang.annotation.Annotation> annotationType() {
+                return Flamingock.class;
+            }
+        };
+    }
+
+    private Flamingock createMockAnnotationWithSystemStageAndPipelineFile() {
+        return new Flamingock() {
+            @Override
+            public SystemStage systemStage() {
+                return new SystemStage() {
+                    @Override
+                    public String sourcesPackage() { return "com.example.system"; }
                     @Override
                     public String resourcesDir() { return ""; }
                     @Override

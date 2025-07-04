@@ -27,7 +27,7 @@ public @interface Flamingock {
     
     SystemStage systemStage() default @SystemStage;
     
-    Stage[] stages();
+    Stage[] stages() default {};
 
     String pipelineFile() default "";
 }

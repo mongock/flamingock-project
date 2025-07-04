@@ -180,6 +180,7 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         
         boolean hasFileInAnnotation = !pipelineAnnotation.pipelineFile().isEmpty();
         boolean hasStagesInAnnotation = pipelineAnnotation.stages().length > 0;
+        boolean hasSystemStage = !pipelineAnnotation.systemStage().sourcesPackage().isEmpty();
         
         // Validate mutually exclusive modes
         if (hasFileInAnnotation && hasStagesInAnnotation) {
@@ -188,6 +189,11 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         
         if (!hasFileInAnnotation && !hasStagesInAnnotation) {
             throw new RuntimeException("@Flamingock annotation must specify either pipelineFile OR stages configuration.");
+        }
+        
+        // SystemStage only allowed with stages, not with pipelineFile
+        if (hasSystemStage && !hasStagesInAnnotation) {
+            throw new RuntimeException("SystemStage can only be configured when stages are provided, not with pipelineFile.");
         }
         
         if (hasFileInAnnotation) {

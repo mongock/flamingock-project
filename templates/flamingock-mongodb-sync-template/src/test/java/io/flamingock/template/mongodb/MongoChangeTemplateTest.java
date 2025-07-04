@@ -16,18 +16,14 @@
 
 package io.flamingock.template.mongodb;
 
-import io.flamingock.community.Flamingock;
-
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import io.flamingock.community.Flamingock;
 import io.flamingock.internal.core.community.Constants;
 import org.bson.Document;
-import org.junit.jupiter.api.AfterEach;
-
-import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STORE_NAME;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,8 +36,8 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STORE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
 class MongoChangeTemplateTest {
@@ -71,7 +67,6 @@ class MongoChangeTemplateTest {
         mongoDatabase.getCollection(DEFAULT_AUDIT_STORE_NAME).drop();
         mongoDatabase.getCollection(DEFAULT_AUDIT_STORE_NAME).drop();
     }
-
 
 
     @Test
