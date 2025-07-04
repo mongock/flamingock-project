@@ -1,5 +1,6 @@
 package io.flamingock.core.processor;
 
+import io.flamingock.api.SetupType;
 import io.flamingock.api.annotations.Flamingock;
 import io.flamingock.api.annotations.Stage;
 import io.flamingock.api.StageType;
@@ -274,6 +275,11 @@ public class PipelinePreProcessorTest {
             public String pipelineFile() { return ""; }
 
             @Override
+            public SetupType setup() {
+                return SetupType.DEFAULT;
+            }
+
+            @Override
             public Class<? extends java.lang.annotation.Annotation> annotationType() {
                 return Flamingock.class;
             }
@@ -322,6 +328,11 @@ public class PipelinePreProcessorTest {
             public String pipelineFile() { return "test-pipeline.yaml"; }
 
             @Override
+            public SetupType setup() {
+                return SetupType.DEFAULT;
+            }
+
+            @Override
             public Class<? extends java.lang.annotation.Annotation> annotationType() {
                 return Flamingock.class;
             }
@@ -351,6 +362,11 @@ public class PipelinePreProcessorTest {
 
             @Override
             public String pipelineFile() { return ""; }
+
+            @Override
+            public SetupType setup() {
+                return SetupType.DEFAULT;
+            }
 
             @Override
             public Class<? extends java.lang.annotation.Annotation> annotationType() {
@@ -384,6 +400,11 @@ public class PipelinePreProcessorTest {
             public String pipelineFile() { return pipelineFile.getAbsolutePath(); }
 
             @Override
+            public SetupType setup() {
+                return SetupType.DEFAULT;
+            }
+
+            @Override
             public Class<? extends java.lang.annotation.Annotation> annotationType() {
                 return Flamingock.class;
             }
@@ -413,6 +434,11 @@ public class PipelinePreProcessorTest {
 
             @Override
             public String pipelineFile() { return pipelineFile.getAbsolutePath(); }
+
+            @Override
+            public SetupType setup() {
+                return SetupType.DEFAULT;
+            }
 
             @Override
             public Class<? extends java.lang.annotation.Annotation> annotationType() {
