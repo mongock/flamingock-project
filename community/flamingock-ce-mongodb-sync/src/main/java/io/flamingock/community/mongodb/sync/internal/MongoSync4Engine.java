@@ -31,7 +31,6 @@ import io.flamingock.internal.core.community.LocalAuditor;
 import io.flamingock.internal.core.community.LocalExecutionPlanner;
 import io.flamingock.internal.core.community.TransactionManager;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashSet;
