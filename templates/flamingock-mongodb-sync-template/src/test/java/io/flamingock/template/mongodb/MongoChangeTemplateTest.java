@@ -39,7 +39,7 @@ import java.util.List;
 import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STORE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Flamingock(pipelineFile = "resources/flamingock/pipeline.yaml")
+@Flamingock(pipelineFile = "flamingock/pipeline.yaml")
 @Testcontainers
 class MongoChangeTemplateTest {
 

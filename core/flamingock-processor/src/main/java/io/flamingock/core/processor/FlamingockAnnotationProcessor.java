@@ -37,60 +37,87 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Annotation processor for Flamingock that generates metadata files
- * containing information about templated and annotated changes.
+ * Annotation processor for Flamingock that generates metadata files containing information 
+ * about templated and annotated changes. The processor requires a mandatory {@link Flamingock} 
+ * annotation to configure the pipeline.
  * <p>
- * The processor operates in two phases:
+ * <h2>@Flamingock Annotation Configuration</h2>
+ * The processor supports two mutually exclusive configuration modes:
  * <ul>
- *     <li><b>Initialization (`init()` phase):</b> Processes templated changes
- *         (which are stored in files) and serializes them into
- *         <code>META-INF/flamingock/metadata-templated.json</code>.</li>
- *     <li><b>Processing (`process()` phase):</b> Processes all changes,
- *         including templated changes and those derived from annotated classes.
- *         The final structure is serialized into
- *         <code>META-INF/flamingock/metadata-full.json</code>.</li>
+ *     <li><b>File-based configuration:</b> Uses {@code pipelineFile} to reference a YAML pipeline definition</li>
+ *     <li><b>Annotation-based configuration:</b> Uses {@code stages} array to define the pipeline inline</li>
  * </ul>
- * <p>
+ * 
+ * <h3>Pipeline File Resolution</h3>
+ * When using {@code pipelineFile}, the processor provides resource resolution
+ * supporting multiple file locations:
+ * 
+ * <h4>Examples:</h4>
+ * <pre>{@code
+ * // Absolute file path - highest priority
+ * @Flamingock(pipelineFile = "/path/to/external/pipeline.yaml")
+ * // Uses direct file system path
+ * 
+ * // Relative file path - second priority (relative to working directory)
+ * @Flamingock(pipelineFile = "config/flamingock-pipeline.yaml")
+ * // Resolves relative to current working directory, NOT as classpath resource
+ * 
+ * // Classpath resource - fallback if file doesn't exist relative to working directory
+ * @Flamingock(pipelineFile = "flamingock/pipeline.yaml")
+ * // If "flamingock/pipeline.yaml" doesn't exist in working directory,
+ * // then tries: src/main/resources/flamingock/pipeline.yaml
+ * // then tries: src/test/resources/flamingock/pipeline.yaml
+ * 
+ * // Resource with explicit "resources/" prefix (automatically stripped)
+ * @Flamingock(pipelineFile = "resources/flamingock/pipeline.yaml")
+ * // First tries: "resources/flamingock/pipeline.yaml" relative to working directory
+ * // If not found, strips "resources/" prefix and tries classpath resolution:
+ * // src/main/resources/flamingock/pipeline.yaml or src/test/resources/flamingock/pipeline.yaml
+ * }</pre>
  *
- * <h2>Runtime Behavior</h2>
- * At runtime, the Flamingock library follows this lookup order for metadata:
+ * <h4>Resolution Order (stops at first match):</h4>
  * <ol>
- *     <li>If <code>META-INF/flamingock/metadata-full.json</code> exists,
- *         it is used exclusively.</li>
- *     <li>If <code>META-INF/flamingock/metadata-full.json</code> does not exist,
- *         the system falls back to <code>META-INF/flamingock/metadata-templated.json</code>.</li>
- *     <li><b>If neither file exists, the Flamingock library throws an exception.</b></li>
+ *     <li><b>Direct file path:</b> {@code [pipelineFile]} (absolute or relative to working directory)</li>
+ *     <li><b>Main resources:</b> {@code src/main/resources/[pipelineFile]}</li>
+ *     <li><b>Test resources:</b> {@code src/test/resources/[pipelineFile]}</li>
+ *     <li><b>Main resources (stripped):</b> If path starts with "resources/", strips prefix and tries {@code src/main/resources/[remaining-path]}</li>
+ *     <li><b>Test resources (stripped):</b> If path starts with "resources/", strips prefix and tries {@code src/test/resources/[remaining-path]}</li>
  * </ol>
  * <p>
+ * <b>Important:</b> Working directory files always take precedence over classpath resources.
+ * If both {@code ./config/pipeline.yaml} and {@code src/main/resources/config/pipeline.yaml} exist,
+ * the working directory file is used.
  *
- * <h2>Usage</h2>
- * This annotation processor is automatically triggered during compilation.
- * It processes annotated classes and predefined metadata templates without requiring
- * additional configuration.
+ * <h3>Annotation-based Configuration</h3>
+ * <pre>{@code
+ * @Flamingock(stages = {
+ *     @Stage(name = "init", type = StageType.BEFORE, sourcesPackage = "com.example.init"),
+ *     @Stage(name = "migration", type = StageType.DEFAULT, sourcesPackage = "com.example.migrations")
+ * })
+ * }</pre>
+ *
+ * <h2>Processing Phases</h2>
+ * <ul>
+ *     <li><b>Initialization:</b> Sets up resource paths and validates @Flamingock annotation</li>
+ *     <li><b>Processing:</b> Generates {@code META-INF/flamingock/metadata-full.json} with complete pipeline metadata</li>
+ * </ul>
+ *
+ * <h2>Validation Rules</h2>
+ * <ul>
+ *     <li>@Flamingock annotation is mandatory</li>
+ *     <li>Must specify either {@code pipelineFile} OR {@code stages} (mutually exclusive)</li>
+ *     <li>SystemStage can only be used with annotation-based configuration (not with pipelineFile)</li>
+ * </ul>
  *
  * <h2>Supported Annotations</h2>
- * The processor detects and processes classes annotated with:
  * <ul>
- *     <li>{@link  ChangeUnit} - Represents a change unit defined within the code.</li>
- *     <li>io.mongock.api.annotations.ChangeUnit - Represents a legacy change unit defined within the code.</li>
- * </ul>
- *
- * <h2>Generated Metadata Files</h2>
- * <ul>
- *     <li><b><code>templated-pipeline.json</code></b> - Contains only templated changes.</li>
- *     <li><b><code>full-pipeline.json</code></b> - Contains all processed changes
- *         (templated + annotated classes).</li>
- * </ul>
- *
- * <h2>Compilation Behavior</h2>
- * <ul>
- *     <li>The processor executes at compile-time.</li>
- *     <li>The templated metadata is always processed in the `init()` phase.</li>
- *     <li>If annotated elements exist, the processor enriches the metadata in `process()`.</li>
+ *     <li>{@link Flamingock} - Mandatory pipeline configuration</li>
+ *     <li>{@link ChangeUnit} - Represents a change unit defined within the code</li>
+ *     <li>io.mongock.api.annotations.ChangeUnit - Legacy change unit support</li>
  * </ul>
  *
  * @author Antonio
- * @version 1.0
+ * @version 2.0
  * @since Flamingock v1.x
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
