@@ -101,7 +101,6 @@ public class MongoDbImporterTest {
         Runner flamingock = Flamingock.builder()
                 .addDependency(mongoClient)
                 .addDependency(mongoClient.getDatabase(DB_NAME))
-                .setProperty("mongodb.databaseName", DB_NAME)
                 .build();
 
         flamingock.run();
@@ -146,7 +145,6 @@ public class MongoDbImporterTest {
         Runner flamingock = Flamingock.builder()
                 .addDependency(mongoClient)
                 .addDependency(mongoClient.getDatabase(DB_NAME))
-                .setProperty("mongodb.databaseName", DB_NAME)
                 .build();
 
         //TODO should check error message, but currently it return the summary text

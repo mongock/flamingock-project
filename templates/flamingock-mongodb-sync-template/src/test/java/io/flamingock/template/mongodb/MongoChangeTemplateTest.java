@@ -81,7 +81,6 @@ class MongoChangeTemplateTest {
         Flamingock.builder()
                 .addDependency(mongoClient)
                 .addDependency(mongoClient.getDatabase(DB_NAME))
-                .setProperty("mongodb.databaseName", DB_NAME)
                 .build()
                 .run();
 
