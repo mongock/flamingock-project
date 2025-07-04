@@ -1,7 +1,7 @@
 package io.flamingock.core.processor;
 
 import io.flamingock.api.annotations.ChangeUnit;
-import io.flamingock.api.annotations.Pipeline;
+import io.flamingock.api.annotations.Flamingock;
 import io.flamingock.api.annotations.Stage;
 import io.flamingock.api.annotations.SystemStage;
 import io.flamingock.internal.common.core.preview.PreviewPipeline;
@@ -37,64 +37,91 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Annotation processor for Flamingock that generates metadata files
- * containing information about templated and annotated changes.
+ * Annotation processor for Flamingock that generates metadata files containing information 
+ * about templated and annotated changes. The processor requires a mandatory {@link Flamingock} 
+ * annotation to configure the pipeline.
  * <p>
- * The processor operates in two phases:
+ * <h2>@Flamingock Annotation Configuration</h2>
+ * The processor supports two mutually exclusive configuration modes:
  * <ul>
- *     <li><b>Initialization (`init()` phase):</b> Processes templated changes
- *         (which are stored in files) and serializes them into
- *         <code>META-INF/flamingock/metadata-templated.json</code>.</li>
- *     <li><b>Processing (`process()` phase):</b> Processes all changes,
- *         including templated changes and those derived from annotated classes.
- *         The final structure is serialized into
- *         <code>META-INF/flamingock/metadata-full.json</code>.</li>
+ *     <li><b>File-based configuration:</b> Uses {@code pipelineFile} to reference a YAML pipeline definition</li>
+ *     <li><b>Annotation-based configuration:</b> Uses {@code stages} array to define the pipeline inline</li>
  * </ul>
- * <p>
+ * 
+ * <h3>Pipeline File Resolution</h3>
+ * When using {@code pipelineFile}, the processor provides resource resolution
+ * supporting multiple file locations:
+ * 
+ * <h4>Examples:</h4>
+ * <pre>{@code
+ * // Absolute file path - highest priority
+ * @Flamingock(pipelineFile = "/path/to/external/pipeline.yaml")
+ * // Uses direct file system path
+ * 
+ * // Relative file path - second priority (relative to working directory)
+ * @Flamingock(pipelineFile = "config/flamingock-pipeline.yaml")
+ * // Resolves relative to current working directory, NOT as classpath resource
+ * 
+ * // Classpath resource - fallback if file doesn't exist relative to working directory
+ * @Flamingock(pipelineFile = "flamingock/pipeline.yaml")
+ * // If "flamingock/pipeline.yaml" doesn't exist in working directory,
+ * // then tries: src/main/resources/flamingock/pipeline.yaml
+ * // then tries: src/test/resources/flamingock/pipeline.yaml
+ * 
+ * // Resource with explicit "resources/" prefix (automatically stripped)
+ * @Flamingock(pipelineFile = "resources/flamingock/pipeline.yaml")
+ * // First tries: "resources/flamingock/pipeline.yaml" relative to working directory
+ * // If not found, strips "resources/" prefix and tries classpath resolution:
+ * // src/main/resources/flamingock/pipeline.yaml or src/test/resources/flamingock/pipeline.yaml
+ * }</pre>
  *
- * <h2>Runtime Behavior</h2>
- * At runtime, the Flamingock library follows this lookup order for metadata:
+ * <h4>Resolution Order (stops at first match):</h4>
  * <ol>
- *     <li>If <code>META-INF/flamingock/metadata-full.json</code> exists,
- *         it is used exclusively.</li>
- *     <li>If <code>META-INF/flamingock/metadata-full.json</code> does not exist,
- *         the system falls back to <code>META-INF/flamingock/metadata-templated.json</code>.</li>
- *     <li><b>If neither file exists, the Flamingock library throws an exception.</b></li>
+ *     <li><b>Direct file path:</b> {@code [pipelineFile]} (absolute or relative to working directory)</li>
+ *     <li><b>Main resources:</b> {@code src/main/resources/[pipelineFile]}</li>
+ *     <li><b>Test resources:</b> {@code src/test/resources/[pipelineFile]}</li>
+ *     <li><b>Main resources (stripped):</b> If path starts with "resources/", strips prefix and tries {@code src/main/resources/[remaining-path]}</li>
+ *     <li><b>Test resources (stripped):</b> If path starts with "resources/", strips prefix and tries {@code src/test/resources/[remaining-path]}</li>
  * </ol>
  * <p>
+ * <b>Important:</b> Working directory files always take precedence over classpath resources.
+ * If both {@code ./config/pipeline.yaml} and {@code src/main/resources/config/pipeline.yaml} exist,
+ * the working directory file is used.
  *
- * <h2>Usage</h2>
- * This annotation processor is automatically triggered during compilation.
- * It processes annotated classes and predefined metadata templates without requiring
- * additional configuration.
+ * <h3>Annotation-based Configuration</h3>
+ * <pre>{@code
+ * @Flamingock(stages = {
+ *     @Stage(name = "init", type = StageType.BEFORE, sourcesPackage = "com.example.init"),
+ *     @Stage(name = "migration", type = StageType.DEFAULT, sourcesPackage = "com.example.migrations")
+ * })
+ * }</pre>
+ *
+ * <h2>Processing Phases</h2>
+ * <ul>
+ *     <li><b>Initialization:</b> Sets up resource paths and validates @Flamingock annotation</li>
+ *     <li><b>Processing:</b> Generates {@code META-INF/flamingock/metadata-full.json} with complete pipeline metadata</li>
+ * </ul>
+ *
+ * <h2>Validation Rules</h2>
+ * <ul>
+ *     <li>@Flamingock annotation is mandatory</li>
+ *     <li>Must specify either {@code pipelineFile} OR {@code stages} (mutually exclusive)</li>
+ *     <li>SystemStage can only be used with annotation-based configuration (not with pipelineFile)</li>
+ * </ul>
  *
  * <h2>Supported Annotations</h2>
- * The processor detects and processes classes annotated with:
  * <ul>
- *     <li>{@link  ChangeUnit} - Represents a change unit defined within the code.</li>
- *     <li>io.mongock.api.annotations.ChangeUnit - Represents a legacy change unit defined within the code.</li>
- * </ul>
- *
- * <h2>Generated Metadata Files</h2>
- * <ul>
- *     <li><b><code>templated-pipeline.json</code></b> - Contains only templated changes.</li>
- *     <li><b><code>full-pipeline.json</code></b> - Contains all processed changes
- *         (templated + annotated classes).</li>
- * </ul>
- *
- * <h2>Compilation Behavior</h2>
- * <ul>
- *     <li>The processor executes at compile-time.</li>
- *     <li>The templated metadata is always processed in the `init()` phase.</li>
- *     <li>If annotated elements exist, the processor enriches the metadata in `process()`.</li>
+ *     <li>{@link Flamingock} - Mandatory pipeline configuration</li>
+ *     <li>{@link ChangeUnit} - Represents a change unit defined within the code</li>
+ *     <li>io.mongock.api.annotations.ChangeUnit - Legacy change unit support</li>
  * </ul>
  *
  * @author Antonio
- * @version 1.0
+ * @version 2.0
  * @since Flamingock v1.x
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class PipelinePreProcessor extends AbstractProcessor {
+public class FlamingockAnnotationProcessor extends AbstractProcessor {
 
     private static final String RESOURCES_PATH_ARG = "resources";
     private static final String SOURCES_PATH_ARG = "sources";
@@ -117,7 +144,7 @@ public class PipelinePreProcessor extends AbstractProcessor {
     private Serializer serializer;
     private AnnotationFinder annotationFinder;
 
-    public PipelinePreProcessor(){}
+    public FlamingockAnnotationProcessor(){}
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -130,15 +157,7 @@ public class PipelinePreProcessor extends AbstractProcessor {
         serializer = new Serializer(processingEnv, logger);
         pipelineFile = getFlamingockPipelineFile();
         
-        if (pipelineFile.exists()) {
-            PreviewPipeline pipeline = getPipelineFromTemplatedChanges();
-            serializer.serializeTemplatedPipeline(pipeline);
-            logger.info("Initialization completed. Processed templated-based changes.");
-        } else {
-            // Create empty templated pipeline - will be populated in process phase with annotation config
-            serializer.serializeTemplatedPipeline(new PreviewPipeline(Collections.emptyList()));
-            logger.info("No pipeline.yaml file found. Pipeline will be processed with @Pipeline annotation.");
-        }
+        logger.info("Initialization completed. Pipeline will be processed with @Flamingock annotation.");
     }
 
     @Override
@@ -150,7 +169,7 @@ public class PipelinePreProcessor extends AbstractProcessor {
     public Set<String> getSupportedAnnotationTypes() {
         return new HashSet<>(Arrays.asList(
                 ChangeUnit.class.getName(),
-                Pipeline.class.getName()
+                Flamingock.class.getName()
         ));
     }
 
@@ -175,37 +194,46 @@ public class PipelinePreProcessor extends AbstractProcessor {
         return true;
     }
 
-    private PreviewPipeline getPipelineFromTemplatedChanges() {
-        return getPipelineFromProcessChanges(null, null);
-    }
 
     @SuppressWarnings("unchecked")
-    private PreviewPipeline getPipelineFromProcessChanges(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, Pipeline pipelineAnnotation) {
+    private PreviewPipeline getPipelineFromProcessChanges(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, Flamingock pipelineAnnotation) {
         if (codedChangeUnitsByPackage == null) {
             codedChangeUnitsByPackage = new HashMap<>();
         }
         
-        boolean hasFile = pipelineFile != null && pipelineFile.exists();
-        boolean hasAnnotation = pipelineAnnotation != null;
-        
-        if (!hasFile && !hasAnnotation) {
-            throw new RuntimeException("No pipeline configuration found. Provide either pipeline.yaml file or @Pipeline annotation.");
+        if (pipelineAnnotation == null) {
+            throw new RuntimeException("@Flamingock annotation is mandatory. Please annotate a class with @Flamingock to configure the pipeline.");
         }
         
-        if (hasFile && hasAnnotation) {
-            logger.warn("Both pipeline.yaml file and @Pipeline annotation found. Using @Pipeline annotation.");
+        boolean hasFileInAnnotation = !pipelineAnnotation.pipelineFile().isEmpty();
+        boolean hasStagesInAnnotation = pipelineAnnotation.stages().length > 0;
+        boolean hasSystemStage = !pipelineAnnotation.systemStage().sourcesPackage().isEmpty();
+        
+        // Validate mutually exclusive modes
+        if (hasFileInAnnotation && hasStagesInAnnotation) {
+            throw new RuntimeException("@Flamingock annotation cannot have both pipelineFile and stages configured. Choose one: either specify pipelineFile OR stages.");
         }
         
-        if (hasAnnotation) {
-            logger.info("Reading flamingock pipeline from @Pipeline annotation");
-            return buildPipelineFromAnnotation(pipelineAnnotation, codedChangeUnitsByPackage);
+        if (!hasFileInAnnotation && !hasStagesInAnnotation) {
+            throw new RuntimeException("@Flamingock annotation must specify either pipelineFile OR stages configuration.");
+        }
+        
+        // SystemStage only allowed with stages, not with pipelineFile
+        if (hasSystemStage && !hasStagesInAnnotation) {
+            throw new RuntimeException("SystemStage can only be configured when stages are provided, not with pipelineFile.");
+        }
+        
+        if (hasFileInAnnotation) {
+            logger.info("Reading flamingock pipeline from file specified in @Flamingock annotation: '" + pipelineAnnotation.pipelineFile() + "'");
+            File specifiedPipelineFile = resolvePipelineFile(pipelineAnnotation.pipelineFile());
+            return buildPipelineFromSpecifiedFile(specifiedPipelineFile, codedChangeUnitsByPackage);
         } else {
-            logger.info("Reading flamingock pipeline from file: '" + pipelineFile.getPath() + "'");
-            return buildPipelineFromFile(codedChangeUnitsByPackage);
+            logger.info("Reading flamingock pipeline from @Flamingock annotation stages configuration");
+            return buildPipelineFromAnnotation(pipelineAnnotation, codedChangeUnitsByPackage);
         }
     }
     
-    private PreviewPipeline buildPipelineFromAnnotation(Pipeline pipelineAnnotation, Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
+    private PreviewPipeline buildPipelineFromAnnotation(Flamingock pipelineAnnotation, Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
         List<PreviewStage> stages = new ArrayList<>();
         
         for (Stage stageAnnotation : pipelineAnnotation.stages()) {
@@ -237,6 +265,12 @@ public class PipelinePreProcessor extends AbstractProcessor {
     
     private Optional<SystemPreviewStage> getSystemStageFromAnnotation(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, SystemStage systemStageAnnotation) {
         String sourcesPackage = systemStageAnnotation.sourcesPackage();
+        
+        // If no sourcesPackage specified for systemStage, don't create it
+        if (sourcesPackage == null || sourcesPackage.trim().isEmpty()) {
+            return Optional.empty();
+        }
+        
         Collection<AbstractPreviewTask> changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
         
         SystemPreviewStage stage = PreviewStage.systemBuilder()
@@ -250,9 +284,68 @@ public class PipelinePreProcessor extends AbstractProcessor {
         return Optional.of(stage);
     }
 
-    private PreviewPipeline buildPipelineFromFile(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
+    /**
+     * Resolves a pipeline file path from the @Flamingock annotation, supporting both absolute file paths
+     * and classpath resources. This method provides resource resolution for the Flamingock library.
+     *
+     * @param pipelineFilePath the file path specified in the @Flamingock annotation
+     * @return a File object representing the resolved pipeline file
+     * @throws RuntimeException if the file cannot be found in any of the supported locations
+     */
+    private File resolvePipelineFile(String pipelineFilePath) {
+        List<File> searchedFiles = new ArrayList<>();
+        
+        // Try direct file path first (absolute or relative to current working directory)
+        File result = tryResolveFile(new File(pipelineFilePath), "direct file path", searchedFiles);
+        if (result != null) return result;
+        
+        // Try as classpath resource in main resources
+        result = tryResolveFile(new File(resourcesRoot + "/" + pipelineFilePath), "main resources", searchedFiles);
+        if (result != null) return result;
+        
+        // Try as classpath resource in test resources (for annotation processing during tests)
+        String testResourcesRoot = resourcesRoot.replace("src/main/resources", "src/test/resources");
+        result = tryResolveFile(new File(testResourcesRoot + "/" + pipelineFilePath), "test resources", searchedFiles);
+        if (result != null) return result;
+        
+        // Try with "resources/" prefix stripped (handle cases like "resources/flamingock/pipeline.yaml")
+        if (pipelineFilePath.startsWith("resources/")) {
+            String pathWithoutResourcesPrefix = pipelineFilePath.substring("resources/".length());
+            
+            // Try in main resources without "resources/" prefix
+            result = tryResolveFile(new File(resourcesRoot + "/" + pathWithoutResourcesPrefix), "main resources (stripped resources/ prefix)", searchedFiles);
+            if (result != null) return result;
+            
+            // Try in test resources without "resources/" prefix
+            result = tryResolveFile(new File(testResourcesRoot + "/" + pathWithoutResourcesPrefix), "test resources (stripped resources/ prefix)", searchedFiles);
+            if (result != null) return result;
+        }
+        
+        // If all resolution attempts failed, provide helpful error message
+        StringBuilder searchedLocations = new StringBuilder("Searched locations:");
+        for (int i = 0; i < searchedFiles.size(); i++) {
+            searchedLocations.append(String.format("\n  %d. %s", i + 1, searchedFiles.get(i).getAbsolutePath()));
+        }
+        
+        throw new RuntimeException(
+            "Pipeline file specified in @Flamingock annotation does not exist: " + pipelineFilePath + "\n" +
+            searchedLocations
+        );
+    }
+    
 
-        try (InputStream inputStream = Files.newInputStream(pipelineFile.toPath())) {
+    private File tryResolveFile(File file, String description, List<File> searchedFiles) {
+        searchedFiles.add(file);
+        if (file.exists()) {
+            logger.info("Pipeline file resolved as " + description + ": " + file.getAbsolutePath());
+            return file;
+        }
+        return null;
+    }
+
+    private PreviewPipeline buildPipelineFromSpecifiedFile(File file, Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
+
+        try (InputStream inputStream = Files.newInputStream(file.toPath())) {
             Yaml yaml = new Yaml();
             Map<String, Object> config = yaml.load(inputStream);
 
