@@ -50,13 +50,7 @@ import static org.mockito.Mockito.verify;
 //TODO add listener to check final Summary
 //TODO verify calls to server
 @Flamingock(
-        stages = {
-                @Stage(
-                        name = "stage-1",
-                        description = "First processing stage",
-                        sourcesPackage = "io.flamingock.core.cloud.changes"
-                )
-        }
+        stages = {@Stage(name = "stage-1", sourcesPackage = "io.flamingock.core.cloud.changes")}
 )
 public class CloudEngineTest {
 
