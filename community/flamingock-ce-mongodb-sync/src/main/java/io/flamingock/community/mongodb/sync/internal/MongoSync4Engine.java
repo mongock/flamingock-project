@@ -31,6 +31,7 @@ import io.flamingock.internal.core.community.LocalAuditor;
 import io.flamingock.internal.core.community.LocalExecutionPlanner;
 import io.flamingock.internal.core.community.TransactionManager;
 import io.flamingock.internal.core.transaction.TransactionWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,15 +48,14 @@ public class MongoSync4Engine extends AbstractLocalEngine {
     private LocalExecutionPlanner executionPlanner;
     private TransactionWrapper transactionWrapper;
 
-
     public MongoSync4Engine(MongoClient mongoClient,
-                            String databaseName,
+                            MongoDatabase database,
                             CoreConfigurable coreConfiguration,
                             CommunityConfigurable localConfiguration,
                             MongoDBSync4Configuration driverConfiguration) {
         super(localConfiguration);
         this.mongoClient = mongoClient;
-        this.database = mongoClient.getDatabase(databaseName);
+        this.database = database;
         this.driverConfiguration = driverConfiguration;
         this.coreConfiguration = coreConfiguration;
     }
@@ -63,30 +63,17 @@ public class MongoSync4Engine extends AbstractLocalEngine {
     @Override
     protected void doInitialize(RunnerId runnerId) {
         TransactionManager<ClientSession> sessionManager = new TransactionManager<>(mongoClient::startSession);
+
         transactionWrapper = localConfiguration.isTransactionDisabled()
                 ? null
                 : new MongoSync4TransactionWrapper(sessionManager);
+
         //Auditor
-        auditor = new MongoSync4Auditor(
-                database,
-                driverConfiguration.getAuditRepositoryName(),
-                new ReadWriteConfiguration(
-                        driverConfiguration.getBuiltMongoDBWriteConcern(),
-                        new ReadConcern(driverConfiguration.getReadConcern()),
-                        driverConfiguration.getReadPreference().getValue()
-                ),
-                sessionManager);
+        auditor = buildAuditor(sessionManager);
         auditor.initialize(driverConfiguration.isAutoCreate());
+
         //Lock
-        MongoSync4LockService lockService = new MongoSync4LockService(
-                database,
-                driverConfiguration.getLockRepositoryName(),
-                new ReadWriteConfiguration(
-                        driverConfiguration.getBuiltMongoDBWriteConcern(),
-                        new ReadConcern(driverConfiguration.getReadConcern()),
-                        driverConfiguration.getReadPreference().getValue()
-                ),
-                TimeService.getDefault());
+        MongoSync4LockService lockService = buildLockService();
         lockService.initialize(driverConfiguration.isAutoCreate());
         executionPlanner = new LocalExecutionPlanner(runnerId, lockService, auditor, coreConfiguration);
     }
@@ -109,6 +96,32 @@ public class MongoSync4Engine extends AbstractLocalEngine {
     @Override
     public Optional<TransactionWrapper> getTransactionWrapper() {
         return Optional.ofNullable(transactionWrapper);
+    }
+
+
+
+    private MongoSync4Auditor buildAuditor(TransactionManager<ClientSession> sessionManager) {
+        return new MongoSync4Auditor(
+                database,
+                driverConfiguration.getAuditRepositoryName(),
+                new ReadWriteConfiguration(
+                        driverConfiguration.getBuiltMongoDBWriteConcern(),
+                        new ReadConcern(driverConfiguration.getReadConcern()),
+                        driverConfiguration.getReadPreference().getValue()
+                ),
+                sessionManager);
+    }
+
+    private MongoSync4LockService buildLockService() {
+        return new MongoSync4LockService(
+                database,
+                driverConfiguration.getLockRepositoryName(),
+                new ReadWriteConfiguration(
+                        driverConfiguration.getBuiltMongoDBWriteConcern(),
+                        new ReadConcern(driverConfiguration.getReadConcern()),
+                        driverConfiguration.getReadPreference().getValue()
+                ),
+                TimeService.getDefault());
     }
 
 }
