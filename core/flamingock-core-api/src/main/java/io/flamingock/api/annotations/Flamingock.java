@@ -23,9 +23,11 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Pipeline {
+public @interface Flamingock {
     
     SystemStage systemStage() default @SystemStage;
     
     Stage[] stages();
+
+    String pipelineFile() default "";
 }

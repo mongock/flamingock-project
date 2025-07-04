@@ -1,7 +1,7 @@
 package io.flamingock.core.processor;
 
 import io.flamingock.api.annotations.ChangeUnit;
-import io.flamingock.api.annotations.Pipeline;
+import io.flamingock.api.annotations.Flamingock;
 import io.flamingock.api.annotations.Stage;
 import io.flamingock.api.annotations.SystemStage;
 import io.flamingock.internal.common.core.preview.PreviewPipeline;
@@ -94,7 +94,7 @@ import java.util.Set;
  * @since Flamingock v1.x
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class PipelinePreProcessor extends AbstractProcessor {
+public class FlamingockAnnotationProcessor extends AbstractProcessor {
 
     private static final String RESOURCES_PATH_ARG = "resources";
     private static final String SOURCES_PATH_ARG = "sources";
@@ -117,7 +117,7 @@ public class PipelinePreProcessor extends AbstractProcessor {
     private Serializer serializer;
     private AnnotationFinder annotationFinder;
 
-    public PipelinePreProcessor(){}
+    public FlamingockAnnotationProcessor(){}
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -130,15 +130,7 @@ public class PipelinePreProcessor extends AbstractProcessor {
         serializer = new Serializer(processingEnv, logger);
         pipelineFile = getFlamingockPipelineFile();
         
-        if (pipelineFile.exists()) {
-            PreviewPipeline pipeline = getPipelineFromTemplatedChanges();
-            serializer.serializeTemplatedPipeline(pipeline);
-            logger.info("Initialization completed. Processed templated-based changes.");
-        } else {
-            // Create empty templated pipeline - will be populated in process phase with annotation config
-            serializer.serializeTemplatedPipeline(new PreviewPipeline(Collections.emptyList()));
-            logger.info("No pipeline.yaml file found. Pipeline will be processed with @Pipeline annotation.");
-        }
+        logger.info("Initialization completed. Pipeline will be processed with @Flamingock annotation.");
     }
 
     @Override
@@ -150,7 +142,7 @@ public class PipelinePreProcessor extends AbstractProcessor {
     public Set<String> getSupportedAnnotationTypes() {
         return new HashSet<>(Arrays.asList(
                 ChangeUnit.class.getName(),
-                Pipeline.class.getName()
+                Flamingock.class.getName()
         ));
     }
 
@@ -175,37 +167,43 @@ public class PipelinePreProcessor extends AbstractProcessor {
         return true;
     }
 
-    private PreviewPipeline getPipelineFromTemplatedChanges() {
-        return getPipelineFromProcessChanges(null, null);
-    }
 
     @SuppressWarnings("unchecked")
-    private PreviewPipeline getPipelineFromProcessChanges(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, Pipeline pipelineAnnotation) {
+    private PreviewPipeline getPipelineFromProcessChanges(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, Flamingock pipelineAnnotation) {
         if (codedChangeUnitsByPackage == null) {
             codedChangeUnitsByPackage = new HashMap<>();
         }
         
-        boolean hasFile = pipelineFile != null && pipelineFile.exists();
-        boolean hasAnnotation = pipelineAnnotation != null;
-        
-        if (!hasFile && !hasAnnotation) {
-            throw new RuntimeException("No pipeline configuration found. Provide either pipeline.yaml file or @Pipeline annotation.");
+        if (pipelineAnnotation == null) {
+            throw new RuntimeException("@Flamingock annotation is mandatory. Please annotate a class with @Flamingock to configure the pipeline.");
         }
         
-        if (hasFile && hasAnnotation) {
-            logger.warn("Both pipeline.yaml file and @Pipeline annotation found. Using @Pipeline annotation.");
+        boolean hasFileInAnnotation = !pipelineAnnotation.pipelineFile().isEmpty();
+        boolean hasStagesInAnnotation = pipelineAnnotation.stages().length > 0;
+        
+        // Validate mutually exclusive modes
+        if (hasFileInAnnotation && hasStagesInAnnotation) {
+            throw new RuntimeException("@Flamingock annotation cannot have both pipelineFile and stages configured. Choose one: either specify pipelineFile OR stages.");
         }
         
-        if (hasAnnotation) {
-            logger.info("Reading flamingock pipeline from @Pipeline annotation");
-            return buildPipelineFromAnnotation(pipelineAnnotation, codedChangeUnitsByPackage);
+        if (!hasFileInAnnotation && !hasStagesInAnnotation) {
+            throw new RuntimeException("@Flamingock annotation must specify either pipelineFile OR stages configuration.");
+        }
+        
+        if (hasFileInAnnotation) {
+            logger.info("Reading flamingock pipeline from file specified in @Flamingock annotation: '" + pipelineAnnotation.pipelineFile() + "'");
+            File specifiedPipelineFile = new File(pipelineAnnotation.pipelineFile());
+            if (!specifiedPipelineFile.exists()) {
+                throw new RuntimeException("Pipeline file specified in @Flamingock annotation does not exist: " + pipelineAnnotation.pipelineFile());
+            }
+            return buildPipelineFromSpecifiedFile(specifiedPipelineFile, codedChangeUnitsByPackage);
         } else {
-            logger.info("Reading flamingock pipeline from file: '" + pipelineFile.getPath() + "'");
-            return buildPipelineFromFile(codedChangeUnitsByPackage);
+            logger.info("Reading flamingock pipeline from @Flamingock annotation stages configuration");
+            return buildPipelineFromAnnotation(pipelineAnnotation, codedChangeUnitsByPackage);
         }
     }
     
-    private PreviewPipeline buildPipelineFromAnnotation(Pipeline pipelineAnnotation, Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
+    private PreviewPipeline buildPipelineFromAnnotation(Flamingock pipelineAnnotation, Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
         List<PreviewStage> stages = new ArrayList<>();
         
         for (Stage stageAnnotation : pipelineAnnotation.stages()) {
@@ -237,6 +235,12 @@ public class PipelinePreProcessor extends AbstractProcessor {
     
     private Optional<SystemPreviewStage> getSystemStageFromAnnotation(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, SystemStage systemStageAnnotation) {
         String sourcesPackage = systemStageAnnotation.sourcesPackage();
+        
+        // If no sourcesPackage specified for systemStage, don't create it
+        if (sourcesPackage == null || sourcesPackage.trim().isEmpty()) {
+            return Optional.empty();
+        }
+        
         Collection<AbstractPreviewTask> changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
         
         SystemPreviewStage stage = PreviewStage.systemBuilder()
@@ -250,9 +254,10 @@ public class PipelinePreProcessor extends AbstractProcessor {
         return Optional.of(stage);
     }
 
-    private PreviewPipeline buildPipelineFromFile(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
 
-        try (InputStream inputStream = Files.newInputStream(pipelineFile.toPath())) {
+    private PreviewPipeline buildPipelineFromSpecifiedFile(File file, Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage) {
+
+        try (InputStream inputStream = Files.newInputStream(file.toPath())) {
             Yaml yaml = new Yaml();
             Map<String, Object> config = yaml.load(inputStream);
 
