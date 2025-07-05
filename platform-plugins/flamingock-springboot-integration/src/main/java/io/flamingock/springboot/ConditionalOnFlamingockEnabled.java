@@ -16,8 +16,7 @@
 
 package io.flamingock.springboot;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Conditional;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,10 +24,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Documented
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@EnableConfigurationProperties
-@Import({SpringbootContext.class, SpringbootProperties.class})
-public @interface EnableFlamingock {
+@Documented
+@Conditional(OnFlamingockEnabledCondition.class)
+public @interface ConditionalOnFlamingockEnabled {
 }
