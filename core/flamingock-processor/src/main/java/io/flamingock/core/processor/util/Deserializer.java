@@ -21,6 +21,11 @@ public final class Deserializer {
     private Deserializer() {
     }
 
+    public static FlamingockMetadata readMetadataFromFile() {
+        return readMetadataOptional()
+                .orElseThrow(() -> new RuntimeException("Flamingock metadata file not found"));
+    }
+
     /**
      * Reads the preview pipeline from file. It first tries to load the full pipeline,
      * and if not found, falls back to the templated pipeline.
@@ -29,28 +34,28 @@ public final class Deserializer {
      * @throws RuntimeException if neither file is found
      */
     public static PreviewPipeline readPreviewPipelineFromFile() {
-        return readFileIfExists(Constants.FULL_PIPELINE_FILE_PATH)
+        return readMetadataOptional()
+                .map(FlamingockMetadata::getPipeline)
                 .orElseThrow(() -> new RuntimeException("Flamingock metadata file not found"));
     }
 
     /**
      * Attempts to read a file and deserialize it into a PreviewPipeline.
      *
-     * @param filePath Path to the file inside resources
      * @return An Optional containing the deserialized PreviewPipeline if successful, otherwise empty
      */
-    private static Optional<PreviewPipeline> readFileIfExists(String filePath) {
-        try (InputStream inputStream = CLASS_LOADER.getResourceAsStream(filePath)) {
+    private static Optional<FlamingockMetadata> readMetadataOptional() {
+        try (InputStream inputStream = CLASS_LOADER.getResourceAsStream(Constants.FULL_PIPELINE_FILE_PATH)) {
             if (inputStream == null) {
-                logger.debug("Flamingock pipeline file not found at the specified path: '{}'", filePath);
+                logger.debug("Flamingock pipeline file not found at the specified path: '{}'", Constants.FULL_PIPELINE_FILE_PATH);
                 return Optional.empty();
             }
 
             FlamingockMetadata metadata = JsonObjectMapper.DEFAULT_INSTANCE.readValue(inputStream, FlamingockMetadata.class);
-            logger.debug("Successfully deserialized Flamingock metadata from file: '{}'", filePath);
-            return Optional.of(metadata.getPipeline());
+            logger.debug("Successfully deserialized Flamingock metadata from file: '{}'", Constants.FULL_PIPELINE_FILE_PATH);
+            return Optional.of(metadata);
         } catch (IOException e) {
-            throw new RuntimeException("Error reading Flamingock metadata file at: " + filePath, e);
+            throw new RuntimeException("Error reading Flamingock metadata file at: " + Constants.FULL_PIPELINE_FILE_PATH, e);
         }
     }
 

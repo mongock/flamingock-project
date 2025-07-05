@@ -24,6 +24,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
@@ -52,6 +53,7 @@ public class FlamingockAutoConfiguration {
 
     @Bean("flamingock-builder")
     @Profile(Constants.NON_CLI_PROFILE)
+    @ConditionalOnMissingBean(RunnerBuilder.class)
     public RunnerBuilder flamingockBuilder(SpringbootProperties configurationProperties,
                                            ApplicationContext springContext,
                                            ApplicationEventPublisher applicationEventPublisher) {

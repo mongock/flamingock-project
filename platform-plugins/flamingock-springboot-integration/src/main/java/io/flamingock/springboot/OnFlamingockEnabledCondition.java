@@ -16,56 +16,62 @@
 
 package io.flamingock.springboot;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flamingock.api.SetupType;
-import io.flamingock.internal.common.core.metadata.Constants;
+import io.flamingock.core.processor.util.Deserializer;
+import io.flamingock.internal.common.core.metadata.FlamingockMetadata;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
 import org.springframework.context.annotation.ConditionContext;
-import org.springframework.core.io.Resource;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Optional;
+import java.util.function.Supplier;
 
-public class OnFlamingockEnabledCondition extends SpringBootCondition {
+public final class OnFlamingockEnabledCondition extends SpringBootCondition {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Supplier<Optional<FlamingockMetadata>> DEFAULT_METADATA_SUPPLIER = () -> {
+        try {
+            return Optional.ofNullable(Deserializer.readMetadataFromFile());      // wrap so we still get a metadata object
+        } catch (Exception ex) {
+            return Optional.empty();
+        }
+    };
+
+    private static Supplier<Optional<FlamingockMetadata>> metadataSupplier = DEFAULT_METADATA_SUPPLIER;
+
+    // ---- TEST HOOK -------------------------------------------------------
+    static void setMetadataSupplier(Supplier<Optional<FlamingockMetadata>> s) {
+        metadataSupplier = s;
+    }
+
+    static void restoreMetadataSupplier() {
+        metadataSupplier = DEFAULT_METADATA_SUPPLIER;
+    }
+    // ---------------------------------------------------------------------
 
     @Override
-    public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        ConditionMessage.Builder message = ConditionMessage.forCondition("Flamingock Auto-configuration");
-        
-        // First check if flamingock is globally enabled
-        String enabled = context.getEnvironment().getProperty("flamingock.enabled", "true");
-        if (!"true".equalsIgnoreCase(enabled)) {
-            return ConditionOutcome.noMatch(message.because("flamingock.enabled is set to false"));
+    public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata md) {
+
+        ConditionMessage.Builder msg = ConditionMessage.forCondition("Flamingock auto-configuration");
+
+        // global toggle
+        if (!Boolean.parseBoolean(context.getEnvironment().getProperty("flamingock.enabled", "true"))) {
+            return ConditionOutcome.noMatch(msg.because("flamingock.enabled=false"));
         }
 
-        // Check for pipeline metadata file
-        Resource resource = context.getResourceLoader().getResource("classpath:" + Constants.FULL_PIPELINE_FILE_PATH);
-        if (!resource.exists()) {
-            return ConditionOutcome.noMatch(message.because("pipeline metadata file not found at " + Constants.FULL_PIPELINE_FILE_PATH));
+        Optional<FlamingockMetadata> metadataOpt = metadataSupplier.get();
+
+        if (metadataOpt.isEmpty()) {
+            return ConditionOutcome.noMatch(msg.because("no metadata file found"));
         }
 
-        try (InputStream inputStream = resource.getInputStream()) {
-            JsonNode pipelineNode = objectMapper.readTree(inputStream);
-            
-            // Check if setup type is present and not BUILDER
-            JsonNode setupNode = pipelineNode.get("setup");
-            if (setupNode != null) {
-                String setupType = setupNode.asText();
-                if (SetupType.BUILDER.name().equals(setupType)) {
-                    return ConditionOutcome.noMatch(message.because("setup type is BUILDER: automatic configuration disabled"));
-                }
-            }
+        String setupStr = Optional.ofNullable(metadataOpt.get().getSetup()).orElse(SetupType.DEFAULT.name());
 
-            return ConditionOutcome.match(message.because("pipeline metadata found with default setup"));
-            
-        } catch (IOException e) {
-            return ConditionOutcome.noMatch(message.because("failed to read pipeline metadata: " + e.getMessage()));
+        if (SetupType.BUILDER.name().equalsIgnoreCase(setupStr)) {
+            return ConditionOutcome.noMatch(msg.because("setup=BUILDER → manual builder expected"));
         }
+
+        return ConditionOutcome.match(msg.because("setup=" + setupStr));
     }
 }
