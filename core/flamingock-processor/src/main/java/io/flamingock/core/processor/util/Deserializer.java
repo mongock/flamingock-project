@@ -47,7 +47,7 @@ public final class Deserializer {
     private static Optional<FlamingockMetadata> readMetadataOptional() {
         try (InputStream inputStream = CLASS_LOADER.getResourceAsStream(Constants.FULL_PIPELINE_FILE_PATH)) {
             if (inputStream == null) {
-                logger.debug("Flamingock pipeline file not found at the specified path: '{}'", Constants.FULL_PIPELINE_FILE_PATH);
+                logger.debug("Flamingock metadata file not found at the specified path: '{}'", Constants.FULL_PIPELINE_FILE_PATH);
                 return Optional.empty();
             }
 
