@@ -3,6 +3,7 @@ package io.flamingock.core.processor.util;
 import io.flamingock.internal.util.JsonObjectMapper;
 import io.flamingock.internal.common.core.metadata.Constants;
 import io.flamingock.internal.common.core.preview.PreviewPipeline;
+import io.flamingock.internal.common.core.metadata.FlamingockMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +30,7 @@ public final class Deserializer {
      */
     public static PreviewPipeline readPreviewPipelineFromFile() {
         return readFileIfExists(Constants.FULL_PIPELINE_FILE_PATH)
-                .orElseGet(() -> readFileIfExists(Constants.TEMPLATED_PIPELINE_FILE_PATH)
-                        .orElseThrow(() -> new RuntimeException("Flamingock Pipeline file not found")));
+                .orElseThrow(() -> new RuntimeException("Flamingock metadata file not found"));
     }
 
     /**
@@ -45,12 +45,12 @@ public final class Deserializer {
                 logger.debug("Flamingock pipeline file not found at the specified path: '{}'", filePath);
                 return Optional.empty();
             }
-            PreviewPipeline pipeline = JsonObjectMapper.DEFAULT_INSTANCE.readValue(inputStream, PreviewPipeline.class);
-            logger.debug("Successfully deserialized Flamingock pipeline from file: '{}'", filePath);
-            return Optional.of(pipeline);
+
+            FlamingockMetadata metadata = JsonObjectMapper.DEFAULT_INSTANCE.readValue(inputStream, FlamingockMetadata.class);
+            logger.debug("Successfully deserialized Flamingock metadata from file: '{}'", filePath);
+            return Optional.of(metadata.getPipeline());
         } catch (IOException e) {
-            logger.error("Failed to read Flamingock pipeline file at '{}'.", filePath, e);
-            throw new RuntimeException("Error reading file: " + filePath, e);
+            throw new RuntimeException("Error reading Flamingock metadata file at: " + filePath, e);
         }
     }
 

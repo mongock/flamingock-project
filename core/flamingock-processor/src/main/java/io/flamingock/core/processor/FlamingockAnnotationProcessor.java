@@ -4,6 +4,7 @@ import io.flamingock.api.annotations.ChangeUnit;
 import io.flamingock.api.annotations.Flamingock;
 import io.flamingock.api.annotations.Stage;
 import io.flamingock.api.annotations.SystemStage;
+import io.flamingock.internal.common.core.metadata.FlamingockMetadata;
 import io.flamingock.internal.common.core.preview.PreviewPipeline;
 import io.flamingock.internal.common.core.preview.PreviewStage;
 import io.flamingock.core.processor.util.AnnotationFinder;
@@ -179,12 +180,16 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         }
 
         AnnotationFinder annotationFinder = new AnnotationFinder(roundEnv, logger);
+        Flamingock flamingockAnnotation = annotationFinder.getPipelineAnnotation();
         PreviewPipeline pipeline = getPipelineFromProcessChanges(
                 annotationFinder.getCodedChangeUnitsMapByPackage(),
-                annotationFinder.getPipelineAnnotation()
+                flamingockAnnotation
         );
         Serializer serializer = new Serializer(processingEnv, logger);
-        serializer.serializeFullPipeline(pipeline);
+        String setup = flamingockAnnotation.setup().toString();
+        String pipelineFile = flamingockAnnotation.pipelineFile();
+        FlamingockMetadata flamingockMetadata = new FlamingockMetadata(pipeline, setup, pipelineFile);
+        serializer.serializeFullPipeline(flamingockMetadata);
         logger.info("Finished processing annotated classes and generating metadata.");
         return true;
     }
