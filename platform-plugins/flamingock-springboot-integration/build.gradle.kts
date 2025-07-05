@@ -6,6 +6,7 @@ val versions = mapOf(
 
 dependencies {
     api(project(":core:flamingock-core"))
+    implementation(project(":core:flamingock-core-commons"))
     compileOnly("org.springframework:spring-context:${versions["spring"]}")
     compileOnly("org.springframework.boot:spring-boot:${versions["springBoot"]}")
     compileOnly("org.springframework.boot:spring-boot-autoconfigure:${versions["springBoot"]}")
