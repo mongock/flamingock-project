@@ -272,6 +272,28 @@ graph TB
 
 ## Individual Library Diagrams
 
+### Cloud Edition
+```mermaid
+graph TB
+    classDef ibu fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef ubu fill:#f3e5f5,stroke:#4a148c,stroke-width:3px
+    classDef internal fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef external fill:#f1f8e9,stroke:#33691e,stroke-width:1px
+    classDef bom fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+
+    User[User Application]:::external
+    User -->|imports| flamingock-cloud
+    User -->|BOM| flamingock-cloud-bom
+    
+    flamingock-cloud[flamingock-cloud<br/>IBU]:::ibu
+    flamingock-cloud-bom[flamingock-cloud-bom<br/>IBU]:::bom
+    flamingock-core[flamingock-core<br/>Internal]:::internal
+    
+    flamingock-cloud -->|impl| flamingock-core
+    flamingock-cloud-bom -->|constraints| flamingock-cloud
+    flamingock-cloud-bom -->|constraints| flamingock-core
+```
+
 ### MongoDB Sync Integration
 ```mermaid
 graph TB
@@ -298,6 +320,33 @@ graph TB
     mongodb-sync-transactioner -->|api| flamingock-core
     mongodb-sync-transactioner -->|impl| mongodb-util
     mongodb-sync-transactioner -.->|compileOnly| MongoDriver
+```
+
+### Spring Data MongoDB Integration
+```mermaid
+graph TB
+    classDef ibu fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef ubu fill:#f3e5f5,stroke:#4a148c,stroke-width:3px
+    classDef internal fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef external fill:#f1f8e9,stroke:#33691e,stroke-width:1px
+
+    User[User Application]:::external
+    User -->|imports| flamingock-ce-mongodb-springdata
+    
+    flamingock-ce-mongodb-springdata[flamingock-ce-mongodb-springdata<br/>IBU]:::ibu
+    flamingock-ce-mongodb-sync[flamingock-ce-mongodb-sync<br/>IBU]:::ibu
+    flamingock-core[flamingock-core<br/>Internal]:::internal
+    mongodb-util[mongodb-util<br/>Internal]:::internal
+    MongoDriver[MongoDB Driver<br/>4.8.0-5.6.0]:::external
+    SpringData[Spring Data MongoDB<br/>4.0.0-5.0.0]:::external
+    SpringBoot[Spring Boot<br/>3.0.0-4.0.0]:::external
+    
+    flamingock-ce-mongodb-springdata -->|api| flamingock-ce-mongodb-sync
+    flamingock-ce-mongodb-springdata -->|impl| flamingock-core
+    flamingock-ce-mongodb-springdata -->|impl| mongodb-util
+    flamingock-ce-mongodb-springdata -.->|compileOnly| MongoDriver
+    flamingock-ce-mongodb-springdata -.->|compileOnly| SpringData
+    flamingock-ce-mongodb-springdata -.->|compileOnly| SpringBoot
 ```
 
 ### DynamoDB Integration
@@ -349,54 +398,6 @@ graph TB
     flamingock-ce-couchbase -.->|compileOnly| CouchbaseDriver
 ```
 
-### Spring Data MongoDB Integration
-```mermaid
-graph TB
-    classDef ibu fill:#e1f5fe,stroke:#01579b,stroke-width:3px
-    classDef ubu fill:#f3e5f5,stroke:#4a148c,stroke-width:3px
-    classDef internal fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef external fill:#f1f8e9,stroke:#33691e,stroke-width:1px
-
-    User[User Application]:::external
-    User -->|imports| flamingock-ce-mongodb-springdata
-    
-    flamingock-ce-mongodb-springdata[flamingock-ce-mongodb-springdata<br/>IBU]:::ibu
-    flamingock-ce-mongodb-sync[flamingock-ce-mongodb-sync<br/>IBU]:::ibu
-    flamingock-core[flamingock-core<br/>Internal]:::internal
-    mongodb-util[mongodb-util<br/>Internal]:::internal
-    MongoDriver[MongoDB Driver<br/>4.8.0-5.6.0]:::external
-    SpringData[Spring Data MongoDB<br/>4.0.0-5.0.0]:::external
-    SpringBoot[Spring Boot<br/>3.0.0-4.0.0]:::external
-    
-    flamingock-ce-mongodb-springdata -->|api| flamingock-ce-mongodb-sync
-    flamingock-ce-mongodb-springdata -->|impl| flamingock-core
-    flamingock-ce-mongodb-springdata -->|impl| mongodb-util
-    flamingock-ce-mongodb-springdata -.->|compileOnly| MongoDriver
-    flamingock-ce-mongodb-springdata -.->|compileOnly| SpringData
-    flamingock-ce-mongodb-springdata -.->|compileOnly| SpringBoot
-```
-
-### Cloud Edition
-```mermaid
-graph TB
-    classDef ibu fill:#e1f5fe,stroke:#01579b,stroke-width:3px
-    classDef ubu fill:#f3e5f5,stroke:#4a148c,stroke-width:3px
-    classDef internal fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef external fill:#f1f8e9,stroke:#33691e,stroke-width:1px
-    classDef bom fill:#fce4ec,stroke:#880e4f,stroke-width:2px
-
-    User[User Application]:::external
-    User -->|imports| flamingock-cloud
-    User -->|BOM| flamingock-cloud-bom
-    
-    flamingock-cloud[flamingock-cloud<br/>IBU]:::ibu
-    flamingock-cloud-bom[flamingock-cloud-bom<br/>IBU]:::bom
-    flamingock-core[flamingock-core<br/>Internal]:::internal
-    
-    flamingock-cloud -->|impl| flamingock-core
-    flamingock-cloud-bom -->|constraints| flamingock-cloud
-    flamingock-cloud-bom -->|constraints| flamingock-core
-```
 
 ## Module Relationships Summary
 
