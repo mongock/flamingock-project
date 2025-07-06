@@ -34,12 +34,17 @@ This document provides a comprehensive overview of the Flamingock project's modu
 ### IBU (Import By User) - Libraries
 These modules are designed to be directly imported by end users:
 
+#### Core Extensions
+- `flamingock-processor` - Annotation processor
+- `flamingock-graalvm` - GraalVM native image support
+- `flamingock-cloud` - Cloud edition
+- 
 #### Community Edition
-- `flamingock-ce-mongodb-sync` - MongoDB Sync driver integration
-- `flamingock-ce-dynamodb` - DynamoDB integration  
-- `flamingock-ce-couchbase` - Couchbase integration
-- `flamingock-ce-mongodb-springdata` - Spring Data MongoDB v4.x integration
-- `flamingock-ce-mongodb-springdata-v3-legacy` - Spring Data MongoDB v3.x integration
+- `flamingock-ce-mongodb-sync` - MongoDB Sync community Edition
+- `flamingock-ce-dynamodb` - DynamoDB community Edition  
+- `flamingock-ce-couchbase` - Couchbase community Edition
+- `flamingock-ce-mongodb-springdata` - Spring Data MongoDB v4.x community Edition
+- `flamingock-ce-mongodb-springdata-v3-legacy` - Spring Data MongoDB v3.x community Edition
 
 #### Templates
 - `flamingock-mongodb-sync-template` - MongoDB template support
@@ -54,13 +59,9 @@ These modules are designed to be directly imported by end users:
 - `flamingock-springboot-integration` - Spring Boot v3.x integration
 - `flamingock-springboot-integration-v2-legacy` - Spring Boot v2.x integration
 
-#### Core Extensions
-- `flamingock-processor` - Annotation processor
-- `flamingock-graalvm` - GraalVM native image support
-- `flamingock-cloud` - Cloud edition
-
 #### BOMs
 - `flamingock-cloud-bom` - Cloud dependencies management
+- `flamingock-ce-bom` - Cloud dependencies management
 
 ### UBU (Used By User) - API Access Only
 These modules provide APIs that users interact with but typically don't import directly:
@@ -294,7 +295,7 @@ graph TB
     flamingock-cloud-bom -->|constraints| flamingock-core
 ```
 
-### MongoDB Sync Integration
+### MongoDB Sync Community Edition
 ```mermaid
 graph TB
     classDef ibu fill:#e1f5fe,stroke:#01579b,stroke-width:3px
@@ -322,7 +323,7 @@ graph TB
     mongodb-sync-transactioner -.->|compileOnly| MongoDriver
 ```
 
-### Spring Data MongoDB Integration
+### Spring Data MongoDB Community Edition
 ```mermaid
 graph TB
     classDef ibu fill:#e1f5fe,stroke:#01579b,stroke-width:3px
@@ -349,7 +350,7 @@ graph TB
     flamingock-ce-mongodb-springdata -.->|compileOnly| SpringBoot
 ```
 
-### DynamoDB Integration
+### DynamoDB Community Edition
 ```mermaid
 graph TB
     classDef ibu fill:#e1f5fe,stroke:#01579b,stroke-width:3px
@@ -377,7 +378,7 @@ graph TB
     dynamodb-transactioner -.->|compileOnly| AWSSDKDriver
 ```
 
-### Couchbase Integration
+### Couchbase Community Edition
 ```mermaid
 graph TB
     classDef ibu fill:#e1f5fe,stroke:#01579b,stroke-width:3px
