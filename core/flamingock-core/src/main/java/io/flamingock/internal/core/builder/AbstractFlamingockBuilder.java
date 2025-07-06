@@ -16,6 +16,7 @@
 
 package io.flamingock.internal.core.builder;
 
+import io.flamingock.internal.core.engine.audit.ExecutionAuditWriter;
 import io.flamingock.internal.util.CollectionUtil;
 import io.flamingock.internal.util.Property;
 import io.flamingock.internal.util.id.RunnerId;
@@ -44,7 +45,6 @@ import io.flamingock.internal.common.core.context.Dependency;
 import io.flamingock.internal.common.core.context.ContextResolver;
 import io.flamingock.internal.common.core.context.Context;
 import io.flamingock.internal.core.context.PriorityContextResolver;
-import io.flamingock.internal.common.core.system.SystemModuleManager;
 import io.flamingock.internal.core.task.filter.TaskFilter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -84,7 +84,6 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
     private static final Logger logger = LoggerFactory.getLogger(AbstractFlamingockBuilder.class);
 
     private final PluginManager pluginManager;
-    private final SystemModuleManager systemModuleManager;
     private final Context context;
     private final CoreConfiguration coreConfiguration;
 
@@ -108,10 +107,8 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
             CoreConfiguration coreConfiguration,
             Context context,
             PluginManager pluginManager,
-            SystemModuleManager systemModuleManager,
             Driver<?> driver) {
         this.pluginManager = pluginManager;
-        this.systemModuleManager = systemModuleManager;
         this.context = context;
         this.coreConfiguration = coreConfiguration;
         this.driver = driver;
@@ -128,17 +125,17 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
 
         RunnerId runnerId = RunnerId.generate();
         logger.info("Generated runner id:  {}", runnerId);
-        updateContext(runnerId);
-
-        driver.initialize(context);
-        ConnectionEngine engine = driver.getEngine();
-        engine.contributeToSystemModules(systemModuleManager);
-        engine.contributeToContext(context);
-
-        systemModuleManager.initialize(context);
-        systemModuleManager.contributeToContext(context);
+        prepareContext(runnerId);
 
         pluginManager.initialize(context);
+
+        ContextResolver hierarchicalContext = buildHierarchicalContext();
+
+        driver.initialize(hierarchicalContext);
+
+        ConnectionEngine engine = driver.getEngine();
+        context.addDependency(new Dependency(ExecutionAuditWriter.class, engine.getAuditWriter()));
+
 
         LoadedPipeline pipeline = buildPipeline();
         pipeline.contributeToContext(context);
@@ -149,7 +146,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
                 engine,
                 coreConfiguration,
                 buildEventPublisher(),
-                buildHierarchicalContext(),
+                hierarchicalContext,
                 engine.getNonGuardedTypes(),
                 coreConfiguration.isThrowExceptionIfCannotObtainLock(),
                 engine.getCloser()
@@ -166,12 +163,10 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
         return LoadedPipeline.builder()
                 .addFilters(taskFiltersFromPlugins)
                 .addPreviewPipeline(coreConfiguration.getPreviewPipeline())
-                .addBeforeUserStages(systemModuleManager.getSortedSystemStagesBefore())
-                .addAfterUserStages(systemModuleManager.getSortedSystemStagesAfter())
                 .build();
     }
 
-    private void updateContext(RunnerId runnerId) {
+    private void prepareContext(RunnerId runnerId) {
         logger.trace("injecting internal configuration");
         setProperty(runnerId);
         addDependency(coreConfiguration);
