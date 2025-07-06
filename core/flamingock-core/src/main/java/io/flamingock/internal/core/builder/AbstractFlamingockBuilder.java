@@ -156,7 +156,7 @@ public abstract class AbstractFlamingockBuilder<HOLDER extends AbstractFlamingoc
      * 
      * <h3>Integration Points:</h3>
      * <ul>
-     * <li><strong>Spring Boot</strong>: External context merged via {@code buildHierarchicalContext()}</li>
+     * <li><strong>Plugins</strong>: External context merged via {@code buildHierarchicalContext()}</li>
      * <li><strong>Plugins</strong>: Contribute task filters and event publishers</li>
      * <li><strong>Templates</strong>: Loaded for YAML-based pipeline definitions</li>
      * </ul>
