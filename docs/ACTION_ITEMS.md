@@ -5,6 +5,22 @@
 **Priority**: High  
 **Assignee**: Development Team Lead  
 
+## Table of Contents
+
+1. [Executive Summary](#executive-summary)
+2. [Critical Issues (Fix Immediately)](#-critical-issues-fix-immediately)
+3. [Medium Priority Issues](#-medium-priority-issues)
+4. [Low Priority Items](#-low-priority-items)
+5. [Implementation Checklist](#implementation-checklist)
+6. [Validation Steps](#validation-steps)
+7. [Risk Assessment](#risk-assessment)
+8. [Communication Plan](#communication-plan)
+
+## Related Documents
+
+- **[Architecture Overview](ARCHITECTURE_OVERVIEW.md)** - Complete module architecture and diagrams
+- **[Dependency Analysis](DEPENDENCY_ANALYSIS.md)** - Detailed technical dependency analysis
+
 ## Executive Summary
 
 This document outlines critical dependency issues discovered during the architecture analysis and provides specific action items to resolve them. These issues should be addressed to ensure consistency, avoid conflicts, and maintain a clean architecture.
@@ -253,6 +269,7 @@ After implementing fixes:
 2. **Pre-Fix**: Create branch `fix/dependency-issues`
 3. **Post-Fix**: Update team on completed fixes
 4. **Documentation**: Update architecture docs after changes
+5. **Team Training**: Review Internal vs IBU/UBU classifications with team
 
 ---
 

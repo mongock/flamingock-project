@@ -4,9 +4,35 @@
 **Date**: 2025-01-06  
 **Audience**: Development Team, Architecture Review  
 
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Module-by-Module Dependency Analysis](#module-by-module-dependency-analysis)
+   - [Core Framework](#core-framework)
+   - [Cloud Edition](#cloud-edition)
+   - [Community Edition](#community-edition)
+   - [Transactioners](#transactioners)
+   - [Templates](#templates)
+   - [Platform Integration](#platform-integration)
+   - [Utilities](#utilities)
+3. [External Dependency Summary](#external-dependency-summary)
+4. [Dependency Pattern Analysis](#dependency-pattern-analysis)
+
+## Related Documents
+
+- **[Architecture Overview](ARCHITECTURE_OVERVIEW.md)** - Visual architecture diagrams and module relationships
+- **[Action Items](ACTION_ITEMS.md)** - Specific fixes needed for dependency issues
+
 ## Overview
 
 This document provides a comprehensive analysis of all module dependencies in the Flamingock project, including external libraries, version ranges, and dependency patterns. It serves as a technical reference for understanding the project's dependency landscape.
+
+### Module Type Classifications
+
+- **IBU (Import By User)**: Libraries designed for direct import by end users
+- **UBU (Used By User)**: Modules providing APIs that users access but don't import directly  
+- **Internal**: Implementation modules not exposed to end users
+- **BOM**: Bill of Materials for dependency management
 
 ## Module-by-Module Dependency Analysis
 
@@ -378,6 +404,7 @@ dependencies {
 2. **API exposure via `api` dependencies**: Proper transitive dependency management
 3. **Version ranges for compatibility**: Flexible integration
 4. **Separation of concerns**: Clear module boundaries
+5. **Internal module encapsulation**: Implementation details properly hidden from users
 
 ### Issues Identified ⚠️
 1. **Jackson version inconsistency**: Multiple versions in use
