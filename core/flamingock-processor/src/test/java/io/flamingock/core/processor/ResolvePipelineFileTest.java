@@ -250,8 +250,7 @@ class ResolvePipelineFileTest {
     private void createYamlFile(File file, String content) throws IOException {
         String yamlContent = "pipeline:\n" +
                 "  stages:\n" +
-                "    - name: test-stage\n" +
-                "      description: " + content + "\n" +
+                "    - description: " + content + "\n" +
                 "      location: com.example.test\n";
         java.nio.file.Files.write(file.toPath(), yamlContent.getBytes());
     }
