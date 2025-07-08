@@ -194,18 +194,18 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         return true;
     }
 
-    private PreviewPipeline getPipelineFromProcessChanges(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, EnableFlamingock pipelineAnnotation) {
+    private PreviewPipeline getPipelineFromProcessChanges(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, EnableFlamingock enableFlamingockAnnotation) {
         if (codedChangeUnitsByPackage == null) {
             codedChangeUnitsByPackage = new HashMap<>();
         }
 
-        if (pipelineAnnotation == null) {
+        if (enableFlamingockAnnotation == null) {
             throw new RuntimeException("@EnableFlamingock annotation is mandatory. Please annotate a class with @EnableFlamingock to configure the pipeline.");
         }
 
-        boolean hasFileInAnnotation = !pipelineAnnotation.pipelineFile().isEmpty();
-        boolean hasStagesInAnnotation = pipelineAnnotation.stages().length > 0;
-        boolean hasSystemStage = !pipelineAnnotation.systemStage().isEmpty();
+        boolean hasFileInAnnotation = !enableFlamingockAnnotation.pipelineFile().isEmpty();
+        boolean hasStagesInAnnotation = enableFlamingockAnnotation.stages().length > 0;
+        boolean hasSystemStage = !enableFlamingockAnnotation.systemStage().isEmpty();
 
         // Validate mutually exclusive modes
         if (hasFileInAnnotation && hasStagesInAnnotation) {
@@ -222,12 +222,12 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         }
 
         if (hasFileInAnnotation) {
-            logger.info("Reading flamingock pipeline from file specified in @EnableFlamingock annotation: '" + pipelineAnnotation.pipelineFile() + "'");
-            File specifiedPipelineFile = resolvePipelineFile(pipelineAnnotation.pipelineFile());
+            logger.info("Reading flamingock pipeline from file specified in @EnableFlamingock annotation: '" + enableFlamingockAnnotation.pipelineFile() + "'");
+            File specifiedPipelineFile = resolvePipelineFile(enableFlamingockAnnotation.pipelineFile());
             return buildPipelineFromSpecifiedFile(specifiedPipelineFile, codedChangeUnitsByPackage);
         } else {
             logger.info("Reading flamingock pipeline from @EnableFlamingock annotation stages configuration");
-            return buildPipelineFromAnnotation(pipelineAnnotation, codedChangeUnitsByPackage);
+            return buildPipelineFromAnnotation(enableFlamingockAnnotation, codedChangeUnitsByPackage);
         }
     }
 
