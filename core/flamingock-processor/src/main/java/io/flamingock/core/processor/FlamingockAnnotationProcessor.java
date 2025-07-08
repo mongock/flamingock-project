@@ -92,8 +92,8 @@ import java.util.Set;
  * <h3>Annotation-based Configuration</h3>
  * <pre>{@code
  * @Flamingock(stages = {
- *     @Stage(name = "init", type = StageType.BEFORE, sourcesPackage = "com.example.init"),
- *     @Stage(name = "migration", type = StageType.DEFAULT, sourcesPackage = "com.example.migrations")
+ *     @Stage(name = "init", type = StageType.BEFORE, location = "com.example.init"),
+ *     @Stage(name = "migration", type = StageType.DEFAULT, location = "com.example.migrations")
  * })
  * }</pre>
  *
@@ -205,7 +205,7 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         
         boolean hasFileInAnnotation = !pipelineAnnotation.pipelineFile().isEmpty();
         boolean hasStagesInAnnotation = pipelineAnnotation.stages().length > 0;
-        boolean hasSystemStage = !pipelineAnnotation.systemStage().sourcesPackage().isEmpty();
+        boolean hasSystemStage = !pipelineAnnotation.systemStage().location().isEmpty();
         
         // Validate mutually exclusive modes
         if (hasFileInAnnotation && hasStagesInAnnotation) {
@@ -247,8 +247,20 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
     }
     
     private PreviewStage mapAnnotationToStage(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, Stage stageAnnotation) {
-        String sourcesPackage = stageAnnotation.sourcesPackage().isEmpty() ? null : stageAnnotation.sourcesPackage();
-        Collection<AbstractPreviewTask> changeUnitClasses = sourcesPackage != null ? codedChangeUnitsByPackage.get(sourcesPackage) : null;
+        String location = stageAnnotation.location().isEmpty() ? null : stageAnnotation.location();
+        
+        String sourcesPackage = null;
+        String resourcesDir = null;
+        Collection<AbstractPreviewTask> changeUnitClasses = null;
+        
+        if (location != null) {
+            if (isPackageName(location)) {
+                sourcesPackage = location;
+                changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
+            } else {
+                resourcesDir = location;
+            }
+        }
         
         return PreviewStage.defaultBuilder(stageAnnotation.type())
                 .setName(stageAnnotation.name())
@@ -256,20 +268,29 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
                 .setSourcesRoots(sourceRoots)
                 .setSourcesPackage(sourcesPackage)
                 .setResourcesRoot(resourcesRoot)
-                .setResourcesDir(stageAnnotation.resourcesDir().isEmpty() ? null : stageAnnotation.resourcesDir())
+                .setResourcesDir(resourcesDir)
                 .setChanges(changeUnitClasses)
                 .build();
     }
     
     private Optional<SystemPreviewStage> getSystemStageFromAnnotation(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, SystemStage systemStageAnnotation) {
-        String sourcesPackage = systemStageAnnotation.sourcesPackage();
+        String location = systemStageAnnotation.location();
         
-        // If no sourcesPackage specified for systemStage, don't create it
-        if (sourcesPackage == null || sourcesPackage.trim().isEmpty()) {
+        // If no location specified for systemStage, don't create it
+        if (location == null || location.trim().isEmpty()) {
             return Optional.empty();
         }
         
-        Collection<AbstractPreviewTask> changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
+        String sourcesPackage = null;
+        String resourcesDir = null;
+        Collection<AbstractPreviewTask> changeUnitClasses = null;
+        
+        if (isPackageName(location)) {
+            sourcesPackage = location;
+            changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
+        } else {
+            resourcesDir = location;
+        }
         
         SystemPreviewStage stage = PreviewStage.systemBuilder()
                 .setName("flamingock-system-stage")
@@ -277,6 +298,7 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
                 .setSourcesRoots(sourceRoots)
                 .setSourcesPackage(sourcesPackage)
                 .setResourcesRoot(resourcesRoot)
+                .setResourcesDir(resourcesDir)
                 .setChanges(changeUnitClasses)
                 .build();
         return Optional.of(stage);
@@ -376,31 +398,74 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
         if(systemStage == null) {
             return Optional.empty();
         }
-        String sourcesPackage = systemStage.get("sourcesPackage");
-        Collection<AbstractPreviewTask> changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
+        
+        // Try new location field first, fall back to legacy fields for compatibility
+        String location = systemStage.get("location");
+        if (location == null) {
+            // Legacy support - check old fields
+            String sourcesPackage = systemStage.get("sourcesPackage");
+            String resourcesDir = systemStage.get("resourcesDir");
+            location = sourcesPackage != null ? sourcesPackage : resourcesDir;
+        }
+        
+        if (location == null) {
+            return Optional.empty();
+        }
+        
+        String sourcesPackage = null;
+        String resourcesDir = null;
+        Collection<AbstractPreviewTask> changeUnitClasses = null;
+        
+        if (isPackageName(location)) {
+            sourcesPackage = location;
+            changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
+        } else {
+            resourcesDir = location;
+        }
+        
         SystemPreviewStage stage = PreviewStage.systemBuilder()
                 .setName("flamingock-system-stage")
                 .setDescription("Dedicated stage for system-level changes")
                 .setSourcesRoots(sourceRoots)
                 .setSourcesPackage(sourcesPackage)
                 .setResourcesRoot(resourcesRoot)
-                .setResourcesDir(systemStage.get("resourcesDir"))
+                .setResourcesDir(resourcesDir)
                 .setChanges(changeUnitClasses)
                 .build();
         return Optional.of(stage);
     }
 
     private PreviewStage mapToStage(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, Map<String, String> stageMap) {
-
-        String sourcesPackage = stageMap.get("sourcesPackage");
-        Collection<AbstractPreviewTask> changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
+        
+        // Try new location field first, fall back to legacy fields for compatibility
+        String location = stageMap.get("location");
+        if (location == null) {
+            // Legacy support - check old fields
+            String sourcesPackage = stageMap.get("sourcesPackage");
+            String resourcesDir = stageMap.get("resourcesDir");
+            location = sourcesPackage != null ? sourcesPackage : resourcesDir;
+        }
+        
+        String sourcesPackage = null;
+        String resourcesDir = null;
+        Collection<AbstractPreviewTask> changeUnitClasses = null;
+        
+        if (location != null) {
+            if (isPackageName(location)) {
+                sourcesPackage = location;
+                changeUnitClasses = codedChangeUnitsByPackage.get(sourcesPackage);
+            } else {
+                resourcesDir = location;
+            }
+        }
+        
         return PreviewStage.defaultBuilder(StageType.from(stageMap.get("type")))
                 .setName(stageMap.get("name"))
                 .setDescription(stageMap.get("description"))
                 .setSourcesRoots(sourceRoots)
                 .setSourcesPackage(sourcesPackage)
                 .setResourcesRoot(resourcesRoot)
-                .setResourcesDir(stageMap.get("resourcesDir"))
+                .setResourcesDir(resourcesDir)
                 .setChanges(changeUnitClasses)
                 .build();
     }
@@ -428,6 +493,39 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
             logger.warn("'" + RESOURCES_PATH_ARG + "' parameter NOT passed. Using default '" + resourcesDir + "'");
         }
         return resourcesDir;
+    }
+
+    /**
+     * Determines if the given location string represents a package name.
+     * A package name contains dots and no slashes (e.g., "com.example.migrations").
+     *
+     * @param location the location string to check
+     * @return true if the location is a package name, false otherwise
+     */
+    private boolean isPackageName(String location) {
+        return location.contains(".") && !location.contains("/");
+    }
+
+    /**
+     * Determines if the given location string represents an absolute resource path.
+     * An absolute path starts with "/" (e.g., "/absolute/path/to/templates").
+     *
+     * @param location the location string to check
+     * @return true if the location is an absolute resource path, false otherwise
+     */
+    private boolean isAbsoluteResourcePath(String location) {
+        return location.startsWith("/");
+    }
+
+    /**
+     * Determines if the given location string represents a relative resource path.
+     * A relative resource path starts with "resources/" (e.g., "resources/db/migrations").
+     *
+     * @param location the location string to check
+     * @return true if the location is a relative resource path, false otherwise
+     */
+    private boolean isRelativeResourcePath(String location) {
+        return location.startsWith("resources/");
     }
 
 

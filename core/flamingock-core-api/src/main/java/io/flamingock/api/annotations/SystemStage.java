@@ -17,7 +17,20 @@
 package io.flamingock.api.annotations;
 
 public @interface SystemStage {
-    String sourcesPackage() default "";
-
-    String resourcesDir() default "";
+    /**
+     * Specifies the location where system-level change units are found.
+     * 
+     * <p>The location format determines how it's interpreted:
+     * <ul>
+     *   <li><b>Package name:</b> Contains dots and no slashes (e.g., "com.example.system") - 
+     *       Used to scan for annotated change units in the specified package</li>
+     *   <li><b>Resource directory (relative):</b> Starts with "resources/" (e.g., "resources/system/migrations") - 
+     *       Used to scan for template-based change units in the specified resources directory</li>
+     *   <li><b>Resource directory (absolute):</b> Starts with "/" (e.g., "/absolute/path/to/system/templates") - 
+     *       Used to scan for template-based change units in the specified absolute path</li>
+     * </ul>
+     * 
+     * @return the location where system-level change units are found
+     */
+    String location() default "";
 }

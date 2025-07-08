@@ -2,4 +2,4 @@ pipeline:
   stages:
     - name: "stage-1"
       description: "First processing stage"
-      sourcesPackage: "io.flamingock.core.cloud.changes"
+      location: "io.flamingock.core.cloud.changes"

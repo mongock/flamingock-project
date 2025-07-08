@@ -45,10 +45,10 @@ import java.lang.annotation.Target;
  * Use {@link #stages()} and {@link #systemStage()} to define the pipeline inline:
  * <pre>
  * &#64;Flamingock(
- *     systemStage = &#64;SystemStage(sourcesPackage = "com.example.system"),
+ *     systemStage = &#64;SystemStage(location = "com.example.system"),
  *     stages = {
- *         &#64;Stage(name = "init", type = StageType.LEGACY, sourcesPackage = "com.example.init"),
- *         &#64;Stage(name = "migration", type = StageType.DEFAULT, sourcesPackage = "com.example.migrations")
+ *         &#64;Stage(name = "init", type = StageType.LEGACY, location = "com.example.init"),
+ *         &#64;Stage(name = "migration", type = StageType.DEFAULT, location = "com.example.migrations")
  *     }
  * )
  * public class MyMigrationConfig {
@@ -68,7 +68,7 @@ import java.lang.annotation.Target;
  * <pre>
  * &#64;Flamingock(
  *     setup = SetupType.DEFAULT,  // Default value - automatic framework integration
- *     stages = { &#64;Stage(name = "migration", sourcesPackage = "com.example.migrations") }
+ *     stages = { &#64;Stage(name = "migration", location = "com.example.migrations") }
  * )
  * &#64;Configuration
  * public class FlamingockConfig {
@@ -84,7 +84,7 @@ import java.lang.annotation.Target;
  * <pre>
  * &#64;Flamingock(
  *     setup = SetupType.BUILDER,  // Manual configuration required
- *     stages = { &#64;Stage(name = "migration", sourcesPackage = "com.example.migrations") }
+ *     stages = { &#64;Stage(name = "migration", location = "com.example.migrations") }
  * )
  * &#64;Configuration
  * public class FlamingockConfig {
@@ -123,7 +123,7 @@ public @interface Flamingock {
      * 
      * <p>Example:
      * <pre>
-     * systemStage = &#64;SystemStage(sourcesPackage = "com.example.system.migrations")
+     * systemStage = &#64;SystemStage(location = "com.example.system.migrations")
      * </pre>
      * 
      * @return the system stage configuration
@@ -141,9 +141,9 @@ public @interface Flamingock {
      * <p>Example:
      * <pre>
      * stages = {
-     *     &#64;Stage(name = "before", type = StageType.BEFORE, sourcesPackage = "com.example.setup"),
-     *     &#64;Stage(name = "main", type = StageType.DEFAULT, sourcesPackage = "com.example.changes"),
-     *     &#64;Stage(name = "after", type = StageType.AFTER, sourcesPackage = "com.example.cleanup")
+     *     &#64;Stage(name = "before", type = StageType.BEFORE, location = "com.example.setup"),
+     *     &#64;Stage(name = "main", type = StageType.DEFAULT, location = "com.example.changes"),
+     *     &#64;Stage(name = "after", type = StageType.AFTER, location = "com.example.cleanup")
      * }
      * </pre>
      * 

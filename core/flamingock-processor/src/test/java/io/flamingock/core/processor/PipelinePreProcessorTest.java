@@ -199,10 +199,10 @@ public class PipelinePreProcessorTest {
         Path pipelineFile = tempDir.resolve("pipeline.yaml");
         String yamlContent = "pipeline:\n" +
             "  systemStage:\n" +
-            "    sourcesPackage: com.example.system\n" +
+            "    location: com.example.system\n" +
             "  stages:\n" +
             "    - name: test-stage\n" +
-            "      sourcesPackage: com.example.changes\n";
+            "      location: com.example.changes\n";
         Files.write(pipelineFile, yamlContent.getBytes());
     }
 
@@ -221,7 +221,7 @@ public class PipelinePreProcessorTest {
     // Mock annotation factories
     private Flamingock createMockAnnotationWithStages() {
         return new MockFlamingockBuilder()
-            .withSystemStage("com.example.system", "")
+            .withSystemStage("com.example.system")
             .withStages(
                 createMockStage("init", StageType.DEFAULT, "com.example.init"),
                 createMockStage("migration", StageType.DEFAULT, "com.example.migrations")
@@ -239,21 +239,19 @@ public class PipelinePreProcessorTest {
         return new MockFlamingockBuilder().build();
     }
 
-    private Stage createMockStage(String name, StageType type, String sourcesPackage) {
+    private Stage createMockStage(String name, StageType type, String location) {
         return new Stage() {
             @Override public String name() { return name; }
             @Override public String description() { return ""; }
             @Override public StageType type() { return type; }
-            @Override public String sourcesPackage() { return sourcesPackage; }
-            @Override public String resourcesDir() { return ""; }
+            @Override public String location() { return location; }
             @Override public Class<? extends java.lang.annotation.Annotation> annotationType() { return Stage.class; }
         };
     }
 
-    private SystemStage createMockSystemStage(String sourcesPackage, String resourcesDir) {
+    private SystemStage createMockSystemStage(String location) {
         return new SystemStage() {
-            @Override public String sourcesPackage() { return sourcesPackage; }
-            @Override public String resourcesDir() { return resourcesDir; }
+            @Override public String location() { return location; }
             @Override public Class<? extends java.lang.annotation.Annotation> annotationType() { return SystemStage.class; }
         };
     }
@@ -263,10 +261,9 @@ public class PipelinePreProcessorTest {
         private Stage[] stages = new Stage[0];
         private String pipelineFile = "";
 
-        public MockFlamingockBuilder withSystemStage(String sourcesPackage, String resourcesDir) {
+        public MockFlamingockBuilder withSystemStage(String location) {
             this.systemStage = new SystemStage() {
-                @Override public String sourcesPackage() { return sourcesPackage; }
-                @Override public String resourcesDir() { return resourcesDir; }
+                @Override public String location() { return location; }
                 @Override public Class<? extends java.lang.annotation.Annotation> annotationType() { return SystemStage.class; }
             };
             return this;
@@ -286,8 +283,7 @@ public class PipelinePreProcessorTest {
             return new Flamingock() {
                 @Override public SystemStage systemStage() { 
                     return systemStage != null ? systemStage : new SystemStage() {
-                        @Override public String sourcesPackage() { return ""; }
-                        @Override public String resourcesDir() { return ""; }
+                        @Override public String location() { return ""; }
                         @Override public Class<? extends java.lang.annotation.Annotation> annotationType() { return SystemStage.class; }
                     };
                 }

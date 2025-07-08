@@ -252,7 +252,7 @@ class ResolvePipelineFileTest {
                 "  stages:\n" +
                 "    - name: test-stage\n" +
                 "      description: " + content + "\n" +
-                "      sourcesPackage: com.example.test\n";
+                "      location: com.example.test\n";
         java.nio.file.Files.write(file.toPath(), yamlContent.getBytes());
     }
 

@@ -26,7 +26,20 @@ public @interface Stage {
     
     StageType type() default StageType.DEFAULT;
     
-    String sourcesPackage() default "";
-    
-    String resourcesDir() default "";
+    /**
+     * Specifies the location where change units are found.
+     * 
+     * <p>The location format determines how it's interpreted:
+     * <ul>
+     *   <li><b>Package name:</b> Contains dots and no slashes (e.g., "com.example.migrations") - 
+     *       Used to scan for annotated change units in the specified package</li>
+     *   <li><b>Resource directory (relative):</b> Starts with "resources/" (e.g., "resources/db/migrations") - 
+     *       Used to scan for template-based change units in the specified resources directory</li>
+     *   <li><b>Resource directory (absolute):</b> Starts with "/" (e.g., "/absolute/path/to/templates") - 
+     *       Used to scan for template-based change units in the specified absolute path</li>
+     * </ul>
+     * 
+     * @return the location where change units are found
+     */
+    String location() default "";
 }

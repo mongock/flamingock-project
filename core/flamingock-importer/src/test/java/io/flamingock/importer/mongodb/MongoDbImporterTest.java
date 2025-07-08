@@ -47,10 +47,10 @@ import static io.flamingock.internal.core.community.Constants.DEFAULT_AUDIT_STOR
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Flamingock(
-    systemStage = @SystemStage(sourcesPackage = "io.flamingock.importer.mongodb.flamingock.system"),
+    systemStage = @SystemStage(location = "io.flamingock.importer.mongodb.flamingock.system"),
     stages = {
-        @Stage(name = "Legacy stage", type = LEGACY, sourcesPackage = "io.flamingock.importer.mongodb.flamingock.legacy"),
-        @Stage(name = "MongoDB Changes", sourcesPackage = "io.flamingock.importer.mongodb.flamingock.mongodb")
+        @Stage(name = "Legacy stage", type = LEGACY, location = "io.flamingock.importer.mongodb.flamingock.legacy"),
+        @Stage(name = "MongoDB Changes", location = "io.flamingock.importer.mongodb.flamingock.mongodb")
     }
 )
 @Testcontainers
