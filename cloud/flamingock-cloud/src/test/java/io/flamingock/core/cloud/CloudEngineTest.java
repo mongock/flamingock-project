@@ -18,17 +18,17 @@ package io.flamingock.core.cloud;
 
 import io.flamingock.api.annotations.EnableFlamingock;
 import io.flamingock.api.annotations.Stage;
-import io.flamingock.core.cloud.changes.CloudChange1;
-import io.flamingock.core.cloud.changes.CloudChange2;
 import io.flamingock.common.test.cloud.deprecated.AuditEntryMatcher;
 import io.flamingock.common.test.cloud.deprecated.MockRunnerServerOld;
-import io.flamingock.internal.util.ThreadSleeper;
+import io.flamingock.core.cloud.changes.CloudChange1;
+import io.flamingock.core.cloud.changes.CloudChange2;
+import io.flamingock.internal.common.cloud.audit.AuditEntryRequest;
 import io.flamingock.internal.common.core.error.FlamingockException;
 import io.flamingock.internal.core.builder.CloudFlamingockBuilder;
 import io.flamingock.internal.core.builder.FlamingockFactory;
-import io.flamingock.internal.common.cloud.audit.AuditEntryRequest;
 import io.flamingock.internal.core.engine.lock.LockException;
 import io.flamingock.internal.core.runner.Runner;
+import io.flamingock.internal.util.ThreadSleeper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.verify;
 //TODO add listener to check final Summary
 //TODO verify calls to server
 @EnableFlamingock(
-        stages = {@Stage(location = "io.flamingock.core.cloud.changes")}
+        stages = {@Stage("io.flamingock.core.cloud.changes")}
 )
 public class CloudEngineTest {
 
@@ -115,7 +115,7 @@ public class CloudEngineTest {
                 .setHost("http://localhost:" + runnerServerPort)
                 .setService(serviceName)
                 .setEnvironment(environmentName)
-                //.addStage(new Stage("changes")
+        //.addStage(new Stage("changes")
 //                        .setCodePackages(Collections.singletonList("io.flamingock.core.cloud.changes")))
         ;
     }

@@ -241,7 +241,7 @@ public class PipelinePreProcessorTest {
             @Override public String name() { return name; }
             @Override public String description() { return ""; }
             @Override public StageType type() { return type; }
-            @Override public String location() { return location; }
+            @Override public String value() { return location; }
             @Override public Class<? extends java.lang.annotation.Annotation> annotationType() { return Stage.class; }
         };
     }

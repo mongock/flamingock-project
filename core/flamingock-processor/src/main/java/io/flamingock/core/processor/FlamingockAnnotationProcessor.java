@@ -247,7 +247,7 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
     }
 
     private PreviewStage mapAnnotationToStage(Map<String, List<AbstractPreviewTask>> codedChangeUnitsByPackage, Stage stageAnnotation) {
-        String location = stageAnnotation.location();
+        String location = stageAnnotation.value();
 
         if (location == null || location.trim().isEmpty()) {
             throw new RuntimeException("@Stage annotation requires a location. Please specify the location field.");

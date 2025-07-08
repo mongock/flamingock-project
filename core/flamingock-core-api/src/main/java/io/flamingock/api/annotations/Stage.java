@@ -34,7 +34,7 @@ public @interface Stage {
      *
      * @return the location where change units are found (mandatory)
      */
-    String location();
+    String value();
 
     /**
      * The name of the stage. If not specified, the name will be automatically derived from the location.

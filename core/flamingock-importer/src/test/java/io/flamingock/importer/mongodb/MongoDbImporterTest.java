@@ -48,8 +48,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @EnableFlamingock(
     systemStage = "io.flamingock.importer.mongodb.flamingock.system",
     stages = {
-        @Stage(location = "io.flamingock.importer.mongodb.flamingock.legacy", type = LEGACY),
-        @Stage(location = "io.flamingock.importer.mongodb.flamingock.mongodb")
+        @Stage(value = "io.flamingock.importer.mongodb.flamingock.legacy", type = LEGACY),
+        @Stage("io.flamingock.importer.mongodb.flamingock.mongodb")
     }
 )
 @Testcontainers
