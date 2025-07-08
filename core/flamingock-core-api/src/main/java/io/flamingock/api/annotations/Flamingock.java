@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  * &#64;Flamingock(
  *     systemStage = &#64;SystemStage(sourcesPackage = "com.example.system"),
  *     stages = {
- *         &#64;Stage(name = "init", type = StageType.BEFORE, sourcesPackage = "com.example.init"),
+ *         &#64;Stage(name = "init", type = StageType.LEGACY, sourcesPackage = "com.example.init"),
  *         &#64;Stage(name = "migration", type = StageType.DEFAULT, sourcesPackage = "com.example.migrations")
  *     }
  * )
