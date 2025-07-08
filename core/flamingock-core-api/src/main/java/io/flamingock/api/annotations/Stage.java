@@ -25,11 +25,13 @@ public @interface Stage {
      * <p>The location format determines how it's interpreted:
      * <ul>
      *   <li><b>Package name:</b> Contains dots and no slashes (e.g., "com.example.migrations") -
-     *       Used to scan for annotated change units in the specified package</li>
-     *   <li><b>Resource directory (relative):</b> Starts with "resources/" (e.g., "resources/db/migrations") -
-     *       Used to scan for template-based change units in the specified resources directory</li>
-     *   <li><b>Resource directory (absolute):</b> Starts with "/" (e.g., "/absolute/path/to/templates") -
-     *       Used to scan for template-based change units in the specified absolute path</li>
+     *       Used to scan for code and template based changeUnits in the specified package</li>
+     *   <li><b>Resource directory (relative):</b> Contains slashes(dots are ignored)
+     *       Used to scan for template-based(no code-based) change units in the specified resources directory
+     *       e.g., "flamingock/changes" and "resources/flamingock/changes", in both cases resolve to resources/flamingock/changes relatively</li>
+     *   <li><b>Resource directory (absolute):</b> Starts with "/"
+     *       Used to scan for template-based change units in the specified absolute path
+     *       e.g., "/resources/flamingock/changes", it searches for the absolute path "/resources/flamingock/changes"</li>
      * </ul>
      *
      * @return the location where change units are found (mandatory)
