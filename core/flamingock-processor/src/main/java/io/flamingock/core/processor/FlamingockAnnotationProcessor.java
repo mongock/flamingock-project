@@ -388,10 +388,10 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
                 stages.add(stage);
             }
 
-            Optional<SystemPreviewStage> systemStage = getSystemStage(codedChangeUnitsByPackage, (String) pipelineMap.get("systemStage"));
+            Optional<SystemPreviewStage> systemStageOptional = getSystemStage(codedChangeUnitsByPackage, (String) pipelineMap.get("systemStage"));
 
-            return systemStage
-                    .map(previewStage -> new PreviewPipeline(previewStage, stages))
+            return systemStageOptional
+                    .map(systemStage -> new PreviewPipeline(systemStage, stages))
                     .orElseGet(() -> new PreviewPipeline(stages));
 
         } catch (IOException e) {
