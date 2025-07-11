@@ -257,6 +257,91 @@ public class PipelinePreProcessorTest {
     }
 
     /**
+     * Test that stages are ordered correctly regardless of declaration order.
+     */
+    @Test
+    @DisplayName("Should order stages by type priority: LEGACY before DEFAULT")
+    void shouldOrderStagesByTypePriorityLegacyBeforeDefault() throws Exception {
+        // Given - create annotation with stages in reverse order (DEFAULT first, LEGACY second)
+        EnableFlamingock annotation = new MockFlamingockBuilder()
+            .withStages(
+                createMockStage("", StageType.DEFAULT, "com.example.migrations"),
+                createMockStage("", StageType.LEGACY, "com.example.init"),
+                createMockStage("", StageType.DEFAULT, "com.example.cleanup")
+            )
+            .build();
+        Map<String, List<AbstractPreviewTask>> changeUnits = createMockChangeUnitsMap();
+        FlamingockAnnotationProcessor processor = new FlamingockAnnotationProcessor();
+        
+        // When - build pipeline from annotation
+        PreviewPipeline pipeline = buildPipelineFromAnnotation(processor, annotation, changeUnits);
+        
+        // Then - verify stages are sorted by type priority
+        assertNotNull(pipeline, "Pipeline should be created");
+        assertEquals(3, pipeline.getStages().size(), "Should have 3 stages");
+        
+        PreviewStage[] stages = pipeline.getStages().toArray(new PreviewStage[0]);
+        
+        // First stage should be LEGACY (highest priority)
+        assertEquals(StageType.LEGACY, stages[0].getType());
+        assertEquals("init", stages[0].getName());
+        assertEquals("com.example.init", stages[0].getSourcesPackage());
+        
+        // Second and third stages should be DEFAULT (lower priority)
+        assertEquals(StageType.DEFAULT, stages[1].getType());
+        assertEquals("migrations", stages[1].getName());
+        assertEquals("com.example.migrations", stages[1].getSourcesPackage());
+        
+        assertEquals(StageType.DEFAULT, stages[2].getType());
+        assertEquals("cleanup", stages[2].getName());
+        assertEquals("com.example.cleanup", stages[2].getSourcesPackage());
+    }
+
+    /**
+     * Test that YAML stages are ordered correctly regardless of declaration order.
+     */
+    @Test
+    @DisplayName("Should order YAML stages by type priority: LEGACY before DEFAULT")
+    void shouldOrderYamlStagesByTypePriorityLegacyBeforeDefault() throws Exception {
+        // Given - create YAML file with stages in reverse order (DEFAULT first, LEGACY second)
+        Path pipelineFile = tempDir.resolve("pipeline.yaml");
+        String yamlContent = "pipeline:\n" +
+            "  stages:\n" +
+            "    - location: com.example.migrations\n" +
+            "    - location: com.example.init\n" +
+            "      type: legacy\n" +
+            "    - location: com.example.cleanup\n";
+        Files.write(pipelineFile, yamlContent.getBytes());
+        
+        EnableFlamingock annotation = createMockAnnotationWithFile("pipeline.yaml");
+        Map<String, List<AbstractPreviewTask>> changeUnits = createMockChangeUnitsMap();
+        FlamingockAnnotationProcessor processor = new FlamingockAnnotationProcessor();
+        
+        // When - build pipeline from file
+        PreviewPipeline pipeline = buildPipelineFromFile(processor, annotation, changeUnits);
+        
+        // Then - verify stages are sorted by type priority
+        assertNotNull(pipeline, "Pipeline should be created");
+        assertEquals(3, pipeline.getStages().size(), "Should have 3 stages");
+        
+        PreviewStage[] stages = pipeline.getStages().toArray(new PreviewStage[0]);
+        
+        // First stage should be LEGACY (highest priority)
+        assertEquals(StageType.LEGACY, stages[0].getType());
+        assertEquals("init", stages[0].getName());
+        assertEquals("com.example.init", stages[0].getSourcesPackage());
+        
+        // Second and third stages should be DEFAULT (lower priority)
+        assertEquals(StageType.DEFAULT, stages[1].getType());
+        assertEquals("migrations", stages[1].getName());
+        assertEquals("com.example.migrations", stages[1].getSourcesPackage());
+        
+        assertEquals(StageType.DEFAULT, stages[2].getType());
+        assertEquals("cleanup", stages[2].getName());
+        assertEquals("com.example.cleanup", stages[2].getSourcesPackage());
+    }
+
+    /**
      * Test validation for YAML pipeline with multiple SYSTEM stages.
      */
     @Test
@@ -430,6 +515,7 @@ public class PipelinePreProcessorTest {
         map.put("com.example.migrations2", Collections.singletonList(mockTask));
         map.put("com.example.migrations3", Collections.singletonList(mockTask));
         map.put("com.example.changes", Collections.singletonList(mockTask));
+        map.put("com.example.cleanup", Collections.singletonList(mockTask));
         return map;
     }
 

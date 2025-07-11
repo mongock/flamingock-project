@@ -234,6 +234,35 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
     }
 
     /**
+     * Compares stages by type priority for sorting.
+     * Priority order: LEGACY (1) → DEFAULT (2)
+     * SYSTEM stages are handled separately and not included in this comparison.
+     *
+     * @param stage1 the first stage to compare
+     * @param stage2 the second stage to compare
+     * @return negative if stage1 has higher priority, positive if stage2 has higher priority, 0 if equal
+     */
+    private int compareStagesByTypePriority(PreviewStage stage1, PreviewStage stage2) {
+        return getStageTypePriority(stage1.getType()) - getStageTypePriority(stage2.getType());
+    }
+
+    /**
+     * Gets the priority value for a stage type.
+     * Lower values indicate higher priority (execute earlier).
+     *
+     * @param stageType the stage type
+     * @return priority value (LEGACY: 1, DEFAULT: 2)
+     */
+    private int getStageTypePriority(StageType stageType) {
+        switch (stageType) {
+            case SYSTEM: return 0;
+            case LEGACY: return 1;
+            case DEFAULT: return 2;
+            default: return 3;
+        }
+    }
+
+    /**
      * Validates that stage types conform to the restrictions:
      * - Maximum 1 SYSTEM stage allowed
      * - Maximum 1 LEGACY stage allowed
@@ -306,6 +335,9 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
                 stages.add(stage);
             }
         }
+
+        // Sort stages by type priority: LEGACY stages first, then DEFAULT stages
+        stages.sort(this::compareStagesByTypePriority);
 
         return systemStage != null
                 ? new PreviewPipeline(systemStage, stages)
@@ -464,6 +496,9 @@ public class FlamingockAnnotationProcessor extends AbstractProcessor {
                     stages.add(stage);
                 }
             }
+
+            // Sort stages by type priority: LEGACY stages first, then DEFAULT stages
+            stages.sort(this::compareStagesByTypePriority);
 
             return systemStage != null
                     ? new PreviewPipeline(systemStage, stages)
